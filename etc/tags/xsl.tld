@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<!-- The tag library descriptor -->
+<taglib>
+	<!-- Basic library information -->
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>xsl</shortname>
+	<info>Libreria de tags del ibit</info>
+	<!-- IncludeTag -->
+	<tag>
+		<name>include</name>
+		<tagclass>org.ibit.tag.IncludeTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>include a file from another context with RequestDispatcher</info>
+		<attribute>
+			<name>contexto</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>page</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>include2</name>
+		<tagclass>org.ibit.tag.IncludeTagV2</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>include a file from another context with HTTP</info>
+		<attribute>
+			<name>contexto</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>page</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- ParamTag -->
+	<tag>
+		<name>param</name>
+		<tagclass>org.ibit.tag.ParamTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>set a param for include tag</info>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+                <attribute>
+			<name>ivalue</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<!-- SecureTag -->
+	<tag>
+		<name>secure</name>
+		<tagclass>org.ibit.tag.SecureTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>if test attribute is not in the session do a forward to</info>
+		<attribute>
+			<name>test</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<!-- ResourceTag -->
+	<tag>
+        <name>resource</name>
+        <tagclass>org.ibit.tag.ResourceTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <info>Inclou una url del tipus proto://host:port/file?..., pot dur un tag param</info>
+        <attribute>
+            <name>proto</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>host</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>port</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>file</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

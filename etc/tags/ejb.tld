@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+<!-- a tab library descriptor -->
+
+<taglib>
+  <tlibversion>1.0</tlibversion>
+  <jspversion>1.1</jspversion>
+  <shortname>ejb</shortname>
+  <uri>http://www.orionserver.com/taglibs/ejbtags.jar</uri>
+  <info>
+	EJB helper tags...
+  </info>
+
+  <tag>
+	<name>useHome</name>
+	<tagclass>com.evermind.ejb.taglib.UseHomeTag</tagclass>
+	<teiclass>com.evermind.ejb.taglib.UseTEI</teiclass>
+	<bodycontent>empty</bodycontent>
+	<info>
+		Looks up a home...
+	</info>
+
+	<attribute>
+	  <name>id</name>
+	  <required>true</required>
+	</attribute>
+	<attribute>
+	  <name>type</name>
+	  <required>true</required>
+	</attribute>
+	<attribute>
+	  <name>location</name>
+	  <required>true</required>
+	</attribute>
+  </tag>
+
+  <tag>
+	<name>useBean</name>
+	<tagclass>com.evermind.ejb.taglib.UseBeanTag</tagclass>
+	<teiclass>com.evermind.ejb.taglib.UseTEI</teiclass>
+	<bodycontent>jsp</bodycontent>
+	<info>
+		Looks up and narrows a bean...
+	</info>
+
+	<attribute>
+	  <name>id</name>
+	  <required>true</required>
+	</attribute>
+	<attribute>
+	  <name>type</name>
+	  <required>true</required>
+	</attribute>
+	<attribute>
+		<name>value</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	<attribute>
+	  <name>scope</name>
+	  <required>false</required>
+	</attribute>
+  </tag>
+  <tag>
+	<name>createBean</name>
+	<tagclass>com.evermind.ejb.taglib.CreateBeanTag</tagclass>
+	<bodycontent>empty</bodycontent>
+	<info>
+		Creates a bean instance...
+	</info>
+
+	<attribute>
+		<name>instance</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+  </tag>
+  <tag>
+	<name>iterate</name>
+	<tagclass>com.evermind.ejb.taglib.IterateTag</tagclass>
+	<teiclass>com.evermind.ejb.taglib.IterateTEI</teiclass>
+	<bodycontent>jsp</bodycontent>
+	<info>
+		Iterates over the finder result from a home...
+	</info>
+
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>collection</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>max</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+	<name>nvl</name>
+	<tagclass>com.evermind.ejb.taglib.NvlTag</tagclass>
+	<bodycontent>empty</bodycontent>
+	<info>Implementa la funcion NVL</info>
+	<attribute> 
+		<name>value</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue> 
+	</attribute> 
+	<attribute> 
+		<name>alt</name>
+		<required>true</required>
+		<rtexprvalue>false</rtexprvalue> 
+	</attribute> 
+  </tag>
+  <tag>
+	<name>useModel</name>
+	<tagclass>com.evermind.ejb.taglib.UseModelTag</tagclass>
+	<teiclass>com.evermind.ejb.taglib.UseTEI</teiclass>
+	<bodycontent>empty</bodycontent>
+	<info>Usar un objeto determinado</info>
+	<attribute>
+  		<name>id</name>
+  		<required>true</required>
+  		<rtexprvalue>false</rtexprvalue> 
+	</attribute>
+	<attribute>
+  		<name>type</name>
+  		<required>true</required>
+		<rtexprvalue>false</rtexprvalue> 
+	</attribute>
+	<attribute> 
+		<name>value</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue> 
+	</attribute> 
+  </tag>
+</taglib>

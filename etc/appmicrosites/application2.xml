@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC
+   '-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN'
+   'http://java.sun.com/dtd/application_1_3.dtd'>
+<application>
+	<display-name>MICROSITES</display-name>
+  	<description/>
+
+			<module><java>micromodel.jar</java></module>
+			<module><java>extractor.jar</java></module>
+			<module><java>model.jar</java></module>
+
+  			<!-- BACK -->
+    		<module><ejb>sac-micropersistence.jar</ejb></module>
+    		<module><ejb>sac-persistence.jar</ejb></module>
+			<module><ejb>boib.jar</ejb></module>
+			<module><ejb>sac.jar</ejb></module>
+			<module><java>link.jar</java></module>
+			
+    		<module>
+        		<web>
+          		<web-uri>sac-microfront.war</web-uri>
+	          	<context-root>sacmicrofront</context-root>
+        		</web>
+    		</module>
+			<module>
+				<web>
+	          	<web-uri>sac-microback.war</web-uri>
+	          	<context-root>sacmicroback</context-root>
+        		</web>
+    		</module>
+
+
+ 
+</application>
