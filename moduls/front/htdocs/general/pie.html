@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra el pie de página.
+
+Variables:
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_idioma: devuelve el idioma correspondiente
+	MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos
+	MVS_listaidiomas: devuelve la lista de idiomas disponibles
+	MVS_listacabecera: devuelve una lista de arrays para la cabecera
+
+
+Objetos:
+	#gusuri.accessibilitat(MVS_microsite,MVS_idioma): devuelve la URL hacia la información de accesibilidad de la web
+	#gusuri.traduccionEnlacePie(context,url, idiomaLista.key): devuelve la URL hacia la que irá(la misma que la actul pero en el idioma seleccionado)
+	
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+</head>
+<body>
+	<footer th:fragment="pie">
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div th:if="${MVS_microsite} !=null" th:remove="tag">
+			<div th:if="${MVS_microsite.tipopie} ==null" th:with="tipopie='1'"
+				th:remove="tag">
+				<div th:remove="(${MVS_microsite.tipopie}=='0')==true ? all : tag"
+					id="" th:fragment="tipoPie">
+					<div th:remove="(${MVS_microsite.tipopie}=='2')==true ? all : tag">
+						<!-- eines -->
+						<div class="row clearfix" th:remove="tag">
+							<div class="col-md-12 column" th:remove="tag">
+								<div id="eines">
+									<div class="col-md-3 column" th:remove="tag">
+										<div class="esquerra">
+											<!-- #gusuri.accessibilitat(MVS_microsite,MVS_idioma): devuelve la URL hacia la información de accesibilidad de la web -->
+											<!-- MVS_idioma: devuelve el idioma correspondiente -->
+											<a accesskey="1" href="accessibilitat.html"
+												th:href="@{${#gusuri.accessibilitat(MVS_microsite,MVS_idioma)}}"
+												th:text="#{general.accessibilitat}">Accessibilitat</a>
+										</div>				
+									</div>
+									<div class="col-md-6 column" th:remove="tag">
+										<div class="centre">
+											<div class="tamanyLletra"></div>
+											<span class="idiomes"> 
+											<!-- MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos -->
+											<span
+												th:if="${MVS_seulet} !=null" th:remove="tag"> 
+												<!-- MVS_listaidiomas: devuelve la lista de idiomas disponibles -->
+												<span
+													th:with="tamano=${#lists.size(MVS_listaidiomas)}"
+													th:remove="tag"> <span
+														th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+														th:with="indice=${iterStat.index}" th:remove="tag">
+															<span th:with="idi=${MVS_idioma}" th:remove="tag">
+																<span th:with="idiomaa=${idiomaLista.key}" th:remove="tag">
+																	<span th:with="idi2=${#strings.toLowerCase(idi)}"
+																	th:remove="tag"> <strong
+																		th:if="${idi2}==${idiomaa}" th:utext="${idiomaLista.value}">Valor
+																			idioma</strong>
+																		<!-- #gusuri.traduccionEnlacePie(context,url, idiomaLista.key): devuelve la URL hacia la que irá(la misma que la actul pero en el idioma seleccionado) -->
+																		<a th:with="url=${#httpServletRequest.requestURI}, context=${#ctx.httpServletRequest.contextPath}" href=""
+																		th:href="@{${#gusuri.traduccionEnlacePie(context,url, idiomaLista.key,MVS_busquedaBuscador)}}"
+																		th:if="${idi2}!=${idiomaa}" th:utext="${idiomaLista.value}">Valor
+																			idioma</a>
+															</span>
+															</span>
+														</span>
+															<span th:text="(${tamano})==(${indice}+1) ? '':' - '"
+															th:remove="tag">-</span>
+													</span>
+												</span>
+											</span>
+											</span>
+										</div>
+									</div>
+									<div class="col-md-3 column" th:remove="tag">
+										<div class="dreta">
+											<!-- enllaços -->
+											<!-- MVS_listacabecera: devuelve una lista de arrays para la cabecera -->
+											<div th:if="${MVS_listacabecera} !=null" th:remove="tag">
+												<div th:with="tamano2=${#lists.size(MVS_listacabecera)}"
+													th:remove="tag">
+													<div th:each="i,iterStat:${MVS_listacabecera}"
+														th:with="indice2=${iterStat.index}" th:remove="tag">
+														<div th:remove="tag">
+															<a href="" th:href="@{${i.value1}}" th:text="${i.key}">VALOR
+																HTTP 1</a>
+														</div>
+														<div th:text="(${tamano2})==(${indice2}+1) ? '':' - '"
+															th:remove="tag">-</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /eines-->
+						<div th:with="langMVS=${MVS_idioma}" th:remove="tag">
+							<div th:with="lang=${#strings.toLowerCase(langMVS)}"
+								th:remove="tag">
+								<div class="row clearfix" th:remove="tag">
+									<div class="col-md-12 column" th:remove="tag">
+										<div id="traduccio">
+											<div class="col-md-3 column" th:remove="tag"></div>
+											<div class="col-md-6 column" th:remove="tag">
+												<div class="centre">
+													<div th:remove="(${lang}=='ca')==true ? all : tag">
+														<span th:remove="(${lang}=='es')==true ? all : none"
+															class="destacat" style="color: rgb(255, 0, 0);">
+															<p align="center" th:align="center"
+																th:text="#{general.traduccion}">Automatic
+																translation. Sorry for the inconvenience</p>
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-3 column" th:remove="tag"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--  peu -->
+						<div class="row clearfix" th:remove="tag">
+							<div class="col-md-12 column" th:remove="tag">
+								<div id="peu">
+									<div class="col-md-3 column" th:remove="tag">
+										<div class="esquerra">
+											&copy; <a href="http://www.caib.es">Govern de les Illes
+												Balears</a>
+										</div>
+									</div>
+									<!-- contacte -->
+									<div class="col-md-6 column" th:remove="tag">
+										<div class="centre">
+											<div th:if="${direccion} !=null" th:utext="${direccion}"
+												th:remove="tag">
+												<!-- Dirección -->
+											</div>
+										</div>
+									</div>
+									<!-- /contacte -->
+									<div class="col-md-3 column" th:remove="tag">
+										<div class="dreta">&nbsp;</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /peu -->
+					</div>
+					<div th:remove="(${MVS_microsite.tipopie}=='1')==true ? all : tag">
+						<div th:if="${MVS_microsite.traduce !=null}" th:remove="tag">
+							<div th:utext="${MVS_microsite.traduce.piepersonal}"
+								th:remove="tag">Traduce Pie Personal</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:if="${MVS_microsite.tipopie} !=null" th:remove="tag">
+				<div th:replace="general/pie :: tipoPie">Tipo Pie</div>
+			</div> 
+		</div>
+	</footer>
+</body>
+</html>

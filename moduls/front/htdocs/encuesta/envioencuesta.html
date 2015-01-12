@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra información de haber realizado una encuesta.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_encuesta: devuelve una encuesta en cuestión
+	
+Objetos:
+	#gusuri.archivopub(MVS_microsite,elementoEncuesta.imagen): devuelve la URL hacia el archivo en cuestión
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_encuesta: devuelve una encuesta en cuestión-->
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:if="${MVS_encuesta} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo} + ' - ' + #{encuesta.resultados} ">Microsite
+	Título - encuesta traduce título - Resultats</title>	
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsEncuesta.css"
+	th:href="@{/resources/css/estilsEncuesta.css}"></link>
+</section>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag"></div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- informacio con o sin menu -->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+			<!-- MVS_encuesta: devuelve una encuesta en cuestión -->
+			<div th:if="${MVS_encuesta} !=null" th:remove="tag">
+				<!-- titol -->
+				<h2 th:text="${MVS_encuesta.traduce.titulo}">Encuesta traduce
+					título</h2>
+				<!-- informacio -->
+				<div th:if="${MVS_encuesta.votoDuplicado} =='NVOT'" th:remove="tag">
+					<i th:text="#{encuesta.mensaje}">(Només es permet un vot per
+						persona)</i> <br />
+				</div>
+				<br />
+				<div th:if="${MVS_encuesta.visible} =='S'" th:remove="tag">
+					<div th:if="${MVS_encuesta.mostrar} !='S'"
+						th:utext="#{encuesta.gracias}" th:remove="tag">Gràcies per la
+						teva col.laboració</div>
+					<div th:if="${MVS_encuesta.mostrar} =='S'" th:remove="tag">
+						<div th:each="elementoEncuesta : ${MVS_encuesta.preguntas}" th:remove="tag">
+							<div th:if="${elementoEncuesta.visible} =='S'" th:remove="tag">
+								<div id="enquestaResultats" class="enquestaResultats">
+									<!--  es visible -->
+									<h3 th:text="${elementoEncuesta.traduce.titulo}">Traduce título</h3>
+									<div th:if="${elementoEncuesta.imagen} !=null" th:remove="tag">
+										<p>
+											<!-- #gusuri.archivopub(MVS_microsite,elementoEncuesta.imagen): devuelve la URL hacia el archivo en cuestión -->
+											<img src="archivopub.html"
+												th:src="@{${#gusuri.archivopub(MVS_microsite,elementoEncuesta.imagen)}}"
+												alt="" />											
+										</p>
+									</div>
+									<div th:with="total=0" th:remove="tag">
+										<div th:if="${elementoEncuesta.nrespuestas} !=null" th:remove="tag">
+											<div th:with="total=${elementoEncuesta.nrespuestas}" th:remove="tag">
+												<div th:fragment="variableTotal" th:remove="tag">
+													<div th:if="${total}==0" th:with="total=1" th:remove="tag">
+														<div th:fragment="totalDistintoValor" th:remove="tag">
+															<ul>
+																<div th:each="j,iterStat : ${elementoEncuesta.respuestas}"
+																	th:with="indice=${iterStat.index},numrespuestas=0"
+																	th:remove="tag">
+																	<div th:if="${j.nrespuestas} !=null"
+																		th:with="numrespuestas=${j.nrespuestas}"
+																		th:remove="tag">
+																		<li th:fragment="liRespuestas">
+																			<div th:with="resultado=(${numrespuestas}*100)/${total}" th:remove="tag">
+																			<div th:with="resulNoDecim = ${#strings.arraySplit(resultado, '.')}" th:remove="tag">
+																			<span th:text="${j.traduce.titulo}" th:remove="tag"></span>
+																			<em 
+																			th:text="${j.nrespuestas}==null ? '(' + ${resulNoDecim[0]} + ' % - ' + #{encuesta.respuestas} + ')': '(' + ${resulNoDecim[0]} + ' % - ' + ${j.nrespuestas} + ' ' + #{encuesta.respuestas} + ')'">(Resultado
+																				- nrespuestas - respostes)</em> <span class="barra"
+																			th:style="${j.nrespuestas}==null ? 'width: 0%' : 'width:' +${resulNoDecim[0]} + '%'">&nbsp;</span>
+																			</div>
+																			</div>
+																		</li>
+																	</div>
+																	<div th:if="${j.nrespuestas} ==null" th:remove="tag">
+																		<li th:replace="encuesta/envioencuesta :: liRespuestas"></li>
+																	</div>
+																</div>
+															</ul>
+															<p class="votsTotals">
+																<span th:text="#{encuesta.respuestas.totales} + ':'"
+																	th:remove="tag">respostes totals:</span> <strong
+																	th:text="${elementoEncuesta.nrespuestas}"></strong>
+															</p>
+														</div>
+													</div>
+													<div th:if="${total}!=0" th:remove="tag">
+														<div th:replace="encuesta/envioencuesta :: totalDistintoValor"
+															th:remove="tag"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div th:if="${elementoEncuesta.nrespuestas} ==null" th:remove="tag">
+											<div th:replace="encuesta/envioencuesta :: variableTotal"
+												th:remove="tag"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

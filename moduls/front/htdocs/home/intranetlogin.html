@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra la información previa antes de acceder a la intranet.
+
+Variables: 
+	MVS_css: devuelve la hoja de estilos css correspondiente
+	-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
+<META http-equiv="CACHE-CONTROL" content="NO-CACHE">
+<!-- For HTTP 1.1 -->
+<META http-equiv="PRAGMA" content="NO-CACHE">
+<!-- For HTTP 1.0 -->
+<META http-equiv="refresh" content="1; URL=intranethome.html" th:content="1; URL=${#gusuri.intranetHome(MVS_microsite,MVS_idioma)}">
+<title th:text="#{pleasewait.favor}">Esperi, si us plau</title>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<link th:remove="tag" th:utext="${MVS_css}" />
+</head>
+<!-- TESTEAR SI ESTO FUNCIONA -->
+<body th:attr="onload='javascript:window.focus();'">
+	<br />
+	<br />
+	<table cellpadding="10">
+		<tr>
+			<td align="center">
+				<h4 th:text="#{pleasewait.peticion}">La seva petició s`està 
+					processant</h4>
+				<h4 th:text="#{pleasewait.favor}">Esperi, si us plau</h4>
+			</td>
+		</tr>
+	</table>
+</body>

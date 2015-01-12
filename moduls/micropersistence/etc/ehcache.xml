@@ -1,0 +1,41 @@
+<ehcache>
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <!-- Cache per defecte. No volem fitxers temporals -->
+    <defaultCache
+        maxElementsInMemory="800"
+        eternal="false"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"
+        />
+
+    <!-- Caches sempre definits per Hibernate -->
+    <cache name="net.sf.hibernate.cache.UpdateTimestampsCache"
+        maxElementsInMemory="5000"
+        eternal="true"
+        overflowToDisk="false"/>
+
+    <cache name="net.sf.hibernate.cache.StandardQueryCache"
+        maxElementsInMemory="1000"
+        eternal="false"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"/>
+    
+    <cache name="es.caib.gusite.micromodel.Contenido"
+	    maxElementsInMemory="200"
+	    eternal="false"
+	    timeToIdleSeconds="600"
+	    timeToLiveSeconds="240"
+	    overflowToDisk="false"
+	/>
+
+    <cache name="es.caib.gusite.micromodel.Contenido.traducciones"
+	    maxElementsInMemory="800"
+	    eternal="false"
+	    timeToIdleSeconds="600"
+	    timeToLiveSeconds="240"
+	    overflowToDisk="false"
+	/>
+    
+</ehcache>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código es la plantilla base de la mayoría de páginas web ya que en él hemos integrado el código común
+en la mayoría de páginas, para reutilizar el código.
+
+Variables: 
+	MVS_home_campanya: MVS_home_campanya devuelve un string preparado para insertar en un html.
+					   Ese string contiene el trozo de html que muestra la imagen de la campaña.
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_css: devuelve la hoja de estilos css correspondiente
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://gus"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Generator"
+	th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})" />
+<!-- Meta utilizado para adaptar la escala del responsive en los dispositivos moviles limitandola para
+    que no se vea demasiado grande. tambien se evita el zoom -->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<!-- Al utilizar layout:title-pattern="$content_title" se define que el titulo de las páginas que usen el layout como plantilla
+base sea el propio titulo de cada pagina -->
+<title layout:title-pattern="$CONTENT_TITLE">Layout page</title>
+
+<!-- Bootstrap -->
+<link href="resources/bootstrap/css/bootstrap.min.css"
+	th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
+	rel="stylesheet" media="screen" />
+<script src="resources/js/jquery/jquery-1.11.0.min.js"
+	th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js"
+	th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<!-- Fin bootstrap -->
+
+<!-- Reset default bootstrap elements -->
+<link href="resources/bootstrap/css/bootstrap-reset.css"
+	th:href="@{/resources/bootstrap/css/bootstrap-reset.css}"
+	rel="stylesheet" media="screen" />
+<!-- Fin reset bootstrap -->
+
+<script type="text/javascript" src="resources/js/globales.js"
+	th:src="@{/resources/js/globales.js}"></script>
+
+<link th:remove="tag" th:utext="${MVS_css}" />
+
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>
+
+<!--.css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina -->
+<link href="resources/css/estilsLogo.css"
+	th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet"
+	media="screen" />
+
+<script th:replace="general/scriptmenu :: script"></script>
+
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+<section th:remove="tag" layout:fragment="scriptExtra"></section>
+
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+<section th:remove="tag" layout:fragment="cssExtra"></section>
+</head>
+<body class="bodyFontSize">
+	<div id="contenedor">
+		<!-- Cabecera-->
+		<div class="row clearfix" th:remove="tag">
+			<div class="col-md-12 column" th:remove="tag">
+				<!-- capçal -->
+				<header th:replace="general/cabecera::cabecera">Header</header>
+				<!-- fin capçal -->
+			</div>
+		</div>
+		<!-- continguts -->
+		<div id="continguts">
+			<!-- Parte añadida para usar el layout decorator "<section>"-->
+			<section th:remove="tag" layout:fragment="campanya">
+				<!-- campanya -->
+				<!--MVS_home_campanya devuelve un string preparado para insertar en un html.
+	 			Ese string contiene el trozo de html que muestra la imagen de la campaña.-->
+				<div th:if="${MVS_home_campanya} !=null"
+					th:utext="${MVS_home_campanya}" th:remove="tag">Campaña del
+					home</div>
+				<!-- fin campanya -->
+			</section>
+			<!-- Parte añadida para usar el layout decorator "</section>"-->
+			<div class="row clearfix" th:remove="tag">
+				<div class="col-md-4 column" th:remove="tag">
+					<!-- Parte añadida para usar el layout decorator "<section>"-->
+					<section th:remove="tag" layout:fragment="menuLateral">
+						<!-- menu -->
+						<!--MVS_microsite devuelve un microsite a partir de su clave unica  -->
+						<div th:if="${MVS_microsite} !=null" th:remove="tag">
+							<div
+								th:remove="(${MVS_microsite.tipomenu}=='0')==true ? all : none"
+								th:id="(${MVS_microsite.tipomenu}=='1')==true ? 'marcLateral':((${MVS_microsite.tipomenu}=='2')==true ? 'marcLateralAmbIcones')"
+								class="menuAccessibilitat" id="">
+								<div th:replace="general/menu :: menu">Menu1</div>
+							</div>
+						</div>
+						<!-- fin menu -->
+					</section>
+				</div>
+				<!-- Contenido info -->
+				<div class="col-md-8 column" th:remove="tag">
+					<!-- Contenido variable -->
+					<div class="row clearfix" th:remove="tag">
+						<!-- Parte añadida para usar el layout decorator "<section>"-->
+						<section th:remove="tag" layout:fragment="content"></section>
+						<!-- Parte añadida para usar el layout decorator "</section>"-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- fin informacio -->
+
+		<!-- fin continguts -->
+
+		<!-- Parte añadida para usar el layout decorator "<section>"-->
+		<section th:remove="tag" layout:fragment="scriptExtraBody1">
+		</section>
+		<!-- Parte añadida para usar el layout decorator "<section>"-->
+		<section th:remove="tag" layout:fragment="scriptExtraBody2">
+		</section>
+		<!-- footer -->
+		<div class="row clearfix" th:remove="tag">
+			<!-- pie -->
+			<div class="col-md-12 column" th:remove="tag">
+				<footer th:replace="general/pie :: pie">Footer</footer>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

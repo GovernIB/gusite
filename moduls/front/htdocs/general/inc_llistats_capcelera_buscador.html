@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra el listado de anyos de la cabecera.
+
+Variables: 
+	MVS_listadoanyos: devuelve una lista con los años
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_claseelemento: devuelve el tipo de elemento
+	MVS_idioma: devuelve el idioma correspondiente
+	MVS_tipolistado: devuelve el tipo de listado que mostrará
+	MVS_anyo: devuelve el anyo en cuestión
+	MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer>
+	
+Objetos:
+	#gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo): devuelve la URL hacia el elemento en función del año en cuestión
+	-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>		
+</head>
+<body>
+	<div th:fragment="capcelera_buscador" th:remove="tag">
+		<p class="navLlistat">
+			<!-- MVS_listadoanyos: devuelve una lista con los años  -->
+			<span th:if="${#lists.isEmpty(MVS_listadoanyos)}!=true" th:remove="tag"> 
+				<span th:text="#{noticia.anyos}" th:remove="tag">Anys</span>  
+				[<span th:each="anyo:${MVS_listadoanyos}" th:remove="tag">
+					<span th:if="${anyo}=='-1'" th:remove="tag">
+					<!-- #gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo): devuelve la URL hacia el elemento en función del año en cuestión -->
+					<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+					<!-- MVS_claseelemento: devuelve el tipo de elemento -->
+					<!-- MVS_idioma: devuelve el idioma correspondiente  -->	
+						<a id="" th:id="(${anyo}=='-1')==true ? Tots:(${anyo})" href="noticias.html"
+						th:href="@{${#gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo)}}"
+						th:onclick="'onClickAnyo(Tots)'"
+						th:text="(${anyo}=='-1')==true ? Tots:(${anyo})">lista años</a>&nbsp;
+					</span>
+					<span th:if="${anyo}!='-1'" th:remove="tag">
+					<!-- #gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo): devuelve la URL hacia el elemento en función del año en cuestión -->
+						<a id="" th:id="(${anyo}=='-1')==true ? Tots:(${anyo})" href="noticias.html"
+						th:href="@{${#gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo)}}"
+						th:onclick="'onClickAnyo(' + ${anyo} + ')'"
+						th:text="(${anyo}=='-1')==true ? Tots:(${anyo})">lista años</a>&nbsp;
+					</span>					
+				</span>]
+			</span>
+		</p>
+		<h2 id="titolPagina">
+			<!-- MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+			<span th:text="${MVS_tipolistado}" th:remove="tag">Tipo listado</span> 
+			<!-- MVS_anyo: devuelve el anyo en cuestión -->
+			<span th:if="${MVS_anyo} !=null" th:remove="tag">			
+				<span th:if="${MVS_anyo}==-1" th:text="'Tots'" th:remove="tag">
+				Año
+				</span>
+				<span th:if="${MVS_anyo}!=-1" th:text="${MVS_anyo}" th:remove="tag">
+				Año
+				</span>
+			</span>
+		</h2>
+		<!-- MVS_claseelemento: devuelve el tipo de elemento -->
+		<div th:if="${MVS_claseelemento.buscador}=='S'" th:remove="tag">
+			<form action="#">
+				<p class="navLlistat">
+					<label th:text="(#{listarnoticias.introduce}) + ':'">Introduïu
+						el text a cercar:</label> <input type="text" name="filtro" />&nbsp; <input
+						type="submit" name="btnSsearch" value=""
+						th:value="#{general.buscar}" />
+				</p>
+			</form>
+		</div>
+		<div th:if="${MVS_anyo} !=null" th:remove="tag">
+			<div th:if="${MVS_anyo}=='-1'" th:with="anyo='Tots'" th:remove="tag">
+			<script type="text/javascript">
+		   anyo = "<div th:text='${anyo}' th:remove='tag'></div>";
+		  document.getElementById(anyo).style.fontWeight= "bold"; 
+		</script>
+		</div>
+		<div th:if="${MVS_anyo}!='-1'" th:remove="tag">
+			<script type="text/javascript">
+		   anyo = "<div th:text='${MVS_anyo}' th:remove='tag'></div>";
+		  document.getElementById(anyo).style.fontWeight= "bold"; 
+		</script>
+		</div>
+		</div>
+		<!-- MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer> -->
+		<div th:if="${MVS_parametros_pagina.nreg}==0" th:remove="tag">
+			<p
+				th:text="(#{listarnoticias.nohay}) + ' ' +(${MVS_tipolistado}) + '.'">No
+				s`han trobat tipo listado.</p>
+		</div>
+	</div>
+</body>
+</html>

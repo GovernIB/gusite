@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra una encuesta.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_encuesta: devuelve una encuesta en cuestión
+	MVS_manteniment: devuelve una instancia a un nuevo objeto
+	MVS_htmlEncuestaParsed: devuelve la encuesta en cuestión parseada y montada
+	
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_encuesta: devuelve una encuesta en cuestión-->
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:if="${MVS_encuesta} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo}">Microsite
+	Título - encuesta traduce título</title>	
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsEncuesta.css"
+	th:href="@{/resources/css/estilsEncuesta.css}"></link>
+</section>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag"></div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- informacio con o sin menu -->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">			
+			<!-- MVS_manteniment: devuelve una instancia a un nuevo objeto-->
+			<div th:if="${MVS_manteniment} !=null" th:remove="tag">
+				<div align="center"
+					style="border: 2px solid; border-radius: 5px; padding: 10px;"
+					th:text="#{encuesta.mantenimiento}">Per motius de manteniment
+					l'enquesta no estarà accesible durant unes hores.</div>
+			</div>
+			<!-- MVS_htmlEncuestaParsed: devuelve la encuesta en cuestión parseada y montada-->
+			<div th:if="${MVS_manteniment} ==null" th:remove="tag">			
+ 				<!-- <div th:utext="${MVS_htmlEncuestaParsed}" th:remove="tag"></div> -->			
+ 			<!-- encuestaHTMLparseada -->
+			<div th:replace=" encuesta/encuestaparseada :: encuestaHTMLParseada">Encuesta Parseada</div> 	
+ 			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra mensaje de error genérico.
+
+Variables:
+	MVS_errparam: devuelve String de error de contenido de un site
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
+<!-- MVS_errparam: devuelve String de error de contenido de un site -->
+<title th:if="${MVS_errparam.aviso} !=null"
+	th:text="${MVS_errparam.aviso}"></title>
+<script type="text/javascript" src="/resources/js/globales.js"
+	th:src="@{/resources/js/globales.js}"></script>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+<link th:remove="tag" th:utext="${MVS_css}" />
+<script th:replace="general/scriptmenu :: script"></script>
+</head>
+<body>
+	<!-- contenidor -->
+	<div id="contenedor">
+		<!-- capçal -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:remove="(${MVS_microsite.tipocabecera}=='0')==true ? all : none"
+			id="" th:fragment="cabeceraReducida">
+			<div
+				th:remove="(${MVS_microsite.tipocabecera}=='2')==true ? all : none">
+				<div id="capsal">
+					<div th:if="${MVS_microsite.restringido}=='S'">
+						<a href="index.html" id="lang" name="lang" accesskey="0"
+							class="destacat"> <img class="logo"
+							src="intranet/imgs/capsal/logo.gif"
+							th:src="@{/intranet/imgs/capsal/logo.gif}"
+							alt="Logo del Govern de les Illes Balears" />
+						</a>
+					</div>
+					<div th:if="${MVS_microsite.restringido}!='S'">
+						<a href="index.html" id="lang" name="lang" accesskey="0"
+							class="destacat"> <img class="logo"
+							src="resources/imgs/cap/logo.gif"
+							th:src="@{/resources/imgs/cap/logo.gif}"
+							alt="Logo del Govern de les Illes Balears" /></a>
+					</div>
+				</div>
+			</div>
+			<div
+				th:remove="(${MVS_microsite.tipocabecera}=='1')==true ? all : tag"
+				th:utext="${MVS_microsite.traduce.cabecerapersonal}">Cabecera
+				personal microsite</div>
+		</div>
+		<!--  Fi capçal -->
+		<!-- continguts -->
+		<div id="continguts">
+			<!-- missatge -->
+			<div id="missatge">
+				<p align="center">
+					<strong> 
+							<span th:text="#{error.titulo}" th:remove="tag">Error:</span>
+							<span th:if="${exception} !=null" th:remove="tag">
+								<span th:text="${exception}" th:remove="tag"></span>
+								 <span th:text="${exception.message}" th:remove="tag"></span> 
+							</span>
+							<span th:if="${exception} ==null" th:remove="tag">
+								<span th:if="${MVS_errparam} !=null" th:remove="tag">
+									<span th:if="${MVS_errparam.mensaje} !=null" th:text="${MVS_errparam.mensaje}" th:remove="tag"></span>
+									<span th:if="${MVS_errparam.descripcion} !=null" th:text="${MVS_errparam.descripcion}" th:remove="tag"></span>
+									<span th:if="${MVS_errparam.accion} !=null" th:text="${MVS_errparam.accion}" th:remove="tag"></span>
+								</span>
+							</span>							   
+					</strong>
+				</p>
+			</div>
+			<!-- fi missatge -->
+		</div>
+		<div th:if="${MVS_microsite} ==null" th:remove="tag">
+			<div id="info"></div>
+		</div>
+		<!-- fi continguts -->
+	</div>
+	<!-- fi contenidor -->
+</body>
+</html>

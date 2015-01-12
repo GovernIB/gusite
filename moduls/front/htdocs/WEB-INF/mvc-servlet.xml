@@ -1,0 +1,76 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd">
+
+
+	<mvc:annotation-driven />
+
+	<!-- Components base package -->
+	<context:component-scan base-package="es.caib.gusite.front" />
+
+	<!-- Static media files (imgs, css, js...). See RequestUtil.RESOURCE_PATTERN 
+		and open.jsp -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    <property name="maxUploadSize" value="268435456"/> <!-- 256 megs -->
+	</bean>
+
+	<!-- Interceptors (order matters) -->
+	<!-- <mvc:interceptors> </mvc:interceptors> -->
+
+	<!-- thymeleaf IMPORTANTE: para correr (temporalmente, por ahora) en jboss3_caib, 
+		hay que eliminar el jar xml-apis de endorsed, ya que en java 1.6 ya está 
+		en el JRE -->
+	<bean id="templateResolver"
+		class="org.thymeleaf.spring3.templateresolver.SpringResourceTemplateResolver">
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
+		<!-- TODO: fijar a true en producción -->
+		<property name="cacheable" value="false" />
+	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+
+		<!-- These lines add the dialect to Thymeleaf -->
+		<property name="additionalDialects">
+			<set>
+				<bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
+				<bean class="es.caib.gusite.front.newDialect.GusiteDialect" />
+			</set>
+		</property>
+		<!-- -->
+
+	</bean>
+
+
+
+	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+		<property name="templateEngine" ref="templateEngine" />
+		<property name="characterEncoding" value="UTF-8" />
+	</bean>
+
+
+	<!-- i18n -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="fallbackToSystemLocale" value="false" />
+		<property name="cacheSeconds" value="2" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="basename" value="WEB-INF/classes/ApplicationResources_front" />
+	</bean>
+
+	<bean id="localeResolver" class="es.caib.gusite.front.general.UriLocaleResolver">
+		<property name="defaultLocale" value="ca" />
+	</bean>
+
+</beans>

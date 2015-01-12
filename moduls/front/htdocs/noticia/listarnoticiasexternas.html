@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra el listado de noticias externas.
+
+Variables: 
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_tipolistado: devuelve el tipo de listado que mostrará
+	MVS_microsite: devuelve un microsite a partir de su clave unica 
+	MVS_mchtml: devuelve código html externo
+	MVS_idioma: devuelve el idioma correspondiente
+	MVS_claseelemento: devuelve el tipo de noticia
+	-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+<title
+	th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite
+	título - tipo listado</title>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+</head>
+<body>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
+			campana Menu</div>
+	</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+	<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+		<!-- titol -->
+		<!-- MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+		<h2 th:text="${MVS_tipolistado}">Tipo listado</h2>
+		<!-- SE USA? -->
+		<!-- <div th:if="${MVS_mcstyle} !=null" th:remove="tag">
+			<style th:text="${MVS_mcstyle}"></style>
+		</div> -->
+		<!-- MVS_mchtml: devuelve código html externo -->
+		<div th:if="${MVS_mchtml} !=null" th:remove="tag">
+			<form action="noticias.html" name="formnoticiasexterno"
+				id="formnoticiasexterno">
+				<!--MVS_idioma: devuelve el idioma correspondiente  -->
+				<input type="hidden" name="lang" th:value="${MVS_idioma}" /> <input
+					type="hidden" name="nameform" value="formnoticiasexterno" /> 
+					<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+					<input
+					type="hidden" name="mkey" th:value="${MVS_microsite.claveunica}" />
+				<!-- MVS_claseelemento: devuelve el tipo de noticia -->	
+				<input type="hidden" name="tipo" th:value="${MVS_claseelemento.id}" />
+				<input type="hidden" name="pagina" value="1" />
+				<!-- MVS_mchtml: devuelve código html externo -->
+				<div th:text="${MVS_mchtml}" th:remove="tag"></div>
+			</form>
+		</div>
+		<!-- SE USA? -->
+		<!-- <div th:if="${MVS_mcjavascript} !=null" th:remove="tag">
+			<script type="text/javascript" th:text="${MVS_mcjavascript}"></script>
+		</div> -->
+		</div>
+	</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+
+

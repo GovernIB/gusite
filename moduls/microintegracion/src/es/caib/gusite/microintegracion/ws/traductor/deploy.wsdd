@@ -1,0 +1,55 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from AutomaticTranslationService WSDL service -->
+
+  <service name="AutomaticTranslationPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://lucysoftware.com/ws"/>
+      <parameter name="wsdlServiceElement" value="AutomaticTranslationService"/>
+      <parameter name="schemaUnqualified" value="http://lucysoftware.com/ws"/>
+      <parameter name="wsdlServicePort" value="AutomaticTranslationPort"/>
+      <parameter name="className" value="es.caib.gusite.integracion.ws.traductor.AutomaticTranslationPortBindingImpl"/>
+      <parameter name="wsdlPortType" value="AutomaticTranslation"/>
+      <parameter name="typeMappingVersion" value="1.1"/>
+      <operation name="translate" qname="translate" soapAction="" >
+        <parameter qname="pns:Task" xmlns:pns="http://lucysoftware.com/ws" type="tns:task" xmlns:tns="http://lucysoftware.com/ws" mode="INOUT"/>
+      </operation>
+      <operation name="test" qname="test" soapAction="" >
+      </operation>
+      <parameter name="allowedMethods" value="translate test"/>
+      <parameter name="scope" value="Session"/>
+
+      <typeMapping
+        xmlns:ns="http://lucysoftware.com/ws"
+        qname="ns:param"
+        type="java:es.caib.gusite.integracion.ws.traductor.Param"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="http://lucysoftware.com/ws"
+        qname="ns:paramListType"
+        type="java:es.caib.gusite.integracion.ws.traductor.Param[]"
+        innerType="cmp-ns:param" xmlns:cmp-ns="http://lucysoftware.com/ws"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://lucysoftware.com/ws"
+        qname="ns:task"
+        type="java:es.caib.gusite.integracion.ws.traductor.Task"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

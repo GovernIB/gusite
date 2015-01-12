@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra la galería de fotos organizados por año.
+
+Variables: 
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_tipolistado: devuelve el tipo de listado que mostrará
+	MVS_microsite: devuelve un microsite a partir de su clave unica 
+	MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer>
+	MVS_listado: devuelve un listado de elementos de una colección
+	MVS_anchoFoto: devuelve el ancho de la foto
+	
+Objetos:
+	#gusuri.archivopub(MVS_microsite,i.imagen): devuelve la URL hacia el archivo en cuestion
+	-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+<title
+	th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite
+	título - tipo listado</title>
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+<section th:remove="tag" layout:fragment="scriptExtra">
+	<div th:replace="noticia/mostrarGaleriaFotos :: lightboxResources"></div>
+</section>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsListarNoticias.css"
+	th:href="@{/resources/css/estilsListarNoticias.css}"></link>
+</section>
+</head>
+<body>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
+			campana Menu</div>
+	</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<div th:replace="noticia/mostrarGaleriaFotos :: GaleriaFotos"></div>
+	</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+

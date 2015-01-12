@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+
+	<!--  
+	 Hay recursos referenciados relativos desde archivos css que se cargan como archivopub.
+	 En el caso de los css es importante hacer un redirect para que luego las imágenes
+	 referenciadas desde los css funcionen
+	-->
+        <rule>
+            <from>/(.*)/f/css/(.*)</from>
+            <to type="permanent-redirect">%{context-path}/resources/css/$2</to>
+        </rule>
+
+        <rule>
+            <from>/(.*)/f/imgs/(.*)</from>
+            <to>%{context-path}/resources/imgs/$2"</to>
+        </rule>
+
+        <rule>
+            <from>/(.*)/f/v1/css/(.*)</from>
+            <to type="permanent-redirect">%{context-path}/resources/css/$2</to>
+        </rule>
+
+        <rule>
+            <from>/(.*)/f/v4/css/(.*)</from>
+            <to type="permanent-redirect">%{context-path}/resources/css/$2</to>
+        </rule>
+
+        <rule>
+            <from>/(.*)/f/v1/imgs/(.*)</from>
+            <to>/resources/imgs/$2</to>
+        </rule>
+
+        <rule>
+            <from>/(.*)/f/v4/imgs/(.*)</from>
+            <to>/resources/imgs/$2</to>
+        </rule>
+
+	<!--  
+	 Hay imágenes referenciadas relativas en contenidos estáticos, css, etc. 
+	-->
+        <rule>
+            <from>/(.*)/archivopub.do?(.*)</from>
+            <to>/archivopub.do?$2</to>
+        </rule>
+        
+
+</urlrewrite>
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN" 
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	
+<hibernate-configuration>
+ <session-factory>
+  <property name="connection.datasource">java:/@datasource.jndi.micro@</property>
+  <property name="dialect">@hibernate.dialect@</property>
+  
+  <!-- TODO amartin: ¿por qué se repiten estas propiedades? -->
+  <property name="show_sql">@hibernate.show_sql@</property>
+  <property name="hibernate.show.sql">@hibernate.show_sql@</property> 
+  
+  <property name="use_outer_join">true</property>
+  <property name="jdbc.batch_size">50</property>
+  
+  <property name="hibernate.cache.provider_class">@hibernate.cache.provider_class@</property>
+  <property name="hibernate.cache.region.factory_class">@hibernate.cache.region.factory_class@</property>
+  
+  <!-- TODO amartin: confirmar uso -->
+  <!-- <property name="hibernate.cache.use_second_level_cache">true</property> -->
+  
+  <!--
+  	  INFO amartin: visto en http://stackoverflow.com/a/9269059
+  	  Evita incompatibilidad entre el Hibernate que lleva JBoss y el del proyecto.
+   -->
+  <property name="hibernate.validator.apply_to_ddl">false</property>
+  <property name="hibernate.validator.autoregister_listeners">false</property>
+  <!-- /INFO -->
+  
+  <property name="cache.use_query_cache">false</property>
+  <property name="cache.provider_configuration_file_resource_path">ehcache-microsites.xml</property>
+  
+  <property name="transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property>
+  <property name="transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
+  <property name="hibernate.bytecode.use_reflection_optimizer">@hibernate.cglib@</property>
+
+  <mapping class="es.caib.gusite.micromodel.Accesibilidad"/>
+  <mapping class="es.caib.gusite.micromodel.Actividadagenda"/>
+  <mapping class="es.caib.gusite.micromodel.Agenda"/>
+  <mapping class="es.caib.gusite.micromodel.Archivo"/>
+  <mapping class="es.caib.gusite.micromodel.Auditoria"/>
+  <mapping class="es.caib.gusite.micromodel.Componente"/>
+  <mapping class="es.caib.gusite.micromodel.Contacto"/>
+  <mapping class="es.caib.gusite.micromodel.Contenido"/>
+  <mapping class="es.caib.gusite.micromodel.Convocatoria"/>
+  <mapping class="es.caib.gusite.micromodel.Correo"/>
+  <mapping class="es.caib.gusite.micromodel.DistribucionConvocatoria"/>
+  <mapping class="es.caib.gusite.micromodel.Encuesta"/>
+  <mapping class="es.caib.gusite.micromodel.Estadistica"/>
+  <mapping class="es.caib.gusite.micromodel.Faq"/>
+  <mapping class="es.caib.gusite.micromodel.Frqssi"/>
+  <mapping class="es.caib.gusite.micromodel.Idioma"/>
+  <mapping class="es.caib.gusite.micromodel.IdiomaMicrosite"/>
+  <mapping class="es.caib.gusite.micromodel.Lineadatocontacto"/>
+  <mapping class="es.caib.gusite.micromodel.ListaDistribucion"/>
+  <mapping class="es.caib.gusite.micromodel.Menu"/>
+  <mapping class="es.caib.gusite.micromodel.Microsite"/>
+  <mapping class="es.caib.gusite.micromodel.MicrositeCompleto"/>
+  <mapping class="es.caib.gusite.micromodel.Noticia"/>
+  <mapping class="es.caib.gusite.micromodel.Pregunta"/>
+  <mapping class="es.caib.gusite.micromodel.Respuesta"/>
+  <mapping class="es.caib.gusite.micromodel.RespuestaDato"/>
+  <mapping class="es.caib.gusite.micromodel.Temafaq"/>
+  <mapping class="es.caib.gusite.micromodel.Tipo"/>
+  <mapping class="es.caib.gusite.micromodel.Tiposervicio"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionActividadagenda"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionAgenda"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionComponente"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionContenido"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionEncuesta"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionFaq"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionFrqssi"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionLineadatocontacto"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionMenu"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionMicrosite"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionNoticia"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionPregunta"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionRespuesta"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionTemafaq"/>
+  <mapping class="es.caib.gusite.micromodel.TraduccionTipo"/>
+  <mapping class="es.caib.gusite.micromodel.Usuario"/>
+  <mapping class="es.caib.gusite.micromodel.UsuarioEncuesta"/>
+  <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioMicrosite"/>
+  <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioRespuesta"/>
+
+ </session-factory>
+</hibernate-configuration>

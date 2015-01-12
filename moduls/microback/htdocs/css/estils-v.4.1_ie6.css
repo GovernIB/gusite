@@ -1,0 +1,17 @@
+/* CSS Document */
+
+/* ids */
+
+#peu p { margin-top:-0.5em; }
+
+#titol { padding-left:0; margin-left:10px; }
+
+#continguts { _padding:0 1em 100px 1em; margin-right:10px; }
+
+table#llistat { float:none; width:90%; empty-cells:show; border:2px solid #bdd3ea; border-collapse:collapse; }
+
+/* formulari */
+
+form #idiomes { border-bottom:0; }
+
+form.formulari div.element { margin-left:10px; }

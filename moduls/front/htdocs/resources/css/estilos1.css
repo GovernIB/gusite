@@ -1,0 +1,593 @@
+/* CSS Document */
+body {
+	font: normal 75% Arial, Helvetica, sans-serif;
+	color: #494949;
+	background: url(../imgs/bkg_site.png) repeat-x top #9ec9e3;
+	margin: 0;
+	padding: 1em 0 0 0;
+}
+
+#contenedor {
+	margin: 0 auto;
+	width: 65em;
+}
+
+#continguts {
+	margin: 0;
+	padding-bottom: 2em;
+	background-color: #fff;
+	border-top: .1em solid #85bbe4;
+	border-bottom: .3em solid #85bbe4;
+}
+
+#laTablaObligada {
+	width: 100%;
+	border: 0;
+}
+
+/* enllaços */
+a {
+	color: #0047b2;
+}
+
+a.veureTot {
+	padding-right: 1.5em;
+	background: url(../imgs/enlaces/veuretot.gif) no-repeat right center;
+}
+
+a.docInfo {
+	background: url(../imgs/enlaces/ico_document.gif) no-repeat left top;
+	padding-left: 2em;
+}
+
+a.webExterna {
+	background: url(../imgs/enlaces/webexterna.gif) no-repeat left top;
+	padding-left: 2em;
+}
+
+/* imatges */
+img {
+	border: 0;
+}
+
+/* titols */
+h1 {
+	font-size: 1.4em;
+	margin: 0;
+	color: #000f21;
+	background-color: #85bbe4;
+	border-bottom: .05em solid #fff;
+	padding: .2em 0 .2em 3em;
+}
+
+h1 a {
+	text-decoration: none;
+	display: block;
+	color: #000f21;
+}
+
+h2 {
+	font-size: 1.4em;
+	margin: 0 0 1em 0;
+}
+
+h2.invisible {
+	display: none;
+}
+
+h3 {
+	font-size: 1.2em;
+	margin: 0 0 1em 0;
+}
+
+/* formularis */
+input,select {
+	vertical-align: middle;
+}
+
+select.tipoPetit {
+	font-size: 1em;
+}
+
+textarea {
+	font: normal 1em Arial, Helvetica, sans-serif;
+}
+
+form div.etiqueta {
+	display: block;
+	float: left;
+	width: 30%;
+	padding-right: .5em;
+	text-align: right;
+	padding-top: .25em;
+}
+
+form div.separacio {
+	display: table;
+	clear: both;
+	font-size: .4em;
+	height: 1em;
+}
+
+form p.botonera {
+	background-color: #efefef;
+	padding: .5em;
+	text-align: center;
+}
+
+form input.txt {
+	width: 25.9em;
+}
+
+/* llistes */
+
+/* tables */
+
+/* pàrrafs */
+p {
+	margin: 1em 0;
+}
+
+/* capes */
+div.sep {
+	clear: both;
+	height: .1em;
+	font-size: .1em;
+}
+
+div.tornarArrere {
+	border-top: 1px dashed #b8d7ef;
+	padding: 1em 0;
+	margin-top: 2em;
+}
+
+div.tornarArrere a {
+	background: url(../imgs/enlaces/04tornar.gif) no-repeat left center #fff;
+	padding-left: 2em;
+}
+
+/* capçal */
+#capsal {
+	padding: 0.5em 1em 0.8em 1em;
+	background: url(../imgs/capsal/fondo.gif) repeat-x #003575;
+	color: #fff;
+	text-align: right;
+}
+
+#capsal a {
+	color: #fff;
+}
+
+#capsal img.logo {
+	float: left;
+}
+
+#capsal #organisme {
+	font-size: .9em;
+	margin-bottom: .5em;
+}
+
+ul#capsalEnllasos {
+	position: relative;
+	background-color: #efefef;
+	margin: 0;
+	padding: .3em .7em;
+	text-align: right;
+	color: #000;
+}
+
+ul#capsalEnllasos li {
+	display: inline;
+	list-style: none;
+}
+
+ul#capsalEnllasos li a {
+	color: #002e63;
+}
+
+ul#capsalEnllasos li span.sep {
+	margin: 0 .5em;
+}
+
+/* molla pa */
+ul#mollaPa {
+	margin: 0;
+	padding-left: .7em;
+	line-height: 2em;
+	position: relative;
+	border-bottom: 1px solid #e3e3e3;
+}
+
+ul#mollaPa li {
+	list-style: none;
+	display: inline;
+	padding-right: 1.3em;
+	background: url(../imgs/mollapa/flecha.gif) no-repeat right center #fff;
+}
+
+/* peu */
+#peu {
+	padding-top: 0.5em;
+	height: 3.5em;
+	color: #000;
+	border-top: .5em solid #003574;
+}
+
+#peu img#logoAD {
+	float: left;
+	position: relative;
+	top: -0.5em;
+}
+
+#peu ul#enllasos {
+	float: right;
+	margin: 0;
+	padding-right: 1em;
+}
+
+#peu ul#enllasos li {
+	display: inline;
+}
+
+#peu ul#enllasos li a {
+	color: #000;
+}
+
+#peu span.sep {
+	margin: 0 .5em;
+}
+
+/* enllaç destacat */
+#enllasDest {
+	position: relative;
+	height: 123px;
+	overflow: hidden;
+}
+
+#enllasDest #enllas {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 40em;
+	height: 123px;
+	padding: 30px 0 0 30em;
+	text-decoration: none;
+	background: url(../imgs/index/bp_cortina.gif) no-repeat 300px 0px;
+}
+
+#enllasDest #enllas .frase1 {
+	font: normal 1.7em "Times New Roman", Times, serif;
+	color: #000;
+}
+
+#enllasDest #enllas .frase2 {
+	font: normal 3em "Times New Roman", Times, serif;
+	color: #00276c;
+	line-height: .7em;
+}
+
+#enllasDestPeu {
+	background: url(../imgs/index/bp_sombra.gif) repeat-x #fff;
+	height: 2em;
+	font-size: 1em;
+	border-top: 1px solid #fff;
+}
+
+/* menú */
+#marcLateral {
+	background-color: #ecf4fb;
+	padding: .5em 1em;
+	width: 15em;
+	vertical-align: top;
+}
+
+#marcLateral ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 15em;
+}
+
+#marcLateral ul li {
+	padding-bottom: .5em;
+}
+
+#marcLateral ul li a {
+	padding-left: 1.5em;
+	background: url(../imgs/listados/menu_off.gif) no-repeat left top
+		#ecf4fb;
+	display: block;
+}
+
+#marcLateral ul li a.pareAD {
+	padding-left: 1.5em;
+	background: url(../imgs/listados/menu_off.gif) no-repeat left top
+		#ecf4fb;
+}
+
+#marcLateral ul li a.pareADon {
+	padding-left: 1.5em;
+	background: url(../imgs/listados/menu_on.gif) no-repeat left top #ecf4fb;
+}
+
+#marcLateral ul li ul {
+	display: none;
+	padding: .5em 0 0 2.5em;
+	list-style: circle;
+	margin: 0;
+	width: 85%;
+}
+
+#marcLateral ul li ul li a {
+	background: none;
+	padding-left: 0;
+	font-size: .9em;
+}
+
+#marcLateral h3 {
+	margin-top: 1em;
+}
+
+/* info */
+td#info {
+	padding: 0 1em 1em 1em;
+	vertical-align: top;
+}
+
+div#info {
+	padding: 0 1em 1em 1em;
+}
+
+/* INDEX */
+
+/* agenda */
+#agenda {
+	float: left;
+	width: 21em;
+	border-right: 1px dashed #85bbe4;
+	padding-right: 1em;
+}
+
+#agenda h2 {
+	padding: .5em 0 0 2em;
+	color: #00276c;
+	background: url(../imgs/titol/ico_blau.gif) no-repeat left top #fff;
+}
+
+#agenda #agendaLlistat {
+	float: right;
+	width: 24em;
+}
+
+#agenda #agendaLlistat p {
+	margin-top: .4em;
+}
+
+#agenda #agendaLlistat ul {
+	margin: 0 0 0 2em;
+	padding: 0;
+}
+
+#agenda #agendaLlistat ul li {
+	margin-bottom: .8em;
+}
+
+.calendariTabla {
+	border: 1px solid #ccc;
+	width: 20em;
+}
+
+.calendariTabla th {
+	padding: .5em;
+	background-color: #efefef;
+	color: #000;
+}
+
+.calendariTabla tr.par {
+	background-color: #f7f7f7;
+}
+
+.calendariTabla td {
+	text-align: center;
+	padding: .2em;
+	border: 1px solid #efefef;
+	border-collapse: collapse;
+}
+
+.calendariTabla td.acte {
+	font-weight: bold;
+}
+
+.calendariTabla td.acte a {
+	display: block;
+}
+
+/* noticies */
+div#noticies {
+	float: right;
+	width: 23em;
+}
+
+div#noticies h2 {
+	padding: .5em 0 0 2em;
+	color: #00276c;
+	background: url(../imgs/titol/ico_blau.gif) no-repeat left top #fff;
+}
+
+div#noticies ul {
+	margin: 0;
+	padding: 0;
+}
+
+div#noticies ul li {
+	list-style: none;
+	margin: 0 0 1em 1em;
+	clear: left;
+}
+
+div#noticies ul li img {
+	float: left;
+	margin-right: .8em;
+	border: 1px solid #003574;
+	margin-bottom: 1em;
+}
+
+div#noticies p {
+	margin-top: 2em;
+	text-align: right;
+}
+
+/* continguts desplegats */
+table#contingutsDesplegats {
+	width: 100%;
+	border: 0;
+}
+
+table#contingutsDesplegats td {
+	width: 33%;
+	background-color: #ecf4fb;
+	padding: 1em;
+	vertical-align: top;
+}
+
+table#contingutsDesplegats td ul {
+	list-style: circle;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+table#contingutsDesplegats td ul li {
+	margin-bottom: 1em;
+}
+
+/* PAGINES INTERNES */
+#continguts h2#titolPagina {
+	font-size: 1.7em;
+	color: #00276c;
+	padding: .5em 0;
+	margin: 0;
+	border-bottom: 1px dashed #b8d7ef;
+}
+
+/* pag noticies */
+ul#noticiesLlistat {
+	margin: 0;
+	padding: 0;
+}
+
+ul#noticiesLlistat li {
+	list-style: none;
+	margin: 0 0 1em 1em;
+	clear: left;
+}
+
+ul#noticiesLlistat li img {
+	float: left;
+	margin-right: .8em;
+	border: 1px solid #003574;
+	margin-bottom: 1em;
+}
+
+#infoNoticia p {
+	text-align: justify;
+}
+
+p.navLlistat,p#navLlistat {
+	text-align: center;
+	background-color: #f7f7f7;
+	padding: .5em;
+}
+
+h3#titolNoticia {
+	margin-top: 1em;
+}
+
+p#subtitol {
+	font-weight: bold;
+}
+
+img#imgNoticia {
+	float: left;
+	margin: 0 1em 1em 0;
+}
+
+p#fontNoticia {
+	font-style: italic;
+}
+
+/* pag agenda */
+#agendaLlistat {
+	margin-bottom: 3em;
+}
+
+#agendaLlistat li {
+	margin-bottom: .5em;
+}
+
+/* pag FAQs */
+#infoFAQ dt {
+	font-style: italic;
+	margin-bottom: .2em;
+}
+
+#infoFAQ dd {
+	margin-bottom: .5em;
+}
+
+/* mapa web */
+div#pagMapaWeb h3 {
+	margin-top: 2em;
+}
+
+div#pagMapaWeb ul {
+	list-style: none;
+	margin: 0 2em;
+	padding: 0;
+}
+
+div#pagMapaWeb ul li {
+	padding: 0 0 .5em 2em;
+	background: url(../imgs/enlaces/mapawebnivel1.gif) no-repeat left top
+		#fff;
+}
+
+div#pagMapaWeb ul li ul {
+	margin-top: .5em;
+	list-style: none;
+	margin: .5em 1em 0 1em;
+}
+
+div#pagMapaWeb ul li ul li {
+	padding-left: 2.8em;
+	background: url(../imgs/enlaces/mapawebnivel2.gif) no-repeat left top
+		#fff;
+}
+
+/* agenda */
+div#calendariLateral {
+	float: left;
+	width: 20em;
+	margin-right: 2em;
+}
+
+div#calendariLateral p {
+	margin-top: .4em;
+}
+
+div#calendariLateral ul {
+	margin: 0 0 0 2em;
+	padding: 0;
+}
+
+div#calendariLateral ul li {
+	margin-bottom: .8em;
+}
+
+div#calendariLateral table {
+	width: 17em !important;
+}
+
+div#agendaLlistat ul li {
+	margin-bottom: 1em;
+}

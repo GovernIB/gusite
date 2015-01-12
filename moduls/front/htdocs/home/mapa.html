@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra la información previa antes de acceder a la intranet.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_listacabecera: devuelve una lista de arrays para la cabecera
+	MVS_idioma: devuelve el idioma correspondiente
+	MVS_menu: devuelve el menú principal de un microsite listo para ser visualizado por el público
+
+Objetos:
+	#gusuri.contenido(MVS_microsite,MVS_idioma,contenido):devuelve la URL hacia el contenido con el id correspondiente
+	
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión-->
+<title th:if="${MVS_micrositetitulo} !=null"
+	th:text="(${MVS_micrositetitulo}) + ' - Mapa'">Mapa</title>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+</head>
+<body>
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+		<section th:remove="tag" layout:fragment="menuLateral">
+		</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<div id="infoNoMenu">
+			<div class="contenedorMapa">
+				<h2 th:text="#{mapa.mapaweb}">Mapa web</h2>
+				<div id="pagMapaWeb">
+					<h3 th:text="#{mapa.apartados}">Apartats generals</h3>
+					<ul>
+						<li th:remove="tag">
+						<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+							<ul
+								th:remove="(${MVS_microsite.tipocabecera}=='1')==false ? all : tag"
+								th:with="${MVS_microsite.tipocabecera}='1'">
+								<li th:remove="tag">
+									<ul th:remove="tag">
+									<!-- MVS_listacabecera: devuelve una lista de arrays para la cabecera -->
+										<li th:if="${MVS_listacabecera} !=null" th:remove="tag">
+											<ul th:each="i,iterStat:${MVS_listacabecera}"
+												th:with="indice2=${iterStat.index}" th:remove="tag">
+												<li th:if="${#strings.contains(i.value1,'http')}==true">
+												<a href="" th:href="@{${i.value1}}"
+													th:text="${i.key}">VALOR HTTP CABECERA 1</a></li>
+												<li th:unless="${#strings.contains(i.value1,'http')}==true">
+												<a href=""
+													th:href="@{${i.value1}}"
+													th:text="${i.key}">VALOR HTTP CABECERA 2</a></li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li th:remove="tag">
+						<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+							<ul
+								th:remove="(${MVS_microsite.tipopie}=='1')==false ? all : tag"
+								th:with="${MVS_microsite.tipopie}='1'">
+								<li th:remove="tag">
+									<ul th:remove="tag">
+									<!-- MVS_listapie: devuelve una lista de arrays para el pie -->
+										<li th:if="${MVS_listapie} !=null" th:remove="tag">
+											<ul th:each="i,iterStat:${MVS_listapie}"
+												th:with="indice=${iterStat.index}" th:remove="tag">
+												<li th:if="${#strings.contains(i.value,'http')}==true">
+												<a href="" th:href="@{${i.value1}}"
+													th:text="${i.key}">VALOR HTTP PIE 1</a></li>
+												<li th:unless="${#strings.contains(i.value,'http')}==true">
+												<a href=""
+													th:href="@{${i.value}}"
+													th:text="${i.key}">VALOR HTTP PIE 2</a></li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<!-- MVS_idioma: devuelve el idioma correspondiente -->
+					<div th:remove="tag" th:with="idiomaDefault=${MVS_idioma}">
+					<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+					<div th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : tag">
+						<!-- MVS_menu: devuelve el menú principal de un microsite listo para ser visualizado por el público -->
+						<ul th:if="${MVS_menu}!=null" th:remove="tag">
+							<li th:each="i : ${MVS_menu}" th:remove="tag">
+								<ul th:if="${i.traducciones} !=null" th:remove="tag">
+									<li th:remove="tag">
+									<ul th:each="menuTraduccion : ${i.traducciones}" th:remove="tag">
+										<li th:with="idiomaIter=${menuTraduccion.key}, idiomaIterUpper=${#strings.toUpperCase(idiomaIter)}" th:remove="tag">
+										<ul th:if="${idiomaIterUpper}==${idiomaDefault}" th:remove="tag">
+										<li th:remove="tag">
+												<h3 th:text="${menuTraduccion.value.nombre}">Traduce Nombre</h3>
+											<ul th:remove="tag"> 
+											 <li th:remove="tag">
+												<ul th:each="contenido : ${i.listacosas}">
+													<li  th:remove="tag" >
+														<div th:with="objeto=${contenido}" th:type="Object"
+															th:remove="tag">
+															<ul th:if="${objeto instanceof T(es.caib.gusite.micromodel.Contenido)}"
+																th:remove="tag">
+																<li th:with="idconteactual1=${contenido.id}" th:remove="tag">
+																	<ul th:remove="tag">
+																		<li   th:with="urlExterna1=${contenido.urlExterna}"
+																			th:remove="tag">
+																			<ul th:remove="tag">
+																				<li  
+																					th:id="${idconteactual1}==${idcontenido} ? ${idconteactual1} : ''"
+																					th:class="${idconteactual1}==${idcontenido} ? 'seleccionado' : ''">
+																					<div th:each="contenidoTraduccion : ${contenido.traducciones}" th:remove="tag">
+																					<div th:with="idiomaIter=${contenidoTraduccion.key}, idiomaIterUpper=${#strings.toUpperCase(idiomaIter)}" th:remove="tag">
+																						<span th:if="${idiomaIterUpper}==${idiomaDefault}" th:remove="tag">
+																							<!-- #gusuri.contenido(MVS_microsite,MVS_idioma,contenido):devuelve la URL hacia el contenido con el id correspondiente -->
+																							<a href="contenido.html"
+																							th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}"
+																							target=""
+																							th:target="(${urlExterna1}==true) ? '_blank' : '_self'"
+																							th:text="${contenidoTraduccion.value.titulo}">Traduce Título</a>
+																						</span>
+																					</div>
+																					</div>
+																				</li>
+																			</ul>
+																		</li>
+																	</ul>
+																</li>
+															</ul>
+															<ul
+																th:unless="${objeto instanceof T(es.caib.gusite.micromodel.Contenido)}"
+																th:remove="tag">
+																<li th:with="tamano=${#lists.size(contenido.listacosas)}"
+																	th:remove="tag">
+																	<ul th:remove="tag">
+																		<li th:if="${tamano} !=1" th:remove="tag">
+																			<ul th:if="${contenido.traducciones} !=null" th:remove="tag">
+																				<li th:remove="tag">
+																				<div th:each="k : ${contenido.traducciones}" th:remove="tag">
+																					<ul th:with="idiomaIter=${k.key}, idiomaIterUpper=${#strings.toUpperCase(idiomaIter)}" th:remove="tag">
+																						<li th:remove="tag">
+																						<ul th:if="${idiomaIterUpper}==${idiomaDefault}" th:remove="tag">
+																						<li>
+																							<a href="#" class="pareADon" th:text="${k.value.nombre}"></a>
+																					<ul >
+																					<li th:remove="tag">
+																					<div th:each="k : ${contenido.listacosas}" th:remove="tag">
+																					<ul th:remove="tag">
+																						<li  th:with="idconteactual=${k.id}"
+																							th:remove="tag">
+																							<ul th:remove="tag">
+																								<li th:with="urlExterna=${k.urlExterna}"
+																									th:remove="tag">
+																									<ul th:remove="tag">
+																										<li th:id="${idconteactual}==${idcontenido} ? ${idconteactual} : ''"
+																											th:class="${idconteactual}==${idcontenido} ? 'seleccionado' : ''">
+																											<div th:each="contenidoLista : ${k.traducciones}" th:remove="tag">
+																											<ul  th:remove="tag">
+																												<li th:with="idiomaIter=${contenidoLista.key}, idiomaIterUpper=${#strings.toUpperCase(idiomaIter)}" th:remove="tag">
+																													<span th:if="${idiomaIterUpper}==${idiomaDefault}" th:remove="tag">
+																														<!-- #gusuri.contenido(MVS_microsite,MVS_idioma,k):devuelve la URL hacia el contenido con el id correspondiente -->
+																														<a href="contenido.html" target=""
+																														th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,k)}}"
+																														th:target="(${urlExterna}==true)? '_blank' : '_self'"
+																														th:text="${contenidoLista.value.titulo}">Traduce
+																															Título</a>
+																													</span>
+																												</li>	
+																											</ul> 
+																											</div>
+																										</li>
+																									</ul>
+																								</li>
+																							</ul>
+																						</li>
+																						</ul>
+																						</div>
+																						</li>
+																					</ul>															
+																						</li> 
+																						</ul>
+																						</li>																						
+																					</ul>
+																				</div>
+																				</li>
+																			</ul>
+																		 </li> 
+																		 <li th:remove="tag"> 
+																			<ul th:if="${tamano} ==1" th:remove="tag">
+																				<li th:with="idconteactual=${contenido.listacosas[0].id}"
+																					th:remove="tag">
+																					<ul th:remove="tag">
+																						<li
+																							th:with="urlExterna=${contenido.listacosas[0].urlExterna}"
+																							th:remove="tag">
+																							<ul th:remove="tag">
+																								<li th:id="${idconteactual}==${idcontenido} ? ${idconteactual} : ''"
+																									th:class="${idconteactual}==${idcontenido} ? 'seleccionado' : ''">
+																									<ul th:each="k : ${contenido.traducciones}" th:remove="tag">
+																										<li th:with="idiomaIter=${k.key}, idiomaIterUpper=${#strings.toUpperCase(idiomaIter)}" th:remove="tag">
+																											<span th:if="${idiomaIterUpper}==${idiomaDefault}" th:remove="tag">
+																												<!-- #gusuri.contenido(MVS_microsite,MVS_idioma,contenido.listacosas[0]):devuelve la URL hacia el contenido con el id correspondiente -->
+																												<a href="contenido.html" target=""
+																												th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido.listacosas[0])}}"
+																												th:target="(${urlExterna}==true)? '_blank' : '_self'"
+																												th:text="${k.value.nombre}">Traduce Nombre</a>
+																											</span>
+																										</li>
+																									</ul>
+																								</li>
+																							</ul>
+																						</li>
+																					</ul>
+																				</li>
+																			</ul>
+																		</li>
+																	</ul>
+																</li>
+															</ul>
+														</div>
+													</li>
+												</ul>
+												 </li>
+										</ul>
+										</li>
+										</ul>						
+										</li>
+									</ul>								
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>					
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+

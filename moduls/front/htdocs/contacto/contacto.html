@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra los datos a enviar de un contacto.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_idsite: devuelve el id del site en cuestión
+	MVS_idioma: devuelve el idioma correspondiente
+	MVS_contacto_titulo: devuelve el título del contacto en cuestión
+	MVS_contacto: devuelve los datos de un formulario de contacto
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_contacto_titulo: devuelve el título del contacto en cuestión -->
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:if="${MVS_contacto_titulo} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_contacto_titulo}">-</title>
+<!-- PARTE AÑADIDA PARA USAR EL LAYOUT DECORATOR "<SECTION>"-->
+<section th:remove="tag" layout:fragment="scriptExtra">
+	<script th:inline="javascript">
+	/***********************************************
+	* Validador de campos genericos requeridos v1.10- By VRS
+	***********************************************/
+	/*<![CDATA[*/
+		function checkrequired(which) {
+			var pass=true;
+			for (var i = 0; i < which.length; i++){
+			
+				var obj = which.elements[i];
+				if (obj.name.substring(0,8)=="required") {
+					if (obj){
+						switch(obj.type){
+						case "select-one":
+							if (obj.selectedIndex == -1 || obj.options[obj.selectedIndex].text == "")
+								pass=false;
+							break;
+						case "select-multiple":
+							if (obj.selectedIndex == -1)
+								pass=false;
+							break;
+						case "text":
+						case "textarea":
+							if (obj.value == "" || obj.value == null)
+								pass=false;
+							break;
+						default:
+  					 	}
+					 	if (obj.type == undefined){
+							var blnchecked = false;
+							for (var j = 0; j < obj.length; j++){
+								if (obj[j].checked){
+									blnchecked = true;
+								}
+							}
+							if (!blnchecked){
+								pass=false;
+							}
+					  	}
+					}
+				}
+				if (!pass) break;
+			}
+			
+			if (!pass) {
+				var contactoCampoRequerido=/*[[#{contacto.camporequerido}]]*/;
+				alert(contactoCampoRequerido);
+				return false;
+			}
+			else
+				return true;
+			}
+		/*]]>*/
+</script>
+</section>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsContactos.css"
+	th:href="@{/resources/css/estilsContactos.css}"></link>
+</section>	
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag"></div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio con o sin menu -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+			<!-- MVS_contacto: devuelve los datos de un formulario de contacto -->
+			<div th:if="${MVS_contacto} !=null" th:remove="tag">
+				<h2 th:text="${MVS_contacto_titulo}"></h2>
+					<form  th:action="@{${#gusuri.contacto(MVS_microsite,MVS_idioma,MVS_contacto)}}"
+						onsubmit="return checkrequired(this)" enctype="multipart/form-data" method="post">
+							<!-- MVS_idsite: devuelve el id del site en cuestión -->
+							<input  type="hidden" name="idsite" th:value="${MVS_idsite}" /> 
+							<!-- MVS_idioma: devuelve el idioma correspondiente -->
+							<input
+								type="hidden" name="lang" th:value="${MVS_idioma}" /> <input
+								type="hidden" name="cont" th:value="${MVS_contacto.id}" />
+							<div th:each="i,iterStat : ${MVS_contacto_listatags}"
+								th:with="indice=${iterStat.index}" th:remove="tag">
+								<div class="separacio"></div>
+								<div class="etiqueta">
+									<label th:for="${i.key}" th:text="${i.key}">I KEY</label>
+								</div>
+								<div th:utext="${i.value}" th:remove="tag"></div>
+							</div>
+							<div class="separacio"></div>
+							<div th:if="${MVS_contacto.anexarch} =='S'" th:remove="tag">
+								<div class="etiqueta">
+									<label th:text="#{contacto.docanex}"> Document per
+										annexar</label> <input type="file" name="docAnex" id="docAnex" size="30" />
+								</div>
+							</div>
+						<p class="botonera">
+							<input name="btnanar" type="submit" th:value="#{contacto.enviar}"
+								tabindex="500" />
+						</p>						
+					</form>				
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

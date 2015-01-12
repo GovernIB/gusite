@@ -1,0 +1,33 @@
+/* CSS Document */
+
+#info h4,#infoNoMenu h4 {
+	font-weight: bold !important;
+	margin-bottom: 0px !important;
+}
+
+#info h2,#infoNoMenu h2 {
+	font-weight: bold !important;
+}
+
+#infoFAQ dl li dl dt,dd {
+	color: black !important;
+}
+
+.ie h4 {
+	color: black !important;
+}
+
+
+.tituloPregunta{
+	padding-bottom: 27px !important;
+}
+
+.tituloPreguntaIE{
+	padding-top: 22px !important;
+}
+
+.bloquePreguntas{
+margin-top: 29px !important;	
+}
+
+

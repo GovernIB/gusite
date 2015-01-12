@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra el listado de preguntas frecuentes.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_campanya: MVS_home_campanya devuelve un string preparado para insertar en un html.
+					   Ese string contiene el trozo de html que muestra la imagen de la campaña.
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_listado: devuelve un listado de elementos de una colección
+	MVS_idsite: devuelve el id del site en cuestión
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:if="${MVS_micrositetitulo} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + #{listarfaqs.listado}">Microsite
+	Título - Llistat de faqs</title>
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estilsFAQS.css"
+	th:href="@{/resources/css/estilsFAQS.css}"></link>	
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_campanya: MVS_home_campanya devuelve un string preparado para insertar en un html.
+					   Ese string contiene el trozo de html que muestra la imagen de la campaña. -->
+		<div th:if="${MVS_home_campanya} !=null"
+			th:utext="${MVS_home_campanya}" th:remove="tag">Campaña del home</div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+			<div class="contenedorFAQS">
+				<!-- titol -->
+				<h2 th:text="#{listarfaqs.preguntas}">Preguntes freqüents</h2>
+				<!-- informacio FAQ-->
+				<div id="infoFAQ">
+					<dl class="bloquePreguntas">	
+						<!-- MVS_listado: devuelve un listado de elementos de una colección -->
+						<div th:each="i : ${MVS_listado}" th:remove="tag">
+							<li class="nivel1" tabindex="1">
+								<!-- Todos menos explorer--> <span name="noie"
+								style="visibility: visible;" class="noie nivel1">
+									<h4 class="tituloPregunta" th:text="${i.tema}">i tema</h4> <span
+									th:each="j : ${i.listadopreguntas}" th:remove="tag"
+									th:fragment="contenidoIE">
+										<dl class="textoOculto" style="visibility: visible;">
+											<dt th:text="${j.traduce.pregunta}"></dt>
+											<dd th:text="${j.traduce.respuesta}">
+												<span th:if="${j.traduce.url} !=null" th:remove="tag">
+													<span th:with="externa=${j.traduce.url}" th:remove="tag">
+														<!-- MVS_idsite: devuelve el id del site en cuestión -->
+														<span
+														th:with="sitio=${MVS_idsite}, idsitio='idsite='+${sitio}, index=${#strings.indexOf(externa,idsitio)}"
+														th:remove="tag"> <a th:href="${j.traduce.url}"
+															th:target="(${index}==-1)==true ? '_blanck' : '_self'">
+																<span th:if="${j.traduce.urlnom} !=null" th:remove="tag">
+																	<span th:text="${j.traduce.urlnom}" th:remove="tag">
+																		traduce url</span>
+															</span> <span th:if="${j.traduce.urlnom} ==null" th:remove="tag">
+																	<span th:text="#{url.adicional}" th:remove="tag">Addicional</span>
+															</span>
+														</a>
+													</span>
+												</span>
+												</span> <br />
+											</dd>
+										</dl>
+								</span>
+							</span> <!-- explorer--> <span class="ie" name="ie"
+								style="visibility: hidden;"> <a href="#enlace"
+									name="enlace" class="nivel1">
+										<h4 class="tituloPreguntaIE" th:text="${i.tema}">i tema</h4>
+										<table class="falsa">
+											<tr>
+												<td><span th:replace="faq/listarfaqs :: contenidoIE"
+													th:remove="tag">Contenido IE</span></td>
+											</tr>
+										</table>
+								</a>
+							</span> <!-- explorer-->
+							</li>
+							<br />
+						</div>
+					</dl>
+				</div>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="scriptExtraBody1">
+		<script>
+ function browser() {
+	 var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+	  if (navigator.userAgent.indexOf("MSIE") !=-1) {navega ="iexplorer";}
+	  else if (navigator.userAgent.indexOf('Firefox') !=-1) {navega ="firefox";}
+	  else if (navigator.userAgent.indexOf('Chrome') !=-1) {navega ="chrome";}
+	  else if (navigator.userAgent.indexOf('Opera') !=-1) {navega ="opera";}
+	  else if(iOS==true){navega="IOS";}
+	  /* probar en un android y si hay el mismo problema que en iphone, implementar .js como en ios */
+	  else if ((navigator.userAgent.indexOf('Android') != -1)) {navega="android";}
+	  return navega;
+}	  
+</script>
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="scriptExtraBody2">
+		<script>
+if ("iexplorer"==browser()){
+	
+	var node=jQuery('.ie');
+	
+	node.removeAttr('style');
+	
+	node.attr('style', 'display:block');
+	
+	
+	var node2=jQuery('.noie');
+	
+	node2.removeAttr('style');
+	
+	node2.attr('style', 'display:none');
+	
+	var enlace=jQuery('a');
+	var href = jQuery(enlace).attr('href');
+
+	if(href="#enlace"){
+	enlace.removeAttr('href');
+	enlace.removeAttr('name');
+	enlace.attr('href', '#');
+	}
+
+}
+else if ("IOS"==browser()){
+		
+	var node=jQuery('.ie');
+
+	node.removeAttr('style');
+	
+	node.attr('style', 'display:block');
+	
+	var node2=jQuery('.noie');
+	
+	node2.removeAttr('style');
+	
+	node2.attr('style', 'display:none');
+
+	node.click(function(event) {
+		
+		var node3=jQuery('.textoOculto', this);
+		
+		var node4=jQuery('.textoOculto');
+		
+		  node3.toggle( "slow", function() {
+		    // Animation complete.
+		  });
+		  
+		  node4.attr('style', 'display:none');
+		  node3.attr('style', 'display:block');
+		  
+		 
+		  /* Act on the event */
+		});
+	
+}
+else{
+	var tabla =jQuery('.falsa');
+	
+	tabla.attr('style', 'display:none');
+	
+	
+	var node=jQuery('.ie');
+
+	node.removeAttr('style');
+	
+	node.attr('style', 'display:none');
+}
+</script>
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+

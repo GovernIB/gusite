@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra el listado de la agenda.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_agenda_diaevento: devuelve la fecha del evento en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_agenda_lista: devuelve el listado de eventos de la agenda
+	
+Objetos:
+	#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.imagen): devuelve la URL hacia el archivo en cuestión
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<!-- MVS_agenda_diaevento: devuelve la fecha del evento en cuestión -->
+<title
+	th:if="(${MVS_micrositetitulo} !=null) and (${MVS_agenda_diaevento} !=null)"
+	th:text="(${MVS_micrositetitulo} + '-' + #{agenda.eventos} + ' ' +${MVS_agenda_diaevento})"></title>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsAgenda.css"
+	th:href="@{/resources/css/estilsAgenda.css}"></link>
+</section>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!--	campanya-->		
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag">
+			<!-- Campaña temporal microsite -->
+		</div>
+		<!-- fin campanya-->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio con o sin menu -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'">
+			<!-- informacio-->
+			<div id="infoNoticia">
+				<!-- MVS_agenda_lista: devuelve el listado de eventos de la agenda -->
+				<div th:if="${#arrays.length(MVS_agenda_lista)}!=0" th:remove="tag">			
+					<h2 id="titolPagina" th:text="#{agenda.evento}">esdeveniment</h2>
+					<div th:with="actividadold=''" th:remove="tag">
+					 <div th:each="elementoAgenda,iterStat : ${MVS_agenda_lista}" th:with="indice=${iterStat.first},contador=${iterStat.index}" th:remove="tag">
+						 <div th:if="${elementoAgenda.actividad.traduce} !=null" th:remove="tag">
+							<div class="activitat">							
+								<div th:if="${elementoAgenda.actividad}!=null" th:remove="tag">									
+										<div th:with="actividad=${elementoAgenda.actividad.traduce.nombre}"
+											th:remove="tag">
+											<div>											
+											</div>
+											<div th:if="${indice}==false" th:with="actividadold=${MVS_agenda_lista[contador-1].actividad.traduce.nombre}" th:remove="tag">
+											<div th:if="${actividad}!=${actividadold}" th:remove="tag">
+												<p id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></p>
+											</div>
+											</div>
+											<div th:if="${indice}==true" th:remove="tag">
+											<div th:if="${actividad}!=${actividadold}" th:remove="tag">
+												<p id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></p>
+											</div>
+											</div>
+										</div>						
+								</div>
+								<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}"></h3>								
+								 <p id="subtitol">
+									<span
+										th:with="inicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')}"
+										th:remove="tag"> <span th:text="${inicio}"
+										th:remove="tag">01/01/2014</span>
+										  <span
+										th:with="horai=${#calendars.format(elementoAgenda.finicio, 'HH:mm')}" th:remove="tag">
+										 <span
+											th:if="${horai}!='00:00'"
+											th:text="#{agenda.cuando} +' '+ ${horai}" th:remove="tag">
+												Agenda cuando</span>
+									</span>
+									</span> 
+									 <span th:if="${elementoAgenda.ffin}!=null"
+										th:remove="tag" th:with="fin=${#calendars.format(elementoAgenda.ffin, 'dd/MM/yyyy')}"> 
+										<span th:text="'- '+${fin}" th:remove="tag"></span>
+										 <span th:with="horaf=${#calendars.format(elementoAgenda.ffin, 'HH:mm')}" th:remove="tag">
+										 	 <span th:if="${horaf}!='00:00'" th:remove="tag" th:text="#{agenda.cuando} +' '+ ${horaf}">
+													Agenda cuando</span>
+										</span>
+									</span>
+								</p>								
+								 <div th:if="${elementoAgenda.traduce.imagen}!=null" th:remove="tag">
+									<!-- #gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.imagen): devuelve la URL hacia el archivo en cuestión -->
+									<img id="imgNoticia" src="archivopub.html"
+										th:src="@{${#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.imagen)}}"
+										alt="" />
+								</div>
+								<p th:utext="${elementoAgenda.traduce.descripcion}" th:remove="tag">traduce i descripcion</p>
+								<div th:if="${elementoAgenda.traduce.documento} !=null" th:remove="tag">
+									<p th:utext="#{agenda.descdocumento}">agenda desdocumento</p>
+									<div th:remove="tag">
+										<p>
+										<span
+											th:text="#{general.archivo} + ' ' + ${elementoAgenda.traduce.documento.mime}+ ', ' + ${elementoAgenda.traduce.documento.peso} + ' bytes -'" th:remove="tag">
+											archivo general</span>
+										<a href="archivopub.html"
+											th:href="@{${#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.documento)}}"
+											target="blank" th:text="${elementoAgenda.traduce.documento.nombre}"></a>
+										</p>
+									</div>
+								</div>								
+								<div th:if="${elementoAgenda.traduce.url} !=null" th:remove="tag">
+									<div th:with="externa=${elementoAgenda.traduce.url}"
+										th:type="java.lang.String" th:remove="tag">
+										<div th:with="sitio=${MVS_idsite}" th:remove="tag">
+											<p>
+												<a href="" th:href="@{${elementoAgenda.traduce.url}}"
+													th:target="(${#strings.indexOf(externa,sitio)}==-1)? '__blanck' : '_self'">
+													<span
+													th:text="(${elementoAgenda.traduce.urlnom}!=null) ? (${elementoAgenda.traduce.urlnom}) : (#{url.adicional})"
+													th:remove="tag">traduce url o url adicional</span>
+												</a>
+											</p>
+										</div>
+									</div>
+								</div>							
+						</div>							
+						</div>
+					</div>
+					</div>
+				</div>			
+					<div th:if="${#arrays.length(MVS_agenda_lista)}==0">
+						<p id="fontNoticia" th:text="#{agenda.nohay}">No hay más
+							información</p>
+					</div>
+			</div>
+		</div>
+		<!--fin informacio-->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://lucysoftware.com/ws" xmlns:tns="http://lucysoftware.com/ws" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Task" type="tns:task"/>
+
+  <xs:complexType name="task">
+    <xs:sequence>
+      <xs:element name="InputParams" type="tns:paramListType"/>
+      <xs:element name="OutputParams" type="tns:paramListType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="verbose" type="xs:boolean" use="required"/>
+    <xs:attribute name="ID" type="xs:string"/>
+    <xs:attribute name="service" type="xs:string"/>
+    <xs:attribute name="state" type="xs:string"/>
+    <xs:attribute name="prio" type="xs:string"/>
+    <xs:attribute name="created" type="xs:string"/>
+    <xs:attribute name="running" type="xs:string"/>
+    <xs:attribute name="done" type="xs:string"/>
+    <xs:attribute name="removed" type="xs:string"/>
+    <xs:attribute name="creator" type="xs:string"/>
+    <xs:attribute name="engine" type="xs:string"/>
+    <xs:attribute name="removeReason" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="paramListType">
+    <xs:sequence>
+      <xs:element name="Param" type="tns:param" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="param">
+    <xs:sequence>
+      <xs:element name="txtValue" type="xs:string" minOccurs="0"/>
+      <xs:element name="binValue" type="xs:base64Binary" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+</xs:schema>
+

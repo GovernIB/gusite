@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra el mensaje de información de contacto enviado.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_contacto_titulo: devuelve el título del contacto en cuestión
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!--MVS_contacto_titulo: devuelve el título del contacto en cuestión  -->
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:if="${MVS_contacto_titulo} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + #{enviocontacto.confirmacion}">-</title>	
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag"></div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio con o sin menu -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+			<!-- titol -->
+			<h2 th:text="#{enviocontacto.resultado}">Resultat enviament</h2>
+			<!-- informacio -->
+			<br /> <br />
+			<div th:text="#{enviocontacto.ok} + '.'" th:remove="tag">S`ha
+				enviat el formulari satisfactòriament</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

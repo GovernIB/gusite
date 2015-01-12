@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+  <data-sources>
+  </data-sources>
+  <form-beans>
+    <form-bean name="BuscaOrdenaFaqActionForm" type="es.caib.gusite.microfront.faq.actionforms.BuscaOrdenaFaqActionForm"/>
+    <form-bean name="BuscaOrdenaNoticiasActionForm" type="es.caib.gusite.microfront.noticia.actionforms.BuscaOrdenaNoticiasActionForm"/>
+    <form-bean name="BuscaOrdenaContactosActionForm" type="es.caib.gusite.microfront.contacto.actionforms.BuscaOrdenaContactosActionForm"/>
+    <form-bean name="BuscaOrdenaAgendaActionForm" type="es.caib.gusite.microfront.agenda.actionforms.BuscaOrdenaAgendaActionForm"/>
+  </form-beans>
+  <global-exceptions>
+    <exception type="java.lang.Exception" path="/v4/error/errorgenerico.jsp" handler="org.apache.struts.action.ExceptionHandler" key="global.error.message" scope="request"/>
+  </global-exceptions>
+  <global-forwards>
+    <forward name="homeDO" path="/home.do"/>
+    <forward name="errorgenericov4" path="/v4/error/errorgenerico.jsp"/>
+    <forward name="errorgenericov1" path="/v1/error/errorgenerico.jsp"/>
+  </global-forwards>
+  <action-mappings>
+  	<action path="/invalidrol" type="es.caib.gusite.microfront.home.actions.InvalidRolAction" unknown="false">
+      <forward name="errorgenericov4" path="/v4/error/errorgenerico.jsp"/>
+    </action>
+    <action path="/invalidsession" type="es.caib.gusite.microfront.home.actions.InvalidSessionAction" unknown="false">
+      <forward name="errorgenericov4" path="/v4/error/errorgenerico.jsp"/>
+    </action>
+    <action path="/index" type="es.caib.gusite.microfront.home.actions.HomeAction" unknown="false">
+      <forward name="plantilla1v4" path="/v4/home/home1.jsp" redirect="false"/>
+      <forward name="plantilla1v1" path="/v1/home/home1.jsp" redirect="false"/>
+    </action>  
+    <action path="/home" type="es.caib.gusite.microfront.home.actions.HomeAction" unknown="true">
+      <forward name="plantilla1v4" path="/v4/home/home1.jsp" />
+      <forward name="plantilla1v1" path="/v1/home/home1.jsp" />
+    </action>
+    <action path="/menupreview" type="es.caib.gusite.microfront.home.actions.PreviewAction" unknown="false">
+      <forward name="previewv4" path="/v4/home/menupreview.jsp"/>
+      <forward name="previewv1" path="/v1/home/menupreview.jsp"/>
+    </action>    
+    <action path="/mapa" type="es.caib.gusite.microfront.home.actions.mapaAction" unknown="false">
+      <forward name="mapav4" path="/v4/home/mapa.jsp"/>
+      <forward name="mapav1" path="/v1/home/mapa.jsp"/>
+    </action>  
+    <action path="/faqs" name="BuscaOrdenaFaqActionForm" type="es.caib.gusite.microfront.faq.actions.ListarFaqsAction" unknown="false">
+      <forward name="listarfaqsv4" path="/v4/faq/listarfaqs.jsp"/>
+      <forward name="listarfaqsv1" path="/v1/faq/listarfaqs.jsp"/>
+    </action>
+    <action path="/noticias" name="BuscaOrdenaNoticiasActionForm" type="es.caib.gusite.microfront.noticia.actions.ListarNoticiasAction" unknown="false" scope="request">
+      <forward name="listarnoticiasv4" path="/v4/noticia/listarnoticias.jsp"/>
+      <forward name="listarnoticiasanyosv4" path="/v4/noticia/listarnoticiasanual.jsp"/>      
+      <forward name="listarlinksnormalv4" path="/v4/noticia/listarlinksnormal.jsp"/> 
+      <forward name="listarlinksanyosv4" path="/v4/noticia/listarlinksanual.jsp"/>       
+      <forward name="listardocumentosnormalv4" path="/v4/noticia/listardocumentosnormal.jsp"/> 
+      <forward name="listardocumentosanyosv4" path="/v4/noticia/listardocumentosanual.jsp"/>  
+      <forward name="listarnoticiasexternasv4" path="/v4/noticia/listarnoticiasexternas.jsp"/>     
+      <forward name="listarnoticiasv1" path="/v1/noticia/listarnoticias.jsp"/>
+      <forward name="listarnoticiasanyosv1" path="/v1/noticia/listarnoticiasanual.jsp"/>      
+      <forward name="listarlinksnormalv1" path="/v1/noticia/listarlinksnormal.jsp"/> 
+      <forward name="listarlinksanyosv1" path="/v1/noticia/listarlinksanual.jsp"/>       
+      <forward name="listardocumentosnormalv1" path="/v1/noticia/listardocumentosnormal.jsp"/> 
+      <forward name="listardocumentosanyosv1" path="/v1/noticia/listardocumentosanual.jsp"/>       
+      <forward name="listarnoticiasexternasv1" path="/v1/noticia/listarnoticiasexternas.jsp"/>
+      <forward name="mostrarGaleriaFotosv1" path="/v1/noticia/mostrarGaleriaFotos.jsp"/> 
+      <forward name="mostrarGaleriaFotosv4" path="/v4/noticia/mostrarGaleriaFotos.jsp"/>
+      <forward name="mostrarGaleriaFotosAnualv1" path="/v1/noticia/mostrarGaleriaFotosAnual.jsp"/> 
+      <forward name="mostrarGaleriaFotosAnualv4" path="/v4/noticia/mostrarGaleriaFotosAnual.jsp"/>
+      
+    </action>
+    <action path="/elementodocumento" type="es.caib.gusite.microfront.noticia.actions.ElementoDocumentoAction" unknown="false">
+    </action>    
+    <action path="/contactos" name="BuscaOrdenaContactosActionForm" type="es.caib.gusite.microfront.contacto.actions.ListarContactosAction" unknown="false">
+      <forward name="listarcontactosv4" path="/v4/contacto/listarcontactos.jsp"/>
+      <forward name="listarcontactosv1" path="/v1/contacto/listarcontactos.jsp"/>
+    </action>
+    <action path="/agendas" name="BuscaOrdenaAgendaActionForm" type="es.caib.gusite.microfront.agenda.actions.ListarAgendaAction" unknown="false">
+      <forward name="listaragendav4" path="/v4/agenda/listaragenda.jsp"/>
+      <forward name="listaragendav1" path="/v1/agenda/listaragenda.jsp"/>
+    </action>
+    <action path="/archivopub" type="es.caib.gusite.microfront.archivo.actions.ArchivoPubAction" unknown="false">
+    </action>
+    <action path="/agenda" type="es.caib.gusite.microfront.agenda.actions.AgendaAction" unknown="false">
+      <forward name="contenidov4" path="/v4/agenda/agenda.jsp"/>
+      <forward name="contenidov1" path="/v1/agenda/agenda.jsp"/>
+    </action>
+    <action path="/noticia" type="es.caib.gusite.microfront.noticia.actions.NoticiaAction" unknown="false">
+      <forward name="contenidov4" path="/v4/noticia/noticia.jsp"/>
+      <forward name="contenidov1" path="/v1/noticia/noticia.jsp"/>
+    </action>
+    <action path="/contenido" type="es.caib.gusite.microfront.contenido.actions.ContenidoAction" unknown="false">
+      <forward name="contenidov4" path="/v4/contenido/contenido.jsp"/>
+      <forward name="contenidov1" path="/v1/contenido/contenido.jsp"/>
+    </action>
+    <action path="/qssi" type="es.caib.gusite.microfront.qssi.actions.QssiAction" unknown="false">
+      <forward name="contenidov4" path="/v4/qssi/qssi.jsp"/>
+      <forward name="contenidov1" path="/v1/qssi/qssi.jsp"/>
+    </action>
+    <action path="/contacto" type="es.caib.gusite.microfront.contacto.actions.ContactoAction" unknown="false">
+      <forward name="contenidov4" path="/v4/contacto/contacto.jsp"/>
+      <forward name="contenidov1" path="/v1/contacto/contacto.jsp"/>
+    </action>
+    <action path="/enviocontacto" type="es.caib.gusite.microfront.contacto.actions.EnvioContactoAction" unknown="false">
+      <forward name="contenidov4" path="/v4/contacto/enviocontacto.jsp"/>
+      <forward name="contenidov1" path="/v1/contacto/enviocontacto.jsp"/>
+    </action>
+    
+    <action path="/accessibilitat" type="es.caib.gusite.microfront.home.actions.AccessibilitatAction">
+    	<forward name="accessibilitatv4" path="/v4/home/accessibilitat.jsp"></forward>
+    	<forward name="accessibilitatv1" path="/v1/home/accessibilitat.jsp"></forward>
+    </action>
+        	
+    <action path="/encuesta" type="es.caib.gusite.microfront.encuesta.actions.EncuestaAction" unknown="false">
+      <forward name="contenidov4" path="/v4/encuesta/encuesta.jsp"/>
+      <forward name="realizadov4" path="/v4/encuesta/envioencuesta.jsp"/>      
+      <forward name="contenidov1" path="/v1/encuesta/encuesta.jsp"/>
+      <forward name="realizadov1" path="/v1/encuesta/envioencuesta.jsp"/>      
+    </action> 
+    <action path="/envioencuesta" type="es.caib.gusite.microfront.encuesta.actions.EnvioEncuestaAction" unknown="false">
+      <forward name="contenidov4" path="/v4/encuesta/envioencuesta.jsp"/>
+      <forward name="contenidov1" path="/v1/encuesta/envioencuesta.jsp"/>
+    </action> 
+     <action path="/previsualiza" type="es.caib.gusite.microfront.previsualiza.actions.PrevisualizaAction" unknown="false">
+      <forward name="previsualiza" path="/v1/previsualiza/previsualiza.jsp"/>
+    </action> 
+    
+    <action path="/cercar" type="es.caib.gusite.microfront.cercador.actions.CercarAction" unknown="false">
+      <forward name="resultadosv4" path="/v4/cercador/cercar.jsp"/>
+      <forward name="resultadosv1" path="/v1/cercador/cercar.jsp"/>
+    </action>       
+    
+	<action path="/intranethome" type="es.caib.gusite.microfront.home.actions.IntranetAction" unknown="true">
+      <forward name="intranet" path="/v4/home/intranet.jsp"/>
+    </action>   
+	<action path="/intranetlogin" type="es.caib.gusite.microfront.home.actions.IntranetLoginAction" unknown="true">
+      <forward name="intranetlogin" path="/v4/home/intranetlogin.jsp"/>
+    </action>   
+
+    <action path="/taw" type="es.caib.gusite.microfront.home.actions.TawAction" unknown="false">
+      <forward name="ttritem" path="/v4/general/tawitem.jsp"/>
+    </action>    
+
+	<action path="/operacioMailing" type="es.caib.gusite.microfront.mailing.actions.OperacioMailing" unknown="false">
+	  <forward name="contenidov1" path="/v1/usuariomsg/msggenerico.jsp"/>
+      <forward name="contenidov4" path="/v4/usuariomsg/msggenerico.jsp"/>
+    </action>
+       
+  </action-mappings>
+
+	<controller
+	maxFileSize="1G"
+    contentType="text/html;charset=utf-8"
+    debug="3" locale="true" nocache="true"
+	processorClass="es.caib.gusite.microfront.home.UserRequestProcessor"
+  />
+
+
+  <message-resources parameter="ApplicationResources_front_EN" key="EN"/>
+  <message-resources parameter="ApplicationResources_front_DE" key="DE"/>
+  <message-resources parameter="ApplicationResources_front_ES" key="ES"/>
+  <message-resources parameter="ApplicationResources_front_CA" key="CA"/>
+  <message-resources parameter="ApplicationResources_front_FR" key="FR"/>
+  <message-resources parameter="ApplicationResources_front"/>
+
+</struts-config>

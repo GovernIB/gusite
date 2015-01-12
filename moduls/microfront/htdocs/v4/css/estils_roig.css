@@ -1,0 +1,13 @@
+/* CSS Document */
+
+h1, h2, h3, h4, h5 { color:#a20000 !important; }
+
+h1 a, h1 a:hover { color:#a20000; }
+
+.esquerra h2, .esquerra h3, .esquerra h4, .esquerra h5, .esquerra h6 { color:#a20000;  }
+.dreta h2, .dreta h3, .dreta h4, .dreta h5, .dreta h6 { color:#a20000;  }
+
+#marcLateral ul li a { color:#a20000; }
+#marcLateral ul li a:hover { color:#000; }
+#marcLateral ul li li a { color:#000; }
+#marcLateral ul li li a:hover { color:#c33; }

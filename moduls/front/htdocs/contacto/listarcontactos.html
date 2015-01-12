@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra los formularios de contacto disponibles.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer>
+	MVS_listado: devuelve un listado de elementos de una colección
+	MVS_seulet_sin: devuelve el listado de elementos sin la pagina
+	MVS_tipolistado: devuelve el tipo de listado que mostrará	
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title
+	th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">Título
+	Microsite - Formularis de contacte</title>
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsContactos.css"
+	th:href="@{/resources/css/estilsContactos.css}"></link>
+</section>
+</head>
+<body>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="campanya">
+		<!-- campanya -->
+		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
+						   trozo de html que muestra la imagen de la campaña -->
+		<div th:if="${MVS_home_tmp_campanya} !=null"
+			th:utext="${MVS_home_tmp_campanya}" th:remove="tag"></div>
+		<!-- fin campanya -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio con o sin menu -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div
+			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
+			id="">
+			<!-- titol -->
+			<h2 th:text="#{listarcontactos.frmcontacto}">Formularis de
+				contacte</h2>
+			<!-- MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer> -->
+			<div th:if="${MVS_parametros_pagina.nreg} ==0" th:remove="tag">
+				<p th:text="#{listarcontactos.nohay} + '.'">No s`han trobat
+					formularis de contacte.</p>
+			</div>
+			<div th:if="${MVS_parametros_pagina.nreg} !=0" th:remove="tag">
+				<p th:text="#{listarcontactos.frmdisponibles} + ':'">Formularis
+					de contacte disponibles:</p>
+				<!-- MVS_listado: devuelve un listado de elementos de una colección -->
+				<ul>
+					<li th:each="i : ${MVS_listado}"><a th:href="@{${i.value}}" th:text="${i.key}">i key</a></li>
+				</ul>
+				<!-- MVS_seulet_sin: devuelve el listado de elementos sin la pagina -->
+				<p class="navLlistat"
+				th:with="SeuletRelativeURL=${MVS_seulet_sin}">
+				<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+					&lt;&lt; <a
+					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.inicio})}"
+					th:text="#{general.param.inicio}">Inici</a>&nbsp;
+				</span> <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+					&lt; <a
+					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.anterior})}"
+					th:text="#{general.param.anterior}">Anterior</a>&nbsp;
+				</span> 
+				<!-- MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+				<span th:if="${MVS_listado} !=null">
+				- <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
+					cursor</span> a <span th:text="${MVS_parametros_pagina.cursor_final}"
+					th:remove="tag">cursor final</span> de <span
+					th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">pagina
+					nreg</span> -
+				</span>
+					 <span
+					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+					th:remove="tag"> <a
+					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.siguiente})}"
+					th:text="#{general.param.siguiente}">Següent</a> &gt;&gt;
+				</span> 	
+				 <span
+					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+					th:remove="tag"> <a
+					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.final})}"
+					th:text="#{general.param.final}">Fi</a> &gt;
+				</span> 
+			</p>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+

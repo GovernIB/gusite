@@ -1,0 +1,15 @@
+/* Document CSS */
+
+button { padding:0 5px; }
+button img { width:16px; height:16px; }
+
+table.llistat { width:100%; border:0; margin-bottom:1em; }
+table.llistat th { text-align:left; padding:10px 8px; background-color:#e7e7e7; }
+table.llistat th img { vertical-align:middle; }
+table.llistat tr.over { background-color:#ffc; }
+table.llistat tr.marcado { background-color:#ffe7cd; }
+table.llistat tbody td { padding:8px; vertical-align:middle; cursor:pointer; border-bottom:1px solid #f2f2f2; }
+table.llistat tfoot td { text-align:center; background-color:#f7f7f7; padding:10px 5px; }
+
+table.llistat td { outline:none; border:0; }
+table.llistat td.check, table.llistat th.check { display:none; }

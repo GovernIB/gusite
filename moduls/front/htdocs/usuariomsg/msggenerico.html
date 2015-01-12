@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra el mensaje genérico en caso de no poder mostrar la página.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
+<title th:text="#{msg.titulo}">Missatge:</title>
+<script type="text/javascript" src="/resources/js/globales.js"
+	th:src="@{/resources/js/globales.js}"></script>
+<link th:remove="tag" th:utext="${MVS_css}"/>
+
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+<script th:replace="general/scriptmenu :: script"></script>
+</head>
+<body>
+	<!-- contenidor -->
+	<div id="contenedor">
+		<!-- capçal -->
+		<div th:replace="error/errorgenerico :: cabeceraReducida">Cabecera</div>
+		<!--  Fi capçal -->
+		<!-- continguts -->
+		<div id="continguts">
+			<!-- missatge -->
+			<div id="missatge">
+				<strong> 
+					<span th:text="#{msg.titulo}" th:remove="tag">Missatge:</span>
+					<span th:if="${msg} !=null" th:remove="tag"> 
+						<span th:text="${msg}" th:remove="tag"></span>
+					</span>
+				</strong>
+			</div>
+			<!-- fi missatge -->
+		</div>
+		<div th:if="${msg} ==null" th:remove="tag">
+			<div id="info"></div>
+		</div>
+		<!-- fi continguts -->
+	</div>
+	<!-- fi contenidor -->
+</body>
+</html>

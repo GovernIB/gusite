@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra la fecha y hora actual.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hora Oficial</title>
+
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+</head>
+<body>
+	<div
+		th:with="cal=${#calendars.createNow()}, sdf=${#calendars.format(cal,'yyyy-MM-dd HH:mm:ss')}"
+		th:remove="tag">
+		<div id="infoNoMenu">
+			<h2 th:text="${sdf}">Hora</h2>
+		</div>
+	</div>
+</body>
+</html>

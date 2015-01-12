@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sac.lucene" default="main" basedir=".">
+
+    <property name="modul" value="lucene"/>
+    <property name="package" value="es.caib.gusite.lucene"/>
+
+	<property name="home.dir" location="${basedir}/../.."/>
+	<property file="${home.dir}/build.${user.name}.properties" />
+	<property file="${home.dir}/default.properties"/>
+
+    <property name="output.dir" location="${home.dir}/output"/>
+    <property name="modul.output.dir" location="${output.dir}/${modul}"/>
+
+    <property name="lib.dir" location="${home.dir}/lib"/>
+    <property name="etc.dir" location="${basedir}/etc"/>
+
+    <property name="jar.src" location="${basedir}/src"/>
+    <property name="jar.doc" location="${basedir}/doc"/>
+
+    <property name="jar.classes" location="${modul.output.dir}/classes"/>
+
+    <property name="doc" location="${output.dir}/doc"/>
+    <property name="jar.doc.api" location="${doc}/api/${modul}"/>
+    <property name="jar.product" location="${output.dir}/moduls"/>
+    <property name="jar.gen.etc" location="${modul.output.dir}/gen-etc"/>
+
+	<path id="jar.class.path">
+		<fileset dir="${lib.dir}">
+			<include name="lucene-core-3.6.2.jar"/>
+			<include name="lucene-spellchecker-3.6.2.jar"/>
+		</fileset>
+    	
+		<fileset dir="${lib.dir}/jboss">
+    		<include name="hibernate-core.jar"/>
+			<include name="hibernate-annotations.jar"/>
+    		<include name="ejb3-persistence.jar"/>
+    	</fileset>
+
+		<fileset dir="${lib.dir}/webcaib">
+			<include name="aclibico.jar"/>
+			<include name="htmlparser.jar"/>
+			<include name="img.jar"/>
+			<include name="jericho-html-2.5.jar"/>
+			<include name="lax.jar"/>
+			<include name="pdfbox-app-1.8.4.jar"/>
+			<include name="poi.jar"/>
+		</fileset>
+	</path>
+
+	<target name="prepare">
+		<mkdir dir="${jar.classes}"/>
+        <mkdir dir="${jar.doc.api}"/>
+        <mkdir dir="${jar.product}"/>
+    </target>
+
+    <target name="jar.compile" depends="prepare">
+    	<javac
+            destdir="${jar.classes}"
+            classpathref="jar.class.path"
+            debug="${javac.debug}"
+            deprecation="${javac.deprecation}"
+            optimize="${javac.optimize}"
+            encoding="${javac.encoding}"
+			source="${javac.source}"
+			target="${javac.target}"
+			includeantruntime="false"
+            >
+    		<src path="${jar.src}"/>
+    	</javac>
+    </target>
+
+	<target name="jar.jar" depends="jar.compile">
+		<delete file="${jar.product}/${modul}.jar" quiet="yes"/>
+		<jar jarfile="${jar.product}/${modul}.jar" basedir="${jar.classes}">
+			<manifest>
+				<attribute name="Created-By" value="Fundació IBIT" />
+				<attribute name="Class-Path" value="lib/lucene-core-3.6.2.jar lib/lucene-spellchecker-3.6.2.jar" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="jar.javadoc" depends="prepare">
+        <javadoc
+            destdir="${jar.doc.api}"
+            classpathref="jar.class.path"
+            packagenames="${package}.*"
+            overview="${jar.doc}/overview.html"
+            windowtitle="API del componente ${modul}"
+            doctitle="API del componente ${modul}"
+            bottom="Fundació Ibit">
+            <sourcepath>
+                <pathelement path="${jar.src}"/>
+            </sourcepath>
+            <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
+        </javadoc>
+    </target>
+
+	<target name="doc" depends="jar.javadoc" description="Realiza las tareas de documentación"/>
+
+	<target name="module.package" depends="jar.jar"/>
+
+	<path id="module.classpath" refid="jar.class.path"/>
+
+	<property name="module.classes"  location="${jar.classes}"/>
+
+	<target name="main" depends="jar.jar" description="Construye el jar"/>
+
+</project>

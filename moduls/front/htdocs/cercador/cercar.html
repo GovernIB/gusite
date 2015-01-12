@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código nos muestra los resultados de una busqueda.
+
+Variables:
+	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
+	MVS_listado_buscador: devuelve el resultado de una busqueda realizada
+	
+Objetos:
+	#gusuri.cercar(MVS_microsite,MVS_idioma): devuelve la URL hacia la que quiere realizar la busqueda
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<head>
+<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+<title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
+	titulo - Resultats recerca</title>	
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
+<section th:remove="tag" layout:fragment="cssExtra">
+<!-- css específico para esta página -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estilsCercar.css"
+	th:href="@{/resources/css/estilsCercar.css}"></link>
+</section>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="menuLateral">
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio sin menu -->
+		<div id="infoNoMenu">
+			<!-- titol -->
+			<h2 th:utext="#{cercar.resultados}">Resultats recerca</h2>
+			<!-- MVS_listado_buscador: devuelve el resultado de una busqueda realizada -->
+			<div th:if="${MVS_listado_buscador} !=null" th:remove="tag">
+				<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
+					<p>
+						<strong
+							th:utext="#{cercar.encontrados} + ' ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' ' + ${MVS_listado_buscador.duracionBusqueda} + ' ' + #{cercar.resultados.para} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}+ '\'\''">
+							Trobat/s 0 resultat/s en 3 mil·lisegons per al terme "busqued"</strong>
+					</p>
+					<div th:if="${MVS_listado_buscador.saltos} !=null" th:remove="tag">
+						<p>
+							<i th:utext="#{cercar.primer.intento}">S`ha combinat tot el
+								text per a obtenir algun resultat</i>
+						</p>
+					</div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida} !=''"
+						th:remove="tag">
+						<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ' : '">Potser va voler
+							dir:</span>&nbsp; 
+							<!-- #gusuri.cercar(MVS_microsite,MVS_idioma): devuelve la URL hacia la que quiere realizar la busqueda -->
+							<a href="cercar.html"
+							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+							buscador Consulta sugerida</a>
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}">
+							<input type="hidden" name="cerca"
+								th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+					</div>
+					<div th:with="docus=${MVS_listado_buscador.lista}" th:remove="tag">
+						<div th:each="i : ${docus}" th:remove="tag">
+							<ul class="resultatsRecercaInteligent">
+								<li><a th:href="${i.url}" th:text="${i.titulo}">titulo
+										docus</a> <span
+									th:text="'(' + ' ' + ${i.score}+ ' ' +'%)'">score</span> <br /><span
+									th:text="${i.id} + ' ' + 'Site:' + ' ' +${i.site}">Site:</span><span class="detall"
+									th:text="${i.descripcion}">Descripcion</span></li>
+							</ul>
+						</div>
+						<br />
+					</div>
+				</div>
+				<div th:if="${MVS_listado_buscador.lista} ==null" th:remove="tag">
+					<div th:if="${MVS_listado_buscador.consultaSugerida}!=''"
+						th:remove="tag">
+						<br />
+						<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
+						<a href="cercar.html"	
+							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+							buscador Consulta sugerida</a>
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" >
+							<input type="hidden" name="cerca"
+								th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+					</div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
+						th:remove="tag">
+						<div th:utext="#{cercar.subusqueda} + ' - '" th:remove="tag">La
+							seva recerca -</div>
+						<strong th:utext="${MVS_listado_buscador.consultaOriginal}">Consulta
+							original</strong>
+						<div th:utext="' - '+ #{cercar.no.resultados}" th:remove="tag">
+							- no va produir cap resultat</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+
