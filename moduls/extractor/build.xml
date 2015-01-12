@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="sac.extractor" default="main" basedir=".">
+
+    <property file="${basedir}/build.properties"/>
+
+    <property name="modul" value="extractor"/>
+    <property name="package" value="org.ibit.rol.sac.extractor"/>
+
+    <property name="home.dir" location="${basedir}/../.."/>
+    <property name="output.dir" location="${home.dir}/output"/>
+    <property name="modul.output.dir" location="${output.dir}/${modul}"/>
+	
+    <property name="lib.dir" location="${home.dir}/lib"/>
+	<property name="etc.dir" location="${basedir}/etc"/>
+
+    <property name="jar.src" location="${basedir}/src"/>
+    <property name="jar.doc" location="${basedir}/doc"/>
+
+    <property name="jar.classes" location="${modul.output.dir}/classes"/>
+
+    <property name="doc" location="${output.dir}/doc"/>
+    <property name="jar.doc.api" location="${doc}/api/${modul}"/>
+    <property name="jar.product" location="${output.dir}/moduls"/>
+	<property name="jar.gen.etc" location="${modul.output.dir}/gen-etc"/>
+
+	<property name="test.src.dir" location="${home.dir}/test/${modul}/java"/>
+    <property name="test.lib.dir" location="${home.dir}/test/common/resources/lib"/>
+    <property name="test.classes" location="${modul.output.dir}/test/classes"/>
+
+	
+    <path id="jar.class.path">
+        <fileset dir="${lib.dir}">
+			<include name="htmllexer.jar"/>
+        </fileset>
+	    <!-- agarcia: librerias en 00librerias.ear -->
+		<fileset dir="${lib.dir}/webcaib">
+			<include name="htmlparser.jar"/>
+			<include name="taw.jar"/>
+			<include name="Tidy.jar"/>
+		</fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="${jar.classes}"/>
+    	<mkdir dir="${test.classes}"/>
+        <mkdir dir="${jar.doc.api}"/>
+        <mkdir dir="${jar.product}"/>
+    </target>
+
+    <target name="jar.compile" depends="prepare">
+        <javac
+            destdir="${jar.classes}"
+            classpathref="jar.class.path"
+            debug="${javac.debug}"
+            deprecation="${javac.deprecation}"
+            optimize="${javac.optimize}"
+        	encoding="${javac.encoding}"
+            >
+            <src path="${jar.src}"/>
+        </javac>
+    </target>
+
+    <target name="jar.jar" depends="jar.compile">
+        <delete file="${jar.product}/${modul}.jar" quiet="yes"/>
+        <jar
+            jarfile="${jar.product}/${modul}.jar"
+            basedir="${jar.classes}">
+            <manifest>
+                <attribute name="Created-By" value="Fundació IBIT"/>
+            </manifest>
+                	
+        </jar>
+    </target>
+
+    <target name="jar.javadoc" depends="prepare">
+        <javadoc
+            destdir="${jar.doc.api}"
+            classpathref="jar.class.path"
+            packagenames="${package}.*"
+            overview="${jar.doc}/overview.html"
+            windowtitle="API del componente ${modul}"
+            doctitle="API del componente ${modul}"
+            bottom="Fundació Ibit">
+            <sourcepath>
+                <pathelement path="${jar.src}"/>
+            </sourcepath>
+            <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
+        </javadoc>
+    </target>
+	
+
+	<path id="test.class.path">
+		<path refid="jar.class.path"/>
+		<pathelement location="${jar.classes}" />
+		<fileset dir="${test.lib.dir}">
+		    <include name="junit-4.8.2.jar"/>
+		</fileset>
+		<fileset dir="${test.lib.dir}"/>
+	</path>	
+
+	<target name="test.compile" depends="jar.jar">
+	        <javac
+	            destdir="${test.classes}"
+	        	classpathref="test.class.path"
+	            debug="${javac.debug}"
+	            deprecation="${javac.deprecation}"
+	            optimize="${javac.optimize}"
+	        	encoding="${javac.encoding}">
+	            <src path="${test.src.dir}"/>
+	        </javac>
+	</target>
+	
+	
+	<target name="test.unitario" depends="test.compile">
+			<junit printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="no" >
+			<formatter type="plain" usefile="false"/>
+			<batchtest todir="${test.output.dir}">
+			      <fileset dir="${test.src.dir}">
+			            <include name="test/unitario/**/*.java"/> 
+			      		<exclude name="test/unitario/*/mock/**/*.java"/>
+			       </fileset>
+			</batchtest>
+			<classpath refid="test.class.path"/>
+			</junit>
+		</target>	
+		
+	
+
+    <target name="doc" depends="jar.javadoc" description="Realiza las tareas de documentación"/>
+    <target name="main" depends="jar.jar" description="Construye el jar"/>
+
+</project>
