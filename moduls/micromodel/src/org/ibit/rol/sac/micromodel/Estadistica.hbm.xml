@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+		<class name="org.ibit.rol.sac.micromodel.Estadistica" table="GUS_STATS">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="Id" type="long" column="STA_CODI" >
+            <generator class="sequence">
+                <param name="sequence">GUS_SEQSTA</param>
+            </generator>			
+		</id>
+
+		<property name="item" column="STA_ITEM" type="long" not-null="true" />
+		<property
+			name="mes"
+			column="STA_MES"
+			type="integer"
+			not-null="true"
+			length="22"
+		/>
+		<property
+			name="referencia"
+			column="STA_REF"
+			type="string"
+			not-null="true"
+			length="5"
+		/>
+		<property
+			name="accesos"
+			column="STA_NACCES"
+			type="integer"
+			not-null="true"
+			length="22"
+		/>
+		<property name="idmicrosite" column="STA_MICCOD" type="long" not-null="true" />	
+		<property
+			name="publico"
+			column="STA_PUB"
+			type="integer"
+			not-null="true"
+			length="22"
+		/>		
+
+	</class>	
+</hibernate-mapping>

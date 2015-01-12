@@ -1,0 +1,49 @@
+/* CSS Document */
+
+body { font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-serif; color:#666; background-color:#fff; }
+
+body, form, table, caption, tr, tr, td, dl, img, button, p, h1, h2, h3, h4, h5, h6, h7, dl, dt, dd, object, iframe, dl, dt, dd, legend, fieldset { margin:0; padding:0; outline:0; }
+
+ul,li,ol { list-style-position:inside; }
+
+a.destacat { color:#c33; }
+a.destacat:hover { color:#000; }
+
+.invisible { display:none; }
+.important { font-weight:bold; }
+
+/* tables */
+
+table.Taula_ContornGros { width:99%; margin:1em 0; empty-cells:show; border:2px solid #ccc; border-collapse:collapse; }
+table.Taula_ContornGros thead th, table.Taula_ContornGros thead td { font-weight:bold; text-align:left; }
+table.Taula_ContornGros thead th, table.Taula_ContornGros thead td, table.Taula_ContornGros tbody td { padding:.2em .5em; border:1px solid #ccc; }
+
+table.Taula_Transparent { width:99%; margin:1em 0; empty-cells:show; border:0; border-collapse:collapse; }
+table.Taula_Transparent thead th, table.Taula_Transparent thead td { font-weight:bold; text-align:left; }
+table.Taula_Transparent thead th, table.Taula_Transparent thead td, table.Taula_Transparent tbody td { padding:.2em .5em; }
+
+table.Taula_SombrejatClar { width:99%; margin:1em 0; empty-cells:show; border-top:1px solid #ccc; border-bottom:1px solid #ccc; border-collapse:collapse; }
+table.Taula_SombrejatClar thead th, table.Taula_SombrejatClar thead td { font-weight:bold; text-align:left; border-bottom:1px solid #ccc; }
+table.Taula_SombrejatClar thead th, table.Taula_SombrejatClar thead td, table.Taula_SombrejatClar tbody td { padding:.2em .5em; }
+table.Taula_SombrejatClar tbody tr:nth-child(2n+1) { background-color:#f2f2f2 }
+table.Taula_SombrejatClar tbody tr.Taula_SClar_línia_imparell { background-color:#f2f2f2 }
+
+table.Taula_SenseContorn { width:99%; margin:1em 0; empty-cells:show; border:0; border-collapse:collapse; }
+table.Taula_SenseContorn thead tr th:first-child, table.Taula_SenseContorn thead tr td:first-child, table.Taula_SenseContorn tbody tr td:first-child { border-left:0 !important; }
+table.Taula_SenseContorn thead th, table.Taula_SenseContorn thead td, table.Taula_SenseContorn tbody td { padding:.2em .5em; }
+table.Taula_SenseContorn thead th, table.Taula_SenseContorn thead td { font-weight:bold; text-align:left; border-left:1px solid #ccc; }
+table.Taula_SenseContorn tbody td { border-top:1px solid #ccc; border-left:1px solid #ccc; }
+
+table.Taula_ContornSimple { width:99%; margin:1em 0; empty-cells:show; border:1px solid #ccc; border-collapse:collapse; }
+table.Taula_ContornSimple thead th, table.Taula_ContornSimple thead td { font-weight:bold; text-align:left; }
+table.Taula_ContornSimple thead th, table.Taula_ContornSimple thead td, table.Taula_ContornSimple tbody td { padding:.2em .5em; border:1px solid #ccc; }
+
+
+h1 { font-size:1.5em; text-align:center; padding:0 0 .5em 0; } /* Títol */ 
+h2 { font-size:1.5em; text-align:left; padding:0 0 .5em 0; } /* Subtítol */ 
+h3 { font-size:1.3em; text-align:left; padding:0 0 .5em 0; } /* Subtítol nivell 2 */
+h4 { font-size:1.2em; text-align:left; padding:0 0 .5em 0; } /* Subtítol nivell 3 */
+h5 { font-size:1.2em; font-weight:normal; padding:0 0 .5em 0; }  /* Subtítol nivell 4 */ 
+h6 { font-size:1.2em; font-weight:normal; font-style:italic; padding:0 0 .5em 0;text-decoration: underline } /* Subtítol nivell 5 */
+h7 { font-size:1.2em; font-weight:normal; font-style:italic; padding:0 0 .5em 0; } /* Subtítol nivell 6 */
+

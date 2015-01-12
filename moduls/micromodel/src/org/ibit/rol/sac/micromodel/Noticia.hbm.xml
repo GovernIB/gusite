@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Noticia" table="GUS_NOTICS">
+		<cache usage="read-write"/>
+
+		<id name="Id" type="long" column="NOT_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQNOT</param>
+            </generator>
+		</id>
+
+		<property name="fcaducidad"	column="NOT_CADUCA"	/>
+		<property name="fpublicacion" column="NOT_PUBLIC"	/>
+		<property name="visible" column="NOT_VISIB" type="string" not-null="false" length="1"/>
+		<property name="visibleweb" column="NOT_VISWEB" type="string" not-null="false" length="1"/>
+		<property name="orden" column="NOT_ORDEN" type="integer" not-null="false" length="22" />
+		<property name="idmicrosite" column="NOT_MICCOD"/>
+
+        <many-to-one name="imagen" cascade="all" column="NOT_IMAGEN" foreign-key="GUS_NOTDCM_FK"/>
+		<many-to-one name="tipo" column="NOT_TIPO" foreign-key="GUS_NOTTPN_FK"/>
+
+		<map name="traducciones" cascade="all" table="GUS_NOTIDI">
+            <cache usage="read-write"/>
+            <key column="NID_NOTCOD" foreign-key="GUS_NIDNOT_FK"/>
+            <index column="NID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionNoticia">
+                <property name="titulo" length="512" column="NID_TITULO"/>
+                <property name="subtitulo" length="256" column="NID_SUBTIT"/>
+                <property name="fuente" length="100" column="NID_FUENTE"/>
+                <property name="laurl" length="512" column="NID_URL"/>
+                <property name="urlnom" length="512" column="NID_URLNOM"/>
+                <many-to-one name="docu" cascade="all" column="NID_DOCU" foreign-key="GUS_NIDDCM_FK"/>
+                <property name="texto" column="NID_TEXTO" type="es.caib.rolsac.oracle.hibernate.OracleClobType" />
+             </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

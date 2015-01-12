@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Pregunta" table="GUS_PREGUN">
+		
+		<meta attribute="sync-DAO">false</meta>
+    	<cache usage="read-write"/>
+		<id name="Id" type="long" column="PRE_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQPRE</param>
+            </generator>
+		</id>
+
+  		<property name="idencuesta" column="PRE_ENCCOD" type="long" not-null="false" />	
+		<property name="multiresp" column="PRE_MULTIR" type="string" not-null="false" length="1"/>
+		<property name="visiblecmp" column="PRE_VISCMP" type="string" not-null="false" length="1"/>
+		<property name="obligatorio" column="PRE_OBLIGA" type="string" not-null="false" length="1"/>
+		<property name="visible" column="PRE_VISIB" type="string" not-null="false" length="1"/>
+		<property name="orden" column="PRE_ORDEN" type="integer" not-null="false" length="22" />
+		<property name="nrespuestas" column="PRE_NRESP" type="integer" not-null="false" length="22" />
+		<property name="minContestadas" column="PRE_MINCONT" type="integer" length="2"/>
+		<property name="maxContestadas" column="PRE_MAXCONT" type="integer" length="2"/>
+		
+        <many-to-one name="imagen" cascade="all" column="PRE_IMAGEN" foreign-key="GUS_PREDOC_FK"/>
+
+		<set name="respuestas" table="GUS_RESPUS" order-by="RES_ORDEN ASC" cascade="all">
+			<cache usage="read-write"/>
+			<key column="RES_PRECOD" foreign-key="GUS_RESPRE_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Respuesta"/>
+		</set>
+
+
+		<map name="traducciones" cascade="all" table="GUS_PREIDI">
+			<cache usage="read-write"/>
+            <key column="PID_PRECOD" foreign-key="GUS_PIDPRE_FK"/>
+            <index column="PID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionPregunta">
+                <property name="titulo" length="256" column="PID_TITULO"/>
+            </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

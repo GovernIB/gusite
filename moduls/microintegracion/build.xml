@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="sac.microintegracion" default="main" basedir=".">
+
+    <property file="${basedir}/build.properties"/>
+
+    <property name="modul" value="microintegracion"/>
+    <property name="package" value="es.indra.gusite.microintegracion"/>
+
+    <property name="home.dir" location="${basedir}/../.."/>
+    <property name="output.dir" location="${home.dir}/output"/>
+    <property name="modul.output.dir" location="${output.dir}/${modul}"/>
+	<property name="moduls.output.dir" location="${output.dir}/moduls"/>
+
+    <property name="lib.dir" location="${home.dir}/lib"/>
+
+    <property name="jar.src" location="${basedir}/src"/>
+    <property name="jar.doc" location="${basedir}/doc"/>
+
+    <property name="jar.classes" location="${modul.output.dir}/classes"/>
+
+    <property name="doc" location="${output.dir}/doc"/>
+    <property name="jar.doc.api" location="${doc}/api/${modul}"/>
+    <property name="jar.product" location="${output.dir}/moduls"/>
+
+    <path id="jar.class.path">
+        <fileset dir="${jar.product}">
+            
+        	
+        </fileset>    	
+        <fileset dir="${lib.dir}">
+            <include name="commons-beanutils.jar"/>
+            <include name="commons-collections.jar"/>
+        	<include name="commons-lang.jar"/>
+        	<include name="commons-logging.jar"/>
+            <include name="servlet.jar"/>
+            <include name="model.jar"/>
+            <include name="sac-persistence.jar"/>
+        	<include name="integracion.jar"/>
+        </fileset>
+        <fileset dir="${moduls.output.dir}">
+            <include name="micromodel.jar"/>
+            <include name="sac-micropersistence-client.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">
+        <mkdir dir="${jar.classes}"/>
+        <mkdir dir="${jar.doc.api}"/>
+        <mkdir dir="${jar.product}"/>
+    </target>
+
+    <target name="jar.compile" depends="prepare">
+        <javac
+            destdir="${jar.classes}"
+            classpathref="jar.class.path"
+            debug="${javac.debug}"
+            deprecation="${javac.deprecation}"
+            optimize="${javac.optimize}"
+            >
+            <src path="${jar.src}"/>
+        </javac>
+    </target>
+
+    <target name="jar.jar" depends="jar.compile">
+        <delete file="${jar.product}/${modul}.jar" quiet="yes"/>
+        <jar
+            jarfile="${jar.product}/${modul}.jar"
+            basedir="${jar.classes}">
+            <manifest>
+                <attribute name="Created-By" value="INDRA"/>
+            </manifest>
+            <fileset dir="${jar.src}" includes="**/*.hbm.xml" />
+        </jar>
+    </target>
+
+    <target name="jar.javadoc" depends="prepare">
+        <javadoc
+            destdir="${jar.doc.api}"
+            classpathref="jar.class.path"
+            packagenames="${package}.*"
+            overview="${jar.doc}/overview.html"
+            windowtitle="API del componente ${modul}"
+            doctitle="API del componente ${modul}"
+            bottom="INDRA">
+            <sourcepath>
+                <pathelement path="${jar.src}"/>
+            </sourcepath>
+            <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
+        </javadoc>
+    </target>
+
+    <target name="doc" depends="jar.javadoc" description="Realiza las tareas de documentación"/>
+    <target name="main" depends="jar.jar" description="Construye el jar"/>
+
+</project>

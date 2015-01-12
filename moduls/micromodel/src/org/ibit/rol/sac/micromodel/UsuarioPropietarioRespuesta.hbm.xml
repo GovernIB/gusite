@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+    <class name="org.ibit.rol.sac.micromodel.UsuarioPropietarioRespuesta" table="GUS_USURESP">
+		
+		
+		<composite-id >
+			 <key-property name="idusuario" column="USR_CODUSU" type="long" /> 
+	         <key-property  name="idrespuesta"  column="USR_CODRESP" type="long" />      
+	     </composite-id>  
+
+            
+    </class>
+
+</hibernate-mapping>

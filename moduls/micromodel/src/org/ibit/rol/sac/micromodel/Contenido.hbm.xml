@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Contenido" table="GUS_CONTEN">
+		<cache usage="read-write"/>
+		<id name="Id" type="long" column="CON_CODI" >
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQCON</param>
+            </generator>
+		</id>		
+
+  		<property name="idmenu" column="CON_MNUCOD" type="long" not-null="false" />	
+		<property name="fpublicacion" column="CON_PUBLIC"/>
+		<property name="fcaducidad" column="CON_CADUCA"/>		
+		<property name="visible" column="CON_VISIB" type="string" not-null="false"/>
+		<property name="orden" column="CON_ORDEN" type="integer" not-null="false"/>
+
+  		
+		<many-to-one name="imagenmenu" cascade="all" column="CON_IMGMEN" foreign-key="GUS_CONDCM_FK"/>								
+		
+		<map name="traducciones" cascade="all" table="GUS_CONIDI">
+            <cache usage="read-write"/>
+            <key column="CID_CONCOD" foreign-key="GUS_CIDCON_FK"/>
+            <index column="CID_CODIDI" type="string" length="2"/>
+            
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionContenido">
+                <property name="titulo" length="256" column="CID_TITULO"/>
+                <property name="texto" column="CID_TEXTO" type="es.caib.rolsac.oracle.hibernate.OracleClobType"  />
+                <property name="txbeta" column="CID_TXBETA" type="es.caib.rolsac.oracle.hibernate.OracleClobType"  />
+                <property name="url" length="512" column="CID_URL"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

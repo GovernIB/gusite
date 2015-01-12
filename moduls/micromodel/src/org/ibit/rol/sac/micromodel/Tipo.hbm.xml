@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Tipo" table="GUS_TPNOTI">
+	
+		<cache usage="read-write"/>
+		
+		<id	name="Id" type="long" column="TPN_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQTPN</param>
+            </generator>
+		</id>
+
+		<property name="idmicrosite" column="TPN_MICCOD"/>
+		<property name="tampagina" column="TPN_TAMPAG" type="integer" length="22" />
+		<property name="tipopagina" column="TPN_TIPPAG" type="string" not-null="true" length="1" />	
+		<property name="tipoelemento" column="TPN_TPELEM" type="string" not-null="true" length="1" />	
+		<property name="buscador" column="TPN_BUSCAR" type="string" not-null="true" length="1" />		
+		<property name="orden" column="TPN_ORDEN" type="string" not-null="true" length="1" />
+		<property name="clasificacion" column="TPN_CLASIF" type="string" length="100" />
+
+		<property name="fotosporfila" column="TPN_FOTOSPORFILA" type="integer" length="1" />
+
+		<property name="xurl"  column="TPN_XURL" length="1000"/>
+	    <property name="xjndi"  column="TPN_XJNDI" length="500"/>
+	    <property name="xlocalizacion"  column="TPN_XLOCAL" length="1"/>
+	    <property name="xauth"  column="TPN_XAUTH" length="1"/>
+	    <property name="xusr"  column="TPN_XUSR" length="50" />
+	    <property name="xpwd"  column="TPN_XPWD" length="50"/>
+	    <property name="xid"  column="TPN_XID" length="50"/>
+		
+		<map name="traducciones" cascade="all" table="GUS_TPNIDI">
+            <cache usage="read-write"/>
+            <key column="TPI_TIPCOD" foreign-key="GUS_TPITPN_FK"/>
+            <index column="TPI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionTipo">
+                <property name="nombre" length="100" column="TPI_NOMBRE"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

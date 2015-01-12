@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Menu" table="GUS_MENU">
+		<cache usage="read-write"/>
+		<id	name="Id" type="long" column="MNU_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQMEN</param>
+            </generator>
+		</id>
+
+		<property name="idmicrosite" column="MNU_MICCOD" />	
+		<property name="orden" column="MNU_ORDEN" type="integer" not-null="false" length="22"/>
+		<property name="visible" column="MNU_VISIB" type="string" not-null="false"/>
+		<property name="modo" column="MNU_MODO" type="string" not-null="false"/>
+		<property name="padre" column="MNU_PADRE" />	
+		<many-to-one name="imagenmenu" cascade="all" column="MNU_IMGMEN" foreign-key="GUS_MNUDCM_FK"/>				
+		
+		<set name="contenidos" table="GUS_CONTEN" order-by="CON_ORDEN ASC" cascade="all">
+			<key column="CON_MNUCOD" foreign-key="GUS_CONMNU_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Contenido"/>
+		</set>	
+
+		<map name="traducciones" cascade="all" table="GUS_MNUIDI">
+            <cache usage="read-write"/>
+            <key column="MDI_MNUCOD" foreign-key="GUS_MDIMNU_FK"/>
+            <index column="MDI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionMenu">
+                <property name="nombre" length="256" column="MDI_NOMBRE"/>
+            </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

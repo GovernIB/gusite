@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<!-- Generated 14-feb-2011 13:38:43 by Hibernate Tools 3.3.0.GA -->
+<hibernate-mapping>
+    <class name="org.ibit.rol.sac.micromodel.Convocatoria" table="GUS_CONVOCATORIA">
+        <id name="id" column="CODI" type="java.lang.Long">
+            <generator class="sequence">
+                <param name="sequence">GUS_CONV_SEQ</param>
+            </generator>
+        </id>
+        <property name="nombre" column="NOMBRE" type="java.lang.String"/>
+        <property name="descripcion" column="DESCRIPCION" type="java.lang.String"/>
+        <property name="ultimoEnvio" column="DATA_ENVIO" type="java.sql.Timestamp"/>
+        <many-to-one name="microsite" column="MICROSITE_ID" class="org.ibit.rol.sac.micromodel.Microsite" not-null="false" foreign-key="GUS_CONVOC_MICROSITE_FK"/>
+        <property name="envioSiError" column="REENVIO_ERROR" type="java.lang.Boolean"/>                                
+        <many-to-one name="encuesta" column="ENCUESTA_ID" class="org.ibit.rol.sac.micromodel.Encuesta" not-null="false" foreign-key="GUS_CONVOC_ENCUESTA_FK"/>            
+        <many-to-one name="respuestaCorreo" column="RESPUESTA_CORREO_ID" class="org.ibit.rol.sac.micromodel.Respuesta" not-null="false" foreign-key="GUS_CONVOC_RESPUESTA_CORR_FK"/>            
+        <many-to-one name="preguntaConfirmacion" column="PREGUNTA_CONFIRMACION_ID" class="org.ibit.rol.sac.micromodel.Pregunta" not-null="false" foreign-key="GUS_CONVOC_PREGUNTA_CONF_FK"/>
+        <many-to-one name="respuestaConfirmacion" column="RESPUESTA_CONFIRMACION_ID" class="org.ibit.rol.sac.micromodel.Respuesta" not-null="false" foreign-key="GUS_CONVOC_RESPUESTA_CONF_FK"/>
+        <set name="destinatarios" cascade="all" inverse="true">
+			<key column="CONVOCATORIA_ID" foreign-key="GUS_CONVOC_CONVOCDISTRIB_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.DistribucionConvocatoria"/>
+		</set>
+		<property name="otrosDestinatarios" column="OTROS_DEST" type="java.lang.String"/>
+		<property name="asuntoMsg" column="ASUNTO_MSG" type="java.lang.String"/>        
+        <property name="textoMsg" column="TEXTO_MSG" type="es.caib.rolsac.oracle.hibernate.OracleClobType"/>            
+    </class>
+</hibernate-mapping>

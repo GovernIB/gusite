@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	<class name="org.ibit.rol.sac.micromodel.Encuesta" table="GUS_ENCUST">
+		<meta attribute="sync-DAO">false</meta>
+		<cache usage="read-write"/>
+		<id name="Id" type="long" column="ENC_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQENC</param>
+            </generator>
+		</id>
+
+		<property name="idmicrosite" column="ENC_MICCOD" />
+		<property name="fcaducidad"	column="ENC_CADUCA"	/>
+		<property name="fpublicacion" column="ENC_PUBLIC" />
+		
+		<property name="visible" column="ENC_VISIB" type="string" not-null="false" length="1"/>
+		<property name="indivisible" column="ENC_INDIV" type="string" not-null="false" length="1"/>
+		<property name="paginacion" column="ENC_PAGINA" type="integer" not-null="false" length="22" />
+		<property name="mostrar" column="ENC_MUESTR" type="string" not-null="false" length="1"/>
+		<property name="identificacion" column="ENC_IDENTIF" type="string" not-null="false" length="1"/>
+
+		<set name="preguntas" table="GUS_PREGUN" order-by="PRE_ORDEN ASC" cascade="all">
+			<cache usage="read-write"/>
+			<key column="PRE_ENCCOD" foreign-key="GUS_PREENC_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Pregunta"/>
+		</set>
+
+		<map name="traducciones" cascade="all" table="GUS_ENCIDI">
+			<cache usage="read-write"/>
+            <key column="EID_ENCCOD" foreign-key="GUS_EIDENC_FK"/>
+            <index column="EID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionEncuesta">
+                <property name="titulo" length="256" column="EID_TITULO"/>
+            </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

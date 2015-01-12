@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Respuesta" table="GUS_RESPUS">
+
+		<meta attribute="sync-DAO">false</meta>
+    	<cache usage="read-write"/>
+		<id name="Id" type="long" column="RES_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQRES</param>
+            </generator>
+		</id>
+
+  		<property name="idpregunta" column="RES_PRECOD" type="long" not-null="false" />	
+		<property name="tipo" column="RES_TIPO" type="string" not-null="false" length="1"/>
+		<property name="orden" column="RES_ORDEN" type="integer" not-null="false" length="22" />
+		<property name="nrespuestas" column="RES_NRESP" type="integer" not-null="false" length="22" />
+		
+
+		<set name="respuestadato" table="GUS_ENCVOT" cascade="all" lazy="true">
+			<key column="VOT_IDRESP"  foreign-key="GUS_VOT_IDRESP_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.RespuestaDato"/>
+		</set>	
+		
+		
+		<map name="traducciones" cascade="all" table="GUS_RESIDI">
+			<cache usage="read-write"/>
+            <key column="REI_RESCOD" foreign-key="GUS_REIRES_FK"/>
+            <index column="REI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionRespuesta">
+                <property name="titulo" length="256" column="REI_TITULO"/>
+            </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

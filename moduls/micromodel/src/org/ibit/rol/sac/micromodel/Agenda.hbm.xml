@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Agenda" table="GUS_AGENDA">
+	
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="AGE_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQAGE</param>
+            </generator>
+		</id>
+
+		<property name="organizador" column="AGE_ORGANI" type="string" not-null="false" length="256" />
+		<property name="finicio" column="AGE_INICIO" />
+		<property name="ffin" column="AGE_FIN" />
+		<property name="visible" column="AGE_VISIB" type="string" not-null="false" length="1" />
+		<property name="idmicrosite" column="AGE_MICCOD" type="long" />	
+		
+		<many-to-one name="actividad" column="AGE_ACTIVI" foreign-key="GUS_AGEACT_FK"/>
+				
+		<map name="traducciones" cascade="all" table="GUS_AGEIDI">
+            <key column="AID_AGECOD" foreign-key="GUS_AIDAGE_FK"/>
+            <index column="AID_CODIDI" type="string" length="2"/>
+            
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionAgenda">
+                <property name="descripcion" length="4000" column="AID_DESCRI"/>
+                <property name="titulo" length="256" column="AID_TITULO"/>
+                <property name="url" length="256" column="AID_URL"/>
+                <property name="urlnom" length="512" column="AID_URLNOM"/>
+                <many-to-one name="documento" cascade="all" column="AID_DOCU" foreign-key="GUS_AIDDCM_FK"/>
+                <many-to-one name="imagen" cascade="all" column="AID_IMAGEN" foreign-key="GUS_AIDIMA_FK"/>                
+            </composite-element>
+        </map>
+
+
+
+	</class>	
+</hibernate-mapping>

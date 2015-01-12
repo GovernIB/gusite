@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="sac.persistence" default="main" basedir=".">
+
+    <property file="${basedir}/build.properties"/>
+
+    <property name="modul" value="micropersistence"/>
+    <property name="package" value="org.ibit.rol.sac.micropersistence"/>
+
+    <property name="home.dir" location="${basedir}/../.."/>
+    <property file="${home.dir}/default.properties"/>
+
+    <property name="output.dir" location="${home.dir}/output"/>
+    <property name="modul.output.dir" location="${output.dir}/${modul}"/>
+
+    <property name="lib.dir" location="${home.dir}/lib"/>
+    <property name="etc.dir" location="${home.dir}/etc"/>
+    <property name="xdoclet.dir" location="${lib.dir}/xdoclet123"/>
+    
+    <property name="ejb.src" location="${basedir}/src"/>
+    <property name="ejb.etc" location="${basedir}/etc"/>
+    <property name="ejb.doc" location="${basedir}/doc"/>
+    <property name="ejb.merge.jboss" location="${ejb.etc}/merge/jboss-${jboss.version}"/>
+
+    <property name="ejb.gen.src" location="${modul.output.dir}/gen-src"/>
+    <property name="ejb.gen.etc" location="${modul.output.dir}/gen-etc"/>
+    <property name="ejb.classes" location="${modul.output.dir}/classes"/>
+
+    <property name="doc" location="${output.dir}/doc"/>
+    <property name="ejb.doc.api" location="${doc}/api/${modul}"/>
+    <property name="ejb.product" location="${output.dir}/moduls"/>
+
+    <path id="ejb.class.path">
+	    <fileset dir="${ejb.product}">
+	    	<include name="micromodel.jar"/>
+	    </fileset>
+        <fileset dir="${lib.dir}">
+		    <include name="cglib2.jar"/>
+        	<include name="hibernate2.jar"/>
+            <include name="ejb-2_0.jar"/>
+			<include name="commons-logging.jar"/>
+        	<include name="model.jar"/>
+        	<include name="extractor.jar"/>
+        	<include name="sac-persistence.jar"/>
+        </fileset>
+	    <!-- agarcia: librerias en 00librerias.ear -->
+		<fileset dir="${lib.dir}/webcaib">
+		    <include name="commons-beanutils-1.8.3.jar"/>
+		    <include name="commons-collections-3.2.1.jar"/>
+		    <include name="commons-lang-2.1.jar"/>
+		    <include name="dom4j.jar"/>
+			<include name="lucene-caib.jar"/>
+		   	<include name="lucene-core-2.2.0.jar"/>
+			<include name="lucene-spellchecker-2.2.0.jar"/>			
+			<include name="jericho-html-2.5.jar"/>
+			<include name="struts.jar"/>
+		</fileset>
+
+</path>
+
+    <path id="doclet.class.path">
+        <path refid="ejb.class.path"/>
+        <fileset dir="${lib.dir}">
+            <include name="commons-collections.jar"/>
+        </fileset>
+        <fileset dir="${xdoclet.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <taskdef
+            name="ejbdoclet"
+            classname="xdoclet.modules.ejb.EjbDocletTask"
+            classpathref="doclet.class.path"
+            />
+        <tstamp>
+            <format property="TODAY" pattern="dd-MM-yy"/>
+        </tstamp>
+
+
+        <fail unless="persistence.auth.domain" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="persistence.auth.principal" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="datasource.jndi.micro" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="hibernate.dialect" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="hibernate.show_sql" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="hibernate.cglib" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="hibernate.cache.provider_class" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="hibernate.cache.jar" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="role.system" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="role.admin" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="role.super" message="Revise el fichero ${home.dir}/default.properties"/>
+        <fail unless="role.oper" message="Revise el fichero ${home.dir}/default.properties"/>
+    </target>
+
+    <!-- Crea tots els directoris de treball necessaris -->
+    <target name="prepare">
+        <mkdir dir="${ejb.gen.src}"/>
+        <mkdir dir="${ejb.gen.etc}"/>
+        <mkdir dir="${ejb.classes}"/>
+        <mkdir dir="${ejb.doc.api}"/>
+        <mkdir dir="${ejb.product}"/>
+    </target>
+
+    <target name="ejb.gen.all" depends="prepare,init">
+
+        <ejbdoclet
+            destdir="${ejb.gen.src}"
+            excludedtags="@version,@author"
+            ejbspec="2.0"
+            force="false"
+            verbose="true"
+            >
+
+            <fileset dir="${ejb.src}">
+                <include name="**/*EJB.java"/>
+                <include name="**/*MDB.java"/>
+            </fileset>
+
+            <packageSubstitution packages="ejb" substituteWith="intf"/>
+            <localinterface pattern="{0}Local"/>
+            <localhomeinterface pattern="{0}LocalHome"/>
+            <remoteinterface pattern="{0}"/>
+            <homeinterface pattern="{0}Home"/>
+            <session/>
+
+            <utilobject cacheHomes="true" kind="physical">
+                <packageSubstitution packages="ejb" substituteWith="util"/>
+            </utilobject>
+
+            <deploymentdescriptor
+                clientjar="sac-${modul}-client.jar"
+                xmlencoding="UTF-8"
+                destdir="${ejb.gen.etc}"
+                validatexml="true"
+                />
+
+            <jboss
+                version="${jboss.version}"
+                xmlencoding="UTF-8"
+                destdir="${ejb.gen.etc}"
+                mergedir="${ejb.merge.jboss}"
+                validatexml="true"
+                securityDomain="${persistence.auth.domain}"
+                unauthenticatedPrincipal="${persistence.auth.principal}"
+                />
+
+        </ejbdoclet>
+
+        <copy file="${ejb.etc}/hibernate-microsites.cfg.xml" todir="${ejb.gen.etc}" overwrite="true"/>
+
+        <replace file="${ejb.gen.etc}/hibernate-microsites.cfg.xml">
+            <replacefilter token="@hibernate.jndi@" value="${hibernate.jndi}"/>
+            <replacefilter token="@datasource.jndi@" value="${datasource.jndi.micro}"/>
+            <replacefilter token="@hibernate.dialect@" value="${hibernate.dialect}"/>
+            <replacefilter token="@hibernate.cache.provider_class@" value="${hibernate.cache.provider_class}"/>
+            <replacefilter token="@hibernate.show_sql@" value="${hibernate.show_sql}"/>
+            <replacefilter token="@hibernate.cglib@" value="${hibernate.cglib}"/>
+        </replace>
+
+    </target>
+
+    <target name="ejb.compile" depends="ejb.gen.all">
+        <javac
+            destdir="${ejb.classes}"
+            classpathref="ejb.class.path"
+            debug="${javac.debug}"
+            deprecation="${javac.deprecation}"
+            optimize="${javac.optimize}">
+            <src path="${ejb.src}"/>
+            <src path="${ejb.gen.src}"/>
+        </javac>
+    </target>
+
+    <target name="ejb.jar" depends="ejb.compile">
+        <delete file="${ejb.product}/sac-${modul}.jar" quiet="yes"/>
+        <jar
+            jarfile="${ejb.product}/sac-${modul}.jar"
+            basedir="${ejb.classes}">
+            <manifest>
+                <attribute name="Created-By" value="INDRA"/>
+            </manifest>
+            <metainf dir="${ejb.gen.etc}" includes="*.xml" excludes="hibernate-microsites.cfg.xml"/>
+            <fileset dir="${ejb.gen.etc}" includes="hibernate-microsites.cfg.xml"/>
+            <fileset dir="${ejb.etc}" includes="ehcache-microsites.xml" />
+        </jar>
+    </target>
+
+    <target name="ejb.client" depends="ejb.compile">
+        <delete file="${ejb.product}/sac-${modul}-client.jar" quiet="yes"/>
+        <jar
+            jarfile="${ejb.product}/sac-${modul}-client.jar"
+            basedir="${ejb.classes}">
+            <manifest>
+                <attribute name="Created-By" value="INDRA"/>
+            </manifest>
+            <include name="**/delegate/**/*.class"/>
+            <include name="**/intf/**/*.class"/>
+            <include name="**/util/**/*.class"/>
+        </jar>
+    </target>
+
+    <target name="ejb.javadoc" depends="ejb.gen.all">
+        <javadoc
+            destdir="${ejb.doc.api}"
+            classpathref="ejb.class.path"
+            packagenames="${package}.*"
+            overview="${ejb.doc}/overview.html"
+            windowtitle="API del componente ${modul}"
+            doctitle="API del componente ${modul}"
+            bottom="INDRA">
+            <sourcepath>
+                <pathelement path="${ejb.gen.src}"/>
+                <pathelement path="${ejb.src}"/>
+            </sourcepath>
+            <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
+            <link href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/"/>
+            <link href="http://hibernate.bluemars.net/hib_docs/api/"/>
+        </javadoc>
+    </target>
+
+    <target name="doc" depends="ejb.javadoc" description="Realiza las tareas de documentación"/>
+    <target name="main" depends="ejb.jar,ejb.client" description="Construye el componente"/>
+
+</project>

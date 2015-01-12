@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.MProcedimiento" table="GUS_MICPRO">
+
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="MPR_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQMPR</param>
+            </generator>
+		</id>
+
+		<property name="procedimientos"	column="MPR_PROSEL"	/>
+		<property name="idmicrosite" column="MPR_MICCOD"/>
+
+	</class>	
+
+</hibernate-mapping>

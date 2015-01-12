@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.ibit.rol.sac.micromodel.Correo" table="GUS_CORREO"
+    		select-before-update="false">
+        <id name="correo" column="CORREO" type="java.lang.String">
+            <generator class="assigned"/>
+        </id>
+        <property name="nombre" column="NOMBRE" type="java.lang.String"/>
+        <property name="apellidos" column="APELLIDOS" type="java.lang.String"/>
+        <property name="noEnviar" column="NOENVIAR" type="java.lang.Boolean"/>            
+        <property name="ultimoEnvio" column="ULTIMO_ENVIO" type="java.sql.Timestamp"/>
+        <property name="traceError" column="ERROR_ENVIO" type="java.lang.String"/>
+        <property name="intentoEnvio" column="INTENTO_ENVIO" type="java.lang.Integer"/>
+    </class>
+</hibernate-mapping>

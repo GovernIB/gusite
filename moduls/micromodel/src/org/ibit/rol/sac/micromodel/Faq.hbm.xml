@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Faq" table="GUS_FAQ">
+	
+		<meta attribute="sync-DAO">false</meta>
+		<id name="Id" type="long" column="FAQ_CODI" >
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQFAQ</param>
+            </generator>
+		</id>
+
+		<property name="fecha" column="FAQ_FECHA"/>
+		<property name="visible" column="FAQ_VISIB" type="string" not-null="false" length="1" />
+		<property name="idmicrosite" column="FAQ_MICCOD" type="long" />
+
+		<many-to-one  name="tema" column="FAQ_CODTEM" foreign-key="GUS_FAQTEM_FK"/>
+
+		<map name="traducciones" cascade="all" table="GUS_FAQIDI">
+            <key column="FID_FAQCOD" foreign-key="GUS_FIDFAQ_FK"/>
+            <index column="FID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionFaq">
+                <property name="pregunta" length="1024" column="FID_PREGUN"/>
+                <property name="respuesta" length="4000" column="FID_RESPU"/>
+                <property name="url" length="1024" column="FID_URL"/>
+                <property name="urlnom" length="512" column="FID_URLNOM"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

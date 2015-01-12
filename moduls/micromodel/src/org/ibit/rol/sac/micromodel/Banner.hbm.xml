@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Banner" table="GUS_BANNER">
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="BAN_CODI" >
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQBAN</param>
+            </generator>
+		</id>
+
+		<property name="fcaducidad" column="BAN_CADUCA" />
+		<property name="fpublicacion" column="BAN_PUBLIC" />
+		<property name="visible" column="BAN_VISIB" type="string" not-null="false" length="1" />
+		<property name="idmicrosite" column="BAN_MICCOD"/>
+			
+		<map name="traducciones" cascade="all" table="GUS_BANIDI">
+            <key column="BID_BANCOD" foreign-key="GUS_BIDBAN_FK"/>
+            <index column="BID_CODIDI" type="string" length="2"/>
+            
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionBanner">
+                <property name="titulo" length="50" column="BID_TITULO"/>
+                <property name="url" length="1024" column="BID_URL"/>
+                <property name="alt" length="512" column="BID_ALT"/>
+                <many-to-one name="imagen" cascade="all" column="BID_IMAGEN" foreign-key="GUS_BIDDCM_FK"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

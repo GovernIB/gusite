@@ -1,0 +1,935 @@
+<?xml version="1.0"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" 
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+
+<form-beans>
+	
+	<!-- ***************************************************************** -->
+    <!-- ****************** Formularios de búsquedas ********************* -->
+	<!-- ***************************************************************** -->
+	
+	<form-bean name="BuscaOrdenaNoticiaActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaNoticiaActionForm"/>
+	<form-bean name="BuscaOrdenaEncuestaActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaEncuestaActionForm"/>
+	<form-bean name="BuscaOrdenaComponenteActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaComponenteActionForm"/>
+	<form-bean name="BuscaOrdenaConvocatoriaActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaConvocatoriaActionForm"/>
+	<form-bean name="BuscaOrdenaLDistribucionActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaLDistribucionActionForm"/>
+	<form-bean name="BuscaOrdenaSeleccionarLDistribucionActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaSeleccionarLDistribucionActionForm"/>
+	<form-bean name="BuscaOrdenaAgendaActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaAgendaActionForm"/>
+	<form-bean name="BuscaOrdenaBannerActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaBannerActionForm"/>
+	<form-bean name="BuscaOrdenaActividadActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaActividadActionForm"/>
+	<form-bean name="BuscaOrdenaTemaActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaTemaActionForm"/>
+	<form-bean name="BuscaOrdenaFaqActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaFaqActionForm"/>
+	<form-bean name="BuscaOrdenaFormularioActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaFormularioActionForm"/>
+	<form-bean name="BuscaOrdenaTipoActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaTipoActionForm"/>
+	<form-bean name="BuscaOrdenaMicrositeActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaMicrositeActionForm"/>
+	<form-bean name="BuscaOrdenaFrqssiActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaFrqssiActionForm"/>	
+	<form-bean name="BuscaOrdenaEstadisticaGenActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaEstadisticaGenActionForm"/>	
+	<form-bean name="BuscaOrdenaEstadisticaIndActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaEstadisticaIndActionForm"/>		
+	<form-bean name="BuscaOrdenaRecursoActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaRecursoActionForm"/>			
+	<form-bean name="BuscaOrdenaMicroUsuarioActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaMicroUsuarioActionForm"/>
+	<form-bean name="BuscaOrdenaUsuarioActionForm" type="org.ibit.rol.sac.microback.actionform.busca.BuscaOrdenaUsuarioActionForm"/>
+				
+	<!-- Formulario de listado general -->
+	<form-bean name="listaActionForm" type="org.ibit.rol.sac.microback.actionform.listaActionForm"/>    
+
+	<!-- ***************************************************************** -->
+    <!-- ******************* Formularios de detalle ********************** -->
+	<!-- ***************************************************************** -->
+
+	<form-bean name="noticiaForm" type="org.ibit.rol.sac.microback.actionform.formulario.noticiaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionNoticia"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="fcaducidad" type="java.lang.String"/>
+	    <form-property name="fpublicacion" type="java.lang.String"/>
+   	    <form-property name="orden" type="java.lang.Integer"/>
+   	    <form-property name="imagen" type="org.apache.struts.upload.FormFile" />
+   	    <form-property name="idTipo" type="java.lang.Long" initial=""/>
+		<form-property name="imagenid"  type="java.lang.Long"/>		
+ 	    <form-property name="imagennom" type="java.lang.String"/>
+	    <form-property name="imagenbor" type="boolean" initial="false"/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+	    <form-property name="visibleweb" type="java.lang.String" initial="S"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+  	    <form-property name="ficheros" type="org.apache.struts.upload.FormFile[]" />
+		<form-property name="ficherosid"  type="java.lang.Long[]"/>		
+ 	    <form-property name="ficherosnom" type="java.lang.String[]"/>
+	    <form-property name="ficherosbor" type="boolean[]" initial="false"/>
+	</form-bean>
+
+	<form-bean name="componenteForm" type="org.ibit.rol.sac.microback.actionform.formulario.componenteForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionComponente"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+   	    <form-property name="idTipo" type="java.lang.Long" initial=""/>
+ 	    <form-property name="nombre" type="java.lang.String"/>
+   	    <form-property name="orden" type="java.lang.Integer"/>
+   	    <form-property name="numelem" type="java.lang.Integer"/>
+	    <form-property name="filas" type="java.lang.String" initial="S"/>
+	    <form-property name="soloimg" type="java.lang.String" initial="N"/>
+       	<form-property name="traducciones" type="java.util.ArrayList"/>
+   	    <form-property name="imagen" type="org.apache.struts.upload.FormFile" />
+		<form-property name="imagenid"  type="java.lang.Long"/>		
+ 	    <form-property name="imagennom" type="java.lang.String"/>
+	    <form-property name="imagenbor" type="boolean" initial="false"/>
+	</form-bean>
+
+	<form-bean name="encuestaForm" type="org.ibit.rol.sac.microback.actionform.formulario.encuestaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionEncuesta"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="fcaducidad" type="java.lang.String"/>
+	    <form-property name="fpublicacion" type="java.lang.String"/>
+   	    <form-property name="paginacion" type="java.lang.Integer"/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+	    <form-property name="indivisible" type="java.lang.String" initial="S"/>
+	    <form-property name="mostrar" type="java.lang.String" initial="S"/>
+	    <form-property name="identificacion" type="java.lang.String" initial="N"/>	    
+	    <form-property name="preguntas" type="java.util.ArrayList"/>
+       	<form-property name="seleccionados" type="java.lang.String[]"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="preguntaForm" type="org.ibit.rol.sac.microback.actionform.formulario.preguntaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionPregunta"/>
+    	<form-property name="id" type="java.lang.Long"/>
+		<form-property name="imagen" type="org.apache.struts.upload.FormFile" />
+		<form-property name="imagenid"  type="java.lang.Long"/>		
+ 	    <form-property name="imagennom" type="java.lang.String"/>
+	    <form-property name="imagenbor" type="boolean" initial="false"/>
+   	    <form-property name="orden" type="java.lang.Integer"/>
+   	    <form-property name="nrespuestas" type="java.lang.Integer" initial="0"/>
+	    <form-property name="multiresp" type="java.lang.String" initial="S"/>
+	    <form-property name="obligatoria" type="java.lang.Integer" initial="0"/>
+   	    <form-property name="visiblecmp" type="java.lang.String" initial="S"/>
+   	    <form-property name="obligatorio" type="java.lang.String" initial="S"/>
+   	    <form-property name="visible" type="java.lang.String" initial="S"/>
+   	    <form-property name="maxContestadas" type="java.lang.Integer" initial="0"/>
+   	    <form-property name="minContestadas" type="java.lang.Integer" initial="0"/>
+	    <form-property name="idencuesta" type="java.lang.Long" initial=""/>
+   	    <form-property name="respuestas" type="java.util.ArrayList"/>
+       	<form-property name="seleccionados" type="java.lang.String[]"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="respuestaForm" type="org.ibit.rol.sac.microback.actionform.formulario.respuestaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionRespuesta"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idpregunta" type="java.lang.Long" initial=""/>
+   	    <form-property name="orden" type="java.lang.Integer"/>
+   	    <form-property name="nrespuestas" type="java.lang.Integer" initial="0"/>
+   	    <form-property name="tipo" type="java.lang.String" initial="S"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="temaForm" type="org.ibit.rol.sac.microback.actionform.formulario.temaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionTemafaq"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+       	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="actividadForm" type="org.ibit.rol.sac.microback.actionform.formulario.actividadForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionActividadagenda"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="faqForm" type="org.ibit.rol.sac.microback.actionform.formulario.faqForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionFaq"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="idTema" type="java.lang.Long" initial=""/>
+	    <form-property name="fecha" type="java.lang.String"/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="tiponotForm" type="org.ibit.rol.sac.microback.actionform.formulario.tiponotForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionTipo"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="tampagina" type="java.lang.Integer"/>
+	    <form-property name="tipopagina" type="java.lang.String"/>
+   	    <form-property name="tipoelemento" type="java.lang.String"/>
+   	    <form-property name="fotosporfila" type="java.lang.Integer"/>
+	    <form-property name="buscador" type="java.lang.String" initial="N"/>
+   	    <form-property name="orden" type="java.lang.String"/>
+   	    <form-property name="clasificacion" type="java.lang.String"/>
+   	    <form-property name="clasificacion_txt" type="java.lang.String"/>
+   	    <form-property name="clasificacion_ext" type="java.lang.String"/>
+   	    <form-property name="clasificacion_txt_ext" type="java.lang.String"/>
+   	    <form-property name="xjndi" type="java.lang.String"/>
+   	    <form-property name="xurl" type="java.lang.String"/>
+   	    <form-property name="xusr" type="java.lang.String"/>
+   	    <form-property name="xpwd" type="java.lang.String"/>
+   	    <form-property name="xlocal" type="java.lang.String"/>
+   	    <form-property name="xid" type="java.lang.String"/>
+       	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+	
+	<form-bean name="frqssiForm" type="org.ibit.rol.sac.microback.actionform.formulario.frqssiForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionFrqssi"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="centro" type="java.lang.String"/>
+   	    <form-property name="tipoescrito" type="java.lang.String"/>
+       	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>	
+
+	<form-bean name="bannerForm" type="org.ibit.rol.sac.microback.actionform.formulario.bannerForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionBanner"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="fcaducidad" type="java.lang.String"/>
+	    <form-property name="fpublicacion" type="java.lang.String"/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+  	    <form-property name="ficheros" type="org.apache.struts.upload.FormFile[]" />
+		<form-property name="ficherosid"  type="java.lang.Long[]"/>
+ 	    <form-property name="ficherosnom" type="java.lang.String[]"/>
+	    <form-property name="ficherosbor" type="boolean[]" initial="false"/>
+	</form-bean>
+
+	<form-bean name="agendaForm" type="org.ibit.rol.sac.microback.actionform.formulario.agendaForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionAgenda"/>
+    	<form-property name="id" type="java.lang.Long"/>
+	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+	    <form-property name="finicio" type="java.lang.String"/>
+	    <form-property name="ffin" type="java.lang.String"/>
+	    <form-property name="organizador" type="java.lang.String"/>
+   	    <form-property name="idActividad" type="java.lang.Long" initial=""/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+   	    <form-property name="imagenes" type="org.apache.struts.upload.FormFile[]" />
+		<form-property name="imagenesid"  type="java.lang.Long[]"/>		
+ 	    <form-property name="imagenesnom" type="java.lang.String[]"/>
+	    <form-property name="imagenesbor" type="boolean[]" initial="false"/>
+  	    <form-property name="ficheros" type="org.apache.struts.upload.FormFile[]" />
+		<form-property name="ficherosid"  type="java.lang.Long[]"/>		
+ 	    <form-property name="ficherosnom" type="java.lang.String[]"/>
+	    <form-property name="ficherosbor" type="boolean[]" initial="false"/>
+	</form-bean>
+
+	<form-bean name="contenidoForm" type="org.ibit.rol.sac.microback.actionform.formulario.contenidoForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionContenido"/>
+    	<form-property name="id" type="java.lang.Long"/>
+   	    <form-property name="idMenu" type="java.lang.Long" initial=""/>
+	    <form-property name="fcaducidad" type="java.lang.String"/>
+	    <form-property name="fpublicacion" type="java.lang.String"/>
+	    <form-property name="visible" type="java.lang.String" initial="S"/>
+	    <form-property name="orden" type="java.lang.Integer" initial="0"/>
+	    <form-property name="imagenmenu" type="org.apache.struts.upload.FormFile" />
+	    <form-property name="imagenmenuid"  type="java.lang.Long[]"/>		
+ 	    <form-property name="imagenmenunom" type="java.lang.String[]"/>
+	    <form-property name="imagenmenubor" type="boolean[]" initial="false"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>
+	</form-bean>
+
+	<form-bean name="docsForm" type="org.apache.struts.action.DynaActionForm">
+    	<form-property name="archi" type="org.apache.struts.upload.FormFile"/>
+   	    <form-property name="id" type="java.lang.Long"/>
+  	    <form-property name="idPagina" type="java.lang.Long"/>
+  	    <form-property name="operacion" type="java.lang.String"/>
+  	    <form-property name="seleccionados" type="java.lang.String[]"/>
+	</form-bean>
+
+	<form-bean name="menuForm" type="org.ibit.rol.sac.microback.actionform.formulario.menuForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+    	<form-property name="padreCM" type="java.lang.String"/>
+       	<form-property name="visibleCM" type="java.lang.String" initial="S"/>       	
+       	<form-property name="modoCM" type="java.lang.String" initial="F"/>       	       	
+       	<form-property name="nombreCM" type="java.lang.String[]"/>
+       	<form-property name="imagenCM" type="org.apache.struts.upload.FormFile" />
+
+    	<form-property name="ids" type="java.lang.Long[]"/>
+    	<form-property name="numeroobjectes" type="java.lang.Integer" initial="0"/>
+	   	<form-property name="visibles" type="java.lang.String[]"/>
+	   	<form-property name="modos" type="java.lang.String[]"/>	   	
+   		<form-property name="ordenes" type="java.lang.Integer[]"/>
+    	<form-property name="idPadres" type="java.lang.Long[]"/>
+    	<form-property name="tipos" type="java.lang.String[]"/>
+       	<form-property name="traducciones" type="java.lang.String[]"/>
+	    <form-property name="imagenes" type="org.apache.struts.upload.FormFile[]" />
+	    <form-property name="imagenesid"  type="java.lang.Long[]"/>		
+ 	    <form-property name="imagenesnom" type="java.lang.String[]"/>
+	    <form-property name="imagenesbor" type="boolean[]" initial="false"/>
+
+	</form-bean>
+
+	<form-bean name="microForm" type="org.ibit.rol.sac.microback.actionform.formulario.microForm"
+    	className="org.ibit.rol.sac.microback.config.TraFormBeanConfig">
+	    <set-property property="traduccionClassName" value="org.ibit.rol.sac.micromodel.TraduccionMicrosite"/>
+    	<form-property name="id" type="java.lang.Long"/>
+		<form-property name="unidadAdministrativa" type="java.lang.Integer"/>
+		<form-property name="idUA" type="java.lang.Integer"/>
+		<form-property name="nombreUA" type="java.lang.String"/>
+		<form-property name="nivelAccesibilidad" type="java.lang.Integer" initial="0"/>
+       	<form-property name="fecha" type="java.lang.String"/>
+       	<form-property name="visible" type="java.lang.String" initial="N"/>
+       	<form-property name="tipomenu" type="java.lang.String" initial="N"/>
+       	<form-property name="plantilla" type="java.lang.String"/>
+       	<form-property name="optFaq" type="java.lang.String" initial="N"/>
+       	<form-property name="optMapa" type="java.lang.String" initial="N"/>
+       	<form-property name="optContacto" type="java.lang.String" initial="N"/>
+       	<form-property name="opt1" type="java.lang.String" initial="N"/>
+       	<form-property name="opt2" type="java.lang.String" initial="N"/>
+       	<form-property name="opt3" type="java.lang.String" initial="N"/>
+       	<form-property name="opt4" type="java.lang.String" initial="N"/>
+       	<form-property name="opt5" type="java.lang.String" initial="N"/>
+       	<form-property name="opt6" type="java.lang.String" initial="N"/>
+       	<form-property name="opt7" type="java.lang.String" initial="N"/>
+   	    <form-property name="imagenPrincipal" type="org.apache.struts.upload.FormFile" />
+		<form-property name="imagenPrincipalid"  type="java.lang.Long"/>		
+ 	    <form-property name="imagenPrincipalnom" type="java.lang.String"/>
+	    <form-property name="imagenPrincipalbor" type="boolean" initial="false"/>
+   	    <form-property name="imagenCampanya" type="org.apache.struts.upload.FormFile" />
+		<form-property name="imagenCampanyaid"  type="java.lang.Long"/>		
+ 	    <form-property name="imagenCampanyanom" type="java.lang.String"/>
+	    <form-property name="imagenCampanyabor" type="boolean" initial="false"/>
+   	    <form-property name="estiloCSS" type="org.apache.struts.upload.FormFile" />
+		<form-property name="estiloCSSid"  type="java.lang.Long"/>		
+ 	    <form-property name="estiloCSSnom" type="java.lang.String"/>
+	    <form-property name="estiloCSSbor" type="boolean" initial="false"/>
+       	<form-property name="estiloCSSPatron" type="java.lang.String" initial="N"/>	    
+       	<form-property name="urlhome" type="java.lang.String"/>
+       	<form-property name="urlcampanya" type="java.lang.String"/>
+       	<form-property name="restringido" type="java.lang.String" initial="N"/>
+       	<form-property name="buscador" type="java.lang.String" initial="N"/>
+       	<form-property name="version" type="java.lang.String" initial="2"/>
+       	<form-property name="rol" type="java.lang.String"/>
+       	<form-property name="serviciosSeleccionados" type="java.lang.String"/>
+       	<form-property name="serviciosOfrecidos" type="java.lang.String"/>
+       	<form-property name="idiomas" type="java.lang.String[]"/>
+       	<form-property name="planti5serv" type="java.lang.String[]"/>
+       	<form-property name="servofr" type="java.lang.String[]"/>
+    	<form-property name="numeronoticias" type="java.lang.Integer"/>
+    	<form-property name="tipocabecera" type="java.lang.String"/>
+    	<form-property name="tipopie" type="java.lang.String"/>
+    	<form-property name="claveunica" type="java.lang.String"/>
+    	<form-property name="menucorporativo" type="java.lang.String" initial="N"/>
+    	<form-property name="traducciones" type="java.util.ArrayList"/>   
+    	<form-property name="domini" type="java.lang.String"/>	
+	</form-bean>
+
+	<form-bean name="formularioconForm" type="org.ibit.rol.sac.microback.actionform.formulario.formularioconForm">
+   	    <form-property name="id" type="java.lang.Long"/>
+   	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
+   	    <form-property name="visible" type="java.lang.String" initial="S"/>
+      	<form-property name="email" type="java.lang.String"/>
+      	<form-property name="lineasdatocontacto" type="java.util.ArrayList"/>
+      	<form-property name="anexarch" type="java.lang.String" initial="N"/>
+       	<form-property name="seleccionados" type="java.lang.String[]"/>
+	</form-bean>
+
+	<form-bean name="lineaFormularioForm" type="org.ibit.rol.sac.microback.actionform.formulario.lineaFormularioForm">
+   	    <form-property name="id" type="java.lang.Long"/>
+   	    <form-property name="idcontacto" type="java.lang.Long" initial=""/>
+   	    <form-property name="visible" type="java.lang.String" initial="S"/>
+   	    <form-property name="tamano" type="java.lang.Integer" initial=""/>
+   	    <form-property name="lineas" type="java.lang.Integer" initial=""/>
+   	    <form-property name="obligatorio" type="java.lang.Integer" initial=""/>
+  	    <form-property name="orden" type="java.lang.Integer" initial=""/>
+  	    <form-property name="tipo" type="java.lang.String" initial=""/>
+       	<form-property name="textos" type="java.lang.String[]"/>
+       	<form-property name="etiq" type="java.lang.String[]"/>
+       	<form-property name="numSelectors" type="java.lang.Integer"/>
+       	<form-property name="numSelectors2" type="java.lang.Integer"/>
+       	<form-property name="numOptions" type="java.lang.String" initial=""/>
+	</form-bean>
+
+	<form-bean name="usuarioForm" type="org.ibit.rol.sac.microback.actionform.formulario.UsuarioForm">
+		<form-property name="id" type="java.lang.Long"/>
+		<form-property name="username" type="java.lang.String"/>
+		<form-property name="password" type="java.lang.String"/>
+		<form-property name="repitepwd" type="java.lang.String"/>
+		<form-property name="nombre" type="java.lang.String"/>
+		<form-property name="observaciones" type="java.lang.String"/>
+		<form-property name="perfil" type="java.lang.String"/>
+	</form-bean>
+
+
+	<!-- Formulario de MProcedimiento. No es dinamico (no tiene sentido) -->
+	<form-bean name="MProcedimientoActionForm" type="org.ibit.rol.sac.microback.actionform.formulario.MProcedimientoActionForm"/>    	
+
+	<form-bean name="importarForm" type="org.ibit.rol.sac.microback.actionform.formulario.importarForm">
+		<form-property name="archi" type="org.apache.struts.upload.FormFile"/>
+       	<form-property name="nuevonombre" type="java.lang.String"/>
+       	<form-property name="indexar" type="java.lang.String" initial="S"/>
+       	<form-property name="tarea" type="java.lang.String" initial="C"/>
+	</form-bean>    	
+
+	<form-bean name="convocatoriaForm" type="org.ibit.rol.sac.microback.actionform.formulario.convocatoriaForm">
+		<form-property name="id" type="java.lang.Long"/>
+       	<form-property name="nombre" type="java.lang.String"/>
+       	<form-property name="descripcion" type="java.lang.String"/>
+       	<form-property name="envioError" type="java.lang.String" initial="S"/>
+       	<form-property name="envioConfirmado" type="java.lang.String" initial="N"/>
+       	<form-property name="ultimoEnvio" type="java.lang.String"/>
+       	<form-property name="idEncuesta" type="java.lang.Long"/>
+       	<form-property name="idPregCorreo" type="java.lang.Long"/>
+       	<form-property name="idPregConfirmacion" type="java.lang.Long"/>
+       	<form-property name="idRespConfirmacion" type="java.lang.Long"/>
+       	<form-property name="otrosDestinatarios" type="java.lang.String"/>
+		<form-property name="txtAsunto" type="java.lang.String"/>       	       	
+       	<form-property name="txtMensaje" type="java.lang.String"/>
+	</form-bean>
+	
+	<form-bean name="ldistribucionForm" type="org.ibit.rol.sac.microback.actionform.formulario.ldistribucionForm">
+		<form-property name="id" type="java.lang.Long"/>
+		<form-property name="nombre" type="java.lang.String"/>
+		<form-property name="descripcion" type="java.lang.String"/>
+		<form-property name="microsite" type="java.lang.Long"/>
+		<form-property name="destinatarios" type="java.lang.String[]"/>
+		<form-property name="email" type="java.lang.String"/>
+		<form-property name="seleccionados" type="java.lang.String[]"/>
+	</form-bean> 
+
+	<form-bean name="correoForm" type="org.ibit.rol.sac.microback.actionform.formulario.correoForm">
+		<form-property name="correo" type="java.lang.String"/>
+		<form-property name="nombre" type="java.lang.String"/>
+		<form-property name="apellidos" type="java.lang.String"/>
+		<form-property name="ultimoEnvio" type="java.sql.Timestamp"/>
+		<form-property name="traceError" type="java.lang.String"/>
+		<form-property name="intentoEnvio" type="java.lang.Integer"/>
+	</form-bean>
+
+</form-beans>
+
+<global-exceptions>
+    <exception key="errors.delegate" type="org.ibit.rol.sac.micropersistence.delegate.DelegateException"
+    		   path="/error.jsp" handler="org.ibit.rol.sac.microback.action.DelegateExceptionHandler"/>
+    <exception key="errors.excepcion" type="java.lang.Exception"
+    		   path="/error.jsp" handler="org.ibit.rol.sac.microback.action.ExcepcionGlobalHandler"/>  
+</global-exceptions>
+
+<global-forwards>
+    <forward name="info" path="/info.jsp"/>
+    <forward name="infoscreen" path="/infoscreen.jsp"/>
+    <forward name="pleaseWait" path="/pleaseWait.jsp"/>
+    <forward name="microusu" path="/microusu.jsp"/>   
+</global-forwards>
+
+<action-mappings>
+
+	<action path="/home" type="org.ibit.rol.sac.microback.action.HomeAction" unknown="false">
+		<forward name="inicio" path="/inicio.jsp"/>
+		<forward name="listadomicrosites" path="/microsites.do"/>
+	</action>
+
+	<action path="/index" type="org.ibit.rol.sac.microback.action.HomeAction" unknown="false">
+		<forward name="inicio" path="/inicio.jsp"/>
+		<forward name="listadomicrosites" path="/microsites.do"/>
+		<forward name="home" path="/detallePaginaInicio.jsp"></forward>
+	</action>
+
+	<action path="/index_inicio" type="org.ibit.rol.sac.microback.action.IndexInicioAction" unknown="false">
+		<forward name="inicio" path="/index_inicio.jsp"/>
+	</action>
+
+
+	<action path="/indexa" type="org.ibit.rol.sac.microback.action.IndexaAction" unknown="false"/>
+	
+	<action path="/desindexa" type="org.ibit.rol.sac.microback.action.DesindexaAction" unknown="false"/>
+	
+	<action path="/indexador" type="org.ibit.rol.sac.microback.action.IndexadorAction" unknown="false">
+		<forward name="indexador" path="/indexador.jsp"/>
+	</action>	
+	
+	<action path="/busca" type="org.ibit.rol.sac.microback.action.BuscaAction" unknown="false">
+		<forward name="resultados" path="/buscar.jsp"/>
+	</action>
+
+	<action path="/exportador" type="org.ibit.rol.sac.microback.action.ExportadorAction" unknown="false">
+		<forward name="exportador" path="/exportador.jsp"/>
+	</action>
+
+	<action path="/archivo" type="org.ibit.rol.sac.microback.action.ArchivoAction"/>
+	<action path="/archivopub" type="org.ibit.rol.sac.microback.action.ArchivoPubAction"/>
+	<action path="/grafico" type="org.ibit.rol.sac.microback.action.GraficoAction"/>
+   	<action path="/recursosEdita" type="org.ibit.rol.sac.microback.action.RecursosDocsAction">
+	   	<forward name="listarecursos" path="/listaarchivos.jsp"/>
+   	</action>
+   	
+	<action path="/listarServicios" type="org.ibit.rol.sac.microback.action.ServiciosAction">
+      <forward name="listarservicios" path="/listarservicios.jsp"/>
+    </action>
+
+	<action path="/listartinycomponentes" type="org.ibit.rol.sac.microback.action.ComponentesTinyAction">
+      <forward name="listarcomponentes" path="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"/>
+    </action>    
+    
+	<action path="/recursos" name="BuscaOrdenaRecursoActionForm"
+		type="org.ibit.rol.sac.microback.action.RecursosAction" unknown="false">
+      <forward name="listarrecursos" path="/listaRecursos.jsp"/>
+	  <forward name="listarecursostiny" path="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"/>      
+    </action>
+	<action path="/estadisticagen" name="BuscaOrdenaEstadisticaGenActionForm"
+		type="org.ibit.rol.sac.microback.action.EstadisticasGenAction" unknown="false">
+      <forward name="listarestadistica" path="/listaEstadisticasGen.jsp"/>
+    </action>
+	<action path="/estadisticaind" name="BuscaOrdenaEstadisticaIndActionForm"
+		type="org.ibit.rol.sac.microback.action.EstadisticasIndAction" unknown="false">
+      <forward name="listarestadistica" path="/listaEstadisticasInd.jsp"/>
+    </action>
+    
+	<action path="/estadisticaenc" type="org.ibit.rol.sac.microback.action.EstadisticasEncuestasAction" unknown="false">
+		<forward name="listarglobal" path="/listaEstadisticasEnc.jsp"/>
+		<forward name="listarindividual" path="/listaEstadisticasEncInd.jsp"/>		
+	</action>
+	
+	<action path="/exportaEncuesta" type="org.ibit.rol.sac.microback.action.ExportarEncuestaAction"/>    
+    
+	<action path="/manual" type="org.ibit.rol.sac.microback.action.ManualAction" unknown="false">
+		<forward name="mostramanual" path="/manual.jsp"/>
+		<forward name="listarpildoras" path="/listapildoras.jsp"/>
+	</action>    
+    
+	<action path="/encdatos" type="org.ibit.rol.sac.microback.action.EstadisticasEncuestasDatosAction" unknown="false">
+		<forward name="listardatos" path="/listaEstadisticasEncDatos.jsp"/>		
+	</action>    
+    
+    <action path="/enccerca" type="org.ibit.rol.sac.microback.action.EstadisticaEncuestaCercaAction" unknown="false">
+		<forward name="mostraresultcerca" path="/listaEstadisitcasEncCerca.jsp"/>		
+	</action> 
+	
+    <action path="/back" 
+         type="org.ibit.rol.sac.back.indra.actions.BackRequestAction"/>    
+    
+	<!-- ***************************************************************** -->
+    <!-- ************** Acciones de busqueda y ordenacion **************** -->
+	<!-- ***************************************************************** -->
+
+	<action path="/noticias" name="BuscaOrdenaNoticiaActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaNoticiasAction" >
+      <forward name="listarNotis" path="/listaNoticias.jsp"/>
+      <forward name="listarTipos" path="/tipos.do"/>
+    </action>
+    
+	<action path="/componentes" name="BuscaOrdenaComponenteActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaComponentesAction" >
+      <forward name="listarComponentes" path="/listaComponentes.jsp"/>
+    </action>
+    
+	<action path="/encuestas" name="BuscaOrdenaEncuestaActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaEncuestasAction" >
+      <forward name="listarEncuestas" path="/listaEncuestas.jsp"/>
+    </action>
+    
+    <action path="/convocatorias" name="BuscaOrdenaConvocatoriaActionForm"
+    	type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaConvocatoriasAction">
+      <forward name="listarconvocatorias" path="/listaConvocatorias.jsp"/>
+    </action>
+    
+    <action path="/ldistribucion" name="BuscaOrdenaLDistribucionActionForm"
+    	type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaLDistribucionAction">
+      <forward name="listadistribucion" path="/listaDistribucion.jsp"/>
+    </action>
+    
+    <action path="/escogerDistribConvoc" name="BuscaOrdenaSeleccionarLDistribucionActionForm"
+    	type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaSeleccionarLDistribucionAction">
+      <forward name="listadistribucion" path="/seleccionarListaDistribucion.jsp"/>
+    </action>
+
+    <action path="/agendas" name="BuscaOrdenaAgendaActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaAgendaAction" >
+      <forward name="listarAgendas" path="/listaAgendas.jsp"/>
+    </action>
+        
+	<action path="/actividades" name="BuscaOrdenaActividadActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaActividadesAction" >
+      <forward name="listarActivis" path="/listaActividades.jsp"/>
+    </action>
+
+	<action path="/temas" name="BuscaOrdenaTemaActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaTemasAction" >
+      <forward name="listarTemas" path="/listaTemas.jsp"/>
+    </action>
+
+	<action path="/faqs" name="BuscaOrdenaFaqActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaFaqsAction" >
+      <forward name="listarFaqs" path="/listaFaqs.jsp"/>
+    </action>
+
+	<action path="/tipos" name="BuscaOrdenaTipoActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaTiposAction" >
+      <forward name="listarTipos" path="/listaTipos.jsp"/>
+      <forward name="listarTiposMantenimiento" path="/listaTiposMantenimientos.jsp"/>
+    </action>
+    
+   	<action path="/frqssis" name="BuscaOrdenaFrqssiActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaFrqssisAction" >
+      <forward name="listarFrqssis" path="/listaFrqssis.jsp"/>
+    </action>
+
+	<action path="/banners" name="BuscaOrdenaBannerActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaBannerAction" >
+      <forward name="listarBanners" path="/listaBanners.jsp"/>
+    </action>
+
+    <action path="/formularios" name="BuscaOrdenaFormularioActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.buscaordenaFormularioAction" >
+      <forward name="listarFormus" path="/listaFormularios.jsp"/>
+    </action>
+
+	<action path="/microsites"  name="BuscaOrdenaMicrositeActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.BuscaordenaMicrositesAction" >
+      <forward name="listarMicrosites" path="/listaMicrosites.jsp"/>
+    </action>
+    
+	<action path="/microUsuarios" name="BuscaOrdenaMicroUsuarioActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.BuscaOrdenaMicroUsuariosAction" >
+      <forward name="listarUsuarios" path="/listaUsuariosMicrosite.jsp"/>
+      <forward name="listarMicrositesdelusu" path="/listaMicrositesdelusu.jsp"/>
+    </action>
+    
+	<action path="/usuarios"  name="BuscaOrdenaUsuarioActionForm"
+		type="org.ibit.rol.sac.microback.action.buscaordena.BuscaordenaUsuarioAction" >
+      <forward name="listarUsuarios" path="/listaUsuarios.jsp"/>
+    </action>
+    
+	<!-- ***************************************************************** -->
+    <!-- ******************* Acciones de Edición ************************* -->
+	<!-- ***************************************************************** -->
+
+    <action path="/noticiasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaNoticiasAction" >
+      <forward name="detalleNoti" path="/detalleNoticia.jsp"/>
+      <forward name="listarNoticias" path="/noticias.do"/>
+    </action>
+
+    <action path="/componentesAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaComponentesAction" >
+      <forward name="detalleCompo" path="/detalleComponente.jsp"/>
+      <forward name="listarComponentes" path="/componentes.do"/>
+    </action>
+
+    <action path="/encuestasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaEncuestasAction" >
+      <forward name="detalleEncuesta" path="/detalleEncuesta.jsp"/>
+    </action>
+    
+    <action path="/convocatoriasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaConvocatoriasAction" >
+      <forward name="detalleConvocatoria" path="/detalleConvocatoria.jsp"/>
+    </action>
+
+    <action path="/ldistribucionAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaLDistribucionAction" >
+      <forward name="detalleLDistribucion" path="/detalleLDistribucion.jsp"/>
+    </action>
+    
+    <action path="/escogerDistribConvocAcc" name="BuscaOrdenaSeleccionarLDistribucionActionForm"
+    	scope="request" type="org.ibit.rol.sac.microback.action.lista.listaSeleccionarLDistribucionAction">
+      <forward name="detalleConvocatoria" path="/convocatoriaEdita.do"/>
+    </action>
+
+    <action path="/preguntasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaPreguntasAction" >
+      <forward name="detalle" path="/detallePregunta.jsp"/>
+    </action>
+
+    <action path="/respuestasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaRespuestasAction" >
+      <forward name="detalle" path="/detalleRespuesta.jsp"/>
+    </action>
+
+    <action path="/contenidosAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaContenidosAction" >
+      <forward name="detalleConte" path="/detalleContenido.jsp"/>
+       <forward name="info" path="/infoContenido.jsp"/>
+    </action>
+
+    <action path="/agendasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaAgendasAction" >
+      <forward name="detalleAgenda" path="/detalleAgenda.jsp"/>
+      <forward name="listarAgendas" path="/agendas.do"/>
+    </action>
+
+    <action path="/actividadesAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaActividadesAction" >
+      <forward name="detalleActivi" path="/detalleActividad.jsp"/>
+      <forward name="listarActividades" path="/actividades.do"/>
+    </action>
+
+    <action path="/temasAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaTemasAction" >
+      <forward name="detalleTema" path="/detalleTema.jsp"/>
+    </action>
+
+    <action path="/faqsAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaFaqsAction" >
+      <forward name="detalleFaq" path="/detalleFaq.jsp"/>
+    </action>
+
+    <action path="/tiposAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaTiposAction" >
+      <forward name="detalleTipo" path="/detalleTipo.jsp"/>
+      <forward name="listarTipos" path="/tipos.do"/>
+    </action>
+    
+   <action path="/frqssisAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaFrqssisAction" >
+      <forward name="detalleFrqssi" path="/detalleFrqssi.jsp"/>
+    </action>    
+
+    <action path="/bannersAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaBannersAction" >
+      <forward name="detalleBanner" path="/detalleBanner.jsp"/>
+    </action>
+
+    <action path="/microAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.errorMicroAction" >
+		<forward name="general" path="/microGeneral.jsp"/>
+    </action>
+
+    <action path="/menuAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.errorMenuAction" >
+		<forward name="detalle" path="/detalleMenu.jsp"/>
+    </action>
+
+    <action path="/formulariosAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaFormulariosAction" >
+      <forward name="detalleFormu" path="/detalleFormulario.jsp"/>
+      <forward name="listarFormu" path="/formularios.do"/>
+    </action>
+    
+    <action path="/lineaFormuAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaLineasFormuAction" >
+      <forward name="detalleLineaFormu" path="/detalleLineaFormulario.jsp"/>
+    </action>
+
+    <action path="/micrositesAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.listaMicrositesAction" >
+      <forward name="detalleMicrosite" path="/inicio.jsp"/>
+      <forward name="crearMicrosite" path="/home.do"/>
+    </action>
+
+    <action path="/microusuariosAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.ListaMicroUsuariosAction" >
+      <forward name="detalleMicrousuario" path="/detalleMicrousuario.jsp"/>
+    </action>
+
+    <action path="/usuariosAcc" name="listaActionForm"
+		scope="request" type="org.ibit.rol.sac.microback.action.lista.ListaUsuariosAction" >
+      <forward name="detalleUsuario" path="/detalleUsuario.jsp"/>
+    </action>
+
+	<!-- ***************************************************************** -->
+    <!-- ******************* Acciones de Multiples *********************** -->
+	<!-- ***************************************************************** -->
+
+    <action path="/noticiaEdita" name="noticiaForm" input="/noticiasAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.noticiasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleNoticia.jsp"/>
+    </action>
+
+    <action path="/componenteEdita" name="componenteForm" input="/componentesAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.componentesEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleComponente.jsp"/>
+    </action>
+
+    <action path="/encuestaEdita" name="encuestaForm" input="/encuestasAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.encuestasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleEncuesta.jsp"/>
+    </action>
+    
+    <action path="/convocatoriaEdita" name="convocatoriaForm" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.convocatoriasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleConvocatoria.jsp"/>      
+    </action>
+    
+    <action path="/ldistribucionEdita" name="ldistribucionForm" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.ldistribucionEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleLDistribucion.jsp"/>
+    </action>
+
+    <action path="/correoEdita" name="correoForm" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.correoEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleCorreo.jsp"/>      
+    </action>
+
+    <action path="/preguntaEdita" name="preguntaForm" input="/preguntasAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.preguntasEditaAction" unknown="false">
+      <forward name="detalle" path="/detallePregunta.jsp"/>
+    </action>
+
+    <action path="/respuestaEdita" name="respuestaForm" input="/respuestasAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.respuestasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleRespuesta.jsp"/>
+    </action>
+
+    <action path="/contenidoEdita" name="contenidoForm" input="/contenidosAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.contenidosEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleContenido.jsp"/>
+      <forward name="info" path="/infoContenido.jsp"/>
+    </action>
+
+    <action path="/docsEdita" name="docsForm" scope="request" 
+    	type="org.ibit.rol.sac.microback.action.edita.docsEditaAction" >
+    </action>
+
+    <action path="/agendaEdita" name="agendaForm" input="/agendasAcc.do"
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.agendasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleAgenda.jsp"/>
+    </action>
+
+    <action path="/actividadEdita" name="actividadForm" input="/actividadesAcc.do"
+    	scope="session" type="org.ibit.rol.sac.microback.action.edita.actividadesEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleActividad.jsp"/>
+    </action>
+
+    <action path="/temaEdita" name="temaForm" input="/temasAcc.do"
+    	scope="session" type="org.ibit.rol.sac.microback.action.edita.temasEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleTema.jsp"/>
+    </action>
+
+    <action path="/faqEdita" name="faqForm" input="/faqsAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.faqsEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleFaq.jsp"/>
+    </action>
+
+    <action path="/tipoEdita" name="tiponotForm" input="/tiposAcc.do"
+    	scope="session" type="org.ibit.rol.sac.microback.action.edita.tiposEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleTipo.jsp"/>
+    </action>
+    
+    <action path="/frqssiEdita" name="frqssiForm" input="/frqssisAcc.do"
+    	scope="session" type="org.ibit.rol.sac.microback.action.edita.frqssisEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleFrqssi.jsp"/>
+    </action>    
+
+    <action path="/bannerEdita" name="bannerForm" input="/bannersAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.bannersEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleBanner.jsp"/>
+    </action>
+
+    <action path="/menuEdita" name="menuForm" input="/menuAcc.do"
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.menuEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleMenu.jsp"/>
+      <forward name="info" path="/infoContenido.jsp"/>
+    </action>
+
+    <action path="/microEdita" name="microForm" input="/microAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.microEditaAction" unknown="false">
+      <forward name="general" path="/microGeneral.jsp"/>
+      <forward name="cabpie" path="/microCabpie.jsp"/>
+      <forward name="home" path="/detallePaginaInicio.jsp"/>
+      <forward name="info" path="/info.jsp"/>
+      <forward name="inicio" path="/inicio.jsp"></forward>
+      <forward name="refresco" path="/pleaseWaitGeneral.jsp"></forward>
+    </action>
+    
+    <action path="/paginaInicioEdita" name="microForm" input="/microAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.paginaInicioEditaAction" unknown="false">
+      <forward name="home" path="/detallePaginaInicio.jsp"/>
+      <forward name="info" path="/info.jsp"/>
+      <forward name="inicio" path="/inicio.jsp"></forward>
+    </action>
+
+    <action path="/cabeceraPieEdita" name="microForm" input="/microAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.cabeceraPieEditaAction" unknown="false">
+      <forward name="general" path="/microGeneral.jsp"/>
+      <forward name="cabpie" path="/microCabpie.jsp"/>
+      <forward name="home" path="/detallePaginaInicio.jsp"/>
+      <forward name="inicio" path="/inicio.jsp"></forward>
+      <forward name="refresco" path="/pleaseWaitCabPie.jsp"></forward>
+    </action>    
+
+    <action path="/formularioEdita" name="formularioconForm" input="/formulariosAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.formulariosEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleFormulario.jsp"/>
+    </action>
+
+    <action path="/lineaformularioEdita" name="lineaFormularioForm" input="/lineaFormuAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.lineaFormularioEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleLineaFormulario.jsp"/>
+    </action>
+
+    
+    <action path="/procedimientos" name="MProcedimientoActionForm" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.MProcedimientosEditaAction" unknown="false">
+      <forward name="detalle" path="/listaProcedimientos.jsp"/>
+    </action>    
+
+    <action path="/usuarioEdita" name="usuarioForm" input="/usuariosAcc.do" 
+	    scope="session" type="org.ibit.rol.sac.microback.action.edita.UsuarioEditaAction" unknown="false">
+      <forward name="detalle" path="/detalleUsuario.jsp"/>
+    </action>
+
+    <action path="/exportar" type="org.ibit.rol.sac.microback.action.util.exportarAction" scope="request" unknown="false"/>
+
+    <action path="/importar" name="importarForm" type="org.ibit.rol.sac.microback.action.util.importarAction" scope="request" unknown="false">
+	    <forward name="detalle" path="/importar.jsp"/>
+    </action>    	 
+
+    <action path="/consola" type="org.ibit.rol.sac.microback.action.util.ConsolaAction" unknown="false">
+	    <forward name="detalle" path="/consola.jsp"/>
+    </action>    	 
+       
+    <action path="/detallelogimport" type="org.ibit.rol.sac.microback.action.ImportRequestProcessorAction" unknown="false">
+	    <forward name="detalle" path="/detallelogimport.jsp"/>
+    </action>    
+    
+    <action path="/eliminarmicro" type="org.ibit.rol.sac.microback.action.util.eliminarAction" scope="request" unknown="false"/>
+
+
+    <action path="/procesow3c" type="org.ibit.rol.sac.microback.action.W3cAction" unknown="false">
+	    <forward name="procesow3c" path="/procesow3c.jsp"/>
+	    <forward name="procesow3ctesteando" path="/procesow3ctesteando.jsp"/>
+    </action>    	 
+
+	<action path="/visorw3c" type="org.ibit.rol.sac.microback.action.VisorW3cAction" unknown="false">
+			<forward name="visorw3c" path="/visorw3c.jsp"/>
+	</action>	
+
+	<action path="/accesibilitat" type="org.ibit.rol.sac.microback.action.AccesibilidadAction" unknown="false">
+			<forward name="acce" path="/accesibilitat.jsp"/>
+	</action>	
+
+	<action path="/procesow3ctesteandopintastatus" type="org.ibit.rol.sac.microback.action.ProcesoW3CTesteandoValorStatusBar" unknown="false">
+			<forward name="detallestatusbar" path="/procesow3ctesteandopintastatus.jsp"/>
+	</action>	
+
+    <!-- Acciones para ajax -->
+    
+	<action path="/ajaxBarraEstado" type="org.ibit.rol.sac.microback.ajax.AjaxValorBarraEstadoAction" unknown="false"/>
+
+
+</action-mappings>
+
+
+<controller
+	maxFileSize="50M"
+	memFileSize="10K"
+    contentType="text/html;charset=iso-8859-1"
+    debug="3"
+    locale="true"
+    nocache="true"
+    processorClass="org.ibit.rol.sac.microback.utils.espera.LongWaitRequestProcessor"
+  />
+
+<message-resources parameter="sac-microback-messages"/>
+
+<plug-in className="org.ibit.rol.sac.microback.plugins.HibernateConverterPlugin" />
+<plug-in className="org.ibit.rol.sac.microback.plugins.IdiomaPlugin" />
+
+
+</struts-config>

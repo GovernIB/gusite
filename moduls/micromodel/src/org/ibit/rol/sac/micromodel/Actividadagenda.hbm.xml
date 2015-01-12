@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Actividadagenda" table="GUS_ACTIVI">
+		
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="ACT_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQACT</param>
+            </generator>
+		</id>
+		
+		<property name="idmicrosite" column="ACT_MICCOD"/>
+
+		<map name="traducciones" cascade="all" table="GUS_ACTIDI">
+            <key column="ATI_ACTCOD" foreign-key="GUS_ATIACT_FK"/>
+            <index column="ATI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionActividadagenda">
+                <property name="nombre" length="150" column="ATI_NOMBRE"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

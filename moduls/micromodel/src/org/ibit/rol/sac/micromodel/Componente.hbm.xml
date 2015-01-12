@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Componente" table="GUS_COMPOS">
+		<cache usage="read-write"/>
+
+		<id name="Id" type="long" column="CMP_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQCMP</param>
+            </generator>
+		</id>
+		
+		<property name="idmicrosite" column="CMP_MICCOD"/>
+		<property name="soloimagen" column="CMP_SOLOIM" type="string" not-null="false" length="1"/>
+		<property name="filas" column="CMP_FILAS" type="string" not-null="false" length="1"/>		
+		<property name="nombre" column="CMP_NOMBRE" type="string" not-null="false" length="256"/>		
+		<property name="ordenacion" column="CMP_ORDEN" type="integer" not-null="false"/>
+		<property name="numelementos" column="CMP_NUMELE" type="integer"/>
+
+		<many-to-one name="tipo" column="CMP_TIPO" foreign-key="GUS_CMPTPN_FK"/>		
+        <many-to-one name="imagenbul" cascade="all" column="CMP_IMGBUL" foreign-key="GUS_CMPDCM_FK"/>		
+
+
+		<map name="traducciones" cascade="all" table="GUS_CMPIDI">
+            <cache usage="read-write"/>
+            <key column="CPI_CMPCOD" foreign-key="GUS_CPICMP_FK"/>
+            <index column="CPI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionComponente">
+                <property name="titulo" length="256" column="CPI_TITULO"/>
+            </composite-element>
+        </map>
+
+	</class>	
+
+</hibernate-mapping>

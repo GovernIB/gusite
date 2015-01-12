@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.MicrositeCompleto" table="GUS_MICROS">
+	
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="MIC_CODI" >
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQMIC</param>
+            </generator>
+		</id>
+
+		<property name="idUA" column="MIC_CODUNI" type="integer" not-null="false" length="22" />
+		<property name="fecha" column="MIC_FECHA" />
+		<property name="visible" column="MIC_VISIB" type="string" not-null="true" length="1" />
+		<property name="tipomenu" column="MIC_MENU" type="string" not-null="true" length="1" />
+		<property name="estiloCSSPatron" column="MIC_CSSPTR" type="string" length="1" />		
+		<property name="plantilla" column="MIC_PLANTI" type="string"/>
+		<property name="optFaq" column="MIC_OPFAQ" type="string"/>
+		<property name="optMapa" column="MIC_OPMAPA" type="string"/>
+		<property name="optContacto" column="MIC_OPCONT" type="string"/>
+		<property name="opt1" column="MIC_OPT1" type="string"/>
+		<property name="opt2" column="MIC_OPT2" type="string"/>
+		<property name="opt3" column="MIC_OPT3" type="string"/>
+		<property name="opt4" column="MIC_OPT4" type="string"/>
+		<property name="opt5" column="MIC_OPT5" type="string"/>
+		<property name="opt6" column="MIC_OPT6" type="string"/>												
+		<property name="opt7" column="MIC_OPT7" type="string"/>
+		<property name="urlhome" column="MIC_URLHOM" type="string" length="512" />
+		<property name="restringido" column="MIC_RESTRI" type="string" length="1" />
+		<property name="rol" column="MIC_ROL" type="string" length="150" />
+		<property name="numeronoticias" column="MIC_NUMNOT" type="integer" length="22" />
+		<property name="serviciosSeleccionados" column="MIC_SERSEL" type="string" length="1024" />		
+		<property name="serviciosOfrecidos" column="MIC_SEROFR" type="string" length="1024" />		
+		<property name="urlcampanya" column="MIC_URLCAM" type="string" length="512" />
+		<property name="tipocabecera" column="MIC_CAB" type="string" length="1" />		
+		<property name="tipopie" column="MIC_PIE" type="string" length="1" />				
+		<property name="buscador" column="MIC_BUSCA" type="string" not-null="true" length="1" />		
+
+		<property name="claveunica" column="MIC_CLAVE" type="string" length="150" />
+		<property name="menucorporativo" column="MIC_MNUCRP" type="string" length="1" />
+		
+		<many-to-one name="imagenPrincipal" cascade="all" column="MIC_IMAGEN" foreign-key="GUS_MICDCM_FK"/>
+		<many-to-one name="imagenCampanya" cascade="all" column="MIC_IMGCAM" foreign-key="GUS_MICDC2_FK"/>
+		<many-to-one name="estiloCSS" cascade="all" column="MIC_CSS" foreign-key="GUS_MICDC3_FK"/>	
+
+		<set name="idis" table="GUS_IDIMIC" cascade="all">
+        	<key column="IMI_MICCOD"/>
+            <element column="IMI_CODIDI" type="string"/>
+        </set>
+
+		<set name="docus" table="GUS_DOCUS" cascade="all">
+			<key column="DCM_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Archivo"/>
+		</set>	
+
+		<set name="proceds" table="GUS_MICPRO" cascade="all">
+			<key column="MPR_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.MProcedimiento"/>
+		</set>	
+
+		<set name="faqs" table="GUS_FAQ" cascade="all">
+			<key column="FAQ_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Faq"/>
+		</set>	
+				
+		<set name="temas" table="GUS_TEMAS" cascade="all">
+			<key column="TEM_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Temafaq"/>
+		</set>	
+
+		<set name="actividades" table="GUS_ACTIVI" cascade="all">
+			<key column="ACT_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Actividadagenda"/>
+		</set>	
+
+		<set name="agendas" table="GUS_AGENDA" cascade="all">
+			<key column="AGE_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Agenda"/>
+		</set>	
+
+		<set name="banners" table="GUS_BANNER" cascade="all">
+			<key column="BAN_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Banner"/>
+		</set>	
+
+		<set name="noticias" table="GUS_NOTICS" cascade="all">
+			<key column="NOT_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Noticia"/>
+		</set>			
+		
+		<set name="frqssis" table="GUS_FRQSSI" cascade="all">
+			<key column="FRQ_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Frqssi"/>
+		</set>					
+
+		<set name="componentes" table="GUS_COMPOS" cascade="all">
+			<key column="CMP_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Componente"/>
+		</set>			
+
+		<set name="tiponotis" table="GUS_TPNOTI" cascade="all">
+			<key column="TPN_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Tipo"/>
+		</set>	
+
+		<set name="menus" table="GUS_MENU" cascade="all">
+			<key column="MNU_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Menu"/>
+		</set>			
+
+		<set name="formularioscontacto" table="GUS_FRMCON" cascade="all">
+			<key column="FRM_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Contacto"/>
+		</set>			
+		
+
+		<set name="encuestas" table="GUS_ENCUST" cascade="all">
+			<key column="ENC_MICCOD"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Encuesta"/>
+		</set>			
+
+
+		<map name="traducciones" cascade="all" table="GUS_MICIDI">
+            <cache usage="read-write"/>
+            <key column="MID_MICCOD" foreign-key="GUS_MIDMIC_FK"/>
+            <index column="MID_CODIDI" type="string" length="2"/>
+            
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionMicrosite">
+				<property name="titulo" length="256" column="MID_TITULO"/>
+                <property name="txtop1" length="64" column="MID_TXTOP1"/>
+                <property name="urlop1" length="256" column="MID_URLOP1"/>
+                <property name="txtop2" length="64" column="MID_TXTOP2"/>
+                <property name="urlop2" length="256" column="MID_URLOP2"/>
+                <property name="txtop3" length="64" column="MID_TXTOP3"/>
+                <property name="urlop3" length="256" column="MID_URLOP3"/>
+                <property name="txtop4" length="64" column="MID_TXTOP4"/>
+                <property name="urlop4" length="256" column="MID_URLOP4"/>
+                <property name="txtop5" length="64" column="MID_TXTOP5"/>
+                <property name="urlop5" length="256" column="MID_URLOP5"/>
+                <property name="txtop6" length="64" column="MID_TXTOP6"/>
+                <property name="urlop6" length="256" column="MID_URLOP6"/>
+                <property name="txtop7" length="64" column="MID_TXTOP7"/>
+                <property name="urlop7" length="256" column="MID_URLOP7"/>
+                <property name="titulocampanya" length="256" column="MID_TITCAM"/>
+                <property name="subtitulocampanya" length="256" column="MID_SUBTCA"/>                
+                <property name="cabecerapersonal" length="4000" column="MID_CABPER"/>                
+                <property name="piepersonal" length="4000" column="MID_PIEPER"/>                                                
+            </composite-element>
+        </map>
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<!-- Generated 14-feb-2011 13:38:43 by Hibernate Tools 3.3.0.GA -->
+<hibernate-mapping>
+    <class name="org.ibit.rol.sac.micromodel.DistribucionConvocatoria" table="GUS_DISTRIB_CONVOCATORIA">
+		<composite-id >			
+	         <key-property name="idConvocatoria"  column="CONVOCATORIA_ID" type="java.lang.Long" />   
+	         <key-property name="idDistribucion" column="DISTRIB_ID" type="java.lang.Long" />   
+	     </composite-id>		
+        <property name="ultimoEnvio" column="ULTIMO_ENVIO" type="java.sql.Timestamp"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+		<class name="org.ibit.rol.sac.micromodel.Lineadatocontacto" table="GUS_FRMLIN">
+	
+		<meta attribute="sync-DAO">false</meta>
+		<id	name="Id" type="long" column="FLI_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQFLI</param>
+            </generator>
+		</id>
+		
+		<property name="visible" column="FLI_VISIB" type="string" not-null="false" length="1" />
+		<property name="tamano" column="FLI_TAMANO" type="integer" not-null="false" length="22" />
+		<property name="lineas" column="FLI_LINEAS" type="integer" not-null="false" length="22" />
+		<property name="orden" column="FLI_ORDEN" type="integer" not-null="false" length="22" />
+		<property name="obligatorio" column="FLI_OBLIGA" type="integer" not-null="false" length="22" />
+		<property name="tipo" column="FLI_TIPO" type="string" not-null="false" length="1" />
+		<property name="idcontacto" column="FLI_FRMCOD" type="long" not-null="false" />	
+
+		<map name="traducciones" cascade="all" table="GUS_FRMIDI">
+            <cache usage="read-write"/>
+            <key column="RID_FLICOD" foreign-key="GUS_RIDFLI_FK"/>
+            <index column="RID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionLineadatocontacto">
+                <property name="texto" length="4000" column="RID_TEXTO"/>
+            </composite-element>
+        </map>		
+
+
+	</class>	
+</hibernate-mapping>

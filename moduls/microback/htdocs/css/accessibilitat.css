@@ -1,0 +1,30 @@
+/* Document CSS */
+
+.capaFormIdioma { padding:0 1em; }
+.capaFormIdioma ul { margin-left:1em; }
+
+ul.xhtml { list-style:none; }
+ul.xhtml li { padding:.3em 0; }
+ul.xhtml li.warning { padding-left:2em; background:#fff url(../imgs/accessibilitat/warning.gif) no-repeat left center; }
+ul.xhtml li.warning strong { color:#990; }
+ul.xhtml li.error { padding-left:2em; background:#fff url(../imgs/accessibilitat/error.gif) no-repeat left center; }
+ul.xhtml li.error strong { color:#c00; }
+
+
+ul.acc { list-style:none; }
+ul.acc li.cap { font-variant:small-caps; }
+ul.acc li.principal { font-weight:bold; }
+ul.acc li { overflow:hidden; clear:left; width:100%; padding:.2em 0; }
+ul.acc span.automatic, ul.acc span.manual { display:block; float:left; width:10%; text-align:center; }
+ul.acc span.detall { display:block; float:left; width:20%; text-align:center; }
+ul.acc li p { overflow:hidden; width:100%; padding:0; margin:0; }
+ul.acc li p.detall { display:none; margin-top:.3em; }
+ul.acc li p.detall span.automatic { width:15%; }
+ul.acc li p.detall span.manual { width:5%; }
+ul.acc span.text { display:block; float:left; width:75%; }
+ul.acc span.pag { padding-left:1.7em; background:#fff url(../imgs/accessibilitat/pag.gif) no-repeat left center; }
+ul.acc span.mal { padding-left:1.7em; background:#fff url(../imgs/accessibilitat/mal.gif) no-repeat left center; }
+ul.acc span.revisar { padding-left:1.7em; background:#fff url(../imgs/accessibilitat/revisar.gif) no-repeat left center; }
+ul.acc li a { color:#069; text-decoration:none; outline:none; }
+ul.acc li a:hover { text-decoration:underline; }
+

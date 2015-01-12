@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Frqssi" table="GUS_FRQSSI">
+	
+		<meta attribute="sync-DAO">false</meta>
+		
+		<id	name="Id" type="long" column="FRQ_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQFRQ</param>
+            </generator>
+		</id>
+
+		<property name="idmicrosite" column="FRQ_MICCOD"/>
+		<property name="centro" column="FRQ_CENTRE" type="string" not-null="false" length="25" />
+		<property name="tipoescrito" column="FRQ_TPESCR" type="string" not-null="false" length="25" />	
+				
+		<map name="traducciones" cascade="all" table="GUS_FRQIDI">
+            <key column="FQI_FRQCOD" foreign-key="GUS_FQIFRQ_FK"/>
+            <index column="FQI_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionFrqssi">
+                <property name="nombre" length="100" column="FQI_NOMBRE"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

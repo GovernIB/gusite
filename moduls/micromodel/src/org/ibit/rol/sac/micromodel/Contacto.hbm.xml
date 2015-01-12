@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+	<class name="org.ibit.rol.sac.micromodel.Contacto" table="GUS_FRMCON">
+		<meta attribute="sync-DAO">false</meta>
+
+		<id name="Id" type="long" column="FRM_CODI" >
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQFRM</param>
+            </generator>
+		</id>
+		
+		<property name="email" column="FRM_EMAIL" type="string" not-null="false" length="256" />
+		<property name="visible" column="FRM_VISIB" type="string" not-null="false" length="1" />
+		<property name="anexarch" column="FRM_ANEXARCH" type="string" not-null="false" length="1" />
+		<property name="idmicrosite" column="FRM_MICCOD"/>
+
+		<set name="lineasdatocontacto" table="GUS_FRMLIN" order-by="FLI_ORDEN ASC" cascade="all">
+			<key column="FLI_FRMCOD" foreign-key="GUS_FLIFRM_FK"/>
+			<one-to-many class="org.ibit.rol.sac.micromodel.Lineadatocontacto"/>
+		</set>
+
+	</class>	
+</hibernate-mapping>

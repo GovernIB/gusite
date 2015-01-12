@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.ibit.rol.sac.micromodel.Idioma" table="GUS_IDIOMA" mutable="false">
+        <id name="lang" unsaved-value="any" length="2" column="IDI_CODI" >
+            <generator class="assigned"/>
+        </id>
+        <property name="orden" not-null="true" column="IDI_ORDEN" />
+        <property name="codigoEstandar" length="128" column="IDI_CODEST" />
+        <property name="nombre" length="128"  column="IDI_NOMBRE"/>
+        <property name="langTraductor" length="128" column="IDI_TRADUCTOR" />
+    </class>
+</hibernate-mapping>

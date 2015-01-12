@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+	
+		<class name="org.ibit.rol.sac.micromodel.Accesibilidad" table="GUS_W3C">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="Id" type="long" column="W3C_CODI" >
+            <generator class="sequence">
+                <param name="sequence">GUS_SEQCON</param>
+            </generator>			
+		</id>
+	
+		<property name="iditem" column="W3C_IDITEM" type="long" not-null="true" />
+		<property name="servicio" column="W3C_SERVIC" type="string" not-null="true" length="25" />
+		<property name="resultado" column="W3C_RESULT" type="string" not-null="true" length="1" />
+		<property name="mensaje" column="W3C_MENSA" type="string" length="2000" />
+		<property name="medida" column="W3C_MESURA" type="string" length="1" />		
+		<property name="idioma" column="W3C_IDIOMA" type="string" length="2" />
+		<property name="codmicro" column="W3C_MICCOD" type="long" />
+		<property name="tawresultado" column="W3C_TAWRES" type="string" not-null="true" length="1" />
+		<property name="tawmensaje" column="W3C_TAWMEN" type="string" length="2000" />		 
+		 
+	</class>	
+</hibernate-mapping>

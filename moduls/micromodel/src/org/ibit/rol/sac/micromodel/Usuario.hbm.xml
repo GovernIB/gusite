@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.ibit.rol.sac.micromodel.Usuario" table="GUS_MUSUAR">
+        <cache usage="read-write"/>
+        <id name="id" unsaved-value="null" column="MSU_CODI">
+            <generator class="sequence">
+                <param name="sequence">GUS_SQM_ALL</param>
+            </generator>
+        </id>
+        <property name="username" length="128" not-null="true" unique="true" column="MSU_USERNA"/>
+        <property name="password" length="128" column="MSU_PASSWO"/>
+        <property name="nombre" length="256" column="MSU_NOMBRE"/>
+        <property name="observaciones" length="4000" column="MSU_OBSERV"/>
+        <property name="perfil" length="64" column="MSU_PERFIL"/>
+
+
+    </class>
+</hibernate-mapping>

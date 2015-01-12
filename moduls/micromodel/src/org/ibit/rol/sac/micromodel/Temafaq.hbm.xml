@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.ibit.rol.sac.micromodel">
+
+	<class name="org.ibit.rol.sac.micromodel.Temafaq" table="GUS_TEMAS">
+	
+		<meta attribute="sync-DAO">false</meta>
+		
+		<id	name="Id" type="long" column="TEM_CODI">
+			<generator class="sequence">
+                <param name="sequence">GUS_SEQTEM</param>
+            </generator>
+		</id>
+
+		<property name="idmicrosite" column="TEM_MICCOD"/>
+		
+		<map name="traducciones" cascade="all" table="GUS_TEMIDI">
+            <key column="TID_TEMCOD" foreign-key="GUS_TIDTEM_FK"/>
+            <index column="TID_CODIDI" type="string" length="2"/>
+            <composite-element class="org.ibit.rol.sac.micromodel.TraduccionTemafaq">
+                <property name="nombre" length="100" column="TID_NOMBRE"/>
+            </composite-element>
+        </map>
+
+	</class>	
+</hibernate-mapping>

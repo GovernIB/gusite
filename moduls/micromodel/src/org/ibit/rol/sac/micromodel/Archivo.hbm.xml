@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.ibit.rol.sac.micromodel.Archivo" table="GUS_DOCUS">
+
+		<meta attribute="sync-DAO">false</meta>
+
+        <id name="id" type="long" column="DCM_CODI">
+            <generator class="sequence">
+                <param name="sequence">GUS_SEQDOC</param>
+            </generator>
+        </id>
+      	<property name="idmicrosite" column="DCM_MICCOD" not-null="true"/>
+      	<property name="datos" column="DCM_DATOS" type="es.caib.rolsac.oracle.hibernate.OracleBlobType"/>
+		<property name="nombre" column="DCM_NOMBRE" type="string" not-null="false" length="256"/>
+		<property name="mime" column="DCM_TIPO" type="string" not-null="false" length="256"/>
+		<property name="peso" column="DCM_TAMANO" not-null="false"/>
+      	<property name="pagina" column="DCM_PAGINA" not-null="false"/>
+
+    </class>
+
+</hibernate-mapping>
+

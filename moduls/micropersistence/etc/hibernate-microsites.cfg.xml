@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="connection.datasource">java:/@datasource.jndi@</property>
+  <property name="dialect">@hibernate.dialect@</property>
+  <property name="show_sql">@hibernate.show_sql@</property>
+  <property name="hibernate.show.sql">@hibernate.show_sql@</property> 
+  <property name="use_outer_join">true</property>
+  <property name="jdbc.batch_size">50</property>
+  <property name="cache.provider_class">@hibernate.cache.provider_class@</property>
+  <property name="cache.use_query_cache">true</property>
+  <property name="cache.provider_configuration_file_resource_path">pezehcache-microsites.xml</property>
+  <property name="transaction.factory_class">net.sf.hibernate.transaction.JTATransactionFactory</property>
+  <property name="transaction.manager_lookup_class">net.sf.hibernate.transaction.JBossTransactionManagerLookup</property>
+  <property name="cglib.use_reflection_optimizer">@hibernate.cglib@</property>
+  <mapping resource="org/ibit/rol/sac/micromodel/Actividadagenda.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Agenda.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Archivo.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Banner.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Componente.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Contacto.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Contenido.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Encuesta.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Estadistica.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Faq.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Frqssi.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Idioma.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Lineadatocontacto.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Menu.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Microsite.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/MicrositeCompleto.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Noticia.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Pregunta.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Respuesta.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/RespuestaDato.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Temafaq.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Tipo.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Tiposervicio.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/MProcedimiento.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/UsuarioPropietarioMicrosite.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/UsuarioPropietarioRespuesta.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Usuario.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/UsuarioEncuesta.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Accesibilidad.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Convocatoria.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/DistribucionConvocatoria.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/Correo.hbm.xml"/>
+  <mapping resource="org/ibit/rol/sac/micromodel/ListaDistribucion.hbm.xml"/>
+  <!--
+        <mapping resource="org/ibit/rol/sac/micromodel/GrupoSuscripcion.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/TipoSuscripcion.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/Suscriptor.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/SuscriptorClave.hbm.xml" />        
+        <mapping resource="org/ibit/rol/sac/micromodel/EnvioSuscripcion.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/ActivacionSuscripcion.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/GrupoGenericoSuscripcion.hbm.xml" />
+        <mapping resource="org/ibit/rol/sac/micromodel/HistoricoEnvio.hbm.xml" />
+        -->
+ </session-factory>
+</hibernate-configuration>
