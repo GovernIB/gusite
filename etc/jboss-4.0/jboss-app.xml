@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-app>
+	<loader-repository> 
+   	es.caib.gusite:loader=gusite.ear
+ 	<loader-repository-config>java2ParentDelegation=false</loader-repository-config>    
+  </loader-repository> 
+</jboss-app>
