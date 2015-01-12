@@ -1,0 +1,12 @@
+<mbean code="org.jboss.varia.property.SystemPropertiesService"
+        name="jboss.util:type=Service,name=GusitesProperties">
+    <!-- Set properties using the properties file style. -->
+    <attribute name="Properties">
+	   es.caib.gusite.integracion.traductor=S
+	   es.caib.gusite.portal.url=https://proves.caib.es	   
+	   es.caib.gusite.intentosMailing=5
+	   es.caib.gusite.db.jndiname=es.caib.microsite.db
+	   es.caib.gusite.mantenimiento=si
+    </attribute>
+            
+</mbean>

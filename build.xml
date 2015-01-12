@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="gusite-1.1.0" default="usage">
+
+	<property name="project.version" value="${ant.project.name}"/>
+	<property name="home" value="."/>
+	
+	<property file="${home}/build.${user.name}.properties" />
+	<property file="${home}/default.properties"/>
+	
+	<property name="doc" value="${home}/doc"/>
+	<property name="components" value="${home}/moduls"/>
+	<property name="etc" value="${home}/etc"/>
+	<property name="etc.jboss" location="${etc}/jboss-${jboss.version}"/>
+	
+	<property name="lib" value="${home}/lib"/>
+	<property name="lib.caib" location="${lib}/caib"/>
+	<property name="axis" location="${lib}/axis"/>
+	
+	<property name="output.dir" location="${home}/output"/>
+	<property name="product.dir" location="${output.dir}/product"/>
+	<property name="moduls.dir" location="${output.dir}/moduls"/>
+	<property name="doc.dir" location="${output.dir}/doc"/>
+
+	<property name="projecte.name.librerias" value="librerias"/>	
+	<property name="projecte.name.rolsac" value="rolsac"/>	
+	<property name="projecte.name.gusite" value="gusite"/>
+	<property name="projecte.name.foros" value="gforum"/>	
+	<property name="projecte.name.webcaib" value="webcaib"/>	
+
+
+	
+	<property name="etc.applib" value="${etc}/applib"/>	
+	<property name="etc.approlsac" value="${etc}/approlsac"/>	
+	<property name="etc.appgusite" value="${etc}/appmicrosites"/>
+	<property name="etc.appforos" value="${etc}/appforos"/>
+	<property name="etc.appwebcaib" value="${etc}/appwebcaib"/>		
+
+
+	
+  <!-- *******************   TASQUES GENERALS  ****************************   -->
+  <!-- ====================================================================== -->
+  <!-- usage                                                                                                                           -->
+  <!-- ====================================================================== -->
+  <target name="usage">
+    <echo>
+		---------------------------------------------------------------------------------------------------
+		Tasques del projecte :
+	
+		****** Tasques d'ajuda :
+		system : informacio sobre la versio de l'ant emprada
+		usage : aquesta ajuda
+		properties : mostra les propietats definides
+		info : system + usage + properties
+
+		****** Tasques de preparacio :
+		prepare : fitxa l'estructura de directoris necessaria per la construccio de l'aplicacio
+	
+		****** Tasques d'actualitzaciÃ³ de components :
+		update.XXX.jar : re-construeix el producte final (caib.ear) actualitzant nomes el component jar XXX
+		update.XXX.war : re-construeix el producte final (caib.ear) actualitzant nomes el component war XXX
+
+		Els components existents (valors de XXX) son :
+		boib, forum*, hemeroteca*, moduls**, pidip, portal**, root**, sac,link,fitxer
+		* nomes tenen component jar
+		** nomes tenen component war
+
+		****** Tasques de documentacio i control
+		todo : genera al directori ../todo un informe de les coses que estan documentades al codi com que queden per fer
+		doc-pdf : genera al directori ../doc un fitxer PDF amb la documentacio del projecte
+		doc-html : genera al directori ../doc/html la documentacio del projecte en format html
+		doc-print : genera al directori ../doc/print la documentacio del projecte en format html per imprimir
+		doc-api : genera la documentaciÃ³ javadoc pels components dins dels directori ../doc/api
+	
+		****** Tasques de construccio :
+		assemble : construeix el ear amb tots els components existents
+		main : construeix tota l'aplicacio
+		---------------------------------------------------------------------------------------------------
+      </echo>
+  </target>
+  
+  
+  <!-- ================================================================== -->
+  <!-- properties                                                                                                                     -->
+  <!-- ================================================================== -->
+  <target name="properties" description="Muestra las propiedades del sistema">
+	<echo>
+		---------------------------------------------------------------------------------------------------
+		Propietats del sistema:
+
+		home=${home}
+		components=${components}
+		product.dir=${product.dir}
+		lib=${lib}
+		doc=${doc}
+          ant.file=${ant.file}
+          ant.version=${ant.version}
+          ant.project.name=${ant.project.name}
+          ant.java.version=${ant.java.version}
+		---------------------------------------------------------------------------------------------------
+	</echo>
+  </target>
+
+
+  <target name="clean" description="Destruye los directorios de trabajo">
+    <delete dir="${output.dir}" quiet="yes"/>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- info                                                                                                                               -->
+  <!-- ================================================================== -->
+  <target name="info" depends="usage,properties"/>
+
+
+  <!-- ================================================================== -->
+  <!-- prepare                                                                                                                         -->
+  <!-- ================================================================== -->
+  <target name="prepare" description="Crea los directorios necesarios para la construcción de la aplicación">
+  	<mkdir dir="${output.dir}"/>
+     <mkdir dir="${product.dir}"/>
+     <mkdir dir="${moduls.dir}"/>
+     <mkdir dir="${doc.dir}"/>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- doc                                                                                                                        -->
+  <!-- ================================================================== -->
+  <target name="doc" depends="prepare" description="Genera la documentación">
+  	<antcall target="propagate">
+     	<param name="task" value="doc"/>
+     </antcall>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- update                                                                                                                     -->
+  <!-- ================================================================== -->
+  
+	<target name="update.XDOCLET" description="Actualiza los módulos que generan clases con XDOCLET.">
+		<antcall target="update.extractor"/>
+		<antcall target="update.micromodel"/>
+		<antcall target="update.micropersistence"/>		
+	</target>
+	
+	<target name="update.extractor" description="Actualizar herramientas de texto">
+		<ant dir="moduls/extractor" target="main" inheritall="false"/>
+	</target>
+	
+	<target name="update.micromodel" description="Actualizar el modelo de datos de GUSITE.">
+		<ant dir="moduls/micromodel" target="main" inheritall="false"/>
+	</target>
+
+	<target name="update.micropersistence" description="Actualizar la capa de persistencia de GUSITE">
+		<ant dir="moduls/micropersistence" target="main" inheritall="false"/>
+	</target>
+
+	<target name="update.microintegracion" description="Actualizar el módulo de Integración de GUSITE">
+		<ant dir="moduls/microintegracion" target="main" inheritall="false"/>
+	</target>	
+	
+	<target name="update.microback" description="Actualizar el módulo web de backoffice de GUSITE">
+		<ant dir="moduls/microback" target="main" inheritall="false"/>
+	</target>
+
+	<target name="update.microfront" description="Actualizar el módulo web de frontoffice de GUSITE">
+		<ant dir="moduls/microfront" target="main" inheritall="false"/>
+	</target>
+	
+
+  <!-- ================================================================== -->
+  <!-- assemble                                                           -->
+  <!--																	  --> 
+  <!--	necessites declarar 'project.author' en el teu build properties   -->
+  <!-- ================================================================== -->
+
+
+	<target name="assemble02GUSITE" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
+		<delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
+		<ear earfile="${product.dir}/02${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application.xml" manifest="${etc.appgusite}/manifest.mf">
+			
+			<manifest>
+				<attribute name="Version" value="${project.version}"/>
+				<attribute name="Built-By" value="${project.author}"/>
+				<attribute name="Build-Jdk" value="${java.version}"/>
+			</manifest>
+	        
+			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
+	
+			<!-- Incluimos los .war y .jar generados con la aplicación para gusite-->
+			<fileset dir="${moduls.dir}">
+				<include name="sac-microfront.war" />
+				<include name="sac-microback.war" />	
+				<include name="sac-microintegracion.war" />
+
+				<include name="micromodel.jar" />
+				<include name="sac-micropersistence.jar" />	
+				<include name="sac-micropersistence-client.jar" />
+				<include name="microintegracion.jar" />
+				<include name="extractor.jar" />
+				
+			</fileset>
+    	</ear>
+	</target>	
+
+	
+	<target name="assemble02GUSITEStandAlone" description="Actualiza el EAR con los componentes generados para micoristes en StandAlone.">
+		<delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
+		<ear earfile="${product.dir}/02${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application2.xml" manifest="${etc.appgusite}/manifest.mf">
+			
+			<manifest>
+				<attribute name="Created-By" value="INDRA"/>
+			</manifest>
+	        
+			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
+	
+			<!-- Incluimos los .war y .jar generados con la aplicación para gusite-->
+			<fileset dir="${moduls.dir}">
+				<include name="sac-microfront.war" />
+				<include name="sac-microback.war" />
+
+				<include name="micromodel.jar" />
+				<include name="sac-micropersistence.jar" />	
+				<include name="sac-micropersistence-client.jar" />	
+				<include name="microintegracion.jar" />
+			</fileset>
+
+			<!-- Incluimos los .jar externos para que funcione stand alone-->
+			<fileset dir="${lib}">
+				<include name="model.jar" />
+				<include name="sac-persistence.jar" />
+				<include name="boib.jar" />
+				<include name="extractor.jar" />
+				<include name="sac.jar" />
+				<include name="link.jar" />
+			</fileset>
+			
+    	</ear>
+	</target>
+	
+
+	
+  <!-- ================================================================== -->
+  <!-- main                                                                                                                              -->
+  <!-- ================================================================== -->
+  
+  
+	  <target name="main02GUSITE" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE">
+
+		 <antcall target="propagateGUSITE">
+	          <param name="task" value="main"/>
+	       </antcall>
+	  
+	      <antcall target="assemble02GUSITE"/>
+	      <antcall target="deploy02GUSITE"/>
+	  </target>	
+
+	  <target name="main02GUSITEStandAlone" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE StandAlone">
+
+		 <antcall target="propagateGUSITE">
+	          <param name="task" value="main"/>
+	       </antcall>
+	  
+	      <antcall target="assemble02GUSITEStandAlone"/>
+	      <antcall target="deploy02GUSITE"/>
+	  </target>	
+	
+	
+  <!-- ================================================================== -->
+  <!-- propagate                                                                                                                     -->
+  <!-- ================================================================== -->
+  
+	  <target name="propagateGUSITE">
+	  	<ant dir="moduls/extractor" target="${task}" inheritall="false"/>
+		<ant dir="moduls/micromodel" target="${task}" inheritall="false"/>	  	
+		<ant dir="moduls/micropersistence" target="${task}" inheritall="false"/>	  	
+	  	<ant dir="moduls/microintegracion" target="${task}" inheritall="false"/>
+	  	<ant dir="moduls/microback" target="${task}" inheritall="false"/>
+		<ant dir="moduls/microfront" target="${task}" inheritall="false"/>
+	  </target>	
+	
+	
+  <!-- ================================================================== -->
+  <!-- deploy                                                                                                                              -->
+  <!-- ================================================================== -->
+	
+
+	  <target name="deploy02GUSITE">
+	      <copy file="${product.dir}/02${projecte.name.gusite}.ear" todir="${deploy.dir}"/>
+	  </target>		  	
+
+	<target name="copiarAOTROS">
+			<copy file="${moduls.dir}/micromodel.jar" todir="${home}/../01rolsac/lib"/>
+			<copy file="${moduls.dir}/sac-micropersistence.jar" todir="${home}/../01rolsac/lib"/>
+			<copy file="${moduls.dir}/micromodel.jar" todir="${home}/../03webcaib/lib"/>
+			<copy file="${moduls.dir}/sac-micropersistence.jar" todir="${home}/../03webcaib/lib"/>
+	</target>
+	
+</project>

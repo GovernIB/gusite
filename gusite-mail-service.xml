@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: gusite-mail-service.xml,v 1.1 2011-07-14 12:51:26 u91856 Exp $ -->
+<server>
+<!-- ==================================================================== -->
+<!-- Mail Connection Factory                                              -->
+<!-- ==================================================================== -->
+    <mbean code="org.jboss.mail.MailService" name="jboss:service=MailGusite">
+        <attribute name="JNDIName">java:/es.caib.gusite.mailGusite</attribute>
+        <attribute name="User">sss</attribute>
+        <attribute name="Password">sss</attribute>
+        <attribute name="Configuration">
+<!-- Test -->
+            <configuration>
+<!-- Change to your mail server prototocol -->
+
+                <property name="mail.transport.protocol" value="smtp" />
+                
+<!-- Change to the SMTP gateway server -->
+
+                <property name="mail.smtp.host" value="scorlin1" />
+                <property name="mail.from" value="gusite@caib.es" />
+                
+<!-- Enable debugging output from the javamail classes -->
+
+                <property name="mail.debug" value="false" />
+                
+            </configuration>
+        </attribute>
+    </mbean>
+</server>
