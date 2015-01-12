@@ -1,0 +1,2217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xdoclet PUBLIC "-//XDoclet Team//DTD XDoclet Tags 1.1//EN" "http://xdoclet.sourceforge.net/dtds/xtags_1_1.dtd">
+<xdoclet>
+  <!-- jboss specific tags -->
+  <namespace>
+    <name>jboss</name>
+    <usage-description>Tags for creation of jboss specific resources</usage-description>
+    <condition-description>all EJB types on class and method level</condition-description>
+    <condition type="and">
+      <condition type="or">
+        <condition type="method"/>
+        <condition type="class"/>
+      </condition>
+      <condition type="or">
+        <condition type="type">
+          <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+        </condition>
+        <condition type="type">
+          <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+        </condition>
+        <condition type="type">
+          <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+        </condition>
+      </condition>
+    </condition>
+    <tags>
+      <tag>
+        <level>class</level>
+        <name>jboss.persistence</name>
+        <usage-description>
+          The @jboss.persistence tag provides information about the persistence
+          of a CMP Entity bean.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>CMP entity bean</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>datasource</name>
+          <usage-description>
+          The jndi-name used to lookup the datasource.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>datasource-mapping</name>
+          <usage-description>
+          The name of the type mapping that will be used for this datasource.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>create-table</name>
+          <usage-description>
+          Should the persistence manager attempt to create tables if they are
+          not present?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>alter-table</name>
+          <usage-description>
+          Should the persistence manager attempt to alter tables if they have
+          changed?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>remove-table</name>
+          <usage-description>
+          Should the persistence manager attempt to remove tables during
+          shutdown?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>post-table-create</name>
+          <usage-description>
+          Arbitrary SQL code to execute directly after the database table is created.
+          The code is only executed if create-table is true and the table
+          did not previously exist.	
+          </usage-description>
+          <mandatory>false</mandatory>
+          <condition-description>Only used for JBoss 3.2</condition-description>
+        </parameter>
+        <parameter type="bool">
+          <name>read-only</name>
+          <usage-description>
+          Is the entity read-only?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="int">
+          <name>read-time-out</name>
+          <usage-description>
+          Specifies the amount of time that a read-only entity is considered
+          valid (milliseconds).
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>row-locking</name>
+          <usage-description>
+          Should select statements the SELECT ... FOR UPDATE syntax?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>pk-constraint</name>
+          <usage-description>
+          Should a primary key constraint be added when creating tables?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="int">
+          <name>list-cache-max</name>
+          <usage-description>
+          Specifies the number of simultaneous queries that can be tracked by
+          the cache for an entity.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="int">
+          <name>fetch-size</name>
+          <usage-description>
+          Specifies the number of entities to read in one round-trip to
+          the underlying datastore.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>table-name</name>
+          <usage-description>
+          Specifies the name of the table this entity should be persisted to.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+	  <tag>
+		<level>class</level>
+		<name>jboss.audit</name>
+		<usage-description>
+			Indicate that all audit information (created-by, created-time, updated-by, update-time)
+			should be saved in the entity with columns provided by the container.
+			This tag is mutually exclusive with the other jboss.audit-* tags
+		</usage-description>
+		<unique>true</unique>		
+	  </tag>
+	  <tag>
+		<level>class</level>
+		<name>jboss.audit-created-by</name>
+		<usage-description>
+			Store the created-by info for this entity bean.
+			This tag is mutually exclusive with the jboss.audit tag.
+		</usage-description>
+		<unique>true</unique>
+		<parameter type="text">
+			<name>field-name</name>
+			<usage-description>
+				The field, the created-by information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>column-name</name>
+			<usage-description>
+				The column, the created-by information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>jdbc-type</name>
+			<usage-description>The jdbc type. Needs to be given together with the sql-type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>sql-type</name>
+			<usage-description>The sql type. Needs to be given together with the jdbc type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+	  </tag>
+	  <tag>
+		<level>class</level>
+		<name>jboss.audit-created-time</name>
+		<usage-description>
+			Store the created-time info for this entity bean.
+			This tag is mutually exclusive with the jboss.audit tag.
+		</usage-description>
+		<unique>true</unique>
+		<parameter type="text">
+			<name>field-name</name>
+			<usage-description>
+				The field, the created-time information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>column-name</name>
+			<usage-description>
+				The column, the created-time information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>jdbc-type</name>
+			<usage-description>The jdbc type. Needs to be given together with the sql-type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>sql-type</name>
+			<usage-description>The sql type. Needs to be given together with the jdbc type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+	  </tag>
+	  <tag>
+		<level>class</level>
+		<name>jboss.audit-updated-by</name>
+		<usage-description>
+			Store the updated-by info for this entity bean.
+			This tag is mutually exclusive with the jboss.audit tag.
+		</usage-description>
+		<unique>true</unique>
+		<parameter type="text">
+			<name>field-name</name>
+			<usage-description>
+				The field, the updated-by information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>column-name</name>
+			<usage-description>
+				The column, the updated-by information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>jdbc-type</name>
+			<usage-description>The jdbc type. Needs to be given together with the sql-type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>sql-type</name>
+			<usage-description>The sql type. Needs to be given together with the jdbc type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+	  </tag>
+	  <tag>
+		<level>class</level>
+		<name>jboss.audit-updated-time</name>
+		<usage-description>
+			Store the updated-time info for this entity bean.
+			This tag is mutually exclusive with the jboss.audit tag.
+		</usage-description>
+		<unique>true</unique>
+		<parameter type="text">
+			<name>field-name</name>
+			<usage-description>
+				The field, the updated-time information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>column-name</name>
+			<usage-description>
+				The column, the updated-time information should be stored in.
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>jdbc-type</name>
+			<usage-description>The jdbc type. Needs to be given together with the sql-type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+		<parameter type="text">
+			<name>sql-type</name>
+			<usage-description>The sql type. Needs to be given together with the jdbc type</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+	  </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.call-by-value</name>
+        <usage-description>
+         TODO
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>All EJB types</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>call-by-value</name>
+          <usage-description>TODO</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.cmp-field</name>
+        <usage-description>
+           Will define a &lt;cmp-field&gt; element for a field of a cmp-field of
+           ejb-jar.xml. This is used for dependant objects fields mapping, see
+           @jboss.not-persisted-field. Example:
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>Applicable to EJBs using JAWS CMP.</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>field-name</name>
+          <usage-description>The name of the field</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>column-name</name>
+          <usage-description>The name of the column.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.container-configuration</name>
+        <usage-description>
+         The name of the container configuration to use for the bean. Applicable to
+         all types of EJBs.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>All EJB types</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>Defines the container configuration for the bean.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.depends</name>
+        <usage-description>
+          The name of an JMX ObjectName on which the bean depends. Applicable to all types of EJBs.
+		  Also applicable to servlets where the dependency is on WAR-level. (JBoss 3.2+).
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>All EJB types.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>Defines the JMX ObjectName to which the bean depends on. In the servlet
+			case, this dependency is on WAR-level.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.declared-sql</name>
+        <usage-description>
+          Configures a custom query (defined by @ejb.finder) by defining explicitly declared sql fragments to be
+          added to the SQL generated by JBossCMP engine (Requires JBoss 3+).
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>Applicable to Entity beans with at least one custom finder.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+          <condition type="tag-exists">
+            <condition-parameter>ejb.finder</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>signature</name>
+          <usage-description>
+            Defines the signature of the
+            method. E.g.. "java.util.Collection
+            findAll()". The return type in the
+            signature must be fully qualified.
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>description</name>
+          <usage-description>Description of this custom query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>distinct</name>
+          <usage-description>
+            If true JBossCMP will add the DISTINCT keyword to the generated
+            select clause.  The default is to use DISTINCT if method returns a
+            java.util.Set.
+          </usage-description>
+          <mandatory>false</mandatory>
+          <default>false</default>
+        </parameter>
+        <parameter type="text">
+          <name>ejb-name</name>
+          <usage-description>
+            The ejb-name of the entity that will be selected.  Required if
+            ejbSelect method.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>field-name</name>
+          <usage-description>
+            The name of the cmp-field that will be selected from the specified
+            entity.  Default is to select the entire entity.
+          </usage-description>
+          <mandatory>false</mandatory>
+          <condition-description>field-name can only be present if 'ejb-name' is</condition-description>
+          <condition type="tag-param-exists">
+            <condition-parameter>jboss:declared-sql</condition-parameter>
+            <condition-parameter>ejb-name</condition-parameter>
+          </condition>
+        </parameter>
+        <parameter type="text">
+          <name>alias</name>
+          <usage-description>
+            The alias that will be used for the main select table.  Default is
+            ejb-name.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>from</name>
+          <usage-description>
+          Declares additional SQL to append to the generated from clause.
+          Example:  &amp;lt;from&amp;gt;, FullAddressEJB as a&amp;lt;/from&amp;gt;
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>where</name>
+          <usage-description>
+          Declares the where clause for the query.
+          Example: &amp;lt;where&amp;gt;TITLE={0} OR ARTIST={0} OR TYPE={0} OR NOTES={0}&amp;lt;/where&amp;gt;
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>order</name>
+          <usage-description>
+          Declares the order clause for the query.
+          Example: &amp;lt;order&amp;gt;TITLE&amp;lt;/order&amp;gt;
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>other</name>
+          <usage-description>
+          Declares the other sql that is appended to the end of a query.
+          Example: &amp;lt;other&amp;gt;LIMIT 100 OFFSET 200&amp;lt;/other&amp;gt;
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>strategy</name>
+          <usage-description>Specifies the strategy used to read-ahead data in queries.</usage-description>
+          <mandatory>false</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>none</option>
+                <option>on-load</option>
+                <option>on-find</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+        <parameter type="int">
+          <name>page-size</name>
+          <usage-description>Specifies the number of entities that will be read in a single read-ahead load query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>eager-load-group</name>
+          <usage-description>Contains the name of the load group that will eager loaded for this entity.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.destination-jndi-name</name>
+        <usage-description>
+          Defines JNDI name of the Queue/Topic used my the MDB.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>Applicable to MDB</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>The name of the destination.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+      	<level>class</level>
+      	<name>jboss.subscriber</name>
+      	<usage-description>
+      		Provide information about accessing the Message Provider
+      	</usage-description>
+      	<unique>true</unique>
+        <condition-description>Applicable to MDB</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+          </condition>
+        </condition>
+      	<parameter type="text">
+      		<name>name</name>
+      		<usage-description>User for the jms connection that delivers messages.</usage-description>
+      		<mandatory>false</mandatory>
+      	</parameter>
+      	<parameter type="text">
+      		<name>password</name>
+      		<usage-description>Password for the jms connection.</usage-description>
+      		<mandatory>false</mandatory>
+      	</parameter>
+      	<parameter type="text">
+      		<name>client-id</name>
+      		<usage-description>Identifies the Client.</usage-description>
+      		<mandatory>false</mandatory>
+      	</parameter>
+      	<parameter type="text">
+      		<name>subscription-id</name>
+      		<usage-description>Identifies the (durable) subscripition for the topic that will be used.</usage-description>
+      		<mandatory>false</mandatory>
+      	</parameter>      	
+      </tag>
+      <tag>
+      	<level>class</level>
+      	<name>jboss.resource-adapter</name>
+      	<usage-description>
+      		sets the rar used in JCA 1.5 message inflow 
+      	</usage-description>
+      	<unique>true</unique>
+        <condition-description>Applicable for JBoss 4.0 message-driven beans</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+          </condition>
+        </condition>
+      	<parameter type="text">
+      		<name>name</name>
+      		<usage-description>
+                The name of the rar used in JCA 1.5 message inflow 
+                (i.e."jms-ra.rar" or "myapp.ear#myconnector.rar" for embedded rars)
+            </usage-description>
+      		<mandatory>true</mandatory>
+      	</parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.ejb-ref-jndi</name>
+        <usage-description>
+         Sets the JNDI name of a referenced bean.
+         There must be an @ejb.ejb-ref tag too which points to the referenced
+         bean.
+        </usage-description>
+        <unique>false</unique>
+        <condition type="class"/>
+        <parameter type="text">
+          <name>ref-name</name>
+          <usage-description>Define the name of the bean reference.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>jndi-name</name>
+          <usage-description/>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.ejb-local-ref</name>
+        <usage-description>
+         Sets the JNDI name of a locally referenced bean that is
+         not contained in the same application.
+        </usage-description>
+        <unique>false</unique>
+        <condition type="class"/>
+        <parameter type="text">
+          <name>ref-name</name>
+          <usage-description>
+            The name that the referenced bean will be referred to
+            by. For example, to refer to the bean Customer as
+            java:comp/env/ejb/Customer name should be
+            ejb/Customer. Defaults to ejb/[ejb-name], where
+            [ejb-name] is the named of the referenced bean
+            (Customer) prefixed by "ejb/".
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>jndi-name</name>
+          <usage-description>The JNDI name of the bean.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.unknown-pk</name>
+        <usage-description>
+            Supplies information about the unkown primary key. At least
+            the class should be supplied, with optional column name,
+            JDBC and SQL types.
+        </usage-description>
+        <unique>true</unique>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>class</name>
+          <usage-description>The unknown PK class</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>readonly</name>
+          <usage-description>Hint to treat the PK as read-only</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="int">
+          <name>read-time-out</name>
+          <usage-description>The read timeout value for the PK field</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>column-name</name>
+          <usage-description>The name of the PK column in the DB table</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>jdbc-type</name>
+          <usage-description>The JDBC type for the PK column. Should be specified together with sql-type</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>sql-type</name>
+          <usage-description>The SQL type for the PK column. Should be specified together with jdbc-type</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>auto-increment</name>
+          <usage-description>Set if the PK field is autoincremented by the database</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.entity-command</name>
+        <usage-description>
+         Supplies information about an entity-command used to create the
+         entity bean.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>CMP entity bean.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>
+          The command name.
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>class</name>
+          <usage-description>
+          The command class.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.entity-command-attribute</name>
+        <usage-description>
+         Supplies information about an entity-command used to create the
+         entity bean.
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>
+        CMP entity bean with a @jboss.entity-command tag.
+        </condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+          <condition type="tag-exists">
+            <condition-parameter>jboss.entity-command</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>
+          The attribute name.
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>value</name>
+          <usage-description>
+          The attribute value.
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.finder-query</name>
+        <usage-description>
+          Assign custom query to finder named "findFoo". An @ejb.finder tag
+          for the named finder must also be present
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>Applicable to Entity beans using JAWS CMP.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>The name of the finder.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>query</name>
+          <usage-description>The query for the finder. See JAWS documentation for finder query syntax.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>order</name>
+          <usage-description>The order for the finder results.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>read-ahead</name>
+          <usage-description>Indicate if the query should have read-ahead.</usage-description>
+          <mandatory>false</mandatory>
+          <default>true</default>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.query</name>
+        <usage-description>
+          Configures a custom query (defined by @ejb.finder) for the JBossCMP engine (Requires JBoss 3+).
+		  Note that you still need the @ejb.finder with signature and query attributes. If they are
+		  not present, then container will complain at deploy time.
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>Applicable to Entity beans with at least one custom finder.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+          <condition type="tag-exists">
+            <condition-parameter>ejb.finder</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>signature</name>
+          <usage-description>
+            Defines the signature of the
+            method. E.g.. "java.util.Collection
+            findAll()". The return type in the
+            signature must be fully qualified.
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>description</name>
+          <usage-description>Description of this custom query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>query</name>
+          <usage-description>
+          JBossQL query which overrides the EJB-QL specified in the EJB deployment descriptor.  JBossQL is a superset of EJB-QL.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>dynamic</name>
+          <usage-description>
+          Dynamic JBossQL query.  The JBossQL is passed to the query and compiled on the fly.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>strategy</name>
+          <usage-description>Specifies the strategy used to read-ahead data in queries.</usage-description>
+          <mandatory>false</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>none</option>
+                <option>on-load</option>
+                <option>on-find</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+        <parameter type="int">
+          <name>page-size</name>
+          <usage-description>Specifies the number of entities that will be read in a single read-ahead load query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>eager-load-group</name>
+          <usage-description>Contains the name of the load group that will eager loaded for this entity.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>ql-compiler</name>
+          <usage-description>Fully qualified name of QL compiler implementation class.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>lazy-resultset-loading</name>
+          <usage-description>
+          Is relevant only for multi-object queries. Allowed values are true and false.
+          If true, ResultSet will be read on demand, i.e. when user iterates through the collection.
+          If false, user is given completely initialized result, i.e. when user got the result
+          ResultSet is read till the end and closed.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>      
+      <tag>
+        <level>method</level>
+        <name>jboss.query</name>
+        <usage-description>
+          Configures a custom query for a select method for the JBossCMP engine (Requires JBoss 3+).
+		  Note that you still need an empty @ejb.select tag. If it is not present, then container 
+          will complain at deploy time.
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>Applicable to Entity beans with at least one custom finder.</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="tag-exists">
+            <condition-parameter>ejb.select</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>description</name>
+          <usage-description>Description of this custom query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>query</name>
+          <usage-description>
+          JBossQL query which overrides the EJB-QL specified in the EJB deployment descriptor.  JBossQL is a superset of EJB-QL.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>dynamic</name>
+          <usage-description>
+          Dynamic JBossQL query.  The JBossQL is passed to the query and compiled on the fly.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>strategy</name>
+          <usage-description>Specifies the strategy used to read-ahead data in queries.</usage-description>
+          <mandatory>false</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>none</option>
+                <option>on-load</option>
+                <option>on-find</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+        <parameter type="int">
+          <name>page-size</name>
+          <usage-description>Specifies the number of entities that will be read in a single read-ahead load query.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>eager-load-group</name>
+          <usage-description>Contains the name of the load group that will eager loaded for this entity.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>ql-compiler</name>
+          <usage-description>Fully qualified name of QL compiler implementation class.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>lazy-resultset-loading</name>
+          <usage-description>
+          Is relevant only for multi-object queries. Allowed values are true and false.
+          If true, ResultSet will be read on demand, i.e. when user iterates through the collection.
+          If false, user is given completely initialized result, i.e. when user got the result
+          ResultSet is read till the end and closed.
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.read-ahead</name>
+        <usage-description>
+          Specifies the read ahead strategy for this Entity bean.  Applicable to Entity beans using JBossCMP persistence engine.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>Applicable to Entity beans using JBossCMP persistence engine.</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>strategy</name>
+          <usage-description>Specifies the strategy used to read-ahead data in queries.</usage-description>
+          <mandatory>true</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>none</option>
+                <option>on-load</option>
+                <option>on-find</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+        <parameter type="int">
+          <name>page-size</name>
+          <usage-description>Specifies the number of entities that will be read in a single read-ahead load query.</usage-description>
+          <mandatory>false</mandatory>
+          <condition type="and">
+            <condition type="class"/>
+            <condition type="not">
+              <condition type="tag-param">
+                <condition-parameter>jboss:read-ahead</condition-parameter>
+                <condition-parameter>strategy</condition-parameter>
+                <condition-parameter>none</condition-parameter>
+              </condition>
+            </condition>
+          </condition>
+        </parameter>
+        <parameter type="text">
+          <name>eager-load-group</name>
+          <usage-description>Contains the name of the load group that will eager loaded for this entity.</usage-description>
+          <mandatory>false</mandatory>
+          <condition type="and">
+            <condition type="class"/>
+            <condition type="not">
+              <condition type="tag-param">
+                <condition-parameter>jboss:read-ahead</condition-parameter>
+                <condition-parameter>strategy</condition-parameter>
+                <condition-parameter>none</condition-parameter>
+              </condition>
+            </condition>
+          </condition>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.read-only</name>
+        <usage-description>Mark bean as read-only. This will avoid ejbStore calls.</usage-description>
+        <unique>true</unique>
+        <deprecated>Please use the read-only attribute of the @jboss.persistence class tag.</deprecated>
+        <condition-description>Entity beans</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="bool">
+          <name>read-only</name>
+          <usage-description>Declare the bean as read only.</usage-description>
+          <mandatory>true</mandatory>
+          <default>true</default>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.resource-manager</name>
+        <usage-description/>
+        <unique>false</unique>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>res-man-name</name>
+          <usage-description>Define the name of the resource manager.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>res-man-jndi-name</name>
+          <usage-description>Define the jndi name of the resource manager.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.resource-env-ref</name>
+        <usage-description>
+          The resource-env-ref element gives a mapping between the "code name"
+          of a env resource (res-ref-name, provided by the Bean Developer) and
+          its deployed JNDI name.
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>
+          Used in Entity, MessageDriven, and Session beans.
+        </condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>resource-env-ref-name</name>
+          <usage-description>The resource-env-ref-name element gives the "code name" of a resource.
+          It is provided by the Bean Developer.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>jndi-name</name>
+          <usage-description>The jndi name to which the reference should link.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.resource-ref</name>
+        <usage-description>
+          The resource-ref element gives a mapping between the "code name"
+          of a resource (res-ref-name, provided by the Bean Developer) and
+          its "xml name" (resource-name, provided by the Application Assembler).
+          If no resource-ref is provided, jboss will assume that
+          "xml-name" = "code name".
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>
+          Used in Entity, MessageDriven, and Session beans.
+        </condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>res-ref-name</name>
+          <usage-description>The res-ref-name element gives the "code name" of a resource. It is
+          provided by the Bean Developer. See resource-managers for the actual
+          configuration of the resource.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>resource-name</name>
+          <usage-description>The resource-name element gives the "xml name" of the resource. It is
+          provided by the Application Assembler. See resource-managers for the
+          actual configuration of the resource.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>jndi-name</name>
+          <usage-description>The jndi name to which the reference should link.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>res-url</name>
+          <usage-description>The res-url element is the "runtime jndi name" as a url of the resource.
+          It is provided by the Deployer.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.security-proxy</name>
+        <usage-description>The security-proxy gives the class name of the security proxy implementation.
+        This may be an instance of org.jboss.security.SecurityProxy, or an
+        just an object that implements methods in the home or remote interface
+        of an EJB without implementating any common interface.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>All EJB types</condition-description>
+        <condition type="and">
+          <condition type="class"/>
+          <condition type="or">
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+            </condition>
+            <condition type="type">
+              <condition-parameter>javax.ejb.MessageDrivenBean</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>Defines the security-proxy for the bean.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.relation</name>
+        <usage-description>
+         Used to customize the relationships via jbosscmp-jdbc.xml for JBoss 3.0.
+         NOTE: If you replace jboss.relation with jboss.target-relation, you can
+         modify the blind side of a unidirectional relationship (someone fix this
+         wording)
+        </usage-description>
+        <unique>false</unique>
+        <condition-description>CMR field</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <!-- make sure this is a relation -->
+          <condition type="tag-exists">
+            <condition-parameter>ejb.relation</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <!-- check the owning class to be sure it is a CMP entity bean -->
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="starts-with">
+            <condition-parameter>get</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="bool">
+          <name>fk-constraint</name>
+          <usage-description>Flag to indicate if a foreign key constraint should be placed on the relation column.</usage-description>
+          <mandatory>false</mandatory>
+          <default>true</default>
+        </parameter>
+        <parameter type="text">
+          <name>related-pk-field</name>
+          <usage-description>
+           Name of the pk field of the 1- end of the
+           relationship that this foreign key constraint
+           applies to. Required for support of
+           complex primary keys in the 1- end of the
+           relation. (Corresponds to field-name in
+           jbosscmp-jdbc.xml)
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>fk-column</name>
+          <usage-description>
+           Name of the column that should be used
+           for foreign key mapping. (Corresponds to
+           column-name in jbosscmp-jdbc.xml)
+          </usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="text">
+        	<name>jdbc-type</name>
+        	<usage-description>The jdbc type of the related pk-field. Must be used together with sql-type.</usage-description>
+        	<mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+        	<name>sql-type</name>
+        	<usage-description>The sql type of the related pk-field. Must be used together with jdbc-type.</usage-description>
+        	<mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>dbindex</name>
+          <usage-description>
+          Should a DB-index be created for this field?
+          </usage-description>
+          <mandatory>false</mandatory>
+          <condition-description>Only used in 3.2 and later</condition-description>
+        </parameter>
+		<parameter type="bool">
+			<name>batch-cascade-delete</name>
+			<usage-description>
+				The batch-cascade-delete element specifies that, this side of the relationship
+should be batch deleted with one SQL statement of the form
+DELETE FROM &lt;related-table> WHERE &lt;foreign-key> = ?
+The presense of cascade-delete element in ejb-jar.xml for the matching
+ejb-relationship-role is mandatory (see @ejb.relation).
+			</usage-description>
+			<mandatory>false</mandatory>
+			<default>false</default>
+		</parameter>
+		<parameter type="bool">
+			<name>read-only</name>
+			<usage-description>
+                Is the relation read-only?
+			</usage-description>
+			<mandatory>false</mandatory>
+			<default>false</default>
+		</parameter>
+		<parameter type="text">
+			<name>read-time-out</name>
+			<usage-description>
+                Specifies the ammount of time that a read-only field is considered
+valid (milliseconds).
+			</usage-description>
+			<mandatory>false</mandatory>
+		</parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.method-attributes</name>
+        <usage-description>
+          Allows for the specification of non-standard attributes for the method.
+          Can only be used with JBoss 3.2 and later, for 3.0 use the class-level tag.
+        </usage-description>
+        <unique>true</unique>
+        <parameter type="bool">
+          <name>read-only</name>
+          <usage-description>Flags the method as read only. Such a method will
+          never trigger a store.</usage-description>
+          <mandatory>false</mandatory>
+          <default>false</default>
+        </parameter>
+        <parameter type="text">
+          <name>transaction-timeout</name>
+          <usage-description>
+	    The transaction timeout in seconds (overriding the default timeout).
+	    This will only work for Required (where the method starts the transaction) and RequiresNew.
+	    The special value of 0 (zero) uses the default timeout configured on jboss:service=TransactionManager
+	    NOTE: any subsequent use of RequiresNew that is not explicitly overridden will use this value.
+	  </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>class</level>
+        <name>jboss.method-attributes</name>
+        <usage-description>
+          Allows for the specification of non-standard attributes for the named
+          method(s).  For JBoss 3.0 this tag can only appear once, for 3.2 and
+          later there can be multiple occurrences.
+        </usage-description>
+        <unique>false</unique>
+        <parameter type="text">
+          <name>pattern</name>
+          <usage-description>A complete method name or a pattern consisting of an
+            initial match followed by '*'.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>read-only</name>
+          <usage-description>Flags method(s) as read only. The named method(s) will
+            never trigger a store.</usage-description>
+          <mandatory>false</mandatory>
+          <default>false</default>
+        </parameter>
+        <parameter type="text">
+          <name>transaction-timeout</name>
+          <usage-description>
+	    The transaction timeout in seconds (overriding the default timeout).
+	    This will only work for Required (where the method starts the transaction) and RequiresNew.
+	    The special value of 0 (zero) uses the default timeout configured on jboss:service=TransactionManager
+	    NOTE: any subsequent use of RequiresNew that is not explicitly overridden will use this value.
+	  </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+        <tag>
+          <level>method</level>
+          <name>jboss.target-relation</name>
+          <usage-description>
+           Used to customize the relationships via jbosscmp-jdbc.xml for JBoss 3.0.
+           This tag should be used to modify the blind side of the relation in an
+           unidirectional relationship. Aside from this, it's exactly the same as
+           @jboss.relation.
+          </usage-description>
+          <unique>false</unique>
+          <condition-description>CMR field</condition-description>
+          <condition type="and">
+            <condition type="method"/>
+            <condition type="type">
+              <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+            </condition>
+            <!-- make sure this is a relation -->
+            <condition type="tag-exists">
+              <condition-parameter>ejb.relation</condition-parameter>
+            </condition>
+            <condition type="owner">
+              <!-- check the owning class to be sure it is a CMP entity bean -->
+              <condition type="tag-param">
+                <condition-parameter>ejb.bean</condition-parameter>
+                <condition-parameter>type</condition-parameter>
+                <condition-parameter>CMP</condition-parameter>
+              </condition>
+            </condition>
+            <condition type="public"/>
+            <condition type="abstract"/>
+            <condition type="starts-with">
+              <condition-parameter>get</condition-parameter>
+            </condition>
+          </condition>
+          <parameter type="bool">
+            <name>fk-constraint</name>
+            <usage-description>Flag to indicate if a foreign key constraint should be placed on the relation column.</usage-description>
+            <mandatory>false</mandatory>
+            <default>true</default>
+          </parameter>
+          <parameter type="text">
+            <name>related-pk-field</name>
+            <usage-description>
+             Name of the pk field of the 1- end of the
+             relationship that this foreign key constraint
+             applies to. Required for support of
+             complex primary keys in the 1- end of the
+             relation. (Corresponds to field-name in
+             jbosscmp-jdbc.xml)
+            </usage-description>
+            <mandatory>true</mandatory>
+          </parameter>
+          <parameter type="text">
+            <name>fk-column</name>
+            <usage-description>
+             Name of the column that should be used
+             for foreign key mapping. (Corresponds to
+             column-name in jbosscmp-jdbc.xml)
+            </usage-description>
+            <mandatory>true</mandatory>
+          </parameter>
+          <parameter type="text">
+            <name>jdbc-type</name>
+            <usage-description>
+            The jdbc type. Needs to be given together with the sql-type
+            </usage-description>
+            <mandatory>false</mandatory>
+          </parameter>
+          <parameter type="text">
+            <name>sql-type</name>
+            <usage-description>
+            The sql type. Needs to be given together with the jdbc type
+            </usage-description>
+            <mandatory>false</mandatory>
+          </parameter>
+        </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.relation-read-ahead</name>
+        <usage-description><![CDATA[
+         Used to customize the read-ahead component of relationships via jbosscmp-jdbc.xml for JBoss 3.0.
+         NOTE: If you replace jboss.relation-read-ahead with jboss.target-relation-read-ahead, you can modify the blind side of a unidirectional relationship.
+        ]]></usage-description>
+        <unique>false</unique>
+        <condition-description>CMR field</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <!-- make sure this is a relation -->
+          <condition type="tag-exists">
+            <condition-parameter>ejb.relation</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <!-- check the owning class to be sure it is a CMP entity bean -->
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="starts-with">
+            <condition-parameter>get</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>strategy</name>
+          <usage-description>Specifies the strategy used to read-ahead data in queries.</usage-description>
+          <mandatory>true</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>none</option>
+                <option>on-load</option>
+                <option>on-find</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+        <parameter type="int">
+          <name>page-size</name>
+          <usage-description>Specifies the number of entities that will be read in a single read-ahead load query.</usage-description>
+          <mandatory>false</mandatory>
+          <condition type="and">
+            <condition type="class"/>
+            <condition type="not">
+              <condition type="tag-param">
+                <condition-parameter>jboss:read-ahead</condition-parameter>
+                <condition-parameter>strategy</condition-parameter>
+                <condition-parameter>none</condition-parameter>
+              </condition>
+            </condition>
+          </condition>
+        </parameter>
+        <parameter type="text">
+          <name>eager-load-group</name>
+          <usage-description>Contains the name of the load group that will eager loaded for this entity.</usage-description>
+          <mandatory>false</mandatory>
+          <condition type="and">
+            <condition type="class"/>
+            <condition type="not">
+              <condition type="tag-param">
+                <condition-parameter>jboss:read-ahead</condition-parameter>
+                <condition-parameter>strategy</condition-parameter>
+                <condition-parameter>none</condition-parameter>
+              </condition>
+            </condition>
+          </condition>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.persistence</name>
+        <usage-description>
+          The @jboss.persistence tag provides information about the persistence
+          of a CMP field.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>
+          CMP entity bean fields. On the persistent fields getter methods.
+        </condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="or">
+            <condition type="starts-with">
+              <condition-parameter>get</condition-parameter>
+            </condition>
+            <condition type="starts-with">
+              <condition-parameter>is</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="bool">
+          <name>read-only</name>
+          <usage-description>
+          Is the field read-only?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="int">
+          <name>read-time-out</name>
+          <usage-description>
+          Specifies the amount of time that a read-only field is considered
+          valid (milliseconds).
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>not-null</name>
+          <usage-description>
+          Should null values be allowed?
+          </usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>auto-increment</name>
+          <usage-description>
+          Should the field be auto-incremented by the database?
+          </usage-description>
+          <mandatory>false</mandatory>
+          <condition-description>Only used in 3.2 and later</condition-description>
+        </parameter>
+        <parameter type="bool">
+          <name>dbindex</name>
+          <usage-description>
+          Should a DB-index be created for this field?
+          </usage-description>
+          <mandatory>false</mandatory>
+          <condition-description>Only used in 3.2</condition-description>
+        </parameter>
+        <parameter type="bool">
+        	<name>check-dirty-after-get</name>
+        	<usage-description>
+        		Whether an SQL update should be performed after this field has been retrieved via a get* method.
+        	</usage-description>
+        	<mandatory>false</mandatory>
+        	<condition-description>Only used from 3.2.3 on</condition-description>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.column-name</name>
+        <usage-description>Declares the column name to which the CMP field will be mapped.</usage-description>
+        <unique>true</unique>
+        <deprecated>Please use the column-name attribute of the @ejb.persistence method tag.</deprecated>
+        <condition-description>
+          EJB entity bean fields. On the persistent fields getter methods
+        </condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="or">
+            <condition type="starts-with">
+              <condition-parameter>get</condition-parameter>
+            </condition>
+            <condition type="starts-with">
+              <condition-parameter>is</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>name</name>
+          <usage-description>The column name.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.jdbc-type</name>
+        <usage-description>
+              Declare the JDBC Type. Its value must be one
+              of the fields of java.sql.Types (e.g. BIT,
+              CHAR...). This jdbc type will be used by the
+              CMP provider to determine which method to
+              call on PreparedStatement and ResultSet for
+              INSERT / UPDATE / SELECT queries.
+        </usage-description>
+        <unique>true</unique>
+        <deprecated>Please use the jdbc-type attribute of the @ejb.persistence method tag.</deprecated>
+        <condition-description>
+          EJB entity bean fields. On the persistent fields getter methods
+        </condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="or">
+            <condition type="starts-with">
+              <condition-parameter>get</condition-parameter>
+            </condition>
+            <condition type="starts-with">
+              <condition-parameter>is</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>type</name>
+          <usage-description>A valid JDBC type.</usage-description>
+          <mandatory>true</mandatory>
+          <option-sets>
+            <option-set>
+              <default>VARCHAR</default>
+              <options>
+                <option>ARRAY</option>
+                <option>BIGINT</option>
+                <option>BINARY</option>
+                <option>BIT</option>
+                <option>BLOB</option>
+                <option>BOOLEAN</option>
+                <option>CHAR</option>
+                <option>CLOB</option>
+                <option>DATALINK</option>
+                <option>DATE</option>
+                <option>DECIMAL</option>
+                <option>DISTINCT</option>
+                <option>DOUBLE</option>
+                <option>FLOAT</option>
+                <option>INTEGER</option>
+                <option>JAVA_OBJECT</option>
+                <option>LONGVARBINARY</option>
+                <option>LONGVARCHAR</option>
+                <option>NULL</option>
+                <option>NUMERIC</option>
+                <option>OTHER</option>
+                <option>REAL</option>
+                <option>REF</option>
+                <option>SMALLINT</option>
+                <option>STRUCT</option>
+                <option>TIME</option>
+                <option>TIMESTAMP</option>
+                <option>TINYINT</option>
+                <option>VARBINARY</option>
+                <option>VARCHAR</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.not-persisted-field</name>
+        <usage-description/>
+        <unique>true</unique>
+        <condition-description>Applicable to Entity beans using JAWS CMP on method level</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="tag-param">
+            <condition-parameter>ejb.bean</condition-parameter>
+            <condition-parameter>type</condition-parameter>
+            <condition-parameter>CMP</condition-parameter>
+          </condition>
+        </condition>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.relation-table</name>
+        <usage-description>Tells the JBoss persistence manager to use a relation table for managing entity relationships.</usage-description>
+        <unique>true</unique>
+        <condition-description>CMR field</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <!-- make sure this is a relation -->
+          <condition type="tag-exists">
+            <condition-parameter>ejb.relation</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <!-- check the owning class to be sure it is a CMP entity bean -->
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="starts-with">
+            <condition-parameter>get</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>table-name</name>
+          <usage-description>The name of the relation table.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>datasource</name>
+          <usage-description>The datasource to place the relation table in.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="text">
+          <name>datasource-mapping</name>
+          <usage-description>The name of the type mapping that will be used for this datasource.</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>create-table</name>
+          <usage-description>Should the persistence manager attempt to create tables if they are not present?</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>alter-table</name>
+          <usage-description>Should the persistence manager attempt to alter tables if they have changed?</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>remove-table</name>
+          <usage-description>Should the persistence manager attempt to remove tables during shutdown?</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>row-locking</name>
+          <usage-description>Should select statements the SELECT ... FOR UPDATE syntax?</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+        <parameter type="bool">
+          <name>pk-constraint</name>
+          <usage-description>Should a primary key constraint be added when creating tables?</usage-description>
+          <mandatory>false</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.sql-type</name>
+        <usage-description>
+           Declare the actual type of the field in the
+           database. This value will only be used when the
+           CMP container creates your table (if possible).
+        </usage-description>
+        <unique>true</unique>
+        <deprecated>Please use the sql-type attribute of the @ejb.persistence method tag.</deprecated>
+        <condition-description>
+          EJB entity bean fields. On the persistent fields getter methods
+        </condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="or">
+            <condition type="starts-with">
+              <condition-parameter>get</condition-parameter>
+            </condition>
+            <condition type="starts-with">
+              <condition-parameter>is</condition-parameter>
+            </condition>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>type</name>
+          <usage-description>The database-specific SQL type.</usage-description>
+          <mandatory>true</mandatory>
+        </parameter>
+      </tag>
+      <tag>
+        <level>method</level>
+        <name>jboss.relation-mapping</name>
+        <usage-description>
+          Use jboss.relation-mapping="relation-table" to force
+          the use of a relation table mapping in a relationship
+          even when the relation is not M-N.
+        </usage-description>
+        <unique>true</unique>
+        <condition-description>CMR field</condition-description>
+        <condition type="and">
+          <condition type="method"/>
+          <condition type="type">
+            <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+          </condition>
+          <!-- make sure this is a relation -->
+          <condition type="tag-exists">
+            <condition-parameter>ejb.relation</condition-parameter>
+          </condition>
+          <condition type="owner">
+            <!-- check the owning class to be sure it is a CMP entity bean -->
+            <condition type="tag-param">
+              <condition-parameter>ejb.bean</condition-parameter>
+              <condition-parameter>type</condition-parameter>
+              <condition-parameter>CMP</condition-parameter>
+            </condition>
+          </condition>
+          <condition type="public"/>
+          <condition type="abstract"/>
+          <condition type="starts-with">
+            <condition-parameter>get</condition-parameter>
+          </condition>
+        </condition>
+        <parameter type="text">
+          <name>style</name>
+          <usage-description>relation-table to be of any use</usage-description>
+          <mandatory>false</mandatory>
+          <option-sets>
+            <option-set>
+              <options>
+                <option>relation-table</option>
+              </options>
+            </option-set>
+          </option-sets>
+        </parameter>
+      </tag>
+         <tag>
+           <level>class</level>
+           <name>jboss.clustered</name>
+           <usage-description>Marks the EJB as clustered in jboss.xml deployment descriptor</usage-description>
+           <unique>true</unique>
+           <condition-description>Only valid for Session- and Entity- EJB's</condition-description>
+           <condition type="or">
+             <condition type="type">
+               <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+             </condition>
+             <condition type="type">
+               <condition-parameter>javax.ejb.EntityBean</condition-parameter>
+             </condition>
+           </condition>
+           <parameter type="bool">
+             <name>cluster</name>
+             <usage-description>
+               Used to turn on/off clustering.
+             </usage-description>
+             <mandatory>false</mandatory>
+             <default>true</default>
+           </parameter>
+         </tag>
+         <tag>
+             <level>class</level>
+             <name>jboss.cluster-config</name>
+             <usage-description>
+                 Sets JBoss clustering configuration, overriding the default
+                 container on a per-EJB basis. The defaults mentioned here are
+                 not actual XDoclet behavior but rather JBoss defaults cited
+                 here for convenience.
+             </usage-description>
+             <unique>true</unique>
+             <condition-description>
+                 Only valid for EJB's marked as clustered.
+             </condition-description>
+             <condition type="tag-exists">
+                   <condition-parameter>jboss.clustered</condition-parameter>
+             </condition>
+             <parameter type="text">
+                 <name>partition-name</name>
+                 <usage-description>
+                     Sets the name of the JBoss Cluster Partition in which this
+                     EJB is to be deployed.
+                 </usage-description>
+                 <mandatory>false</mandatory>
+             </parameter>
+             <parameter type="text">
+                 <name>home-policy</name>
+                 <usage-description><![CDATA[
+                     Sets the algorithm used for home load balancing policy,
+                     i.e. <code>&lt;home-load-balance-policy&gt;</code> in jboss.xml.
+                     More in JBoss clustering docs...
+                 ]]></usage-description>
+                 <mandatory>false</mandatory>
+                 <default>org.jboss.ha.framework.interfaces.RoundRobin</default>
+             </parameter>
+             <parameter type="text">
+                 <name>bean-policy</name>
+                 <usage-description><![CDATA[
+                     Sets the algorithm used for bean load balancing policy,
+                     i.e. <code>&lt;bean-load-balance-policy&gt;</code> in jboss.xml.
+                     More in JBoss clustering docs...
+                 ]]></usage-description>
+                 <mandatory>false</mandatory>
+                 <default>org.jboss.ha.framework.interfaces.RoundRobin</default>
+             </parameter>
+             <parameter type="text">
+                 <name>state-manager</name>
+                 <usage-description><![CDATA[
+                     Sets the JNDI name used for looking up the clustered
+                     session state manager.
+                     i.e. <code>&lt;session-state-manager-jndi-name&gt;</code> in jboss.xml.
+                     More in JBoss clustering docs...
+                 ]]></usage-description>
+                 <mandatory>false</mandatory>
+                 <default><![CDATA[/HASessionState/Default]]></default>
+                 <condition-description>Only relevant for Stateful SessionBeans</condition-description>
+                 <condition type="and">
+                     <condition type="type">
+                         <condition-parameter>javax.ejb.SessionBean</condition-parameter>
+                     </condition>
+                     <condition type="tag-param">
+                       <condition-parameter>ejb.bean</condition-parameter>
+                       <condition-parameter>type</condition-parameter>
+                       <condition-parameter>Stateful</condition-parameter>
+                     </condition>
+                 </condition>
+             </parameter>
+         </tag>
+        <tag>
+            <level>class</level>
+            <name>jboss.cache-invalidation</name>
+            <usage-description>
+                Tells the container to emit cache invalidation messages when these entities are changed.
+                NOTE! You must ensure the entity is deployed in a container configured or in validation.
+                (i.e. has org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor
+                configured in its interceptor stack.)
+            </usage-description>
+            <unique>true</unique>
+            <condition-description>Only valid for CMP 2.x Beans</condition-description>
+            <condition type="tag-param">
+                <condition-parameter>ejb.bean</condition-parameter>
+                <condition-parameter>type</condition-parameter>
+                <condition-parameter>CMP</condition-parameter>
+            </condition>
+            <parameter type="text">
+                <name>value</name>
+                <usage-description>
+                    Defines the behaviour of the invalidator:
+                    true enables it for commit options A and D,
+                    True forces invalidation on all commit options.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>true</default>
+            </parameter>
+        </tag>
+        <tag>
+            <level>class</level>
+            <name>jboss.cache-invalidation-config</name>
+            <usage-description>
+                Configure the behaviour of jboss cache invalidation.
+                NOTE! The defaults mentioned are not manifested in the output,
+                they are JBoss's behaviour cited here for convenience.
+            </usage-description>
+            <unique>true</unique>
+            <condition-description>Only valid for CMP 2.x Beans</condition-description>
+            <condition type="tag-param">
+                <condition-parameter>ejb.bean</condition-parameter>
+                <condition-parameter>type</condition-parameter>
+                <condition-parameter>CMP</condition-parameter>
+            </condition>
+            <parameter type="text">
+                <name>invalidation-manager-name</name>
+                <usage-description>
+                    The JMX ObjectName of the InvalidationManager to use.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>jboss.cache:service=InvalidationManager</default>
+            </parameter>
+            <parameter type="text">
+                <name>invalidation-group-name</name>
+                <usage-description>
+                    The name of an invalidationgroup to which this entity belongs.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>The EntityBean's name</default>
+            </parameter>
+        </tag>
+        <tag>
+            <level>class</level>
+            <name>jboss.service</name>
+            <usage-description>
+                Configures the generation of -service.xml files for JBoss
+            </usage-description>
+            <unique>false</unique>
+            <condition-description>Valid only for JMX MBeans</condition-description>
+            <condition type="tag-exists">
+                <condition-parameter>jmx.mbean</condition-parameter>
+            </condition>
+
+            <parameter type="text">
+                <name>servicefile</name>
+                <usage-description>
+                    The prefix that will be prepended to the generated -service.xml file
+                    name. For example, if servicefile="test", the generated file will be
+                    called test-service.xml. Please note that you must include at least
+                    one @jboss.service servicefile="xxx" in your MBean, or generation will
+                    fail.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>none</default>
+            </parameter>
+            <parameter type="text">
+                <name>classpath</name>
+                <usage-description>
+                    A directory to use as codebase for this service classpath. This parameter
+                    may be used in conjunction with the 'archives' parameter to form the service
+                    classpath.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>none</default>
+            </parameter>
+            <parameter type="text">
+                <name>archives</name>
+                <usage-description>
+                    Individual filenames that should be used to construct the service classpath.
+                    This parameter should nevercome alone in a '@jboss.service' tag, but should
+                    always come together with the 'classpath' attribute.
+                </usage-description>
+                <mandatory>false</mandatory>
+                <default>*</default>
+            </parameter>
+        </tag>
+        <tag>
+        	<level>method</level>
+        	<name>jboss.dvc-property</name>
+        	<usage-description>Declare field as dependent value class.</usage-description>
+        	<unique>true</unique>
+        	<parameter type="text">
+        		<name>name</name>
+        		<usage-description>
+        			Name of the property being configured. In a dependent-value-class
+element this must match a JavaBean property of the class. In a
+cmp-field element this must match a flattened propety of the
+dependent-value-class field type.
+				</usage-description>
+        		<mandatory>true</mandatory>        		
+        	</parameter>
+        	<parameter type="text">
+        		<name>column-name</name>
+        		<usage-description>
+        			The name of the column that will hold the data for this field.
+        		</usage-description>
+        		<mandatory>false</mandatory>        		
+        	</parameter>
+        	<parameter type="bool">
+        		<name>not-null</name>
+        		<usage-description></usage-description>
+        		<mandatory>false</mandatory>
+        	</parameter>
+        	<parameter type="text">
+        		<name>sql-type</name>
+        		<usage-description>SQL-Type of this field. Must be used together with jdbc-type.</usage-description>
+        		<mandatory>false</mandatory>        		
+        	</parameter>
+        	<parameter type="text">
+        		<name>jdbc-type</name>
+        		<usage-description>JDBC-Type of this field. Must be used together with sql-type.</usage-description>
+        		<mandatory>false</mandatory>        		
+        	</parameter>        	
+        </tag>
+		<tag>
+			<level>class</level>
+			<name>jboss.port-component</name>
+			<usage-description>Specify webservices port-components</usage-description>
+			<unique>false</unique>
+			<parameter type="text">
+				<name>name</name>
+				<usage-description>The name of the port</usage-description>
+				<mandatory>true</mandatory>
+			</parameter>
+			<parameter type="text">
+				<name>uri</name>
+				<usage-description>The uri of the port in the form /web-context-root/port</usage-description>
+				<mandatory>false</mandatory>				
+			</parameter>
+			<parameter type="text">
+				<name>auth-method</name>
+				<usage-description>The auth mechanism of the webservice</usage-description>
+				<mandatory>false</mandatory>
+				<option-sets>
+					<option-set>
+						<options>
+							<option>BASIC</option>
+							<option>CLIENT-CERT</option>							
+						</options>						
+					</option-set>					
+				</option-sets>				
+			</parameter>
+			<parameter type="text">
+				<name>transport-guarantee</name>
+				<usage-description>Specification of the transport security between client and server</usage-description>
+				<mandatory>false</mandatory>
+				<option-sets>
+					<option-set>
+						<options>
+							<option>NONE</option>
+							<option>INTEGRAL</option>
+							<option>CONFIDENTIAL</option>
+						</options>
+					</option-set>
+				</option-sets>
+			</parameter>
+		</tag>
+    </tags>
+  </namespace>
+</xdoclet>
