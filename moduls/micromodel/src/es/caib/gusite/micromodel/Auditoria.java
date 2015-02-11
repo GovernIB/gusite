@@ -107,4 +107,17 @@ public class Auditoria {
     public void setIdEntidad(String idEntidad) {
         this.idEntidad = idEntidad;
     }
+
+    public String estado(int estado) {
+        if (estado == CREAR) {
+            return "CREAR";
+        } else if (estado == MODIFICAR) {
+            return "MODIFICAR";
+        } else if (estado == ELIMINAR) {
+            return "ELIMINAR";
+        } else {
+            return "";
+        }
+    }
+
 }

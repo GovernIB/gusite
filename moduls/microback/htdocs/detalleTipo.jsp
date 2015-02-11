@@ -12,6 +12,8 @@
 	<link href="css/estils.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
 </head>
 
 <body>
@@ -261,6 +263,11 @@
 			<tr>
 				<td class="etiqueta"><bean:message key="tema.nombre" />:</td>
 				<td><html:text property="nombre" name="traducciones" size="40" maxlength="100" indexed="true" /></td>
+			</tr>
+			<tr>
+				<td class="etiqueta"><bean:message key="tema.uri"/>:</td>
+				<td><html:text property="uri" name="traducciones" styleId="<%="uri"+i%>" size="40" maxlength="100" indexed="true" /></td>
+				<input type="hidden" name="type" value="tpi_uri" />
 			</tr>
 			</table>
 		</div>

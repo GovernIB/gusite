@@ -9,7 +9,6 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -57,20 +56,15 @@ public abstract class AccesibilidadFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             boolean nuevo = (accesibilidad.getId() == null) ? true : false;
-            Microsite site = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
+            this.microsite = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
             Transaction tx = session.beginTransaction();
             session.saveOrUpdate(accesibilidad);
             session.flush();
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Accesibilidad.class.getSimpleName());
-            auditoria.setIdEntidad(accesibilidad.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Accesibilidad.class.getSimpleName(), accesibilidad.getId().toString(), op);
 
             return accesibilidad.getId();
             
@@ -92,19 +86,14 @@ public abstract class AccesibilidadFacadeEJB extends HibernateEJB {
 
         Session session = getSession();
         try {
-            Microsite site = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
+            this.microsite = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
             Transaction tx = session.beginTransaction();
             session.delete(accesibilidad);
             session.flush();
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Accesibilidad.class.getSimpleName());
-            auditoria.setIdEntidad(accesibilidad.getId().toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Accesibilidad.class.getSimpleName(), accesibilidad.getId().toString(), Auditoria.ELIMINAR);
             
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -284,17 +273,12 @@ public abstract class AccesibilidadFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
         	Accesibilidad accesibilidad = (Accesibilidad) session.get(Accesibilidad.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
+            this.microsite = (Microsite) session.get(Microsite.class, accesibilidad.getCodmicro());
             session.delete(accesibilidad);
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Accesibilidad.class.getSimpleName());
-            auditoria.setIdEntidad(accesibilidad.getId().toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Accesibilidad.class.getSimpleName(), accesibilidad.getId().toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -314,7 +298,7 @@ public abstract class AccesibilidadFacadeEJB extends HibernateEJB {
 
         Session session = getSession();
         try {
-            Microsite site = (Microsite) session.get(Microsite.class, id);
+            this.microsite = (Microsite) session.get(Microsite.class, id);
             Criteria criteri = session.createCriteria(Accesibilidad.class);
             criteri.add(Expression.eq("codmicro", id));
             List<?> lista = criteri.list();
@@ -332,12 +316,7 @@ public abstract class AccesibilidadFacadeEJB extends HibernateEJB {
             iter = lista.iterator();
             while (iter.hasNext()) {
                 Accesibilidad accesibilidad = (Accesibilidad) iter.next();
-                Auditoria auditoria = new Auditoria();
-                auditoria.setEntidad(Accesibilidad.class.getSimpleName());
-                auditoria.setIdEntidad(accesibilidad.getId().toString());
-                auditoria.setMicrosite(site);
-                auditoria.setOperacion(Auditoria.ELIMINAR);
-                DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+                gravarAuditoria(Accesibilidad.class.getSimpleName(), accesibilidad.getId().toString(), Auditoria.ELIMINAR);
             }
            
         } catch (HibernateException he) {

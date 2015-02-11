@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -53,6 +54,16 @@ public class MicrositeCompleto implements Traducible2, Serializable {
     @XmlAttribute
 	@Column(name="MIC_CODUNI")
     private int idUA;
+    
+  //TEST
+  	@XmlAttribute
+  	@Column(name="MIC_ANALYTICS")
+  	private String analytics;
+    
+  	@XmlAttribute
+  	@Column(name="MIC_URI")
+  	private String uri;
+      //TEST
 
     @XmlAttribute
 	@Temporal(TemporalType.DATE)
@@ -181,6 +192,14 @@ public class MicrositeCompleto implements Traducible2, Serializable {
     @XmlAttribute
     @Column(name="MIC_MNUCRP")
     private String menucorporativo;
+
+    @XmlAttribute
+    @Column(name="MIC_VERSION")
+    private String versio;
+
+    @XmlAttribute
+    @Column(name="MIC_TIPO_ACCESO")
+    private String acceso;
 
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
     @JoinColumn(name="IMI_MICCOD")
@@ -374,6 +393,24 @@ public class MicrositeCompleto implements Traducible2, Serializable {
     public Set getFormularioscontacto() {
         return formularioscontacto;
     }
+    
+  //TEST
+  	public String getAnalytics() {
+  		return analytics;
+  	}
+
+  	public void setAnalytics(String analytics) {
+  		this.analytics = analytics;
+  	}
+  	
+  	public String getUri() {
+  		return uri;
+  	}
+  	
+  	public void setUri(String uri) {
+  		this.uri = uri;
+  	}
+  	//TEST
 
     public void setFormularioscontacto(Set formularioscontacto) {
         this.formularioscontacto = formularioscontacto;
@@ -809,4 +846,19 @@ public class MicrositeCompleto implements Traducible2, Serializable {
 		this.idi=idi;
 	}
 
+    public String getVersio() {
+        return versio;
+    }
+
+    public void setVersio(String versio) {
+        this.versio = versio;
+    }
+
+    public String getAcceso() {
+        return acceso;
+    }
+
+    public void setAcceso(String acceso) {
+        this.acceso = acceso;
+    }
 }

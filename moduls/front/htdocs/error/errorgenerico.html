@@ -30,20 +30,13 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 		<!-- capçal -->
 		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
 		<div
+		 	th:if="${MVS_microsite}!=null"
 			th:remove="(${MVS_microsite.tipocabecera}=='0')==true ? all : none"
 			id="" th:fragment="cabeceraReducida">
 			<div
 				th:remove="(${MVS_microsite.tipocabecera}=='2')==true ? all : none">
 				<div id="capsal">
-					<div th:if="${MVS_microsite.restringido}=='S'">
-						<a href="index.html" id="lang" name="lang" accesskey="0"
-							class="destacat"> <img class="logo"
-							src="intranet/imgs/capsal/logo.gif"
-							th:src="@{/intranet/imgs/capsal/logo.gif}"
-							alt="Logo del Govern de les Illes Balears" />
-						</a>
-					</div>
-					<div th:if="${MVS_microsite.restringido}!='S'">
+					<div>
 						<a href="index.html" id="lang" name="lang" accesskey="0"
 							class="destacat"> <img class="logo"
 							src="resources/imgs/cap/logo.gif"

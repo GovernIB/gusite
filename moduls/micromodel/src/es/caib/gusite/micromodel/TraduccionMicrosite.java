@@ -25,6 +25,16 @@ public class TraduccionMicrosite implements Traduccion{
     @XmlAttribute
 	@Column(name="MID_TITULO")
 	private String titulo;
+    
+    //test
+    @XmlAttribute
+	@Column(name="MID_DESCRIPTION")
+	private String description;
+   
+    @XmlAttribute
+	@Column(name="MID_KEYWORDS")
+	private String keywords;
+    //test
 
     @XmlAttribute
 	@Column(name="MID_TXTOP1")
@@ -105,6 +115,24 @@ public class TraduccionMicrosite implements Traduccion{
 	public void setTitulocampanya(String titulocampanya) {
 		this.titulocampanya = titulocampanya;
 	}
+	
+	//test
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+	//test
 
 	public TraduccionMicrosite(){
     }

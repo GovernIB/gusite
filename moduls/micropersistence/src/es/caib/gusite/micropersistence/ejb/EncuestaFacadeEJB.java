@@ -18,6 +18,7 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
@@ -26,6 +27,7 @@ import org.hibernate.Transaction;
 import es.caib.gusite.lucene.analysis.Analizador;
 import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.ModelFilterObject;
+import es.caib.gusite.micromodel.Encuesta;
 
 /**
  * SessionBean para manipular encuestas.
@@ -133,7 +135,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
         try {
 			boolean nuevo = (enc.getId() == null) ? true : false;
             Transaction tx = session.beginTransaction();
-			Microsite site = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
 
             Map<String, TraduccionEncuesta> listaTraducciones = new HashMap<String, TraduccionEncuesta>();
 
@@ -161,13 +163,8 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
             tx.commit();
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Encuesta.class.getSimpleName());
-			auditoria.setIdEntidad(enc.getId().toString());
-			auditoria.setMicrosite(site);
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-			auditoria.setOperacion(op);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Encuesta.class.getSimpleName(), enc.getId().toString(), op);
 
             return enc.getId();
 
@@ -199,7 +196,42 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			close(session);
 		}
 	}
+	
+	/**
+     * Obtiene una encuesta a partir de la URI
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri) {
 
+        Session session = getSession();
+        try {
+        	Query query;
+        	if (idioma != null) {
+        		query = session.createQuery("from TraduccionEncuesta te where te.id.codigoIdioma = :idioma and te.uri = :uri");
+            	query.setParameter("idioma", idioma);
+       		} else {
+       			query = session.createQuery("from TraduccionEncuesta te where te.uri = :uri");
+      		}
+        	query.setParameter("uri", uri);
+            query.setMaxResults(1);
+            TraduccionEncuesta trad=(TraduccionEncuesta)query.uniqueResult();
+        	if (trad != null) {
+        		return this.obtenerEncuesta(trad.getId().getCodigoEncuesta());
+        	} else {
+        		return null;
+        	}
+
+        } catch (ObjectNotFoundException oNe) {
+            log.error(oNe.getMessage());
+        	return new Encuesta();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    
     /**
 	 * Lista todas las encuestas
 	 * @ejb.interface-method
@@ -300,7 +332,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
         try {
             Transaction tx = session.beginTransaction();
 			Encuesta encuesta = (Encuesta) session.get(Encuesta.class, id);
-			Microsite site = (Microsite) session.get(Microsite.class, encuesta.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, encuesta.getIdmicrosite());
 
             List<Pregunta> preguntas = session.createQuery("from Pregunta where idencuesta = " + id).list();
             for (int p = 0; p < preguntas.size(); p++) {
@@ -327,12 +359,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			tx.commit();
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Encuesta.class.getSimpleName());
-			auditoria.setIdEntidad(id.toString());
-			auditoria.setMicrosite(site);
-			auditoria.setOperacion(Auditoria.ELIMINAR);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Encuesta.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -385,18 +412,13 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 			// Actualizamos el indice
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, pre.getIdencuesta());
-			Microsite site = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
 			indexBorraEncuesta(enc.getId());
 			indexInsertaEncuesta(enc, null);
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Pregunta.class.getSimpleName());
-			auditoria.setIdEntidad(pre.getId().toString());
-			auditoria.setMicrosite(site);
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-			auditoria.setOperacion(op);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Pregunta.class.getSimpleName(), pre.getId().toString(), op);
 
 		} catch (HibernateException e) {
 			throw new EJBException(e);
@@ -509,19 +531,14 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			tx.commit();
 			// Actualizamos el indice
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, encuesta_id);
-			Microsite site = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
 			indexBorraEncuesta(enc.getId());
 			indexInsertaEncuesta(enc, null);
 			close(session);
 
 			AuditoriaDelegate auditoriaDelegate = DelegateUtil.getAuditoriaDelegate();
 			for (String id : idpreguntas) {
-				Auditoria auditoria = new Auditoria();
-				auditoria.setEntidad(Pregunta.class.getSimpleName());
-				auditoria.setIdEntidad(id.toString());
-				auditoria.setMicrosite(site);
-				auditoria.setOperacion(Auditoria.ELIMINAR);
-				auditoriaDelegate.grabarAuditoria(auditoria);
+				gravarAuditoria(Pregunta.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 			}
 
 		} catch (HibernateException e) {
@@ -571,18 +588,13 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
             tx.commit();
 			// Actualizamos el indice
 			Encuesta enc = obtenerEncuesta(obtenerPregunta(res.getIdpregunta()).getIdencuesta());
-			Microsite site = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
 			indexBorraEncuesta(enc.getId());
 			indexInsertaEncuesta(enc, null);
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Respuesta.class.getSimpleName());
-			auditoria.setIdEntidad(res.getId().toString());
-			auditoria.setMicrosite(site);
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-			auditoria.setOperacion(op);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Respuesta.class.getSimpleName(), res.getId().toString(), op);
 
 		} catch (HibernateException e) {
 			throw new EJBException(e);
@@ -715,19 +727,14 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			tx.commit();
 			// Actualizamos el indice
 			Encuesta enc = obtenerEncuesta(obtenerPregunta(pregunta_id).getIdencuesta());
-			Microsite site = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, enc.getIdmicrosite());
 			indexBorraEncuesta(enc.getId());
 			indexInsertaEncuesta(enc, null);
 			close(session);
 
 			AuditoriaDelegate auditoriaDelegate = DelegateUtil.getAuditoriaDelegate();
 			for (String id : idrespuestas) {
-				Auditoria auditoria = new Auditoria();
-				auditoria.setEntidad(Respuesta.class.getSimpleName());
-				auditoria.setIdEntidad(id.toString());
-				auditoria.setMicrosite(site);
-				auditoria.setOperacion(Auditoria.ELIMINAR);
-				DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+				gravarAuditoria(Respuesta.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 			}
 
 		} catch (HibernateException e) {

@@ -11,7 +11,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
@@ -116,7 +115,7 @@ public abstract class FrqssiFacadeEJB extends HibernateEJB {
         try {
             boolean nuevo = (frqssi.getId() == null) ? true : false;
             Transaction tx = session.beginTransaction();
-            Microsite site = (Microsite) session.get(Microsite.class, frqssi.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, frqssi.getIdmicrosite());
 
             Map<String, TraduccionFrqssi> listaTraducciones = new HashMap<String, TraduccionFrqssi>();
             if (nuevo) {
@@ -143,13 +142,8 @@ public abstract class FrqssiFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Frqssi.class.getSimpleName());
-            auditoria.setIdEntidad(frqssi.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Frqssi.class.getSimpleName(), frqssi.getId().toString(), op);
 
             return frqssi.getId();
 
@@ -251,19 +245,14 @@ public abstract class FrqssiFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             Frqssi frqssi = (Frqssi) session.get(Frqssi.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, frqssi.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, frqssi.getIdmicrosite());
 
             session.createQuery("delete from TraduccionFrqssi tfrq where tfrq.id.codigoFrqssi = " + id).executeUpdate();
             session.createQuery("delete from Frqssi where id = " + id).executeUpdate();
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Frqssi.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Frqssi.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

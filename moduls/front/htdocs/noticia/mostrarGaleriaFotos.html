@@ -89,11 +89,11 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 									</div>
 									<div th:if="${i.imagen} ==null" th:remove="tag">
 										<a rel="lightbox[fotos]"
-											href="resources/imgs/noticies/news.gif"> 
+											th:href="@{/resources/imgs/noticies/news.gif}"> 
 											<!--MVS_anchoFoto: devuelve el ancho de la foto  -->
 											<img
 											th:style="height:${MVS_altoFoto}px"
-											src="resources/imgs/noticies/news.gif" />
+											th:src="@{/resources/imgs/noticies/news.gif}" />
 										</a>
 									</div>
 								</div>

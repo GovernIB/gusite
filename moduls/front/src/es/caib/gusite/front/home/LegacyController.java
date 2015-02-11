@@ -27,6 +27,7 @@ import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -230,6 +231,10 @@ public class LegacyController extends FrontController {
         	log.error(e.getMessage());
         	//TODO: 404?
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+        	log.error(e.getMessage());
+        	//TODO: 404?
+        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
 	}
 	
@@ -267,7 +272,7 @@ public class LegacyController extends FrontController {
 	public String noticias (
 					@RequestParam(Microfront.PIDSITE) Long idSite, 
 					@RequestParam(Microfront.PLANG) Idioma lang,
-					@RequestParam(Microfront.PTIPO) String idNoticia,
+					@RequestParam(Microfront.PTIPO) Long idTipo,
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) throws DelegateException {
 
@@ -275,14 +280,19 @@ public class LegacyController extends FrontController {
 		
 	  	try {
 		  	microsite =  this.dataService.getMicrosite(idSite, lang);
+		  	Tipo tipo = this.noticiasDataService.loadTipo(idTipo, lang);
 	  	
 		  	//TODO: cambiar a forward si no deseamos que se vea la url. Por ahora lo dejamos como "redirect" para facil depuración
-			return "redirect:" + this.urlFactory.listarElementos(microsite, lang, idNoticia);
+			return "redirect:" + this.urlFactory.listarElementos(microsite, lang, tipo);
 
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	//TODO: 404?
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+        	log.error(e.getMessage());
+        	//TODO: 404?
+        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
 	}
 	
@@ -296,13 +306,13 @@ public class LegacyController extends FrontController {
 	public String noticias (
 					@RequestParam("mkey") String mkey, 
 					@RequestParam(Microfront.PLANG) Idioma lang,
-					@RequestParam(Microfront.PTIPO) String idNoticia,
+					@RequestParam(Microfront.PTIPO) Long idTipo,
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) throws DelegateException {
 		Microsite microsite = null;
 	  	try {
 			microsite =  this.dataService.getMicrositeByKey(mkey, lang);
-			return noticias(microsite.getId(), lang, idNoticia, model, pcampa);
+			return noticias(microsite.getId(), lang, idTipo, model, pcampa);
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	//TODO: 404?
@@ -320,7 +330,7 @@ public class LegacyController extends FrontController {
 	public String noticiasAnyo (
 					@RequestParam(Microfront.PIDSITE) Long idSite, 
 					@RequestParam(Microfront.PLANG) Idioma lang,
-					@RequestParam(Microfront.PTIPO) String idNoticia,
+					@RequestParam(Microfront.PTIPO) Long idTipo,
 					@RequestParam("tanyo") String anyo,
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) throws DelegateException {
@@ -329,14 +339,19 @@ public class LegacyController extends FrontController {
 		
 	  	try {
 		  	microsite =  this.dataService.getMicrosite(idSite, lang);
+		  	Tipo tipo = this.noticiasDataService.loadTipo(idTipo, lang);
 	  	
 		  	//TODO: cambiar a forward si no deseamos que se vea la url. Por ahora lo dejamos como "redirect" para facil depuración
-		  	return "redirect:" + this.urlFactory.listarAnual(microsite, lang, idNoticia, anyo);
+		  	return "redirect:" + this.urlFactory.listarAnual(microsite, lang, tipo, anyo);
 
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	//TODO: 404?
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+        	log.error(e.getMessage());
+        	//TODO: 404?
+        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
 	}
 	
@@ -350,14 +365,14 @@ public class LegacyController extends FrontController {
 	public String noticiasAnyo (
 					@RequestParam("mkey") String mkey, 
 					@RequestParam(Microfront.PLANG) Idioma lang,
-					@RequestParam(Microfront.PTIPO) String idNoticia,
+					@RequestParam(Microfront.PTIPO) Long idTipo,
 					@RequestParam("tanyo") String anyo,
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) throws DelegateException {
 		Microsite microsite = null;
 	  	try {
 			microsite =  this.dataService.getMicrositeByKey(mkey, lang);
-			return noticiasAnyo(microsite.getId(), lang, idNoticia,anyo, model, pcampa);
+			return noticiasAnyo(microsite.getId(), lang, idTipo, anyo, model, pcampa);
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	//TODO: 404?
@@ -595,7 +610,7 @@ public class LegacyController extends FrontController {
 		Microsite microsite = null;
 	  	try {
 		  	microsite =  this.dataService.getMicrosite(idSite, lang);
-		  	Encuesta encuesta=this.encuestasDataService.getEncuestas(microsite, lang, idEncuesta);
+		  	Encuesta encuesta=this.encuestasDataService.getEncuesta(microsite, lang, idEncuesta);
 		  	//TODO: cambiar a forward si no deseamos que se vea la url. Por ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + this.urlFactory.encuesta(microsite, lang, encuesta);
 
@@ -603,6 +618,10 @@ public class LegacyController extends FrontController {
         	log.error(e.getMessage());
         	//TODO: 404?
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+        } catch (ExceptionFrontPagina e) {
+        	log.error(e.getMessage());
+        	//TODO: 404?
+        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
 	}
 	
@@ -870,10 +889,6 @@ public class LegacyController extends FrontController {
 		}      
 	}
 	
-	//TODO: añadir el resto de posibles urls. Sobre todo, porque se pueden poner en portada y un redirect no funcionará.
-	// 		ver el caso de /sites/M246/ca con noticias.
-	
-
 	/**
 	 * Hay mucho contenido referenciado relativo (src="archivopub.do?ctrl=MCRST449ZI63868&amp;id=63868") 
 	 * Así que captamos toda la url **archivopub.do 
@@ -1016,16 +1031,20 @@ public class LegacyController extends FrontController {
 	/**
 	 * Hay archivos referenciados relativos desde archivos css que se cargan como archivopub 
 	 */
-	@RequestMapping(value="/{mkey}/f/archivopub.do", params=Microfront.PNAME) 
+	@RequestMapping(value="/{uri}/f/archivopub.do", params=Microfront.PNAME) 
 	public String archivopubRelativoPorNombre (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@RequestParam(value=Microfront.PNAME) String name,
 					Model model) {
 		
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  this.dataService.getMicrositeByKey(siteId.mkey, DEFAULT_IDIOMA);
+		  	microsite =  this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+		  	if (microsite == null) {
+		  		//TODO: 404
+	        	return getForwardError (microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		  	}
 	  	
 		  	//TODO: cambiar a forward si no deseamos que se vea la url. Por ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + this.urlFactory.archivopubByNombre(microsite, name);

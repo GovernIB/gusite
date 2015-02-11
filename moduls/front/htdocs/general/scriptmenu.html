@@ -10,12 +10,12 @@ Variables:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
-<script type="text/javascript" th:if="${MVS_contenido} !=null"
+<script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
 	th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : none">
 		var nodo='p'+'${MVS_contenido.id}';
 		window.onload = function() { menuJS(nodo); };
 		</script>
-<script type="text/javascript" th:if="${MVS_contenido} ==null"
+<script type="text/javascript" th:if="${MVS_contenido}==null and ${MVS_microsite}!=null"
 	th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : none">
 		var nodo='0';
 		</script>

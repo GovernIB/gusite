@@ -9,7 +9,7 @@ Variables:
 	MVS_microsite: devuelve un microsite a partir de su clave unica 
 	MVS_mchtml: devuelve código html externo
 	MVS_idioma: devuelve el idioma correspondiente
-	MVS_claseelemento: devuelve el tipo de noticia
+	MVS_claseelemento_id: devuelve el id del tipo de noticia
 	-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
@@ -55,9 +55,10 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 					<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
 					<input
 					type="hidden" name="mkey" th:value="${MVS_microsite.claveunica}" />
-				<!-- MVS_claseelemento: devuelve el tipo de noticia -->	
-				<input type="hidden" name="tipo" th:value="${MVS_claseelemento.id}" />
+				<!-- MVS_claseelemento_id: devuelve el id del tipo de noticia -->	
+				<input type="hidden" name="tipo" th:value="${MVS_claseelemento_id}" />
 				<input type="hidden" name="pagina" value="1" />
+				
 				<!-- MVS_mchtml: devuelve código html externo -->
 				<div th:text="${MVS_mchtml}" th:remove="tag"></div>
 			</form>

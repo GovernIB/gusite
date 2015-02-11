@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
+
 import es.caib.gusite.microback.Microback;
 
 /**
@@ -133,4 +135,38 @@ public class Cadenas {
 		}
 		return cont;
 	}
+	
+	/**
+	 * Convierte una cadena a un formato utilizable en url.
+	 * Por ejemplo, convertiría:
+	 *     "Perfil del t(u)rista britànic 2002´''"
+     *	a:
+	 *     Perfil_del_turista_britanic_2002
+	 *     
+	 * @param nombre
+	 * @return
+	 */
+	public static String string2uri(String nombre) {
+
+		if (nombre == null || nombre.equals("")) return "";
+		
+		StringBuilder uri = new StringBuilder();
+		String origin 	= "ÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÂÊÎÔÛÃÕÑÝÇáéíóúàèìòùäëïöüâêîôûãõñýç ";
+		String dest   	= "AEIOUAEIOUAEIOUAEIOUAONYCaeiouaeiouaeiouaeiouaonyc_";
+		String validAbc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+		
+		String tmp = StringUtils.replaceChars(nombre, origin, dest).toLowerCase();
+
+		for (int i = 0; i < tmp.length(); i++) { 
+		    // filtramos los caracteres no validos
+		    char charAtI = tmp.charAt(i);
+		    if (validAbc.indexOf(charAtI) != -1) { 
+		      uri.append(charAtI);
+		    }
+		}
+		
+		return uri.toString();
+		
+	}
+	
 }

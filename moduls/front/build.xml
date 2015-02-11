@@ -178,6 +178,7 @@
             	<attribute name="Class-Path" value="
             		lib/slf4j-api-1.6.1.jar
             		lib/slf4j-simple-1.6.1.jar
+					lib/aopalliance-1.0.jar
             		lib/spring-aop-3.2.0.RELEASE.jar
         			lib/spring-aspects-3.2.0.RELEASE.jar
         			lib/spring-beans-3.2.0.RELEASE.jar

@@ -3,6 +3,9 @@ package es.caib.gusite.front.contenido;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.caib.gusite.front.general.BaseController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
@@ -19,7 +23,9 @@ import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
+import es.caib.gusite.front.microtag.MicrositeParser;
 import es.caib.gusite.front.service.ContenidoDataService;
+import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Idioma;
@@ -39,34 +45,38 @@ public class ContenidoController extends BaseController {
 	private static Log log = LogFactory.getLog(ContenidoController.class);
 
 	@Autowired
-    protected ContenidoDataService contenidoDataService;
-	
+	private ContenidoDataService contenidoDataService;
+
+	@Autowired
+	private MicrositeParser microparser;
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/{lang}/c/{idContenido}") 
+	@RequestMapping("{uri}/{lang}/c/{uriContenido}") 
 	public String contenido (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
-					@PathVariable("idContenido") Long idContenido,
+					@PathVariable("uriContenido") String uriContenido,
 					Model model,
+					RedirectAttributes redir,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					@RequestParam(value="previsual", required = false, defaultValue="") String previsual,
 					@RequestParam(value="tipo", required = false, defaultValue="") String tipobeta,
-					@RequestParam(value="redi", required = false, defaultValue="") String redi) {
+					@RequestParam(value="redi", required = false, defaultValue="") String redi,
+					HttpServletRequest request, HttpServletResponse response) {
+		
 		
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
-			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
+			Contenido contenido = this.contenidoDataService.getContenido(microsite, uriContenido, lang.getLang());
 
 			if (contenido == null) {
 				//TODO: 404
@@ -76,13 +86,11 @@ public class ContenidoController extends BaseController {
 			String urlredireccionada = ((TraduccionContenido)contenido.getTraduccion(lang.getLang())).getUrl();
 			if (!StringUtils.isEmpty(urlredireccionada)) {
 		    	String sMenuCont = contenido.getId().toString();
-				
-	    		if ((sMenuCont != null) && (!sMenuCont.equals("")) &&
-						( urlredireccionada.indexOf("idsite=") >=0 
-								|| urlredireccionada.indexOf("mkey=") >=0) ){
-					return "redirect:" + urlredireccionada + "&mcont="+ sMenuCont;
+    			String url = this.urlFactory.legatyToFrontUri(urlredireccionada, lang);
+	    		if (!StringUtils.isEmpty(sMenuCont) && this.urlFactory.isLocalLegacyUri(urlredireccionada) ){
+					return "redirect:" + url + "&mcont="+ sMenuCont;
 				}else {
-					return "redirect:" + urlredireccionada;
+					return "redirect:" + url;
 				}
 				
 			}
@@ -129,6 +137,9 @@ public class ContenidoController extends BaseController {
 			
 		    cargarMollapan(microsite, contenido, menu, model, lang, redi);
 
+		    //Parsear el contenido del microsite
+			contenido = reemplazarTags(contenido, lang.getLang(), microsite, request, response);
+		    
     		model.addAttribute("MVS_contenido", contenido);
     		model.addAttribute("MVS_tipobeta", tipobeta);
 		    
@@ -145,6 +156,34 @@ public class ContenidoController extends BaseController {
 
 	}
 
+	
+	/**
+	 * Método privado para remplazar tags.
+	 * @param contenido
+	 * @param idioma
+	 * @param microsite
+	 * @return contenido contenido con los tags remplazados
+	 * @throws Exception
+	 */
+	private Contenido reemplazarTags(Contenido contenido, String idioma, Microsite microsite, HttpServletRequest request, HttpServletResponse response) throws ExceptionFrontPagina {
+		try {
+			if (contenido.getTraduccion(idioma)!=null) {
+				if (((TraduccionContenido)contenido.getTraduccion(idioma)).getTexto()!=null) {
+					String txtBeta = microparser.doParser(microsite, ((TraduccionContenido)contenido.getTraduccion(idioma)).getTxbeta(), idioma, request, response);
+					((TraduccionContenido)contenido.getTraduccion(idioma)).setTxbeta(txtBeta);
+					String txt = microparser.doParser(microsite, ((TraduccionContenido)contenido.getTraduccion(idioma)).getTexto(), idioma, request, response);
+					((TraduccionContenido)contenido.getTraduccion(idioma)).setTexto(txt);
+					
+				}
+			}
+			return contenido;
+		} catch (Exception e) { //TODO: catch Exception!!!
+			
+			throw new ExceptionFrontPagina(" [reemplazarTags, idsite=" + microsite.getId() + ", cont=" + contenido.getId() + ", idioma=" + idioma + " ] Error=" + e.getMessage() +"\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3) );			
+		}	
+	}
+	
+	
 	/**
 	 * Método privado para guardar el recorrido que ha realizado el usuario por el microsite.
 	 * @param microsite
@@ -160,7 +199,7 @@ public class ContenidoController extends BaseController {
 
 		String titulomollapa = (menu.getVisible().equals("S"))?((TraduccionMenu)menu.getTraduccion(lang.getLang())).getNombre():"";
     	String titol=((TraduccionContenido)contenido.getTraduccion(lang.getLang())).getTitulo();
-    	String submolla = ((titulomollapa.length()>0) && (!redi.equals("yes")))?titulomollapa:"";
+    	String submolla = ((titulomollapa != null && titulomollapa.length()>0) && (!redi.equals("yes")))?titulomollapa:"";
 		if (!StringUtils.isEmpty(submolla)) {
 			path.add(new PathItem(submolla));
 	    	if (!redi.equals("yes")) {

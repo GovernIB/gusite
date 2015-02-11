@@ -12,13 +12,12 @@ Variables:
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="layout">
 <head>
-<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	MVS_tipolistado: devuelve el tipo de listado que mostrará -->
+<!-- MVS_micrositetitulo: titulo del microsite en cuestión
+	MVS_tipolistado: tipo de listado que mostrará -->
 <title
-	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_tipolistado}">Microsite
-	título - tipo listado</title>	
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>	
+	<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+		  Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
 <!-- Parte añadida para usar el layout decorator "<section>"-->
@@ -32,14 +31,11 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <body>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="campanya">
-		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
-			campana Menu</div>
+		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado campana Menu</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
-	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
-		<div th:replace="noticia/listardocumentosanual :: listadoDocumentos">Lista
-			documentos</div>
+		<div th:replace="noticia/listardocumentosanual :: listadoDocumentos">Lista documentos</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 </body>

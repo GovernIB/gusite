@@ -19,6 +19,7 @@
 			<li><a href="consola.do?accion=consola"><bean:message key="log.consola" /></a></li>
 			<li><a href="importar.do?accion=importar"><bean:message key="boton.importar" /></a></li>
 			<li><a href="archivo.do?accion=exportarArchivosMicrosites">Exportar archivos de todos los Microsites</a></li>
+			<li><a href="auditorias.do?accion=listarAuditorias"><bean:message key="auditoria.consultar" /></a></li>
 		</logic:equal>
 	</ul>
 	<!-- /menu -->

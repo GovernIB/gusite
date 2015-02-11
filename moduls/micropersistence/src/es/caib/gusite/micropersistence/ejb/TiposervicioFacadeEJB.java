@@ -7,7 +7,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
@@ -78,12 +77,8 @@ public abstract class TiposervicioFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Tiposervicio.class.getSimpleName());
-            auditoria.setIdEntidad(tipo.getId().toString());
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Tiposervicio.class.getSimpleName(), tipo.getId().toString(), op);
 
             return tipo.getId();
 
@@ -172,11 +167,7 @@ public abstract class TiposervicioFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Tiposervicio.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Tiposervicio.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

@@ -17,8 +17,7 @@ Variables:
 	th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})" />
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión-->
 <title th:if="${MVS_micrositetitulo} !=null"
-	th:text="(${MVS_micrositetitulo}) + ' - Menu preview'">Menu
-	preview</title>
+	th:text="(${MVS_micrositetitulo}) + ' - Menu preview'">Menu preview</title>
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
 Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link rel="stylesheet" type="text/css" media="all"
@@ -30,32 +29,9 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 </head>
 <body>
 	<div>
-		<!-- capÃ¾al -->
+		<!-- capçal -->
 		<!-- continguts -->
 		<div id="continguts">
-			<ul id="mollaPa">
-				<!-- MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos  -->
-				<li th:if="${MVS_seulet} !=null" th:remove="tag">
-					<!-- MVS_idioma: devuelve el idioma correspondiente -->
-					<div th:with="idi=${MVS_idioma}" th:remove="tag">
-						<div th:text="(#{cabecera.idioma})+ ':'" th:remove="tag">Idioma:</div>
-						<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
-						<div th:with="tamano=${#lists.size(MVS_microsite.idiomas)}"
-							th:remove="tag"></div>
-						<span th:each="i,iterStat:${MVS_microsite.idiomas}"
-							th:with="indice=${iterStat.index}" th:remove="tag"> <span
-							th:with="idi2=${#strings.toLowerCase(idi)},idiomaa=${i}"
-							th:remove="tag"> <strong th:if="${idi2}==${idiomaa}"
-								th:text="${i}">Valor idioma</strong> <a href=""
-								th:if="${idi2}!=${idiomaa}"
-								th:href="@{/${MVS_seulet}(lang=${i})}" th:text="${i}">Valor
-									idioma</a>
-						</span> <span th:text="${tamano}==(${indice}+1) ? '':' . '"
-							th:remove="tag">-</span>
-						</span>
-					</div>
-				</li>
-			</ul>
 			<!-- menu -->
 			<div th:if="${MVS_microsite} !=null" th:remove="tag">
 				<div
@@ -67,6 +43,11 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			</div>
 			<!-- fin menu -->
 		</div>
+			<!-- pie -->
+			<div class="col-md-12 column" th:remove="tag">
+				<footer th:replace="general/pie :: pie">Footer</footer>
+			</div>
+		
 	</div>
 </body>
 </html>

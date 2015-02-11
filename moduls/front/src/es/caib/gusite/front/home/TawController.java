@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,18 +33,21 @@ import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 public class TawController extends BaseController {
 
 	private static Log log = LogFactory.getLog(TawController.class);
+	
+	@Autowired
+	private MicrositeParser microparser;
+	
+	
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/tawitem/contenido/{contenido}")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/tawitem/contenido/{contenido}")
 	public String tawContenido(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			@PathVariable("contenido") long idContenido,
 			Model model,
@@ -53,7 +57,7 @@ public class TawController extends BaseController {
 			
 		Microsite microsite = null;
 		try{
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 			ContenidoDelegate bdCon = DelegateUtil.getContenidoDelegate();
 			Contenido conte = bdCon.obtenerContenido(idContenido);
 			conte.setIdi(lang.getLang());
@@ -63,9 +67,7 @@ public class TawController extends BaseController {
 			if ((tracon!=null) && (tracon.getTexto()!=null) && (tracon.getTexto().length()>0)) {
 				String htmlatestear = "";
 				htmlatestear = tracon.getTexto();
-				MicrositeParser microparser = new MicrositeParser("2",htmlatestear, new Long(-1), lang.getLang(), 2);
-				microparser.doParser2Comentario(lang.getLang());
-				String html2analizar = microparser.getHtmlParsed().toString();
+				String html2analizar = microparser.doParser2Comentario(microsite, htmlatestear, lang.getLang());
 				tracon.setTexto(html2analizar);
 			}
 			model.addAttribute("MVS_contenido", conte);
@@ -83,17 +85,15 @@ public class TawController extends BaseController {
 }	
 	
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/tawitem/agenda/{agenda}")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/tawitem/agenda/{agenda}")
 	public String tawAgenda(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			@PathVariable("agenda") long idAgenda,
 			Model model,
@@ -103,7 +103,7 @@ public class TawController extends BaseController {
 			
 		Microsite microsite = null;
 		try{
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 			AgendaDelegate bdAge = DelegateUtil.getAgendaDelegate();
 			Agenda agenda = bdAge.obtenerAgenda(idAgenda);
 			agenda.setIdi(lang.getLang());
@@ -121,17 +121,15 @@ public class TawController extends BaseController {
 }
 	
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/tawitem/noticia/{noticia}")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/tawitem/noticia/{noticia}")
 	public String tawNoticia(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			@PathVariable("noticia") long idNoticia,
 			Model model,
@@ -141,7 +139,7 @@ public class TawController extends BaseController {
 			
 		Microsite microsite = null;
 		try{
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 			NoticiaDelegate bdNot = DelegateUtil.getNoticiasDelegate();
 			Noticia noticia = bdNot.obtenerNoticia(idNoticia);
 			noticia.setIdi(lang.getLang());
@@ -160,7 +158,6 @@ public class TawController extends BaseController {
 }
 	@Override
 	public String setServicio() {
-		// TODO Auto-generated method stub
 		return null;
 	}	
 }

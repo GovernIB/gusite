@@ -24,7 +24,9 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	</bean>
 
 	<!-- Interceptors (order matters) -->
-	<!-- <mvc:interceptors> </mvc:interceptors> -->
+	 <mvc:interceptors>
+         <bean id="loginInterceptor" class="es.caib.gusite.front.interceptor.LoginInterceptor"></bean>
+     </mvc:interceptors>
 
 	<!-- thymeleaf IMPORTANTE: para correr (temporalmente, por ahora) en jboss3_caib, 
 		hay que eliminar el jar xml-apis de endorsed, ya que en java 1.6 ya está 
@@ -45,7 +47,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 		<property name="additionalDialects">
 			<set>
 				<bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
-				<bean class="es.caib.gusite.front.newDialect.GusiteDialect" />
+				<bean class="es.caib.gusite.front.thymeleaf.GusiteDialect" />
 			</set>
 		</property>
 		<!-- -->
@@ -54,7 +56,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
 
 
-	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+	<bean id="GusiteViewResolver" class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
 		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8" />
 	</bean>

@@ -1,19 +1,18 @@
 package es.caib.gusite.front.encuesta;
 
-	import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-	import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
-	import org.apache.commons.logging.Log;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.security.auth.certs.SeyconPrincipal;
 
-	import es.caib.gusite.front.general.Microfront;
+import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.microtag.MParserHTML;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Encuesta;
@@ -36,9 +35,8 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 
 	public class ParserHtmlJavascript extends MParserHTML {
 
-		public ParserHtmlJavascript(String version) {
-			super(version);
-			// TODO Auto-generated constructor stub
+		public ParserHtmlJavascript() {
+			super();
 		}
 
 		protected static Log log = LogFactory.getLog(ParserHtmlJavascript.class);

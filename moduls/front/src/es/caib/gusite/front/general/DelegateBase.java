@@ -11,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import es.caib.gusite.front.general.bean.MenuFront;
-import es.caib.gusite.front.microtag.MicrositeParser;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Contenido;
@@ -63,10 +62,30 @@ public class DelegateBase {
 		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
 		    	
 	    Microsite micro = microdel.obtenerMicrositebyKey(key);
-	    micro.setIdi(idioma); 		
+	    if (micro != null) {
+		    micro.setIdi(idioma); 		
+	    }
 		return micro;	
 			
-	}	
+	}
+	
+	/**
+	 * Método que devuelve un microsite a partir de su URI.
+	 * @param uri String con el URI del microsite
+	 * @param idioma String con el idioma
+	 * @return Microsites
+	 * @throws ExceptionFrontMicro 
+	 */
+	public Microsite obtenerMicrositebyUri(String uri, String idioma) throws DelegateException  {
+		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
+		    	
+	    Microsite micro = microdel.obtenerMicrositebyUri(uri);
+	    if (micro != null) {
+		    micro.setIdi(idioma); 		
+	    }
+		return micro;	
+			
+	}
 	
 
 	/**
@@ -98,13 +117,15 @@ public class DelegateBase {
 			
 			ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
 			Contenido contenido = contenidodel.obtenerContenido(idcontenido);
-			contenido.setIdi(idioma);
-			String urlredireccionada = ((TraduccionContenido)contenido.getTraduccion(idioma)).getUrl();
-			if (urlredireccionada==null) { 
-				//TODO: reemplazo de tags por thymeleaf
-				contenido = reemplazarTags(contenido, idioma, microsite);
+			if (contenido == null) {
+				return null;
 			}
-			
+			contenido.setIdi(idioma);
+			TraduccionContenido traduccionContenido = ((TraduccionContenido)contenido.getTraduccion(idioma));
+			if (traduccionContenido == null) {
+				//Si no hay traduccion dada de alta para el contenido (lo cual es una inconsistencia de bd, damos un not found) 
+				return null;
+			}
 			return contenido;
 			
 		} catch (DelegateException e) {
@@ -371,32 +392,5 @@ public class DelegateBase {
 	  	
 	}	
 	
-	/**
-	 * Método privado para remplazar tags.
-	 * @param contenido
-	 * @param idioma
-	 * @param microsite
-	 * @return contenido contenido con los tags remplazados
-	 * @throws ExceptionFront 
-	 * @throws Exception
-	 */
-	private Contenido reemplazarTags(Contenido contenido, String idioma, Microsite microsite) {
-		if (contenido.getTraduccion(idioma)!=null) {
-			if (((TraduccionContenido)contenido.getTraduccion(idioma)).getTexto()!=null) {
-				int noticias=3;
-				if (microsite.getNumeronoticias()!=0) noticias=microsite.getNumeronoticias();	
-				
-				MicrositeParser microparser = new MicrositeParser(microsite.getRestringido(),((TraduccionContenido)contenido.getTraduccion(idioma)).getTxbeta(), microsite.getId(), idioma, noticias);
-				microparser.doParser(idioma);
-				((TraduccionContenido)contenido.getTraduccion(idioma)).setTxbeta(microparser.getHtmlParsed().toString());
-			
-				MicrositeParser microparser2 = new MicrositeParser(microsite.getRestringido(),((TraduccionContenido)contenido.getTraduccion(idioma)).getTexto(), microsite.getId(), idioma, noticias);
-				microparser2.doParser(idioma);
-				((TraduccionContenido)contenido.getTraduccion(idioma)).setTexto(microparser2.getHtmlParsed().toString());
-				
-			}
-		}
-		return contenido;	
-	}
 	
 }

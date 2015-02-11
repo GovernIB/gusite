@@ -109,7 +109,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
         try {
             boolean nuevo = (faq.getId() == null) ? true : false;
          	Transaction tx = session.beginTransaction();
-            Microsite site = (Microsite) session.get(Microsite.class, faq.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, faq.getIdmicrosite());
 
             Map<String, TraduccionFaq> listaTraducciones = new HashMap<String, TraduccionFaq>();
             if (nuevo) {
@@ -136,13 +136,8 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Faq.class.getSimpleName());
-            auditoria.setIdEntidad(faq.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Faq.class.getSimpleName(), faq.getId().toString(), op);
 
             return faq.getId();
 
@@ -229,7 +224,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
         try {
             Transaction tx = session.beginTransaction();
             Faq faq = (Faq) session.get(Faq.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, faq.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, faq.getIdmicrosite());
 
             session.createQuery("delete from TraduccionFaq tfaq where tfaq.id.codigoFaq = " + id).executeUpdate();
             session.createQuery("delete from Faq faq where faq.id = " + id).executeUpdate();
@@ -237,12 +232,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Faq.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Faq.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

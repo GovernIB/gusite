@@ -109,13 +109,9 @@ public abstract class LDistribucionFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(ListaDistribucion.class.getSimpleName());
-            auditoria.setIdEntidad(listaDistribucion.getId().toString());
-            auditoria.setMicrosite(listaDistribucion.getMicrosite());
+            this.microsite = listaDistribucion.getMicrosite();
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(ListaDistribucion.class.getSimpleName(), listaDistribucion.getId().toString(), op);
 
             return listaDistribucion.getId();
             
@@ -154,12 +150,8 @@ public abstract class LDistribucionFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(ListaDistribucion.class.getSimpleName());
-            auditoria.setIdEntidad(listaDistribucion.getId().toString());
-            auditoria.setMicrosite(listaDistribucion.getMicrosite());
-            auditoria.setOperacion(Auditoria.MODIFICAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            this.microsite = listaDistribucion.getMicrosite();
+            gravarAuditoria(ListaDistribucion.class.getSimpleName(), listaDistribucion.getId().toString(), Auditoria.MODIFICAR);
 
             return insertat;
 
@@ -363,12 +355,8 @@ public abstract class LDistribucionFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(ListaDistribucion.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(listaDistribucion.getMicrosite());
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            this.microsite = listaDistribucion.getMicrosite();
+            gravarAuditoria(ListaDistribucion.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

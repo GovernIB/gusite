@@ -90,6 +90,20 @@ public class MicrositeDelegate implements StatelessDelegate {
             throw new DelegateException(e);
         }
     }
+    
+    /**
+     * Obtiene un Microsite a partir de su URI.
+     * @param uri del microsite
+     * @return Microsite
+     * @throws DelegateException, en caso de cualquier error
+     */
+    public Microsite obtenerMicrositebyUri(String uri) throws DelegateException {
+        try {
+            return getFacade().obtenerMicrositebyUri(uri);
+        } catch (RemoteException e) {
+            throw new DelegateException(e);
+        }
+    }
  
     
     /**

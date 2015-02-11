@@ -53,11 +53,9 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			<div th:if="${MVS_contenido.traduce} !=null">
 				<!-- MVS_tipobeta: devuelve un String con el tipo -->
 				<div th:if="${MVS_tipobeta}=='beta'"
-					th:utext="${MVS_contenido.traduce.txbeta}">Contenido
-					traducido beta1</div>
+					th:utext="${MVS_contenido.traduce.txbeta}">Contenido traducido beta</div>
 				<div th:unless="${MVS_tipobeta}=='beta'"
-					th:utext="${MVS_contenido.traduce.texto}">Contenido traducido
-					NO beta</div>
+					th:utext="${MVS_contenido.traduce.texto}">Contenido traducido NO beta</div>
 			</div>
 		</div>
 		<!-- fin informacio -->

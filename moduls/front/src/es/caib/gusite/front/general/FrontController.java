@@ -44,7 +44,7 @@ public class FrontController {
 	    binder.registerCustomEditor(SiteId.class, new PropertyEditorSupport() {
 	        @Override
 	        public String getAsText() {
-	            return ((SiteId) this.getValue()).mkey;
+	            return ((SiteId) this.getValue()).uri;
 	        }
 
 	        @Override
@@ -75,13 +75,15 @@ public class FrontController {
 	public class SiteId {
 
 		public SiteId(String text) {
-			mkey = text;
+			uri = text;
 		}
 
-		public String mkey = null;
+		public String uri = null;
+		
 		
 		
 	}
+	
 	
 	
 	
@@ -116,13 +118,13 @@ public class FrontController {
 
 	/**
 	 * Obtiene una cadena de mensaje
-	 * @param key
+	 * @param uri
 	 * @param lang
 	 * @return
 	 */
-	protected String getMessage(String key, Idioma lang) {
+	protected String getMessage(String uri, Idioma lang) {
 
-		return this.messageSource.getMessage(key, null, new Locale(lang.getLang().toUpperCase(), lang.getLang().toUpperCase()));
+		return this.messageSource.getMessage(uri, null, new Locale(lang.getLang().toUpperCase(), lang.getLang().toUpperCase()));
 	}
 
     /**
@@ -164,12 +166,11 @@ public class FrontController {
 			   model.addAttribute("MVS_errparam", errorMicrosite); 
 		   }
 		     	   
-		   //TODO: por qué se fijan estos atributos de microsite?
-		   microsite.setRestringido("N");
-	  	   microsite.setTipocabecera("1");	
+		  if(microsite != null) {
+			  microsite.setTipocabecera("1");
+		  }
 	  	   
 	  	   model.addAttribute("MVS_microsite", microsite); 
-	  	   
 	  	   model.addAttribute("MVS_idioma", lang.getLang());
 	  	   
 	  	   return this.templateNameFactory.errorGenerico(microsite);

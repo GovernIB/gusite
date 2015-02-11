@@ -9,7 +9,6 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-
 import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Pregunta;
@@ -19,6 +18,7 @@ import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.intf.EncuestaFacade;
 import es.caib.gusite.micropersistence.intf.EncuestaFacadeHome;
 import es.caib.gusite.micropersistence.util.EncuestaFacadeUtil;
+
 
 /**
  * Business delegate para manipular Encuestas.
@@ -79,6 +79,19 @@ public class EncuestaDelegate implements StatelessDelegate {
     public Encuesta obtenerEncuesta(Long id) throws DelegateException {
         try {
             return getFacade().obtenerEncuesta(id);
+        } catch (RemoteException e) {
+            throw new DelegateException(e);
+        }
+    }
+    
+    /**
+     * Obtiene un encuesta a partir de la uri
+     * @return Encuesta
+     * @throws DelegateException
+     */
+    public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri) throws DelegateException {
+        try {
+            return getFacade().obtenerEncuestaDesdeUri(idioma, uri);
         } catch (RemoteException e) {
             throw new DelegateException(e);
         }

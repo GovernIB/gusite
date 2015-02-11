@@ -30,17 +30,15 @@ public class CercadorController extends BaseController {
 	private static Log log = LogFactory.getLog(CercadorController.class);
 
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/{lang}/search/")
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/{lang}/search/")
 	public String cercar(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			Model model,
 			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
@@ -50,7 +48,7 @@ public class CercadorController extends BaseController {
 		
 		Microsite microsite = null;
 		try{
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 		
 			//metodo buscar(); de Bdcercador.java
 			IndexResultados resultado;
@@ -90,139 +88,132 @@ public class CercadorController extends BaseController {
 }
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/buscar/") 
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/buscar/") 
 	public String cercarEs (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercar(siteId, new Idioma(LANG_ES), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_ES), model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/cercar/") 
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/cercar/") 
 	public String cercarCa (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercar(siteId, new Idioma(LANG_CA), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_CA), model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/search/") 
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/search/") 
 	public String cercarEn (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercar(siteId, new Idioma(LANG_EN), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_EN), model, mcont, pcampa, req);
 	}
 	
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/search/")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/search/")
 	public String cercarGet(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			Model model,
 			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 			@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 			HttpServletRequest req) {
 		
-		return cercar(siteId, lang, model, mcont, pcampa, req);
+		return cercar(URI, lang, model, mcont, pcampa, req);
 				
 }
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/buscar/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/buscar/") 
 	public String cercarEsGet (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercarGet(siteId, new Idioma(LANG_ES), model, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_ES), model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/cercar/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/cercar/") 
 	public String cercarCaGet (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercarGet(siteId, new Idioma(LANG_CA), model, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_CA), model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/search/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/search/") 
 	public String cercarEnGet (
-					@PathVariable("mkey") SiteId siteId,
+					@PathVariable("uri") SiteId URI,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.cercarGet(siteId, new Idioma(LANG_EN), model, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_EN), model, mcont, pcampa, req);
 	}
 
 	@Override

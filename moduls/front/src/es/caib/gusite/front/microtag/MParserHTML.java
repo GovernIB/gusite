@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Microsite;
@@ -21,10 +20,7 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  */
 public class MParserHTML {
 
-	private String _version="N"; // S=retringido, N=version 1(azules), 2=version 4(blancos)
-	
-	public MParserHTML(String version) {
-		_version=version;
+	public MParserHTML() {
 	}
 	
 	/**
@@ -47,46 +43,25 @@ public class MParserHTML {
 			if (SubtituloCampanya == null) SubtituloCampanya = "";
 			if (TituloCampanya == null) TituloCampanya = "";
 			
-			if (_version.equals("2")) {
-				retorno.append("<div id=\"enllasDest\" style=\"background:url(" + MicroURI.uriImg(Microfront.RMICROSITE, microsite.getId().longValue(), microsite.getImagenCampanya().getId().longValue()) + ") no-repeat #fff;\" >");
-				retorno.append("<h2 class=\"invisible\">Destaquem</h2>");
-				if (UrlCampanya != null)
-				{				
-					retorno.append("<a id=\"enllas\" href=\"" +  UrlCampanya + "\" title=\"" + SubtituloCampanya + "\">");
-					retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
-					retorno.append("<br />");
-					retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
-					retorno.append("</a></div>");
-				}
-				else
-				{
-					retorno.append("<div id=\"enllas\" >");
-					retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
-					retorno.append("<br />");
-					retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
-					retorno.append("</div></div>");					
-				}
-				retorno.append("<div id=\"enllasDestPeu\"></div>");
-			} else {				
-				retorno.append("<div id=\"enllasDest\" style=\"background:url(" + MicroURI.uriImg(Microfront.RMICROSITE, microsite.getId().longValue(), microsite.getImagenCampanya().getId().longValue()) + ") no-repeat #fff;\" >");
-				retorno.append("<h2 class=\"invisible\">Destaquem</h2>");
-				if (UrlCampanya != null)
-				{
-					retorno.append("<a id=\"enllas\" href=\"" +  UrlCampanya + "\" title=\"" + SubtituloCampanya + "\">");
-					retorno.append("<span class=\"frase1\">" + Titulo + "</span>");
-					retorno.append("<br />");
-					retorno.append("<span class=\"frase2\">" + TituloCampanya + "</span>");					
-				}
-				else
-				{
-					retorno.append("<div id=\"enllas\" >");
-					retorno.append("<span class=\"frase1\">" + Titulo + "</span>");
-					retorno.append("<br />");
-					retorno.append("<span class=\"frase2\">" + TituloCampanya + "</span>");
-					retorno.append("</div></div>");
-				}
-				retorno.append("</a></div>");				
+			retorno.append("<div id=\"enllasDest\" style=\"background:url(" + MicroURI.uriImg(Microfront.RMICROSITE, microsite.getId().longValue(), microsite.getImagenCampanya().getId().longValue()) + ") no-repeat #fff;\" >");
+			retorno.append("<h2 class=\"invisible\">Destaquem</h2>");
+			if (UrlCampanya != null)
+			{				
+				retorno.append("<a id=\"enllas\" href=\"" +  UrlCampanya + "\" title=\"" + SubtituloCampanya + "\">");
+				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
+				retorno.append("<br />");
+				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
+				retorno.append("</a></div>");
 			}
+			else
+			{
+				retorno.append("<div id=\"enllas\" >");
+				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
+				retorno.append("<br />");
+				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
+				retorno.append("</div></div>");					
+			}
+			retorno.append("<div id=\"enllasDestPeu\"></div>");
 		}
 		return retorno;
 	}
@@ -246,31 +221,24 @@ public class MParserHTML {
 		//TODO: esto construye HTML. Mejor que retorne una lista de estilos y las urls se contruyan en la plantilla.
 		//Por ahora, para que funcione, añadimos /sites/resources/
 		
-		if (_version.equals("S")) {
-			
-			retorno="<link href=\"v1/intranet/css/estilosntrnt.css\" rel=\"stylesheet\" type=\"text/css\" />";
-			
+		if ((idsite!=null) && (idcss!=null)) {
+			retorno="<link href=\"/sites/" + MicroURI.uriImg(Microfront.RMICROSITE, idsite.longValue(), idcss.longValue()) + "\" rel=\"stylesheet\" type=\"text/css\" />";
+			retorno+="<link href=\"/sites/resources/css/estils_print.css\" rel=\"stylesheet\" type=\"text/css\" media=\"print\" />";
 		} else {
-			
-			if ((idsite!=null) && (idcss!=null)) {
-				retorno="<link href=\"/sites/" + MicroURI.uriImg(Microfront.RMICROSITE, idsite.longValue(), idcss.longValue()) + "\" rel=\"stylesheet\" type=\"text/css\" />";
-				retorno+="<link href=\"/sites/resources/css/estils_print.css\" rel=\"stylesheet\" type=\"text/css\" media=\"print\" />";
-			} else {
-				retorno="<link href=\"/sites/resources/css/estils.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-				retorno+="<link href=\"/sites/resources/css/estils_print.css\" rel=\"stylesheet\" type=\"text/css\" media=\"print\" />";
-			    if (idcsspatron.equals("A"))
-			    	  retorno+="<link href=\"/sites/resources/css/estils_blau.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-			    if (idcsspatron.equals("R"))
-			    	  retorno+="<link href=\"/sites/resources/css/estils_roig.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-			    if (idcsspatron.equals("V"))
-			    	  retorno+="<link href=\"/sites/resources/css/estils_verd.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-			    if (idcsspatron.equals("G"))
-			    	  retorno+="<link href=\"/sites/resources/css/estils_groc.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-			    if (idcsspatron.equals("M"))
-			    	  retorno+="<link href=\"/sites/resources/css/estils_morat.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";				    
-			}
-			
+			retorno="<link href=\"/sites/resources/css/estils.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+			retorno+="<link href=\"/sites/resources/css/estils_print.css\" rel=\"stylesheet\" type=\"text/css\" media=\"print\" />";
+		    if (idcsspatron.equals("A"))
+		    	  retorno+="<link href=\"/sites/resources/css/estils_blau.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+		    if (idcsspatron.equals("R"))
+		    	  retorno+="<link href=\"/sites/resources/css/estils_roig.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+		    if (idcsspatron.equals("V"))
+		    	  retorno+="<link href=\"/sites/resources/css/estils_verd.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+		    if (idcsspatron.equals("G"))
+		    	  retorno+="<link href=\"/sites/resources/css/estils_groc.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+		    if (idcsspatron.equals("M"))
+		    	  retorno+="<link href=\"/sites/resources/css/estils_morat.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";				    
 		}
+			
 		return retorno;
 	}	
 		

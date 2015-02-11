@@ -2,11 +2,10 @@ package es.caib.gusite.micropersistence.ejb;
 
 import es.caib.gusite.micromodel.*;
 import org.hibernate.*;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Order;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -31,6 +30,28 @@ public abstract class AuditoriaFacadeEJB extends HibernateEJB {
      */
     public void ejbCreate() throws CreateException {
         super.ejbCreate();
+    }
+
+    /**
+     * Inicializo los parámetros de la consulta de una auditoria...
+     *
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public void init() {
+
+        super.tampagina = 10;
+        super.pagina = 0;
+        super.select = "select aud ";
+        super.from = " from Auditoria aud ";
+        super.where = "";
+        super.whereini = " ";
+        super.orderby = " order by aud.fecha desc";
+
+        super.camposfiltro = new String[]{"aud.entidad", "aud.idEntidad", "aud.usuario"};
+        super.cursor = 0;
+        super.nreg = 0;
+        super.npags = 0;
     }
 
     /**
@@ -62,77 +83,40 @@ public abstract class AuditoriaFacadeEJB extends HibernateEJB {
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
-    public List<Auditoria> listarAuditoriasPorEntidad(String entidad) {
+    public List<Auditoria> listarAuditorias(String entity, String idEntity, String user, Date date, String micro) {
 
         Session session = getSession();
         try {
-//            parametrosCons(); // Establecemos los parámetros de la paginación
-//            String hql = "";
-//            Query query = session.createQuery(hql);
-//            query.setFirstResult(cursor - 1);
-//            query.setMaxResults(tampagina);
-//            return query.list();
+            if (entity != null && entity != "") {
+                where += " where aud.entidad = '" + entity + "'";
+            }
+            if (idEntity != null && idEntity != "") {
+                where += (where == "") ? " where" : " and";
+                where += " aud.idEntidad = " + idEntity;
+            }
+            if (user != null && user != "") {
+                where += (where == "") ? " where" : " and";
+                where += " aud.usuario = '" + user + "'";
+            }
+            if (date != null) {
 
-            Criteria criteria = session.createCriteria(Auditoria.class);
-            criteria.add(Expression.like("entidad", entidad));
-            criteria.addOrder(Order.desc("fecha"));
-            return criteria.list();
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.DATE, 1);
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+                where += (where == "") ? " where" : " and";
+                where += " aud.fecha between to_date('" + new SimpleDateFormat("dd/mm/yyyy").format(date) + "', 'dd/mm/yyyy') and to_date('" + new SimpleDateFormat("dd/mm/yyyy").format(c.getTime()) + "', 'dd/mm/yyyy')" ;
+            }
+            if (micro != null && micro != "") {
+                where += (where == "") ? " where" : " and";
+                where += " aud.microsite.id = " + micro;
+            }
 
-    /**
-     * Listar auditorias por id entidad
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public List<Auditoria> listarAuditoriasPorIdEntidad(String idEntidad) {
-
-        Session session = getSession();
-        try {
-//            parametrosCons(); // Establecemos los parámetros de la paginación
-//            String hql = "";
-//            Query query = session.createQuery(hql);
-//            query.setFirstResult(cursor - 1);
-//            query.setMaxResults(tampagina);
-//            return query.list();
-
-            Criteria criteria = session.createCriteria(Auditoria.class);
-            criteria.add(Expression.eq("idEntidad", idEntidad));
-            criteria.addOrder(Order.desc("fecha"));
-            return criteria.list();
-
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
-
-    /**
-     * Listar auditorias por usuario
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public List<Auditoria> listarAuditoriasPorUsuario(String usuario) {
-
-        Session session = getSession();
-        try {
-//            parametrosCons(); // Establecemos los parámetros de la paginación
-//            String hql = "";
-//            Query query = session.createQuery(hql);
-//            query.setFirstResult(cursor - 1);
-//            query.setMaxResults(tampagina);
-//            return query.list();
-
-            Criteria criteria = session.createCriteria(Auditoria.class);
-            criteria.add(Expression.like("usuario", usuario));
-            criteria.addOrder(Order.desc("fecha"));
-            return criteria.list();
+            parametrosCons();
+            Query query = session.createQuery(select + from + where + orderby);
+            query.setFirstResult(cursor - 1);
+            query.setMaxResults(tampagina);
+            return query.list();
 
         } catch (HibernateException he) {
             throw new EJBException(he);

@@ -35,7 +35,7 @@ import es.caib.gusite.micropersistence.util.log.MicroLog;
 public class ExportarAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ExportarAction.class);
-	private static String[] roles = new String[]{"sacsystem", "sacadmin"};
+	private static String[] roles = new String[]{"gussystem", "gusadmin"};
 	
 	// Constantes para la generación del archivo ZIP.
 	private final String NOMBRE_BASE_ZIP = "_microsite.zip";
@@ -78,7 +78,7 @@ public class ExportarAction extends BaseAction {
 			}
 		}
     	
-		// Solo podrán exportar los roles sacsystem y sacadmin
+		// Solo podrán exportar los roles gussystem y gusadmin
 		rolenames = (Hashtable) request.getSession().getAttribute("rolenames");
 
 		if (!(rolenames.contains(roles[0]) || rolenames.contains(roles[1]))) {

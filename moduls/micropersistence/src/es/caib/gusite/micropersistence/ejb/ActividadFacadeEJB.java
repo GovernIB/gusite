@@ -10,7 +10,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
@@ -121,16 +120,11 @@ public abstract class ActividadFacadeEJB extends HibernateEJB {
             }
             
             tx.commit();
-            Microsite site = (Microsite) session.get(Microsite.class, activi.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, activi.getIdmicrosite());
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(activi.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), activi.getId().toString(), op);
 
             return activi.getId();
 
@@ -195,19 +189,14 @@ public abstract class ActividadFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             Actividadagenda activi = (Actividadagenda) session.get(Actividadagenda.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, activi.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, activi.getIdmicrosite());
 
         	session.createQuery("delete from TraduccionActividadagenda tact where tact.id.codigoActividadAgenda = " + id).executeUpdate();
         	session.createQuery("delete from Actividadagenda activi where activi.id = " + id).executeUpdate();
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

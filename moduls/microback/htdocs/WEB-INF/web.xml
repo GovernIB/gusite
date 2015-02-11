@@ -60,23 +60,23 @@
     <load-on-startup>2</load-on-startup>
     
     <security-role-ref>
-       <role-name>sacsystem</role-name>
-       <role-link>RSC_SYSTEM</role-link>
+       <role-name>gussystem</role-name>
+       <role-link>GUS_SYSTEM</role-link>
     </security-role-ref>
     
     <security-role-ref>
-       <role-name>sacadmin</role-name>
-       <role-link>RSC_ADMIN</role-link>
+       <role-name>gusadmin</role-name>
+       <role-link>GUS_ADMIN</role-link>
     </security-role-ref>
     
     <security-role-ref>
-       <role-name>sacsuper</role-name>
-       <role-link>RSC_SUPER</role-link>
+       <role-name>gussuper</role-name>
+       <role-link>GUS_SUPER</role-link>
     </security-role-ref>
     
     <security-role-ref>
-       <role-name>sacoper</role-name>
-       <role-link>RSC_OPER</role-link>
+       <role-name>gusoper</role-name>
+       <role-link>GUS_OPER</role-link>
     </security-role-ref>
     
   </servlet>
@@ -122,10 +122,10 @@
         <url-pattern>*.jsp</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-        <role-name>RSC_SYSTEM</role-name>
-        <role-name>RSC_ADMIN</role-name>
-        <role-name>RSC_SUPER</role-name>
-        <role-name>RSC_OPER</role-name>
+        <role-name>GUS_SYSTEM</role-name>
+        <role-name>GUS_ADMIN</role-name>
+        <role-name>GUS_SUPER</role-name>
+        <role-name>GUS_OPER</role-name>
     </auth-constraint>
   </security-constraint>
 
@@ -135,15 +135,15 @@
   </login-config>
 
   <security-role>
-    <role-name>RSC_SYSTEM</role-name>
+    <role-name>GUS_SYSTEM</role-name>
   </security-role>
   <security-role>
-    <role-name>RSC_ADMIN</role-name>
+    <role-name>GUS_ADMIN</role-name>
   </security-role>
   <security-role>
-    <role-name>RSC_SUPER</role-name>
+    <role-name>GUS_SUPER</role-name>
   </security-role>
   <security-role>
-    <role-name>RSC_OPER</role-name>
+    <role-name>GUS_OPER</role-name>
   </security-role>
 </web-app>

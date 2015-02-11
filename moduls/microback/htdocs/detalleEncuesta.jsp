@@ -13,6 +13,8 @@
 	<script type="text/javascript" src="js/jsEncuestas.js"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>	
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
 </head>
 
 <body>
@@ -124,6 +126,11 @@
 						<tr>
 							<td class="etiqueta"><bean:message key="encuesta.titulo" />:</td>
 							<td><html:text property="titulo" name="traducciones" size="100" maxlength="256" indexed="true" /></td>
+						</tr>
+						<tr>
+							<td class="etiqueta"><bean:message key="encuesta.uri" />:</td>
+							<td><html:text property="uri" name="traducciones" styleId="<%="uri"+i%>" size="100" maxlength="256" indexed="true" /></td>
+							<input type="hidden" name="type" value="eid_uri" />
 						</tr>
 						</table>
 					</div>

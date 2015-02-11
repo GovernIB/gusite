@@ -9,6 +9,8 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 import java.rmi.RemoteException;
+import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -16,6 +18,18 @@ import java.util.List;
  * @author brujula
  */
 public class AuditoriaDelegate implements StatelessDelegate {
+
+    /**
+     * Inicializo los parámetros de la consulta de una auditoria.
+     * @throws DelegateException
+     */
+    public void init() throws DelegateException {
+        try {
+            getFacade().init();
+        } catch (RemoteException e) {
+            throw new DelegateException(e);
+        }
+    }
 
     /**
      * Crea o actualiza una auditoria
@@ -36,35 +50,25 @@ public class AuditoriaDelegate implements StatelessDelegate {
      * @return una lista de menus
      * @throws DelegateException
      */
-    public List<Auditoria> listarAuditoriasPorEntidad(String entidad) throws DelegateException {
+    public List<Auditoria> listarAuditorias(String entity, String idEntity, String user, Date date, String micro) throws DelegateException {
         try {
-            return getFacade().listarAuditoriasPorEntidad(entidad);
+            return getFacade().listarAuditorias(entity, idEntity, user, date, micro);
         } catch (RemoteException e) {
             throw new DelegateException(e);
         }
     }
 
-    /**
-     * Listar auditorias por id entidad
-     * @return una lista de auditorias
-     * @throws DelegateException
-     */
-    public List<Auditoria> listarAuditoriasPorIdEntidad(String idEntidad) throws DelegateException {
+    public Hashtable<?, ?> getParametros() throws DelegateException {
         try {
-            return getFacade().listarAuditoriasPorIdEntidad(idEntidad);
+            return getFacade().getParametros();
         } catch (RemoteException e) {
             throw new DelegateException(e);
         }
     }
 
-    /**
-     * Listar auditorias por usuario
-     * @return una lista de auditorias
-     * @throws DelegateException
-     */
-    public List<Auditoria> listarAuditoriasPorUsuario(String usuario) throws DelegateException {
+    public void setPagina(int pagina) throws DelegateException {
         try {
-            return getFacade().listarAuditoriasPorUsuario(usuario);
+            getFacade().setPagina(pagina);
         } catch (RemoteException e) {
             throw new DelegateException(e);
         }

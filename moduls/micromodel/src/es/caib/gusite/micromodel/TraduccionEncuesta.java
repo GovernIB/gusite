@@ -24,6 +24,18 @@ public class TraduccionEncuesta implements Traduccion {
     @XmlAttribute
 	@Column(name="EID_TITULO")
 	private String titulo;
+    
+    @XmlAttribute
+	@Column(name="EID_URI")
+	private String uri;
+    
+  	public String getUri() {
+  		return uri;
+  	}
+
+  	public void setUri(String uri) {
+  		this.uri = uri;
+  	}
 
     public String getTitulo() {
     	return titulo;

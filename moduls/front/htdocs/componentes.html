@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código muestra el listado de las noticias que hay
+
+Variables: 
+	MVS_listado_elementos: listado de noticias
+	MVS_tipo: tipo de noticias
+
+Objetos:
+	#gusuri.archivopub(MVS_microsite,noticia.imagen): devuelve la URL hacia el archivo en cuestión
+	#gusuri.noticia(MVS_microsite,MVS_idioma,noticia): devuelve la URL hacia la noticia en cuestión
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>	
+</head>
+<body>
+	<div th:fragment="elementos">
+			<div id="noticies">
+				<h2 th:text="${MVS_tipo.traduce.nombre}">Nom del tipus</h2>
+				<!--MVS_listado_elementos devuelve el listado de noticias-->
+				<ul th:if="${#lists.size(MVS_listado_elementos)} !=0">
+					<li th:each="noticia : ${MVS_listado_elementos}">
+						<div th:if="${noticia.tipo.tipoelemento}==${T(es.caib.gusite.front.general.Front).ELEM_NOTICIA}" th:remove="tag">
+							<img  th:if="${noticia.imagen}!=null"
+								th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
+								width="48" height="48" alt="" />
+							<div th:if="${noticia.fpublicacion}!=null" 
+								th:text="${#dates.format(noticia.fpublicacion, 'dd/MM/yyyy')} + ' ' + '-'" th:remove="tag"></div>
+							<em th:text="${noticia.tipo.traduce.nombre}"></em> <br />
+							<a
+								th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
+								th:text="${noticia.traduce.titulo}">Noticia titulo</a>
+						</div>
+					</li>
+				</ul>
+				<p th:if="${#lists.size(MVS_listado_elementos)} ==0" th:text="#{microhtml.nonoticias}">No hi ha cap notícia</p>
+			</div>
+	</div>
+
+
+</body>
+
+</html>

@@ -126,7 +126,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             if (nuevo) {
             	// Ahora se asocian todos los usuarios admin
             	UsuarioDelegate uDel = DelegateUtil.getUsuarioDelegate();
-            	List<?> listau =  uDel.listarUsuariosPerfil("sacadmin");
+            	List<?> listau =  uDel.listarUsuariosPerfil("gusadmin");
             	Iterator<?> iter = listau.iterator();
             	while (iter.hasNext()) {
             		Usuario user = (Usuario) iter.next();
@@ -134,7 +134,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
                 	session.save(upm);
             	}
                 // Ahora se asocian todos los usuarios system
-                listau = uDel.listarUsuariosPerfil("sacsystem");
+                listau = uDel.listarUsuariosPerfil("gussystem");
                 iter = listau.iterator();
                 while (iter.hasNext()) {
                     Usuario user = (Usuario) iter.next();
@@ -147,13 +147,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Microsite.class.getSimpleName());
-            auditoria.setIdEntidad(site.getId().toString());
-            auditoria.setMicrosite(site);
+            this.microsite = site;
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Microsite.class.getSimpleName(), site.getId().toString(), op);
 
             return site.getId();
 
@@ -253,6 +249,27 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
         }
     }
 
+    /**
+     * Obtiene un Microsite a partir de su URI.
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Microsite obtenerMicrositebyUri(String uri) {
+
+        Session session = getSession();
+        try {
+        	Criteria criteri = session.createCriteria(Microsite.class);
+            criteri.add(Expression.eq("uri", uri));
+            Microsite site = (Microsite) criteri.uniqueResult();
+            return site;
+
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    
     /**
      * Obtiene un Microsite para la exportación
      * @ejb.interface-method
@@ -359,12 +376,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Microsite.class.getSimpleName());
-            auditoria.setIdEntidad(site.getId().toString());
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Microsite.class.getSimpleName(), site.getId().toString(), op);
 
             return site.getId();
 
@@ -487,12 +500,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Microsite.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-//            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Microsite.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -578,12 +586,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Microsite.class.getSimpleName());
-            auditoria.setIdEntidad(site.getId().toString());
-//            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.MODIFICAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Microsite.class.getSimpleName(), site.getId().toString(), Auditoria.MODIFICAR);
 
             return site.getId();
 
@@ -717,12 +720,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Microsite.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            this.microsite = site;
+            gravarAuditoria(Microsite.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

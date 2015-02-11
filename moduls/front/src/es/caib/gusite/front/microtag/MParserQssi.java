@@ -25,8 +25,8 @@ public class MParserQssi extends MParserHTML {
 
 	protected static Log log = LogFactory.getLog(MParserEncuesta.class);
 	private Frqssi qssi = new Frqssi();
-	public MParserQssi(String version) {
-		super(version);
+	public MParserQssi() {
+		super();
 	}
 	
 	/**

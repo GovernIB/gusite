@@ -25,7 +25,11 @@ public class TraduccionContenido  implements Traduccion {
     @XmlAttribute
 	@Column(name="CID_TITULO")
 	private String titulo;
-
+    
+    @XmlAttribute
+	@Column(name="CID_URI")
+    private String uri;
+    
     @XmlAttribute
 	@Column(name="CID_URL")
     private String url;
@@ -63,7 +67,15 @@ public class TraduccionContenido  implements Traduccion {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	public String getUri() {
+		return uri;
+	}
 
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+	
 	public String getTxbeta() {
 		return txbeta;
 	}

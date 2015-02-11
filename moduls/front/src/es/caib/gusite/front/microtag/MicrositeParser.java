@@ -1,13 +1,42 @@
 package es.caib.gusite.front.microtag;
 
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.Tridato;
+import es.caib.gusite.front.service.FrontDataService;
+import es.caib.gusite.front.service.NoticiasDataService;
+import es.caib.gusite.front.service.TemplateNameFactory;
+import es.caib.gusite.front.thymeleaf.GusiteFlow;
+import es.caib.gusite.micromodel.Componente;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.TraduccionTipo;
+import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 
 
 /**
@@ -15,61 +44,29 @@ import es.caib.gusite.front.general.bean.Tridato;
  * Esta clase contiene métodos que parsean los tags especiales de los microsites.
  * Los tags pueden ser de cualquier version.
  * 
- * @author Indra
- *
  */
+@Component
 public class MicrositeParser {
+	
+	
+	@Autowired
+    private FrontDataService dataService;
+
+	@Autowired
+    protected NoticiasDataService noticiasDataService;
+	
+	@Autowired
+    private TemplateNameFactory templateNameFactory;
+	
+	@Autowired
+    private GusiteFlow gusiteFlow;
 
 	protected static Log log = LogFactory.getLog(MicrositeParser.class);
 	
-	private String _version="N"; // S=retringido, N=version 1(azules), 2=version 4(blancos)
-	
-	private StringBuffer htmlOld = new StringBuffer();
-	private StringBuffer htmlParsed = new StringBuffer();
-	private Hashtable<String, String> hshTags = new Hashtable<String, String>();
-	private Hashtable<String, Tridato> hshTagsStatus = new Hashtable<String, Tridato>();
-	private Long idsite;
-	private String idioma;
-	private int numeronoticias;
-	
-	/**
-	 * Constructor de la clase Inicia variables.
-	 * @param version
-	 * @param html
-	 * @param idsite
-	 * @param idioma
-	 * @param numeronoticias
-	 */
-	public MicrositeParser(String version, StringBuffer html, Long idsite, String idioma, int numeronoticias) {
-		this._version=version;
-		this.htmlOld = html;
-		this.idsite=idsite;
-		this.idioma=idioma;
-		this.numeronoticias=numeronoticias;
+	private class MicrositeParserAnalysis {
+		private Hashtable<String, String> hshTags = new Hashtable<String, String>();
+		private Hashtable<String, Tridato> hshTagsStatus = new Hashtable<String, Tridato>();
 	}
-	
-	/**
-	 * Constructor de la clase. Inicia variables
-	 * @param version
-	 * @param html
-	 * @param idsite
-	 * @param idioma
-	 * @param numeronoticias
-	 */
-	public MicrositeParser(String version, String html, Long idsite, String idioma, int numeronoticias) {
-		this(version, new StringBuffer((html==null)?"":html), idsite, idioma, numeronoticias);
-	}	
-	
-	/**
-	 * Constructor de la clase. Inicia variables
-	 * @param version
-	 * @param html
-	 * @param idsite
-	 * @param idioma
-	 */
-	public MicrositeParser(String version, String html, Long idsite, String idioma) {
-		this(version, new StringBuffer((html==null)?"":html), idsite, idioma, 3);
-	}	
 	
 	/**
 	 * Método que analiza el código html.
@@ -77,11 +74,11 @@ public class MicrositeParser {
 	 * en el html.
 	 * @param idioma
 	 */
-	public void doAnalisy(String idioma) {
+	private MicrositeParserAnalysis doAnalyze(String htmlOld, String idioma) {
+		MicrositeParserAnalysis result = new MicrositeParserAnalysis();
 		if (htmlOld!=null) {
 			
-				StringBuffer stbuf= new StringBuffer();
-				stbuf = htmlOld;
+				StringBuffer stbuf= new StringBuffer(htmlOld);
 				
 		/* ********     tags version 1.0     ******** */							
 				int pos=0;
@@ -93,7 +90,7 @@ public class MicrositeParser {
 						int pos_ini_tag=stbuf_tmp.lastIndexOf("<");
 						int pos_fin_tag=stbuf.indexOf(">",pos);
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+1);
-						hshTagsStatus.put(tag,new Tridato(Microfront.TAG_NOTICIAS,"V1.0",null));
+						result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_NOTICIAS,"V1.0",null));
 						pos = stbuf.indexOf(Microfront.TAG_NOTICIAS, pos + tag.length());
 			    }
 				
@@ -104,7 +101,7 @@ public class MicrositeParser {
 						int pos_ini_tag=stbuf_tmp.lastIndexOf("<");
 						int pos_fin_tag=stbuf.indexOf(">",pos);
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+1);
-						hshTagsStatus.put(tag,new Tridato(Microfront.TAG_AGENDA,"V1.0",null));
+						result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_AGENDA,"V1.0",null));
 						pos = stbuf.indexOf(Microfront.TAG_AGENDA, pos + tag.length());
 			    }				
 				
@@ -115,7 +112,7 @@ public class MicrositeParser {
 						int pos_ini_tag=stbuf_tmp.lastIndexOf("<");
 						int pos_fin_tag=stbuf.indexOf(">",pos);
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+1);
-						hshTagsStatus.put(tag,new Tridato(Microfront.TAG_BANNER,"V1.0",null));
+						result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_BANNER,"V1.0",null));
 						pos = stbuf.indexOf(Microfront.TAG_BANNER, pos + tag.length());
 			    }	
 				
@@ -131,7 +128,7 @@ public class MicrositeParser {
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
 						String tiponoticia = averiguaTipo(tag);
 						if (!tiponoticia.equals("-1"))
-							hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA,"V1.3",tiponoticia));
+							result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA,"V1.3",tiponoticia));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA, pos + tag.length());
 			    }				
 
@@ -142,7 +139,7 @@ public class MicrositeParser {
 						int pos_ini_tag=stbuf_tmp.lastIndexOf("<");
 						int pos_fin_tag=stbuf.indexOf("</div>",pos);
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
-						hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA,"V1.3",null));
+						result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA,"V1.3",null));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA, pos + tag.length());
 			    }				
 			
@@ -153,7 +150,7 @@ public class MicrositeParser {
 						int pos_ini_tag=stbuf_tmp.lastIndexOf("<");
 						int pos_fin_tag=stbuf.indexOf("</div>",pos);
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
-						hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER,"V1.3",null));
+						result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER,"V1.3",null));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER, pos + tag.length());
 			    }
 				
@@ -170,7 +167,7 @@ public class MicrositeParser {
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
 						String idcomponente = averiguaComponente(tag);
 						if (!idcomponente.equals("-1"))
-							hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA,"V1.4",idcomponente));
+							result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA,"V1.4",idcomponente));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA, pos + tag.length());
 			    }				
 	
@@ -184,7 +181,7 @@ public class MicrositeParser {
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
 						String idcomponente = averiguaComponente(tag);
 						if (!idcomponente.equals("-1"))
-							hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI,"V1.4",idcomponente));
+							result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI,"V1.4",idcomponente));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI, pos + tag.length());
 			    }				
 				
@@ -201,11 +198,12 @@ public class MicrositeParser {
 						String tag = stbuf.substring(pos_ini_tag, pos_fin_tag+6);
 						String idcomponente = averiguaComponente(tag);
 						if (!idcomponente.equals("-1"))
-							hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA,"V2.0",idcomponente));
+							result.hshTagsStatus.put(tag,new Tridato(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA,"V2.0",idcomponente));
 						pos = stbuf.indexOf(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA, pos + tag.length());
 			    }					
 				
 		}
+		return result;
 	}
 
 	/**
@@ -215,18 +213,19 @@ public class MicrositeParser {
 	 * Además meterá en hshTags un listado con todos los tags a parsear encontrados y su correspondiete "trozo" de html.
 	 * 
 	 */
-	public void doParser(String idioma) {
+	public String doParser(Microsite site, String htmlOld, String idioma,HttpServletRequest request, HttpServletResponse response) {
 		try {
-			doAnalisy(idioma);
-			doCalculaTags();
+			MicrositeParserAnalysis analysis = doAnalyze(htmlOld, idioma);
+			doCalculaTags(site, idioma, analysis, request, response);
+
+			StringBuffer htmlParsed = new StringBuffer(htmlOld);
 			 
 			if (htmlOld!=null) {
-				  htmlParsed = htmlOld;
-				  Enumeration<String> enumera = hshTags.keys();
+				  Enumeration<String> enumera = analysis.hshTags.keys();
 				  while (enumera.hasMoreElements()) {
 						      String oldstringtmp = (String)enumera.nextElement();
-						      String newstringtmp = (String)hshTags.get(oldstringtmp);
-						      log.debug( "Parseado " + ((Tridato)hshTagsStatus.get(oldstringtmp)).getKey() + " " + ((Tridato)hshTagsStatus.get(oldstringtmp)).getValue1() );
+						      String newstringtmp = (String)analysis.hshTags.get(oldstringtmp);
+						      log.debug( "Parseado " + (analysis.hshTagsStatus.get(oldstringtmp)).getKey() + " " + (analysis.hshTagsStatus.get(oldstringtmp)).getValue1() );
 						      
 						      int pos = htmlParsed.indexOf(oldstringtmp);
 						      while (pos > -1) {
@@ -235,11 +234,11 @@ public class MicrositeParser {
 						      }
 				  }
 			}   
+			return htmlParsed.toString();
 			  			
-			
-			
 		} catch (Exception e) {
 			log.error("Se ha producido un error parseando html. " + e);
+			return "";
 		}
 		
 	}
@@ -249,21 +248,21 @@ public class MicrositeParser {
 	 * Reemplaza los tags de los microsites por comentarios
 	 * Además meterá en hshTagsStatus un listado con todos los tags a parsear encontrados y su estado.
 	 * Además meterá en hshTags un listado con todos los tags a parsear encontrados y su correspondiete "trozo" de html.
+	 * @return 
 	 * 
 	 */
-	public void doParser2Comentario(String idioma) {
+	public String doParser2Comentario(Microsite site, String htmlOld, String idioma) {
 		try {
-			doAnalisy(idioma);
-			doCalculaTagsComentario();
+			MicrositeParserAnalysis analysis = doAnalyze(htmlOld, idioma);
+			doCalculaTagsComentario(site, idioma, analysis);
 			
-			  
+			StringBuffer htmlParsed = new StringBuffer(htmlOld);
 			if (htmlOld!=null) {
-				  htmlParsed = htmlOld;
-				  Enumeration<String> enumera = hshTags.keys();
+				  Enumeration<String> enumera = analysis.hshTags.keys();
 				  while (enumera.hasMoreElements()) {
 						      String oldstringtmp = (String)enumera.nextElement();
-						      String newstringtmp = (String)hshTags.get(oldstringtmp);
-						      log.debug( "Parseado " + ((Tridato)hshTagsStatus.get(oldstringtmp)).getKey() + " " + ((Tridato)hshTagsStatus.get(oldstringtmp)).getValue1() );
+						      String newstringtmp = (String)analysis.hshTags.get(oldstringtmp);
+						      log.debug( "Parseado " + ((Tridato)analysis.hshTagsStatus.get(oldstringtmp)).getKey() + " " + ((Tridato)analysis.hshTagsStatus.get(oldstringtmp)).getValue1() );
 						      
 						      int pos = htmlParsed.indexOf(oldstringtmp);
 						      while (pos > -1) {
@@ -272,52 +271,59 @@ public class MicrositeParser {
 						      }
 				  }
 			}   
+			return htmlParsed.toString();
 			  			
 		} catch (Exception e) {
 			log.error("Se ha producido un error parseando html. " + e);
+			return "";
 		}
 		
 	}
+
+	
 	
 	/**
 	 * Reemplaza el tag por un comentario.
+	 * @param analysis 
+	 * @param idioma 
+	 * @param site 
 	 */
-	private void doCalculaTagsComentario() {
+	private void doCalculaTagsComentario(Microsite site, String idioma, MicrositeParserAnalysis analysis) {
 		
-		Enumeration<String> enumera = hshTagsStatus.keys();
+		Enumeration<String> enumera = analysis.hshTagsStatus.keys();
     	while (enumera.hasMoreElements()) {
     		String key = (String)enumera.nextElement();
-    		Tridato tridato= (Tridato)hshTagsStatus.get(key);
+    		Tridato tridato= (Tridato)analysis.hshTagsStatus.get(key);
 
     		if (tridato.getKey().equals(Microfront.TAG_NOTICIAS)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_NOTICIAS + idsite + idioma + numeronoticias + " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_NOTICIAS + site.getId() + idioma + site.getNumeronoticias() + " -->");
     		}
     		if (tridato.getKey().equals(Microfront.TAG_AGENDA)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_AGENDA + idsite + idioma + numeronoticias + " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_AGENDA + site.getId() + idioma + site.getNumeronoticias() + " -->");
     		}
     		if (tridato.getKey().equals(Microfront.TAG_BANNER)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_BANNER + idsite + idioma + 1 + " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_BANNER + site.getId() + idioma + 1 + " -->");
     		}    		
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA + idsite + idioma + numeronoticias + " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA + site.getId() + idioma + site.getNumeronoticias() + " -->");
     		} 
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI + idsite + tridato.getValue2() + idioma +  " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI + site.getId() + tridato.getValue2() + idioma +  " -->");
     		}    	
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER)) {
-    			hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER + idsite + idioma + 1 + " -->");
+    			analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RBANNER + site.getId() + idioma + 1 + " -->");
     		}      		
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA)) {
     			if (tridato.getValue1().equals("V1.3")) {
-    				hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA + idsite + tridato.getValue2() +  idioma + numeronoticias + " -->");
+    				analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA + site.getId() + tridato.getValue2() +  idioma + site.getNumeronoticias() + " -->");
     			}
     			if (tridato.getValue1().equals("V1.4")) {
-    				hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA + idsite + tridato.getValue2() + idioma + " -->");
+    				analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA + site.getId() + tridato.getValue2() + idioma + " -->");
     			}    			
     		}
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA)) {
     			if (tridato.getValue1().equals("V2.0")) {
-    				hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA + idsite + tridato.getValue2() + idioma + " -->");
+    				analysis.hshTags.put(key, "<!-- " + Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA + site.getId() + tridato.getValue2() + idioma + " -->");
     			}
     		}
     		
@@ -327,43 +333,50 @@ public class MicrositeParser {
 	
 	/**
 	 * Método privado para calcular Tags
+	 * @param site 
+	 * @param idioma 
+	 * @param analysis 
+	 * @throws DelegateException 
+	 * @throws ExceptionFrontPagina 
+	 * @throws NumberFormatException 
 	 */
-	private void doCalculaTags() {
+	private void doCalculaTags(Microsite site, String idioma, MicrositeParserAnalysis analysis,HttpServletRequest request, HttpServletResponse response) throws DelegateException, NumberFormatException, ExceptionFrontPagina {
 		
-		MParserElemento parseelemento = new MParserElemento(_version);
-		MParserAgenda parseagenda = new MParserAgenda(_version);
-		MParserComponente parsecomponente = new MParserComponente(_version);
-		MParserEncuesta parseencuesta = new MParserEncuesta(_version);
-		MParserQssi parserqssi = new MParserQssi(_version);
-		Enumeration<String> enumera = hshTagsStatus.keys();
+		MParserComponente parsecomponente = new MParserComponente();
+		MParserEncuesta parseencuesta = new MParserEncuesta();
+		MParserQssi parserqssi = new MParserQssi();
+		Enumeration<String> enumera = analysis.hshTagsStatus.keys();
     	while (enumera.hasMoreElements()) {
-    		String key = (String)enumera.nextElement();
-    		Tridato tridato= (Tridato)hshTagsStatus.get(key);
+    		String key = enumera.nextElement();
+    		Tridato tridato= analysis.hshTagsStatus.get(key);
 
     		
     		if (tridato.getKey().equals(Microfront.TAG_NOTICIAS)) {
-    			hshTags.put(key, parseelemento.getHtmlNoticias(idsite,idioma,numeronoticias).toString());
-    		}
-    		if (tridato.getKey().equals(Microfront.TAG_AGENDA)) {
-    			hshTags.put(key, parseagenda.getHtmlAgendaCalendario(idsite,idioma,numeronoticias).toString());
-    		}
-    		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA)) {
-    			hshTags.put(key, parseagenda.getHtmlAgendaCalendario(idsite,idioma,numeronoticias).toString());
-    		} 
-    		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI)) {
-    			hshTags.put(key, parserqssi.getHtmlQssi(idsite,tridato.getValue2(),idioma).toString());
-    		}    	
-    		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA)) {
+    			analysis.hshTags.put(key, this.getHtmlNoticias(site,idioma, request, response));
+    		} else if (tridato.getKey().equals(Microfront.TAG_AGENDA) || 
+    			tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RAGENDA)	) {
+    			analysis.hshTags.put(key, this.getHtmlAgendaCalendario(site,idioma, request, response) );
+    		} else if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RQSSI)) {
+    			//TODO cnavarro: falta cambiar parserqssi thymeleaf 
+    			analysis.hshTags.put(key, parserqssi.getHtmlQssi(site.getId(),tridato.getValue2(),idioma).toString());
+    		} else if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RNOTICIA)) {
     			if (tridato.getValue1().equals("V1.3")) {
-    				hshTags.put(key, parseelemento.getHtmlElementos(idsite,tridato.getValue2(),idioma,numeronoticias).toString());
+    				analysis.hshTags.put(key, this.getHtmlElementos(site, Long.parseLong(tridato.getValue2()),idioma, request, response));
     			}
     			if (tridato.getValue1().equals("V1.4")) {
-    				hshTags.put(key, parsecomponente.getHtmlElementosComponente(idsite,tridato.getValue2(),idioma).toString());
+    				/*
+        			//TODO cnavarro: falta cambiar parsecomponente thymeleaf 
+    				ComponenteDelegate compodel = DelegateUtil.getComponentesDelegate();
+    				Componente componente = compodel.obtenerComponente( new Long(Long.parseLong(tridato.getValue2())) );
+    				analysis.hshTags.put(key, this.getHtmlElementos(site, componente.getTipo().getId(), idioma, request, response));
+    				*/
+    				analysis.hshTags.put(key, parsecomponente.getHtmlElementosComponente(site.getId(),tridato.getValue2(),idioma).toString());
     			}    			
     		}
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA)) {
     			if (tridato.getValue1().equals("V2.0")) {
-    				hshTags.put(key, parseencuesta.getHtmlEncuesta(null, idsite,tridato.getValue2(),idioma).toString());
+        			//TODO cnavarro: falta cambiar parseencuesta 
+    				analysis.hshTags.put(key, parseencuesta.getHtmlEncuesta(null, site.getId(),tridato.getValue2(),idioma).toString());
     			}
     		}
     		
@@ -375,37 +388,81 @@ public class MicrositeParser {
 	/* ********************   auxiliares    ******************* */
 	
 	private String averiguaTipo(String cadena) {
-		MParserHTML parsehtml = new MParserHTML(_version);
+		MParserHTML parsehtml = new MParserHTML();
 		return parsehtml.getAtributoTag(cadena, "propertyid");
 	}
 
 	private String averiguaComponente(String cadena) {
-		MParserHTML parsehtml = new MParserHTML(_version);
+		MParserHTML parsehtml = new MParserHTML();
 		return parsehtml.getAtributoTag(cadena, "componenteid");
 	}
 	
-	private String averiguaComponente2(String cadena, String idioma) {
-		MParserHTML parsehtml = new MParserHTML(_version);
-		return parsehtml.getAtributoTag2(cadena, "componenteID",idioma);
-	}
+
+	//Agenda
+	/**
+	 * Método que devuelve un string preparado para insertar en un html.
+	 * Ese string contiene el calendario de la agenda.
+	 * Se le pasa el numero de meses que se quiere mostrar.
+	 * @param site
+	 * @param idioma
+	 * @return StringBuffer con el codigo HTML del calendario de la agenda
+	 * @throws DelegateException 
+	 */
+	private String getHtmlAgendaCalendario(Microsite site, String idioma, HttpServletRequest request, HttpServletResponse response) throws DelegateException {
+
+		Map<String, Object> model = new HashMap<String, Object>();
+			
+    	model.put("MVS_datos_agenda_calendario", this.dataService.getDatosCalendario(site, idioma));
+    	model.put("MVS_microsite", site);
+    	model.put("MVS_idioma", new Idioma(idioma));
+    	
+    	return this.gusiteFlow.process(model, this.templateNameFactory.moduloAgenda(site), idioma, request, response);
+	}	
+
+
+	/**
+	 * Método que devuelve un string preparado para insertar en un html.
+	 * Ese string contiene el listado de los últimos elementos de clase 'noticias'.
+	 * @param site
+	 * @param idioma
+	 * @return StringBuffer que contiene todo el 'html' necesario para montar noticias
+	 * @throws DelegateException 
+	 */	
+	public String getHtmlNoticias(Microsite site, String idioma, HttpServletRequest request, HttpServletResponse response) throws DelegateException {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+
+    	model.put("MVS_home_datos_noticias_listado", this.dataService.getNoticiasHome(site, idioma));
+    	model.put("MVS_microsite", site);
+    	model.put("MVS_idioma", new Idioma(idioma));
+		
+    	return this.gusiteFlow.process(model, this.templateNameFactory.moduloNoticiasHome(site), idioma, request, response);
+		
+	}			
 	
-	public Hashtable<String, String> getHshTags() {
-		return hshTags;
-	}
-	public void setHshTags(Hashtable<String, String> hshTags) {
-		this.hshTags = hshTags;
-	}
-	public StringBuffer getHtmlOld() {
-		return htmlOld;
-	}
-	public void setHtmlOld(StringBuffer htmlOld) {
-		this.htmlOld = htmlOld;
-	}
-	public StringBuffer getHtmlParsed() {
-		return htmlParsed;
-	}
-	public void setHtmlParsed(StringBuffer htmlParsed) {
-		this.htmlParsed = htmlParsed;
-	}
+	/**
+	 * Método que devuelve un string preparado para insertar en un html.
+	 * Ese string contiene el listado de los últimos elementos según el 'tipo' que se pase.
+	 * Este método es el que se usa para los tags de la version 1.3
+	 * @param idmicrosite
+	 * @param txttipo tipo de elemento
+	 * @param idioma
+	 * @return String que contiene todo el 'html' necesario para montar el listado
+	 * @throws DelegateException 
+	 * @throws ExceptionFrontPagina 
+	 */	
+	public String getHtmlElementos(Microsite site, Long tipo, String idioma, HttpServletRequest request, HttpServletResponse response) throws ExceptionFrontPagina, DelegateException {
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("MVS_tipo", this.noticiasDataService.loadTipo(tipo, idioma));
+    	model.put("MVS_listado_elementos", this.noticiasDataService.listarNoticiasTipo(site, idioma, tipo, site.getNumeronoticias()));
+    	model.put("MVS_microsite", site);
+    	model.put("MVS_idioma", new Idioma(idioma));
+    	
+    	return this.gusiteFlow.process(model, this.templateNameFactory.componenteElementos(site), idioma, request, response);
+    	
+	}			
+	
+	
 	
 }

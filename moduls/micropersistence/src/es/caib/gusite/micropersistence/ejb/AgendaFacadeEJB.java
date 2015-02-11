@@ -162,16 +162,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
             tx.commit();
             //if (!nuevo) indexBorraAgenda(agenda.getId());
             //indexInsertaAgenda(agenda, null);
-            Microsite site = (Microsite) session.get(Microsite.class, agenda.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, agenda.getIdmicrosite());
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Agenda.class.getSimpleName());
-            auditoria.setIdEntidad(agenda.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Agenda.class.getSimpleName(), agenda.getId().toString(), op);
 
             return agenda.getId();
 
@@ -323,7 +318,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
         try {
         	Transaction tx = session.beginTransaction();
         	Agenda agenda = (Agenda) session.get(Agenda.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, agenda.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, agenda.getIdmicrosite());
 
 //            session.delete(agenda);
         	session.createQuery("delete from TraduccionAgenda tage where tage.id.codigoAgenda=" + id).executeUpdate();
@@ -333,12 +328,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

@@ -257,7 +257,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		Session session = getSession();
 		try {
 			Archivo a = (Archivo) session.get(Archivo.class, id);
-			Microsite site = (Microsite) session.get(Microsite.class, a.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, a.getIdmicrosite());
 			
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 				// Si estamos guardando los archivos en el FS, comprobamos si existe.
@@ -270,12 +270,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			session.flush();
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Archivo.class.getSimpleName());
-			auditoria.setIdEntidad(id.toString());
-			auditoria.setMicrosite(site);
-			auditoria.setOperacion(Auditoria.ELIMINAR);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Archivo.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 			
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -297,7 +292,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		boolean nuevo = (a.getId() == null) ? true : false;
 		try {
 			Transaction tx = session.beginTransaction();
-			Microsite site = (Microsite) session.get(Microsite.class, a.getIdmicrosite());
+			this.microsite = (Microsite) session.get(Microsite.class, a.getIdmicrosite());
 			
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 				// Si es una actualización, toca borrar el anterior (por si es un archivo con diferente nombre)
@@ -319,13 +314,8 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			tx.commit();
 			close(session);
 
-			Auditoria auditoria = new Auditoria();
-			auditoria.setEntidad(Archivo.class.getSimpleName());
-			auditoria.setIdEntidad(a.getId().toString());
-			auditoria.setMicrosite(site);
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-			auditoria.setOperacion(op);
-			DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+			gravarAuditoria(Archivo.class.getSimpleName(), a.getId().toString(), op);
 
 			return a.getId();
 

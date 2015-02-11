@@ -10,6 +10,8 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.lucene.model.ModelFilterObject;
+import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micropersistence.intf.NoticiaFacade;
 import es.caib.gusite.micropersistence.intf.NoticiaFacadeHome;
@@ -70,6 +72,18 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
             throw new DelegateException(e);
         }
     }
+    /* (non-Javadoc)
+   	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#obtenerNoticiaDesdeUri(java.lang.Idioma, java.lang.String)
+   	 */
+       public Noticia obtenerNoticiaDesdeUri(String lang, String uri) throws DelegateException {
+           try {
+               return getFacade().obtenerNoticiaDesdeUri(lang, uri);
+           } catch (RemoteException e) {
+               throw new DelegateException(e);
+           }
+       }       
+
+   
 
     /* (non-Javadoc)
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#clonarNoticia(java.lang.Long)

@@ -97,10 +97,10 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 		List listausuarios = micro.listarUsernamesbyMicrosite(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId());
 
 		UsuarioDelegate uDel = DelegateUtil.getUsuarioDelegate();
-		List listaresultante = uDel.listarUsuariosPerfil("sacoper");
-		List lista = uDel.listarUsuariosPerfil("sacsuper");
+		List listaresultante = uDel.listarUsuariosPerfil("gusoper");
+		List lista = uDel.listarUsuariosPerfil("gussuper");
 		listaresultante.addAll(lista);
-		lista = uDel.listarUsuariosPerfil("sacadmin");
+		lista = uDel.listarUsuariosPerfil("gusadmin");
 		listaresultante.addAll(lista);
 
 		Comparator comp = new UsuarioComparator();

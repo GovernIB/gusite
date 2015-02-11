@@ -32,6 +32,8 @@ import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.IndexEncontrado;
 import es.caib.gusite.lucene.model.IndexResultados;
 import es.caib.gusite.lucene.model.ModelFilterObject;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.delegate.BuscarElementosParameter;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -122,7 +124,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
         boolean nuevo = (noticia.getId() == null) ? true : false;
         try {
             Transaction tx = session.beginTransaction();
-            Microsite site = (Microsite) session.get(Microsite.class, noticia.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, noticia.getIdmicrosite());
             Map<String, TraduccionNoticia> listaTraducciones = new HashMap<String, TraduccionNoticia>();
 
             if (nuevo) {
@@ -149,13 +151,8 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Noticia.class.getSimpleName());
-            auditoria.setIdEntidad(noticia.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Noticia.class.getSimpleName(), noticia.getId().toString(), op);
 
             return noticia.getId();
 
@@ -190,6 +187,42 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
         }
     }
     
+    /**
+     * Obtiene una Noticia a partir de la URI
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Noticia obtenerNoticiaDesdeUri(String idioma, String uri) {
+
+        Session session = getSession();
+        try {
+        	Query query;
+        	if (idioma != null) {
+            	query = session.createQuery("from TraduccionNoticia tn where tn.id.codigoIdioma = :idioma and tn.uri = :uri");
+            	query.setParameter("idioma", idioma);
+        	} else {
+            	query = session.createQuery("from TraduccionNoticia tn where tn.uri = :uri");
+        	}
+        	query.setParameter("uri", uri);
+            query.setMaxResults(1);
+        	TraduccionNoticia trad = (TraduccionNoticia) query.uniqueResult(); 
+        	if (trad != null) {
+        		return this.obtenerNoticia(trad.getId().getCodigoNoticia());
+        	} else {
+        		return null;
+        	}
+
+        } catch (ObjectNotFoundException oNe) {
+            log.error(oNe.getMessage());
+        	return new Noticia();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    } 
+    
+   
     /**
      * Clona o duplica una noticia dado un id. Devuelve el id de la nueva noticia
      * @ejb.interface-method
@@ -471,7 +504,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
         try {
         	Transaction tx = session.beginTransaction();
             Noticia noticia = (Noticia) session.get(Noticia.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, noticia.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, noticia.getIdmicrosite());
 
             session.createQuery("delete from TraduccionNoticia where id.codigoNoticia = " + id).executeUpdate();
             session.createQuery("delete from Noticia where id = " + id).executeUpdate();
@@ -479,12 +512,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

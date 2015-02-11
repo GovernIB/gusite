@@ -35,16 +35,9 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 					<div class="row clearfix" th:remove="tag">
 						<div class="col-md-12 column" th:remove="tag">
 							<div id="capsal">
-								<div th:if="${MVS_microsite.restringido}=='S'" th:remove="tag">
-									<a accesskey="0" href="http://www.caib.es/" class="destacat">
-										<span class="logo" id="imagenCabecera1"></span>
-									</a>
-								</div>
-								<div th:if="${MVS_microsite.restringido}!='S'" th:remove="tag">
 									<a accesskey="0" href="http://www.caib.es/" class="destacat">
 										<span class="logo" id="imagenCabecera2"></span>
 									</a>
-								</div>
 							</div>
 						</div>
 					</div>

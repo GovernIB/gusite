@@ -13,6 +13,8 @@
 	<link href="css/estils.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
 </head>
 
 <body>
@@ -239,6 +241,11 @@
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.subtitulo" />:</td>
 				<td><html:text property="subtitulo" name="traducciones" size="50" maxlength="256" indexed="true" /></td>
+			</tr>
+			<tr style="display:block;">
+				<td class="etiqueta"><bean:message key="noticia.uri"/>:</td>
+				<td><html:text property="uri" name="traducciones" styleId="<%="uri"+i%>" size="50" maxlength="256" indexed="true" /></td>
+				<input type="hidden" name="type" value="nid_uri" />
 			</tr>
 			<tr id="tinymceEditor<%=i%>" style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.texto" />:

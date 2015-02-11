@@ -86,6 +86,7 @@ public class Microback {
 	static public final String PVIEW = "view"; //indicará que solo visualizaremos resultados
 	static public final String PMKEY = "mkey"; //iddentificador unico de microsite
 	
+	
 	//clases de los elementos
 	static public final String ELEM_NOTICIA = "0"; //elemento predefinido noticia
 	static public final String ELEM_LINK = "1"; //elemento predefinido link

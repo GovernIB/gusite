@@ -84,6 +84,19 @@ public class ContenidoDelegate implements StatelessDelegate {
     }
  
     /**
+     * Obtiene un Contenido a partir de la uri
+     * @return Contenido
+     * @throws DelegateException
+     */
+    public Contenido obtenerContenidoDesdeUri(String idioma, String uri) throws DelegateException {
+        try {
+            return getFacade().obtenerContenidoDesdeUri(idioma, uri);
+        } catch (RemoteException e) {
+            throw new DelegateException(e);
+        }
+    }
+ 
+    /**
      * Existe contenido
      * @param id Id del contenido
      * @return True si existe el contenido

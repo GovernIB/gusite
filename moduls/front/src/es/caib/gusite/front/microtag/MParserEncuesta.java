@@ -1,6 +1,5 @@
 package es.caib.gusite.front.microtag;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -37,8 +36,8 @@ public class MParserEncuesta extends MParserHTML {
 
 	protected static Log log = LogFactory.getLog(MParserEncuesta.class);
 	
-	public MParserEncuesta(String version) {
-		super(version);
+	public MParserEncuesta() {
+		super();
 	}
 	
 	/**

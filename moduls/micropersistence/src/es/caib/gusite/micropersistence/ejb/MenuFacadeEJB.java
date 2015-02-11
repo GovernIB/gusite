@@ -155,13 +155,9 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setMicrosite(menu.getMicrosite());
-            auditoria.setEntidad(Menu.class.getSimpleName());
-            auditoria.setIdEntidad(menu.getId().toString());
+            this.microsite = menu.getMicrosite();
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Menu.class.getSimpleName(), menu.getId().toString(), op);
 
             return menu.getId();
 
@@ -402,7 +398,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
         try {
         	Transaction tx = session.beginTransaction();
             Menu menu = (Menu) session.get(Menu.class, id);
-            Microsite site = menu.getMicrosite();
+            this.microsite = menu.getMicrosite();
 
         	session.createQuery("delete TraduccionMenu tmenu where tmenu.id.codigoMenu = " + id.toString()).executeUpdate();
         	session.createQuery("delete Contenido conten where conten.menu.id = " + id.toString()).executeUpdate();
@@ -411,12 +407,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setMicrosite(site);
-            auditoria.setEntidad(Menu.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Menu.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -439,7 +430,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
         ArrayList<?> listaobj = ObtenerObjetosMenu(micro);
         Session session = getSession();
         try {
-            Microsite site = (Microsite) session.get(Microsite.class, micro);
+            this.microsite = (Microsite) session.get(Microsite.class, micro);
             Iterator<?> it = listaobj.iterator();
             Object obj = null;
        		Menu men = null;
@@ -472,13 +463,8 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
             close(session);
 
             for (Object object : listaobj) {
-                Auditoria auditoria = new Auditoria();
-                auditoria.setOperacion(Auditoria.MODIFICAR);
-                auditoria.setEntidad(object.getClass().getSimpleName());
-                auditoria.setMicrosite(site);
                 String id = (object instanceof Menu) ? ((Menu) object).getId().toString() : ((Contenido) object).getId().toString();
-                auditoria.setIdEntidad(id);
-                DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+                gravarAuditoria(object.getClass().getSimpleName(), id, Auditoria.MODIFICAR);
             }
     	
         } catch (HibernateException he) {
@@ -690,12 +676,8 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
             Iterator iter = menus.iterator();
             while (iter.hasNext()) {
                 Menu menu = (Menu) iter.next();
-                Auditoria auditoria = new Auditoria();
-                auditoria.setEntidad(Menu.class.getSimpleName());
-                auditoria.setIdEntidad(menu.getId().toString());
-                auditoria.setOperacion(Auditoria.MODIFICAR);
-                auditoria.setMicrosite(menu.getMicrosite());
-                DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+                this.microsite = menu.getMicrosite();
+                gravarAuditoria(Menu.class.getSimpleName(), menu.getId().toString(), Auditoria.MODIFICAR);
             }
 
         } catch (HibernateException he) {

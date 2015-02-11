@@ -30,6 +30,7 @@
 	<form-bean name="BuscaOrdenaRecursoActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaRecursoActionForm"/>			
 	<form-bean name="BuscaOrdenaMicroUsuarioActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaMicroUsuarioActionForm"/>
 	<form-bean name="BuscaOrdenaUsuarioActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaUsuarioActionForm"/>
+	<form-bean name="BuscaOrdenaAuditoriasActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaAuditoriasActionForm"/>
 				
 	<!-- Formulario de listado general -->
 	<form-bean name="listaActionForm" type="es.caib.gusite.microback.actionform.listaActionForm"/>    
@@ -311,7 +312,11 @@
     	<form-property name="claveunica" type="java.lang.String"/>
     	<form-property name="menucorporativo" type="java.lang.String" initial="N"/>
     	<form-property name="traducciones" type="java.util.ArrayList"/>   
-    	<form-property name="domini" type="java.lang.String"/>	
+    	<form-property name="domini" type="java.lang.String"/>
+    	<form-property name="analytics" type="java.lang.String"/>
+    	<form-property name="uri" type="java.lang.String"/>
+		<form-property name="versio" type="java.lang.String"/>
+		<form-property name="acceso" type="java.lang.String"/>
 	</form-bean>
 
 	<form-bean name="formularioconForm" type="es.caib.gusite.microback.actionform.formulario.formularioconForm">
@@ -581,6 +586,11 @@
 		type="es.caib.gusite.microback.action.buscaordena.BuscaordenaUsuarioAction" >
       <forward name="listarUsuarios" path="/listaUsuarios.jsp"/>
     </action>
+
+	<action path="/auditorias"  name="BuscaOrdenaAuditoriasActionForm"
+			type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaAuditoriasAction" >
+		<forward name="listarAuditorias" path="/listaAuditorias.jsp"/>
+	</action>
     
 	<!-- ***************************************************************** -->
     <!-- ******************* Acciones de Edición ************************* -->
@@ -875,7 +885,7 @@
     <!-- Acciones para ajax -->
     
 	<action path="/ajaxBarraEstado" type="es.caib.gusite.microback.ajax.AjaxValorBarraEstadoAction" unknown="false"/>
-
+	<action path="/ajaxCheckUri" type="es.caib.gusite.microback.ajax.AjaxCheckUriAction" unknown="false"/>
 
 </action-mappings>
 

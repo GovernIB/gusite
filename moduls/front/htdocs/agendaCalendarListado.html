@@ -4,8 +4,9 @@ Descripción:
 Este código muestra la tabla con el calendario.
 
 Variables: 
-	MVS_home_datos_noticias_listado: devuelve el listado de noticias
-	MVS_home_idmicrosite: devuelve el id del microsite en cuestión
+	MVS_microsite: microsite actual
+	MVS_idioma: idioma actual
+	MVS_home_datos_agenda_listado: devuelve el listado de eventos
 	MVS_datos_agenda_calendario: devuelve los datos del calendario
 	
 Objetos:
@@ -23,18 +24,16 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>
 </head>
 <body>
+	
 	<div th:fragment="listado">
 		<div th:with="gc=${#calendars.createNow()}" th:remove="tag">
 			<!--  retrocedemos 2 meses-->
-			<div th:with="anteriorMes=(${#calendars.month(gc)}-2)"
-				th:remove="tag">
+			<div th:with="anteriorMes=(${#calendars.month(gc)}-2)" th:remove="tag">
 				<div id="agendaLlistat">
-					<!--MVS_home_datos_noticias_listado devuelve el listado de noticias-->
-					<div th:if="${#lists.size(MVS_home_datos_agenda_listado)} !=0"
-						th:remove="tag">
+					<!-- MVS_home_datos_agenda_listado devuelve el listado de eventos-->
+					<div th:if="${#lists.size(MVS_home_datos_agenda_listado)} !=0" th:remove="tag">
 						<p>
-							<strong th:text="#{microhtml.proximosactos} + ':'">Próxims
-								actes programats</strong>
+							<strong th:text="#{microhtml.proximosactos} + ':'">Próxims actes programats</strong>
 						</p>
 						<ul>
 							<li th:remove="tag">
@@ -66,327 +65,192 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			</div>
 		</div>
 	</div>
+	
+	
 	<div th:fragment="calendario">
-		<div th:with="gc=${#calendars.createNow()}" th:remove="tag">
-			<!-- Establecemos el valor al día  -->
-			<div th:with="DayOfMonth=1" th:remove="tag">
-				<div th:with="nummesesaretroceder=2" th:remove="tag">
-					<!-- retrocedemos 2 meses -->
-					<div th:with="anteriorMes=(${#calendars.month(gc)}-2)"
+		<!-- Establecemos el valor al día y los meses a retroceder (fijos 2)  -->
+		<div th:with="gc=${#calendars.createNow()}, 
+					  DayOfMonth=1, 
+					  nummesesaretroceder=2" th:remove="tag">
+			<div th:with="anteriorMes=(${#calendars.month(gc)}-${nummesesaretroceder})" th:remove="tag">
+				<div
+					th:with="gc=${#calendars.create(#calendars.year(gc),anteriorMes,DayOfMonth,#calendars.hour(gc),#calendars.minute(gc))}"
+					th:remove="tag">
+					<!-- getSelectoragenda -->
+					<div
+						th:with="gi=${#calendars.create(#calendars.year(gc),#calendars.month(gc),#calendars.day(gc),#calendars.hour(gc),#calendars.minute(gc))}"
 						th:remove="tag">
-						<!-- (Inici JOG Feb 2013). Cas especial microsite: 2013 Any Juniper Serra (idsite = 4445) -->
-						<!-- MVS_home_idmicrosite: devuelve el id del microsite en cuestión -->
-						<div th:if="${MVS_home_idmicrosite}==4445" th:remove="tag">
-							<div th:with="gc1=${#calendars.createNow()}" th:remove="tag">
-								<div th:with="mesact=(${#calendars.month(gc1)}+1)"
-									th:remove="tag">
-									<div th:with="nummesesaretroceder=(${mesact}+13)"
+						<div th:with="DayOfMonthgi=1" th:remove="tag">
+							<p
+								th:with="gi=${#calendars.create(#calendars.year(gi),#calendars.month(gi),DayOfMonthgi,#calendars.hour(gi),#calendars.minute(gi))}">
+								<span th:text="#{calendario.mostrarmes} + ':'" th:remove="tag"></span><br />
+								<select onchange="mostrarCalendari();" name="agendaSelect"
+									id="agendaSelect"
+									th:with="nummeses=3 + ${nummesesaretroceder}">
+									<div th:each="i : ${#numbers.sequence( 0, nummeses-1)}"
 										th:remove="tag">
-										<div
-											th:each="i : ${#numbers.sequence( 2, nummesesaretroceder)}"
-											th:remove="tag">
-
-											<div th:with="anteriorMes=(${#calendars.month(gc)}-${i})"
-												th:remove="tag"></div>
-										</div>
-										<div th:with="nummeses=(26-${nummesesaretroceder})"
-											th:remove="tag"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- (Fi JOG) -->
-						<div
-							th:with="gc=${#calendars.create(#calendars.year(gc),anteriorMes,DayOfMonth,#calendars.hour(gc),#calendars.minute(gc))}"
-							th:remove="tag">
-							<!-- getSelectoragenda -->
-							<div
-								th:with="gi=${#calendars.create(#calendars.year(gc),#calendars.month(gc),#calendars.day(gc),#calendars.hour(gc),#calendars.minute(gc))}"
-								th:remove="tag">
-								<div th:with="DayOfMonthgi=1" th:remove="tag">
-									<p
-										th:with="gi=${#calendars.create(#calendars.year(gi),#calendars.month(gi),DayOfMonthgi,#calendars.hour(gi),#calendars.minute(gi))}">
-										<span th:text="#{calendario.mostrarmes} + ':'" th:remove="tag"></span><br />
-										<select onchange="mostrarCalendari();" name="agendaSelect"
-											id="agendaSelect"
-											th:with="nummeses=3 + ${nummesesaretroceder}">
-											<div th:each="i : ${#numbers.sequence( 0, nummeses-1)}"
+										<div th:if="${i} !=0" th:remove="tag">
+											<div th:with="siguienteMes=${#calendars.month(gi)}"
 												th:remove="tag">
-												<div th:if="${i} !=0" th:remove="tag">
-													<div th:with="siguienteMes=${#calendars.month(gi)}"
-														th:remove="tag">
-														<div
-															th:with="gi=${#calendars.create(#calendars.year(gi),siguienteMes,#calendars.day(gi),#calendars.hour(gi),#calendars.minute(gi))}"
-															th:remove="tag">
-															<div th:unless="((${siguienteMes}+ ${i})>12)" th:remove="tag">
-															<div th:if="${i}==${nummesesaretroceder}" th:remove="tag"
-																th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
-																<option th:selected="selected" th:value="${i}"
-																	th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
-															</div>
-															<div th:if="${i}!=${nummesesaretroceder}" th:remove="tag"
-																th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
-																<option th:value="${i}"
-																	th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
-															</div>
-															</div>
-															<div th:if="((${siguienteMes}+ ${i})>12)" th:remove="tag">
-															<div>
-																<div th:with="calendarioMes='calendario.mes.'+ ((${siguienteMes}+ ${i})-12)" th:remove="tag">
-																	<option th:value="${i}"
-																	th:text="#{${calendarioMes}}+ ' ' + (${#calendars.year(gi)}+1)"></option>
-																</div>
-															</div>
-															</div>
+												<div
+													th:with="gi=${#calendars.create(#calendars.year(gi),siguienteMes,#calendars.day(gi),#calendars.hour(gi),#calendars.minute(gi))}"
+													th:remove="tag">
+													<div th:unless="((${siguienteMes}+ ${i})>12)" th:remove="tag">
+													<div th:if="${i}==${nummesesaretroceder}" th:remove="tag"
+														th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
+														<option th:selected="selected" th:value="${i}"
+															th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+													</div>
+													<div th:if="${i}!=${nummesesaretroceder}" th:remove="tag"
+														th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
+														<option th:value="${i}"
+															th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+													</div>
+													</div>
+													<div th:if="((${siguienteMes}+ ${i})>12)" th:remove="tag">
+													<div>
+														<div th:with="calendarioMes='calendario.mes.'+ ((${siguienteMes}+ ${i})-12)" th:remove="tag">
+															<option th:value="${i}"
+															th:text="#{${calendarioMes}}+ ' ' + (${#calendars.year(gi)}+1)"></option>
 														</div>
 													</div>
-												</div>
-												<div th:if="${i} ==0" th:remove="tag"
-													th:with="calendarioMes='calendario.mes.'+(${#calendars.month(gi)}+ ${i})">
-													<option th:value="${i}"
-														th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+													</div>
 												</div>
 											</div>
-										</select>
-									</p>
-								</div>
-							</div>
-							<!-- fi getSelectoragenda -->
-							<div id="agendaCalendaris"
-								th:with="nummeses=3 + ${nummesesaretroceder}">
-								<span th:each="i : ${#numbers.sequence(1, nummeses)}"
-									th:remove="tag">
-									<div th:if="${i}==(${nummesesaretroceder}+1)">
-										<span
-											th:with="anyo=${#calendars.year(gc)},mes=(${#calendars.month(gc)}+${i})"
-											th:remove="tag" th:fragment="tablaCalendario"> <span th:unless="(${mes}-1)>12" 
-											th:switch="(${mes}-1)" class="tituloMes"> <span
-												th:case="1" th:text="#{calendario.enero} + ' ' + ${anyo}"
-												th:remove="tag">Enero Año</span> <span th:case="2"
-												th:text="#{calendario.febrero} + ' ' + ${anyo}"
-												th:remove="tag">Febrero Año</span> <span th:case="3"
-												th:text="#{calendario.marzo} + ' ' + ${anyo}"
-												th:remove="tag">Marzo Año</span> <span th:case="4"
-												th:text="#{calendario.abril} + ' ' + ${anyo}"
-												th:remove="tag">Abril Año</span> <span th:case="5"
-												th:text="#{calendario.mayo} + ' ' + ${anyo}" th:remove="tag">Mayo
-													Año</span> <span th:case="6"
-												th:text="#{calendario.junio} + ' ' + ${anyo}"
-												th:remove="tag">Junio Año</span> <span th:case="7"
-												th:text="#{calendario.julio} + ' ' + ${anyo}"
-												th:remove="tag">Julio Año</span> <span th:case="8"
-												th:text="#{calendario.agosto} + ' ' + ${anyo}"
-												th:remove="tag">Agosto Año</span> <span th:case="9"
-												th:text="#{calendario.septiembre} + ' ' + ${anyo}"
-												th:remove="tag">Septiembre Año</span> <span th:case="10"
-												th:text="#{calendario.octubre} + ' ' + ${anyo}"
-												th:remove="tag">Octubre Año</span> <span th:case="11"
-												th:text="#{calendario.noviembre} + ' ' + ${anyo}"
-												th:remove="tag">Noviembre Año</span> <span th:case="12"
-												th:text="#{calendario.diciembre} + ' ' + ${anyo}"
-												th:remove="tag">Diciembre Año</span>
-										</span>
-										<span th:if="(${mes}-1)>12" th:switch="((${mes}-1)-12)" class="tituloMes" th:with="anyo=(${anyo}+1)"> 
-											<span
-												th:case="1" th:text="#{calendario.enero} + ' ' + ${anyo}"
-												th:remove="tag">Enero Año</span> <span th:case="2"
-												th:text="#{calendario.febrero} + ' ' + ${anyo}"
-												th:remove="tag">Febrero Año</span> <span th:case="3"
-												th:text="#{calendario.marzo} + ' ' + ${anyo}"
-												th:remove="tag">Marzo Año</span> <span th:case="4"
-												th:text="#{calendario.abril} + ' ' + ${anyo}"
-												th:remove="tag">Abril Año</span> <span th:case="5"
-												th:text="#{calendario.mayo} + ' ' + ${anyo}" th:remove="tag">Mayo
-													Año</span> <span th:case="6"
-												th:text="#{calendario.junio} + ' ' + ${anyo}"
-												th:remove="tag">Junio Año</span> <span th:case="7"
-												th:text="#{calendario.julio} + ' ' + ${anyo}"
-												th:remove="tag">Julio Año</span> <span th:case="8"
-												th:text="#{calendario.agosto} + ' ' + ${anyo}"
-												th:remove="tag">Agosto Año</span> <span th:case="9"
-												th:text="#{calendario.septiembre} + ' ' + ${anyo}"
-												th:remove="tag">Septiembre Año</span> <span th:case="10"
-												th:text="#{calendario.octubre} + ' ' + ${anyo}"
-												th:remove="tag">Octubre Año</span> <span th:case="11"
-												th:text="#{calendario.noviembre} + ' ' + ${anyo}"
-												th:remove="tag">Noviembre Año</span> <span th:case="12"
-												th:text="#{calendario.diciembre} + ' ' + ${anyo}"
-												th:remove="tag">Diciembre Año</span>
-										</span>
-											<table class="calendariTabla">
-												<caption class="captionSummaryTable"
-													th:text="#{calendario.sumario}">Dies del mes on
-													haurà qualque acte</caption>
-												<tr>
-													<th scope="col"><abbr th:title="#{calendario.lunes}"
-														title="Dilluns" th:text="#{calendario.lunes.abrv}">Dl</abbr>
-													</th>
-													<th scope="col"><abbr th:title="#{calendario.martes}"
-														title="Dimarts" th:text="#{calendario.martes.abrv}">Dm</abbr>
-													</th>
-													<th scope="col"><abbr
-														th:title="#{calendario.miercoles}" title="Dimecres"
-														th:text="#{calendario.miercoles.abrv}">Dc</abbr></th>
-													<th scope="col"><abbr th:title="#{calendario.jueves}"
-														title="Dijous" th:text="#{calendario.jueves.abrv}">Dj</abbr>
-													</th>
-													<th scope="col"><abbr th:title="#{calendario.viernes}"
-														title="Divendres" th:text="#{calendario.viernes.abrv}">Dv</abbr>
-													</th>
-													<th scope="col"><abbr th:title="#{calendario.sabado}"
-														title="Dissabte" th:text="#{calendario.sabado.abrv}">Ds</abbr>
-													</th>
-													<th scope="col"><abbr th:title="#{calendario.domingo}"
-														title="Diumenge" th:text="#{calendario.domingo.abrv}">Dg</abbr>
-													</th>
-												</tr>
-												<span
-													th:with="mes=(${mes}-1),cf=${#calendars.create(anyo,mes,1,0,0,0)}"
-													th:remove="tag"> <span
-													th:with="diadelasemana=(${#calendars.dayOfWeek(cf)}-1)"
-													th:remove="tag"> <span th:if="${diadelasemana}==0"
-														th:remove="tag"> <span th:with="diadelasemana=7"
-															th:remove="tag"> <span th:switch="${mes}"
-																th:remove="tag" th:fragment="contenidoTabla"> <span
-																	th:case="2" th:remove="tag"> <span
-																		th:if="((${anyo} % 100 == 0) and (${anyo} % 400 == 0)) or ((${anyo} % 100 != 0) and (${anyo} % 4 == 0))"
-																		th:with="diasmes=29" th:remove="tag">
-																			<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
-																	</span> <span
-																		th:if="((${anyo} % 100 == 0) and (${anyo} % 400 != 0)) or ((${anyo} % 100 != 0) and (${anyo} % 4 != 0))"
-																		th:with="diasmes=28" th:remove="tag">
-																			<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
-																	</span>
-																</span> <span th:case="*" th:remove="tag"> <span
-																		th:if="(${mes}==4) or (${mes}==6) or (${mes}==9) or (${mes}==11)"
-																		th:with="diasmes=30" th:remove="tag">
-																			<tr th:fragment="filasTabla">
-																				<span
-																					th:each="i,iterStat : ${#numbers.sequence(1, diadelasemana-1)}"
-																					th:with="indice=${iterStat.last},cuentadias=1"
-																					th:remove="tag"> <span
-																					th:with="cuentadias=(${cuentadias}+${i})"
-																					th:remove="tag"> <!-- Utilizo esta condicion ""(${diadelasemana}==1)==true ? all : tag"" pq si el dia es 1
-		  							 												quiere decir que es lunes, por lo tanto no es necesario dejar casillas vacias al inicio de -->
-																						<span
-																						th:remove="(${diadelasemana}==1)==true ? all : tag">
-																							<td></td>
-																					</span> <span th:if="${indice}==true" th:remove="tag">
-																							<span
-																							th:each="j,iterStat : ${#numbers.sequence(1, diasmes)}"
-																							th:with="primerValor=${iterStat.first}"
-																							th:remove="tag"> <!-- MVS_datos_agenda_calendario devuelve los datos del calendario -->
-																								<span
-																								th:if="${MVS_datos_agenda_calendario}!=null"
-																								th:remove="tag"> <span
-																									th:each="datosAnos, itera:${MVS_datos_agenda_calendario}"
-																									th:remove="tag"> <span
-																										th:if="${datosAnos.key}==(${anyo}+ '-' + ${mes})"
-																										th:remove="tag"> <span
-																											th:each="valorDatos, iter:${datosAnos.value}"
-																											th:with="cuentaDato=${iter.count}, tamanoDato=${iter.size}"
-																											th:remove="tag"> 
-																											<span
-																												th:if="${j}!=${valorDatos.key}"
-																												th:remove="tag"> <span
-																													th:if="(${j} gt ${valorDatos.key}) and (${cuentaDato==1})"
-																													th:remove="tag">
-																														 <td class="NoActe noEvento" th:text="${j}"></td>
-																												</span> <span
-																													th:remove="(${cuentaDato} != ${tamanoDato})==true ? all : tag">
-																														<span
-																														th:remove="(${j} gt ${valorDatos.key})==true ? all : tag">
-																															<td class="NoActe noEvento" th:text="${j}"></td>	
-																													</span>
-																												</span>
-																											</span> 
-																											<span th:if="${j}==${valorDatos.key}"
-																												th:remove="tag"> <!-- #gusuri.listarAgendaFechaFormateada(MVS_microsite,MVS_idioma,valorDatos.value) devuelve la URL hacia el evento con la fecha en cuestión -->
-																													<td class="acte evento"><a
-																														th:href="@{${#gusuri.listarAgendaFechaFormateada(MVS_microsite,MVS_idioma,valorDatos.value)}}"
-																														th:text="${j}" /></td>
-																											</span>
-																										</span> <span
-																											th:if="${#maps.isEmpty(datosAnos.value)}"
-																											th:remove="tag">
-																												<td th:text="${j}"></td>
-																										</span>
-																									</span>
-																								</span>
-																							</span> <!-- MVS_datos_agenda_calendario devuelve los datos del calendario -->
-																								<span
-																								th:if="${MVS_datos_agenda_calendario}==null"
-																								th:remove="tag">
-																									<td th:text="${j}"></td>
-																							</span> <span th:switch="${primerValor}" th:remove="tag">
-																									<span th:case="false"
-																									th:with="cuentadias=(${cuentadias}+(${j}-1))"
-																									th:remove="tag"> <span
-																										th:if="(${cuentadias}% 7) == 0"
-																										th:with="cuentapares=1" th:remove="tag"
-																										th:fragment="pares">
-																											<tr></tr> <span
-																											th:with="cuentapares=(${cuentapares}+${j})"
-																											th:remove="tag"> <span
-																												th:if="(${cuentapares}% 2) ==0"
-																												th:remove="tag"> <script>
-																													jQuery(
-																															document)
-																															.ready(
-																																	function() {
-																																		var filapar = jQuery('.filapar');
-
-																																		var par = jQuery('.filapar + tr');
-
-																																		par
-																																				.attr(
-																																						'class',
-																																						'par');
-
-																																		filapar
-																																				.detach();
-																																	});
-																												</script>
-																													<tr class="filapar"></tr>
-																											</span>
-																										</span>
-																									</span>
-																								</span> <span th:case="true" th:remove="tag"> <span
-																										th:replace="agendaCalendarListado :: pares"
-																										th:remove="tag"> </span>
-																								</span>
-																							</span>
-																						</span>
-																					</span>
-																				</span>
-																				</span>
-																			</tr>
-																	</span> 
-																	<span
-																		th:if="(${mes}!=4) and (${mes}!=6) and (${mes}!=9) and (${mes}!=11)"
-																		th:with="diasmes=31" th:remove="tag">
-																			<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
-																	</span>
-																</span>
-															</span>
+										</div>
+										<div th:if="${i} ==0" th:remove="tag"
+											th:with="calendarioMes='calendario.mes.'+(${#calendars.month(gi)}+ ${i})">
+											<option th:value="${i}"
+												th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+										</div>
+									</div>
+								</select>
+							</p>
+						</div>
+					</div>
+					<!-- fi getSelectoragenda -->
+					<div id="agendaCalendaris" th:with="nummeses=3 + ${nummesesaretroceder}">
+						
+						<span th:each="i : ${#numbers.sequence(1, nummeses)}" th:remove="tag">
+							
+							<!--  Mes actual (inicialmente mostrado) -->
+							
+							<div th:if="${i}==(${nummesesaretroceder}+1)">
+								<span
+									th:with="anyo=${#calendars.year(gc)},
+											 mes=(${#calendars.month(gc)}+${i}),
+											 cf=${#calendars.create(anyo,mes-1,1,0,0,0)},
+											 safeMes=${#calendars.month(cf)},
+											 safeAnyo=${#calendars.year(cf)}" th:remove="tag" 
+									th:fragment="tablaCalendario"> 
+									<span th:switch="(${safeMes})" class="tituloMes"> 
+										<span th:case="1" th:text="#{calendario.enero} + ' ' + ${safeAnyo}" th:remove="tag">Enero Año</span> 
+										<span th:case="2" th:text="#{calendario.febrero} + ' ' + ${safeAnyo}" th:remove="tag">Febrero Año</span> 
+										<span th:case="3" th:text="#{calendario.marzo} + ' ' + ${safeAnyo}" th:remove="tag">Marzo Año</span> 
+										<span th:case="4" th:text="#{calendario.abril} + ' ' + ${safeAnyo}" th:remove="tag">Abril Año</span> 
+										<span th:case="5" th:text="#{calendario.mayo} + ' ' + ${safeAnyo}" th:remove="tag">Mayo Año</span> 
+										<span th:case="6" th:text="#{calendario.junio} + ' ' + ${safeAnyo}" th:remove="tag">Junio Año</span> 
+										<span th:case="7" th:text="#{calendario.julio} + ' ' + ${safeAnyo}" th:remove="tag">Julio Año</span> 
+										<span th:case="8" th:text="#{calendario.agosto} + ' ' + ${safeAnyo}" th:remove="tag">Agosto Año</span> 
+										<span th:case="9" th:text="#{calendario.septiembre} + ' ' + ${safeAnyo}" th:remove="tag">Septiembre Año</span> 
+										<span th:case="10" th:text="#{calendario.octubre} + ' ' + ${safeAnyo}" th:remove="tag">Octubre Año</span> 
+										<span th:case="11" th:text="#{calendario.noviembre} + ' ' + ${safeAnyo}" th:remove="tag">Noviembre Año</span> 
+										<span th:case="12" th:text="#{calendario.diciembre} + ' ' + ${safeAnyo}" th:remove="tag">Diciembre Año</span>
+									</span>
+								
+									<table class="calendariTabla">
+										<caption class="captionSummaryTable" th:text="#{calendario.sumario}">Dies del mes on haurà qualque acte</caption>
+										<tr>
+											<th scope="col"><abbr th:title="#{calendario.lunes}" title="Dilluns" th:text="#{calendario.lunes.abrv}">Dl</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.martes}" title="Dimarts" th:text="#{calendario.martes.abrv}">Dm</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.miercoles}" title="Dimecres" th:text="#{calendario.miercoles.abrv}">Dc</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.jueves}" title="Dijous" th:text="#{calendario.jueves.abrv}">Dj</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.viernes}" title="Divendres" th:text="#{calendario.viernes.abrv}">Dv</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.sabado}" title="Dissabte" th:text="#{calendario.sabado.abrv}">Ds</abbr></th>
+											<th scope="col"><abbr th:title="#{calendario.domingo}" title="Diumenge" th:text="#{calendario.domingo.abrv}">Dg</abbr></th>
+										</tr>
+											
+										 <th:block th:with="diaSemanaPrimerDiaMesEn=(${#calendars.dayOfWeek(cf)}-1),
+										 					diaSemanaPrimerDiaMes=${diaSemanaPrimerDiaMesEn==0?7:diaSemanaPrimerDiaMesEn}" th:remove="tag"> 
+										
+												<span th:switch="${safeMes}" th:remove="tag"> 
+													<span
+														th:case="2" th:remove="tag"> <span
+															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 == 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 == 0))"
+															th:with="diasmes=29" th:remove="tag">
+																<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
+														</span> 
+														<span
+															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 != 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 != 0))"
+															th:with="diasmes=28" th:remove="tag">
+																<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
 														</span>
-													</span> <span th:if="${diadelasemana}!=0" th:remove="tag"><span
-															th:switch="${mes}" th:remove="tag"
-															th:replace="agendaCalendarListado :: contenidoTabla"></span>
+													</span> 
+													<span th:case="*" th:remove="tag"> 
+													
+													<span
+														th:if="(${safeMes}!=4) and (${safeMes}!=6) and (${safeMes}!=9) and (${safeMes}!=11)"
+														th:with="diasmes=31" th:remove="tag">
+															<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
+													</span>
+
+													<span
+															th:if="(${safeMes}==4) or (${safeMes}==6) or (${safeMes}==9) or (${safeMes}==11)"
+															th:with="diasmes=30" th:remove="tag">
+
+																<span th:fragment="filasTabla">
+																	<span th:with="
+																		numFilas=${T(Math).ceil( (0.0 + diasmes + diaSemanaPrimerDiaMes) / 7)},
+																		datosMes=${MVS_datos_agenda_calendario[safeAnyo+ '-' + safeMes]}" 
+																		th:remove="tag">
+																		<!-- MVS_datos_agenda_calendario[YYYY-MM] los dias en que hay eventos -->
+																	
+																	<tr th:each="numFila,iterStat : ${#numbers.sequence(1, numFilas)}"
+																		th:with="diaMes=${ (numFila-1) * 7 - diaSemanaPrimerDiaMes + 1}">
+																	
+																	<!--  dejamos celdas en blanco hasta el primer dia del mes -->
+																	<td th:if="${diaMes &lt; 0}"
+																		th:each="i: ${#numbers.sequence(diaMes, -1)}"></td>
+																	
+																	<span
+																	th:each="diaSemana,iterStat : ${#numbers.sequence(1, 7)}" th:remove="tag"
+																	th:with="diaMes=${ (numFila -1) * 7 - diaSemanaPrimerDiaMes + diaSemana + 1}"> 
+																		<!-- Imprmimos los dias de la semana, si estamos entre el 1 y diasmes -->
+																		<span
+																			th:if="(${diaMes &gt; 0 and diaMes &lt;= diasmes })"
+																			th:remove="tag">			
+																		<span
+																		th:if="${!(#sets.contains(datosMes,diaMes))}" th:remove="tag">
+																			<td class="NoActe noEvento" th:text="${diaMes}"></td>	
+																		</span>
+																		<span 
+																		th:if="${#sets.contains(datosMes,diaMes)}" th:remove="tag">
+																			<td class="acte evento"><a
+																					th:with="dayCalendar=${#calendars.create(safeAnyo, safeMes, diaMes)}"
+																					th:href="@{${#gusuri.listarAgendaFechaFormateada(MVS_microsite,MVS_idioma, #calendars.format(dayCalendar,'yyyyMMdd'))}}"
+																					th:text="${diaMes}" /></td>
+																		</span>
+																		</span>
+
+																	</span> 
+																	</tr>
+																	</span>
+																</span><!--  fin fragment filasTabla -->
+														</span> 
+														
 													</span>
 												</span>
-												</span>
-											</table>
-										</span>
-									</div>
-									<div th:if="${i}!=(${nummesesaretroceder}+1)"
-										style="display: none;">
-										<span th:replace="agendaCalendarListado :: tablaCalendario"
-											th:remove="tag"> </span>
-									</div>
+
+										</th:block>
+										
+									</table>
 								</span>
 							</div>
-						</div>
+							<!--  Meses inicialmente escondidos -->
+							<div th:if="${i}!=(${nummesesaretroceder}+1)" style="display: none;">
+								<span th:replace="agendaCalendarListado :: tablaCalendario" th:remove="tag"> </span>
+							</div>
+						</span>
 					</div>
 				</div>
 			</div>

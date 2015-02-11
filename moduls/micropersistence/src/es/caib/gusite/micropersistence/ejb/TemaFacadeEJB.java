@@ -10,7 +10,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -93,7 +92,7 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
         try {
             boolean nuevo = (tema.getId() == null) ? true : false;
             Transaction tx = session.beginTransaction();
-            Microsite site = (Microsite) session.get(Microsite.class, tema.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, tema.getIdmicrosite());
 
             Map<String, TraduccionTemafaq> listaTraducciones = new HashMap<String, TraduccionTemafaq>();
             if (nuevo) {
@@ -120,13 +119,8 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Temafaq.class.getSimpleName());
-            auditoria.setIdEntidad(tema.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Temafaq.class.getSimpleName(), tema.getId().toString(), op);
 
             return tema.getId();
 
@@ -190,19 +184,14 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             Temafaq temafaq = (Temafaq) session.get(Temafaq.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, temafaq.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, temafaq.getIdmicrosite());
 
         	session.createQuery("delete from TraduccionTemafaq ttema where ttema.id.codigoTema = " + id).executeUpdate();
         	session.createQuery("delete from Temafaq tfaq where tfaq.id = " + id).executeUpdate();
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

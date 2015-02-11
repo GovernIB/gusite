@@ -10,7 +10,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
@@ -99,16 +98,11 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
             session.flush();
             tx.commit();
 
-            Microsite site = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Contacto.class.getSimpleName());
-            auditoria.setIdEntidad(contacto.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Contacto.class.getSimpleName(), contacto.getId().toString(), op);
 
             return contacto.getId();
 
@@ -191,7 +185,7 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
         	Contacto contacto = (Contacto) session.get(Contacto.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
 
             Transaction tx = session.beginTransaction();
             Iterator<Lineadatocontacto> iter = contacto.getLineasdatocontacto().iterator();
@@ -207,12 +201,7 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Contacto.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Contacto.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -261,16 +250,11 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
             
             tx.commit();
             Contacto contacto = (Contacto) session.get(Contacto.class, idcontacto);
-            Microsite site = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Lineadatocontacto.class.getSimpleName());
-            auditoria.setIdEntidad(lin.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Lineadatocontacto.class.getSimpleName(), lin.getId().toString(), op);
         	
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -292,7 +276,7 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
         try {
         	Transaction tx = session.beginTransaction();
             Contacto contacto = (Contacto) session.get(Contacto.class, idContacto);
-            Microsite site = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
 
         	for (int i = 0; i < lineas.length; i++) {
             	session.createQuery("delete from TraduccionLineadatocontacto tlin where tlin.id.codigoLineadatocontacto = " + lineas[i]).executeUpdate();
@@ -303,12 +287,7 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
             close(session);
 
             for (String linea : lineas) {
-                Auditoria auditoria = new Auditoria();
-                auditoria.setEntidad(Lineadatocontacto.class.getSimpleName());
-                auditoria.setIdEntidad(linea);
-                auditoria.setMicrosite(site);
-                auditoria.setOperacion(Auditoria.ELIMINAR);
-                DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+                gravarAuditoria(Lineadatocontacto.class.getSimpleName(), linea, Auditoria.ELIMINAR);
             }
 
         } catch (HibernateException e) {
@@ -330,19 +309,14 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             Contacto contacto = (Contacto) session.get(Contacto.class, idContacto);
-            Microsite site = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, contacto.getIdmicrosite());
 
         	session.createQuery("delete from TraduccionLineadatocontacto tlin where tlin.id.codigoLineadatocontacto = " + idLinea).executeUpdate();
         	session.createQuery("delete from Lineadatocontacto lin where id = " + idLinea).executeUpdate();
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Lineadatocontacto.class.getSimpleName());
-            auditoria.setIdEntidad(idLinea.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Lineadatocontacto.class.getSimpleName(), idLinea.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException e) {
             throw new EJBException(e);

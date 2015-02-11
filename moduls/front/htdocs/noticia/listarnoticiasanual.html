@@ -69,7 +69,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 										alt="" width="48" height="48" align="middle" />
 								</div>
 								<div th:if="${i.imagen} ==null" th:remove="tag">
-									<img src="resources/imgs/noticies/news.gif" alt=""
+									<img th:src="@{/resources/imgs/noticies/news.gif}" alt=""
 										align="middle" />
 								</div>
 								<div

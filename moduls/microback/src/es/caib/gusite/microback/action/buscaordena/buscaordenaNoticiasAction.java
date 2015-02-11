@@ -181,8 +181,9 @@ public class buscaordenaNoticiasAction extends BaseAction {
 			compodel.setTampagina(Microback.MAX_INTEGER);
 			compodel.setWhere("where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and compo.tipo.id=" + tipo.getId());
 			
-			if (compodel.listarComponentes().size() > 0)
-				request.setAttribute("MVS_lista_componentes", compodel.listarComponentes());
+			List<?> listaCompo = compodel.listarComponentes();
+			if (listaCompo.size() > 0)
+				request.setAttribute("MVS_lista_componentes", listaCompo);
 
 		} catch (Exception ex) {
 			

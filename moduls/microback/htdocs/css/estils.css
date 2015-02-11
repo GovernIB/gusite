@@ -5,7 +5,7 @@ body { font:normal 80% 'TrebuchetMS', 'Trebuchet MS', Arial, Helvetica, sans-ser
 * { margin:0; padding:0; }
 img { border:0; }
 
-/* capçaleres */
+/* capï¿½aleres */
 
 h1 { font:normal 1.7em Georgia, "Times New Roman", Times, serif; margin:0 0 10px 0; background:url(../imgs/titulos/h1.gif) repeat-x left bottom #fff; padding:0 10px 10px 10px; color:#000; }
 h1 span { font-size:.7em; }
@@ -29,8 +29,8 @@ h3 { font:normal 1em Georgia, "Times New Roman", Times, serif; padding-bottom:.5
 #submenu { list-style:none; margin:0 0 1em 0; padding:7px 10px; background-color:#fff0e0; border-top:1em solid #fff0e0; }
 #submenu li { display:inline; margin-right:2em; padding:7px 10px; border-top:1px solid #ffcf9d; border-right:1px solid #ffcf9d; border-left:1px solid #ffcf9d; }
 #submenu li a { color:#8a4700; }
-#submenu li.selec { background-color:#fff; border-top:1px solid #fff; border-right:1px solid #fff; border-left:1px solid #fff; }
-#submenu li.selec a { text-decoration:none; color:#494949; font-weight:bold; outline:none; }
+#submenu li.selec,#submenu li.selec2 { background-color:#fff; border-top:1px solid #fff; border-right:1px solid #fff; border-left:1px solid #fff; }
+#submenu li.selec a,#submenu li.selec2 a { text-decoration:none; color:#494949; font-weight:bold; outline:none; }
 
 /* tables */
 
@@ -181,7 +181,7 @@ td.cargando { background:url(../imgs/menu/cargando.gif) no-repeat left center; p
 
 #nodesPrimerNivell { display:none; }
 
-/* nova pàgina */
+/* nova pï¿½gina */
 
 #capaCapaSup { display:none; }
 #nodesNivell1, #nodesNivell2 { display:none; }

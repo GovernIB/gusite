@@ -30,7 +30,7 @@ import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 public class EliminarAction extends BaseAction {
 
 	protected static Log log = LogFactory.getLog(EliminarAction.class);
-	private static String[] roles = new String[]{"sacsystem", "sacadmin"};
+	private static String[] roles = new String[]{"gussystem", "gusadmin"};
 	protected String mensaje="";
 	
 	@SuppressWarnings("unchecked")
@@ -54,7 +54,7 @@ public class EliminarAction extends BaseAction {
             }        
     	}
     	
-		// Solo podrán eliminar los roles sacsystem y sacadmin
+		// Solo podrán eliminar los roles gussystem y gusadmin
 		rolenames=(Hashtable<String,String>)request.getSession().getAttribute("rolenames");
 
 		if (!(rolenames.contains(roles[0]) || rolenames.contains(roles[1]))) {

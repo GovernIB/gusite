@@ -22,8 +22,7 @@ public class ContactosDataService {
 	protected static Log log = LogFactory.getLog(ContactosDataService.class);
 
 	@SuppressWarnings("unchecked")
-	public ResultadoBusqueda<Contacto> getListadoFormularios (
-			Microsite microsite, Idioma lang, BaseCriteria formulario) throws DelegateException {
+	public ResultadoBusqueda<Contacto> getListadoFormularios (Microsite microsite, Idioma lang, BaseCriteria formulario) throws DelegateException {
 
     	ContactoDelegate contactodel = DelegateUtil.getContactoDelegate();
     	contactodel.init();

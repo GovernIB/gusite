@@ -40,6 +40,26 @@ function mostrarForm(obj) {
 	}
 }
 
+function mostrarForm2(obj) {
+	lis2 = obj.parentNode.parentNode.getElementsByTagName('li');
+	for(i=0;i<lis2.length;i++) lis2[i].className = '';
+	obj.parentNode.className = 'selec2';
+	posicion2 = 0;
+	for(i=0;i<lis2.length;i++) if(lis2[i].className == 'selec2') posicion2 = i;
+	divs2 = document.getElementById('formulario2').getElementsByTagName('div');
+	divsIdiomas2 = new Array();
+	for(i=0;i<divs2.length;i++) {
+		if(divs2[i].className == 'capaFormIdioma2') divsIdiomas2.push(divs2[i].id);
+	}
+	for(i=0;i<divsIdiomas2.length;i++) {
+		if(i != posicion2) {
+			document.getElementById(divsIdiomas2[i]).style.display = 'none';
+		} else {
+			document.getElementById(divsIdiomas2[i]).style.display = 'block';
+		}
+	}
+}
+
 function marcarCheck(obj) {
 	obj.className = 'x';
 	inputs = document.getElementById('capa_tablaCA').getElementsByTagName('input');

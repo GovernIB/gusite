@@ -30,7 +30,7 @@ import es.caib.gusite.micropersistence.util.log.MicroLog;
 public class ConsolaAction extends BaseAction {
 	
 	protected static Log log = LogFactory.getLog(ConsolaAction.class);
-	private static String[] roles = new String[]{"sacsystem", "sacadmin"};
+	private static String[] roles = new String[]{"gussystem", "gusadmin"};
 	
 	@SuppressWarnings("unchecked")
 	public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
@@ -53,7 +53,7 @@ public class ConsolaAction extends BaseAction {
             }        
     	}
     	
-		// Solo podrán visualizar la consola sacsystem y sacadmin
+		// Solo podrán visualizar la consola gussystem y gusadmin
 		rolenames=(Hashtable<String,String>)request.getSession().getAttribute("rolenames");
 
 		if (!(rolenames.contains(roles[0]) || rolenames.contains(roles[1]))) {

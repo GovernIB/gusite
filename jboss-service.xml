@@ -23,7 +23,9 @@
 	   <!-- Cuenta a la que enviar emails, en lugar de a los contactos configuraddos  -->
 	   es.caib.gusite.email.debugMode=S
 	   es.caib.gusite.email.debugMail=agarcia@at4.net
-	   
+
+       es.caib.gusite.context.front=/sites
+       es.caib.gusite.redirectToNewFront=S
     </attribute>
 
 </mbean>

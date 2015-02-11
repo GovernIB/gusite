@@ -16,13 +16,14 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
 
+import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micropersistence.plugins.PluginDominio;
 
 /**
@@ -123,7 +124,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
         try {
             boolean nuevo = (tipo.getId() == null) ? true : false;
             Transaction tx = session.beginTransaction();
-            Microsite site = (Microsite) session.get(Microsite.class, tipo.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, tipo.getIdmicrosite());
 
             Map<String, TraduccionTipo> listaTraducciones = new HashMap<String, TraduccionTipo>();
             if (nuevo) {
@@ -150,13 +151,8 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Tipo.class.getSimpleName());
-            auditoria.setIdEntidad(tipo.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Tipo.class.getSimpleName(), tipo.getId().toString(), op);
 
             return tipo.getId();
 
@@ -181,6 +177,40 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
         	Tipo tipo = (Tipo) session.get(Tipo.class, id);
             return tipo;
 
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    /**
+     * Obtiene un Tipo a partir de la URI
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Tipo obtenerTipoDesdeUri(String idioma, String uri) {
+
+        Session session = getSession();
+        try {
+        	Query query;
+        	if (idioma != null) {
+            	query = session.createQuery("from TraduccionTipo tt where tt.id.codigoIdioma = :idioma and tt.uri = :uri");
+            	query.setParameter("idioma", idioma);
+        	} else {
+            	query = session.createQuery("from TraduccionTipo tt where tt.uri = :uri");
+        	}
+        	query.setParameter("uri", uri);
+            query.setMaxResults(1);
+        	TraduccionTipo trad = (TraduccionTipo) query.uniqueResult(); 
+        	if (trad != null) {
+        		return this.obtenerTipo(trad.getId().getCodigoTipo());
+        	} else {
+        		return null;
+        	}
+
+        } catch (ObjectNotFoundException oNe) {
+            log.error(oNe.getMessage());
+        	return new Tipo();
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {
@@ -282,7 +312,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             Tipo tipo = (Tipo) session.get(Tipo.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, tipo.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, tipo.getIdmicrosite());
 
         	Transaction tx = session.beginTransaction();
         	session.createQuery("delete from TraduccionTipo tt where tt.id.codigoTipo = " + id).executeUpdate();
@@ -291,12 +321,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Actividadagenda.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

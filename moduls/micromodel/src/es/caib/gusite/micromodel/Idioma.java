@@ -27,8 +27,10 @@ public class Idioma implements ValueObject {
 		
 		String idiomaDefault = System.getProperty("es.caib.gusite.idioma.default");
 		
-   		if (idiomaDefault == null || idiomaDefault.length() == 0)
-   			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.idioma.default");
+   		if (idiomaDefault == null || idiomaDefault.length() == 0) {
+   			idiomaDefault = "ca";
+   			//throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.idioma.default");
+   		}
    		
    		return idiomaDefault;
    		

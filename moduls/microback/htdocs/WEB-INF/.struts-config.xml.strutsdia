@@ -838,4 +838,6 @@
  <PROCESS-ITEM NAME="page77" PATH="/detalleCorreo.jsp"
   SHAPE="240,11666,0,0" SUBTYPE="jsp" TITLE="detalleCorreo.jsp"
   TYPE="page" model-entity="StrutsProcessItem"/>
+ <PROCESS-ITEM ID="#ajaxCheckUri" NAME="action98"
+  PATH="/ajaxCheckUri" SHAPE="32,5938,0,0" TYPE="action" model-entity="StrutsProcessItem"/>
 </PROCESS>

@@ -26,8 +26,8 @@ public class APIUtil {
     	String keyStoreName = System.getProperty("es.caib.gusite.api.rolsac.keystore.nombre");
     	String keyStorePass = System.getProperty("es.caib.gusite.api.rolsac.keystore.pass");
     	
-    	/*if (API_STRATEGY == STRATEGY.WS)
-    		CertificadoUtil.autentificar(keyStorePass, keyStoreName);*/
+    	if (API_STRATEGY == STRATEGY.WS)
+    		CertificadoUtil.autentificar(keyStorePass, keyStoreName);
     	
     	return (RolsacQueryService)BeanUtils.getAdapter("rolsac", APIUtil.API_STRATEGY);
     	

@@ -38,16 +38,15 @@ public class QssiController extends BaseController {
 	
 
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/qssi/{qssi}/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/qssi/{qssi}/") 
 	public String qssi (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
 					@PathVariable("qssi") long idQssi,
 					Model model,
@@ -56,7 +55,7 @@ public class QssiController extends BaseController {
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model);
 			Frqssi qssi = this.dataService.getFormularioQssi(microsite, lang, idQssi);
 
 			//comprobacion de microsite

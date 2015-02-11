@@ -7,20 +7,15 @@ import es.caib.gusite.micromodel.Microsite;
 @Service
 public class TemplateNameFactory {
 
-	
 	public String errorGenerico(Microsite microsite) {
-		
 		return "error/errorgenerico";
-
 	}
 
 	public String home(Microsite microsite) {
-		
 		return "index";
 	}
 
 	public String listarNoticiasExternas(Microsite microsite) {
-		
 		return "noticia/listarnoticiasexternas";
 	}
 
@@ -33,32 +28,26 @@ public class TemplateNameFactory {
 	}
 
 	public String listarLinksAnyos(Microsite microsite) {
-		
 		return "noticia/listarlinksanual";
 	}
 
 	public String listarLinks(Microsite microsite) {
-		
 		return "noticia/listarlinksnormal";
 	}
 
 	public String listarDocumentosAnyos(Microsite microsite) {
-		
 		return "noticia/listardocumentosanual";
 	}
 
 	public String listarDocumentos(Microsite microsite) {
-		
 		return "noticia/listardocumentosnormal";
 	}
 
 	public String mostrarGaleriaFotosAnyos(Microsite microsite) {
-		
 		return "noticia/mostrarGaleriaFotosAnual";
 	}
 
 	public String mostrarGaleriaFotos(Microsite microsite) {
-		
 		return "noticia/mostrarGaleriaFotos";
 	}
 
@@ -124,6 +113,18 @@ public class TemplateNameFactory {
 	
 	public String menuPreview(Microsite microsite) {
 		return "home/menupreview";
+	}
+
+	public String moduloAgenda(Microsite microsite) {
+		return "agendaCalendarListado :: calendario";
+	}
+
+	public String moduloNoticiasHome(Microsite microsite) {
+		return "noticiasListado :: noticias";
+	}
+
+	public String componenteElementos(Microsite microsite) {
+		return "componentes :: elementos";
 	}
 	
 }

@@ -159,25 +159,25 @@
 							
 							<select name="perfil" tabindex="5" id="perfil">
 								<option value="0">Escull un perfil</option>
-								<logic:equal name="usuarioForm" property="perfil" value="sacadmin">
-									<option value="sacadmin" selected="selected">Administrador</option>
+								<logic:equal name="usuarioForm" property="perfil" value="gusadmin">
+									<option value="gusadmin" selected="selected">Administrador</option>
 								</logic:equal>
-								<logic:notEqual name="usuarioForm" property="perfil" value="sacadmin">
-									<option value="sacadmin">Administrador</option>
+								<logic:notEqual name="usuarioForm" property="perfil" value="gusadmin">
+									<option value="gusadmin">Administrador</option>
 								</logic:notEqual>
 								
-								<logic:equal name="usuarioForm" property="perfil" value="sacsuper">
-									<option value="sacsuper" selected="selected">Supervisor</option>
+								<logic:equal name="usuarioForm" property="perfil" value="gussuper">
+									<option value="gussuper" selected="selected">Supervisor</option>
 								</logic:equal>
-								<logic:notEqual name="usuarioForm" property="perfil" value="sacsuper">
-									<option value="sacsuper">Supervisor</option>
+								<logic:notEqual name="usuarioForm" property="perfil" value="gussuper">
+									<option value="gussuper">Supervisor</option>
 								</logic:notEqual>
 								
-								<logic:equal name="usuarioForm" property="perfil" value="sacoper">
-									<option value="sacoper" selected="selected">Operador</option>
+								<logic:equal name="usuarioForm" property="perfil" value="gusoper">
+									<option value="gusoper" selected="selected">Operador</option>
 								</logic:equal>
-								<logic:notEqual name="usuarioForm" property="perfil" value="sacoper">
-									<option value="sacoper">Operador</option>
+								<logic:notEqual name="usuarioForm" property="perfil" value="gusoper">
+									<option value="gusoper">Operador</option>
 								</logic:notEqual>
 								
 

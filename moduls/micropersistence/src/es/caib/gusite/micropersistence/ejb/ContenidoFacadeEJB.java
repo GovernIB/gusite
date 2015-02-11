@@ -135,13 +135,9 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
              tx.commit();
              close(session);
 
-             Auditoria auditoria = new Auditoria();
-             auditoria.setEntidad(Contenido.class.getSimpleName());
-             auditoria.setIdEntidad(contenido.getId().toString());
-             auditoria.setMicrosite(contenido.getMenu().getMicrosite());
+             this.microsite = contenido.getMenu().getMicrosite();
              int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-             auditoria.setOperacion(op);
-             DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+             gravarAuditoria(Contenido.class.getSimpleName(), contenido.getId().toString(), op);
 
              return contenido.getId();
 
@@ -176,6 +172,41 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
         }
     }
 
+    /**
+     * Obtiene un Contenido a partir de la URI
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Contenido obtenerContenidoDesdeUri(String idioma, String uri) {
+
+        Session session = getSession();
+        try {
+        	Query query;
+        	if (idioma != null) {
+            	query = session.createQuery("from TraduccionContenido tc where tc.id.codigoIdioma = :idioma and tc.uri = :uri");
+            	query.setParameter("idioma", idioma);
+        	} else {
+            	query = session.createQuery("from TraduccionContenido tc where tc.uri = :uri");
+        	}
+        	query.setParameter("uri", uri);
+            query.setMaxResults(1);
+        	TraduccionContenido trad = (TraduccionContenido) query.uniqueResult(); 
+        	if (trad != null) {
+        		return this.obtenerContenido(trad.getId().getCodigoContenido());
+        	} else {
+        		return null;
+        	}
+
+        } catch (ObjectNotFoundException oNe) {
+            log.error(oNe.getMessage());
+        	return new Contenido();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    
     /**
      * Comprueba si existe un contenido
      * @ejb.interface-method
@@ -261,12 +292,8 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Contenido.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(contenido.getMenu().getMicrosite());
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            this.microsite = contenido.getMenu().getMicrosite();
+            gravarAuditoria(Contenido.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

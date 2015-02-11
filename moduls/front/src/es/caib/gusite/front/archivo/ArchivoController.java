@@ -32,23 +32,29 @@ public class ArchivoController extends FrontController {
 	private static Log log = LogFactory.getLog(ArchivoController.class);
 
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
 	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping("{mkey}/f/{id}")
+	@RequestMapping("{uri}/f/{id}")
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("mkey") SiteId siteId,
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI,
 			@PathVariable("id") Long idFile) throws IOException {
 
 		Microsite microsite = null;
 		try {
-			microsite = this.dataService.getMicrositeByKey(siteId.mkey,
+			microsite = this.dataService.getMicrositeByUri(URI.uri,
 					DEFAULT_IDIOMA);
+			if (microsite == null) {
+				log.error("Microsite " + URI.uri + " no encontrado");
+				// TODO: 404?
+				// return getForwardError (microsite, lang, model,
+				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return null;
+			}
 
 			// TODO: if (this.checkControl(ctrl, idFile)) {
 			Archivo archivo = this.dataService.obtenerArchivo(idFile);
@@ -89,29 +95,33 @@ public class ArchivoController extends FrontController {
 
 	}
 
-	
 	/**
-	 * TODO: mkey debería ser el uri del site 
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value="{mkey}/f/", params=Microfront.PNAME)
+	@RequestMapping(value = "{uri}/f/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(
-			@PathVariable("mkey") SiteId siteId,
-			@RequestParam(Microfront.PNAME) String filename
-			) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI,
+			@RequestParam(Microfront.PNAME) String filename) throws IOException {
 
 		Microsite microsite = null;
 		try {
-			microsite = this.dataService.getMicrositeByKey(siteId.mkey,
+			microsite = this.dataService.getMicrositeByUri(URI.uri,
 					DEFAULT_IDIOMA);
+			if (microsite == null) {
+				log.error("Microsite " + URI.uri + " no encontrado");
+				// TODO: 404?
+				// return getForwardError (microsite, lang, model,
+				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return null;
+			}
 
 			// TODO: if (this.checkControl(ctrl, idFile)) {
-			Archivo archivo = this.dataService.obtenerArchivo(microsite.getId(), filename );
+			Archivo archivo = this.dataService.obtenerArchivo(
+					microsite.getId(), filename);
 			// amartin: Si los datos del archivo son nulos en la BD, vamos a
 			// buscarlo a Filesystem.
 			if (ArchivoUtil.almacenarEnFilesystem()) {
@@ -126,10 +136,12 @@ public class ArchivoController extends FrontController {
 
 			}
 
-			//TODO:filename?
+			// TODO:filename?
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
-			responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+			responseHeaders.setContentType(MediaType.parseMediaType(archivo
+					.getMime()));
+			responseHeaders.setContentLength(new Long(archivo.getPeso())
+					.intValue());
 			return new ResponseEntity<byte[]>(archivo.getDatos(),
 					responseHeaders, HttpStatus.CREATED);
 
@@ -147,7 +159,7 @@ public class ArchivoController extends FrontController {
 		}
 
 	}
-	
+
 	private Archivo archivopub(Archivo archivo) throws IOException {
 
 		/*

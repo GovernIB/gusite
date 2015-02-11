@@ -33,15 +33,12 @@ import es.caib.gusite.front.general.bean.ResultadoBusqueda;
 import es.caib.gusite.front.microtag.MParserHTML;
 import es.caib.gusite.front.service.ContactosDataService;
 import es.caib.gusite.front.service.CorreoEngineService;
-import es.caib.gusite.front.service.NoticiasDataService;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Lineadatocontacto;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionLineadatocontacto;
-import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 
 /**
  * 
@@ -58,16 +55,15 @@ public class ContactosController extends BaseController {
 	
 
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/{lang}/contact/") 
+	@RequestMapping("{uri}/{lang}/contact/") 
 	public String listarcontactos (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
@@ -80,7 +76,7 @@ public class ContactosController extends BaseController {
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
 			BaseCriteria criteria = new BaseCriteria(filtro, pagina, ordenacion);
 			ResultadoBusqueda<Contacto> formularios = this.contactosDataService.getListadoFormularios(microsite, lang, criteria);
 
@@ -119,16 +115,15 @@ public class ContactosController extends BaseController {
 
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/contacto/") 
+	@RequestMapping("{uri}/contacto/") 
 	public String listarcontactosEs (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
@@ -137,20 +132,19 @@ public class ContactosController extends BaseController {
 					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
 					HttpServletRequest req) {
 		
-		return this.listarcontactos(siteId, new Idioma(LANG_ES), model, mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, new Idioma(LANG_ES), model, mcont, pcampa, filtro, pagina, ordenacion, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/contacte/") 
+	@RequestMapping("{uri}/contacte/") 
 	public String listarcontactosCa (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
@@ -159,20 +153,19 @@ public class ContactosController extends BaseController {
 					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
 					HttpServletRequest req) {
 		
-		return this.listarcontactos(siteId, new Idioma(LANG_CA), model, mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, new Idioma(LANG_CA), model, mcont, pcampa, filtro, pagina, ordenacion, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/contact/") 
+	@RequestMapping("{uri}/contact/") 
 	public String listarcontactosEn (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
@@ -181,22 +174,21 @@ public class ContactosController extends BaseController {
 					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
 					HttpServletRequest req) {
 		
-		return this.listarcontactos(siteId, new Idioma(LANG_EN), model, mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, new Idioma(LANG_EN), model, mcont, pcampa, filtro, pagina, ordenacion, req);
 	}
 	
 	
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/contact/{contacto}/")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/contact/{contacto}/")
 	public String contacto (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
 					@PathVariable("contacto") long idContacto,
 					Model model,
@@ -207,7 +199,7 @@ public class ContactosController extends BaseController {
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 
 			//comprobacion de microsite
@@ -244,16 +236,15 @@ public class ContactosController extends BaseController {
 
 
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/{lang}/contact/{contacto}/") 
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/{lang}/contact/{contacto}/") 
 	public String enviarContacto (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
 					@PathVariable("contacto") long idContacto,
 					Model model,
@@ -265,7 +256,7 @@ public class ContactosController extends BaseController {
 		Microsite microsite = null;
 	  	try {
 	  		
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 
 			//comprobacion de microsite
@@ -314,7 +305,6 @@ public class ContactosController extends BaseController {
 	/**
 	 * Método privado que se encarga de enviar via correo electrónico la información del formulario
 	 * @throws ExceptionFrontPagina 
-	 * @throws Exception
 	 */
 	private void enviarFormulario(Contacto contacto, Idioma lang, String mensaje, InputStream docAnex, String fileName) throws ExceptionFrontPagina {
 		
@@ -393,7 +383,7 @@ public class ContactosController extends BaseController {
 		
 	    for (Lineadatocontacto ld : contacto.getLineasdatocontacto()) {
 	        	 Pardato pardato = new Pardato();
-	        	 MParserHTML parserhtml = new MParserHTML(microsite.getRestringido());
+	        	 MParserHTML parserhtml = new MParserHTML();
 	        	 if ((ld.getTipo().equals(Contacto.RTYPE_TEXTAREA)) || (ld.getTipo().equals(Contacto.RTYPE_TEXTO))) {
 		        	 pardato.setKey(((TraduccionLineadatocontacto)ld.getTraduccion(lang.getLang())).getTexto()) ;
 		        	 if (ld.getLineas()==0) 
@@ -469,63 +459,60 @@ public class ContactosController extends BaseController {
     
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/contacto/{contacto}/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/contacto/{contacto}/") 
 	public String contactoEs (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("contacto") long idContacto,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.contacto(siteId, new Idioma(LANG_ES), idContacto, model, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_ES), idContacto, model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/contacte/{contacto}/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/contacte/{contacto}/") 
 	public String contactoCa (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("contacto") long idContacto,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.contacto(siteId, new Idioma(LANG_CA), idContacto, model, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_CA), idContacto, model, mcont, pcampa, req);
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/contact/{contacto}/") 
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/contact/{contacto}/") 
 	public String contactoEn (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("contacto") long idContacto,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 					HttpServletRequest req) {
 		
-		return this.contacto(siteId, new Idioma(LANG_EN), idContacto, model, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_EN), idContacto, model, mcont, pcampa, req);
 	}
 	
 	

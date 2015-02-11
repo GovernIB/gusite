@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.Model;
 
-import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.Pardato;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.general.bean.Tridato;
@@ -38,40 +37,36 @@ import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
 
-public abstract class BaseController extends FrontController {
+public abstract class BaseController extends FrontController { 
 	
 
 	private static Log log = LogFactory.getLog(BaseController.class);
 
 	
 
-	public Microsite loadMicrosite(String mkey, Idioma lang, Model model) throws ExceptionFrontMicro {
-		return this.loadMicrosite(mkey, lang, model, null);
+	public Microsite loadMicrosite(String uri, Idioma lang, Model model) throws ExceptionFrontMicro {
+		return this.loadMicrosite(uri, lang, model, null);
 	}
 	
 	
 	/**
 	 * Realiza las tareas que antes realizaba el constructor de Bdbase
-	 * @param mkey
+	 * @param uri
 	 * @param lang
 	 * @param model
 	 * @return 
 	 * @throws ExceptionFrontMicro 
 	 * @see 
 	 */
-	public Microsite loadMicrosite(String mkey, Idioma lang, Model model, String pcampa) throws ExceptionFrontMicro {
+	public Microsite loadMicrosite(String uri, Idioma lang, Model model, String pcampa) throws ExceptionFrontMicro {
 
 		/* El idioma ya viene fijado en la URI */
 		String idi = lang.getLang().toUpperCase();
 		model.addAttribute("MVS_idioma",idi);
 		
-		/* Por ahora no se usa, así que no lo migramos 
-		prepararStat(request);
-		*/
+		Microsite microsite = cargarSite(uri, lang, model);
 		
-		/* TODO: Por ahora usamos mkey, aunque después será el URI */
-		Microsite microsite = cargarSite(mkey, lang, model);
-		
+		//TODO: comprobar que el idioma es de los válidos para el microsite. En caso contrario habria que lanzar un 404 not found
 		cargarListaIdiomas(microsite, model);
 		
 		//cargarUA(microsite, model, lang);
@@ -90,15 +85,19 @@ public abstract class BaseController extends FrontController {
 	}
 
   
-	private Microsite cargarSite(String mkey, Idioma lang, Model model) throws ExceptionFrontMicro {
+	private Microsite cargarSite(String uri, Idioma lang, Model model) throws ExceptionFrontMicro {
 
 		Microsite microsite = null;
     	try {
     		DelegateBase _delegateBase = new DelegateBase();
-    		microsite = _delegateBase.obtenerMicrositebyKey(mkey, lang.getLang());
+    		microsite = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
 			
 	    	if ( microsite == null) {
 	    		throw new ExceptionFrontMicro(" [Configuracion microsite]: Se debe indicar algún microsite");
+	    	}
+	    	
+	    	if (!"S".equals(microsite.getVisible())) {
+	    		throw new ExceptionFrontMicro(" [Configuracion microsite]: El site no es visible");
 	    	}
 
     	} catch (DelegateException e) {
@@ -121,6 +120,15 @@ public abstract class BaseController extends FrontController {
     	String titulo_mic = ((TraduccionMicrosite)microsite.getTraduccion(lang.getLang()) != null) ? ((TraduccionMicrosite)microsite.getTraduccion(lang.getLang())).getTitulo() : "&nbsp;";
     	model.addAttribute("MVS_micrositetitulo", titulo_mic );
     	
+    	String descripcion_mic=((TraduccionMicrosite)microsite.getTraduccion(lang.getLang()) != null) ? ((TraduccionMicrosite)microsite.getTraduccion(lang.getLang())).getDescription() : "&nbsp;";
+    	model.addAttribute("MVS_micrositedescription", descripcion_mic );
+    	
+    	String keywords_mic=((TraduccionMicrosite)microsite.getTraduccion(lang.getLang()) != null) ? ((TraduccionMicrosite)microsite.getTraduccion(lang.getLang())).getKeywords() : "&nbsp;";
+    	model.addAttribute("MVS_micrositekeywords", keywords_mic );
+    	
+    	String analytics_mic=((TraduccionMicrosite)microsite.getTraduccion(lang.getLang()) != null) ? microsite.getAnalytics() : "&nbsp;";
+    	model.addAttribute("MVS_micrositeanalytics", analytics_mic );
+    	
     	/* TODO: Esto lo hace de modo poco elegante. Investigar cómo previsualizar
     	//chequear la visibilidad del site
 	    String previ= ""+request.getSession().getAttribute("previsualiza");
@@ -133,15 +141,6 @@ public abstract class BaseController extends FrontController {
 	   	}
 	   	*/
 	    
-	    /* TODO: hacerlo en un "listener" de sesión
-	   //guardar la estadistica de visita
-	    if (guardoStatSesion) {
-	    	request.getSession().getServletContext().setAttribute("bufferStats", 
-					StatManager.grabarestadistica(microsite,publico, 
-							(List<Estadistica>) request.getSession().getServletContext().getAttribute("bufferStats")));
-	    }
-	    */
-    	
     	return microsite;
 	}
 
@@ -182,60 +181,7 @@ public abstract class BaseController extends FrontController {
 		}
 	}
 	
-
-	/**
-	 * Carga en el modelo la unidad administrativa. MVS_ua
-	 * Este método componía un tag <a> completo (montarLinkUA, en realidad) que no tiene sentido en el controlador 
-	 * @param request
-	private void cargarUA(Microsite microsite, Model model, Idioma lang) throws ExceptionFrontMicro {
-		try {
-		    Iterator<IdiomaMicrosite> iter = microsite.getIdiomas().iterator();
-		    String tmpidioma="";
-		    while (iter.hasNext()) {
-		    	String uacompleta = "";
-		    	tmpidioma = ((IdiomaMicrosite)iter.next()).getId().getCodigoIdioma().toLowerCase();
-    			uacompleta=montarLinkUA(microsite, tmpidioma).toString();
-		    	model.addAttribute("MVS_ua"+tmpidioma,uacompleta);
-
-		    	if (tmpidioma.equals(lang.getLang())) {
-		    		model.addAttribute("MVS_ua",uacompleta);
-		    		break;
-		    	}
-	        }
-
-		} catch (DelegateException e) {
-			throw new ExceptionFrontMicro(this + " [prepararua]: " + e.getMessage());				
-		}
-	}		
-	 */
 	
-
-	/**
-	 * Comprueba si si ha accedido desde la intranet o publicamente.
-	 * @param request
-	 * @throws Exception
-	 * 
-	 * TODO: por ahora no se usa, así que no lo migramos
-	 
-	private void prepararStat(HttpServletRequest request) throws Exception  {
-		
-		//String elHost = request.getServerName();
-    	//String value = System.getProperty("es.indra.caib.rolsac.oficina");
-    	
-        //if ((value == null) || value.equals("N"))
-        //	elHost = Microfront._HOSTCAIB;
-		//
-		
-		// Si se ha logado se considera intranet, fichero de apache conf ProxyPass invalida forma anterior 
-		if (request.getHeader("Authorization") == null)
-			publico = Integer.parseInt(Microfront._DMZ_PUBLICO);
-		else
-			publico = Integer.parseInt(Microfront._DMZ_INTRANET);
-			
-	}
-	*/
-	
-
 	/**
 	 * Mete en sesión el css. MVS_css
 	 * @param request
@@ -243,19 +189,12 @@ public abstract class BaseController extends FrontController {
 	 */
 	private void cargarCss(Microsite microsite, Model model) throws ExceptionFrontMicro  {
 		//MCR v1.1
-		MParserHTML parserhtml = new MParserHTML(microsite.getRestringido());
-		if (microsite.getRestringido().equals("S")) {
-			model.addAttribute("MVS_css",parserhtml.tagCSS(null, null, null));
-			
+		MParserHTML parserhtml = new MParserHTML();
+		if (microsite.getEstiloCSS()!=null) {
+			model.addAttribute("MVS_css",parserhtml.tagCSS(microsite.getId(), microsite.getEstiloCSS().getId(), microsite.getEstiloCSSPatron()) );
 		} else {
-			if (microsite.getEstiloCSS()!=null) {
-				model.addAttribute("MVS_css",parserhtml.tagCSS(microsite.getId(), microsite.getEstiloCSS().getId(), microsite.getEstiloCSSPatron()) );
-			} else {
-				model.addAttribute("MVS_css",parserhtml.tagCSS(null, null,microsite.getEstiloCSSPatron()));
-			}
-			
+			model.addAttribute("MVS_css",parserhtml.tagCSS(null, null,microsite.getEstiloCSSPatron()));
 		}
-		
 	}
 	
 	/**
@@ -505,7 +444,7 @@ public abstract class BaseController extends FrontController {
 		
 		//String pcampa=""+getParameter(Microfront.PCAMPA);
 		if (pcampa != null && pcampa.equals("yes")) {
-			MParserHTML parserhtml = new MParserHTML(microsite.getRestringido());
+			MParserHTML parserhtml = new MParserHTML();
 			String tagHtmlTmpCampaya=parserhtml.getHtmlCampanya(microsite,lang.getLang()).toString();
 			if (tagHtmlTmpCampaya.length()>1) model.addAttribute("MVS_home_tmp_campanya",tagHtmlTmpCampaya);
 		}
@@ -634,57 +573,4 @@ public abstract class BaseController extends FrontController {
 	}
 
 
-	
-    /**
-     * Metodo protegido que devuelve String de error de contenido de un site
-     * @param HttpServletRequest request, Microsite microsite, ErrorMicrosite errorMicrosite
-     * @exception Exception
-     */
-	protected String getForwardError(Microsite microsite, Idioma lang, Model model, String ambitError) {
-	     
-		   ErrorMicrosite errorMicrosite;
-			
-		   if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
-		  	   
-			  if(microsite != null) {
-		  	   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId());
-			  } else {
-				  errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL);
-			  }
-			  model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }	   
-		   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
-			   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
-			   model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }
-		   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
-			   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG);
-			   model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }
-		   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
-			   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG);
-			   model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }
-		   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
-			   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG);
-			   model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }	   
-		   else {
-			   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
-			   model.addAttribute("MVS_errparam", errorMicrosite); 
-		   }
-		     	   
-		   //TODO: por qué se fijan estos atributos de microsite?
-		   microsite.setRestringido("N");
-	  	   microsite.setTipocabecera("1");	
-	  	   
-	  	   model.addAttribute("MVS_microsite", microsite); 
-	  	   
-	  	   model.addAttribute("MVS_idioma", lang.getLang());
-	  	   
-	  	   return this.templateNameFactory.errorGenerico(microsite);
-			
-	}
-
-	
 }

@@ -32,21 +32,20 @@ public class FaqController extends BaseController {
 	private static Log log = LogFactory.getLog(FaqController.class);
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/{lang}/faq") 
+	@RequestMapping("{uri}/{lang}/faq") 
 	public String listarfaqs (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) {
 		Microsite microsite = null;
 	  	try {
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
      		
 			cargarFaq(microsite, model, lang);
 			cargarMollapan(microsite, model, lang);
@@ -65,18 +64,17 @@ public class FaqController extends BaseController {
 
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{mkey}/faq") 
+	@RequestMapping("{uri}/faq") 
 	public String home (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					Model model,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa) {
 		//TODO: implementar negociación de idioma y, tal vez, redireccionar en lugar de aceptar la uri.
-		return listarfaqs(siteId, DEFAULT_IDIOMA, model, pcampa);
+		return listarfaqs(URI, DEFAULT_IDIOMA, model, pcampa);
 
 	}
 

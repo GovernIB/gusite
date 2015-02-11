@@ -5,7 +5,7 @@ Este código es el contenido que necesita la HOME
 
 Variables: 
 	MVS_microsite: devuelve un microsite a partir de su clave unica
-	MVS_home_datos_calendario_agenda: devuelve los datos del calendario de la HOME
+	MVS_datos_agenda_calendario: devuelve los datos del calendario de la HOME
 	MVS_home_datos_noticias_listado: devuelve el listado de noticias
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -30,11 +30,11 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			id="" class="tamanoIndex">
 			<div id="contenedorIndex" class="menuAccessibilitat">
 				<div class="menuLateral2">
-					<!--MVS_home_datos_calendario_agenda devuelve los datos del calendario de la HOME-->	
-					<div th:if="${MVS_home_datos_calendario_agenda} !=null"
+					<!--MVS_datos_agenda_calendario devuelve los datos del calendario de la HOME-->	
+					<div th:if="${MVS_datos_agenda_calendario} !=null"
 						th:remove="tag">
 						<div
-							th:remove="(${MVS_home_datos_calendario_agenda}=='-1')==true ? all : tag">
+							th:remove="(${MVS_datos_agenda_calendario}=='-1')==true ? all : tag">
 							<br /> <br />
 							<div class="col-md-5 column" th:remove="tag">
 								<div id="agenda">
@@ -53,8 +53,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 						<div
 							th:remove="(${MVS_home_datos_noticias_listado}=='-1')==true ? all : tag">
 							<div class="col-md-7 column" th:remove="tag">
-								<div th:replace="noticiasListado :: noticias">Noticias
-									Listado</div>
+								<div th:replace="noticiasListado :: noticias">Noticias Listado</div>
 							</div>
 						</div>
 					</div>	

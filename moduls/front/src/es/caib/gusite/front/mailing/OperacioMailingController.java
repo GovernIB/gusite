@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
-import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.service.CorreoEngineService;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.ListaDistribucion;
@@ -40,17 +40,15 @@ public class OperacioMailingController extends BaseController {
 	List listaDistrib = null;
 
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */	
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/msggenerico/")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/msggenerico/")
 	public String mailing(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
 			Model model,
 			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
@@ -59,7 +57,7 @@ public class OperacioMailingController extends BaseController {
 
 	  	ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", req.getLocale());
 		try {
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 			//bdSuscripcion constructor
 			try {
 				_delegateBase = new DelegateBase();

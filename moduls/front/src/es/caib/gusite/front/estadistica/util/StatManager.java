@@ -4,12 +4,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-
-
-
-
-
-
 import es.caib.gusite.front.general.Front;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Agenda;

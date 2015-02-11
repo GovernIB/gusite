@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.gusite.microback.utils.Cadenas;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -55,11 +56,10 @@ public class contenidosEditaAction extends BaseAction
 	
 	protected static Log log = LogFactory.getLog(contenidosEditaAction.class);
 
-	
-    public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
-    		HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    	ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
+	public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
     	MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
     	MenuDelegate menuDelegate = DelegateUtil.getMenuDelegate();
     	
@@ -70,68 +70,82 @@ public class contenidosEditaAction extends BaseAction
     	//Metemos en el request el CSS que utilizará el tinymce
     	request.setAttribute("MVS_css_tiny",tagCSS(micrositeBean.getEstiloCSS(),micrositeBean.getEstiloCSSPatron()));
     	
- 		try {    	
-			
- 		if 	((String)request.getParameter("accion") != null) {
- 			
- 			//Volcamos los datos del formulario al Bean de contenido
- 			contenido = setFormtoBean(request, contenidoForm, micrositeBean);	
- 			
-     		if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.traducir"))) 
-     			//Traducimos el Contenido
-     			traducir (request, contenidoForm);
-	     	 
-     		else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar"))) {
+ 		try {
+			if 	((String) request.getParameter("accion") != null) {
 
-	     		 //Guardamos y reordenamos el árbol de menús
-	         	contenidoDelegate.grabarContenido(contenido);
-				micrositeDelegate.grabarUltimoIdcontenido(micrositeBean,contenido.getId());
-	     		
-				//Pasamos el testeo W3C
-				if (!pasaTesteoW3C(request, contenido)) return mapping.findForward("info"); 
-			    //Añaadimos mensajes de Información
-			    setMensajesInfo(request, contenidoForm);
-				
-			    contenidoForm.set("orden", contenido.getOrden());
-			    contenidoForm.set("id", contenido.getId());
-	     	 
-	     	 } else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
-	     		//Borramos y reordenamos el árbol de menús
-	         	contenidoDelegate.borrarContenido(contenido.getId());
-	       		menuDelegate.Reordena(contenido.getOrden(), 'b', micrositeBean.getId());
+				//Volcamos los datos del formulario al Bean de contenido
+				contenido = setFormtoBean(request, contenidoForm, micrositeBean);
 
-	    	   	//request.getSession().removeAttribute("contenidoForm");
-	    		//request.removeAttribute("contenidoForm");
-	    		contenidoForm.resetForm(mapping, request);
-	    	   	String idmenu=""+contenido.getMenu().getId();
-	    	   	request.setAttribute("menu", idmenu );
-	    	   	request.setAttribute("migapan", contenidoDelegate.migapan(idmenu,null) );
-	    	   	setMensajesInfo(request, contenidoForm);
+				if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.traducir"))) {
+					//Traducimos el Contenido
+					traducir (request, contenidoForm);
+				}
 
-	     		return mapping.findForward("detalle"); 
-	     	 
-	     	 }
-	     	 
- 		} else { 
- 				//Volcamos los datos del Bean de contenido al formulario
-	     		contenido = setBeantoForm (request, contenidoForm, micrositeBean);
-	    }
-    	
- 		request.setAttribute("listaDocs", contenidoDelegate.listarDocumentos(micrositeBean.getId().toString(), ""+contenido.getId()));
-        request.getSession().setAttribute("migapan", contenidoDelegate.migapan(""+contenido.getMenu().getId(),contenido.getId()) );
-    	//vrs: anyadido para saber migapan de la url
-    	request.setAttribute("MVS_HS_URL_migapan",hashMigaPan(contenido));
-    	request.setAttribute("contenidoForm", contenidoForm);
-		//Refresco de parámetro MVS de menú
-		Base.menuRefresh(request);
+				else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar"))) {
 
-    	return mapping.findForward("detalle");    
-    	
- 		} catch (Exception e) {
-        	addMessageError(request, "peticion.error");
+					//Guardamos y reordenamos el árbol de menús
+					List<String> eliminar = new ArrayList<String>();
+					for (TraduccionContenido trad : contenido.getTraducciones().values()) {
+						if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
+							eliminar.add(trad.getId().getCodigoIdioma());
+						} else if (trad.getUri().equals("")) {
+							trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+						}
+					}
+					for (String key : eliminar) {
+						contenido.getTraducciones().remove(key);
+					}
+
+					contenidoDelegate.grabarContenido(contenido);
+					micrositeDelegate.grabarUltimoIdcontenido(micrositeBean,contenido.getId());
+
+					//Pasamos el testeo W3C
+					if (!pasaTesteoW3C(request, contenido)) {
+						return mapping.findForward("info");
+					}
+
+					//Añaadimos mensajes de Información
+					setMensajesInfo(request, contenidoForm);
+
+					contenidoForm.set("orden", contenido.getOrden());
+					contenidoForm.set("id", contenido.getId());
+
+					} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
+
+					//Borramos y reordenamos el árbol de menús
+					contenidoDelegate.borrarContenido(contenido.getId());
+					menuDelegate.Reordena(contenido.getOrden(), 'b', micrositeBean.getId());
+
+					//request.getSession().removeAttribute("contenidoForm");
+					//request.removeAttribute("contenidoForm");
+					contenidoForm.resetForm(mapping, request);
+					String idmenu = "" + contenido.getMenu().getId();
+					request.setAttribute("menu", idmenu );
+					request.setAttribute("migapan", contenidoDelegate.migapan(idmenu, null));
+					setMensajesInfo(request, contenidoForm);
+
+					return mapping.findForward("detalle");
+				}
+
+			} else {
+				//Volcamos los datos del Bean de contenido al formulario
+				contenido = setBeantoForm(request, contenidoForm, micrositeBean);
+	    	}
+
+			request.setAttribute("listaDocs", contenidoDelegate.listarDocumentos(micrositeBean.getId().toString(), "" + contenido.getId()));
+			request.getSession().setAttribute("migapan", contenidoDelegate.migapan("" + contenido.getMenu().getId(), contenido.getId()));
+			//vrs: anyadido para saber migapan de la url
+			request.setAttribute("MVS_HS_URL_migapan", hashMigaPan(contenido));
+			request.setAttribute("contenidoForm", contenidoForm);
+			//Refresco de parámetro MVS de menú
+			Base.menuRefresh(request);
+
+			return mapping.findForward("detalle");
+
+		} catch (Exception e) {
+			addMessageError(request, "peticion.error");
  			return mapping.findForward("info");
  		}
-
     }
  
     /**
@@ -197,6 +211,8 @@ public class contenidosEditaAction extends BaseAction
     				contenido.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setTitulo(llista.get(i).getTitulo());
     				contenido.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setTxbeta(llista.get(i).getTxbeta());
     				contenido.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setUrl(llista.get(i).getUrl());
+    				contenido.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setUri(llista.get(i).getUri());
+    				
     			} else {
     				TraduccionContenido traduccio = new TraduccionContenido();
 //    				traduccio.setContenido(contenido);
@@ -205,7 +221,8 @@ public class contenidosEditaAction extends BaseAction
     				traduccio.setTitulo(llista.get(i).getTitulo());
     				traduccio.setTxbeta(llista.get(i).getTxbeta());
     				traduccio.setUrl(llista.get(i).getUrl());
-    				
+    				traduccio.setUri(llista.get(i).getUri());
+    		
     				contenido.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);
     			}
     		}

@@ -9,7 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-
+import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micropersistence.intf.TipoFacade;
 import es.caib.gusite.micropersistence.intf.TipoFacadeHome;
@@ -93,7 +93,20 @@ public class TipoDelegate implements StatelessDelegate {
             throw new DelegateException(e);
         }
     }
- 
+    
+    /**
+     * Obtiene un tipo a partir de la uri
+     * @return Tipo
+     * @throws DelegateException
+     */
+    public Tipo obtenerTipoDesdeUri(String idioma, String uri) throws DelegateException {
+        try {
+            return getFacade().obtenerTipoDesdeUri(idioma, uri);
+        } catch (RemoteException e) {
+            throw new DelegateException(e);
+        }
+    }
+    
     /**
      * Obtiene los valores del dominio
      * @param id Id de un tipo

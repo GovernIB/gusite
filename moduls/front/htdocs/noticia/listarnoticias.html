@@ -73,6 +73,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 									<div th:if="${elementoListado.imagen} ==null" th:remove="tag">
 										<img th:src="@{/resources/imgs/noticies/news.gif}" alt=""
 											align="middle" />
+											
 									</div>
 									<div th:if="${elementoListado.fpublicacion}!=null"
 										th:with="anoPublicacion=${#strings.substring(elementoListado.fpublicacion,0,4)},mesPublicacion=${#strings.substring(elementoListado.fpublicacion,5,7)},diaPublicacion=${#strings.substring(elementoListado.fpublicacion,8,10)},publicacionFecha=${#calendars.create(anoPublicacion,mesPublicacion,diaPublicacion)},publicacion=${#calendars.format(publicacionFecha, 'dd/MM/yyyy')}"

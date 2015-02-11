@@ -20,21 +20,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import es.caib.gusite.front.general.BaseController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
-import es.caib.gusite.front.general.Front;
+import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
-import es.caib.gusite.front.general.FrontController.SiteId;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
-import es.caib.gusite.front.microtag.MParserEncuesta;
 import es.caib.gusite.front.service.EncuestasDataService;
 import es.caib.gusite.front.util.Fechas;
-import es.caib.gusite.front.estadistica.util.StatManager;
 import es.caib.gusite.micromodel.Encuesta;
-import es.caib.gusite.micromodel.Estadistica;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Pregunta;
@@ -43,14 +38,12 @@ import es.caib.gusite.micromodel.RespuestaDato;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.UsuarioEncuesta;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
-import es.caib.gusite.micromodel.UsuarioPropietarioRespuestaPK;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.RespuestaDatoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioEncuestaDelegate;
 import es.caib.loginModule.client.SeyconPrincipal;
-import es.caib.gusite.front.encuesta.ParserHtmlJavascript;
 
 
 @Controller
@@ -58,50 +51,42 @@ public class EncuestasController extends BaseController {
 
 	private static Log log = LogFactory.getLog(EncuestasController.class);
 	
-	
 	@Autowired
 	protected EncuestasDataService encuestasDataService;
-
+	
 	/**
-	 * TODO: mkey debería ser el uri del site TODO: tipo debería ser el
-	 * nemotecnico del tipo
 	 * 
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/encuesta/{encuesta}/")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/encuesta/{uriEncuesta}")
 	public String encuesta(
-			@PathVariable("mkey") SiteId siteId, 
+			@PathVariable("uri") SiteId URI, 
 			@PathVariable("lang") Idioma lang,
-			@PathVariable("encuesta") long idEncuesta,
+			@PathVariable("uriEncuesta") String uriEncuesta,
 			Model model,
 			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 			@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
 			HttpServletRequest req) {
 		
-		
-		 boolean error = false;
-		 boolean ensesion = false;
-
+		boolean error = false;
+		boolean ensesion = false;
 		Microsite microsite = null;
 
 		try {
-
 			if (estaEnMantenimiento()) {
 				model.addAttribute("MVS_manteniment", new Object());
-
 			}
 
-			microsite = super.loadMicrosite(siteId.mkey, lang, model, pcampa);
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 
 			// Sustitución función procesaSesion(); de BdEncuesta
 			try {
-
 				String vsesion = ""
 						+ req.getSession().getAttribute(
-								"MVS_encuestarellena" + idEncuesta);
+								"MVS_encuestarellena" + uriEncuesta);
 				if (vsesion.equals("yes"))
 					ensesion = true;
 			} catch (Exception e) {
@@ -110,9 +95,7 @@ public class EncuestasController extends BaseController {
 			}
 			// hasta aqui funcion procesSesion(); de BdEncuesta
 
-			Encuesta encuesta = this.encuestasDataService.getEncuestas(
-					microsite, lang, idEncuesta);
-
+			Encuesta encuesta= this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
 			// //Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute(
 					"MVS_encuestarellena" + encuesta.getId().toString());
@@ -147,7 +130,6 @@ public class EncuestasController extends BaseController {
 				return getForwardError(microsite, lang, model,
 						ErrorMicrosite.ERROR_AMBIT_PAGINA);
 			}
-
 			// o bien comprobacion de que esté vigente
 			if (!Fechas.vigente(encuesta.getFpublicacion(),
 					encuesta.getFcaducidad())) {
@@ -171,21 +153,17 @@ public class EncuestasController extends BaseController {
 					Respuesta respuesta = (Respuesta) iter2.next();
 					respuesta.setIdi(lang.getLang());
 				}
-
 			}
-
 			// si llegamos aqui.... todo ok, así que grabamos la estadistica
 			if (error==false) {
 			if ("no".equals("" + req.getSession().getAttribute("MVS_stat"))) {
 				log.info("Skip Estadistica, preview conten");
 			}
 			}
-
 			model.addAttribute("MVS_encuesta", encuesta);
 			
 			if (ensesion==true) {
-				return this.enviarEncuesta(siteId, lang, idEncuesta, model, mcont, pcampa, req);
-	    		
+				return this.enviarEncuesta(URI, lang, uriEncuesta, model, mcont, pcampa, req);
 	    	}
 
 			if (encuesta.getIdentificacion().equals("S")) {
@@ -195,15 +173,12 @@ public class EncuestasController extends BaseController {
 				} catch (Exception e) {
 					log.error("Error en la identificación del usuario en la encuesta: "
 							+ encuesta.getId() + " ---> " + e);
-
 					return getForwardError(microsite, lang, model,
 							ErrorMicrosite.ERROR_AMBIT_ACCES);
 				}
 			}
-			
-			
 			//JAVASCRIPT ENCUESTAS INTRODUCIDO DESDE JAVA EN UNA VARIABLE CON LA NUEVA CLASE (SOLO JAVASCRIPT, PERO HAY QUE ADAPTARLO)
-//			ParserHtmlJavascript parsehtml=new ParserHtmlJavascript(microsite.getRestringido());
+//			ParserHtmlJavascript parsehtml=new ParserHtmlJavascript();
 //			StringBuffer sb1 = parsehtml.getHtmlEncuesta(
 //	    			req,
 //	    			encuesta.getIdmicrosite(),
@@ -213,7 +188,7 @@ public class EncuestasController extends BaseController {
 //	    	req.setAttribute("MVS_htmlEncuestaParsed",sb1);
 			
 	    	//HTML Y JAVASCRIPT ENCUESTAS INTRODUCIDO DESDE JAVA EN UNA VARIABLE CON LA CLASE ANTIGUA
-//			MParserEncuesta parser = new MParserEncuesta(microsite.getRestringido());
+//			MParserEncuesta parser = new MParserEncuesta();
 //	    	StringBuffer sb = parser.getHtmlEncuesta(
 //	    			req,
 //	    			encuesta.getIdmicrosite(),
@@ -222,11 +197,8 @@ public class EncuestasController extends BaseController {
 //				);
 //	    	req.setAttribute("MVS_htmlEncuestaParsed",sb);
 	    	
-	    	
-			
 			ResourceBundle rb =	ResourceBundle.getBundle("ApplicationResources_front", new Locale(lang.getLang().toUpperCase(), lang.getLang().toUpperCase()));
 			
-						
 				// u91856 29/06/2011 Respostes que venen donades fixes
 				Map param = (req==null)?null:(HashMap)req.getSession().getAttribute(Microfront.ENCPARAM);
 				if (param == null){
@@ -235,7 +207,6 @@ public class EncuestasController extends BaseController {
 				else{ 
 					req.getSession().removeAttribute(Microfront.ENCPARAM);	
 				}
-				
 				//Comprobar si funciona correctamente
 				model.addAttribute("MVS_mapRespostesFixades", param);
 				
@@ -248,7 +219,7 @@ public class EncuestasController extends BaseController {
 						String identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}",principal.getFullName());
 						model.addAttribute("MVS_identificacion", identificacio);
 					} catch (Exception e) {
-						log.error("Error en la identificación del usuario en la encuesta: " + idEncuesta + " ---> " + e);
+						log.error("Error en la identificación del usuario en la encuesta: " + uriEncuesta + " ---> " + e);
 						return getForwardError(microsite, lang, model,
 								ErrorMicrosite.ERROR_AMBIT_ACCES);
 //						throw new Exception("Error en la identificación del usuario");
@@ -256,37 +227,33 @@ public class EncuestasController extends BaseController {
 	    		}else{
 	    			//retorno.append(rb.getString("encuesta.anonima"));
 	    		}
-			
-
 			cargarMollapan(microsite, model, lang, encuesta);
 
 			return this.templateNameFactory.encuesta(microsite);
 
-		} catch (DelegateException e) {
-			log.error(e.getMessage());
-			return getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
 			return getForwardError(microsite, lang, model,
 					ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			return getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 	}
 	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-
-	@RequestMapping(method=RequestMethod.POST,value="{mkey}/{lang}/envioencuesta/{encuesta}/")
+	@RequestMapping(method=RequestMethod.POST,value="{uri}/{lang}/envioencuesta/{uriEncuesta}/")
 	public String enviarEncuesta (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
-					@PathVariable("encuesta") long idEncuesta,
+					@PathVariable("uriEncuesta") String uriEncuesta,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,					
@@ -297,7 +264,6 @@ public class EncuestasController extends BaseController {
 		boolean ensesion = false;
 		Microsite microsite = null;
 	  	try {
-	  		
 	  		//sustitucion procesaSesion(); de BdEnvioEncuesta.java
 	  		String idencuesta = "" + req.getParameter(Microfront.PCONT);
 			String solover = "" + req.getParameter(Microfront.PVIEW);
@@ -306,8 +272,8 @@ public class EncuestasController extends BaseController {
 			if (solover.equals("yes")) ensesion=true;
 			//hasta aqui
 			
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
-			Encuesta encuesta = this.encuestasDataService.getEncuestas(microsite, lang, idEncuesta);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
+			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
 			
 			//Canvi Salvador 05/10/2010
 			String encuestaRellena=(String)req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
@@ -331,7 +297,6 @@ public class EncuestasController extends BaseController {
 					String cuerpomensaje="\n";
 					EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
 					RespuestaDatoDelegate resdatdel = DelegateUtil.getRespuestaDatoDelegate();
-					
 					Enumeration<?> paramNames = req.getParameterNames();
 			
 					//idioma
@@ -360,7 +325,6 @@ public class EncuestasController extends BaseController {
 				    
 				    UsuarioPropietarioRespuesta upm = new UsuarioPropietarioRespuesta ();
 				    UsuarioEncuestaDelegate encu = DelegateUtil.getUsuarioEncuestaDelegate();
-				    
 				    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 				    			      
 				    while (paramNames.hasMoreElements())  {
@@ -459,10 +423,8 @@ public class EncuestasController extends BaseController {
 				    	Respuesta respuesta = (Respuesta)iter2.next();
 				    	respuesta.setIdi(lang.getLang());
 				    }
-			    	
 			    }
 			    //hasta aqui traduce encuesta
-	
 			    
 			 // si llegamos aqui.... todo ok, así que grabamos la estadistica
 			    if (error==false) {
@@ -473,7 +435,6 @@ public class EncuestasController extends BaseController {
 				//hasta aqui recogerencuesta();
 								
 			} else {
-				
 				//sustitucion recogerencuesta(); de BdEnvioencuesta.java	
 				//comprobacion de microsite
 				if (encuesta.getIdmicrosite().longValue()!=microsite.getId().longValue()) {
@@ -502,11 +463,8 @@ public class EncuestasController extends BaseController {
 				    	Respuesta respuesta = (Respuesta)iter2.next();
 				    	respuesta.setIdi(lang.getLang());
 				    }
-			    	
 			    }
 			    //hasta aqui traduce encuesta
-	
-			    
 			 // si llegamos aqui.... todo ok, así que grabamos la estadistica
 			    if (error==false) {
 				if ("no".equals("" + req.getSession().getAttribute("MVS_stat"))) {
@@ -514,54 +472,49 @@ public class EncuestasController extends BaseController {
 				}
 			    }
 				//hasta aqui recogerencuesta();
-				
 			}
 
 			req.setAttribute("MVS_encuesta_entera",((entera==true)?"entera":"componente"));
 			model.addAttribute("MVS_encuesta",encuesta);
-
+			
 		    cargarMollapan(microsite, model, lang, encuesta);
-		
 
 		    return this.templateNameFactory.envioEncuesta(microsite);
 
-	
         } catch (DelegateException e) {
         	log.error(e.getMessage());
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			return getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
-
 	}
-
+	
 	protected boolean estaEnMantenimiento() {
 		String mantenimiento = System
 				.getProperty("es.caib.gusite.mantenimiento");
 		return null != mantenimiento && "si".equalsIgnoreCase(mantenimiento);
 	}
 
-	
 	/**
-	 * TODO: mkey debería ser el uri del site
 	 * TODO: tipo debería ser el nemotecnico del tipo
 	 * @param lang
-	 * @param mkey
+	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	//@RequestMapping(method = {RequestMethod.POST, RequestMethod.GET},value="{mkey}/{lang}/envioencuesta/{encuesta}/")
-	@RequestMapping(method=RequestMethod.GET,value="{mkey}/{lang}/resultados/{encuesta}/")
+	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/resultados/{uriEncuesta}/")
 	public String resultadoEncuestas (
-					@PathVariable("mkey") SiteId siteId, 
+					@PathVariable("uri") SiteId URI, 
 					@PathVariable("lang") Idioma lang,
-					@PathVariable("encuesta") long idEncuesta,
+					@PathVariable("uriEncuesta") String uriEncuesta,
 					Model model,
 					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
 					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,					
 					HttpServletRequest req) {
-		
 		
 		boolean error = false;
 		boolean entera = true;
@@ -577,8 +530,8 @@ public class EncuestasController extends BaseController {
 			if (solover.equals("yes")) ensesion=true;
 			//hasta aqui
 			
-		  	microsite =  super.loadMicrosite(siteId.mkey, lang, model, pcampa);
-			Encuesta encuesta = this.encuestasDataService.getEncuestas(microsite, lang, idEncuesta);
+		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
+			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
 			
 			//Canvi Salvador 05/10/2010
 			String encuestaRellena=(String)req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
@@ -601,8 +554,7 @@ public class EncuestasController extends BaseController {
 					
 					String cuerpomensaje="\n";
 					EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
-					RespuestaDatoDelegate resdatdel = DelegateUtil.getRespuestaDatoDelegate();
-					
+					RespuestaDatoDelegate resdatdel = DelegateUtil.getRespuestaDatoDelegate();	
 					Enumeration<?> paramNames = req.getParameterNames();
 			
 					//idioma
@@ -630,8 +582,7 @@ public class EncuestasController extends BaseController {
 				    }
 				    
 				    UsuarioPropietarioRespuesta upm = new UsuarioPropietarioRespuesta ();
-				    UsuarioEncuestaDelegate encu = DelegateUtil.getUsuarioEncuestaDelegate();
-				    
+				    UsuarioEncuestaDelegate encu = DelegateUtil.getUsuarioEncuestaDelegate();				
 				    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 				    			      
 				    while (paramNames.hasMoreElements())  {
@@ -730,19 +681,16 @@ public class EncuestasController extends BaseController {
 				    	Respuesta respuesta = (Respuesta)iter2.next();
 				    	respuesta.setIdi(lang.getLang());
 				    }
-			    	
 			    }
 			    //hasta aqui traduce encuesta
 	
-			    
 			 // si llegamos aqui.... todo ok, así que grabamos la estadistica
 			    if (error==false) {
 				if ("no".equals("" + req.getSession().getAttribute("MVS_stat"))) {
 					log.info("Skip Estadistica, preview conten");
 				}
 			    }
-				//hasta aqui recogerencuesta();
-								
+				//hasta aqui recogerencuesta();				
 			} else {
 				
 				//sustitucion recogerencuesta(); de BdEnvioencuesta.java	
@@ -772,11 +720,9 @@ public class EncuestasController extends BaseController {
 				    	
 				    	Respuesta respuesta = (Respuesta)iter2.next();
 				    	respuesta.setIdi(lang.getLang());
-				    }
-			    	
+				    }	
 			    }
 			    //hasta aqui traduce encuesta
-	
 			    
 			 // si llegamos aqui.... todo ok, así que grabamos la estadistica
 			    if (error==false) {
@@ -785,27 +731,24 @@ public class EncuestasController extends BaseController {
 				}
 			    }
 				//hasta aqui recogerencuesta();
-			   
 			}
-
 			req.setAttribute("MVS_encuesta_entera",((entera==true)?"entera":"componente"));
 			model.addAttribute("MVS_encuesta",encuesta);
 
 		    cargarMollapan(microsite, model, lang, encuesta);
-		
-		    
-
+				    
 		    return this.templateNameFactory.envioEncuesta(microsite);
 		 
-	
         } catch (DelegateException e) {
         	log.error(e.getMessage());
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
         } catch (ExceptionFrontMicro e) {
         	log.error(e.getMessage());
         	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			return getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}      
-
 	}
 
 	/**
@@ -818,26 +761,20 @@ public class EncuestasController extends BaseController {
 	 * @return
 	 * @return string recorrido en el microsite
 	 */
-
 	private void cargarMollapan(Microsite microsite, Model model, Idioma lang,
 			Encuesta encuesta) {
 
 		List<PathItem> path = super.getBasePath(microsite, model, lang);
-
 		String titulo = ((TraduccionEncuesta)encuesta.getTraduccion(encuesta.getIdi())).getTitulo();
-
 		path.add(new PathItem(titulo, this.urlFactory.encuesta(microsite, lang,
 				encuesta)));
 
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
-
 	}
-
+	
 	@Override
 	public String setServicio() {
-		// TODO Auto-generated method stub
 		return Microfront.RENCUESTA;
 	}
-
 }

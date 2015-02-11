@@ -8,30 +8,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.gusite.micromodel.*;
+import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.struts.action.ActionForm;
 
 import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.actionform.busca.BuscaOrdenaEstadisticaIndActionForm;
 import es.caib.gusite.microback.base.bean.Pardato;
-import es.caib.gusite.micromodel.Agenda;
-import es.caib.gusite.micromodel.Contacto;
-import es.caib.gusite.micromodel.Contenido;
-import es.caib.gusite.micromodel.Encuesta;
-import es.caib.gusite.micromodel.EstadisticaGroup;
-import es.caib.gusite.micromodel.Idioma;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.Noticia;
-import es.caib.gusite.micromodel.TraduccionAgenda;
-import es.caib.gusite.micromodel.TraduccionContenido;
-import es.caib.gusite.micromodel.TraduccionEncuesta;
-import es.caib.gusite.micromodel.TraduccionNoticia;
-import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
-import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
-import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
-import es.caib.gusite.micropersistence.delegate.EstadisticaGroupDelegate;
-import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 
 
 /**
@@ -182,16 +165,16 @@ public class Bdestadisticasind {
 		  }
 	  }
 
-	 /**
+	/**
 	 * Método que pone los nombres de los servicios activos de un microsite en una lista
-	 */	
-	  private void ponernombreslista() {
-		  
-			  AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
-			  NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
-			  ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
-			  ContactoDelegate contactodel = DelegateUtil.getContactoDelegate();
-			  EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
+	 */
+	private void ponernombreslista() {
+
+		AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+		ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
+		ContactoDelegate contactodel = DelegateUtil.getContactoDelegate();
+		EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
 			  
 			  Iterator<?> iter = listaoriginal.iterator();
 			  			
@@ -273,9 +256,9 @@ public class Bdestadisticasind {
 				  }
 				  if (statg.getReferencia().equals(Microback.RFAQ)) {
 					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RFAQ));
-					  if (statg.getItem().intValue() == hist) 
+					  if (statg.getItem().intValue() == hist) {
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
-
+					  }
 				  }		
 				  if (statg.getReferencia().equals(Microback.RQSSI)) {
 					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RQSSI));

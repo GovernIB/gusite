@@ -50,7 +50,7 @@ import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
 public class ImportarAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ImportarAction.class);
-	private static String[] roles = new String[] { "sacsystem", "sacadmin" };
+	private static String[] roles = new String[] { "gussystem", "gusadmin" };
 	
 	// Constantes para la descompresión del archivo ZIP.
 	private final String NOMBRE_BASE_DIR_ZIP = "_importacion_microsite";
@@ -67,7 +67,7 @@ public class ImportarAction extends BaseAction {
 
         recogerUsuario(request);
 
-		// Solo podrán importar los roles sacsystem y sacadmin
+		// Solo podrán importar los roles gussystem y gusadmin
         Hashtable<String, String> rolenames = recogerRoles(request);
 		if (!(rolenames.contains(roles[0]) || rolenames.contains(roles[1]))) {
 			addMessage(request, "peticion.error");

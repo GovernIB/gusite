@@ -31,12 +31,11 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 
-
 /**
  * 
  * Clase que controla en todo momento el acceso a los microsites restringidos.
  * En caso de un microsite restringido, si no estas logado redirige a una pantalla que
- * se le ha definido seguridad de SEYCON.
+ * se le ha definido seguridad.
  * <BR>
  * Es una clase controller definida en el struts-config.
  * @author Indra
@@ -57,7 +56,6 @@ public class UserRequestProcessor extends RequestProcessor {
 	protected Exception exception;  // campo creado sólo para ser utilitzado para los tests unitarios
 	
 	private String paramIdsite;
-
 	
 	/**
   	 *Obtengo el usuario en la sesion de EJBs.
@@ -70,85 +68,81 @@ public class UserRequestProcessor extends RequestProcessor {
 	 * 							a.2.2 Si no es igual, obtenemos el nuevo microsite 
 	 * 
 	 * 2. Comprobamos que el microsite es restringido.
-	 * 	b.1 Si es restringido --> Hay que redireccionarlo para que pase por SEYCON
+	 * 	b.1 Si es restringido --> Hay que redireccionarlo para que pase por Auth
 	 * 	b.2 Si no es restringido --> Salimos y seguimos
 	 */
-	public boolean processPreprocess( HttpServletRequest req, HttpServletResponse resp ) {
-		String requestPath = req.getServletPath();
+	public boolean processPreprocess(HttpServletRequest req, HttpServletResponse resp) {
+
+        String requestPath = req.getServletPath();
 		String pmkey = null;
 		
-		
 		// TODO procesamiento de las encuentas - quitar de aqui algo tan especifico como encuentas!
-		
 		 if (peticionNoEsMultipart(req)) {
 			paramIdsite = obtenerIdMicrositeFromRequest(req);
 			pmkey = obtenerKeyMicrositeFromRequest(req);
 			
 			ponerEnSessionLasRespuestasEncuenta(req);
 			
-		}else{ // cas en que sigui un multipart
-			
+		} else { // cas en que sigui un multipart
 			paramIdsite = ponerEnElRequestLasRespuestasEncuesta(req, paramIdsite);		
 		}
-		 
-		
-		//si archivopub o el propio intranethome, no hacemos nada
-		if  ( (requestPath.equals(_URLARCHIVO)) || 
-			  (requestPath.indexOf(_URLINTRANETLOGADO)!=-1) || 
-			  (requestPath.indexOf(_URLINTRANETLOGIN)!=-1) || 
-			  (requestPath.indexOf(_URLINVALIDROL)!=-1)  ||
-			  (requestPath.indexOf(_URLERRORSESSION)!=-1) )  
-			return true ;
 
-		
-		try {
-			
-			// TODO procesamiento de las encuentas - quitar de aqui algo tan especifico como encuentas!
+        //si archivopub o el propio intranethome, no hacemos nada
+		if  ((requestPath.equals(_URLARCHIVO)) ||
+			  (requestPath.indexOf(_URLINTRANETLOGADO) != -1) ||
+			  (requestPath.indexOf(_URLINTRANETLOGIN) != -1) ||
+			  (requestPath.indexOf(_URLINVALIDROL) != -1) ||
+			  (requestPath.indexOf(_URLERRORSESSION) != -1)) {
+            return true;
+        }
 
-			if (esUnaPeticionEnviarEncuesta(requestPath)){
-				if(!esPeticionExternaYnoTieneKey(pmkey)) {
-					req.getRequestDispatcher(_URLERRORSESSION  + "?idsite=" + paramIdsite).forward(req,resp);
+        try {
+            // TODO procesamiento de las encuentas - quitar de aqui algo tan especifico como encuentas!
+            if (esUnaPeticionEnviarEncuesta(requestPath)) {
+                if(!esPeticionExternaYnoTieneKey(pmkey)) {
+                    req.getRequestDispatcher(_URLERRORSESSION  + "?idsite=" + paramIdsite).forward(req, resp);
 					return false;
 				}
 			}
 			
-			if (esUnaPeticionExterna()) {  
+			if (esUnaPeticionExterna()) {
+                Microsite microsite = obtenerMicrosite(req, pmkey);
 
-				if ( esUnMicrositePublico(req, pmkey)  ) {   
+                if (redirectNewFront(microsite)) {
+                    String[] oldUrl = req.getRequestURL().toString().split("/");
+                    String host = oldUrl[0].concat("//").concat(oldUrl[2]);
+                    String newContext = System.getProperty("es.caib.gusite.context.front");
+                    String newUrl = host.concat(newContext).concat(req.getServletPath()).concat("?").concat(req.getQueryString());
+                    resp.sendRedirect(newUrl);
+                    return false;
+                }
+
+				if (esUnMicrositePublico(microsite)) {
 					return true;
 				}
-			} else {
 
-				if(!tieneRol(req)) {
-					req.getRequestDispatcher(_URLINVALIDROL + "?idsite=" + paramIdsite).forward(req,resp);
-					return false;
+			} else {
+				if (!tieneRol(req)) {
+                    req.getRequestDispatcher(_URLINVALIDROL + "?idsite=" + paramIdsite).forward(req, resp);
+                    return false;
 				}
 				return true;
 			}
-			
-		} catch (DelegateException de) {
-			log.error("",de);
-			exception = de;
-		} catch (Exception e) {
-			log.error("",e);
-			exception = e;
-			return true;
-		}
 
-		//Si llegamos aquí, redirigir a la pantalla de intranetlogin (que a su vez sera interceptada por SEYCON)
-		try {
-				
-            req.getRequestDispatcher(_URLINTRANETLOGIN + "?idsite=" + paramIdsite).forward(req,resp);
-            return false;
-		}
-		catch( Exception e ) {
-			log.error( e.toString() );
-			exception = e;
-			return true ;
-		}
-		
+            //Si llegamos aquí, redirigir a la pantalla de intranetlogin (que a su vez sera interceptada)
+            req.getRequestDispatcher(_URLINTRANETLOGIN + "?idsite=" + paramIdsite).forward(req, resp);
+
+        } catch (DelegateException de) {
+            log.error("", de);
+            exception = de;
+        } catch (Exception e) {
+            log.error("", e);
+            exception = e;
+            return true;
+        }
+
+        return false;
 	}
-
 
 	protected String obtenerIdMicrositeFromRequest(HttpServletRequest req) {
 		return "" + req.getParameter(Microfront.PIDSITE);
@@ -181,49 +175,45 @@ public class UserRequestProcessor extends RequestProcessor {
 		
 		Microsite microsite = obtenerMicrositeFromRequest(req);
 		
-		if(null==microsite) {
+		if (null == microsite) {
 			return false;
 		}
-		
-		
+
 		InvalidRolSites invalidIds = getInvalidRoleSitesFromSession(req);
-
 		long idSite = microsite.getId();
-
 		if(invalidIds.contains(idSite)) {
 			return false;
 		}
 		
-		if (microsite.getRol()!=null) {  
-				 if (req.isUserInRole(microsite.getRol())) {
-					 invalidIds.removeId(idSite);
-					 return true;
-				 }
-				 else {
-					 invalidIds.addId(idSite);
-					 return false;
-				 }
-		}
-		
-		invalidIds.removeId(idSite);
+		if (microsite.getRol() != null) {
+            if (req.isUserInRole(microsite.getRol())) {
+                invalidIds.removeId(idSite);
+                return true;
+            } else {
+                invalidIds.addId(idSite);
+                return false;
+            }
+        }
+
+        invalidIds.removeId(idSite);
 		return true;
-		
 	}
 
-
 	protected Microsite obtenerMicrositeFromRequest(HttpServletRequest req) {
+
 		Microsite microsite = null;
 		try {
 			String pmkey = obtenerKeyMicrositeFromRequest(req);
-			if(micrositeTieneKey(pmkey)) {
+			if (micrositeTieneKey(pmkey)) {
 				microsite = obtenerMicrositePorKey(req, pmkey);
 			}
-			if(null==microsite) {
+			if (null == microsite) {
 				String id = obtenerIdMicrositeFromRequest(req);
-				if(null!=id) {
+				if (null != id) {
 					microsite = obtenerMicrositePorId(id);
 				}
 			}
+
 		} catch (Exception e) {
 			log.error("error obtenint microsite del request ",e);
 			exception = e;
@@ -231,31 +221,30 @@ public class UserRequestProcessor extends RequestProcessor {
 		return microsite;
 	}
 
-
 	protected InvalidRolSites getInvalidRoleSitesFromSession(HttpServletRequest req) {
+
 		InvalidRolSites invalidIds = (InvalidRolSites)req.getSession().getAttribute(INVALID_ROLE_SITES);
-		if(null==invalidIds) {
+		if (null == invalidIds) {
 			invalidIds = new InvalidRolSites();
 			req.getSession().setAttribute(INVALID_ROLE_SITES,invalidIds);
 		}
 		return invalidIds;
 	}
-
 	
-	protected Microsite obtenerMicrosite(HttpServletRequest req, String pmkey) throws Exception, DelegateException {
+	protected Microsite obtenerMicrosite(HttpServletRequest req, String pmkey) throws Exception {
 		
 		Microsite microsite = obtenerMicrositeDeSession(req);
 		
-		if (microsite==null) {   
-			
-			if (micrositeTieneKey(pmkey)) {    
-				microsite = obtenerMicrositePorKey(req, pmkey);
-			} else{	
+		if (microsite == null) {
+            if (micrositeTieneKey(pmkey)) {
+                microsite = obtenerMicrositePorKey(req, pmkey);
+            } else{
 				microsite = obtenerMicrositePorId(paramIdsite);
 			}
+
 		} else {
-			Long micrositeId = microsite.getId()==null?null:microsite.getId().longValue();
-			if (null!=pmkey) {
+			Long micrositeId = microsite.getId() == null ? null : microsite.getId().longValue();
+			if (null != pmkey) {
 				paramIdsite = "" + micrositeId;
 			}
 			if (siteSolicitadoEsDiferenteAlDeSession(paramIdsite, micrositeId)) {   
@@ -266,20 +255,21 @@ public class UserRequestProcessor extends RequestProcessor {
 	}
 
 	protected boolean esPeticionExternaYnoTieneKey(String pmkey) {
+
 		try {
 			if (esUnaPeticionExterna()) {
 				if (!micrositeTieneKey(pmkey)) {
 					return false;
 				}
 			}
+
 		} catch (DelegateException de) {
 			log.error(de.getMessage());
 			exception = de;
 		}
 		return true;
 	}
-	
-	
+
 	protected boolean peticionNoEsMultipart(HttpServletRequest req) {
 		return !ServletFileUpload.isMultipartContent(req);
 	}
@@ -294,8 +284,7 @@ public class UserRequestProcessor extends RequestProcessor {
 		return microdel.obtenerMicrosite(new Long(pidsite));
 	}
 
-	protected Microsite obtenerMicrositePorKey(HttpServletRequest req,
-			String pmkey) throws Exception {
+	protected Microsite obtenerMicrositePorKey(HttpServletRequest req, String pmkey) throws Exception {
 		Microsite microsite;
 		DelegateBase dbase = new DelegateBase(req);
 		microsite = dbase.obtenerMicrositebyKey(pmkey, "CA");
@@ -303,7 +292,7 @@ public class UserRequestProcessor extends RequestProcessor {
 	}
 
 	protected Microsite obtenerMicrositeDeSession(HttpServletRequest req) {
-		return (Microsite)req.getSession().getAttribute("MVS_microsite");
+		return (Microsite) req.getSession().getAttribute("MVS_microsite");
 	}
 
 	/**
@@ -320,17 +309,11 @@ public class UserRequestProcessor extends RequestProcessor {
 	}
 
 	protected boolean esUnaPeticionEnviarEncuesta(String requestPath) {
-		return requestPath.indexOf(_URLENVIOENQ)!=-1;
+		return requestPath.indexOf(_URLENVIOENQ) != -1;
 	}
 
-	protected boolean esUnMicrositePublico(HttpServletRequest req, String pmkey) {
-		Microsite microsite=null;
-		try {
-			microsite = obtenerMicrosite(req, pmkey);
-		} catch (Exception e) {
-			exception = e;
-		}
-		return (!(microsite.getRestringido().equals("S"))) && (microsite.getRol()==null);
+	protected boolean esUnMicrositePublico(Microsite microsite) {
+        return (!(microsite.getRestringido().equals("S"))) && (microsite.getRol() == null);
 	}
 
 	protected boolean esUnaPeticionExterna() throws DelegateException {
@@ -338,40 +321,41 @@ public class UserRequestProcessor extends RequestProcessor {
 		return microdel.getUsuarioEJB().equals(Microfront._NOBODY);
 	}
 
-	protected String ponerEnElRequestLasRespuestasEncuesta(
-			HttpServletRequest req, String pidsite) {
-		ServletFileUpload upload = new ServletFileUpload();
+	protected String ponerEnElRequestLasRespuestasEncuesta(HttpServletRequest req, String pidsite) {
+
+        ServletFileUpload upload = new ServletFileUpload();
 		HashMap paramEncuesta = new HashMap();
 		
 		try {
 			HashMap<String, ArrayList<String>> parameter = new HashMap<String, ArrayList<String>>();            	
 			FileItemIterator iter = upload.getItemIterator(req);
 
-			while (iter.hasNext()) 
-		    {
+			while (iter.hasNext()) {
 		        FileItemStream fileItemStream = iter.next();
 		        String strParamName  = fileItemStream.getFieldName();
 		        InputStream streamIn = fileItemStream.openStream();
 		        
-		        if (fileItemStream.isFormField()) //son parametres 
-		        {	                	
-		            String strParamValue =Streams.asString(streamIn);
-		            if (parameter.containsKey(strParamName)){
+		        if (fileItemStream.isFormField()) { //son parametres
+		            String strParamValue = Streams.asString(streamIn);
+		            if (parameter.containsKey(strParamName)) {
 		            	parameter.get(strParamName).add(strParamValue);
-		            }else{
+		            } else {
 		            	ArrayList<String> aux = new ArrayList<String>();
 		            	aux.add(strParamValue);
-		            	parameter.put(strParamName,aux);
-		            }  	
-		            if ("idsite".equals(strParamName))pidsite=strParamValue;
+		            	parameter.put(strParamName, aux);
+		            }
+		            if ("idsite".equals(strParamName)) {
+                        pidsite = strParamValue;
+                    }
 		        	
 		        }else{ //es un fitxer
-		        	if (!fileItemStream.isFormField()) 
-		        	{
+		        	if (!fileItemStream.isFormField()) {
 		        		ByteArrayInputStream bais;
-		        		ByteArrayOutputStream baos= new ByteArrayOutputStream();
+		        		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		        		int b;
-		    			while ((b=streamIn.read())!=-1) baos.write(b);
+		    			while ((b=streamIn.read()) != -1) {
+                            baos.write(b);
+                        }
 		    			bais = new ByteArrayInputStream(baos.toByteArray());
 		    			baos.close();
 		    			bais.close();
@@ -386,9 +370,10 @@ public class UserRequestProcessor extends RequestProcessor {
 		        	}
 		        }	                
 		    } 
-			for (String key : parameter.keySet()){
+			for (String key : parameter.keySet()) {
 				 req.setAttribute(key, parameter.get(key).toArray());
 			}
+
 		} catch (FileUploadException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -399,6 +384,7 @@ public class UserRequestProcessor extends RequestProcessor {
 
 	// Guardamos las respuestas que vienen prefijadas en una encuesta texte
 	protected void ponerEnSessionLasRespuestasEncuenta(HttpServletRequest req) {
+
 		if (req != null) {
 			HashMap paramEncuesta = new HashMap();
 			Map mapParameter = req.getParameterMap();
@@ -407,14 +393,22 @@ public class UserRequestProcessor extends RequestProcessor {
 					Long key = new Long(((String) o).substring(4));
 					try {
 						byte[] p = ((String[]) mapParameter.get(o))[0].getBytes("utf-8");
-						paramEncuesta.put(key,(new String(p,"UTF-8")).replace("'", "\\'"));
+						paramEncuesta.put(key, (new String(p, "UTF-8")).replace("'", "\\'"));
 					} catch (UnsupportedEncodingException e) {
-						paramEncuesta.put(key,new String("ERROR ENCODING"));
+						paramEncuesta.put(key, new String("ERROR ENCODING"));
 					}
 				}
 			}
-			if (paramEncuesta.size() > 0) req.getSession().setAttribute(Microfront.ENCPARAM, paramEncuesta);
+			if (paramEncuesta.size() > 0) {
+                req.getSession().setAttribute(Microfront.ENCPARAM, paramEncuesta);
+            }
 		}
 	}
+
+    private boolean redirectNewFront(Microsite microsite) {
+        return System.getProperty("es.caib.gusite.redirectToNewFront").equals("S")
+                && microsite != null
+                && microsite.getRestringido().equals("5");
+    }
 	
 }

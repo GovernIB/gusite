@@ -9,7 +9,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -98,19 +97,15 @@ public abstract class UsuarioFacadeEJB extends HibernateEJB {
         Session session = getSession();
         try {
             boolean nuevo = (usuario.getId() == null) ? true : false;
-            if ("sacsystem".equals(usuario.getPerfil())) {
+            if ("gussystem".equals(usuario.getPerfil())) {
                 throw new SecurityException("No puede crear usuarios de sistema");
             }
             session.saveOrUpdate(usuario);
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Usuario.class.getSimpleName());
-            auditoria.setIdEntidad(usuario.getId().toString());
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Usuario.class.getSimpleName(), usuario.getId().toString(), op);
 
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -221,11 +216,7 @@ public abstract class UsuarioFacadeEJB extends HibernateEJB {
             session.flush();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Usuario.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Usuario.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

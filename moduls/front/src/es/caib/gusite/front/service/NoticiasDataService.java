@@ -42,16 +42,25 @@ public class NoticiasDataService {
 	 */
 	private String getOrdenNoticias(NoticiaCriteria criteria) {
 		
-		if (criteria.getTipo().getOrden().equals("0")) 
+		return getOrdenNoticias(criteria.getTipo());
+	}
+
+	/**
+	 * Método privado para preparar el orden en el cual se mostrara el listado.
+	 */
+	private String getOrdenNoticias(Tipo tipo) {
+		
+		if (tipo.getOrden().equals("0")) 
 			return " order by noti.orden ";
-		if (criteria.getTipo().getOrden().equals("1")) 
+		if (tipo.getOrden().equals("1")) 
 			return " order by noti.fpublicacion ";
-		if (criteria.getTipo().getOrden().equals("2")) 
+		if (tipo.getOrden().equals("2")) 
 			return " order by noti.fpublicacion desc";
-		if (criteria.getTipo().getOrden().equals("3")) 
+		if (tipo.getOrden().equals("3")) 
 			return " order by trad.titulo ";
 		return "";
 	}
+
 
 	private String construirPartialWhereAnyo(int anyo) {
 		String where="" ;
@@ -127,18 +136,17 @@ public class NoticiasDataService {
 	        	noticiadel.setPagina(criteria.getPagina());
 		        
 	        	List<Noticia> listanoticias = noticiadel.listarNoticiasThin(lang.getCodigoEstandar());
+	        	for (Noticia n : listanoticias) {
+	        		n.setIdi(lang.getLang());
+	        		if (n.getTipo() != null) {
+	        			n.getTipo().setIdi(lang.getLang());
+	        		}
+	        	}
 	        	
 	        	ResultadoNoticias<Noticia> ret = new ResultadoNoticias<Noticia>(listanoticias, (Map<String, Integer>)noticiadel.getParametros());
 				// listado tradicional
 	        	ret.setBusqueda(false);
 	        	return ret;
-		        /* WTF?
-		        //Si hay algún registro limpiamos el filtro
-		        if (listanoticias.size()==0) formulario.setFiltro("");
-
-				if (idsite.longValue()==0) error=true;
-		        */
-		        
 					
 			} else {
 				
@@ -152,6 +160,37 @@ public class NoticiasDataService {
 		log.error(e.getMessage());
 		return new ResultadoNoticias<Noticia>(new ErrorMicrosite("Error", "Se ha producido un error desconocido en el listado de noticias.")); 
 	}	
+	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Noticia> listarNoticiasTipo(Microsite microsite, String lang, Long idTipo, int numNoticias) throws DelegateException, ExceptionFrontPagina {
+		
+		Tipo tipo = this.loadTipo(idTipo, lang);
+		
+		//preparar el tipo de noticias.
+		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+    	noticiadel.init();
+    	java.sql.Date dt = new java.sql.Date((new Date()).getTime());
+    	String wherenoticias  ="where noti.visible='S' and noti.idmicrosite=" + microsite.getId() + " and noti.tipo=" + tipo.getId();
+    	wherenoticias+=" and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
+    	wherenoticias+=" and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
+    	
+    	noticiadel.setWhere(wherenoticias);
+    	noticiadel.setOrderby2(getOrdenNoticias(tipo));
+    	noticiadel.setTampagina(numNoticias);
+    
+    	noticiadel.setPagina(1);
+        
+    	List<Noticia> listanoticias = noticiadel.listarNoticiasThin(lang);
+    	for (Noticia n : listanoticias) {
+    		n.setIdi(lang);
+    		if (n.getTipo() != null) {
+    			n.getTipo().setIdi(lang);
+    		}
+    	}
+    	
+    	return listanoticias;
 	
 	}
 	
@@ -236,14 +275,50 @@ public class NoticiasDataService {
 		}
 	}
 
-	public Noticia loadNoticia(long idNoticia, Idioma lang) throws DelegateException {
+	public Noticia loadNoticia(long idNoticia, Idioma lang) throws DelegateException, ExceptionFrontPagina {
 		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
 		Noticia noticia = noticiadel.obtenerNoticia(idNoticia);
+		if (noticia == null) {
+			throw new ExceptionFrontPagina("Noticia no encontrada: " + idNoticia, ExceptionFrontPagina.HTTP_NOT_FOUND);
+		}
 		noticia.setIdi(lang.getLang());
-		noticia.getTipo().setIdi(lang.getLang());			
+		if (noticia.getTipo() != null) {
+			noticia.getTipo().setIdi(lang.getLang());
+		}
+		
+		return noticia;
+	}
+	
+	public Noticia loadNoticia(String uriNoticia, String lang) throws DelegateException, ExceptionFrontPagina {
+		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+		Noticia noticia = noticiadel.obtenerNoticiaDesdeUri(lang,uriNoticia);
+		if (noticia == null) {
+			//Si no lo encontramos por idioma, buscamos cualquiera. Esto sirve para el cambio de idioma sencillo
+			noticia = noticiadel.obtenerNoticiaDesdeUri(null, uriNoticia);
+		}
+		if (noticia == null) {
+			throw new ExceptionFrontPagina("Noticia no encontrada: " + uriNoticia, ExceptionFrontPagina.HTTP_NOT_FOUND);
+		}
+		noticia.setIdi(lang);
+		if (noticia.getTipo() != null) {
+			noticia.getTipo().setIdi(lang);
+		}
 		return noticia;
 	}
 
+	public Tipo loadTipo (long idTipo, Idioma lang) throws DelegateException, ExceptionFrontPagina {
+		return this.loadTipo(idTipo, lang.getLang());
+	}
 
+	public Tipo loadTipo (long idTipo, String lang) throws DelegateException, ExceptionFrontPagina {
+		TipoDelegate tipodel = DelegateUtil.getTipoDelegate();
+		Tipo tipo = tipodel.obtenerTipo(idTipo);
+		if (tipo == null) {
+			throw new ExceptionFrontPagina("Tipo no encontrado: " + idTipo, ExceptionFrontPagina.HTTP_NOT_FOUND);
+		}
+		tipo.setIdi(lang);
+		return tipo;
+		
+	}
 	
 }

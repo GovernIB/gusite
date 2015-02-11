@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -76,7 +77,19 @@ public class noticiasEditaAction extends BaseAction
 	    	|| (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")))){
 	
 		        noticiaBean = setFormtoBean(request, noticiaForm, micrositeBean);
-		
+
+                List<String> eliminar = new ArrayList<String>();
+                for (TraduccionNoticia trad : noticiaBean.getTraducciones().values()) {
+                    if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
+                        eliminar.add(trad.getId().getCodigoIdioma());
+                    } else if (trad.getUri().equals("")) {
+                        trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+                    }
+                }
+                for (String key : eliminar) {
+                    noticiaBean.getTraducciones().remove(key);
+                }
+
 		       	noticiaDelegate.grabarNoticia(noticiaBean);
 		
 		       	String resultadoW3C = new ProcesoW3C(request).testeoW3C(noticiaBean);
@@ -211,6 +224,7 @@ public class noticiasEditaAction extends BaseAction
                     noticiaBean.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUrlnom(llista.get(i).getUrlnom());
                     noticiaBean.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setDocu(llista.get(i).getDocu());
                     noticiaBean.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setTexto(llista.get(i).getTexto());
+                    noticiaBean.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUri(llista.get(i).getUri());
                 } else {
                     TraduccionNoticia traduccio = new TraduccionNoticia();
                     traduccio.setTitulo(llista.get(i).getTitulo());
@@ -220,6 +234,7 @@ public class noticiasEditaAction extends BaseAction
                     traduccio.setUrlnom(llista.get(i).getUrlnom());
                     traduccio.setDocu(llista.get(i).getDocu());
                     traduccio.setTexto(llista.get(i).getTexto());
+                    traduccio.setUri(llista.get(i).getUri());
 
                     noticiaBean.getTraducciones().put(((Idioma) langs.get(i)).getLang(), traduccio);
                 }

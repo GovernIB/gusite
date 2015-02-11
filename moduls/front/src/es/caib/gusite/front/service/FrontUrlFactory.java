@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import es.caib.gusite.front.general.BaseCriteria;
 import es.caib.gusite.front.general.Microfront;
@@ -16,11 +17,14 @@ import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
-import es.caib.gusite.micromodel.Frqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
 
 @Service
@@ -29,6 +33,8 @@ public class FrontUrlFactory {
 	protected static final String LANG_EN = "en";
 	protected static final String LANG_CA = "ca";
 	protected static final String LANG_ES = "es";
+
+    protected static final String CONTEXT_KEY = "es.caib.gusite.context.front";
 
 	public String traduccionEnlacePie(String context, String url, String idioma, String palabraBuscada) {
 		
@@ -126,17 +132,17 @@ public class FrontUrlFactory {
 
 	public String encuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return microsite(microsite, lang) + "encuesta/" + encuesta.getId() + "/";
+		return microsite(microsite, lang) + "encuesta/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()+ "/";	
 	}
 	
 	public String envioencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 		
-		return microsite(microsite, lang) + "envioencuesta/" + encuesta.getId() + "/";
+		return microsite(microsite, lang) + "envioencuesta/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 	
 	public String resultadosencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 		
-		return microsite(microsite, lang) + "resultados/" + encuesta.getId() + "/";
+		return microsite(microsite, lang) + "resultados/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 
 	public String menuPreview(Microsite microsite, Idioma lang) {
@@ -169,9 +175,9 @@ public class FrontUrlFactory {
 		return microsite(microsite, lang) + "tawitem/noticia/"+noticia.getId();
 	}
 
-	public String intranetLogin(Microsite microsite, Idioma lang) {
+	public String intranetLogin() {
 
-		return microsite(microsite, lang) + "intranetlogin/";
+		return System.getProperty(CONTEXT_KEY).concat("/intranetLogin");
 	}
 
 	public String intranetHome(Microsite microsite, Idioma lang) {
@@ -258,7 +264,7 @@ public class FrontUrlFactory {
 
 	public String archivopubByNombre(Microsite microsite, String nombre) {
 
-		return microsite(microsite) + "f/" + nombre;
+		return microsite(microsite) + "f/?name=" + nombre;
 	}
 
 	public String archivopub(Microsite microsite, Archivo archivo) {
@@ -271,10 +277,9 @@ public class FrontUrlFactory {
 		return microsite(microsite) + "f/" + id;
 	}
 
-	public String contenido(Microsite microsite, Idioma lang,
-			Contenido contenido) {
+	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
 
-		return microsite(microsite, lang) + "c/" + contenido.getId() + "/";
+		return microsite(microsite, lang) + "c/" + ((TraduccionContenido)contenido.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 	
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {
@@ -288,14 +293,10 @@ public class FrontUrlFactory {
 
 	public String listarElementos(Microsite microsite, Idioma lang, Tipo tipo) {
 
-		return microsite(microsite, lang) + "l/" + tipo.getId() + "/";
+		return microsite(microsite, lang) + "l/" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 	
-	public String listarElementos(Microsite microsite, Idioma lang, String tipo) {
 
-		return microsite(microsite, lang) + "l/" + tipo + "/";
-	}
-	
 	public String qssi(Microsite microsite, Idioma lang, Long qssi) {
 
 		return microsite(microsite, lang) + "qssi/" + qssi + "/";
@@ -325,7 +326,8 @@ public class FrontUrlFactory {
 		}
 	}
 	
-	public String listarAnual(Microsite microsite, Idioma lang, String tipo, String anyo) {
+	/*
+	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo, String anyo) {
 
 		String any = anyo;
 
@@ -340,6 +342,7 @@ public class FrontUrlFactory {
 			return listarElementos(microsite, lang, tipo) + any + "/";
 		}
 	}
+	*/
 
 	public String listarFaqs(Microsite microsite, Idioma lang) {
 
@@ -358,12 +361,12 @@ public class FrontUrlFactory {
 
 	public String noticia(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return microsite(microsite, lang) + "n/" + noticia.getId() + "/";
+		return microsite(microsite, lang) + "n/" + ((TraduccionNoticia)noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 
 	public String noticiaDescarga(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return microsite(microsite, lang) + "d/" + noticia.getId() + "/";
+		return microsite(microsite, lang) + "d/" + ((TraduccionNoticia)noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 	
 	public String noticiaDescarga(Microsite microsite, Idioma lang, String noticia) {
@@ -373,12 +376,12 @@ public class FrontUrlFactory {
 
 	public String microsite(Microsite microsite) {
 		
-		return "/" + microsite.getClaveunica() + "/";
+		return "/" + microsite.getUri() + "/";
 	}
 
 	public String microsite(Microsite microsite, Idioma lang) {
 		
-		return "/" + microsite.getClaveunica() + "/" + lang.getLang().toLowerCase() + "/";
+		return "/" + microsite.getUri() + "/" + lang.getLang().toLowerCase() + "/";
 	}
 
 	public String home(Microsite microsite, Idioma lang) {
@@ -451,5 +454,35 @@ public class FrontUrlFactory {
 		} else {
 			return uri;
 		}
+	}
+
+	/**
+	 * Convierte una url interna (relativa) legacy a una válida para front. Antes comprueba que se trate de una uri interna
+	 * TODO: hacer que confierta a la URL final de front, para evitar una redirección
+	 * @param urlredireccionada
+	 * @param lang
+	 * @return
+	 */
+	public String legatyToFrontUri(String legacyUri, Idioma lang) {
+		
+		if (this.isLocalLegacyUri(legacyUri)) {
+			UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(legacyUri);
+			uri.replaceQueryParam(Microfront.PLANG, lang.getLang());
+			return "/" + uri.build().toUriString();
+		} else {
+			return legacyUri;
+		}
+		
+	}
+
+	/**
+	 * Comprueba que se trate de una url relativa interna
+	 * @param legacyUri
+	 * @return
+	 */
+	public boolean isLocalLegacyUri(String legacyUri) {
+		//TODO: es mejorable, pero debería funcionar comprobar que ni comienza por / ni contiene marca de protocolo, y lleva parámetro de site
+		return !legacyUri.startsWith("/") && !legacyUri.contains("://") && (legacyUri.indexOf("idsite=") >=0 || legacyUri.indexOf("mkey=") >=0);
+		
 	}
 }

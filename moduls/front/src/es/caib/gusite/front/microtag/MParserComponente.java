@@ -39,8 +39,8 @@ public class MParserComponente extends MParserHTML {
 	 * Constructor de la clase
 	 * @param version
 	 */
-	public MParserComponente(String version) {
-		super(version);
+	public MParserComponente() {
+		super();
 	}
 	
 	/**

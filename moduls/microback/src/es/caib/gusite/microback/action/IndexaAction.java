@@ -27,12 +27,12 @@ import es.caib.gusite.micropersistence.util.log.MicroLog;
 public class IndexaAction extends BaseAction  {
 
 	protected static Log log = LogFactory.getLog(IndexaAction.class);
-	private static String[] roles = new String[]{"sacsystem", "sacadmin"};
+	private static String[] roles = new String[]{"gussystem", "gusadmin"};
 		
 	public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		// Solo podrán indexar los roles sacsystem y sacadmin
+		// Solo podrán indexar los roles gussystem y gusadmin
 		Hashtable<?, ?> rolenames = null;
 		rolenames = (Hashtable<?, ?>) request.getSession().getAttribute("rolenames");
 		if (!(rolenames.contains(roles[0]) || rolenames.contains(roles[1]))) {

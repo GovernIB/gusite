@@ -10,7 +10,6 @@ import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
@@ -50,7 +49,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
     public void init(Long site) {
     	super.tampagina = 10;
     	super.pagina = 0;
-    	super.select = "";
+    	super.select = "select compo ";
     	super.from = " from Componente compo join compo.traducciones trad ";
     	super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and compo.idmicrosite = " + site.toString();
     	super.whereini = " ";
@@ -70,7 +69,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
     public void init() {
     	super.tampagina = 10;
     	super.pagina = 0;
-    	super.select = "";
+    	super.select = "select compo ";
     	super.from = " from Componente compo join compo.traducciones trad ";
     	super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
     	super.whereini = " ";
@@ -120,16 +119,11 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
             }
 
             tx.commit();
-            Microsite site = (Microsite) session.get(Microsite.class, compo.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, compo.getIdmicrosite());
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Componente.class.getSimpleName());
-            auditoria.setIdEntidad(compo.getId().toString());
-            auditoria.setMicrosite(site);
             int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            auditoria.setOperacion(op);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Componente.class.getSimpleName(), compo.getId().toString(), op);
 
             return compo.getId();
 
@@ -194,7 +188,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
         try {
             Transaction tx = session.beginTransaction();
             Componente componente = (Componente) session.get(Componente.class, id);
-            Microsite site = (Microsite) session.get(Microsite.class, componente.getIdmicrosite());
+            this.microsite = (Microsite) session.get(Microsite.class, componente.getIdmicrosite());
 
         	session.createQuery("delete from TraduccionComponente tc where tc.id.codigoComponente = " + id).executeUpdate();
         	session.createQuery("delete from Componente compo where compo.id = " + id).executeUpdate();
@@ -202,12 +196,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
             tx.commit();
             close(session);
 
-            Auditoria auditoria = new Auditoria();
-            auditoria.setEntidad(Componente.class.getSimpleName());
-            auditoria.setIdEntidad(id.toString());
-            auditoria.setMicrosite(site);
-            auditoria.setOperacion(Auditoria.ELIMINAR);
-            DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
+            gravarAuditoria(Componente.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
 
         } catch (HibernateException he) {
             throw new EJBException(he);

@@ -27,6 +27,10 @@ public class TraduccionNoticia implements Traduccion {
     @XmlAttribute
 	@Column(name="NID_TITULO")
 	private String titulo;
+    
+    @XmlAttribute
+	@Column(name="NID_URI")
+	private String uri;
 
     @XmlAttribute
 	@Column(name="NID_SUBTIT")
@@ -79,6 +83,14 @@ public class TraduccionNoticia implements Traduccion {
     public void setLaurl(String laurl){
         this.laurl = laurl;
     }
+    
+    public String getUri() {
+  		return uri;
+  	}
+
+  	public void setUri(String uri) {
+  		this.uri = uri;
+  	}
     
     public String getUrlnom(){
         return urlnom;

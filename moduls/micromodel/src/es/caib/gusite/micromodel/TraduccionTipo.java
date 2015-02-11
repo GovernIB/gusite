@@ -26,6 +26,18 @@ public class TraduccionTipo  implements Traduccion{
     @XmlAttribute
 	@Column(name="TPI_NOMBRE")
 	private String nombre;
+    
+    @XmlAttribute
+	@Column(name="TPI_URI")
+	private String uri;
+    
+    public String getUri() {
+  		return uri;
+  	}
+
+  	public void setUri(String uri) {
+  		this.uri = uri;
+  	}
 
     public String getNombre(){
         return nombre;

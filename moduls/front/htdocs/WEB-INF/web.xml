@@ -72,5 +72,39 @@
 		<url-pattern>*.jpg</url-pattern>
 	</servlet-mapping>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>frontintranet</web-resource-name>
+            <url-pattern>/intranetLogin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>GUS_SYSTEM</role-name>
+            <role-name>GUS_ADMIN</role-name>
+            <role-name>GUS_SUPER</role-name>
+            <role-name>GUS_OPER</role-name>
+            <!--<role-name>tothom</role-name>-->
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name><![CDATA[ROL - GUS]]></realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>GUS_SYSTEM</role-name>
+    </security-role>
+    <security-role>
+        <role-name>GUS_ADMIN</role-name>
+    </security-role>
+    <security-role>
+        <role-name>GUS_SUPER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>GUS_OPER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>tothom</role-name>
+    </security-role>
 
 </web-app>

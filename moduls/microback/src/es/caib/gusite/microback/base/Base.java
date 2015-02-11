@@ -59,7 +59,7 @@ public class Base {
 
 	protected static Log log = LogFactory.getLog(Base.class);
 	
-	private static String[] roles = new String[]{"sacsystem", "sacadmin", "sacoper", "sacsuper", "sacindra"};	
+	private static String[] roles = new String[]{"gussystem", "gusadmin", "gusoper", "gussuper", "gusindra"};
 	
 	/**
 	 * Método estático que recarga en sesion el microsite.

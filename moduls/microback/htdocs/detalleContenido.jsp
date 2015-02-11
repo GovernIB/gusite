@@ -14,6 +14,8 @@
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
 	<script type="text/javascript" src="js/rArxius.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
 </head>
 
 <body>
@@ -233,6 +235,14 @@
 						
 						</td>
 					</tr>
+					<tr>
+						<td class="etiqueta"><bean:message key="conte.uri" />:</td>
+						<td><html:text property="uri" name="traducciones" styleId="<%="uri"+i%>" size="60" maxlength="512" indexed="true"/>
+						&nbsp;
+						</td>
+						<input type="hidden" name="type" value="cid_uri" />
+					</tr>
+					
 				</table>
 				
 				<table id="tinymceEditor<%=i%>" cellpadding="0" cellspacing="0" class="tablaEdicio">

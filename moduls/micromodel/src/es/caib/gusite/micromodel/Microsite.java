@@ -52,11 +52,22 @@ public class Microsite implements Traducible2 {
 	@SequenceGenerator(name="GUS_MICROSITE_ID_GENERATOR", sequenceName="GUS_SEQMIC", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_MICROSITE_ID_GENERATOR")
 	@Column(name="MIC_CODI")
-	private Long Id;
+	private Long id;
 	
 	@Column(name="MIC_CODUNI")
 	private int unidadAdministrativa;
-    
+
+	//TEST
+	@XmlAttribute
+	@Column(name="MIC_ANALYTICS")
+	private String analytics;
+  
+	@XmlAttribute
+	@Column(name="MIC_URI")
+	private String uri;
+    //TEST
+  
+  
 	@Transient
     private int idUA;
 	
@@ -165,7 +176,15 @@ public class Microsite implements Traducible2 {
     
     @Column(name="MIC_MNUCRP")
     private String menucorporativo;
-    
+
+    @XmlAttribute
+    @Column(name="MIC_VERSION")
+    private String versio;
+
+    @XmlAttribute
+    @Column(name="MIC_TIPO_ACCESO")
+    private String acceso;
+
     @Transient
     private List<?> tiposServicios;
     
@@ -245,6 +264,24 @@ public class Microsite implements Traducible2 {
 	public String getDomini() {
 		return domini;
 	}
+	
+	//TEST
+	public String getAnalytics() {
+		return analytics;
+	}
+
+	public void setAnalytics(String analytics) {
+		this.analytics = analytics;
+	}
+	
+	public String getUri() {
+		return uri;
+	}
+	
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+	//TEST
 
 	public void setDomini(String domini) {
 		this.domini = domini;
@@ -259,11 +296,11 @@ public class Microsite implements Traducible2 {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Archivo getImagenPrincipal() {
@@ -399,13 +436,14 @@ public class Microsite implements Traducible2 {
 	}
 	
 	public String[] getIdiomas(Set<?> idiomas) {
-    	Iterator<?> it = idiomas.iterator();	
-    	String[] idiomasS=new String[idiomas.size()];
-    	int n=0;
-    	while (it.hasNext()) {
-    		idiomasS[n++]=""+it.next();
-    	}
-    	return idiomasS;
+        Object[] array = idiomas.toArray();
+    	String[] idiomasArray = new String[idiomas.size()];
+    	int n = 0;
+        for (Object obj : array) {
+            idiomasArray[n] = ((IdiomaMicrosite) obj).getId().getCodigoIdioma();
+            n++;
+        }
+    	return idiomasArray;
 	}
 
     public void setIdiomas(Set<IdiomaMicrosite> idiomas) {
@@ -427,8 +465,8 @@ public class Microsite implements Traducible2 {
                 IdiomaMicrosite idioma = new IdiomaMicrosite();
                 idioma.setId(new IdiomaMicrositePK());
                 idioma.getId().setCodigoIdioma(idiomas[i]);
-                if (this.Id != null) {
-                    idioma.getId().setCodigoMicrosite(this.Id);
+                if (this.id != null) {
+                    idioma.getId().setCodigoMicrosite(this.id);
                 }
                 this.idiomas.add(idioma);
             }
@@ -711,4 +749,19 @@ public class Microsite implements Traducible2 {
 		this.idi=idi;
 	}
 
+    public String getVersio() {
+        return versio;
+    }
+
+    public void setVersio(String versio) {
+        this.versio = versio;
+    }
+
+    public String getAcceso() {
+        return acceso;
+    }
+
+    public void setAcceso(String acceso) {
+        this.acceso = acceso;
+    }
 }
