@@ -16,7 +16,9 @@ import org.ibit.rol.sac.microfront.exception.ExceptionFrontPagina;
 import org.ibit.rol.sac.microfront.noticia.util.Bdnoticia;
 import org.ibit.rol.sac.micromodel.Microsite;
 import org.ibit.rol.sac.micromodel.Noticia;
+import org.ibit.rol.sac.micromodel.Traduccion;
 import org.ibit.rol.sac.micromodel.TraduccionMicrosite;
+import org.ibit.rol.sac.micromodel.TraduccionNoticia;
 
 /**
  *  Action para ver una noticia en el front <P>
@@ -37,7 +39,48 @@ public class NoticiaAction extends BaseAction   {
 		  	Bdnoticia bdnoticia = new Bdnoticia(request);
 		  	if (!bdnoticia.isError()) {
 		    	 
-			    request.setAttribute("MVS_noticia", bdnoticia.getNoticia());
+		  		Noticia noticia = bdnoticia.getNoticia();
+			    request.setAttribute("MVS_noticia", noticia);
+	
+			    // Iconos de los documentos adjuntos
+			    String mimeIcon = "icon.1x.archivo.png";
+			    try {
+			    	if (noticia!=null && noticia.getTraduce()!=null) {
+						TraduccionNoticia traduccionNoticia = (TraduccionNoticia) noticia.getTraduce();
+						if (traduccionNoticia!=null && 
+							traduccionNoticia.getDocu()!=null && 
+							traduccionNoticia.getDocu().getMime()!=null) {
+							String mime = traduccionNoticia.getDocu().getMime();
+							if (mime.contains("pdf")) {
+								mimeIcon = "icon.1x.pdf.png";
+							} else if (mime.contains("excel")) {
+								mimeIcon = "icon.1x.excel.png";
+							} else if (mime.contains("word")) {
+								mimeIcon = "icon.1x.doc.png";
+							} else if (mime.contains("gif") || 
+								mime.contains("png") || 
+								mime.equals("image/bmp") || 
+								mime.equals("image/tiff") || 
+								mime.equals("image/x-icon")) {
+								mimeIcon = "icon.1x.gif.png";
+							} else if (mime.contains("jpeg")) {
+								mimeIcon = "icon.1x.jpg.png";
+							} else if (mime.equals("text/plain")) {
+								mimeIcon = "icon.1x.txt.png";
+							} else if (mime.equals("application/vnd.oasis.opendocument.text")) {
+								mimeIcon = "icon.1x.odt.png";
+							} else if (mime.contains("audio")) {
+								mimeIcon = "icon.1x.son.png";
+							} else if (mime.contains("video")) {
+								mimeIcon = "icon.1x.mpeg.png";
+							} else if (mime.contains("powerpoint")) {
+								mimeIcon = "icon.1x.powerpoint.png";
+							}
+						}
+					}
+			    } catch (Exception e) {}
+			    request.setAttribute("MVS_MIME_ICON", mimeIcon);
+
 			    if (bdnoticia.getNoticia().getImagen()!= null){
 			    	if (bdnoticia.getNoticia().getImagen().getPeso()> 100*1024) request.setAttribute("MVS_anchoImg", "width=460");
 			    	else  request.setAttribute("MVS_anchoImg", "");

@@ -3,7 +3,6 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="org.ibit.rol.sac.micromodel.Microsite" %>
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -42,7 +41,10 @@
 
 		<!--  Jsp que muestra mensajes de Info/Alerta y/o error -->
 		<jsp:include page="/moduls/mensajes.jsp"/>	
-		
+		<%
+			String urlPopupValue = System.getProperty("es.caib.gusite.urlPopup");
+		%>
+		<input type="hidden" id="urlPopup" name="urlPopup" value="<%=urlPopupValue%>"/>
 		<input type="hidden" name="accion" value=""/>
 		<!-- botonera -->
 		<div id="botonera">
@@ -167,7 +169,6 @@
 		    		    <html:option value="0"><bean:message key="micro.menu.nohay" /></html:option>
 			            <html:option value="1"><bean:message key="micro.menu.siniconos" /></html:option>
 			            <html:option value="2"><bean:message key="micro.menu.coniconos" /></html:option>
-			            
 			        </html:select>
 					</td>
 				</tr>
@@ -429,8 +430,13 @@
 	}
 	
 	function abrirUA() {
-        poprealcion = obrir("../sacback/organigrama/unidad/poparbol.do?idUA=0&action=&", "<bean:message key='boton.seleccionar'/>", 538, 440);
+        //poprealcion = obrir("http://sdesweblin1.caib.es/sacbackold/organigrama/unidad/poparbol.do?idUA=0&action=&", "<bean:message key='boton.seleccionar'/>", 538, 440);
+        urlPopup=document.getElementById('urlPopup');
+        url = urlPopup.value;
+        poprealcion = obrir(url, "<bean:message key='boton.seleccionar'/>", 538, 440);
+        
     }
+	
     function obrir(url, name, x, y) {
    		nombre = window.open(url, name, 'scrollbars=no, resizable=yes, width=' + x + ',height=' + y);
    		return nombre;

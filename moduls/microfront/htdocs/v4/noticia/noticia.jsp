@@ -2,7 +2,6 @@
 <%@ taglib prefix="bean" uri="http://jakarta.apache.org/struts/tags-bean" %>
 <%@ taglib prefix="logic" uri="http://jakarta.apache.org/struts/tags-logic" %>
 <%@ taglib prefix="html" uri="http://jakarta.apache.org/struts/tags-html" %>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -76,9 +75,19 @@
 											<p id="fontNoticia"><bean:write name="MVS_noticia" property="fpublicacion" format="dd/MM/yyyy"/><logic:notEmpty name="MVS_noticia" property="traduce.fuente"> - <bean:write name="MVS_noticia" property="traduce.fuente" filter="false"/></logic:notEmpty></p>
 											<p><bean:write name="MVS_noticia" property="traduce.texto" filter="false"/></p>
 											<logic:notEmpty name="MVS_noticia" property="traduce.docu">
-												<p><bean:message key="noticia.descdocumento"/></p>
-												<p><bean:message key="general.archivo"/> <bean:write name="MVS_noticia" property="traduce.docu.mime" />, <bean:write name="MVS_noticia" property="traduce.docu.peso" /> bytes - 
-												<a href="archivopub.do?ctrl=<bean:write name="MVS_servicio"/><bean:write name="MVS_noticia" property="id" />ZI<bean:write name="MVS_noticia" property="traduce.docu.id" />&amp;id=<bean:write name="MVS_noticia" property="traduce.docu.id" />" target="blank"><bean:write name="MVS_noticia" property="traduce.docu.nombre" /></a></p>
+												<p id="descDocumento"><bean:message key="noticia.descdocumento"/></p>
+												<p id="infoDocumento">
+													<span id="documentoIcono" style="vertical-align: middle; margin-right: 5px;">
+														<img src="<%=request.getContextPath()%>/imgs/archivos_icons/<bean:write name='MVS_MIME_ICON'/>" width="16px"/>
+													</span>
+													<span id="nombreDocumento">
+														<bean:message key="general.archivo"/>
+													</span> 
+													<span id="mimeDocumento"><bean:write name="MVS_noticia" property="traduce.docu.mime" /></span>, <span id="pesoDocumento"><bean:write name="MVS_noticia" property="traduce.docu.peso" /> bytes</span> - 
+													<span id="linkDocumento">
+														<a href="archivopub.do?ctrl=<bean:write name="MVS_servicio"/><bean:write name="MVS_noticia" property="id" />ZI<bean:write name="MVS_noticia" property="traduce.docu.id" />&amp;id=<bean:write name="MVS_noticia" property="traduce.docu.id" />" target="blank"><bean:write name="MVS_noticia" property="traduce.docu.nombre" /></a>
+													</span>
+												</p>
 											</logic:notEmpty>
 											<logic:notEmpty name="MVS_noticia" property="traduce.laurl">
 												<p>

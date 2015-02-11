@@ -148,13 +148,13 @@ public class Bdlistanoticias extends Bdbase  {
 	private void preparaOrden() {
 		
 		if (claseelemento.getOrden().equals("0")) 
-			sqlOrder = " order by noti.orden ";
+			sqlOrder = " order by noti.orden, noti.id ";
 		if (claseelemento.getOrden().equals("1")) 
-			sqlOrder = " order by noti.fpublicacion ";
+			sqlOrder = " order by noti.fpublicacion, noti.id ";
 		if (claseelemento.getOrden().equals("2")) 
-			sqlOrder = " order by noti.fpublicacion desc";
+			sqlOrder = " order by noti.fpublicacion desc, noti.id";
 		if (claseelemento.getOrden().equals("3")) 
-			sqlOrder = " order by trad.titulo ";
+			sqlOrder = " order by trad.titulo, noti.id ";
  
 	}
 	

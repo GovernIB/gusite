@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="gusite-1.1.0" default="usage">
+<project name="02gusite" default="usage">
 
 	<property name="project.version" value="${ant.project.name}"/>
 	<property name="home" value="."/>
