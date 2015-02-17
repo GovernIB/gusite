@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionFrqssiPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="FQI_CODIDI")
+	@XmlAttribute
+	@Column(name = "FQI_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="FQI_FRQCOD")
+	@XmlAttribute
+	@Column(name = "FQI_FRQCOD")
 	private Long codigoFrqssi;
 
-    public TraduccionFrqssiPK() {
-    }
-	
-    public String getCodigoIdioma() {
-		return codigoIdioma;
+	public TraduccionFrqssiPK() {
+	}
+
+	public String getCodigoIdioma() {
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionFrqssiPK implements Serializable {
 	}
 
 	public Long getCodigoFrqssi() {
-		return codigoFrqssi;
+		return this.codigoFrqssi;
 	}
 
 	public void setCodigoFrqssi(Long codigoFrqssi) {
 		this.codigoFrqssi = codigoFrqssi;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,20 @@ public class TraduccionFrqssiPK implements Serializable {
 		if (!(other instanceof TraduccionFrqssiPK)) {
 			return false;
 		}
-		TraduccionFrqssiPK castOther = (TraduccionFrqssiPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoFrqssi == castOther.codigoFrqssi);
+		TraduccionFrqssiPK castOther = (TraduccionFrqssiPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoFrqssi == castOther.codigoFrqssi);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoFrqssi ^ (this.codigoFrqssi >>> 32)));
-		
+		hash = hash * prime
+				+ ((int) (this.codigoFrqssi ^ (this.codigoFrqssi >>> 32)));
+
 		return hash;
-    }
+	}
 }

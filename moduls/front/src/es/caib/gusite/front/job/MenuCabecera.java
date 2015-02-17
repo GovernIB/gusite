@@ -19,14 +19,18 @@ import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServi
 
 /**
  * Clase MenuCabecera. Utilizado para trabajar con las cabeceras del microsite
+ * 
  * @author Indra
- *
+ * 
  */
 public class MenuCabecera {
 
-	/* Se guardará en cada hash una entrada por idioma. Y a su vez, el `value` del hash será un ArrayList con el listado correspondiente. */
+	/*
+	 * Se guardará en cada hash una entrada por idioma. Y a su vez, el `value`
+	 * del hash será un ArrayList con el listado correspondiente.
+	 */
 	private static Hashtable<String, Collection<?>> uos = new Hashtable<String, Collection<?>>();
-	private static Log log = LogFactory.getLog( MenuCabecera.class  );
+	private static Log log = LogFactory.getLog(MenuCabecera.class);
 
 	/**
 	 * Parte que se ejecuta la primera vez que se invoca a esta clase
@@ -43,7 +47,8 @@ public class MenuCabecera {
 
 		try {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-			List<IdiomaQueryServiceAdapter> listaIdiomas = rqs.llistarIdiomes(new IdiomaCriteria());
+			List<IdiomaQueryServiceAdapter> listaIdiomas = rqs
+					.llistarIdiomes(new IdiomaCriteria());
 
 			// Rellenamos array de idiomas.
 			List<String> idiomas = new ArrayList<String>();
@@ -51,32 +56,37 @@ public class MenuCabecera {
 				idiomas.add(idioma.getLang());
 			}
 
-			String idUOGovern = System.getProperty("es.caib.gusite.codigoUO.govern");
+			String idUOGovern = System
+					.getProperty("es.caib.gusite.codigoUO.govern");
 			if (idUOGovern == null) {
-				throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
+				throw new RuntimeException(
+						"No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 			}
 
 			Long UO_GOVERN_IB = new Long(idUOGovern);
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
 			uaCriteria.setId(UO_GOVERN_IB.toString());
-			
-			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua.llistarFilles(new UnitatAdministrativaCriteria());
+
+			UnitatAdministrativaQueryServiceAdapter ua = rqs
+					.obtenirUnitatAdministrativa(uaCriteria);
+			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua
+					.llistarFilles(new UnitatAdministrativaCriteria());
 
 			for (String lang : idiomas) {
 				Collection<UnitatAdministrativaQueryServiceAdapter> nuevasUAs = new ArrayList<UnitatAdministrativaQueryServiceAdapter>();
-				Iterator<UnitatAdministrativaQueryServiceAdapter> it = listaUAs.iterator();
-				
+				Iterator<UnitatAdministrativaQueryServiceAdapter> it = listaUAs
+						.iterator();
+
 				// La conselleria de Portavoz se trata a parte.
 				UnitatAdministrativaQueryServiceAdapter conse;
 				while (it.hasNext()) {
 					conse = it.next();
 					nuevasUAs.add(conse);
 				}
-				
+
 				uos.put(lang, nuevasUAs);
 			}
-			
+
 		} catch (Exception e) {
 			log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB.");
 			e.printStackTrace();
@@ -85,25 +95,27 @@ public class MenuCabecera {
 
 	/**
 	 * Devuelve un listado de las consellerias
+	 * 
 	 * @param lang
 	 * @return ArrayList
 	 */
 	public static Collection<?> getUos(String lang) {
 
-		Collection<?> lista = (Collection) uos.get(lang);
+		Collection<?> lista = uos.get(lang);
 		if (lista == null) {
 			return lista;
 		}
 		try {
-	    	Collection listaDef = new  ArrayList();
-	    	Iterator<?> conseDef = lista.iterator();    	
-	    	while (conseDef.hasNext()) {
-	    		UnitatAdministrativaQueryServiceAdapter cons = (UnitatAdministrativaQueryServiceAdapter)conseDef.next();
+			Collection listaDef = new ArrayList();
+			Iterator<?> conseDef = lista.iterator();
+			while (conseDef.hasNext()) {
+				UnitatAdministrativaQueryServiceAdapter cons = (UnitatAdministrativaQueryServiceAdapter) conseDef
+						.next();
 				if (!cons.getId().toString().equals(Microfront.UO_PORTAVOZ)) {
 					listaDef.add(cons);
 				}
-	    	}
-	    	return listaDef;
+			}
+			return listaDef;
 
 		} catch (Exception e) {
 			e.printStackTrace();

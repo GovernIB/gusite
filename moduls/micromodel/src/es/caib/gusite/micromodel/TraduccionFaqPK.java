@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionFaqPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="FID_CODIDI")
+	@XmlAttribute
+	@Column(name = "FID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="FID_FAQCOD")
+	@XmlAttribute
+	@Column(name = "FID_FAQCOD")
 	private Long codigoFaq;
 
-    public TraduccionFaqPK() {
-    }
+	public TraduccionFaqPK() {
+	}
 
-    public String getCodigoIdioma() {
-		return codigoIdioma;
+	public String getCodigoIdioma() {
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionFaqPK implements Serializable {
 	}
 
 	public Long getCodigoFaq() {
-		return codigoFaq;
+		return this.codigoFaq;
 	}
 
 	public void setCodigoFaq(long codigoFaq) {
 		this.codigoFaq = codigoFaq;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,20 +54,21 @@ public class TraduccionFaqPK implements Serializable {
 		if (!(other instanceof TraduccionFaqPK)) {
 			return false;
 		}
-		TraduccionFaqPK castOther = (TraduccionFaqPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoFaq == castOther.codigoFaq);
+		TraduccionFaqPK castOther = (TraduccionFaqPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoFaq == castOther.codigoFaq);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoFaq ^ (this.codigoFaq >>> 32)));
-		
+		hash = hash * prime
+				+ ((int) (this.codigoFaq ^ (this.codigoFaq >>> 32)));
+
 		return hash;
-    }
+	}
 
 }

@@ -1,6 +1,5 @@
 package es.caib.gusite.front.mailing;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +32,7 @@ import es.caib.gusite.micropersistence.delegate.LDistribucionDelegate;
 
 @Controller
 public class OperacioMailingController extends BaseController {
-	
+
 	private static Log log = LogFactory.getLog(OperacioMailingController.class);
 	Microsite microsite = null;
 	DelegateBase _delegateBase;
@@ -45,118 +44,149 @@ public class OperacioMailingController extends BaseController {
 	 * @param uri
 	 * @param model
 	 * @return
-	 */	
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/msggenerico/")
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/msggenerico/")
 	public String mailing(
-			@PathVariable("uri") SiteId URI, 
+			@PathVariable("uri") SiteId URI,
 			@PathVariable("lang") Idioma lang,
 			Model model,
-			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-			@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			HttpServletRequest req) {
 
-	  	ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", req.getLocale());
+		ResourceBundle rb = ResourceBundle.getBundle(
+				"ApplicationResources_front", req.getLocale());
 		try {
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
-			//bdSuscripcion constructor
+			this.microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			// bdSuscripcion constructor
 			try {
-				_delegateBase = new DelegateBase();
-				
-				if ((microsite!=null) && (existeServicio(Microfront.RLDISTRIB, lang.getLang()))) {	
-					//recogerlista de bdSuscripcion
-					listaDistrib = _delegateBase.obtenerListadoDistribucionMicrosite(microsite.getId());
-					//hasta aqui recogerlista de bdSuscripcion
-				}	
+				this._delegateBase = new DelegateBase();
+
+				if ((this.microsite != null)
+						&& (this.existeServicio(Microfront.RLDISTRIB,
+								lang.getLang()))) {
+					// recogerlista de bdSuscripcion
+					this.listaDistrib = this._delegateBase
+							.obtenerListadoDistribucionMicrosite(this.microsite
+									.getId());
+					// hasta aqui recogerlista de bdSuscripcion
+				}
 			} catch (Exception e) {
 				log.error("Error en la busqueda: " + e);
-				return getForwardError(microsite, lang, model,
-						ErrorMicrosite.ERROR_AMBIT_ACCES);	
+				return this.getForwardError(this.microsite, lang, model,
+						ErrorMicrosite.ERROR_AMBIT_ACCES);
 			}
-			//hasta aqui bdSuscripcion
-			
+			// hasta aqui bdSuscripcion
+
 			StringBuffer body = new StringBuffer();
 			String assumpte = "";
-			if ("alta".equals(req.getParameter(Microfront.PACTION))){
-				//metodo alta() de bdSuscripcion
-				LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
-				if (req.getParameter(Microfront.PEMAIL) != null &&
-						((String)req.getParameter(Microfront.PEMAIL)).matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$") &&
-						req.getParameter(Microfront.PDISTRIB) != null){
-					Long idLista = Long.parseLong(req.getParameter(Microfront.PDISTRIB));
-					if(DelegateUtil.getLlistaDistribucionDelegate().obtenerListaDistribucion(idLista).getPublico()){
+			if ("alta".equals(req.getParameter(Microfront.PACTION))) {
+				// metodo alta() de bdSuscripcion
+				LDistribucionDelegate distribDel = DelegateUtil
+						.getLlistaDistribucionDelegate();
+				if (req.getParameter(Microfront.PEMAIL) != null
+						&& (req.getParameter(Microfront.PEMAIL))
+								.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$")
+						&& req.getParameter(Microfront.PDISTRIB) != null) {
+					Long idLista = Long.parseLong(req
+							.getParameter(Microfront.PDISTRIB));
+					if (DelegateUtil.getLlistaDistribucionDelegate()
+							.obtenerListaDistribucion(idLista).getPublico()) {
 						String email = req.getParameter(Microfront.PEMAIL);
 						distribDel.anadeCorreo(idLista, email);
-						if ("no".equals(""+req.getSession().getAttribute("MVS_stat"))) log.info("Skip Estadistica, preview conten"); 
-					}else{
+						if ("no".equals(""
+								+ req.getSession().getAttribute("MVS_stat"))) {
+							log.info("Skip Estadistica, preview conten");
+						}
+					} else {
 						throw new Exception("Faltan parámetros");
 					}
-				}else{
+				} else {
 					throw new Exception("Faltan parámetros");
 				}
-				//hasta aqui metodo alta() de bdSuscripcion
-				
+				// hasta aqui metodo alta() de bdSuscripcion
+
 				assumpte = rb.getString("mailing.assumpte.alta");
 				body.append(rb.getString("mailing.body.alta"));
-			}else if("baixa".equals(req.getParameter(Microfront.PACTION))){
-				//metodo baixa() de bdSuscripcion
-				if(req.getParameter(Microfront.PEMAIL) != null){
-					for(Object l:listaDistrib){
-						LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
-						distribDel.borrarCorreo(((ListaDistribucion)l).getId(), req.getParameter(Microfront.PEMAIL));
-						if ("no".equals(""+req.getSession().getAttribute("MVS_stat"))) log.info("Skip Estadistica, preview conten"); 
+			} else if ("baixa".equals(req.getParameter(Microfront.PACTION))) {
+				// metodo baixa() de bdSuscripcion
+				if (req.getParameter(Microfront.PEMAIL) != null) {
+					for (Object l : this.listaDistrib) {
+						LDistribucionDelegate distribDel = DelegateUtil
+								.getLlistaDistribucionDelegate();
+						distribDel.borrarCorreo(
+								((ListaDistribucion) l).getId(),
+								req.getParameter(Microfront.PEMAIL));
+						if ("no".equals(""
+								+ req.getSession().getAttribute("MVS_stat"))) {
+							log.info("Skip Estadistica, preview conten");
+						}
 					}
 					model.addAttribute("msg", rb.getString("mailing.baixa"));
-				}else 
+				} else {
 					throw new Exception("Faltan parámetros");
-				//hasta aqui metodo baixa() de bdSuscripcion
+				}
+				// hasta aqui metodo baixa() de bdSuscripcion
 				assumpte = rb.getString("mailing.assumpte.baixa");
 				body.append(rb.getString("mailing.body.baixa"));
 			}
-			if(microsite.getIdiomas().contains(req.getLocale().toString()))
-				body.append(((TraduccionMicrosite)microsite.getTraduccion(req.getLocale().toString())).getTitulo());
-			else
-				body.append(((TraduccionMicrosite)microsite.getTraduce()).getTitulo());
-			
+			if (this.microsite.getIdiomas()
+					.contains(req.getLocale().toString())) {
+				body.append(((TraduccionMicrosite) this.microsite
+						.getTraduccion(req.getLocale().toString())).getTitulo());
+			} else {
+				body.append(((TraduccionMicrosite) this.microsite.getTraduce())
+						.getTitulo());
+			}
+
 			CorreoEngineService mail = new CorreoEngineService();
-			mail.initCorreo(req.getParameter(Microfront.PEMAIL), assumpte, false, body);
-			mail.enviarCorreo();	
+			mail.initCorreo(req.getParameter(Microfront.PEMAIL), assumpte,
+					false, body);
+			mail.enviarCorreo();
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return getForwardError(microsite, lang, model,
+			return this.getForwardError(this.microsite, lang, model,
 					ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			return getForwardError(microsite, lang, model,
+			return this.getForwardError(this.microsite, lang, model,
 					ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
-		return this.templateNameFactory.mailing(microsite);	
-}
-	
+		return this.templateNameFactory.mailing(this.microsite);
+	}
+
 	/**
-	 * Método que devuelve si el servicio que se solicita es ofrecido o no por el microsite.
-	 *
-	 * @param refservicio una referencia a un servicio
-	 * @return boolean true si el tipo de servicio del microsite es igual a refservicio
+	 * Método que devuelve si el servicio que se solicita es ofrecido o no por
+	 * el microsite.
+	 * 
+	 * @param refservicio
+	 *            una referencia a un servicio
+	 * @return boolean true si el tipo de servicio del microsite es igual a
+	 *         refservicio
 	 */
 	public boolean existeServicio(String refservicio, String idioma) {
-		boolean tmp=false;
+		boolean tmp = false;
 		try {
-	    	ArrayList<?> listserofr = _delegateBase.obtenerListadoServiciosMicrosite(microsite, idioma);
-			//chequeamos el servicio
-			Iterator<?> iter2=listserofr.iterator();
+			ArrayList<?> listserofr = this._delegateBase
+					.obtenerListadoServiciosMicrosite(this.microsite, idioma);
+			// chequeamos el servicio
+			Iterator<?> iter2 = listserofr.iterator();
 			while (iter2.hasNext()) {
-				Tiposervicio tiposervicio = (Tiposervicio)iter2.next();
-				if (tiposervicio.getReferencia().equals(refservicio)){
-					tmp=true;
+				Tiposervicio tiposervicio = (Tiposervicio) iter2.next();
+				if (tiposervicio.getReferencia().equals(refservicio)) {
+					tmp = true;
 				}
-				if (tmp) break;
+				if (tmp) {
+					break;
+				}
 			}
 		} catch (Exception e) {
-			log.error("[existeServicio] con el servicio '" + refservicio + "' "  + e.getMessage());
+			log.error("[existeServicio] con el servicio '" + refservicio + "' "
+					+ e.getMessage());
 		}
 		return tmp;
 	}
-	
+
 	@Override
 	public String setServicio() {
 		// TODO Auto-generated method stub

@@ -9,7 +9,8 @@ public class NoticiaCriteria extends BaseCriteria {
 		super(filtro, pagina, ordenacion);
 	}
 
-	public NoticiaCriteria(String filtro, int pagina, String ordenacion, int anyo) {
+	public NoticiaCriteria(String filtro, int pagina, String ordenacion,
+			int anyo) {
 		super(filtro, pagina, ordenacion);
 		this.anyo = anyo;
 	}
@@ -19,7 +20,7 @@ public class NoticiaCriteria extends BaseCriteria {
 	}
 
 	public Tipo getTipo() {
-		return tipo;
+		return this.tipo;
 	}
 
 	private Tipo tipo;
@@ -28,10 +29,9 @@ public class NoticiaCriteria extends BaseCriteria {
 	public void setAnyo(int anyo) {
 		this.anyo = anyo;
 	}
-	
 
 	public int getAnyo() {
-		return anyo;
+		return this.anyo;
 	}
-	
+
 }

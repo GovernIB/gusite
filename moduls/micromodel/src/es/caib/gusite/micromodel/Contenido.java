@@ -20,87 +20,97 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Contenido. Bean que define un Contenido. 
- * Modela la tabla de BBDD GUS_CONTEN
+ * Clase Contenido. Bean que define un Contenido. Modela la tabla de BBDD
+ * GUS_CONTEN
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_CONTEN")
-public class Contenido implements Traducible2 {
-	
+@Table(name = "GUS_CONTEN")
+public class Contenido extends AuditableModel implements Traducible2 {
+
 	private static final long serialVersionUID = 4688044820582237768L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_CONTENIDO_ID_GENERATOR", sequenceName="GUS_SEQCON", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_CONTENIDO_ID_GENERATOR")
-	@Column(name="CON_CODI")
+	@SequenceGenerator(name = "GUS_CONTENIDO_ID_GENERATOR", sequenceName = "GUS_SEQCON", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_CONTENIDO_ID_GENERATOR")
+	@Column(name = "CON_CODI")
 	private Long id;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Temporal(TemporalType.DATE)
-	@Column(name="CON_CADUCA")
+	@Column(name = "CON_CADUCA")
 	private Date fcaducidad;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Temporal(TemporalType.DATE)
-	@Column(name="CON_PUBLIC")
+	@Column(name = "CON_PUBLIC")
 	private Date fpublicacion;
 
-    @XmlAttribute
-	@Column(name="CON_ORDEN")
+	@XmlAttribute
+	@Column(name = "CON_ORDEN")
 	private int orden;
 
-    @XmlAttribute
-	@Column(name="CON_VISIB")
+	@XmlAttribute
+	@Column(name = "CON_VISIB")
 	private String visible;
-	
-	//bi-directional many-to-one association to GusDocus
-    @XmlElement
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="CON_IMGMEN")
+
+	// bi-directional many-to-one association to GusDocus
+	@XmlElement
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CON_IMGMEN")
 	private Archivo imagenmenu;
 
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="CID_CONCOD")
-	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@MapKey(name="id.codigoIdioma")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CID_CONCOD")
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@MapKey(name = "id.codigoIdioma")
 	@Fetch(FetchMode.SUBSELECT)
 	private Map<String, TraduccionContenido> traducciones = new HashMap<String, TraduccionContenido>();
 
-    @ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="CON_MNUCOD")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "CON_MNUCOD")
 	private Menu menu;
 
-    @Transient
-	private String urlExterna="";
+	@Transient
+	private String urlExterna = "";
 
-    @Transient
-    private String idi = Idioma.getIdiomaPorDefecto();
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionContenido> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CON_PPLCOD")
+	private PersonalizacionPlantilla personalizacionPlantilla;
 
-    public void setTranslates(Map<String, TraduccionContenido> traducciones) {
-        this.traducciones = traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionContenido> getTranslates() {
+		return this.traducciones;
+	}
+
+	public void setTranslates(Map<String, TraduccionContenido> traducciones) {
+		this.traducciones = traducciones;
+	}
 
 	public Date getFcaducidad() {
-		return fcaducidad;
+		return this.fcaducidad;
 	}
 
 	public void setFcaducidad(Date fcaducidad) {
@@ -108,15 +118,16 @@ public class Contenido implements Traducible2 {
 	}
 
 	public Date getFpublicacion() {
-		return fpublicacion;
+		return this.fpublicacion;
 	}
 
 	public void setFpublicacion(Date fpublicacion) {
 		this.fpublicacion = fpublicacion;
 	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -124,7 +135,7 @@ public class Contenido implements Traducible2 {
 	}
 
 	public Archivo getImagenmenu() {
-		return imagenmenu;
+		return this.imagenmenu;
 	}
 
 	public void setImagenmenu(Archivo imagenmenu) {
@@ -132,7 +143,7 @@ public class Contenido implements Traducible2 {
 	}
 
 	public int getOrden() {
-		return orden;
+		return this.orden;
 	}
 
 	public void setOrden(int orden) {
@@ -140,75 +151,110 @@ public class Contenido implements Traducible2 {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
 		this.visible = visible;
-	}  
+	}
 
 	public void addTraduccionMap(String lang, TraduccionContenido traduccion) {
-        setTraduccion(lang, traduccion);
-    }
-
-	public String getUrlExterna(){
-		return urlExterna;
+		this.setTraduccion(lang, traduccion);
 	}
 
-	public void setUrlExterna(String urlExterna){
-		this.urlExterna=urlExterna;
+	public String getUrlExterna() {
+		return this.urlExterna;
 	}
 
+	public void setUrlExterna(String urlExterna) {
+		this.urlExterna = urlExterna;
+	}
+
+	public PersonalizacionPlantilla getPersonalizacionPlantilla() {
+		return this.personalizacionPlantilla;
+	}
+
+	public void setPersonalizacionPlantilla(
+			PersonalizacionPlantilla personalizacionPlantilla) {
+		this.personalizacionPlantilla = personalizacionPlantilla;
+	}
+
+	@Override
 	public Map<String, TraduccionContenido> getTraducciones() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraducciones(Map traducciones) {
 		this.traducciones = traducciones;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionContenido)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionContenido) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}
 
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 
 	public Menu getMenu() {
-		return menu;
+		return this.menu;
 	}
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+
+	public Microsite getMicrosite() {
+		if (this.getMenu() != null) {
+			return this.getMenu().getMicrosite();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public Long getIdmicrosite() {
+		if (this.getMenu() != null && this.getMenu().getMicrosite() != null) {
+			return this.getMenu().getMicrosite().getId();
+		} else {
+			return null;
+		}
 	}
 
 }

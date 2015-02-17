@@ -11,40 +11,41 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * Clase Tiposervicio. Bean que define un Tipo de servicio. 
- * Modela la tabla de BBDD GUS_TIPSER.
+ * Clase Tiposervicio. Bean que define un Tipo de servicio. Modela la tabla de
+ * BBDD GUS_TIPSER.
+ * 
  * @author Indra
  */
 
 @Entity
-@Table(name="GUS_TIPSER")
-public class Tiposervicio implements Serializable {
+@Table(name = "GUS_TIPSER")
+public class Tiposervicio extends AuditableModel implements Serializable {
 
 	private static final long serialVersionUID = 8927320761345779941L;
-	
-	@Id
-	@SequenceGenerator(name="GUS_TIPOSERVICIO_ID_GENERATOR", sequenceName="GUS_SEQTIP", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_TIPOSERVICIO_ID_GENERATOR")
-	@Column(name="TPS_CODI")
-	private Long id;
-	
-	@Column(name="TPS_NOMBRE")
-    private String nombre;
-	
-	@Column(name="TPS_VISIB")
-    private String visible;
-	
-	@Column(name="TPS_TIPO")
-    private String tipo;
-	
-	@Column(name="TPS_URL")
-    private String url;
-	
-	@Column(name="TPS_REF")
-    private String referencia;
 
-    public String getTipo() {
-		return tipo;
+	@Id
+	@SequenceGenerator(name = "GUS_TIPOSERVICIO_ID_GENERATOR", sequenceName = "GUS_SEQTIP", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_TIPOSERVICIO_ID_GENERATOR")
+	@Column(name = "TPS_CODI")
+	private Long id;
+
+	@Column(name = "TPS_NOMBRE")
+	private String nombre;
+
+	@Column(name = "TPS_VISIB")
+	private String visible;
+
+	@Column(name = "TPS_TIPO")
+	private String tipo;
+
+	@Column(name = "TPS_URL")
+	private String url;
+
+	@Column(name = "TPS_REF")
+	private String referencia;
+
+	public String getTipo() {
+		return this.tipo;
 	}
 
 	public void setTipo(String tipo) {
@@ -52,23 +53,24 @@ public class Tiposervicio implements Serializable {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	@Override
 	public Long getId() {
-        return id;
-    }
+		return this.id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getNombre() {
-		return nombre;
+		return this.nombre;
 	}
 
 	public void setNombre(String nombre) {
@@ -76,7 +78,7 @@ public class Tiposervicio implements Serializable {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
@@ -84,7 +86,7 @@ public class Tiposervicio implements Serializable {
 	}
 
 	public String getReferencia() {
-		return referencia;
+		return this.referencia;
 	}
 
 	public void setReferencia(String referencia) {

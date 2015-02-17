@@ -5,15 +5,13 @@
 
 package es.caib.gusite.micropersistence.delegate;
 
-
 // Referenced classes of package es.caib.gusite.persistence.delegate:
 //            Delegate
 
 /**
  * Interface Stateless
+ * 
  * @author Indra
  */
-public interface StatelessDelegate
-    extends Delegate
-{
+public interface StatelessDelegate extends Delegate {
 }

@@ -1,6 +1,7 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -9,29 +10,26 @@ import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 
-import es.caib.gusite.micromodel.Auditoria;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
-import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.hibernate.criterion.Expression;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
+import es.caib.gusite.micromodel.Auditable;
+import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micropersistence.util.HibernateLocator;
 import es.caib.gusite.micropersistence.util.JBossUtils;
 
 /**
  * Bean con la funcionalidad básica para interactuar con HIBERNATE.
- *
- * @ejb.bean
- *  view-type="remote"
- *  generate="false"
+ * 
+ * @ejb.bean view-type="remote" generate="false"
  * @ejb.security-role-ref role-name="gussystem" role-link="${role.system}"
  * @ejb.security-role-ref role-name="gusadmin" role-link="${role.admin}"
  * @ejb.security-role-ref role-name="gussuper" role-link="${role.super}"
@@ -43,81 +41,80 @@ public abstract class HibernateEJB implements SessionBean {
 
 	private static final long serialVersionUID = -3971398698181242398L;
 
-	public static int RESULTATS_CERCA_TOTS = 99999;   
+	public static int RESULTATS_CERCA_TOTS = 99999;
 
 	protected static Log log = LogFactory.getLog(HibernateEJB.class);
 
-    protected SessionContext ctx = null;
-    
-    //  Parámetros de consulta paginada
-    protected int tampagina = 0;   // tamaño de la página
-    protected int pagina = 0;      // página actual
-   
-    protected String select = "";
-    protected String from = "";
-    protected String where = "";
-    protected String whereini = "";
-    protected String orderby = "";  // ordenación de la consulta
+	protected SessionContext ctx = null;
 
-    protected String[] camposfiltro;
-    protected int cursor = 0;
-    protected int nreg = 0;
-    protected int npags = 0;
+	// Parámetros de consulta paginada
+	protected int tampagina = 0; // tamaño de la página
+	protected int pagina = 0; // página actual
 
-    // List de idiomas
-    protected List<?> langs;
+	protected String select = "";
+	protected String from = "";
+	protected String where = "";
+	protected String whereini = "";
+	protected String orderby = ""; // ordenación de la consulta
 
-    // Microsite para las auditoria
-    protected Microsite microsite;
-    
-    public void setSessionContext(SessionContext ctx) {
-        this.ctx = ctx;
-    }
+	protected String[] camposfiltro;
+	protected int cursor = 0;
+	protected int nreg = 0;
+	protected int npags = 0;
 
-    public void ejbCreate() throws CreateException {
-    	getSessionFactory();
-    }
+	// List de idiomas
+	protected List<?> langs;
+
+	@Override
+	public void setSessionContext(SessionContext ctx) {
+		this.ctx = ctx;
+	}
+
+	public void ejbCreate() throws CreateException {
+		this.getSessionFactory();
+	}
 
 	protected SessionFactory getSessionFactory() {
 		return HibernateLocator.getSessionFactory();
 	}
 
-    public void ejbRemove() {
-    }
+	@Override
+	public void ejbRemove() {
+	}
 
-    protected Session getSession() {
+	protected Session getSession() {
 
-        try {
-        	restartSessionFactoryIfDatasourceModified();
-            Session session = getSessionFactory().openSession();
-            session.setFlushMode(FlushMode.COMMIT);
-            
-            return session;
+		try {
+			this.restartSessionFactoryIfDatasourceModified();
+			Session session = this.getSessionFactory().openSession();
+			session.setFlushMode(FlushMode.COMMIT);
 
-        } catch (HibernateException e) {
-            throw new EJBException(e);
-        }
-    }
+			return session;
+
+		} catch (HibernateException e) {
+			throw new EJBException(e);
+		}
+	}
 
 	private void restartSessionFactoryIfDatasourceModified() {
-		
-		if (isDatasourceModified()) {
+
+		if (this.isDatasourceModified()) {
 			HibernateLocator.resetSessionFactory();
 		}
 	}
 
-    static Object ds; //jboss.resource.adapter.jdbc.WrappedDataSource
+	static Object ds; // jboss.resource.adapter.jdbc.WrappedDataSource
 
-    private boolean isDatasourceModified() {
+	private boolean isDatasourceModified() {
 
-    	String dsJndiname = System.getProperty("es.caib.gusite.db.jndiname");
+		String dsJndiname = System.getProperty("es.caib.gusite.db.jndiname");
 		Object ds = JBossUtils.lookupLocal("java:" + dsJndiname);
-		if (null == this.ds) {
-			this.ds = ds;
+		if (null == HibernateEJB.ds) {
+			HibernateEJB.ds = ds;
 			return false;
 		} else {
-			if (ds != this.ds) {
-				this.ds = ds;
+			if (ds != HibernateEJB.ds) {
+				HibernateEJB.ds = ds;
 				return true;
 			}
 		}
@@ -126,288 +123,346 @@ public abstract class HibernateEJB implements SessionBean {
 
 	protected void close(Session session) {
 
-        if (session != null && session.isOpen()) {
-            try {
-                if (session.isDirty()) {
-                    log.warn("Closing dirty session!!");
-                }
-                session.close();
-            } catch (HibernateException e) {
-                log.error(e);
-            }
-        }
-    }
-    
-    /**
-     * Devuelve los parámetros de la consulta en una Hash
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public Hashtable<String, Integer> getParametros() {
+		if (session != null && session.isOpen()) {
+			try {
+				if (session.isDirty()) {
+					log.warn("Closing dirty session!!");
+				}
+				session.close();
+			} catch (HibernateException e) {
+				log.error(e);
+			}
+		}
+	}
 
-        Hashtable<String, Integer> tabla = new Hashtable<String, Integer>();
-    
-        tabla.put("cursor", new Integer(cursor));
-        
-        // Calculo del cursor final
-        int cursor_final = cursor;
-        if (getPagina() == npags) {
-            cursor_final = nreg;
-        } else {
-            cursor_final = cursor + tampagina - 1;
-        }
-        tabla.put("cursor_final", new Integer(cursor_final));
-        
-        tabla.put("nreg", new Integer(nreg));
-        tabla.put("tampagina", new Integer(tampagina));
-        tabla.put("actual", new Integer(getPagina()));
-        
-        if (getPagina() != 1)      tabla.put("inicio", new Integer(1));
-        if (getPagina() > 1)       tabla.put("anterior", new Integer(getPagina()-1));
-        if (getPagina() < npags)   tabla.put("siguiente", new Integer(getPagina()+1));
-        if (getPagina() != npags)  tabla.put("final", new Integer(npags));
-        
-        return tabla;
-    }
+	/**
+	 * Devuelve los parámetros de la consulta en una Hash
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Hashtable<String, Integer> getParametros() {
 
-    /**
-     * Establece distintos parámetros para la paginación tras realizar la
-     * consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void parametrosCons() {
+		Hashtable<String, Integer> tabla = new Hashtable<String, Integer>();
 
-    	boolean paginar = false;                      // hay paginación o no
-        
-        Session ses = getSession();
-        try {
-        	nreg = ((Long) ses.createQuery("select count(*) " + from + where).iterate().next()).intValue();
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(ses);
-        }
+		tabla.put("cursor", new Integer(this.cursor));
 
-		if (getPagina() == 0) {
-            setPagina(1);
-        }
-		
-		cursor = ((getPagina() - 1) * tampagina) + 1; // posición del cursor
-		npags = 1; // número total de páginas
-		
-		if (nreg > tampagina && tampagina > 0) {
+		// Calculo del cursor final
+		int cursor_final = this.cursor;
+		if (this.getPagina() == this.npags) {
+			cursor_final = this.nreg;
+		} else {
+			cursor_final = this.cursor + this.tampagina - 1;
+		}
+		tabla.put("cursor_final", new Integer(cursor_final));
+
+		tabla.put("nreg", new Integer(this.nreg));
+		tabla.put("tampagina", new Integer(this.tampagina));
+		tabla.put("actual", new Integer(this.getPagina()));
+
+		if (this.getPagina() != 1) {
+			tabla.put("inicio", new Integer(1));
+		}
+		if (this.getPagina() > 1) {
+			tabla.put("anterior", new Integer(this.getPagina() - 1));
+		}
+		if (this.getPagina() < this.npags) {
+			tabla.put("siguiente", new Integer(this.getPagina() + 1));
+		}
+		if (this.getPagina() != this.npags) {
+			tabla.put("final", new Integer(this.npags));
+		}
+
+		return tabla;
+	}
+
+	/**
+	 * Establece distintos parámetros para la paginación tras realizar la
+	 * consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void parametrosCons() {
+
+		boolean paginar = false; // hay paginación o no
+
+		Session ses = this.getSession();
+		try {
+			this.nreg = ((Long) ses
+					.createQuery("select count(*) " + this.from + this.where)
+					.iterate().next()).intValue();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(ses);
+		}
+
+		if (this.getPagina() == 0) {
+			this.setPagina(1);
+		}
+
+		this.cursor = ((this.getPagina() - 1) * this.tampagina) + 1; // posición
+																		// del
+																		// cursor
+		this.npags = 1; // número total de páginas
+
+		if (this.nreg > this.tampagina && this.tampagina > 0) {
 			paginar = true;
-			npags = ((nreg % tampagina) > 0 ? (nreg / tampagina) + 1 : nreg / tampagina);
+			this.npags = ((this.nreg % this.tampagina) > 0 ? (this.nreg / this.tampagina) + 1
+					: this.nreg / this.tampagina);
 		}
 
 		if (!paginar) {
-            tampagina = nreg;
-        }
-    }
-
-    /**
-     * @ejb.interface-method
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public int getPagina() {
-        return pagina;
-    }
-
-    /**
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void setPagina(int pagina) {
-        this.pagina = pagina;
-    }
-
-    /**
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void setOrderby(String orderby) {
-     	
-        String tipo = "";
-
-        if (orderby.length() > 0) {
-            tipo=orderby.substring(0, 1);
-            if (tipo.equals("A")) {
-                tipo = "ASC";
-            } else {
-                tipo = "DESC";
-            }
-            this.orderby = " ORDER BY " + orderby.substring(1) + " " + tipo;
-        }
-    }
-
-    /**
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void setOrderby2(String orderby) {
-           this.orderby = orderby;
-    }
-
-    /**
-     * Ejecuta una consulta y devuelve el primer valor del primer registro
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public String getValorBD(String hql) {
-
-        Session ses = getSession();
-        try {
-        	return ((String)(ses.createQuery(hql).iterate().next())).toString();
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(ses);
-        }
-    }
-
-    /**
-     * Establece el filtro de la consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void setFiltro(String valor) {
-        // Establece el filtro de la consulta
-        
-        if (valor.equals("")) {
-            where = whereini;
-            return;
-        }
-
-        String filtro = " ";
-        for (int i = 0; i < camposfiltro.length; i++) {
-            filtro += camposfiltro[i] + " like '%" + valor + "%' OR ";
-        }
-
-        if (filtro.length() > 0) {
-            filtro = filtro.substring(0, filtro.length() - 3);
-        }
-
-        if (where.length() > 0) {
-            where = where + " AND (" + filtro + ")";
-        } else {
-            where = " where " + filtro;
-        }
-    }
-
-    /**
-     * Obtiene la condicion 'where' de de la consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-	public String getWhere() {
-		return where;
+			this.tampagina = this.nreg;
+		}
 	}
 
-    /**
-     * Establece la condicion 'where' de la consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
+	/**
+	 * @ejb.interface-method
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public int getPagina() {
+		return this.pagina;
+	}
+
+	/**
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void setPagina(int pagina) {
+		this.pagina = pagina;
+	}
+
+	/**
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void setOrderby(String orderby) {
+
+		String tipo = "";
+
+		if (orderby.length() > 0) {
+			tipo = orderby.substring(0, 1);
+			if (tipo.equals("A")) {
+				tipo = "ASC";
+			} else {
+				tipo = "DESC";
+			}
+			this.orderby = " ORDER BY " + orderby.substring(1) + " " + tipo;
+		}
+	}
+
+	/**
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void setOrderby2(String orderby) {
+		this.orderby = orderby;
+	}
+
+	/**
+	 * Ejecuta una consulta y devuelve el primer valor del primer registro
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public String getValorBD(String hql) {
+
+		Session ses = this.getSession();
+		try {
+			return ((String) (ses.createQuery(hql).iterate().next()))
+					.toString();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(ses);
+		}
+	}
+
+	/**
+	 * Establece el filtro de la consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void setFiltro(String valor) {
+		// Establece el filtro de la consulta
+
+		if (valor.equals("")) {
+			this.where = this.whereini;
+			return;
+		}
+
+		String filtro = " ";
+		for (String element : this.camposfiltro) {
+			filtro += element + " like '%" + valor + "%' OR ";
+		}
+
+		if (filtro.length() > 0) {
+			filtro = filtro.substring(0, filtro.length() - 3);
+		}
+
+		if (this.where.length() > 0) {
+			this.where = this.where + " AND (" + filtro + ")";
+		} else {
+			this.where = " where " + filtro;
+		}
+	}
+
+	/**
+	 * Obtiene la condicion 'where' de de la consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public String getWhere() {
+		return this.where;
+	}
+
+	/**
+	 * Establece la condicion 'where' de la consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
 	public void setWhere(String where) {
 		this.where = where;
-	}    
-
-    /**
-     * Obtiene el tamano de la paginacion de de la consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-	public int getTampagina() {
-		return tampagina;
 	}
 
-    /**
-     * Establece la paginación de la consulta
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
+	/**
+	 * Obtiene el tamano de la paginacion de de la consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public int getTampagina() {
+		return this.tampagina;
+	}
+
+	/**
+	 * Establece la paginación de la consulta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
 	public void setTampagina(int tampagina) {
 		this.tampagina = tampagina;
-	}    	
+	}
 
-    /**
-     * Devuelve el usuario del EJB
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
+	/**
+	 * Devuelve el usuario del EJB
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
 	public String getUsuarioEJB() {
-        Principal principal = ctx.getCallerPrincipal();
-        return principal.getName();
+		Principal principal = this.ctx.getCallerPrincipal();
+		return principal.getName();
 	}
 
 	/*
-    Los roles de usuario son inclusivos.
-    Los siguientes métodos permiten saber si un usuario tiene los permisos
-    de un determinado rol, bien porque sea su rol, o porque tenga uno superior. 
-    */
+	 * Los roles de usuario son inclusivos. Los siguientes métodos permiten
+	 * saber si un usuario tiene los permisos de un determinado rol, bien porque
+	 * sea su rol, o porque tenga uno superior.
+	 */
 
 	protected boolean userIsSystem() {
-		return ctx.isCallerInRole("gussystem");
+		return this.ctx.isCallerInRole("gussystem");
 	}
 
 	protected boolean userIsAdmin() {
-		return userIsSystem() || ctx.isCallerInRole("gusadmin");
+		return this.userIsSystem() || this.ctx.isCallerInRole("gusadmin");
 	}
 
 	protected boolean userIsSuper() {
-		return userIsAdmin() || ctx.isCallerInRole("gussuper");
+		return this.userIsAdmin() || this.ctx.isCallerInRole("gussuper");
 	}
 
 	protected boolean userIsOper() {
-		return userIsSuper() || ctx.isCallerInRole("gusoper");
+		return this.userIsSuper() || this.ctx.isCallerInRole("gusoper");
 	}
 
 	protected boolean userIs(String role) {
 		if ("gusoper".equals(role)) {
-			return userIsOper();
+			return this.userIsOper();
 		} else if ("gussuper".equals(role)) {
-			return userIsSuper();
+			return this.userIsSuper();
 		} else if ("gusadmin".equals(role)) {
-			return userIsAdmin();
+			return this.userIsAdmin();
 		} else if ("gussystem".equals(role)) {
-			return userIsSystem();
+			return this.userIsSystem();
 		} else {
 			return false;
 		}
 	}
 
-    /**
-     * Comprueba si un usuario puede acceder a un Microsite
-     */
-    protected Usuario getUsuario(Session session) throws HibernateException {
+	/**
+	 * Comprueba si un usuario puede acceder a un Microsite
+	 */
+	protected Usuario getUsuario(Session session) throws HibernateException {
 
-        Criteria criteriUsu = session.createCriteria(Usuario.class);
-        criteriUsu.add(Expression.eq("username", ctx.getCallerPrincipal().getName()));
-        //List usuaris = criteriUsu.list();
-        List<?> usuaris;
-        
-        try {
-        	usuaris = criteriUsu.list();
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        }
+		Criteria criteriUsu = session.createCriteria(Usuario.class);
+		criteriUsu.add(Restrictions.eq("username", this.ctx.getCallerPrincipal()
+				.getName()));
+		// List usuaris = criteriUsu.list();
+		List<?> usuaris;
 
-        if (usuaris.isEmpty()) {
-            throw new EJBException("El usuario actual no existe!");
-        }
-        return (Usuario) usuaris.get(0);
-    }
+		try {
+			usuaris = criteriUsu.list();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		}
 
-    protected void gravarAuditoria(String entidad, String id, int operacion) throws DelegateException {
+		if (usuaris.isEmpty()) {
+			throw new EJBException("El usuario actual no existe!");
+		}
+		return (Usuario) usuaris.get(0);
+	}
 
-        Auditoria auditoria = new Auditoria();
-        auditoria.setEntidad(entidad);
-        auditoria.setIdEntidad(id);
-        auditoria.setMicrosite(this.microsite);
-        auditoria.setOperacion(operacion);
-        DelegateUtil.getAuditoriaDelegate().grabarAuditoria(auditoria);
-    }
+	protected void grabarAuditoria(Auditable entidad, int operacion) {
+		if (entidad.getIdmicrosite() != null) {
+			this.grabarAuditoria(entidad.getIdmicrosite(), entidad, operacion);
+		} else {
+			// No hay microsite
+			this.grabarAuditoria(null, entidad, operacion);
+		}
+
+	}
+
+	protected void grabarAuditoria(Long idmicrosite, Auditable entidad,
+			int operacion) {
+
+		Auditoria auditoria = new Auditoria();
+		auditoria.setEntidad(entidad.getClass().getSimpleName());
+		auditoria.setIdEntidad(entidad.getAuditKey());
+		auditoria.setIdmicrosite(idmicrosite);
+		auditoria.setOperacion(operacion);
+		this.grabarAuditoria(auditoria);
+
+	}
+
+	/**
+	 * Crea o actualiza una Auditoria
+	 */
+	private Long grabarAuditoria(Auditoria auditoria) {
+
+		Session session = this.getSession();
+		try {
+			Transaction tx = session.beginTransaction();
+			auditoria.setFecha(new Date());
+			auditoria.setUsuario(this.getUsuario(session).getUsername());
+			session.saveOrUpdate(auditoria);
+			session.flush();
+			tx.commit();
+			return auditoria.getId();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
 }

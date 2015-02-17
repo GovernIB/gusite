@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionMenuPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="MDI_MNUCOD")
+	@XmlAttribute
+	@Column(name = "MDI_MNUCOD")
 	private Long codigoMenu;
 
-    @XmlAttribute
-	@Column(name="MDI_CODIDI")
+	@XmlAttribute
+	@Column(name = "MDI_CODIDI")
 	private String codigoIdioma;
 
-    public TraduccionMenuPK() {
-    }
+	public TraduccionMenuPK() {
+	}
 
 	public Long getCodigoMenu() {
-		return codigoMenu;
+		return this.codigoMenu;
 	}
 
 	public void setCodigoMenu(Long codigoMenu) {
@@ -39,13 +39,14 @@ public class TraduccionMenuPK implements Serializable {
 	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
 		this.codigoIdioma = codigoIdioma;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,18 +54,19 @@ public class TraduccionMenuPK implements Serializable {
 		if (!(other instanceof TraduccionMenuPK)) {
 			return false;
 		}
-		TraduccionMenuPK castOther = (TraduccionMenuPK)other;
-		return 
-			(this.codigoMenu == castOther.codigoMenu)
-			&& this.codigoIdioma.equals(castOther.codigoIdioma);
-    }
-    
+		TraduccionMenuPK castOther = (TraduccionMenuPK) other;
+		return (this.codigoMenu == castOther.codigoMenu)
+				&& this.codigoIdioma.equals(castOther.codigoIdioma);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + ((int) (this.codigoMenu ^ (this.codigoMenu >>> 32)));
+		hash = hash * prime
+				+ ((int) (this.codigoMenu ^ (this.codigoMenu >>> 32)));
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		
+
 		return hash;
-    }
+	}
 }

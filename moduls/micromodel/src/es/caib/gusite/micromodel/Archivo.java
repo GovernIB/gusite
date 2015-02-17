@@ -12,168 +12,182 @@ import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
- * Clase Archivo. Bean que define una Archivo. 
- * Modela la tabla de BBDD GUS_DOCUS
+ * Clase Archivo. Bean que define una Archivo. Modela la tabla de BBDD GUS_DOCUS
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_DOCUS")
-public class Archivo implements Indexable {
+@Table(name = "GUS_DOCUS")
+public class Archivo extends AuditableModel implements Indexable {
 
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -3122017714028641802L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_DOCUS_ID_GENERATOR", sequenceName="GUS_SEQDOC", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_DOCUS_ID_GENERATOR")
-	@Column(name="DCM_CODI")
+	@SequenceGenerator(name = "GUS_DOCUS_ID_GENERATOR", sequenceName = "GUS_SEQDOC", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_DOCUS_ID_GENERATOR")
+	@Column(name = "DCM_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="DCM_TIPO")
-    private String mime;
+	@XmlAttribute
+	@Column(name = "DCM_TIPO")
+	private String mime;
 
-    @XmlAttribute
-	@Column(name="DCM_NOMBRE")
-    private String nombre;
+	@XmlAttribute
+	@Column(name = "DCM_NOMBRE")
+	private String nombre;
 
-    @XmlAttribute
-	@Column(name="DCM_TAMANO")
-    private long peso;
+	@XmlAttribute
+	@Column(name = "DCM_TAMANO")
+	private long peso;
 
-    @Lob
-	@Column(name="DCM_DATOS")
-    private byte[] datos;
+	@Lob
+	@Column(name = "DCM_DATOS")
+	private byte[] datos;
 
-    @XmlAttribute
-	@Column(name="DCM_PAGINA")
-    private Long pagina;
+	@XmlAttribute
+	@Column(name = "DCM_PAGINA")
+	private Long pagina;
 
-    @XmlAttribute
-	@Column(name="DCM_MICCOD")
+	@XmlAttribute
+	@Column(name = "DCM_MICCOD")
 	private Long idmicrosite;
 
 	@Transient
-    private Map traducciones = new HashMap();
+	private Map traducciones = new HashMap();
 
 	@Transient
 	private String idi = Idioma.getIdiomaPorDefecto();
 
-    protected Map getTraducciones() {
-        return traducciones;
-    }
+	protected Map getTraducciones() {
+		return this.traducciones;
+	}
 
-    protected void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
+	protected void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    /**
-     * Obtiene la traduccion por defecto.
-     * @return La traduccion en el idioma per defecto.
-     */
-    public Traduccion getTraduccion() {
-        return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
-    }
+	/**
+	 * Obtiene la traduccion por defecto.
+	 * 
+	 * @return La traduccion en el idioma per defecto.
+	 */
+	public Traduccion getTraduccion() {
+		return (Traduccion) this.traducciones.get(Idioma.getIdiomaPorDefecto());
+	}
 
-    /**
-     * Obtiene la traduccion en un idioma determinado o <code>null</code>.
-     * @param idioma Idioma de la traducción.
-     * @return Traduccion en el idioma indicado o <code>null</code> si no existe.
-     */
-    public Traduccion getTraduccion(String idioma) {
-        return (Traduccion) traducciones.get(idioma);
-    }
-    
-    /**
-     * Fija una traducción en un idioma determinado, o la borra si es <code>null</code>.
-     * @param idioma Idioma de la traducción,
-     * @param traduccion La traducción a fijar.
-     */
-    public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, traduccion);
-        }
-    }
-   
-    /**
-     * Obtiene la traduccion por defecto.
-     * @return La traduccion en el idioma per defecto.
-     */
-    public Traduccion getTraduce() {
-        return (Traduccion) traducciones.get(idi);
-    }
- 
-    public Map getTraduccionMap() {
-        return traducciones;
-    }
+	/**
+	 * Obtiene la traduccion en un idioma determinado o <code>null</code>.
+	 * 
+	 * @param idioma
+	 *            Idioma de la traducción.
+	 * @return Traduccion en el idioma indicado o <code>null</code> si no
+	 *         existe.
+	 */
+	public Traduccion getTraduccion(String idioma) {
+		return (Traduccion) this.traducciones.get(idioma);
+	}
 
-    public void setTraduccionMap(Map traduccionMap) {
-        this.traducciones = new HashMap(traduccionMap);
-    }
+	/**
+	 * Fija una traducción en un idioma determinado, o la borra si es
+	 * <code>null</code>.
+	 * 
+	 * @param idioma
+	 *            Idioma de la traducción,
+	 * @param traduccion
+	 *            La traducción a fijar.
+	 */
+	public void setTraduccion(String idioma, Traduccion traduccion) {
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, traduccion);
+		}
+	}
 
-    public void setIdi(String idi) {
-    	this.idi=idi;
-    }
+	/**
+	 * Obtiene la traduccion por defecto.
+	 * 
+	 * @return La traduccion en el idioma per defecto.
+	 */
+	public Traduccion getTraduce() {
+		return (Traduccion) this.traducciones.get(this.idi);
+	}
 
-    public Archivo() {}
-    
-    public Long getPagina() {
-		return pagina;
+	public Map getTraduccionMap() {
+		return this.traducciones;
+	}
+
+	public void setTraduccionMap(Map traduccionMap) {
+		this.traducciones = new HashMap(traduccionMap);
+	}
+
+	public void setIdi(String idi) {
+		this.idi = idi;
+	}
+
+	public Archivo() {
+	}
+
+	public Long getPagina() {
+		return this.pagina;
 	}
 
 	public void setPagina(Long pagina) {
 		this.pagina = pagina;
 	}
 
+	@Override
 	public Long getId() {
-        return id;
-    }
+		return this.id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getMime() {
-        return mime;
-    }
+	public String getMime() {
+		return this.mime;
+	}
 
-    public void setMime(String mime) {
-        this.mime = mime;
-    }
+	public void setMime(String mime) {
+		this.mime = mime;
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public String getNombre() {
+		return this.nombre;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public long getPeso() {
-        return peso;
-    }
+	public long getPeso() {
+		return this.peso;
+	}
 
-    public void setPeso(long peso) {
-        this.peso = peso;
-    }
+	public void setPeso(long peso) {
+		this.peso = peso;
+	}
 
-    public byte[] getDatos() {
-        return datos;
-    }
+	public byte[] getDatos() {
+		return this.datos;
+	}
 
-    public void setDatos(byte[] datos) {
-        this.datos = datos;
-    }
+	public void setDatos(byte[] datos) {
+		this.datos = datos;
+	}
 
+	@Override
 	public Long getIdmicrosite() {
-		return idmicrosite;
+		return this.idmicrosite;
 	}
 
 	public void setIdmicrosite(Long idmicrosite) {
@@ -181,6 +195,6 @@ public class Archivo implements Indexable {
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 }

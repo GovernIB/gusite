@@ -131,7 +131,7 @@
 
   <login-config>
     <auth-method>BASIC</auth-method>
-    <realm-name><![CDATA[ROL - SAC]]></realm-name>
+    <!--<realm-name><![CDATA[ROL - SAC]]></realm-name>-->
   </login-config>
 
   <security-role>

@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 /**
  * Action IntranetLoginAction <P>
  *  Definición Struts:<BR>
- *  action path="/intranetlogin" <BR> 
+ *  action path="/intranet/login" <BR> 
  *  unknown="true" <BR>
  *  forward name="intranetlogin" path=/v4/home/intranetlogin.jsp 
  * @author Indra

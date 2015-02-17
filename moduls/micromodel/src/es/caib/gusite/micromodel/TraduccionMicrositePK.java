@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionMicrositePK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="MID_CODIDI")
+	@XmlAttribute
+	@Column(name = "MID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="MID_MICCOD")
+	@XmlAttribute
+	@Column(name = "MID_MICCOD")
 	private Long codigoMicrosite;
 
-    public TraduccionMicrositePK() {
-    }
+	public TraduccionMicrositePK() {
+	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionMicrositePK implements Serializable {
 	}
 
 	public long getCodigoMicrosite() {
-		return codigoMicrosite;
+		return this.codigoMicrosite;
 	}
 
 	public void setCodigoMicrosite(Long codigoMicrosite) {
 		this.codigoMicrosite = codigoMicrosite;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,21 @@ public class TraduccionMicrositePK implements Serializable {
 		if (!(other instanceof TraduccionMicrositePK)) {
 			return false;
 		}
-		TraduccionMicrositePK castOther = (TraduccionMicrositePK)other;
-		return 
-			this.codigoMicrosite.equals(castOther.codigoMicrosite)
-			&& (this.codigoMicrosite == castOther.codigoMicrosite);
+		TraduccionMicrositePK castOther = (TraduccionMicrositePK) other;
+		return this.codigoMicrosite.equals(castOther.codigoMicrosite)
+				&& (this.codigoMicrosite == castOther.codigoMicrosite);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoMicrosite.hashCode();
-		hash = hash * prime + ((int) (this.codigoMicrosite ^ (this.codigoMicrosite >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoMicrosite ^ (this.codigoMicrosite >>> 32)));
+
 		return hash;
-    }
+	}
 }

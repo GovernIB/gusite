@@ -34,10 +34,11 @@ public class FrontUrlFactory {
 	protected static final String LANG_CA = "ca";
 	protected static final String LANG_ES = "es";
 
-    protected static final String CONTEXT_KEY = "es.caib.gusite.context.front";
+	protected static final String CONTEXT_KEY = "es.caib.gusite.context.front";
 
-	public String traduccionEnlacePie(String context, String url, String idioma, String palabraBuscada) {
-		
+	public String traduccionEnlacePie(String context, String url,
+			String idioma, String palabraBuscada) {
+
 		String urlTraducida = "";
 
 		String urlSinSites[] = url.split(context);
@@ -47,10 +48,10 @@ public class FrontUrlFactory {
 		urlEditada = urlEditada + urlSinSites[1];
 
 		String urlSeparada[] = urlEditada.split("/");
-		
+
 		Boolean idiomaFinal = true;
-		Boolean sinBarraFinal=false;
-		Boolean idiomaContact=false;
+		Boolean sinBarraFinal = false;
+		Boolean idiomaContact = false;
 
 		for (int i = 1; i < urlSeparada.length; i++) {
 			if ((urlSeparada[i].contentEquals("ca"))
@@ -60,56 +61,61 @@ public class FrontUrlFactory {
 					|| (urlSeparada[i].contentEquals("fr"))) {
 
 				idiomaFinal = false;
-				idiomaContact=true;
-		
+				idiomaContact = true;
+
 				urlTraducida = urlTraducida + "/" + idioma;
 
-			} else if((urlSeparada[i].contentEquals("contacte"))||(urlSeparada[i].contentEquals("contacto"))||(urlSeparada[i].contentEquals("contact"))){
-					
-				if(idiomaContact==true){
-					if(idioma.contentEquals("es")){
-						urlTraducida = urlTraducida + "/" +"contact";	
+			} else if ((urlSeparada[i].contentEquals("contacte"))
+					|| (urlSeparada[i].contentEquals("contacto"))
+					|| (urlSeparada[i].contentEquals("contact"))) {
+
+				if (idiomaContact == true) {
+					if (idioma.contentEquals("es")) {
+						urlTraducida = urlTraducida + "/" + "contact";
 					}
-					if(idioma.contentEquals("ca")){
-						urlTraducida = urlTraducida + "/" +"contact";	
+					if (idioma.contentEquals("ca")) {
+						urlTraducida = urlTraducida + "/" + "contact";
 					}
-					if(idioma.contentEquals("en")){
-						urlTraducida = urlTraducida + "/" +"contact";	
-					}
-				}
-				if(idiomaContact==false){
-					if(idioma.contentEquals("es")){
-						urlTraducida = urlTraducida + "/" +"contacto";	
-					}
-					if(idioma.contentEquals("ca")){
-						urlTraducida = urlTraducida + "/" +"contacte";	
-					}
-					if(idioma.contentEquals("en")){
-						urlTraducida = urlTraducida + "/" +"contact";	
+					if (idioma.contentEquals("en")) {
+						urlTraducida = urlTraducida + "/" + "contact";
 					}
 				}
-					idiomaFinal = false;
+				if (idiomaContact == false) {
+					if (idioma.contentEquals("es")) {
+						urlTraducida = urlTraducida + "/" + "contacto";
+					}
+					if (idioma.contentEquals("ca")) {
+						urlTraducida = urlTraducida + "/" + "contacte";
+					}
+					if (idioma.contentEquals("en")) {
+						urlTraducida = urlTraducida + "/" + "contact";
+					}
 				}
-			else if((urlSeparada[i].contentEquals("cercar"))||(urlSeparada[i].contentEquals("buscar"))||(urlSeparada[i].contentEquals("search"))){
-				
-				if(idioma.equals("es")){
-					urlTraducida = urlTraducida + "/" +"buscar"+"/?cerca="+palabraBuscada+"&lang="+idioma;	
+				idiomaFinal = false;
+			} else if ((urlSeparada[i].contentEquals("cercar"))
+					|| (urlSeparada[i].contentEquals("buscar"))
+					|| (urlSeparada[i].contentEquals("search"))) {
+
+				if (idioma.equals("es")) {
+					urlTraducida = urlTraducida + "/" + "buscar" + "/?cerca="
+							+ palabraBuscada + "&lang=" + idioma;
 				}
-				if(idioma.equals("ca")){
-					urlTraducida = urlTraducida + "/" +"cercar"+"/?cerca="+palabraBuscada+"&lang="+idioma;	
+				if (idioma.equals("ca")) {
+					urlTraducida = urlTraducida + "/" + "cercar" + "/?cerca="
+							+ palabraBuscada + "&lang=" + idioma;
 				}
-				if(idioma.equals("en")){
-					urlTraducida = urlTraducida + "/" +"search"+"/?cerca="+palabraBuscada+"&lang="+idioma;	
+				if (idioma.equals("en")) {
+					urlTraducida = urlTraducida + "/" + "search" + "/?cerca="
+							+ palabraBuscada + "&lang=" + idioma;
 				}
-				
+
 				idiomaFinal = true;
-				sinBarraFinal=true;
-			}
-				else{
+				sinBarraFinal = true;
+			} else {
 				urlTraducida = urlTraducida + "/" + urlSeparada[i];
-				}	
+			}
 		}
-		
+
 		if (urlTraducida.startsWith("//")) {
 			String urlSinDobleBarra[] = urlTraducida.split("//");
 			urlTraducida = "/" + urlSinDobleBarra[1];
@@ -118,8 +124,7 @@ public class FrontUrlFactory {
 		if (idiomaFinal == false) {
 
 			urlTraducida = urlTraducida + "/";
-		}
-		else if((idiomaFinal==true)&&(sinBarraFinal==true)){
+		} else if ((idiomaFinal == true) && (sinBarraFinal == true)) {
 			urlTraducida = urlTraducida + "";
 		}
 
@@ -132,100 +137,116 @@ public class FrontUrlFactory {
 
 	public String encuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return microsite(microsite, lang) + "encuesta/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()+ "/";	
+		return this.microsite(microsite, lang)
+				+ "encuesta/"
+				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
-	
-	public String envioencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
-		
-		return microsite(microsite, lang) + "envioencuesta/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+
+	public String envioencuesta(Microsite microsite, Idioma lang,
+			Encuesta encuesta) {
+
+		return this.microsite(microsite, lang)
+				+ "envioencuesta/"
+				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
-	
-	public String resultadosencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
-		
-		return microsite(microsite, lang) + "resultados/" + ((TraduccionEncuesta)encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+
+	public String resultadosencuesta(Microsite microsite, Idioma lang,
+			Encuesta encuesta) {
+
+		return this.microsite(microsite, lang)
+				+ "resultados/"
+				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
 
 	public String menuPreview(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "menupreview/";
+		return this.microsite(microsite, lang) + "menupreview/";
 	}
 
 	public String errorGenerico(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "errorgenerico/";
+		return this.microsite(microsite, lang) + "errorgenerico/";
 	}
 
 	public String msgGenerico(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "msggenerico/";
+		return this.microsite(microsite, lang) + "msggenerico/";
 	}
 
-	public String tawItemContenido(Microsite microsite, Idioma lang, Contenido contenido) {
-	
-		return microsite(microsite, lang) + "tawitem/contenido/"+contenido.getId();
+	public String tawItemContenido(Microsite microsite, Idioma lang,
+			Contenido contenido) {
+
+		return this.microsite(microsite, lang) + "tawitem/contenido/"
+				+ contenido.getId();
 	}
-	
+
 	public String tawItemAgenda(Microsite microsite, Idioma lang, Agenda agenda) {
-		
-		return microsite(microsite, lang) + "tawitem/agenda/"+agenda.getId();
-	}
-	
-	public String tawItemNoticia(Microsite microsite, Idioma lang, Noticia noticia) {
-		
-		return microsite(microsite, lang) + "tawitem/noticia/"+noticia.getId();
+
+		return this.microsite(microsite, lang) + "tawitem/agenda/"
+				+ agenda.getId();
 	}
 
-	public String intranetLogin() {
+	public String tawItemNoticia(Microsite microsite, Idioma lang,
+			Noticia noticia) {
 
-		return System.getProperty(CONTEXT_KEY).concat("/intranetLogin");
+		return this.microsite(microsite, lang) + "tawitem/noticia/"
+				+ noticia.getId();
+	}
+
+	public String intranetLogin(String contextPath) {
+
+		return contextPath.concat("/intranetLogin");
 	}
 
 	public String intranetHome(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "intranet/";
+		return this.microsite(microsite, lang) + "intranet/";
 	}
 
 	public String cercar(Microsite microsite, Idioma lang) {
-		
+
 		if (lang.getLang().toLowerCase().equals(LANG_CA)) {
-			return microsite(microsite) + "cercar/";
+			return this.microsite(microsite) + "cercar/";
 		} else if (lang.getLang().toLowerCase().equals(LANG_ES)) {
-			return microsite(microsite) + "buscar/";
+			return this.microsite(microsite) + "buscar/";
 		} else if (lang.getLang().toLowerCase().equals(LANG_EN)) {
-			return microsite(microsite) + "search/";
+			return this.microsite(microsite) + "search/";
 		} else {
-			return microsite(microsite, lang) + "search/";
+			return this.microsite(microsite, lang) + "search/";
 		}
 	}
 
 	public String contacto(Microsite microsite, Idioma lang, Contacto contacto) {
 
-		return listarContactos(microsite, lang) + contacto.getId() + "/";
+		return this.listarContactos(microsite, lang) + contacto.getId() + "/";
 	}
 
 	public String listarContactos(Microsite microsite, Idioma lang) {
 
 		if (lang.getLang().equals(LANG_CA)) {
-			return microsite(microsite) + "contacte/";
+			return this.microsite(microsite) + "contacte/";
 		} else if (lang.getLang().equals(LANG_ES)) {
-			return microsite(microsite) + "contacto/";
+			return this.microsite(microsite) + "contacto/";
 		} else if (lang.getLang().equals(LANG_EN)) {
-			return microsite(microsite) + "contact/";
+			return this.microsite(microsite) + "contact/";
 		} else {
-			return microsite(microsite, lang) + "contact/";
+			return this.microsite(microsite, lang) + "contact/";
 		}
 	}
 
 	public String listarAgenda(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "agenda/";
+		return this.microsite(microsite, lang) + "agenda/";
 	}
 
 	public String listarAgendaFechaSinPagina(Microsite microsite, Idioma lang,
 			Date fecha, String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
-		ret.append(listarAgendaFecha(microsite, lang, fecha));
+		ret.append(this.listarAgendaFecha(microsite, lang, fecha));
 		Map<String, String> params = new Hashtable<String, String>();
 		params.put(Microfront.MCONT, mcont);
 		params.put(Microfront.PCAMPA, pcampa);
@@ -236,7 +257,7 @@ public class FrontUrlFactory {
 			String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
-		ret.append(listarAgenda(microsite, lang));
+		ret.append(this.listarAgenda(microsite, lang));
 		Map<String, String> params = new Hashtable<String, String>();
 		params.put(Microfront.MCONT, mcont);
 		params.put(Microfront.PCAMPA, pcampa);
@@ -248,145 +269,157 @@ public class FrontUrlFactory {
 
 	public String listarAgendaFecha(Microsite microsite, Idioma lang, Date fecha) {
 
-		return listarAgenda(microsite, lang) + agendaFechaFormat.format(fecha);
+		return this.listarAgenda(microsite, lang)
+				+ agendaFechaFormat.format(fecha);
 	}
 
 	public String listarAgendaFechaFormateada(Microsite microsite, Idioma lang,
 			String fechaEvento) {
 
-		return listarAgenda(microsite, lang) + fechaEvento;
+		return this.listarAgenda(microsite, lang) + fechaEvento;
 	}
 
 	public String archivopubNombre(Microsite microsite, Archivo archivo) {
 
-		return archivopubByNombre(microsite, archivo.getNombre());
+		return this.archivopubByNombre(microsite, archivo.getNombre());
 	}
 
 	public String archivopubByNombre(Microsite microsite, String nombre) {
 
-		return microsite(microsite) + "f/?name=" + nombre;
+		return this.microsite(microsite) + "f/?name=" + nombre;
 	}
 
 	public String archivopub(Microsite microsite, Archivo archivo) {
 
-		return archivopubById(microsite, archivo.getId());
+		return this.archivopubById(microsite, archivo.getId());
 	}
 
 	public String archivopubById(Microsite microsite, Long id) {
 
-		return microsite(microsite) + "f/" + id;
+		return this.microsite(microsite) + "f/" + id;
 	}
 
-	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
+	public String contenido(Microsite microsite, Idioma lang,
+			Contenido contenido) {
 
-		return microsite(microsite, lang) + "c/" + ((TraduccionContenido)contenido.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang)
+				+ "c/"
+				+ ((TraduccionContenido) contenido.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
-	
-	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {
 
-		String ret = contenido(microsite, lang, contenido);
+	public String contenido(Microsite microsite, Idioma lang,
+			Contenido contenido, String pcampa) {
+
+		String ret = this.contenido(microsite, lang, contenido);
 		if (!StringUtils.isEmpty(pcampa)) {
-			ret = ret + "?" + Microfront.PCAMPA  + "=" + pcampa;
+			ret = ret + "?" + Microfront.PCAMPA + "=" + pcampa;
 		}
 		return ret;
 	}
 
 	public String listarElementos(Microsite microsite, Idioma lang, Tipo tipo) {
 
-		return microsite(microsite, lang) + "l/" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang)
+				+ "l/"
+				+ ((TraduccionTipo) tipo.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
-	
 
 	public String qssi(Microsite microsite, Idioma lang, Long qssi) {
 
-		return microsite(microsite, lang) + "qssi/" + qssi + "/";
+		return this.microsite(microsite, lang) + "qssi/" + qssi + "/";
 	}
 
 	/**
 	 * @deprecated usar listarElementos
 	 */
 	public String listarNoticias(Microsite microsite, Idioma lang, Tipo tipo) {
-	
-		return listarElementos(microsite, lang, tipo);
+
+		return this.listarElementos(microsite, lang, tipo);
 	}
 
-	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo, String anyo) {
+	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo,
+			String anyo) {
 
 		String any = anyo;
 
 		if (any == "-1") {
 			any = "";
-		} else if(anyo=="Tots"){
-			any="";
-		} 
+		} else if (anyo == "Tots") {
+			any = "";
+		}
 		if (StringUtils.isEmpty(any)) {
-			return listarElementos(microsite, lang, tipo);
+			return this.listarElementos(microsite, lang, tipo);
 		} else {
-			return listarElementos(microsite, lang, tipo) + any + "/";
+			return this.listarElementos(microsite, lang, tipo) + any + "/";
 		}
 	}
-	
+
 	/*
-	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo, String anyo) {
-
-		String any = anyo;
-
-		if (any == "-1") {
-			any = "";
-		} else if(anyo=="Tots"){
-			any="";
-		} 
-		if (StringUtils.isEmpty(any)) {
-			return listarElementos(microsite, lang, tipo);
-		} else {
-			return listarElementos(microsite, lang, tipo) + any + "/";
-		}
-	}
-	*/
+	 * public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo,
+	 * String anyo) {
+	 * 
+	 * String any = anyo;
+	 * 
+	 * if (any == "-1") { any = ""; } else if(anyo=="Tots"){ any=""; } if
+	 * (StringUtils.isEmpty(any)) { return listarElementos(microsite, lang,
+	 * tipo); } else { return listarElementos(microsite, lang, tipo) + any +
+	 * "/"; } }
+	 */
 
 	public String listarFaqs(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "faq/";
+		return this.microsite(microsite, lang) + "faq/";
 	}
 
 	public String accessibilitat(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "accessibility/";
+		return this.microsite(microsite, lang) + "accessibility/";
 	}
 
 	public String mapa(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang) + "mapa/";
+		return this.microsite(microsite, lang) + "mapa/";
 	}
 
 	public String noticia(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return microsite(microsite, lang) + "n/" + ((TraduccionNoticia)noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang)
+				+ "n/"
+				+ ((TraduccionNoticia) noticia.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
 
-	public String noticiaDescarga(Microsite microsite, Idioma lang, Noticia noticia) {
+	public String noticiaDescarga(Microsite microsite, Idioma lang,
+			Noticia noticia) {
 
-		return microsite(microsite, lang) + "d/" + ((TraduccionNoticia)noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang)
+				+ "d/"
+				+ ((TraduccionNoticia) noticia.getTraduccion(lang.getLang()
+						.toLowerCase())).getUri() + "/";
 	}
-	
-	public String noticiaDescarga(Microsite microsite, Idioma lang, String noticia) {
 
-		return microsite(microsite, lang) + "d/" + noticia + "/";
+	public String noticiaDescarga(Microsite microsite, Idioma lang,
+			String noticia) {
+
+		return this.microsite(microsite, lang) + "d/" + noticia + "/";
 	}
 
 	public String microsite(Microsite microsite) {
-		
+
 		return "/" + microsite.getUri() + "/";
 	}
 
 	public String microsite(Microsite microsite, Idioma lang) {
-		
-		return "/" + microsite.getUri() + "/" + lang.getLang().toLowerCase() + "/";
+
+		return "/" + microsite.getUri() + "/" + lang.getLang().toLowerCase()
+				+ "/";
 	}
 
 	public String home(Microsite microsite, Idioma lang) {
 
-		return microsite(microsite, lang);
+		return this.microsite(microsite, lang);
 	}
 
 	/**
@@ -402,35 +435,41 @@ public class FrontUrlFactory {
 		uaUrl = System.getProperty("es.caib.gusite.portal.url") + uaUrl;
 		return uaUrl;
 	}
-	
-	public String listarContactosSinPagina(Microsite microsite, Idioma lang, BaseCriteria criteria) {
+
+	public String listarContactosSinPagina(Microsite microsite, Idioma lang,
+			BaseCriteria criteria) {
 		StringBuilder ret = new StringBuilder();
-		ret.append(listarContactos(microsite, lang));
+		ret.append(this.listarContactos(microsite, lang));
 
 		Map<String, String> params = new Hashtable<String, String>();
-		if (!StringUtils.isEmpty(criteria.getFiltro()))
+		if (!StringUtils.isEmpty(criteria.getFiltro())) {
 			params.put("filtro", criteria.getFiltro());
-		if (!StringUtils.isEmpty(criteria.getOrdenacion()))
+		}
+		if (!StringUtils.isEmpty(criteria.getOrdenacion())) {
 			params.put("ordenacion", criteria.getOrdenacion());
+		}
 
 		return this.addParams(ret.toString(), params);
 	}
-	
+
 	public String listarNoticiasSinPagina(Microsite microsite, Idioma lang,
 			Tipo tipo, NoticiaCriteria criteria, String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
-		ret.append(listarNoticias(microsite, lang, tipo));
+		ret.append(this.listarNoticias(microsite, lang, tipo));
 
 		Map<String, String> params = new Hashtable<String, String>();
 		params.put(Microfront.MCONT, mcont);
 		params.put(Microfront.PCAMPA, pcampa);
-		if (!StringUtils.isEmpty(criteria.getFiltro()))
+		if (!StringUtils.isEmpty(criteria.getFiltro())) {
 			params.put("filtro", criteria.getFiltro());
-		if (!StringUtils.isEmpty(criteria.getOrdenacion()))
+		}
+		if (!StringUtils.isEmpty(criteria.getOrdenacion())) {
 			params.put("ordenacion", criteria.getOrdenacion());
-		if (criteria.getAnyo() != 0)
+		}
+		if (criteria.getAnyo() != 0) {
 			params.put("anyo", String.valueOf(criteria.getAnyo()));
+		}
 
 		return this.addParams(ret.toString(), params);
 	}
@@ -457,32 +496,40 @@ public class FrontUrlFactory {
 	}
 
 	/**
-	 * Convierte una url interna (relativa) legacy a una válida para front. Antes comprueba que se trate de una uri interna
-	 * TODO: hacer que confierta a la URL final de front, para evitar una redirección
+	 * Convierte una url interna (relativa) legacy a una válida para front.
+	 * Antes comprueba que se trate de una uri interna TODO: hacer que confierta
+	 * a la URL final de front, para evitar una redirección
+	 * 
 	 * @param urlredireccionada
 	 * @param lang
 	 * @return
 	 */
 	public String legatyToFrontUri(String legacyUri, Idioma lang) {
-		
+
 		if (this.isLocalLegacyUri(legacyUri)) {
-			UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(legacyUri);
+			UriComponentsBuilder uri = UriComponentsBuilder
+					.fromUriString(legacyUri);
 			uri.replaceQueryParam(Microfront.PLANG, lang.getLang());
 			return "/" + uri.build().toUriString();
 		} else {
 			return legacyUri;
 		}
-		
+
 	}
 
 	/**
 	 * Comprueba que se trate de una url relativa interna
+	 * 
 	 * @param legacyUri
 	 * @return
 	 */
 	public boolean isLocalLegacyUri(String legacyUri) {
-		//TODO: es mejorable, pero debería funcionar comprobar que ni comienza por / ni contiene marca de protocolo, y lleva parámetro de site
-		return !legacyUri.startsWith("/") && !legacyUri.contains("://") && (legacyUri.indexOf("idsite=") >=0 || legacyUri.indexOf("mkey=") >=0);
-		
+		// TODO: es mejorable, pero debería funcionar comprobar que ni comienza
+		// por / ni contiene marca de protocolo, y lleva parámetro de site
+		return !legacyUri.startsWith("/")
+				&& !legacyUri.contains("://")
+				&& (legacyUri.indexOf("idsite=") >= 0 || legacyUri
+						.indexOf("mkey=") >= 0);
+
 	}
 }

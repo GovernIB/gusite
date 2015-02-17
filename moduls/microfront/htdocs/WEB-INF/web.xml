@@ -115,22 +115,21 @@
   <security-constraint>
     <web-resource-collection>
         <web-resource-name>sacmicrofrontintranet</web-resource-name>
-        <url-pattern>/intranethome.do</url-pattern>
-        <url-pattern>/intranetlogin.do</url-pattern>
+        <url-pattern>/intranet/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
-       <!--   
-       	<role-name>RSC_SYSTEM</role-name>
-        <role-name>RSC_ADMIN</role-name>
-        <role-name>RSC_SUPER</role-name>
-        <role-name>RSC_OPER</role-name> -->
+       	<role-name>GUS_SYSTEM</role-name>
+        <role-name>GUS_ADMIN</role-name>
+        <role-name>GUS_SUPER</role-name>
+        <role-name>GUS_OPER</role-name>
+         <!--  TODO: pareix ser que això hauria de ser el rol d'interns -->
         <role-name>tothom</role-name>
     </auth-constraint>
   </security-constraint>
 
   <login-config>
     <auth-method>BASIC</auth-method>
-    <realm-name><![CDATA[ROL - SAC]]></realm-name>
+    <!--<realm-name><![CDATA[ROL - SAC]]></realm-name>-->
   </login-config>
 
   <security-role>

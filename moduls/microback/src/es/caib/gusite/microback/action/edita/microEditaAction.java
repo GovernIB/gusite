@@ -427,7 +427,7 @@ public class microEditaAction extends BaseAction  {
 		uaCriteria.setIdioma("ca");
 		
 		UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-        microForm.set("nombreUA", ua.getNombre());
+        microForm.set("nombreUA", ua!= null? ua.getNombre() : "");
         microForm.set("idUA", new Integer(micrositeBean.getUnidadAdministrativa()));
        	
         // Obtenemos la lista de UAs.

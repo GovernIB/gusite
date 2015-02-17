@@ -4,37 +4,42 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Clase TraduccionRespuesta. Encapsula los datos  que pueden tener valor en diferentes idiomas del objeto Respuesta.
+ * Clase TraduccionRespuesta. Encapsula los datos que pueden tener valor en
+ * diferentes idiomas del objeto Respuesta.
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_RESIDI")
+@Table(name = "GUS_RESIDI")
 public class TraduccionRespuesta implements Traduccion {
 
 	private static final long serialVersionUID = 6426636976073934777L;
 
-    @XmlElement
+	@XmlElement
 	@EmbeddedId
 	private TraduccionRespuestaPK id;
 
-    @XmlAttribute
-	@Column(name="REI_TITULO")
+	@XmlAttribute
+	@Column(name = "REI_TITULO")
 	private String titulo;
 
-    public String getTitulo() {
-    	return titulo;
-    }
+	public String getTitulo() {
+		return this.titulo;
+	}
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
 	public TraduccionRespuestaPK getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(TraduccionRespuestaPK id) {

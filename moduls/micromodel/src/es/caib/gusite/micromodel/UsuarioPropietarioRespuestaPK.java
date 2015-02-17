@@ -1,8 +1,9 @@
 package es.caib.gusite.micromodel;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * Created by tcerda on 26/11/2014.
@@ -10,56 +11,70 @@ import java.io.Serializable;
 @Embeddable
 public class UsuarioPropietarioRespuestaPK implements Serializable {
 
-    @Column(name="MIU_CODMIC")
-    private Long idrespuesta;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5044841446839856028L;
 
-    @Column(name="MIU_CODUSU")
-    private Long idusuario;
+	@Column(name = "MIU_CODMIC")
+	private Long idrespuesta;
 
-    public UsuarioPropietarioRespuestaPK() {
-    }
+	@Column(name = "MIU_CODUSU")
+	private Long idusuario;
 
-    public Long getIdrespuesta() {
-        return idrespuesta;
-    }
+	public UsuarioPropietarioRespuestaPK() {
+	}
 
-    public void setIdrespuesta(Long idrespuesta) {
-        this.idrespuesta = idrespuesta;
-    }
+	public Long getIdrespuesta() {
+		return this.idrespuesta;
+	}
 
-    public Long getIdusuario() {
-        return idusuario;
-    }
+	public void setIdrespuesta(Long idrespuesta) {
+		this.idrespuesta = idrespuesta;
+	}
 
-    public void setIdusuario(Long idusuario) {
-        this.idusuario = idusuario;
-    }
+	public Long getIdusuario() {
+		return this.idusuario;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setIdusuario(Long idusuario) {
+		this.idusuario = idusuario;
+	}
 
-        UsuarioPropietarioRespuestaPK that = (UsuarioPropietarioRespuestaPK) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
 
-        if (idrespuesta != null ? !idrespuesta.equals(that.idrespuesta) : that.idrespuesta != null) return false;
-        if (idusuario != null ? !idusuario.equals(that.idusuario) : that.idusuario != null) return false;
+		UsuarioPropietarioRespuestaPK that = (UsuarioPropietarioRespuestaPK) o;
 
-        return true;
-    }
+		if (this.idrespuesta != null ? !this.idrespuesta
+				.equals(that.idrespuesta) : that.idrespuesta != null) {
+			return false;
+		}
+		if (this.idusuario != null ? !this.idusuario.equals(that.idusuario)
+				: that.idusuario != null) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        int result = idrespuesta != null ? idrespuesta.hashCode() : 0;
-        result = 31 * result + (idusuario != null ? idusuario.hashCode() : 0);
-        return result;
-    }
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "UsuarioPropietarioRespuestaPK{" +
-                "idrespuesta=" + idrespuesta +
-                ", idusuario=" + idusuario +
-                '}';
-    }
+	@Override
+	public int hashCode() {
+		int result = this.idrespuesta != null ? this.idrespuesta.hashCode() : 0;
+		result = 31 * result
+				+ (this.idusuario != null ? this.idusuario.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "UsuarioPropietarioRespuestaPK{" + "idrespuesta="
+				+ this.idrespuesta + ", idusuario=" + this.idusuario + '}';
+	}
 }

@@ -8,23 +8,24 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.DelegateException;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Transaction;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import es.caib.gusite.micromodel.Auditoria;
+import es.caib.gusite.micromodel.Componente;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.TraduccionComponente;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 
 /**
  * SessionBean para consultar Componente.
- *
- * @ejb.bean
- *  name="sac/micropersistence/ComponenteFacade"
- *  jndi-name="es.caib.gusite.micropersistence.ComponenteFacade"
- *  type="Stateless"
- *  view-type="remote"
- *  transaction-type="Container"
- *
+ * 
+ * @ejb.bean name="sac/micropersistence/ComponenteFacade"
+ *           jndi-name="es.caib.gusite.micropersistence.ComponenteFacade"
+ *           type="Stateless" view-type="remote" transaction-type="Container"
+ * 
  * @ejb.transaction type="Required"
  * 
  * @author Indra
@@ -34,196 +35,216 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 	private static final long serialVersionUID = -1492166558649126596L;
 
 	/**
-     * @ejb.create-method
-     * @ejb.permission unchecked="true"
-     */
-    public void ejbCreate() throws CreateException {
-        super.ejbCreate();
-    }
+	 * @ejb.create-method
+	 * @ejb.permission unchecked="true"
+	 */
+	@Override
+	public void ejbCreate() throws CreateException {
+		super.ejbCreate();
+	}
 
-    /**
-     * Inicializo los parámetros de la consulta de Componente.... 
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public void init(Long site) {
-    	super.tampagina = 10;
-    	super.pagina = 0;
-    	super.select = "select compo ";
-    	super.from = " from Componente compo join compo.traducciones trad ";
-    	super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and compo.idmicrosite = " + site.toString();
-    	super.whereini = " ";
-    	super.orderby = "";
+	/**
+	 * Inicializo los parámetros de la consulta de Componente....
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init(Long site) {
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select compo ";
+		super.from = " from Componente compo join compo.traducciones trad ";
+		super.where = " where trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto() + "' and compo.idmicrosite = "
+				+ site.toString();
+		super.whereini = " ";
+		super.orderby = "";
 
-    	super.camposfiltro = new String[] {"compo.nombre", "trad.titulo"};
-    	super.cursor = 0;
-    	super.nreg = 0;
-    	super.npags = 0;
-    }  
+		super.camposfiltro = new String[] { "compo.nombre", "trad.titulo" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
 
-    /**
-     * Inicializo los parámetros de la consulta de Componente.... 
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public void init() {
-    	super.tampagina = 10;
-    	super.pagina = 0;
-    	super.select = "select compo ";
-    	super.from = " from Componente compo join compo.traducciones trad ";
-    	super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
-    	super.whereini = " ";
-    	super.orderby = "";
+	/**
+	 * Inicializo los parámetros de la consulta de Componente....
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init() {
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select compo ";
+		super.from = " from Componente compo join compo.traducciones trad ";
+		super.where = " where trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.whereini = " ";
+		super.orderby = "";
 
-    	super.camposfiltro = new String[] {"compo.nombre", "trad.titulo"};
-    	super.cursor = 0;
-    	super.nreg = 0;
-    	super.npags = 0;
-    }      
-    
-    /**
-     * Crea o actualiza un Componente
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public Long grabarComponente(Componente compo) throws DelegateException {
+		super.camposfiltro = new String[] { "compo.nombre", "trad.titulo" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
 
-        Session session = getSession();
-        Boolean nuevo = false;
-        try {
-            Transaction tx = session.beginTransaction();
-            if (compo.getId() == null) {
-                nuevo = true;
-            }
+	/**
+	 * Crea o actualiza un Componente
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public Long grabarComponente(Componente compo) throws DelegateException {
 
-            Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
-            if (nuevo) {
-                Iterator<TraduccionComponente> it = compo.getTraducciones().values().iterator();
-                while (it.hasNext()) {
-                    TraduccionComponente trd = it.next();
-             		listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
-             	}
-                compo.setTraducciones(null);
-            }
+		Session session = this.getSession();
+		Boolean nuevo = false;
+		try {
+			Transaction tx = session.beginTransaction();
+			if (compo.getId() == null) {
+				nuevo = true;
+			}
 
-            session.saveOrUpdate(compo);
-            session.flush();
+			Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
+			if (nuevo) {
+				Iterator<TraduccionComponente> it = compo.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionComponente trd = it.next();
+					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
+				}
+				compo.setTraducciones(null);
+			}
 
-            if (nuevo) {
-                for (TraduccionComponente trad : listaTraducciones.values()) {
-                    trad.getId().setCodigoComponente(compo.getId());
-                    session.saveOrUpdate(trad);
-                }
-                session.flush();
-                compo.setTraducciones(listaTraducciones);
-            }
+			session.saveOrUpdate(compo);
+			session.flush();
 
-            tx.commit();
-            this.microsite = (Microsite) session.get(Microsite.class, compo.getIdmicrosite());
-            close(session);
+			if (nuevo) {
+				for (TraduccionComponente trad : listaTraducciones.values()) {
+					trad.getId().setCodigoComponente(compo.getId());
+					session.saveOrUpdate(trad);
+				}
+				session.flush();
+				compo.setTraducciones(listaTraducciones);
+			}
 
-            int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            gravarAuditoria(Componente.class.getSimpleName(), compo.getId().toString(), op);
+			tx.commit();
+			this.close(session);
 
-            return compo.getId();
+			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			this.grabarAuditoria(compo, op);
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } catch (DelegateException e) {
-            throw new DelegateException(e);
-        } finally {
-            close(session);
-        }
-    }
+			return compo.getId();
 
-    /**
-     * Obtiene un Componente
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public Componente obtenerComponente(Long id) {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	Componente compo = (Componente) session.get(Componente.class, id);
-            return compo;
+	/**
+	 * Obtiene un Componente
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Componente obtenerComponente(Long id) {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			Componente compo = (Componente) session.get(Componente.class, id);
+			return compo;
 
-    /**
-     * Lista todos los Componentes
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public List<?> listarComponentes() {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	parametrosCons(); // Establecemos los parámetros de la paginación
-        	Query query = session.createQuery(select + from + where + orderby);
-            query.setFirstResult(cursor - 1);
-            query.setMaxResults(tampagina);
-        	return query.list();
+	/**
+	 * Lista todos los Componentes
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<?> listarComponentes() {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			this.parametrosCons(); // Establecemos los parámetros de la
+									// paginación
+			Query query = session.createQuery(this.select + this.from
+					+ this.where + this.orderby);
+			query.setFirstResult(this.cursor - 1);
+			query.setMaxResults(this.tampagina);
+			return query.list();
 
-    /**
-     * borra un Componente
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public void borrarComponente(Long id) throws DelegateException {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-            Transaction tx = session.beginTransaction();
-            Componente componente = (Componente) session.get(Componente.class, id);
-            this.microsite = (Microsite) session.get(Microsite.class, componente.getIdmicrosite());
+	/**
+	 * borra un Componente
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarComponente(Long id) throws DelegateException {
 
-        	session.createQuery("delete from TraduccionComponente tc where tc.id.codigoComponente = " + id).executeUpdate();
-        	session.createQuery("delete from Componente compo where compo.id = " + id).executeUpdate();
-            session.flush();
-            tx.commit();
-            close(session);
+		Session session = this.getSession();
+		try {
+			Transaction tx = session.beginTransaction();
+			Componente componente = (Componente) session.get(Componente.class,
+					id);
 
-            gravarAuditoria(Componente.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
+			session.createQuery(
+					"delete from TraduccionComponente tc where tc.id.codigoComponente = "
+							+ id).executeUpdate();
+			session.createQuery(
+					"delete from Componente compo where compo.id = " + id)
+					.executeUpdate();
+			session.flush();
+			tx.commit();
+			this.close(session);
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } catch (DelegateException e) {
-            throw new DelegateException(e);
-        } finally {
-            close(session);
-        }
-    }
+			this.grabarAuditoria(componente, Auditoria.ELIMINAR);
 
-    /**
-     * Comprueba que el componente pertenece al Microsite
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public boolean checkSite(Long site, Long id) {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	Query query = session.createQuery("from Componente compo where compo.idmicrosite = " + site.toString() + " and compo.id = " + id.toString());
-        	return query.list().isEmpty();
+	/**
+	 * Comprueba que el componente pertenece al Microsite
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public boolean checkSite(Long site, Long id) {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			Query query = session
+					.createQuery("from Componente compo where compo.idmicrosite = "
+							+ site.toString()
+							+ " and compo.id = "
+							+ id.toString());
+			return query.list().isEmpty();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
 }

@@ -1,128 +1,148 @@
 package es.caib.gusite.micropersistence.ejb;
 
-import es.caib.gusite.micromodel.*;
-import org.hibernate.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import es.caib.gusite.micromodel.Auditoria;
 
 /**
  * SessionBean para consultar Auditorias.
- *
- * @ejb.bean
- * name="sac/micropersistence/AuditoriaFacade"
- * jndi-name="es.caib.gusite.micropersistence.AuditoriaFacade"
- * type="Stateless"
- * view-type="remote"
- * transaction-type="Container"
- *
+ * 
+ * @ejb.bean name="sac/micropersistence/AuditoriaFacade"
+ *           jndi-name="es.caib.gusite.micropersistence.AuditoriaFacade"
+ *           type="Stateless" view-type="remote" transaction-type="Container"
+ * 
  * @ejb.transaction type="Required"
- *
- * Created by tcerda on 10/12/2014.
+ * 
+ *                  Created by tcerda on 10/12/2014.
  */
 public abstract class AuditoriaFacadeEJB extends HibernateEJB {
 
-    /**
-     * @ejb.create-method
-     * @ejb.permission unchecked="true"
-     */
-    public void ejbCreate() throws CreateException {
-        super.ejbCreate();
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3820071313971615543L;
 
-    /**
-     * Inicializo los parámetros de la consulta de una auditoria...
-     *
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public void init() {
+	/**
+	 * @ejb.create-method
+	 * @ejb.permission unchecked="true"
+	 */
+	@Override
+	public void ejbCreate() throws CreateException {
+		super.ejbCreate();
+	}
 
-        super.tampagina = 10;
-        super.pagina = 0;
-        super.select = "select aud ";
-        super.from = " from Auditoria aud ";
-        super.where = "";
-        super.whereini = " ";
-        super.orderby = " order by aud.fecha desc";
+	/**
+	 * Inicializo los parámetros de la consulta de una auditoria...
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init() {
 
-        super.camposfiltro = new String[]{"aud.entidad", "aud.idEntidad", "aud.usuario"};
-        super.cursor = 0;
-        super.nreg = 0;
-        super.npags = 0;
-    }
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select aud ";
+		super.from = " from Auditoria aud ";
+		super.where = "";
+		super.whereini = " ";
+		super.orderby = " order by aud.fecha desc";
 
-    /**
-     * Crea o actualiza una Auditoria
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public Long grabarAuditoria(Auditoria auditoria) {
+		super.camposfiltro = new String[] { "aud.entidad", "aud.idEntidad",
+				"aud.usuario" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
 
-        Session session = getSession();
-        try {
-            Transaction tx = session.beginTransaction();
-            auditoria.setFecha(new Date());
-            auditoria.setUsuario(this.getUsuario(session).getUsername());
-            session.saveOrUpdate(auditoria);
-            session.flush();
-            tx.commit();
-            return auditoria.getId();
+	/**
+	 * Crea o actualiza una Auditoria
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public Long grabarAuditoria(Auditoria auditoria) {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			Transaction tx = session.beginTransaction();
+			auditoria.setFecha(new Date());
+			auditoria.setUsuario(this.getUsuario(session).getUsername());
+			session.saveOrUpdate(auditoria);
+			session.flush();
+			tx.commit();
+			return auditoria.getId();
 
-    /**
-     * Listar auditorias por entidad
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public List<Auditoria> listarAuditorias(String entity, String idEntity, String user, Date date, String micro) {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-            if (entity != null && entity != "") {
-                where += " where aud.entidad = '" + entity + "'";
-            }
-            if (idEntity != null && idEntity != "") {
-                where += (where == "") ? " where" : " and";
-                where += " aud.idEntidad = " + idEntity;
-            }
-            if (user != null && user != "") {
-                where += (where == "") ? " where" : " and";
-                where += " aud.usuario = '" + user + "'";
-            }
-            if (date != null) {
+	/**
+	 * Listar auditorias por entidad
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<Auditoria> listarAuditorias(String entity, String idEntity,
+			String user, Date date, String micro) {
 
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                c.add(Calendar.DATE, 1);
+		Session session = this.getSession();
+		try {
+			if (entity != null && entity != "") {
+				this.where += " where aud.entidad = '" + entity + "'";
+			}
+			if (idEntity != null && idEntity != "") {
+				this.where += (this.where == "") ? " where" : " and";
+				this.where += " aud.idEntidad = " + idEntity;
+			}
+			if (user != null && user != "") {
+				this.where += (this.where == "") ? " where" : " and";
+				this.where += " aud.usuario = '" + user + "'";
+			}
+			if (date != null) {
 
-                where += (where == "") ? " where" : " and";
-                where += " aud.fecha between to_date('" + new SimpleDateFormat("dd/mm/yyyy").format(date) + "', 'dd/mm/yyyy') and to_date('" + new SimpleDateFormat("dd/mm/yyyy").format(c.getTime()) + "', 'dd/mm/yyyy')" ;
-            }
-            if (micro != null && micro != "") {
-                where += (where == "") ? " where" : " and";
-                where += " aud.microsite.id = " + micro;
-            }
+				Calendar c = Calendar.getInstance();
+				c.setTime(date);
+				c.add(Calendar.DATE, 1);
 
-            parametrosCons();
-            Query query = session.createQuery(select + from + where + orderby);
-            query.setFirstResult(cursor - 1);
-            query.setMaxResults(tampagina);
-            return query.list();
+				this.where += (this.where == "") ? " where" : " and";
+				this.where += " aud.fecha between to_date('"
+						+ new SimpleDateFormat("dd/mm/yyyy").format(date)
+						+ "', 'dd/mm/yyyy') and to_date('"
+						+ new SimpleDateFormat("dd/mm/yyyy")
+								.format(c.getTime()) + "', 'dd/mm/yyyy')";
+			}
+			if (micro != null && micro != "") {
+				this.where += (this.where == "") ? " where" : " and";
+				this.where += " aud.idmicrosite = " + micro;
+			}
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+			this.parametrosCons();
+			Query query = session.createQuery(this.select + this.from
+					+ this.where + this.orderby);
+			query.setFirstResult(this.cursor - 1);
+			query.setMaxResults(this.tampagina);
+			return query.list();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
 }

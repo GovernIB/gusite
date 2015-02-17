@@ -6,7 +6,7 @@ import java.util.Map;
  * Interface para definir un dominio
  * 
  * @author INDRA
- *
+ * 
  */
 public interface DominioInterface {
 

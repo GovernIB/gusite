@@ -17,7 +17,7 @@ public class BaseCriteria {
 	}
 
 	public String getFiltro() {
-		return filtro;
+		return this.filtro;
 	}
 
 	public void setOrdenacion(String ordenacion) {
@@ -25,7 +25,7 @@ public class BaseCriteria {
 	}
 
 	public String getOrdenacion() {
-		return ordenacion;
+		return this.ordenacion;
 	}
 
 	public void setPagina(int pagina) {
@@ -33,8 +33,7 @@ public class BaseCriteria {
 	}
 
 	public int getPagina() {
-		return pagina;
+		return this.pagina;
 	}
 
-	
 }

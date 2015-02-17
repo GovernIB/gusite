@@ -19,8 +19,9 @@ import org.thymeleaf.fragment.IFragmentSpec;
 
 /**
  * TODO: el nombre de clase es temporal
+ * 
  * @author agarcia
- *
+ * 
  */
 @Component
 public class GusiteFlow {
@@ -28,43 +29,49 @@ public class GusiteFlow {
 	@Autowired
 	private TemplateEngine templateEngine;
 
-	@Autowired 
+	@Autowired
 	private ServletContext servletContext;
-	
+
 	private static Log log = LogFactory.getLog(GusiteFlow.class);
-	
-	
+
 	/**
 	 * Procesa una plantilla usando el templateEngine
+	 * 
 	 * @param request
 	 * @param response
 	 * @param model
 	 * @param templateName
-	 * @param request 
+	 * @param request
 	 */
-	public String process(Map<String, Object> model, final String templateName, String lang, HttpServletRequest request, HttpServletResponse response){
-		
-		Locale locale = new Locale(lang.toUpperCase(), lang.toUpperCase());
-	    IWebContext ctx = new WebContext(request, response, servletContext, locale, model) ;
+	public String process(Map<String, Object> model, final String templateName,
+			String lang, HttpServletRequest request,
+			HttpServletResponse response) {
 
-		  try {
-			  if (templateName.contains("::")) {
-				  //Se trata de un fragment
-				  int index = templateName.indexOf("::");
-				  String templateFile = templateName.substring(0, index -1).trim();
-				  String fragmentName = templateName.substring(index+2).trim();
-				  IFragmentSpec fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "th:fragment", fragmentName, true); 
-			      
-				return templateEngine.process(templateFile, ctx, fragmentSpec );
-				  
-			  } else {
-					return templateEngine.process(templateName, ctx);
-			  }
-		  }
-		 catch ( Exception e) {
-			 log.error(e);
-		    throw new RuntimeException("Could not run template: " + templateName, e);
-		  }
-		}	
+		Locale locale = new Locale(lang.toUpperCase(), lang.toUpperCase());
+		IWebContext ctx = new WebContext(request, response,
+				this.servletContext, locale, model);
+
+		try {
+			if (templateName.contains("::")) {
+				// Se trata de un fragment
+				int index = templateName.indexOf("::");
+				String templateFile = templateName.substring(0, index - 1)
+						.trim();
+				String fragmentName = templateName.substring(index + 2).trim();
+				IFragmentSpec fragmentSpec = new ElementAndAttributeNameFragmentSpec(
+						null, "th:fragment", fragmentName, true);
+
+				return this.templateEngine.process(templateFile, ctx,
+						fragmentSpec);
+
+			} else {
+				return this.templateEngine.process(templateName, ctx);
+			}
+		} catch (Exception e) {
+			log.error(e);
+			throw new RuntimeException("Could not run template: "
+					+ templateName, e);
+		}
+	}
 
 }

@@ -1,7 +1,5 @@
 package es.caib.gusite.micromodel;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,82 +20,89 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Faq. Bean que define una Faq. 
- * Modela la tabla de BBDD GUS_FAQ
+ * Clase Faq. Bean que define una Faq. Modela la tabla de BBDD GUS_FAQ
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_FAQ")
-public class Faq implements Traducible2 {
+@Table(name = "GUS_FAQ")
+public class Faq extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 2723640089721073919L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_FAQ_ID_GENERATOR", sequenceName="GUS_SEQFAQ", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_FAQ_ID_GENERATOR")
-	@Column(name="FAQ_CODI")
+	@SequenceGenerator(name = "GUS_FAQ_ID_GENERATOR", sequenceName = "GUS_SEQFAQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_FAQ_ID_GENERATOR")
+	@Column(name = "FAQ_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="FAQ_MICCOD")
+	@XmlAttribute
+	@Column(name = "FAQ_MICCOD")
 	private Long idmicrosite;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Temporal(TemporalType.DATE)
-	@Column(name="FAQ_FECHA")
-    private Date fecha;
+	@Column(name = "FAQ_FECHA")
+	private Date fecha;
 
-    @XmlAttribute
-	@Column(name="FAQ_VISIB")
-    private String visible;
+	@XmlAttribute
+	@Column(name = "FAQ_VISIB")
+	private String visible;
 
-    @XmlElement
-    @ManyToOne
-	@JoinColumn(name="FAQ_CODTEM")
-    private Temafaq tema;
+	@XmlElement
+	@ManyToOne
+	@JoinColumn(name = "FAQ_CODTEM")
+	private Temafaq tema;
 
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@JoinColumn(name="FID_FAQCOD")
-	@MapKey(name="id.codigoIdioma")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "FID_FAQCOD")
+	@MapKey(name = "id.codigoIdioma")
 	private Map<String, TraduccionFaq> traducciones = new HashMap<String, TraduccionFaq>();
 
 	@Transient
 	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionFaq> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionFaq> getTranslates() {
+		return this.traducciones;
+	}
 
-    public void setTranslates(Map<String, TraduccionFaq> traducciones) {
-        this.traducciones = traducciones;
-    }
+	public void setTranslates(Map<String, TraduccionFaq> traducciones) {
+		this.traducciones = traducciones;
+	}
 
 	public Date getFecha() {
-		return fecha;
+		return this.fecha;
 	}
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	@Override
 	public Long getIdmicrosite() {
-		return idmicrosite;
+		return this.idmicrosite;
 	}
 
 	public void setIdmicrosite(Long idmicrosite) {
@@ -105,7 +110,7 @@ public class Faq implements Traducible2 {
 	}
 
 	public Temafaq getTema() {
-		return tema;
+		return this.tema;
 	}
 
 	public void setTema(Temafaq tema) {
@@ -113,7 +118,7 @@ public class Faq implements Traducible2 {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
@@ -121,49 +126,58 @@ public class Faq implements Traducible2 {
 	}
 
 	public void addTraduccionMap(String lang, TraduccionFaq traduccion) {
-        setTraduccion(lang, traduccion);
-    }
-
-	public Map<String, TraduccionFaq> getTraducciones() {
-		return traducciones;
+		this.setTraduccion(lang, traduccion);
 	}
 
+	@Override
+	public Map<String, TraduccionFaq> getTraducciones() {
+		return this.traducciones;
+	}
+
+	@Override
 	public void setTraducciones(Map traducciones) {
 		this.traducciones = traducciones;
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionFaq)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionFaq) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}

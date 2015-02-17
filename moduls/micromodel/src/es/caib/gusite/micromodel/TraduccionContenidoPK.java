@@ -18,22 +18,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Embeddable
 public class TraduccionContenidoPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="CID_CODIDI")
+	@XmlAttribute
+	@Column(name = "CID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="CID_CONCOD")
+	@XmlAttribute
+	@Column(name = "CID_CONCOD")
 	private Long codigoContenido;
 
-    public TraduccionContenidoPK() {
-    }
+	public TraduccionContenidoPK() {
+	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -41,13 +41,14 @@ public class TraduccionContenidoPK implements Serializable {
 	}
 
 	public Long getCodigoContenido() {
-		return codigoContenido;
+		return this.codigoContenido;
 	}
 
 	public void setCodigoContenido(Long codigoContenido) {
 		this.codigoContenido = codigoContenido;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -55,19 +56,21 @@ public class TraduccionContenidoPK implements Serializable {
 		if (!(other instanceof TraduccionContenidoPK)) {
 			return false;
 		}
-		TraduccionContenidoPK castOther = (TraduccionContenidoPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoContenido == castOther.codigoContenido);
+		TraduccionContenidoPK castOther = (TraduccionContenidoPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoContenido == castOther.codigoContenido);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoContenido ^ (this.codigoContenido >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoContenido ^ (this.codigoContenido >>> 32)));
+
 		return hash;
-    }
+	}
 }

@@ -225,7 +225,7 @@
 				<table cellpadding="0" cellspacing="0" class="tablaEdicio">
 					<tr>
 						<td class="etiqueta"><bean:message key="conte.titulo" />:</td>
-						<td><html:text property="titulo" name="traducciones" size="50" maxlength="256" indexed="true" /></td>
+						<td><html:text property="titulo" name="traducciones" styleId="<%="titulo"+i%>" size="50" maxlength="256" indexed="true" /></td>
 					</tr>
 					<tr>
 						<td class="etiqueta"><bean:message key="conte.url" />:</td>

@@ -44,8 +44,8 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 public class UserRequestProcessor extends RequestProcessor {
 
 	protected static final String INVALID_ROLE_SITES = "INVALID_ROLE_SITES";
-	protected final static String _URLINTRANETLOGADO = "/intranethome.do";
-	protected final static String _URLINTRANETLOGIN = "/intranetlogin.do";
+	protected final static String _URLINTRANETLOGADO = "/intranet/home.do";
+	protected final static String _URLINTRANETLOGIN = "/intranet/login.do";
 	protected final static String _URLARCHIVO = "/archivopub.do";
 	protected final static String _URLINVALIDROL = "/invalidrol.do";
 	protected final static String _URLERRORSESSION = "/invalidsession.do";
@@ -104,18 +104,19 @@ public class UserRequestProcessor extends RequestProcessor {
 					return false;
 				}
 			}
-			
-			if (esUnaPeticionExterna()) {
-                Microsite microsite = obtenerMicrosite(req, pmkey);
 
-                if (redirectNewFront(microsite)) {
-                    String[] oldUrl = req.getRequestURL().toString().split("/");
-                    String host = oldUrl[0].concat("//").concat(oldUrl[2]);
-                    String newContext = System.getProperty("es.caib.gusite.context.front");
-                    String newUrl = host.concat(newContext).concat(req.getServletPath()).concat("?").concat(req.getQueryString());
-                    resp.sendRedirect(newUrl);
-                    return false;
-                }
+            Microsite microsite = obtenerMicrosite(req, pmkey);
+
+            if (redirectNewFront(microsite)) {
+                String[] oldUrl = req.getRequestURL().toString().split("/");
+                String host = oldUrl[0].concat("//").concat(oldUrl[2]);
+                String newContext = System.getProperty("es.caib.gusite.context.front");
+                String newUrl = host.concat(newContext).concat(req.getServletPath()).concat("?").concat(req.getQueryString());
+                resp.sendRedirect(newUrl);
+                return false;
+            }
+            
+			if (esUnaPeticionExterna()) {//Si no está autenticat
 
 				if (esUnMicrositePublico(microsite)) {
 					return true;
@@ -406,7 +407,7 @@ public class UserRequestProcessor extends RequestProcessor {
 	}
 
     private boolean redirectNewFront(Microsite microsite) {
-        return System.getProperty("es.caib.gusite.redirectToNewFront").equals("S")
+        return "S".equals(System.getProperty("es.caib.gusite.redirectToNewFront"))
                 && microsite != null
                 && microsite.getRestringido().equals("5");
     }

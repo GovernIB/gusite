@@ -130,9 +130,10 @@ public class tiposEditaAction extends BaseAction {
                 }
 
                 List<String> eliminar = new ArrayList<String>();
-                for (TraduccionTipo trad : tipo.getTraducciones().values()) {
+                for (String lang : tipo.getTraducciones().keySet()) {
+                	TraduccionTipo trad = tipo.getTraducciones().get(lang);
                     if (trad.getNombre().equals("") && trad.getUri().equals("")) {
-                        eliminar.add(trad.getId().getCodigoIdioma());
+                        eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
                         trad.setUri(Cadenas.string2uri(trad.getNombre()));
                     }

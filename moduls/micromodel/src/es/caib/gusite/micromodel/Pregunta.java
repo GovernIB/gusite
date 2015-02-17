@@ -20,185 +20,193 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Pregunta. Bean que define una Pregunta de una Encuesta
- * Modela la tabla de BBDD GUS_PREGUN.
+ * Clase Pregunta. Bean que define una Pregunta de una Encuesta Modela la tabla
+ * de BBDD GUS_PREGUN.
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_PREGUN")
-public class Pregunta implements Traducible2 {
+@Table(name = "GUS_PREGUN")
+public class Pregunta extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 8513598333939006319L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_PREGUNTA_ID_GENERATOR", sequenceName="GUS_SEQPRE", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_PREGUNTA_ID_GENERATOR")
-	@Column(name="PRE_CODI")
+	@SequenceGenerator(name = "GUS_PREGUNTA_ID_GENERATOR", sequenceName = "GUS_SEQPRE", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_PREGUNTA_ID_GENERATOR")
+	@Column(name = "PRE_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="PRE_ENCCOD")
-    private Long idencuesta;
+	@XmlAttribute
+	@Column(name = "PRE_ENCCOD")
+	private Long idencuesta;
 
-    @XmlElement
-    @ManyToOne
-	@JoinColumn(name="PRE_IMAGEN")
-    private Archivo imagen;
+	@XmlElement
+	@ManyToOne
+	@JoinColumn(name = "PRE_IMAGEN")
+	private Archivo imagen;
 
-    @XmlAttribute
-    @Column(name="PRE_MULTIR")
-    private String multiresp;
+	@XmlAttribute
+	@Column(name = "PRE_MULTIR")
+	private String multiresp;
 
-    @XmlAttribute
-    @Column(name="PRE_VISCMP")
-    private String visiblecmp;
+	@XmlAttribute
+	@Column(name = "PRE_VISCMP")
+	private String visiblecmp;
 
-    @XmlAttribute
-    @Column(name="PRE_OBLIGA")
-    private String obligatorio;
+	@XmlAttribute
+	@Column(name = "PRE_OBLIGA")
+	private String obligatorio;
 
-    @XmlAttribute
-    @Column(name="PRE_VISIB")
-    private String visible;
+	@XmlAttribute
+	@Column(name = "PRE_VISIB")
+	private String visible;
 
-    @XmlAttribute
-    @Column(name="PRE_ORDEN")
-    private Integer orden;
+	@XmlAttribute
+	@Column(name = "PRE_ORDEN")
+	private Integer orden;
 
-    @XmlAttribute
-    @Column(name="PRE_NRESP")
-    private Integer nrespuestas;
+	@XmlAttribute
+	@Column(name = "PRE_NRESP")
+	private Integer nrespuestas;
 
-    @XmlAttribute
-    @Column(name="PRE_MINCONT")
-    private Integer minContestadas;
+	@XmlAttribute
+	@Column(name = "PRE_MINCONT")
+	private Integer minContestadas;
 
-    @XmlAttribute
-    @Column(name="PRE_MAXCONT")
-    private Integer maxContestadas;
+	@XmlAttribute
+	@Column(name = "PRE_MAXCONT")
+	private Integer maxContestadas;
 
-    @XmlElement
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-    @JoinColumn(name="RES_PRECOD")
-    @MapKey
+	@XmlElement
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JoinColumn(name = "RES_PRECOD")
+	@MapKey
 	@OrderBy("orden ASC")
 	@Fetch(FetchMode.SUBSELECT)
-    private List<Respuesta> respuestas = new ArrayList();
+	private List<Respuesta> respuestas = new ArrayList();
 
-  	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-  	@JoinColumn(name="PID_PRECOD")
-  	@MapKey(name="id.codigoIdioma")
-  	private Map<String, TraduccionPregunta> traducciones = new HashMap<String, TraduccionPregunta>();
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JoinColumn(name = "PID_PRECOD")
+	@MapKey(name = "id.codigoIdioma")
+	private Map<String, TraduccionPregunta> traducciones = new HashMap<String, TraduccionPregunta>();
 
-  	@Transient
-  	private String idi = Idioma.getIdiomaPorDefecto();;
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();;
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionPregunta> getTranslates() {
-        return traducciones;
-    }
-
-    public void setTranslates(Map<String, TraduccionPregunta> traducciones) {
-        this.traducciones = traducciones;
-    }
-
-    public Map<String, TraduccionPregunta> getTraducciones() {
-        return traducciones;
-    }
-
-    public void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
-
-    public Long getId() {
-		return id;
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionPregunta> getTranslates() {
+		return this.traducciones;
 	}
-    
+
+	public void setTranslates(Map<String, TraduccionPregunta> traducciones) {
+		this.traducciones = traducciones;
+	}
+
+	@Override
+	public Map<String, TraduccionPregunta> getTraducciones() {
+		return this.traducciones;
+	}
+
+	@Override
+	public void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Long getIdencuesta() {
-		return idencuesta;
+		return this.idencuesta;
 	}
-	
+
 	public void setIdencuesta(Long idencuesta) {
 		this.idencuesta = idencuesta;
 	}
-	
+
 	public Archivo getImagen() {
-		return imagen;
+		return this.imagen;
 	}
-	
+
 	public void setImagen(Archivo imagen) {
 		this.imagen = imagen;
 	}
-	
+
 	public String getMultiresp() {
-		return multiresp;
+		return this.multiresp;
 	}
-	
+
 	public void setMultiresp(String multiresp) {
 		this.multiresp = multiresp;
 	}
-	
+
 	public Integer getNrespuestas() {
-		return nrespuestas;
+		return this.nrespuestas;
 	}
-	
+
 	public void setNrespuestas(Integer nrespuestas) {
 		this.nrespuestas = nrespuestas;
 	}
-	
+
 	public String getObligatorio() {
-		return obligatorio;
+		return this.obligatorio;
 	}
-	
+
 	public void setObligatorio(String obligatorio) {
 		this.obligatorio = obligatorio;
 	}
-	
+
 	public Integer getOrden() {
-		return orden;
+		return this.orden;
 	}
-	
+
 	public void setOrden(Integer orden) {
 		this.orden = orden;
 	}
-	
+
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
-	
+
 	public void setVisible(String visible) {
 		this.visible = visible;
 	}
-	
+
 	public String getVisiblecmp() {
-		return visiblecmp;
+		return this.visiblecmp;
 	}
-	
+
 	public void setVisiblecmp(String visiblecmp) {
 		this.visiblecmp = visiblecmp;
 	}
 
 	public List<Respuesta> getRespuestas() {
-		return respuestas;
+		return this.respuestas;
 	}
 
 	public void setRespuestas(List<Respuesta> respuestas) {
@@ -206,24 +214,25 @@ public class Pregunta implements Traducible2 {
 	}
 
 	// Metodos para poder leer las colecciones del XML
-	
+
 	public void addRespuestas(Respuesta resp) {
-		respuestas.add(resp);
+		this.respuestas.add(resp);
 	}
-	
+
 	public void addTraduccionMap(String lang, TraduccionPregunta traduccion) {
-        setTraduccion(lang, traduccion);
-    }
+		this.setTraduccion(lang, traduccion);
+	}
 
 	/**
 	 * @return the minContestadas
 	 */
 	public Integer getMinContestadas() {
-		return minContestadas;
+		return this.minContestadas;
 	}
 
 	/**
-	 * @param minContestadas the minContestadas to set
+	 * @param minContestadas
+	 *            the minContestadas to set
 	 */
 	public void setMinContestadas(Integer minContestadas) {
 		this.minContestadas = minContestadas;
@@ -233,46 +242,54 @@ public class Pregunta implements Traducible2 {
 	 * @return the maxContestadas
 	 */
 	public Integer getMaxContestadas() {
-		return maxContestadas;
+		return this.maxContestadas;
 	}
 
 	/**
-	 * @param maxContestadas the maxContestadas to set
+	 * @param maxContestadas
+	 *            the maxContestadas to set
 	 */
 	public void setMaxContestadas(Integer maxContestadas) {
 		this.maxContestadas = maxContestadas;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionPregunta)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionPregunta) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
-		
+
 	}
 
+	@Override
 	public void setIdi(String idi) {
-		this.idi=idi;
+		this.idi = idi;
 	}
 }

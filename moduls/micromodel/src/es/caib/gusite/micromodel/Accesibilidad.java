@@ -9,93 +9,88 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * Clase Accesibilidad. Bean que contiene información de la accesibilidad de un microsite. 
- * Modela la tabla de BBDD GUS_W3C
+ * Clase Accesibilidad. Bean que contiene información de la accesibilidad de un
+ * microsite. Modela la tabla de BBDD GUS_W3C
+ * 
  * @author Indra
- *
+ * 
  */
 @Entity
-@Table(name="GUS_W3C")
-public class Accesibilidad implements ValueObject {
+@Table(name = "GUS_W3C")
+public class Accesibilidad extends AuditableModel implements ValueObject {
 
-	
 	private static final long serialVersionUID = -3612093597829849842L;
-	
+
 	public static final String RES_OK = "1";
 	public static final String RES_WARN = "2";
 	public static final String RES_ERROR = "3";
-	
+
 	public static final String MES_SINMEDIA = "0";
 	@Id
-	@SequenceGenerator(name="GUS_ACCESIBILIDAD_ID_GENERATOR", sequenceName="GUS_SEQCON", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_ACCESIBILIDAD_ID_GENERATOR")
-	@Column(name="W3C_CODI")
+	@SequenceGenerator(name = "GUS_ACCESIBILIDAD_ID_GENERATOR", sequenceName = "GUS_SEQCON", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_ACCESIBILIDAD_ID_GENERATOR")
+	@Column(name = "W3C_CODI")
 	private Long id;
-	@Column(name="W3C_SERVIC")
-    private String servicio;
-	@Column(name="W3C_RESULT")
-    private String resultado;
-	@Column(name="W3C_MENSA")
-    private String mensaje;
-	@Column(name="W3C_MESURA")
-    private String medida;
-	@Column(name="W3C_IDIOMA")
-    private String idioma;
-	@Column(name="W3C_IDITEM")
-    private Long iditem;
-	@Column(name="W3C_MICCOD")
-    private Long codmicro;
-	@Column(name="W3C_TAWRES")
-    private String tawresultado;
-	@Column(name="W3C_TAWMEN")
-    private String tawmensaje;
-    
-    /**
-     * Constructor de la clase.
-     */
-    public Accesibilidad(){}
+	@Column(name = "W3C_SERVIC")
+	private String servicio;
+	@Column(name = "W3C_RESULT")
+	private String resultado;
+	@Column(name = "W3C_MENSA")
+	private String mensaje;
+	@Column(name = "W3C_MESURA")
+	private String medida;
+	@Column(name = "W3C_IDIOMA")
+	private String idioma;
+	@Column(name = "W3C_IDITEM")
+	private Long iditem;
+	@Column(name = "W3C_MICCOD")
+	private Long codmicro;
+	@Column(name = "W3C_TAWRES")
+	private String tawresultado;
+	@Column(name = "W3C_TAWMEN")
+	private String tawmensaje;
 
-
-	public Long getId() {
-		return id;
+	/**
+	 * Constructor de la clase.
+	 */
+	public Accesibilidad() {
 	}
 
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
 	public String getServicio() {
-		return servicio;
+		return this.servicio;
 	}
-
 
 	public void setServicio(String servicio) {
 		this.servicio = servicio;
 	}
 
-
 	public String getResultado() {
-		return resultado;
+		return this.resultado;
 	}
-
 
 	public void setResultado(String resultado) {
 		this.resultado = resultado;
 	}
 
 	public String getMensaje() {
-		return mensaje;
+		return this.mensaje;
 	}
-
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
 
 	public String getMedida() {
-		return medida;
+		return this.medida;
 	}
 
 	public void setMedida(String medida) {
@@ -103,7 +98,7 @@ public class Accesibilidad implements ValueObject {
 	}
 
 	public Long getIditem() {
-		return iditem;
+		return this.iditem;
 	}
 
 	public void setIditem(Long iditem) {
@@ -111,7 +106,7 @@ public class Accesibilidad implements ValueObject {
 	}
 
 	public String getIdioma() {
-		return idioma;
+		return this.idioma;
 	}
 
 	public void setIdioma(String idioma) {
@@ -119,7 +114,7 @@ public class Accesibilidad implements ValueObject {
 	}
 
 	public Long getCodmicro() {
-		return codmicro;
+		return this.codmicro;
 	}
 
 	public void setCodmicro(Long codmicro) {
@@ -127,7 +122,7 @@ public class Accesibilidad implements ValueObject {
 	}
 
 	public String getTawresultado() {
-		return tawresultado;
+		return this.tawresultado;
 	}
 
 	public void setTawresultado(String tawresultado) {
@@ -135,11 +130,11 @@ public class Accesibilidad implements ValueObject {
 	}
 
 	public String getTawmensaje() {
-		return tawmensaje;
+		return this.tawmensaje;
 	}
 
 	public void setTawmensaje(String tawmensaje) {
 		this.tawmensaje = tawmensaje;
 	}
-	
+
 }

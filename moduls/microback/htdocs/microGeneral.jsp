@@ -244,10 +244,6 @@
 
 								<logic:equal name="puedoeditar" value="1">
 									<tr>
-										<td class="etiqueta"><bean:message key="micro.indique.rol" /> &gt;</td>
-										<td><html:text property="rol" size="30" maxlength="150" /></td>
-									</tr>
-									<tr>
 										<td class="etiqueta"><bean:message key="micro.domini" /> &gt;</td>
 										<td><html:text property="domini" size="30" maxlength="150" /></td>
 									</tr>
@@ -262,15 +258,20 @@
 											</html:select>
 										</td>
 									</tr>
-									<tr class="par">
+									<tr>
 										<td class="etiqueta"><bean:message key="micro.acceso" /> &gt;</td>
 										<td>
 											<html:select property="acceso">
 												<html:option value="R"><bean:message key="micro.version5.acceso.restringit" /></html:option>
 												<html:option value="P"><bean:message key="micro.version5.acceso.public" /></html:option>
+                                                <html:option value="M"><bean:message key="micro.version5.acceso.rol" /></html:option>
 											</html:select>
 										</td>
 									</tr>
+                                    <tr class="par">
+                                        <td class="etiqueta"><bean:message key="micro.indique.rol" /> &gt;</td>
+                                        <td><html:text property="rol" size="30" maxlength="150" /></td>
+                                    </tr>
 									<tr>
 										<td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
 										<td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
@@ -285,7 +286,7 @@
 										<td class="etiqueta"><bean:message key="micro.analytics" /> &gt;</td>
 										<td><html:text property="analytics" name="microForm" size="100" maxlength="256"/></td>
 									</tr>
-									<tr>
+									<tr class="par">
 										<td class="etiqueta"><bean:message key="micro.uri" /> &gt;</td>
 										<td><html:text property="uri" name="microForm"  size="100" maxlength="256"/></td>
 										<input type="hidden" name="type" value="mic_uri" />

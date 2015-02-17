@@ -7,9 +7,9 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.gusite.utilities.auth.CertsPrincipal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.security.auth.certs.SeyconPrincipal;
 
 import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.Microfront;
@@ -186,14 +186,14 @@ public class BdEnvioencuesta  extends Bdbase {
 			    if (!"S".equals(encuesta.getIdentificacion())) 
 			    	usuario.setNombre("Anonimo");
 			    else{
-			    	SeyconPrincipal principal = null;
+			    	CertsPrincipal principal = null;
 		    		try{
-		    			principal = SeyconPrincipal.getCurrent();
+		    			principal = CertsPrincipal.getCurrent();
 		    			usuario.setNombre(principal.getFullName());			    
 				    	usuario.setDni(principal.getNif());
 		    		}catch(Exception e){
-		    			log.error("Error BdEnvioEncuesta (obteniendo identicacion Seycon): " + e);
-		    			throw new Exception("Error BdEnvioEncuesta (obteniendo identicacion Seycon)");
+		    			log.error("Error BdEnvioEncuesta (obteniendo identicacion): " + e);
+		    			throw new Exception("Error BdEnvioEncuesta (obteniendo identicacion)");
 		    		}			    	
 			    }
 			    

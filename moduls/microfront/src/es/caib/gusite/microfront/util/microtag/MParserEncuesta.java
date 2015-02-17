@@ -1,6 +1,5 @@
 package es.caib.gusite.microfront.util.microtag;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -9,9 +8,9 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.gusite.utilities.auth.CertsPrincipal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.security.auth.certs.SeyconPrincipal;
 
 import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.util.Fechas;
@@ -70,9 +69,9 @@ public class MParserEncuesta extends MParserHTML {
     		//u91856 02/03/2012 Salvador Antich: Identificacion del usuario que contesta segun configuracion de la encuesta
     		if (encuesta.getIdentificacion().equals("S")){
     			try {
-					SeyconPrincipal principal = null;
-					principal = SeyconPrincipal.getCurrent();
-					//principal = (SeyconPrincipal) request.getUserPrincipal();
+					CertsPrincipal principal = null;
+					principal = CertsPrincipal.getCurrent();
+					//principal = (CertsPrincipal) request.getUserPrincipal();
 					String identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}",principal.getFullName());
 					retorno.append(identificacio);
 				} catch (Exception e) {

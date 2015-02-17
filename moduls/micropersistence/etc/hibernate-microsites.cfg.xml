@@ -39,6 +39,7 @@
   <mapping class="es.caib.gusite.micromodel.Actividadagenda"/>
   <mapping class="es.caib.gusite.micromodel.Agenda"/>
   <mapping class="es.caib.gusite.micromodel.Archivo"/>
+  <mapping class="es.caib.gusite.micromodel.ArchivoTemaFront" />
   <mapping class="es.caib.gusite.micromodel.Auditoria"/>
   <mapping class="es.caib.gusite.micromodel.Componente"/>
   <mapping class="es.caib.gusite.micromodel.Contacto"/>
@@ -58,10 +59,13 @@
   <mapping class="es.caib.gusite.micromodel.Microsite"/>
   <mapping class="es.caib.gusite.micromodel.MicrositeCompleto"/>
   <mapping class="es.caib.gusite.micromodel.Noticia"/>
+  <mapping class="es.caib.gusite.micromodel.PersonalizacionPlantilla" />
+  <mapping class="es.caib.gusite.micromodel.Plantilla" />
   <mapping class="es.caib.gusite.micromodel.Pregunta"/>
   <mapping class="es.caib.gusite.micromodel.Respuesta"/>
   <mapping class="es.caib.gusite.micromodel.RespuestaDato"/>
   <mapping class="es.caib.gusite.micromodel.Temafaq"/>
+  <mapping class="es.caib.gusite.micromodel.TemaFront" />
   <mapping class="es.caib.gusite.micromodel.Tipo"/>
   <mapping class="es.caib.gusite.micromodel.Tiposervicio"/>
   <mapping class="es.caib.gusite.micromodel.TraduccionActividadagenda"/>
@@ -83,6 +87,7 @@
   <mapping class="es.caib.gusite.micromodel.UsuarioEncuesta"/>
   <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioMicrosite"/>
   <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioRespuesta"/>
+  <mapping class="es.caib.gusite.micromodel.Version" />
 
  </session-factory>
 </hibernate-configuration>

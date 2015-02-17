@@ -236,7 +236,7 @@
 			<table cellpadding="0" cellspacing="0" class="edicio">
 			<tr style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.titulo" />:</td>
-				<td><html:text property="titulo" name="traducciones" size="50" maxlength="512" indexed="true" /></td>
+				<td><html:text property="titulo" name="traducciones" styleId="<%="titulo"+i%>" size="50" maxlength="512" indexed="true" /></td>
 			</tr>
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.subtitulo" />:</td>

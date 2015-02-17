@@ -127,10 +127,10 @@
       <forward name="resultadosv1" path="/v1/cercador/cercar.jsp"/>
     </action>       
     
-	<action path="/intranethome" type="es.caib.gusite.microfront.home.actions.IntranetAction" unknown="true">
+	<action path="/intranet/home" type="es.caib.gusite.microfront.home.actions.IntranetAction" unknown="true">
       <forward name="intranet" path="/v4/home/intranet.jsp"/>
     </action>   
-	<action path="/intranetlogin" type="es.caib.gusite.microfront.home.actions.IntranetLoginAction" unknown="true">
+	<action path="/intranet/login" type="es.caib.gusite.microfront.home.actions.IntranetLoginAction" unknown="true">
       <forward name="intranetlogin" path="/v4/home/intranetlogin.jsp"/>
     </action>   
 

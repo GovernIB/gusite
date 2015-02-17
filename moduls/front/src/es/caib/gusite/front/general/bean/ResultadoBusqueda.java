@@ -9,8 +9,9 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-
-/** Transfer Object que contendrá el resultado de una búsqueda paginada
+/**
+ * Transfer Object que contendrá el resultado de una búsqueda paginada
+ * 
  * @author agarcia
  */
 public class ResultadoBusqueda<T> implements Serializable {
@@ -21,28 +22,29 @@ public class ResultadoBusqueda<T> implements Serializable {
 	private static final long serialVersionUID = -5582328230300652139L;
 
 	private Map<String, Integer> parametros = new Hashtable<String, Integer>();
-	
-    /**
-     * El número total de registros
-     */
-    private Integer totalNumRecords = 0;
 
-    /**
-     * indica si se ha producido un error
-     */
-    private boolean error = false;
+	/**
+	 * El número total de registros
+	 */
+	private Integer totalNumRecords = 0;
 
-    /** Identificador del error
-     */
-    private ErrorMicrosite errorId;
+	/**
+	 * indica si se ha producido un error
+	 */
+	private boolean error = false;
 
-    /**
-     * Mensaje de error
-     */
-    private String msg;
+	/**
+	 * Identificador del error
+	 */
+	private ErrorMicrosite errorId;
 
+	/**
+	 * Mensaje de error
+	 */
+	private String msg;
 
-	public ResultadoBusqueda() {}
+	public ResultadoBusqueda() {
+	}
 
 	public ResultadoBusqueda(List<T> datos, int size) {
 		this.setResultados(datos);
@@ -70,13 +72,15 @@ public class ResultadoBusqueda<T> implements Serializable {
 	/**
 	 * Resultados de la búsqueda. Contendrá una sola página de resultados.
 	 */
-    private Collection<T> resultados;
+	private Collection<T> resultados;
 
 	public Integer getTotalNumRecords() {
 		return this.totalNumRecords;
 	}
 
-	/** Fija totalNumRecords
+	/**
+	 * Fija totalNumRecords
+	 * 
 	 * @param totalNumRecords
 	 */
 	public void setTotalNumRecords(Integer totalNumRecords) {
@@ -87,7 +91,9 @@ public class ResultadoBusqueda<T> implements Serializable {
 		return this.error;
 	}
 
-	/** Fija error
+	/**
+	 * Fija error
+	 * 
 	 * @param error
 	 */
 	public void setError(boolean error) {
@@ -98,7 +104,9 @@ public class ResultadoBusqueda<T> implements Serializable {
 		return this.errorId;
 	}
 
-	/** Fija errorId
+	/**
+	 * Fija errorId
+	 * 
 	 * @param errorId
 	 */
 	public void setErrorId(ErrorMicrosite errorId) {
@@ -109,8 +117,11 @@ public class ResultadoBusqueda<T> implements Serializable {
 		return this.msg;
 	}
 
-	/** Fija el mensaje de error
-	 * @param msg el mensaje de error
+	/**
+	 * Fija el mensaje de error
+	 * 
+	 * @param msg
+	 *            el mensaje de error
 	 */
 	public void setMsg(String msg) {
 		this.msg = msg;
@@ -120,8 +131,11 @@ public class ResultadoBusqueda<T> implements Serializable {
 		return this.resultados;
 	}
 
-	/** Fija los resultados
-	 * @param resultados los resultados
+	/**
+	 * Fija los resultados
+	 * 
+	 * @param resultados
+	 *            los resultados
 	 */
 	public void setResultados(Collection<T> resultados) {
 		this.resultados = resultados;
@@ -132,8 +146,7 @@ public class ResultadoBusqueda<T> implements Serializable {
 	}
 
 	public Map<String, Integer> getParametros() {
-		return parametros;
+		return this.parametros;
 	}
-
 
 }

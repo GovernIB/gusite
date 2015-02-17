@@ -79,9 +79,13 @@ public class noticiasEditaAction extends BaseAction
 		        noticiaBean = setFormtoBean(request, noticiaForm, micrositeBean);
 
                 List<String> eliminar = new ArrayList<String>();
-                for (TraduccionNoticia trad : noticiaBean.getTraducciones().values()) {
+                for (String lang : noticiaBean.getTraducciones().keySet()) {
+                	TraduccionNoticia trad = noticiaBean.getTraducciones().get(lang);
                     if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
+                    	/* NPE!! cuando trad.getId es null
                         eliminar.add(trad.getId().getCodigoIdioma());
+                        */
+                        eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
                         trad.setUri(Cadenas.string2uri(trad.getTitulo()));
                     }

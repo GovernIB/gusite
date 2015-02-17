@@ -1,6 +1,5 @@
 package es.caib.gusite.front.contacto;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,531 +42,573 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 /**
  * 
  * @author brujula-at4
- *
+ * 
  */
 @Controller
 public class ContactosController extends BaseController {
-	
+
 	private static Log log = LogFactory.getLog(ContactosController.class);
 
 	@Autowired
-    protected ContactosDataService contactosDataService;
-	
+	protected ContactosDataService contactosDataService;
 
 	/**
 	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("{uri}/{lang}/contact/") 
-	public String listarcontactos (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("lang") Idioma lang,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					@RequestParam(value="filtro", required = false, defaultValue="") String filtro,
-					@RequestParam(value="pagina", required = false, defaultValue="1") int pagina,
-					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
-					HttpServletRequest req) {
-		
-		Microsite microsite = null;
-	  	try {
-	  		
-		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
-			BaseCriteria criteria = new BaseCriteria(filtro, pagina, ordenacion);
-			ResultadoBusqueda<Contacto> formularios = this.contactosDataService.getListadoFormularios(microsite, lang, criteria);
-
-	    	if (formularios.getTotalNumRecords() == 1) {
-	    		//solo hay uno.... incluimos el formulario
-	    		return "forward:" + this.urlFactory.contacto(microsite, lang, formularios.getResultados().iterator().next());
-	    	} 
-	    	
-
-    		List<Pardato> listaNombreContactos = new ArrayList<Pardato>();
-	        for (Contacto contacto : formularios.getResultados()) {
-	        	 Pardato pardato = new Pardato();
-	        	 pardato.setKey(contacto.getTitulocontacto(lang.getLang().toLowerCase()));
-	        	 pardato.setValue( this.urlFactory.contacto(microsite, lang, contacto) );
-	        	 listaNombreContactos.add(pardato);
-	        }
-    		
-    		model.addAttribute("MVS_seulet_sin", this.urlFactory.listarContactosSinPagina(microsite, lang, criteria));
-    		model.addAttribute("MVS_parametros_pagina",formularios.getParametros());
-    		model.addAttribute("MVS_listado", listaNombreContactos);
-
-		    cargarMollapan(microsite, model, lang);
-
-		    return this.templateNameFactory.listarContactos(microsite);
-
-	
-        } catch (DelegateException e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-        } catch (ExceptionFrontMicro e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}      
-
-	}
-
-	
-	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("{uri}/contacto/") 
-	public String listarcontactosEs (
-					@PathVariable("uri") SiteId URI, 
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					@RequestParam(value="filtro", required = false, defaultValue="") String filtro,
-					@RequestParam(value="pagina", required = false, defaultValue="1") int pagina,
-					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
-					HttpServletRequest req) {
-		
-		return this.listarcontactos(URI, new Idioma(LANG_ES), model, mcont, pcampa, filtro, pagina, ordenacion, req);
-	}
-	
-	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("{uri}/contacte/") 
-	public String listarcontactosCa (
-					@PathVariable("uri") SiteId URI, 
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					@RequestParam(value="filtro", required = false, defaultValue="") String filtro,
-					@RequestParam(value="pagina", required = false, defaultValue="1") int pagina,
-					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
-					HttpServletRequest req) {
-		
-		return this.listarcontactos(URI, new Idioma(LANG_CA), model, mcont, pcampa, filtro, pagina, ordenacion, req);
-	}
-	
-	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("{uri}/contact/") 
-	public String listarcontactosEn (
-					@PathVariable("uri") SiteId URI, 
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					@RequestParam(value="filtro", required = false, defaultValue="") String filtro,
-					@RequestParam(value="pagina", required = false, defaultValue="1") int pagina,
-					@RequestParam(value="ordenacion", required = false, defaultValue="") String ordenacion,					
-					HttpServletRequest req) {
-		
-		return this.listarcontactos(URI, new Idioma(LANG_EN), model, mcont, pcampa, filtro, pagina, ordenacion, req);
-	}
-	
-	
-	
-	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/contact/{contacto}/")
-	public String contacto (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("lang") Idioma lang,
-					@PathVariable("contacto") long idContacto,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					HttpServletRequest req) {
-		
-		Microsite microsite = null;
-	  	try {
-	  		
-		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
-			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
-
-			//comprobacion de microsite
-			if (contacto.getIdmicrosite().longValue()!=microsite.getId().longValue()) {
-					log.error("El elemento solicitado no pertenece al site");
-					return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-			}
-			//comprobacion de visibilidad
-			if (!contacto.getVisible().equals("S")) {
-				log.error("El elemento solicitado no está visible");
-				return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-			}			
-    		
-		    model.addAttribute("MVS_contacto", contacto);
-		    model.addAttribute("MVS_contacto_titulo", contacto.getTitulocontacto(lang.getLang()));
-		    model.addAttribute("MVS_contacto_listatags", montaListaTags(microsite, lang, contacto));
-		    model.addAttribute("cont", contacto.getId());
-		    model.addAttribute("idsite", contacto.getIdmicrosite());
-
-		    cargarMollapan(microsite, model, lang, contacto);
-
-		    return this.templateNameFactory.contacto(microsite);
-
-	
-        } catch (DelegateException e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-        } catch (ExceptionFrontMicro e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}      
-
-	}
-
-
-	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * @param lang
-	 * @param uri
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(method=RequestMethod.POST,value="{uri}/{lang}/contact/{contacto}/") 
-	public String enviarContacto (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("lang") Idioma lang,
-					@PathVariable("contacto") long idContacto,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					@RequestParam(value="docAnex", required=false) CommonsMultipartFile docAnexFileData,					
-					MultipartHttpServletRequest req) {
-		
-		Microsite microsite = null;
-	  	try {
-	  		
-		  	microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
-			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
-
-			//comprobacion de microsite
-			if (contacto.getIdmicrosite().longValue()!=microsite.getId().longValue()) {
-					log.error("El elemento solicitado no pertenece al site");
-					return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-			}
-			//comprobacion de visibilidad
-			if (!contacto.getVisible().equals("S")) {
-				log.error("El elemento solicitado no está visible");
-				return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-			}			
-    		
-		    model.addAttribute("idsite", contacto.getIdmicrosite());
-		    
-		    String mensaje = this.procesaFormulario(contacto, lang, req);
-		    
-		    if (docAnexFileData==null) {
-			    this.enviarFormulario(contacto, lang, mensaje, null, null);
-		    } else {
-			    this.enviarFormulario(contacto, lang, mensaje, docAnexFileData.getInputStream(), docAnexFileData.getOriginalFilename());
-		    }
-
-		    cargarMollapan(microsite, model, lang, contacto);
-
-		    return this.templateNameFactory.envioContacto(microsite);
-
-	
-        } catch (DelegateException e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-        } catch (ExceptionFrontMicro e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		} catch (ExceptionFrontPagina e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		} catch (IOException e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}      
-
-	}
-	
-	
-	/**
-	 * Método privado que se encarga de enviar via correo electrónico la información del formulario
-	 * @throws ExceptionFrontPagina 
-	 */
-	private void enviarFormulario(Contacto contacto, Idioma lang, String mensaje, InputStream docAnex, String fileName) throws ExceptionFrontPagina {
-		
-		java.util.GregorianCalendar fecha = new java.util.GregorianCalendar();
-        String mensaje_asunto = contacto.getTitulocontacto(lang.getLang().toLowerCase());
-        StringBuffer mensaje_cuerpo = new StringBuffer("");
-       
-        mensaje_cuerpo.append(mensaje);
-        mensaje_cuerpo.append(fecha.getTime().toString());        
-
-        CorreoEngineService correo = new CorreoEngineService();
-       if(docAnex != null) {   
-	       correo.setFile(docAnex, fileName);
-       }
-        correo.initCorreo(contacto.getEmail(), mensaje_asunto , false, mensaje_cuerpo);
-        if (!correo.enviarCorreo()) {
-        	throw new ExceptionFrontPagina("Problema enviando correo");
-        }
-	}
-	
-	
-	/**
-	 * Recorreremos el formulario y lo iremos empaquetando en un string que será el 
-	 * cuerpo del mensaje a enviar por correo. 
-	 *
-	 */
-	private String procesaFormulario(Contacto contacto, Idioma lang, HttpServletRequest req) {
-			
-		    StringBuilder cuerpoMensaje = new StringBuilder();
-		    cuerpoMensaje.append("Idioma = ").append(lang.getLang()).append("\n");
-		     	
-		    for (Lineadatocontacto linea : contacto.getLineasdatocontacto()) {
-
-		    	if (linea.getTipo().equals(Contacto.RTYPE_TITULO)) {
-		    		continue; //el tipo n
-		    	}
-		    	String paramName = ((linea.getObligatorio()==1)?Microfront.VCAMPO_REQUERIDO:"") + linea.getId().toString();
-		    	String campovalor = ((TraduccionLineadatocontacto)linea.getTraduccion(lang.getLang())).getTexto() + " = ";
-		    	String[] paramValues = req.getParameterValues(paramName);
-		    	if (paramValues.length == 1) {
-					  String paramValue = paramValues[0];
-					  if (paramValue.length() == 0) {
-						  campovalor+="[sin valor]"+ "\n";
-					  } else {
-						  campovalor+= paramValue + "\n";
-					  }
-			    } else  {
-					  for (int i=0; i < paramValues.length; i++) {
-						  campovalor+= paramValues[i] + ", ";
-					  }
-					  campovalor+="\n";
-					  
-				}
-		    	cuerpoMensaje.append(campovalor);
-		    }
-		    return cuerpoMensaje.toString();
-	}    
-		
-
-
-	/**
-	 * Prepara un arraylist que contiene el bean pardato.
-	 * Prepara una hashtable que contiene el bean pardato.
-	 * En el bean se mete:
-	 * en el key: el texto o titulo
-	 * en el value: el tag html del elemento del formulario
 	 * 
-	 * La clave en el hash será el id de lineadatocontacto.
-	 * @param lang 
-	 * @return 
-	 *
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
 	 */
-	private List<Pardato> montaListaTags(Microsite microsite, Idioma lang, Contacto contacto) {
+	@RequestMapping("{uri}/{lang}/contact/")
+	public String listarcontactos(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("lang") Idioma lang,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion,
+			HttpServletRequest req) {
 
-		List<Pardato> listalineas = new ArrayList<Pardato>(); 
-		
-	    for (Lineadatocontacto ld : contacto.getLineasdatocontacto()) {
-	        	 Pardato pardato = new Pardato();
-	        	 MParserHTML parserhtml = new MParserHTML();
-	        	 if ((ld.getTipo().equals(Contacto.RTYPE_TEXTAREA)) || (ld.getTipo().equals(Contacto.RTYPE_TEXTO))) {
-		        	 pardato.setKey(((TraduccionLineadatocontacto)ld.getTraduccion(lang.getLang())).getTexto()) ;
-		        	 if (ld.getLineas()==0) 
-		        		 pardato.setValue(parserhtml.getTagText(
-				        				 	ld.getId().toString(),
-				        				 	ld.getTamano(),
-				        			 		ld.getObligatorio()).toString());
-		        	 else
-		        		 pardato.setValue(parserhtml.getTagTextarea(
-				        				 	ld.getId().toString(),
-				        				 	50,
-				        				 	ld.getLineas(),
-				        			 		ld.getObligatorio()).toString());
-	        	 }
-	        	 if  ((ld.getTipo().equals(Contacto.RTYPE_SELECTORMULTIPLE)) ||  (ld.getTipo().equals(Contacto.RTYPE_SELECTOR))) {
-		        	 pardato.setKey(getNombreinselect(((TraduccionLineadatocontacto)ld.getTraduccion(lang.getLang())).getTexto()));
-		        	 pardato.setValue(parserhtml.getTagSelect(
-		        			 		ld.getId().toString(),
-		        			 		getListaopciones(((TraduccionLineadatocontacto)ld.getTraduccion(lang.getLang())).getTexto()),
-		        			 		ld.getTipo(),
-		        			 		ld.getLineas(),
-		        			 		ld.getObligatorio()).toString());
-		        	 
-	        	 }
-	        	 if (!ld.getTipo().equals(Contacto.RTYPE_TITULO)) {
-		        	 listalineas.add(pardato);
-	        	 }
-	        }
-	        return listalineas; 
+		Microsite microsite = null;
+		try {
+
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			BaseCriteria criteria = new BaseCriteria(filtro, pagina, ordenacion);
+			ResultadoBusqueda<Contacto> formularios = this.contactosDataService
+					.getListadoFormularios(microsite, lang, criteria);
+
+			if (formularios.getTotalNumRecords() == 1) {
+				// solo hay uno.... incluimos el formulario
+				return "forward:"
+						+ this.urlFactory.contacto(microsite, lang, formularios
+								.getResultados().iterator().next());
+			}
+
+			List<Pardato> listaNombreContactos = new ArrayList<Pardato>();
+			for (Contacto contacto : formularios.getResultados()) {
+				Pardato pardato = new Pardato();
+				pardato.setKey(contacto.getTitulocontacto(lang.getLang()
+						.toLowerCase()));
+				pardato.setValue(this.urlFactory.contacto(microsite, lang,
+						contacto));
+				listaNombreContactos.add(pardato);
+			}
+
+			model.addAttribute("MVS_seulet_sin", this.urlFactory
+					.listarContactosSinPagina(microsite, lang, criteria));
+			model.addAttribute("MVS_parametros_pagina",
+					formularios.getParametros());
+			model.addAttribute("MVS_listado", listaNombreContactos);
+
+			this.cargarMollapan(microsite, model, lang);
+
+			return this.templateNameFactory.listarContactos(microsite);
+
+		} catch (DelegateException e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
 
+	}
 
-    /**
-     * devuelve la primera cadena de texto de un string utilizando como
-     * separador Microfront.separatorwords
-     * @param cadena
-     * @return
-     */
+	/**
+	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("{uri}/contacto/")
+	public String listarcontactosEs(
+			@PathVariable("uri") SiteId URI,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion,
+			HttpServletRequest req) {
 
-    
-    private String getNombreinselect(String cadena) {
-    	String retorno="";
-    	if (cadena.length()>0) {
-	        String txseparador = "" + Microfront.separatorwordsform;
-	        String[] listastringcadenas = cadena.split(txseparador);
-	        if(listastringcadenas.length==0){
-	        }
-	        else{
-	        	retorno=listastringcadenas[0];
-	        }
-	        
-	    }
-    	return retorno;
-    }
-	
-    /**
-     * Devuelve un arraylist que contiene strings.
-     * En la lista se introducen todos menos el primero.
-     * Se utiliza como separador del string Microfront.separatorwords
-     * @param cadena
-     * @return
-     */
-    private ArrayList<String> getListaopciones(String cadena) {
-    	ArrayList<String> lista=new ArrayList<String>();
-	    if (cadena.length()>0) {
-	        String txseparador = "" + Microfront.separatorwordsform;
-	        String[] listastringcadenas = cadena.split(txseparador);
-	        for (int i=1;i<listastringcadenas.length;i++)
-	          if (listastringcadenas[i].length()>0) lista.add(listastringcadenas[i]);
-	    }
-	    return lista;
-    }
-    
-	
+		return this.listarcontactos(URI, new Idioma(LANG_ES), model, mcont,
+				pcampa, filtro, pagina, ordenacion, req);
+	}
+
 	/**
 	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/contacto/{contacto}/") 
-	public String contactoEs (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("contacto") long idContacto,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					HttpServletRequest req) {
-		
-		return this.contacto(URI, new Idioma(LANG_ES), idContacto, model, mcont, pcampa, req);
+	@RequestMapping("{uri}/contacte/")
+	public String listarcontactosCa(
+			@PathVariable("uri") SiteId URI,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion,
+			HttpServletRequest req) {
+
+		return this.listarcontactos(URI, new Idioma(LANG_CA), model, mcont,
+				pcampa, filtro, pagina, ordenacion, req);
 	}
-	
+
 	/**
 	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/contacte/{contacto}/") 
-	public String contactoCa (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("contacto") long idContacto,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					HttpServletRequest req) {
-		
-		return this.contacto(URI, new Idioma(LANG_CA), idContacto, model, mcont, pcampa, req);
+	@RequestMapping("{uri}/contact/")
+	public String listarcontactosEn(
+			@PathVariable("uri") SiteId URI,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion,
+			HttpServletRequest req) {
+
+		return this.listarcontactos(URI, new Idioma(LANG_EN), model, mcont,
+				pcampa, filtro, pagina, ordenacion, req);
 	}
-	
+
 	/**
 	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/contact/{contacto}/") 
-	public String contactoEn (
-					@PathVariable("uri") SiteId URI, 
-					@PathVariable("contacto") long idContacto,
-					Model model,
-					@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-					@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
-					HttpServletRequest req) {
-		
-		return this.contacto(URI, new Idioma(LANG_EN), idContacto, model, mcont, pcampa, req);
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/contact/{contacto}/")
+	public String contacto(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("lang") Idioma lang,
+			@PathVariable("contacto") long idContacto,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			HttpServletRequest req) {
+
+		Microsite microsite = null;
+		try {
+
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			Contacto contacto = this.contactosDataService.getFormulario(
+					microsite, lang, idContacto);
+
+			// comprobacion de microsite
+			if (contacto.getIdmicrosite().longValue() != microsite.getId()
+					.longValue()) {
+				log.error("El elemento solicitado no pertenece al site");
+				return this.getForwardError(microsite, lang, model,
+						ErrorMicrosite.ERROR_AMBIT_MICRO);
+			}
+			// comprobacion de visibilidad
+			if (!contacto.getVisible().equals("S")) {
+				log.error("El elemento solicitado no está visible");
+				return this.getForwardError(microsite, lang, model,
+						ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			}
+
+			model.addAttribute("MVS_contacto", contacto);
+			model.addAttribute("MVS_contacto_titulo",
+					contacto.getTitulocontacto(lang.getLang()));
+			model.addAttribute("MVS_contacto_listatags",
+					this.montaListaTags(microsite, lang, contacto));
+			model.addAttribute("cont", contacto.getId());
+			model.addAttribute("idsite", contacto.getIdmicrosite());
+
+			this.cargarMollapan(microsite, model, lang, contacto);
+
+			return this.templateNameFactory.contacto(microsite);
+
+		} catch (DelegateException e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_MICRO);
+		}
+
 	}
-	
-	
-	
+
 	/**
-	 * Método privado para guardar el recorrido que ha realizado el usuario por el microsite.
+	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang}/contact/{contacto}/")
+	public String enviarContacto(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("lang") Idioma lang,
+			@PathVariable("contacto") long idContacto,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "docAnex", required = false) CommonsMultipartFile docAnexFileData,
+			MultipartHttpServletRequest req) {
+
+		Microsite microsite = null;
+		try {
+
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			Contacto contacto = this.contactosDataService.getFormulario(
+					microsite, lang, idContacto);
+
+			// comprobacion de microsite
+			if (contacto.getIdmicrosite().longValue() != microsite.getId()
+					.longValue()) {
+				log.error("El elemento solicitado no pertenece al site");
+				return this.getForwardError(microsite, lang, model,
+						ErrorMicrosite.ERROR_AMBIT_MICRO);
+			}
+			// comprobacion de visibilidad
+			if (!contacto.getVisible().equals("S")) {
+				log.error("El elemento solicitado no está visible");
+				return this.getForwardError(microsite, lang, model,
+						ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			}
+
+			model.addAttribute("idsite", contacto.getIdmicrosite());
+
+			String mensaje = this.procesaFormulario(contacto, lang, req);
+
+			if (docAnexFileData == null) {
+				this.enviarFormulario(contacto, lang, mensaje, null, null);
+			} else {
+				this.enviarFormulario(contacto, lang, mensaje,
+						docAnexFileData.getInputStream(),
+						docAnexFileData.getOriginalFilename());
+			}
+
+			this.cargarMollapan(microsite, model, lang, contacto);
+
+			return this.templateNameFactory.envioContacto(microsite);
+
+		} catch (DelegateException e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		} catch (IOException e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		}
+
+	}
+
+	/**
+	 * Método privado que se encarga de enviar via correo electrónico la
+	 * información del formulario
+	 * 
+	 * @throws ExceptionFrontPagina
+	 */
+	private void enviarFormulario(Contacto contacto, Idioma lang,
+			String mensaje, InputStream docAnex, String fileName)
+			throws ExceptionFrontPagina {
+
+		java.util.GregorianCalendar fecha = new java.util.GregorianCalendar();
+		String mensaje_asunto = contacto.getTitulocontacto(lang.getLang()
+				.toLowerCase());
+		StringBuffer mensaje_cuerpo = new StringBuffer("");
+
+		mensaje_cuerpo.append(mensaje);
+		mensaje_cuerpo.append(fecha.getTime().toString());
+
+		CorreoEngineService correo = new CorreoEngineService();
+		if (docAnex != null) {
+			correo.setFile(docAnex, fileName);
+		}
+		correo.initCorreo(contacto.getEmail(), mensaje_asunto, false,
+				mensaje_cuerpo);
+		if (!correo.enviarCorreo()) {
+			throw new ExceptionFrontPagina("Problema enviando correo");
+		}
+	}
+
+	/**
+	 * Recorreremos el formulario y lo iremos empaquetando en un string que será
+	 * el cuerpo del mensaje a enviar por correo.
+	 * 
+	 */
+	private String procesaFormulario(Contacto contacto, Idioma lang,
+			HttpServletRequest req) {
+
+		StringBuilder cuerpoMensaje = new StringBuilder();
+		cuerpoMensaje.append("Idioma = ").append(lang.getLang()).append("\n");
+
+		for (Lineadatocontacto linea : contacto.getLineasdatocontacto()) {
+
+			if (linea.getTipo().equals(Contacto.RTYPE_TITULO)) {
+				continue; // el tipo n
+			}
+			String paramName = ((linea.getObligatorio() == 1) ? Microfront.VCAMPO_REQUERIDO
+					: "")
+					+ linea.getId().toString();
+			String campovalor = ((TraduccionLineadatocontacto) linea
+					.getTraduccion(lang.getLang())).getTexto() + " = ";
+			String[] paramValues = req.getParameterValues(paramName);
+			if (paramValues.length == 1) {
+				String paramValue = paramValues[0];
+				if (paramValue.length() == 0) {
+					campovalor += "[sin valor]" + "\n";
+				} else {
+					campovalor += paramValue + "\n";
+				}
+			} else {
+				for (String paramValue : paramValues) {
+					campovalor += paramValue + ", ";
+				}
+				campovalor += "\n";
+
+			}
+			cuerpoMensaje.append(campovalor);
+		}
+		return cuerpoMensaje.toString();
+	}
+
+	/**
+	 * Prepara un arraylist que contiene el bean pardato. Prepara una hashtable
+	 * que contiene el bean pardato. En el bean se mete: en el key: el texto o
+	 * titulo en el value: el tag html del elemento del formulario
+	 * 
+	 * La clave en el hash será el id de lineadatocontacto.
+	 * 
+	 * @param lang
+	 * @return
+	 * 
+	 */
+	private List<Pardato> montaListaTags(Microsite microsite, Idioma lang,
+			Contacto contacto) {
+
+		List<Pardato> listalineas = new ArrayList<Pardato>();
+
+		for (Lineadatocontacto ld : contacto.getLineasdatocontacto()) {
+			Pardato pardato = new Pardato();
+			MParserHTML parserhtml = new MParserHTML();
+			if ((ld.getTipo().equals(Contacto.RTYPE_TEXTAREA))
+					|| (ld.getTipo().equals(Contacto.RTYPE_TEXTO))) {
+				pardato.setKey(((TraduccionLineadatocontacto) ld
+						.getTraduccion(lang.getLang())).getTexto());
+				if (ld.getLineas() == 0) {
+					pardato.setValue(parserhtml.getTagText(
+							ld.getId().toString(), ld.getTamano(),
+							ld.getObligatorio()).toString());
+				} else {
+					pardato.setValue(parserhtml.getTagTextarea(
+							ld.getId().toString(), 50, ld.getLineas(),
+							ld.getObligatorio()).toString());
+				}
+			}
+			if ((ld.getTipo().equals(Contacto.RTYPE_SELECTORMULTIPLE))
+					|| (ld.getTipo().equals(Contacto.RTYPE_SELECTOR))) {
+				pardato.setKey(this
+						.getNombreinselect(((TraduccionLineadatocontacto) ld
+								.getTraduccion(lang.getLang())).getTexto()));
+				pardato.setValue(parserhtml.getTagSelect(
+						ld.getId().toString(),
+						this.getListaopciones(((TraduccionLineadatocontacto) ld
+								.getTraduccion(lang.getLang())).getTexto()),
+						ld.getTipo(), ld.getLineas(), ld.getObligatorio())
+						.toString());
+
+			}
+			if (!ld.getTipo().equals(Contacto.RTYPE_TITULO)) {
+				listalineas.add(pardato);
+			}
+		}
+		return listalineas;
+	}
+
+	/**
+	 * devuelve la primera cadena de texto de un string utilizando como
+	 * separador Microfront.separatorwords
+	 * 
+	 * @param cadena
+	 * @return
+	 */
+
+	private String getNombreinselect(String cadena) {
+		String retorno = "";
+		if (cadena.length() > 0) {
+			String txseparador = "" + Microfront.separatorwordsform;
+			String[] listastringcadenas = cadena.split(txseparador);
+			if (listastringcadenas.length == 0) {
+			} else {
+				retorno = listastringcadenas[0];
+			}
+
+		}
+		return retorno;
+	}
+
+	/**
+	 * Devuelve un arraylist que contiene strings. En la lista se introducen
+	 * todos menos el primero. Se utiliza como separador del string
+	 * Microfront.separatorwords
+	 * 
+	 * @param cadena
+	 * @return
+	 */
+	private ArrayList<String> getListaopciones(String cadena) {
+		ArrayList<String> lista = new ArrayList<String>();
+		if (cadena.length() > 0) {
+			String txseparador = "" + Microfront.separatorwordsform;
+			String[] listastringcadenas = cadena.split(txseparador);
+			for (int i = 1; i < listastringcadenas.length; i++) {
+				if (listastringcadenas[i].length() > 0) {
+					lista.add(listastringcadenas[i]);
+				}
+			}
+		}
+		return lista;
+	}
+
+	/**
+	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contacto/{contacto}/")
+	public String contactoEs(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("contacto") long idContacto,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			HttpServletRequest req) {
+
+		return this.contacto(URI, new Idioma(LANG_ES), idContacto, model,
+				mcont, pcampa, req);
+	}
+
+	/**
+	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contacte/{contacto}/")
+	public String contactoCa(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("contacto") long idContacto,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			HttpServletRequest req) {
+
+		return this.contacto(URI, new Idioma(LANG_CA), idContacto, model,
+				mcont, pcampa, req);
+	}
+
+	/**
+	 * TODO: tipo debería ser el nemotecnico del tipo
+	 * 
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contact/{contacto}/")
+	public String contactoEn(
+			@PathVariable("uri") SiteId URI,
+			@PathVariable("contacto") long idContacto,
+			Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			HttpServletRequest req) {
+
+		return this.contacto(URI, new Idioma(LANG_EN), idContacto, model,
+				mcont, pcampa, req);
+	}
+
+	/**
+	 * Método privado para guardar el recorrido que ha realizado el usuario por
+	 * el microsite.
+	 * 
 	 * @param microsite
 	 * @param model
 	 * @param lang
-	 * @return 
+	 * @return
 	 * @return string recorrido en el microsite
 	 */
-	private List<PathItem> cargarMollapan(Microsite microsite, Model model, Idioma lang) {
-		
+	private List<PathItem> cargarMollapan(Microsite microsite, Model model,
+			Idioma lang) {
+
 		List<PathItem> path = super.getBasePath(microsite, model, lang);
 
-		path.add(new PathItem(getMessage("listarcontactos.frmcontacto", lang), this.urlFactory.listarContactos(microsite, lang)));
-		
-	    //Datos para la plantilla
-	    model.addAttribute("MVS2_pathdata", path);
-	    
-	    return path;
-		
-	}	
-	
-	private void cargarMollapan(Microsite microsite, Model model, Idioma lang,Contacto contacto) {
-		
+		path.add(new PathItem(this.getMessage("listarcontactos.frmcontacto",
+				lang), this.urlFactory.listarContactos(microsite, lang)));
+
+		// Datos para la plantilla
+		model.addAttribute("MVS2_pathdata", path);
+
+		return path;
+
+	}
+
+	private void cargarMollapan(Microsite microsite, Model model, Idioma lang,
+			Contacto contacto) {
+
 		List<PathItem> path = this.cargarMollapan(microsite, model, lang);
-		
-		/* original:
-		path.add(new PathItem(getMessage("contacto.formulario", lang), this.urlFactory.contacto(microsite, lang, contacto)));
-		
-		Mejor usar el título del formulario:
-		*/
+
+		/*
+		 * original: path.add(new PathItem(getMessage("contacto.formulario",
+		 * lang), this.urlFactory.contacto(microsite, lang, contacto)));
+		 * 
+		 * Mejor usar el título del formulario:
+		 */
 		String titulo = contacto.getTitulocontacto(lang.getLang());
 		if (StringUtils.isEmpty(titulo)) {
-			titulo = getMessage("contacto.formulario", lang);
+			titulo = this.getMessage("contacto.formulario", lang);
 		}
-		path.add(new PathItem(titulo, this.urlFactory.contacto(microsite, lang, contacto)));
+		path.add(new PathItem(titulo, this.urlFactory.contacto(microsite, lang,
+				contacto)));
 
-	    //Datos para la plantilla
-	    model.addAttribute("MVS2_pathdata", path);
-		
+		// Datos para la plantilla
+		model.addAttribute("MVS2_pathdata", path);
+
 	}
-	
-	
-	
-	
+
 	@Override
 	public String setServicio() {
-		
+
 		return Microfront.RCONTACTO;
 	}
 
-	
-	
-	
 }

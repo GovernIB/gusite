@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionComponentePK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="CPI_CODIDI")
+	@XmlAttribute
+	@Column(name = "CPI_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="CPI_CMPCOD")
+	@XmlAttribute
+	@Column(name = "CPI_CMPCOD")
 	private long codigoComponente;
 
-    public TraduccionComponentePK() {
-    }
+	public TraduccionComponentePK() {
+	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionComponentePK implements Serializable {
 	}
 
 	public long getCodigoComponente() {
-		return codigoComponente;
+		return this.codigoComponente;
 	}
 
 	public void setCodigoComponente(long codigoComponente) {
 		this.codigoComponente = codigoComponente;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,21 @@ public class TraduccionComponentePK implements Serializable {
 		if (!(other instanceof TraduccionComponentePK)) {
 			return false;
 		}
-		TraduccionComponentePK castOther = (TraduccionComponentePK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoComponente == castOther.codigoComponente);
+		TraduccionComponentePK castOther = (TraduccionComponentePK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoComponente == castOther.codigoComponente);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoComponente ^ (this.codigoComponente >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoComponente ^ (this.codigoComponente >>> 32)));
+
 		return hash;
-    }
+	}
 }

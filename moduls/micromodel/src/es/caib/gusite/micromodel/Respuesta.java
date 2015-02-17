@@ -18,94 +18,102 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Respuesta. Bean que define una Respuesta de la respuesta de una encuesta.
- * Modela la tabla de BBDD GUS_RESPUS.
+ * Clase Respuesta. Bean que define una Respuesta de la respuesta de una
+ * encuesta. Modela la tabla de BBDD GUS_RESPUS.
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_RESPUS")
-public class Respuesta implements Traducible2 {
+@Table(name = "GUS_RESPUS")
+public class Respuesta extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 2967918550911471091L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_RESPUESTA_ID_GENERATOR", sequenceName="GUS_SEQRES", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_RESPUESTA_ID_GENERATOR")
-	@Column(name="RES_CODI")
+	@SequenceGenerator(name = "GUS_RESPUESTA_ID_GENERATOR", sequenceName = "GUS_SEQRES", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_RESPUESTA_ID_GENERATOR")
+	@Column(name = "RES_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="RES_PRECOD")
-    private Long idpregunta;
+	@XmlAttribute
+	@Column(name = "RES_PRECOD")
+	private Long idpregunta;
 
-    @XmlAttribute
-	@Column(name="RES_ORDEN")
-    private Integer orden;
+	@XmlAttribute
+	@Column(name = "RES_ORDEN")
+	private Integer orden;
 
-    @XmlAttribute
-	@Column(name="RES_NRESP")
-    private Integer nrespuestas;
+	@XmlAttribute
+	@Column(name = "RES_NRESP")
+	private Integer nrespuestas;
 
-    @XmlAttribute
-	@Column(name="RES_TIPO")
-    private String tipo;
+	@XmlAttribute
+	@Column(name = "RES_TIPO")
+	private String tipo;
 
-    @XmlElement
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="VOT_IDRESP")
+	@XmlElement
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "VOT_IDRESP")
 	@MapKey
 	private Set<RespuestaDato> respuestadato = new HashSet();
 
-  	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-  	@JoinColumn(name="REI_RESCOD")
-  	@MapKey(name="id.codigoIdioma")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JoinColumn(name = "REI_RESCOD")
+	@MapKey(name = "id.codigoIdioma")
 	@Fetch(FetchMode.SUBSELECT)
-  	private Map<String, TraduccionRespuesta> traducciones = new HashMap<String, TraduccionRespuesta>();
+	private Map<String, TraduccionRespuesta> traducciones = new HashMap<String, TraduccionRespuesta>();
 
-  	@Transient
-    private String idi = Idioma.getIdiomaPorDefecto();
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionRespuesta> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionRespuesta> getTranslates() {
+		return this.traducciones;
+	}
 
-    public void setTranslates(Map<String, TraduccionRespuesta> traducciones) {
-        this.traducciones = traducciones;
-    }
+	public void setTranslates(Map<String, TraduccionRespuesta> traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Map<String, TraduccionRespuesta> getTraducciones() {
-        return traducciones;
-    }
+	@Override
+	public Map<String, TraduccionRespuesta> getTraducciones() {
+		return this.traducciones;
+	}
 
-    public void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
+	@Override
+	public void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Set<RespuestaDato> getRespuestadato() {
-		return respuestadato;
+	public Set<RespuestaDato> getRespuestadato() {
+		return this.respuestadato;
 	}
 
 	public void setRespuestadato(Set<RespuestaDato> respuestadato) {
 		this.respuestadato = respuestadato;
 	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -113,7 +121,7 @@ public class Respuesta implements Traducible2 {
 	}
 
 	public Long getIdpregunta() {
-		return idpregunta;
+		return this.idpregunta;
 	}
 
 	public void setIdpregunta(Long idpregunta) {
@@ -121,7 +129,7 @@ public class Respuesta implements Traducible2 {
 	}
 
 	public Integer getNrespuestas() {
-		return nrespuestas;
+		return this.nrespuestas;
 	}
 
 	public void setNrespuestas(Integer nrespuestas) {
@@ -129,7 +137,7 @@ public class Respuesta implements Traducible2 {
 	}
 
 	public Integer getOrden() {
-		return orden;
+		return this.orden;
 	}
 
 	public void setOrden(Integer orden) {
@@ -137,7 +145,7 @@ public class Respuesta implements Traducible2 {
 	}
 
 	public String getTipo() {
-		return tipo;
+		return this.tipo;
 	}
 
 	public void setTipo(String tipo) {
@@ -145,42 +153,49 @@ public class Respuesta implements Traducible2 {
 	}
 
 	public void addTraduccionMap(String lang, TraduccionRespuesta traduccion) {
-        setTraduccion(lang, traduccion);
-    }
+		this.setTraduccion(lang, traduccion);
+	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionRespuesta)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionRespuesta) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}
 
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 }

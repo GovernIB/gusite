@@ -4,41 +4,46 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Clase TraduccionFaq. Encapsula los datos  que pueden tener valor en diferentes idiomas del objeto Faq.
+ * Clase TraduccionFaq. Encapsula los datos que pueden tener valor en diferentes
+ * idiomas del objeto Faq.
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_FAQIDI")
-public class TraduccionFaq  implements Traduccion{
+@Table(name = "GUS_FAQIDI")
+public class TraduccionFaq implements Traduccion {
 
 	private static final long serialVersionUID = -5527976114771535502L;
 
-    @XmlElement
+	@XmlElement
 	@EmbeddedId
 	private TraduccionFaqPK id;
 
-    @XmlAttribute
-	@Column(name="FID_PREGUN")
+	@XmlAttribute
+	@Column(name = "FID_PREGUN")
 	private String pregunta;
 
-    @XmlAttribute
-	@Column(name="FID_RESPU")
+	@XmlAttribute
+	@Column(name = "FID_RESPU")
 	private String respuesta;
 
-    @XmlAttribute
-	@Column(name="FID_URL")
+	@XmlAttribute
+	@Column(name = "FID_URL")
 	private String url;
 
-    @XmlAttribute
-	@Column(name="FID_URLNOM")
+	@XmlAttribute
+	@Column(name = "FID_URLNOM")
 	private String urlnom;
 
 	public String getPregunta() {
-		return pregunta;
+		return this.pregunta;
 	}
 
 	public void setPregunta(String pregunta) {
@@ -46,7 +51,7 @@ public class TraduccionFaq  implements Traduccion{
 	}
 
 	public String getRespuesta() {
-		return respuesta;
+		return this.respuesta;
 	}
 
 	public void setRespuesta(String respuesta) {
@@ -54,23 +59,23 @@ public class TraduccionFaq  implements Traduccion{
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public String getUrlnom(){
-        return urlnom;
-    }
+	public String getUrlnom() {
+		return this.urlnom;
+	}
 
-	public void setUrlnom(String urlnom){
-        this.urlnom = urlnom;
-    }
+	public void setUrlnom(String urlnom) {
+		this.urlnom = urlnom;
+	}
 
 	public TraduccionFaqPK getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(TraduccionFaqPK id) {

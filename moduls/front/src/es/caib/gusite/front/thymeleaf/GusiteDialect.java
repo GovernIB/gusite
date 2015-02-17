@@ -13,7 +13,6 @@ import org.thymeleaf.processor.IProcessor;
 
 import es.caib.gusite.front.service.FrontUrlFactory;
 
-
 public class GusiteDialect extends AbstractDialect implements
 		IExpressionEnhancingDialect {
 
@@ -23,6 +22,7 @@ public class GusiteDialect extends AbstractDialect implements
 
 	// All of this dialect's attributes and/or tags
 	// will start with 'gus:'
+	@Override
 	public String getPrefix() {
 		return "gus";
 	}

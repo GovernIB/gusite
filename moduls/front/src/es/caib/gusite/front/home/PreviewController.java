@@ -22,7 +22,7 @@ import es.caib.gusite.micromodel.Microsite;
 public class PreviewController extends BaseController {
 
 	private static Log log = LogFactory.getLog(PreviewController.class);
-	
+
 	/**
 	 * 
 	 * @param lang
@@ -30,26 +30,27 @@ public class PreviewController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method=RequestMethod.GET,value="{uri}/{lang}/menupreview/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/menupreview/")
 	public String menuPreview(
-			@PathVariable("uri") SiteId URI, 
+			@PathVariable("uri") SiteId URI,
 			@PathVariable("lang") Idioma lang,
 			Model model,
-			@RequestParam(value=Microfront.MCONT, required = false, defaultValue="") String mcont,
-			@RequestParam(value=Microfront.PCAMPA, required = false, defaultValue="") String pcampa,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			HttpServletRequest req) {
 		Microsite microsite = null;
 
 		try {
 
-			microsite =  super.loadMicrosite(URI.uri, lang, model, pcampa);
-			return this.templateNameFactory.menuPreview(microsite);					
+			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			return this.templateNameFactory.menuPreview(microsite);
 
-        } catch (ExceptionFrontMicro e) {
-        	log.error(e.getMessage());
-        	return getForwardError (microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}      
-}
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model,
+					ErrorMicrosite.ERROR_AMBIT_MICRO);
+		}
+	}
 
 	@Override
 	public String setServicio() {

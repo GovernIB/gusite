@@ -1,16 +1,15 @@
 package es.caib.gusite.microfront.encuesta.actions;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.gusite.utilities.auth.CertsPrincipal;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.jboss.security.auth.certs.SeyconPrincipal;
 
 import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.BaseAction;
@@ -70,8 +69,8 @@ public class EncuestaAction extends BaseAction   {
 			    			    	
 			    	if (bdencuesta.getEncuesta().getIdentificacion().equals("S")){
 		    			try {
-							SeyconPrincipal principal = null;
-							principal = SeyconPrincipal.getCurrent();
+							CertsPrincipal principal = null;
+							principal = CertsPrincipal.getCurrent();
 						} catch (Exception e) {
 							log.error("Error en la identificación del usuario en la encuesta: " + bdencuesta.getEncuesta().getId() + " ---> " + e);
 							return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_ACCES));

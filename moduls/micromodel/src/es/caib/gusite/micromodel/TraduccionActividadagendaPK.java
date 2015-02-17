@@ -15,22 +15,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.NONE)
 @Embeddable
 public class TraduccionActividadagendaPK implements Serializable {
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="ATI_CODIDI")
+	@XmlAttribute
+	@Column(name = "ATI_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="ATI_ACTCOD")
+	@XmlAttribute
+	@Column(name = "ATI_ACTCOD")
 	private long codigoActividadAgenda;
 
-    public TraduccionActividadagendaPK() {
-    }
+	public TraduccionActividadagendaPK() {
+	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -38,13 +38,14 @@ public class TraduccionActividadagendaPK implements Serializable {
 	}
 
 	public long getCodigoActividadAgenda() {
-		return codigoActividadAgenda;
+		return this.codigoActividadAgenda;
 	}
 
 	public void setCodigoActividadAgenda(long codigoActividadAgenda) {
 		this.codigoActividadAgenda = codigoActividadAgenda;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -52,19 +53,21 @@ public class TraduccionActividadagendaPK implements Serializable {
 		if (!(other instanceof TraduccionActividadagendaPK)) {
 			return false;
 		}
-		TraduccionActividadagendaPK castOther = (TraduccionActividadagendaPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoActividadAgenda == castOther.codigoActividadAgenda);
+		TraduccionActividadagendaPK castOther = (TraduccionActividadagendaPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoActividadAgenda == castOther.codigoActividadAgenda);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoActividadAgenda ^ (this.codigoActividadAgenda >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoActividadAgenda ^ (this.codigoActividadAgenda >>> 32)));
+
 		return hash;
-    }
+	}
 }

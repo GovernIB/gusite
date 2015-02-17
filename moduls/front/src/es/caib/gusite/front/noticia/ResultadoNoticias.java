@@ -9,7 +9,7 @@ import es.caib.gusite.front.general.bean.ResultadoBusqueda;
 public class ResultadoNoticias<T> extends ResultadoBusqueda<T> {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private boolean busqueda;
 
 	public ResultadoNoticias() {
@@ -29,10 +29,7 @@ public class ResultadoNoticias<T> extends ResultadoBusqueda<T> {
 	}
 
 	public boolean isBusqueda() {
-		return busqueda;
+		return this.busqueda;
 	}
-
-	
-	
 
 }

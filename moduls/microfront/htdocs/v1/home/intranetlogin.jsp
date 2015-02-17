@@ -8,7 +8,7 @@
 	<meta name="Generator" content="<bean:message key="microsites.name"/>; version:<bean:message key="microsites.version"/>; build:<bean:message key="microsites.build"/>">
   <META http-equiv="CACHE-CONTROL" content="NO-CACHE">  <!-- For HTTP 1.1 -->
   <META http-equiv="PRAGMA" content="NO-CACHE">         <!-- For HTTP 1.0 -->
-  <META http-equiv="refresh" content="1; URL=intranethome.do?idsite=<bean:write name="MVS_idsite" />&amp;lang=<bean:write name="MVS_idioma" />">
+  <META http-equiv="refresh" content="1; URL=<%= request.getContextPath() %>/intranet/home.do?idsite=<bean:write name="MVS_idsite" />&amp;lang=<bean:write name="MVS_idioma" />">
   <title><bean:message key="pleasewait.favor"/></title>
 	<logic:present name="MVS_css">
 			<bean:write name="MVS_css" filter="false"/>

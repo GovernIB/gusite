@@ -36,209 +36,227 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 /**
- * Clase Microsite. Bean que define un Microsite. 
- * Modela la tabla de BBDD GUS_MENU
+ * Clase Microsite. Bean que define un Microsite. Modela la tabla de BBDD
+ * GUS_MENU
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity()
-@Table(name="GUS_MICROS")
-public class Microsite implements Traducible2 {	
+@Table(name = "GUS_MICROS")
+public class Microsite extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = -608935483446670811L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_MICROSITE_ID_GENERATOR", sequenceName="GUS_SEQMIC", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_MICROSITE_ID_GENERATOR")
-	@Column(name="MIC_CODI")
+	@SequenceGenerator(name = "GUS_MICROSITE_ID_GENERATOR", sequenceName = "GUS_SEQMIC", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_MICROSITE_ID_GENERATOR")
+	@Column(name = "MIC_CODI")
 	private Long id;
-	
-	@Column(name="MIC_CODUNI")
+
+	@Column(name = "MIC_CODUNI")
 	private int unidadAdministrativa;
 
-	//TEST
+	// TEST
 	@XmlAttribute
-	@Column(name="MIC_ANALYTICS")
+	@Column(name = "MIC_ANALYTICS")
 	private String analytics;
-  
+
 	@XmlAttribute
-	@Column(name="MIC_URI")
+	@Column(name = "MIC_URI")
 	private String uri;
-    //TEST
-  
-  
-	@Transient
-    private int idUA;
-	
-	@Transient
-    private String nombreUA;
+	// TEST
 
 	@Transient
-    private ArrayList<?> listaUAs;
-       
+	private int idUA;
+
 	@Transient
-    private int nivelAccesibilidad;
-    
+	private String nombreUA;
+
+	@Transient
+	private ArrayList<?> listaUAs;
+
+	@Transient
+	private int nivelAccesibilidad;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="MIC_FECHA")
-    private Date fecha;
-	
-	@Column(name="MIC_VISIB")
-    private String visible;
-	
-	@Column(name="MIC_MENU")
-    private String tipomenu;
-	
-	@Column(name="MIC_PLANTI")
-    private String plantilla;
-	
-	@Column(name="MIC_OPFAQ")
-    private String optFaq;
-	
-	@Column(name="MIC_OPMAPA")
-    private String optMapa;
-	
-	@Column(name="MIC_OPCONT")
-    private String optContacto;
-	
-	@Column(name="MIC_OPT1")
-    private String opt1;
-	
-	@Column(name="MIC_OPT2")
-    private String opt2;
-	
-	@Column(name="MIC_OPT3")
-    private String opt3;
-	
-	@Column(name="MIC_OPT4")
-    private String opt4;
-	
-	@Column(name="MIC_OPT5")
-    private String opt5;
-	
-	@Column(name="MIC_OPT6")
-    private String opt6;
-	
-	@Column(name="MIC_OPT7")
-    private String opt7;
-	
-    @ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="MIC_IMAGEN")
-    private Archivo imagenPrincipal;
-    
-    @ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="MIC_IMGCAM")
-    private Archivo imagenCampanya;
-    
-    @ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="MIC_CSS")
-    private Archivo estiloCSS;
-    
-    @Column(name="MIC_CSSPTR")
-    private String estiloCSSPatron;
-    
-    @Column(name="MIC_URLHOM")
-    private String urlhome;
-    
-    @Column(name="MIC_URLCAM")
-    private String urlcampanya;
-    
-    @Column(name="MIC_RESTRI")
-    private String restringido;
-    
-    @Column(name="MIC_ROL")
-    private String rol;
-    
-    @Column(name="MIC_DOMINI")
-    private String domini;
-    
-    @Column(name="MIC_NUMNOT")
-    private int numeronoticias;
-    
-    @Column(name="MIC_SERSEL")
-    private String serviciosSeleccionados;
-    
-    @Column(name="MIC_SEROFR")
-    private String serviciosOfrecidos;
-    
-    @Column(name="MIC_CAB")
-    private String tipocabecera;
-    
-    @Column(name="MIC_PIE")
-    private String tipopie;
-    
-    @Column(name="MIC_BUSCA")
-    private String buscador;
-    
-    @Column(name="MIC_CLAVE")
-    private String claveunica;
-    
-    @Column(name="MIC_MNUCRP")
-    private String menucorporativo;
+	@Column(name = "MIC_FECHA")
+	private Date fecha;
 
-    @XmlAttribute
-    @Column(name="MIC_VERSION")
-    private String versio;
+	@Column(name = "MIC_VISIB")
+	private String visible;
 
-    @XmlAttribute
-    @Column(name="MIC_TIPO_ACCESO")
-    private String acceso;
+	@Column(name = "MIC_MENU")
+	private String tipomenu;
 
-    @Transient
-    private List<?> tiposServicios;
-    
-    @Transient
-    private String mvsUrlMigapan;
-    
-    @Transient
-    private String mensajeInfo;
-    
-    @Transient
-    private String mensajeError;
-    
-    @Transient
-    private boolean funcionalidadTraduccion;
-    
-    @Transient
-    private String mvsCssTiny;
+	@Column(name = "MIC_PLANTI")
+	private String plantilla;
 
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @JoinColumn(name="MID_MICCOD")
-    @MapKey(name="id.codigoIdioma")
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Column(name = "MIC_OPFAQ")
+	private String optFaq;
+
+	@Column(name = "MIC_OPMAPA")
+	private String optMapa;
+
+	@Column(name = "MIC_OPCONT")
+	private String optContacto;
+
+	@Column(name = "MIC_OPT1")
+	private String opt1;
+
+	@Column(name = "MIC_OPT2")
+	private String opt2;
+
+	@Column(name = "MIC_OPT3")
+	private String opt3;
+
+	@Column(name = "MIC_OPT4")
+	private String opt4;
+
+	@Column(name = "MIC_OPT5")
+	private String opt5;
+
+	@Column(name = "MIC_OPT6")
+	private String opt6;
+
+	@Column(name = "MIC_OPT7")
+	private String opt7;
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MIC_IMAGEN")
+	private Archivo imagenPrincipal;
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MIC_IMGCAM")
+	private Archivo imagenCampanya;
+
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MIC_CSS")
+	private Archivo estiloCSS;
+
+	@Column(name = "MIC_CSSPTR")
+	private String estiloCSSPatron;
+
+	@Column(name = "MIC_URLHOM")
+	private String urlhome;
+
+	@Column(name = "MIC_URLCAM")
+	private String urlcampanya;
+
+	@Column(name = "MIC_RESTRI")
+	private String restringido;
+
+	@Column(name = "MIC_ROL")
+	private String rol;
+
+	@Column(name = "MIC_DOMINI")
+	private String domini;
+
+	@Column(name = "MIC_NUMNOT")
+	private int numeronoticias;
+
+	@Column(name = "MIC_SERSEL")
+	private String serviciosSeleccionados;
+
+	@Column(name = "MIC_SEROFR")
+	private String serviciosOfrecidos;
+
+	@Column(name = "MIC_CAB")
+	private String tipocabecera;
+
+	@Column(name = "MIC_PIE")
+	private String tipopie;
+
+	@Column(name = "MIC_BUSCA")
+	private String buscador;
+
+	@Column(name = "MIC_CLAVE")
+	private String claveunica;
+
+	@Column(name = "MIC_MNUCRP")
+	private String menucorporativo;
+
+	@XmlAttribute
+	@Column(name = "MIC_VERSION")
+	private String versio;
+
+	@XmlAttribute
+	@Column(name = "MIC_TIPO_ACCESO")
+	private String acceso;
+
+	/**
+	 * Pone el sitio web en modo desarrollo, deshabilitando caché de plantillas.
+	 */
+	@XmlAttribute
+	@Column(name = "MIC_DESARROLLO", nullable = false, length = 1)
+	private String desarrollo;
+
+	@Transient
+	private List<?> tiposServicios;
+
+	@Transient
+	private String mvsUrlMigapan;
+
+	@Transient
+	private String mensajeInfo;
+
+	@Transient
+	private String mensajeError;
+
+	@Transient
+	private boolean funcionalidadTraduccion;
+
+	@Transient
+	private String mvsCssTiny;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MID_MICCOD")
+	@MapKey(name = "id.codigoIdioma")
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@Fetch(FetchMode.SUBSELECT)
-  	private Map<String, TraduccionMicrosite> traducciones = new HashMap<String, TraduccionMicrosite>();
+	private Map<String, TraduccionMicrosite> traducciones = new HashMap<String, TraduccionMicrosite>();
 
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @JoinColumn(name="IMI_MICCOD")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "IMI_MICCOD")
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
-	
-	@Transient 
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "microsite")
+	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
+			0);
+
+	/**
+	 * Tema a aplicar
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "MIC_FTECOD")
+	private TemaFront tema;
+
+	@Transient
 	private String idi = Idioma.getIdiomaPorDefecto();
-    
+
 	public Microsite() {
-		setOptMapa("N");
-		setOptFaq("N");
-		setOptContacto("N");
-		setOpt1("N");
-		setOpt2("N");
-		setOpt3("N");
-		setOpt4("N");
-		setOpt5("N");
-		setOpt6("N");
-		setOpt7("N");
-		setFecha(new Date());
-		setPlantilla("1");
-    }
-	
+		this.setOptMapa("N");
+		this.setOptFaq("N");
+		this.setOptContacto("N");
+		this.setOpt1("N");
+		this.setOpt2("N");
+		this.setOpt3("N");
+		this.setOpt4("N");
+		this.setOpt5("N");
+		this.setOpt6("N");
+		this.setOpt7("N");
+		this.setFecha(new Date());
+		this.setPlantilla("1");
+	}
+
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 
 	public Archivo getImagenCampanya() {
-		return imagenCampanya;
+		return this.imagenCampanya;
 	}
 
 	public void setImagenCampanya(Archivo imagenCampanya) {
@@ -246,7 +264,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getRestringido() {
-		return restringido;
+		return this.restringido;
 	}
 
 	public void setRestringido(String restringido) {
@@ -254,249 +272,252 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getRol() {
-		return rol;
+		return this.rol;
 	}
 
 	public void setRol(String rol) {
 		this.rol = rol;
 	}
-	
+
 	public String getDomini() {
-		return domini;
+		return this.domini;
 	}
-	
-	//TEST
+
+	// TEST
 	public String getAnalytics() {
-		return analytics;
+		return this.analytics;
 	}
 
 	public void setAnalytics(String analytics) {
 		this.analytics = analytics;
 	}
-	
+
 	public String getUri() {
-		return uri;
+		return this.uri;
 	}
-	
+
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
-	//TEST
+
+	// TEST
 
 	public void setDomini(String domini) {
 		this.domini = domini;
 	}
-	   
-    public Date getFecha() {
-        return fecha;
-    }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+	public Date getFecha() {
+		return this.fecha;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
-    public Archivo getImagenPrincipal() {
-        return imagenPrincipal;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setImagenPrincipal(Archivo imagenPrincipal) {
-        this.imagenPrincipal = imagenPrincipal;
-    }
+	public Archivo getImagenPrincipal() {
+		return this.imagenPrincipal;
+	}
 
-    public String getOpt1() {
-        return opt1;
-    }
+	public void setImagenPrincipal(Archivo imagenPrincipal) {
+		this.imagenPrincipal = imagenPrincipal;
+	}
 
-    public void setOpt1(String opt1) {
-        this.opt1 = opt1;
-    }
+	public String getOpt1() {
+		return this.opt1;
+	}
 
-    public String getOpt2() {
-        return opt2;
-    }
+	public void setOpt1(String opt1) {
+		this.opt1 = opt1;
+	}
 
-    public void setOpt2(String opt2) {
-        this.opt2 = opt2;
-    }
+	public String getOpt2() {
+		return this.opt2;
+	}
 
-    public String getOpt3() {
-        return opt3;
-    }
+	public void setOpt2(String opt2) {
+		this.opt2 = opt2;
+	}
 
-    public void setOpt3(String opt3) {
-        this.opt3 = opt3;
-    }
+	public String getOpt3() {
+		return this.opt3;
+	}
 
-    public String getOpt4() {
-        return opt4;
-    }
+	public void setOpt3(String opt3) {
+		this.opt3 = opt3;
+	}
 
-    public void setOpt4(String opt4) {
-        this.opt4 = opt4;
-    }
+	public String getOpt4() {
+		return this.opt4;
+	}
 
-    public String getOpt5() {
-        return opt5;
-    }
+	public void setOpt4(String opt4) {
+		this.opt4 = opt4;
+	}
 
-    public void setOpt5(String opt5) {
-        this.opt5 = opt5;
-    }
+	public String getOpt5() {
+		return this.opt5;
+	}
 
-    public String getOpt6() {
-        return opt6;
-    }
+	public void setOpt5(String opt5) {
+		this.opt5 = opt5;
+	}
 
-    public void setOpt6(String opt6) {
-        this.opt6 = opt6;
-    }
+	public String getOpt6() {
+		return this.opt6;
+	}
 
-    public String getOpt7() {
-        return opt7;
-    }
+	public void setOpt6(String opt6) {
+		this.opt6 = opt6;
+	}
 
-    public void setOpt7(String opt7) {
-        this.opt7 = opt7;
-    }
+	public String getOpt7() {
+		return this.opt7;
+	}
 
-    public String getOptContacto() {
-        return optContacto;
-    }
+	public void setOpt7(String opt7) {
+		this.opt7 = opt7;
+	}
 
-    public void setOptContacto(String optContacto) {
-        this.optContacto = optContacto;
-    }
+	public String getOptContacto() {
+		return this.optContacto;
+	}
 
-    public String getOptFaq() {
-        return optFaq;
-    }
+	public void setOptContacto(String optContacto) {
+		this.optContacto = optContacto;
+	}
 
-    public void setOptFaq(String optFaq) {
-        this.optFaq = optFaq;
-    }
+	public String getOptFaq() {
+		return this.optFaq;
+	}
 
-    public String getOptMapa() {
-        return optMapa;
-    }
+	public void setOptFaq(String optFaq) {
+		this.optFaq = optFaq;
+	}
 
-    public void setOptMapa(String optMapa) {
-        this.optMapa = optMapa;
-    }
+	public String getOptMapa() {
+		return this.optMapa;
+	}
 
-    public String getPlantilla() {
-        return plantilla;
-    }
+	public void setOptMapa(String optMapa) {
+		this.optMapa = optMapa;
+	}
 
-    public void setPlantilla(String plantilla) {
-        this.plantilla = plantilla;
-    }
+	public String getPlantilla() {
+		return this.plantilla;
+	}
 
-    public String getTipomenu() {
-        return tipomenu;
-    }
+	public void setPlantilla(String plantilla) {
+		this.plantilla = plantilla;
+	}
 
-    public void setTipomenu(String tipomenu) {
-        this.tipomenu = tipomenu;
-    }
+	public String getTipomenu() {
+		return this.tipomenu;
+	}
 
-    public String getEstiloCSSPatron() {
-        return estiloCSSPatron;
-    }
+	public void setTipomenu(String tipomenu) {
+		this.tipomenu = tipomenu;
+	}
 
-    public void setEstiloCSSPatron(String estiloCSSPatron) {
-        this.estiloCSSPatron = estiloCSSPatron;
-    }
-    
-    public int getUnidadAdministrativa() {
-        return unidadAdministrativa;
-    }
+	public String getEstiloCSSPatron() {
+		return this.estiloCSSPatron;
+	}
 
-    public void setUnidadAdministrativa(int unidadAdministrativa) {
-        this.unidadAdministrativa = unidadAdministrativa;
-    }
+	public void setEstiloCSSPatron(String estiloCSSPatron) {
+		this.estiloCSSPatron = estiloCSSPatron;
+	}
 
-    public String getVisible() {
-        return visible;
-    }
+	public int getUnidadAdministrativa() {
+		return this.unidadAdministrativa;
+	}
 
-    public void setVisible(String visible) {
-        this.visible = visible;
-    }
-    
+	public void setUnidadAdministrativa(int unidadAdministrativa) {
+		this.unidadAdministrativa = unidadAdministrativa;
+	}
+
+	public String getVisible() {
+		return this.visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
 	public Set<IdiomaMicrosite> getIdiomas() {
-		return idiomas;
-	}
-	
-	public String[] getIdiomas(Set<?> idiomas) {
-        Object[] array = idiomas.toArray();
-    	String[] idiomasArray = new String[idiomas.size()];
-    	int n = 0;
-        for (Object obj : array) {
-            idiomasArray[n] = ((IdiomaMicrosite) obj).getId().getCodigoIdioma();
-            n++;
-        }
-    	return idiomasArray;
+		return this.idiomas;
 	}
 
-    public void setIdiomas(Set<IdiomaMicrosite> idiomas) {
-        this.idiomas = idiomas;
-    }
+	public String[] getIdiomas(Set<?> idiomas) {
+		Object[] array = idiomas.toArray();
+		String[] idiomasArray = new String[idiomas.size()];
+		int n = 0;
+		for (Object obj : array) {
+			idiomasArray[n] = ((IdiomaMicrosite) obj).getId().getCodigoIdioma();
+			n++;
+		}
+		return idiomasArray;
+	}
+
+	public void setIdiomas(Set<IdiomaMicrosite> idiomas) {
+		this.idiomas = idiomas;
+	}
 
 	public void setIdiomas(String[] idiomas) {
 
-        for (int i = 0; i < idiomas.length; i++) {
-            boolean existe = false;
-            Iterator iter = this.idiomas.iterator();
-            while (iter.hasNext()) {
-                IdiomaMicrosite idiMicro = (IdiomaMicrosite) iter.next();
-                if (idiMicro.getId().getCodigoIdioma().compareTo(idiomas[i]) == 0) {
-                    existe = true;
-                }
-            }
-            if (!existe) {
-                IdiomaMicrosite idioma = new IdiomaMicrosite();
-                idioma.setId(new IdiomaMicrositePK());
-                idioma.getId().setCodigoIdioma(idiomas[i]);
-                if (this.id != null) {
-                    idioma.getId().setCodigoMicrosite(this.id);
-                }
-                this.idiomas.add(idioma);
-            }
-    	}
+		for (String idioma2 : idiomas) {
+			boolean existe = false;
+			Iterator iter = this.idiomas.iterator();
+			while (iter.hasNext()) {
+				IdiomaMicrosite idiMicro = (IdiomaMicrosite) iter.next();
+				if (idiMicro.getId().getCodigoIdioma().compareTo(idioma2) == 0) {
+					existe = true;
+				}
+			}
+			if (!existe) {
+				IdiomaMicrosite idioma = new IdiomaMicrosite();
+				idioma.setId(new IdiomaMicrositePK());
+				idioma.getId().setCodigoIdioma(idioma2);
+				if (this.id != null) {
+					idioma.getId().setCodigoMicrosite(this.id);
+				}
+				this.idiomas.add(idioma);
+			}
+		}
 	}
 
 	public String getUrlhome() {
-		return urlhome;
+		return this.urlhome;
 	}
 
 	public void setUrlhome(String urlhome) {
 		this.urlhome = urlhome;
 	}
-	
+
 	public String getServiciosSeleccionados() {
-		return serviciosSeleccionados;
+		return this.serviciosSeleccionados;
 	}
-	
+
 	public String[] getServiciosSeleccionados(String serviciosSeleccionados) {
-		
-    	String serviciosSeleccionadosTabla[]=null;
-    	if (serviciosSeleccionados!=null) {
-    		StringTokenizer st=new StringTokenizer(serviciosSeleccionados,";");
-    		int n=st.countTokens();
-    		serviciosSeleccionadosTabla= new String[n];
-    		for (int i=0;i<n;i++) {
-    			serviciosSeleccionadosTabla[i]=st.nextToken();
-    		}
-    	}
-    	
+
+		String serviciosSeleccionadosTabla[] = null;
+		if (serviciosSeleccionados != null) {
+			StringTokenizer st = new StringTokenizer(serviciosSeleccionados,
+					";");
+			int n = st.countTokens();
+			serviciosSeleccionadosTabla = new String[n];
+			for (int i = 0; i < n; i++) {
+				serviciosSeleccionadosTabla[i] = st.nextToken();
+			}
+		}
+
 		return serviciosSeleccionadosTabla;
 	}
 
@@ -505,21 +526,22 @@ public class Microsite implements Traducible2 {
 	}
 
 	public void setServiciosSeleccionados(String[] serviciosSeleccionadosTabla) {
-		
-        String serviciosSeleccionados="";
-        
-        if (serviciosSeleccionadosTabla.length>0) {
-        	for (int i=0;i<serviciosSeleccionadosTabla.length;i++)
-        		serviciosSeleccionados+=serviciosSeleccionadosTabla[i]+";";
-        	serviciosSeleccionados=serviciosSeleccionados.substring(0,serviciosSeleccionados.length()-1);
-        }
-		
+
+		String serviciosSeleccionados = "";
+
+		if (serviciosSeleccionadosTabla.length > 0) {
+			for (String element : serviciosSeleccionadosTabla) {
+				serviciosSeleccionados += element + ";";
+			}
+			serviciosSeleccionados = serviciosSeleccionados.substring(0,
+					serviciosSeleccionados.length() - 1);
+		}
+
 		this.serviciosSeleccionados = serviciosSeleccionados;
 	}
-	
-	
+
 	public String getUrlcampanya() {
-		return urlcampanya;
+		return this.urlcampanya;
 	}
 
 	public void setUrlcampanya(String urlcampanya) {
@@ -527,43 +549,45 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getServiciosOfrecidos() {
-		return serviciosOfrecidos;
-	}
-	
-	public String[] getServiciosOfrecidos(String serviciosOfrecidos) {
-		
-    	String serviciosOfrecidosTabla[]=null;
-    	if (serviciosOfrecidos!=null) {
-    		StringTokenizer st=new StringTokenizer(serviciosOfrecidos,";");
-    		int n=st.countTokens();
-    		serviciosOfrecidosTabla= new String[n];
-    		for (int i=0;i<n;i++) {
-    			serviciosOfrecidosTabla[i]=st.nextToken();
-    		}
-    	}
-		
-		return serviciosOfrecidosTabla;
+		return this.serviciosOfrecidos;
 	}
 
+	public String[] getServiciosOfrecidos(String serviciosOfrecidos) {
+
+		String serviciosOfrecidosTabla[] = null;
+		if (serviciosOfrecidos != null) {
+			StringTokenizer st = new StringTokenizer(serviciosOfrecidos, ";");
+			int n = st.countTokens();
+			serviciosOfrecidosTabla = new String[n];
+			for (int i = 0; i < n; i++) {
+				serviciosOfrecidosTabla[i] = st.nextToken();
+			}
+		}
+
+		return serviciosOfrecidosTabla;
+	}
 
 	public void setServiciosOfrecidos(String serviciosOfrecidos) {
 		this.serviciosOfrecidos = serviciosOfrecidos;
 	}
-	
+
 	public void setServiciosOfrecidos(String[] serviciosOfrecidosTabla) {
-		
-    	String serviciosOfrecidos="";
-    	
-    	for (int i=0;i<serviciosOfrecidosTabla.length;i++)
-    		serviciosOfrecidos+=serviciosOfrecidosTabla[i]+";";
-    	if (serviciosOfrecidos.length()>0)
-    		serviciosOfrecidos=serviciosOfrecidos.substring(0,serviciosOfrecidos.length()-1);
+
+		String serviciosOfrecidos = "";
+
+		for (String element : serviciosOfrecidosTabla) {
+			serviciosOfrecidos += element + ";";
+		}
+		if (serviciosOfrecidos.length() > 0) {
+			serviciosOfrecidos = serviciosOfrecidos.substring(0,
+					serviciosOfrecidos.length() - 1);
+		}
 
 		this.serviciosOfrecidos = serviciosOfrecidos;
 	}
 
 	public int getIdUA() {
-		return idUA;
+		return this.idUA;
 	}
 
 	public void setIdUA(int idUA) {
@@ -571,23 +595,23 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getNombreUA() {
-		return nombreUA;
+		return this.nombreUA;
 	}
 
 	public void setNombreUA(String nombreUA) {
 		this.nombreUA = nombreUA;
 	}
-	
+
 	public void setNivelAccesibilidad(int nivelAccesibilidad) {
 		this.nivelAccesibilidad = nivelAccesibilidad;
 	}
-	
+
 	public int getNivelAccesibilidad() {
-		return nivelAccesibilidad;
-	}	
+		return this.nivelAccesibilidad;
+	}
 
 	public Archivo getEstiloCSS() {
-		return estiloCSS;
+		return this.estiloCSS;
 	}
 
 	public void setEstiloCSS(Archivo estiloCSS) {
@@ -595,7 +619,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public int getNumeronoticias() {
-		return numeronoticias;
+		return this.numeronoticias;
 	}
 
 	public void setNumeronoticias(int numeronoticias) {
@@ -603,7 +627,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getTipocabecera() {
-		return tipocabecera;
+		return this.tipocabecera;
 	}
 
 	public void setTipocabecera(String tipocabecera) {
@@ -611,7 +635,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getTipopie() {
-		return tipopie;
+		return this.tipopie;
 	}
 
 	public void setTipopie(String tipopie) {
@@ -619,7 +643,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getBuscador() {
-		return buscador;
+		return this.buscador;
 	}
 
 	public void setBuscador(String buscador) {
@@ -627,7 +651,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getClaveunica() {
-		return claveunica;
+		return this.claveunica;
 	}
 
 	public void setClaveunica(String claveunica) {
@@ -635,7 +659,7 @@ public class Microsite implements Traducible2 {
 	}
 
 	public String getMenucorporativo() {
-		return menucorporativo;
+		return this.menucorporativo;
 	}
 
 	public void setMenucorporativo(String menucorporativo) {
@@ -643,23 +667,55 @@ public class Microsite implements Traducible2 {
 	}
 
 	public List<?> getTiposServicios() {
-		return tiposServicios;
+		return this.tiposServicios;
 	}
 
 	public void setTiposServicios(List<?> tiposServicios) {
 		this.tiposServicios = tiposServicios;
 	}
-	
+
 	public String getMvsUrlMigapan() {
-		return mvsUrlMigapan;
+		return this.mvsUrlMigapan;
 	}
 
 	public void setMvsUrlMigapan(String mvsUrlMigapan) {
 		this.mvsUrlMigapan = mvsUrlMigapan;
 	}
-	
+
+	/**
+	 * * Pone el sitio web en modo desarrollo, deshabilitando caché de
+	 * plantillas.
+	 */
+	public String getDesarrollo() {
+		return this.desarrollo;
+	}
+
+	public void setDesarrollo(String desarrollo) {
+		this.desarrollo = desarrollo;
+	}
+
+	public Set<PersonalizacionPlantilla> getPersonalizacionesPlantilla() {
+		return this.personalizacionesPlantilla;
+	}
+
+	public void setPersonalizacionesPlantilla(
+			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
+		this.personalizacionesPlantilla = personalizacionesPlantilla;
+	}
+
+	/**
+	 * * Tema a aplicar
+	 */
+	public TemaFront getTema() {
+		return this.tema;
+	}
+
+	public void setTema(TemaFront tema) {
+		this.tema = tema;
+	}
+
 	public String getMensajeInfo() {
-		return mensajeInfo;
+		return this.mensajeInfo;
 	}
 
 	public void setMensajeInfo(String mensajeInfo) {
@@ -669,7 +725,7 @@ public class Microsite implements Traducible2 {
 	public String getMensajeError() {
 		return this.mensajeError;
 	}
-	
+
 	public void setMensajeError(String mensajeError) {
 		this.mensajeError = mensajeError;
 	}
@@ -679,22 +735,23 @@ public class Microsite implements Traducible2 {
 	}
 
 	public void setFuncionalidadTraduccion() {
-		
-		funcionalidadTraduccion = false;
-        if (!traductorHabilitat()) {
-            return;
-        }
-        if (idiomas.contains("ca") & (idiomas.size() > 1)) {
-            funcionalidadTraduccion = true;
-        }
+
+		this.funcionalidadTraduccion = false;
+		if (!traductorHabilitat()) {
+			return;
+		}
+		if (this.idiomas.contains("ca") & (this.idiomas.size() > 1)) {
+			this.funcionalidadTraduccion = true;
+		}
 	}
-	
+
 	public static boolean traductorHabilitat() {
-		return System.getProperty("es.caib.gusite.integracion.traductor").equals("S");
+		return System.getProperty("es.caib.gusite.integracion.traductor")
+				.equals("S");
 	}
 
 	public String getMvsCssTiny() {
-		return mvsCssTiny;
+		return this.mvsCssTiny;
 	}
 
 	public void setMvsCssTiny(String mvsCssTiny) {
@@ -702,66 +759,75 @@ public class Microsite implements Traducible2 {
 	}
 
 	public ArrayList<?> getListaUAs() {
-		return listaUAs;
+		return this.listaUAs;
 	}
 
 	public void setListaUAs(ArrayList<?> listaUAs) {
 		this.listaUAs = listaUAs;
 	}
 
+	@Override
 	public Map<String, TraduccionMicrosite> getTraducciones() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraducciones(Map traducciones) {
 		this.traducciones = traducciones;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionMicrosite)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionMicrosite) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}
 
+	@Override
 	public void setIdi(String idi) {
-		this.idi=idi;
+		this.idi = idi;
 	}
 
-    public String getVersio() {
-        return versio;
-    }
+	public String getVersio() {
+		return this.versio;
+	}
 
-    public void setVersio(String versio) {
-        this.versio = versio;
-    }
+	public void setVersio(String versio) {
+		this.versio = versio;
+	}
 
-    public String getAcceso() {
-        return acceso;
-    }
+	public String getAcceso() {
+		return this.acceso;
+	}
 
-    public void setAcceso(String acceso) {
-        this.acceso = acceso;
-    }
+	public void setAcceso(String acceso) {
+		this.acceso = acceso;
+	}
 }

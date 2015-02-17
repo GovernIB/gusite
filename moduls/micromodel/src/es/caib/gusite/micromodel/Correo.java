@@ -11,81 +11,82 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
-@Table(name="GUS_CORREO")
+@Table(name = "GUS_CORREO")
 public class Correo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/** identifier field */
 	@Id
-	@Column(name="CORREO")
-    private String correo;
+	@Column(name = "CORREO")
+	private String correo;
 
-    /** identifier field */
-	@Column(name="NOMBRE")
-    private String nombre;
-    
-    /** identifier field */
-	@Column(name="APELLIDOS")
-    private String apellidos;
-	
-    /** nullable persistent field */
-	@Column(name="NOENVIAR")
-    private Boolean noEnviar;
+	/** identifier field */
+	@Column(name = "NOMBRE")
+	private String nombre;
 
-    /** nullable persistent field */
-	@Column(name="ULTIMO_ENVIO")
-    private Timestamp ultimoEnvio;
-    
-    /** nullable persistent field */
-	@Column(name="ERROR_ENVIO")
-    private String traceError;
-    
-    /** nullable persistent field */
-	@Column(name="INTENTO_ENVIO")
-    private Integer intentoEnvio;
-    
-    /** full constructor */
-    public Correo(String correo, String nombre, String apellidos, Boolean noEnviar) {
-        this.correo = correo;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.noEnviar = noEnviar;
-    }
-    
-    public Correo(String correo, Boolean noEnviar) {
-        this.correo = correo;
-        this.noEnviar = noEnviar;
-    }
+	/** identifier field */
+	@Column(name = "APELLIDOS")
+	private String apellidos;
 
-    /** default constructor */
-    public Correo() {
-    	this.noEnviar = false;
-    }
+	/** nullable persistent field */
+	@Column(name = "NOENVIAR")
+	private Boolean noEnviar;
 
-    /** minimal constructor */
-    public Correo(String correo) {
-        this.correo = correo;
-    }
+	/** nullable persistent field */
+	@Column(name = "ULTIMO_ENVIO")
+	private Timestamp ultimoEnvio;
 
-    public String getCorreo() {
-        return this.correo;
-    }
+	/** nullable persistent field */
+	@Column(name = "ERROR_ENVIO")
+	private String traceError;
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
+	/** nullable persistent field */
+	@Column(name = "INTENTO_ENVIO")
+	private Integer intentoEnvio;
 
-    public Boolean getNoEnviar() {
-        return this.noEnviar;
-    }
+	/** full constructor */
+	public Correo(String correo, String nombre, String apellidos,
+			Boolean noEnviar) {
+		this.correo = correo;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.noEnviar = noEnviar;
+	}
 
-    public void setNoEnviar(Boolean noEnviar) {
-        this.noEnviar = noEnviar;
-    }
+	public Correo(String correo, Boolean noEnviar) {
+		this.correo = correo;
+		this.noEnviar = noEnviar;
+	}
+
+	/** default constructor */
+	public Correo() {
+		this.noEnviar = false;
+	}
+
+	/** minimal constructor */
+	public Correo(String correo) {
+		this.correo = correo;
+	}
+
+	public String getCorreo() {
+		return this.correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	public Boolean getNoEnviar() {
+		return this.noEnviar;
+	}
+
+	public void setNoEnviar(Boolean noEnviar) {
+		this.noEnviar = noEnviar;
+	}
 
 	public Timestamp getUltimoEnvio() {
-		return ultimoEnvio;
+		return this.ultimoEnvio;
 	}
 
 	public void setUltimoEnvio(Timestamp ultimoEnvio) {
@@ -93,7 +94,7 @@ public class Correo implements Serializable {
 	}
 
 	public String getTraceError() {
-		return traceError;
+		return this.traceError;
 	}
 
 	public void setTraceError(String traceError) {
@@ -101,44 +102,52 @@ public class Correo implements Serializable {
 	}
 
 	public Integer getIntentoEnvio() {
-		return intentoEnvio;
+		return this.intentoEnvio;
 	}
 
 	public void setIntentoEnvio(Integer intentoEnvio) {
 		this.intentoEnvio = intentoEnvio;
 	}
-	
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("correo", getCorreo())
-            .toString();
-    }
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("correo", this.getCorreo())
+				.toString();
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((correo == null) ? 0 : correo.hashCode());
+		result = prime * result
+				+ ((this.correo == null) ? 0 : this.correo.hashCode());
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
 		Correo other = (Correo) obj;
-		if (correo == null) {
-			if (other.correo != null)
+		if (this.correo == null) {
+			if (other.correo != null) {
 				return false;
-		} else if (!correo.equals(other.correo))
+			}
+		} else if (!this.correo.equals(other.correo)) {
 			return false;
+		}
 		return true;
 	}
 
 	public String getNombre() {
-		return nombre;
+		return this.nombre;
 	}
 
 	public void setNombre(String nombre) {
@@ -146,7 +155,7 @@ public class Correo implements Serializable {
 	}
 
 	public String getApellidos() {
-		return apellidos;
+		return this.apellidos;
 	}
 
 	public void setApellidos(String apellidos) {

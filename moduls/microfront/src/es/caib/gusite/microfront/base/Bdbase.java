@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.gusite.utilities.auth.ClientPrincipal;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +35,6 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.loginModule.client.SeyconPrincipal;
 import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
 import es.caib.rolsac.api.v2.edifici.EdificiDTO;
 import es.caib.rolsac.api.v2.edifici.EdificiQueryServiceAdapter;
@@ -903,10 +903,10 @@ public abstract class Bdbase {
      */
     public String getIdUser() {
         String iduser="";
-        es.caib.loginModule.client.SeyconPrincipal principal;
+        ClientPrincipal principal;
         try {
             
-            principal = es.caib.loginModule.client.SeyconPrincipal.getCurrent();
+            principal = ClientPrincipal.getCurrent();
             if (principal != null) iduser=principal.getIntranetUser();
         } catch (NamingException e) {
             log.warn(e.getMessage());
@@ -916,13 +916,13 @@ public abstract class Bdbase {
     }       
     
     /**
-     * Devuelve un Objeto SeyconPrincipal.
+     * Devuelve un Objeto ClientPrincipal.
      * @param request
-     * @return SeyconPrincipal
+     * @return ClientPrincipal
      */
-    public SeyconPrincipal getPrincipal( HttpServletRequest request )
+    public ClientPrincipal getPrincipal( HttpServletRequest request )
     {
-        return ( SeyconPrincipal ) request.getUserPrincipal();
+        return ( ClientPrincipal ) request.getUserPrincipal();
     }
 
 

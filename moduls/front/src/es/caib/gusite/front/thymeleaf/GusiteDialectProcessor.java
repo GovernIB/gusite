@@ -23,6 +23,7 @@ public class GusiteDialectProcessor extends
 		super("nhref");
 	}
 
+	@Override
 	public int getPrecedence() {
 		// A value of 10000 is higher than any attribute in the
 		// SpringStandard dialect. So this attribute will execute

@@ -108,9 +108,10 @@ public class encuestasEditaAction extends BaseAction
 	       	}
 
 			List<String> eliminar = new ArrayList<String>();
-			for (TraduccionEncuesta trad : enc.getTraducciones().values()) {
+			for (String lang : enc.getTraducciones().keySet()) {
+				TraduccionEncuesta trad = enc.getTraducciones().get(lang);
 				if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
-					eliminar.add(trad.getId().getCodigoIdioma());
+					eliminar.add(lang);
 				} else if (trad.getUri().equals("")) {
 					trad.setUri(Cadenas.string2uri(trad.getTitulo()));
 				}

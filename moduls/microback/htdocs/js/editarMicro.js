@@ -11,7 +11,7 @@ $(document).ready(function () {
     });
 
     acceso.change(function() {
-        canvi()
+        canvi();
     });
 
 });
@@ -19,10 +19,7 @@ $(document).ready(function () {
 function canvi() {
     var v = versio.val();
     var a = acceso.val();
-    if ((v == "IN" && a == "P")
-        || (v == "v1" && a == "R")
-        || (v == "v4" && a == "R")) {
-
+    if (combinacioInvalida(v, a)) {
         alert("No es possible guardar versió " + v + " i accés " + a);
         a = (v == "IN") ? "R" : "P";
         $("select[name=acceso] option").each(function() {
@@ -34,3 +31,12 @@ function canvi() {
         });
     }
 };
+
+function combinacioInvalida(v, a) {
+    return (v == "IN" && a == "P")
+        || (v == "v1" && a == "R")
+        || (v == "v4" && a == "R")
+        || (v == "IN" && a == "M")
+        || (v == "v1" && a == "M")
+        || (v == "v4" && a == "M");
+}

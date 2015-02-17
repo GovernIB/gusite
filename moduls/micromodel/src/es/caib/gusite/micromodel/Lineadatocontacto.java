@@ -16,92 +16,101 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Lineadatocontacto. Bean que define una Línea  de Contacto. 
- * Modela la tabla de BBDD GUS_FRMLIN
+ * Clase Lineadatocontacto. Bean que define una Línea de Contacto. Modela la
+ * tabla de BBDD GUS_FRMLIN
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_FRMLIN")
-public class Lineadatocontacto implements Traducible2 {
+@Table(name = "GUS_FRMLIN")
+public class Lineadatocontacto extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 8743296706196032258L;
-	
+
 	public static final int NUMERO_MAXIMO_SELECTOR = 30;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_LINEADATOCONTACTO_ID_GENERATOR", sequenceName="GUS_SEQFLI", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_LINEADATOCONTACTO_ID_GENERATOR")
-	@Column(name="FLI_CODI")
+	@SequenceGenerator(name = "GUS_LINEADATOCONTACTO_ID_GENERATOR", sequenceName = "GUS_SEQFLI", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_LINEADATOCONTACTO_ID_GENERATOR")
+	@Column(name = "FLI_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="FLI_VISIB")
-    private String visible;
+	@XmlAttribute
+	@Column(name = "FLI_VISIB")
+	private String visible;
 
-    @XmlAttribute
-	@Column(name="FLI_TAMANO")
-    private int tamano;
+	@XmlAttribute
+	@Column(name = "FLI_TAMANO")
+	private int tamano;
 
-    @XmlAttribute
-	@Column(name="FLI_LINEAS")
-    private int lineas;
+	@XmlAttribute
+	@Column(name = "FLI_LINEAS")
+	private int lineas;
 
-    @XmlAttribute
-	@Column(name="FLI_OBLIGA")
-    private int obligatorio;
+	@XmlAttribute
+	@Column(name = "FLI_OBLIGA")
+	private int obligatorio;
 
-    @XmlAttribute
-	@Column(name="FLI_ORDEN")
-    private int orden;
+	@XmlAttribute
+	@Column(name = "FLI_ORDEN")
+	private int orden;
 
-    @XmlAttribute
-	@Column(name="FLI_TIPO")
-    private String tipo;
+	@XmlAttribute
+	@Column(name = "FLI_TIPO")
+	private String tipo;
 
-    @XmlAttribute
-	@Column(name="FLI_FRMCOD")
-    private Long idcontacto;
+	@XmlAttribute
+	@Column(name = "FLI_FRMCOD")
+	private Long idcontacto;
 
-  	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-  	@JoinColumn(name="RID_FLICOD")
-  	@MapKey(name="id.codigoIdioma")
-  	private Map<String, TraduccionLineadatocontacto> traducciones = new HashMap<String, TraduccionLineadatocontacto>();
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JoinColumn(name = "RID_FLICOD")
+	@MapKey(name = "id.codigoIdioma")
+	private Map<String, TraduccionLineadatocontacto> traducciones = new HashMap<String, TraduccionLineadatocontacto>();
 
-    @XmlAttribute
-  	@Transient
-  	private String idi = Idioma.getIdiomaPorDefecto();
+	@XmlAttribute
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionLineadatocontacto> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionLineadatocontacto> getTranslates() {
+		return this.traducciones;
+	}
 
-    public void setTranslates(Map<String, TraduccionLineadatocontacto> traducciones) {
-        this.traducciones = traducciones;
-    }
+	public void setTranslates(
+			Map<String, TraduccionLineadatocontacto> traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Map<String, TraduccionLineadatocontacto> getTraducciones() {
-        return traducciones;
-    }
+	@Override
+	public Map<String, TraduccionLineadatocontacto> getTraducciones() {
+		return this.traducciones;
+	}
 
-    public void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
+	@Override
+	public void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -109,7 +118,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public int getLineas() {
-		return lineas;
+		return this.lineas;
 	}
 
 	public void setLineas(int lineas) {
@@ -117,7 +126,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public int getObligatorio() {
-		return obligatorio;
+		return this.obligatorio;
 	}
 
 	public void setObligatorio(int obligatorio) {
@@ -125,7 +134,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public int getOrden() {
-		return orden;
+		return this.orden;
 	}
 
 	public void setOrden(int orden) {
@@ -133,7 +142,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public int getTamano() {
-		return tamano;
+		return this.tamano;
 	}
 
 	public void setTamano(int tamano) {
@@ -141,7 +150,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public String getTipo() {
-		return tipo;
+		return this.tipo;
 	}
 
 	public void setTipo(String tipo) {
@@ -149,7 +158,7 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
@@ -157,51 +166,60 @@ public class Lineadatocontacto implements Traducible2 {
 	}
 
 	public Long getIdcontacto() {
-		return idcontacto;
+		return this.idcontacto;
 	}
 
 	public void setIdcontacto(Long idcontacto) {
 		this.idcontacto = idcontacto;
 	}
 
-	public void addTraduccionMap(String lang, TraduccionLineadatocontacto traduccion) {
-        setTraduccion(lang, traduccion);
-    }
-
-	public String getIdi() {
-		return idi;
+	public void addTraduccionMap(String lang,
+			TraduccionLineadatocontacto traduccion) {
+		this.setTraduccion(lang, traduccion);
 	}
 
+	public String getIdi() {
+		return this.idi;
+	}
+
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionLineadatocontacto)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma,
+					(TraduccionLineadatocontacto) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}
-	
+
 }

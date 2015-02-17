@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionEncuestaPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="EID_CODIDI")
+	@XmlAttribute
+	@Column(name = "EID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="EID_ENCCOD")
+	@XmlAttribute
+	@Column(name = "EID_ENCCOD")
 	private Long codigoEncuesta;
 
-    public TraduccionEncuestaPK() {
-    }
+	public TraduccionEncuestaPK() {
+	}
 
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionEncuestaPK implements Serializable {
 	}
 
 	public long getCodigoEncuesta() {
-		return codigoEncuesta;
+		return this.codigoEncuesta;
 	}
 
 	public void setCodigoEncuesta(Long codigoEncuesta) {
 		this.codigoEncuesta = codigoEncuesta;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,20 @@ public class TraduccionEncuestaPK implements Serializable {
 		if (!(other instanceof TraduccionEncuestaPK)) {
 			return false;
 		}
-		TraduccionEncuestaPK castOther = (TraduccionEncuestaPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoEncuesta == castOther.codigoEncuesta);
+		TraduccionEncuestaPK castOther = (TraduccionEncuestaPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoEncuesta == castOther.codigoEncuesta);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoEncuesta ^ (this.codigoEncuesta >>> 32)));
-		
+		hash = hash * prime
+				+ ((int) (this.codigoEncuesta ^ (this.codigoEncuesta >>> 32)));
+
 		return hash;
-    }
+	}
 }

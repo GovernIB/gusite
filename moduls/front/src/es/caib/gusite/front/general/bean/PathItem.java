@@ -9,19 +9,19 @@ import java.io.Serializable;
  * 
  */
 public class PathItem implements Serializable {
-	
+
 	private static final long serialVersionUID = 7567193458667662802L;
 	private String label;
 	private String href;
-	
-	public PathItem() {	
+
+	public PathItem() {
 	}
-	
+
 	public PathItem(String label, String href) {
 		this.setLabel(label);
 		this.setHref(href);
 	}
-	
+
 	public PathItem(String label) {
 		this.setLabel(label);
 	}
@@ -31,7 +31,7 @@ public class PathItem implements Serializable {
 	}
 
 	public String getLabel() {
-		return label;
+		return this.label;
 	}
 
 	public void setHref(String href) {
@@ -39,11 +39,11 @@ public class PathItem implements Serializable {
 	}
 
 	public String getHref() {
-		return href;
+		return this.href;
 	}
 
 	public boolean hasHref() {
-		return href != null && !href.equals("");
+		return this.href != null && !this.href.equals("");
 	}
-	
+
 }

@@ -1,8 +1,9 @@
 package es.caib.gusite.micromodel;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 /**
  * Created by tcerda on 26/11/2014.
@@ -10,60 +11,76 @@ import java.io.Serializable;
 @Embeddable
 public class DistribucionConvocatoriaPK implements Serializable {
 
-    /** identifier field */
-    @Column(name="CONVOCATORIA_ID")
-    private Long idConvocatoria;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2534597992534148656L;
 
-    /** identifier field */
-    @Column(name="DISTRIB_ID")
-    private Long idDistribucion;
+	/** identifier field */
+	@Column(name = "CONVOCATORIA_ID")
+	private Long idConvocatoria;
 
-    public DistribucionConvocatoriaPK() {
-    }
+	/** identifier field */
+	@Column(name = "DISTRIB_ID")
+	private Long idDistribucion;
 
-    public Long getIdConvocatoria() {
-        return idConvocatoria;
-    }
+	public DistribucionConvocatoriaPK() {
+	}
 
-    public void setIdConvocatoria(Long idConvocatoria) {
-        this.idConvocatoria = idConvocatoria;
-    }
+	public Long getIdConvocatoria() {
+		return this.idConvocatoria;
+	}
 
-    public Long getIdDistribucion() {
-        return idDistribucion;
-    }
+	public void setIdConvocatoria(Long idConvocatoria) {
+		this.idConvocatoria = idConvocatoria;
+	}
 
-    public void setIdDistribucion(Long idDistribucion) {
-        this.idDistribucion = idDistribucion;
-    }
+	public Long getIdDistribucion() {
+		return this.idDistribucion;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setIdDistribucion(Long idDistribucion) {
+		this.idDistribucion = idDistribucion;
+	}
 
-        DistribucionConvocatoriaPK that = (DistribucionConvocatoriaPK) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
 
-        if (idConvocatoria != null ? !idConvocatoria.equals(that.idConvocatoria) : that.idConvocatoria != null)
-            return false;
-        if (idDistribucion != null ? !idDistribucion.equals(that.idDistribucion) : that.idDistribucion != null)
-            return false;
+		DistribucionConvocatoriaPK that = (DistribucionConvocatoriaPK) o;
 
-        return true;
-    }
+		if (this.idConvocatoria != null ? !this.idConvocatoria
+				.equals(that.idConvocatoria) : that.idConvocatoria != null) {
+			return false;
+		}
+		if (this.idDistribucion != null ? !this.idDistribucion
+				.equals(that.idDistribucion) : that.idDistribucion != null) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        int result = idConvocatoria != null ? idConvocatoria.hashCode() : 0;
-        result = 31 * result + (idDistribucion != null ? idDistribucion.hashCode() : 0);
-        return result;
-    }
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "DistribucionConvocatoriaPK{" +
-                "idConvocatoria=" + idConvocatoria +
-                ", idDistribucion=" + idDistribucion +
-                '}';
-    }
+	@Override
+	public int hashCode() {
+		int result = this.idConvocatoria != null ? this.idConvocatoria
+				.hashCode() : 0;
+		result = 31
+				* result
+				+ (this.idDistribucion != null ? this.idDistribucion.hashCode()
+						: 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "DistribucionConvocatoriaPK{" + "idConvocatoria="
+				+ this.idConvocatoria + ", idDistribucion="
+				+ this.idDistribucion + '}';
+	}
 }

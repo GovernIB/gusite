@@ -85,9 +85,10 @@ public class contenidosEditaAction extends BaseAction
 
 					//Guardamos y reordenamos el árbol de menús
 					List<String> eliminar = new ArrayList<String>();
-					for (TraduccionContenido trad : contenido.getTraducciones().values()) {
+					for (String lang : contenido.getTraducciones().keySet()) {
+						TraduccionContenido trad = contenido.getTraducciones().get(lang);
 						if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
-							eliminar.add(trad.getId().getCodigoIdioma());
+							eliminar.add(lang);
 						} else if (trad.getUri().equals("")) {
 							trad.setUri(Cadenas.string2uri(trad.getTitulo()));
 						}

@@ -22,110 +22,117 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Encuesta. Bean que define una Encuesta. 
- * Modela la tabla de BBDD GUS_ENCUST
+ * Clase Encuesta. Bean que define una Encuesta. Modela la tabla de BBDD
+ * GUS_ENCUST
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_ENCUST")
-public class Encuesta implements Traducible2 {
+@Table(name = "GUS_ENCUST")
+public class Encuesta extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 2356576663603622282L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_ENCUESTA_ID_GENERATOR", sequenceName="GUS_SEQENC", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_ENCUESTA_ID_GENERATOR")
-	@Column(name="ENC_CODI")
+	@SequenceGenerator(name = "GUS_ENCUESTA_ID_GENERATOR", sequenceName = "GUS_SEQENC", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_ENCUESTA_ID_GENERATOR")
+	@Column(name = "ENC_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="ENC_MICCOD")
-    private Long idmicrosite;
+	@XmlAttribute
+	@Column(name = "ENC_MICCOD")
+	private Long idmicrosite;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Temporal(TemporalType.DATE)
-	@Column(name="ENC_CADUCA")
-    private Date fcaducidad;
+	@Column(name = "ENC_CADUCA")
+	private Date fcaducidad;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Temporal(TemporalType.DATE)
-	@Column(name="ENC_PUBLIC")
-    private Date fpublicacion;
+	@Column(name = "ENC_PUBLIC")
+	private Date fpublicacion;
 
-    @XmlAttribute
-	@Column(name="ENC_VISIB")
-    private String visible;
+	@XmlAttribute
+	@Column(name = "ENC_VISIB")
+	private String visible;
 
-    @XmlAttribute
-	@Column(name="ENC_INDIV")
-    private String indivisible;
+	@XmlAttribute
+	@Column(name = "ENC_INDIV")
+	private String indivisible;
 
-    @XmlAttribute
-	@Column(name="ENC_PAGINA")
-    private Integer paginacion;
+	@XmlAttribute
+	@Column(name = "ENC_PAGINA")
+	private Integer paginacion;
 
-    @XmlAttribute
-	@Column(name="ENC_MUESTR")
-    private String mostrar;
+	@XmlAttribute
+	@Column(name = "ENC_MUESTR")
+	private String mostrar;
 
-    @XmlAttribute
-	@Column(name="ENC_IDENTIF")
-    private String identificacion;
+	@XmlAttribute
+	@Column(name = "ENC_IDENTIF")
+	private String identificacion;
 
-    @XmlElement
-	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="PRE_ENCCOD")
-	@MapKey(name="id")
+	@XmlElement
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "PRE_ENCCOD")
+	@MapKey(name = "id")
 	@Fetch(FetchMode.SUBSELECT)
 	@OrderBy("orden ASC")
-    private List<Pregunta> preguntas = new ArrayList();
+	private List<Pregunta> preguntas = new ArrayList();
 
 	@Transient
-    private String votoDuplicado;
-	
-	//@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@JoinColumn(name="EID_ENCCOD")
-	@MapKey(name="id.codigoIdioma")
+	private String votoDuplicado;
+
+	// @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "EID_ENCCOD")
+	@MapKey(name = "id.codigoIdioma")
 	@Fetch(FetchMode.SUBSELECT)
 	private Map<String, TraduccionEncuesta> traducciones = new HashMap<String, TraduccionEncuesta>();
 
 	@Transient
-  	private String idi = Idioma.getIdiomaPorDefecto();
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionEncuesta> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionEncuesta> getTranslates() {
+		return this.traducciones;
+	}
 
-    public void setTranslates(Map<String, TraduccionEncuesta> traducciones) {
-        this.traducciones = traducciones;
-    }
+	public void setTranslates(Map<String, TraduccionEncuesta> traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Map<String, TraduccionEncuesta> getTraducciones() {
-        return traducciones;
-    }
+	@Override
+	public Map<String, TraduccionEncuesta> getTraducciones() {
+		return this.traducciones;
+	}
 
-    public void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
+	@Override
+	public void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Date getFcaducidad() {
-		return fcaducidad;
+	public Date getFcaducidad() {
+		return this.fcaducidad;
 	}
 
 	public void setFcaducidad(Date fcaducidad) {
@@ -133,23 +140,25 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public Date getFpublicacion() {
-		return fpublicacion;
+		return this.fpublicacion;
 	}
 
 	public void setFpublicacion(Date fpublicacion) {
 		this.fpublicacion = fpublicacion;
 	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	@Override
 	public Long getIdmicrosite() {
-		return idmicrosite;
+		return this.idmicrosite;
 	}
 
 	public void setIdmicrosite(Long idmicrosite) {
@@ -157,7 +166,7 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public String getIndivisible() {
-		return indivisible;
+		return this.indivisible;
 	}
 
 	public void setIndivisible(String indivisible) {
@@ -165,7 +174,7 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public Integer getPaginacion() {
-		return paginacion;
+		return this.paginacion;
 	}
 
 	public void setPaginacion(Integer paginacion) {
@@ -173,7 +182,7 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
@@ -181,32 +190,32 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public List<Pregunta> getPreguntas() {
-		return preguntas;
+		return this.preguntas;
 	}
 
 	public void setPreguntas(List<Pregunta> preguntas) {
 		this.preguntas = preguntas;
 	}
 
-	// Metodos para poder leer las colecciones del XML	
+	// Metodos para poder leer las colecciones del XML
 	public void addPreguntas(Pregunta pre) {
-		preguntas.add(pre);
+		this.preguntas.add(pre);
 	}
-	
+
 	public void addTraduccionMap(String lang, TraduccionEncuesta traduccion) {
-        setTraduccion(lang, traduccion);
-    }
+		this.setTraduccion(lang, traduccion);
+	}
 
 	public String getMostrar() {
-		return mostrar;
+		return this.mostrar;
 	}
 
 	public void setMostrar(String mostrar) {
 		this.mostrar = mostrar;
 	}
-	
+
 	public String getVotoDuplicado() {
-		return votoDuplicado;
+		return this.votoDuplicado;
 	}
 
 	public void setVotoDuplicado(String votoDuplicado) {
@@ -214,7 +223,7 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public String getIdentificacion() {
-		return identificacion;
+		return this.identificacion;
 	}
 
 	public void setIdentificacion(String identificacion) {
@@ -222,39 +231,46 @@ public class Encuesta implements Traducible2 {
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionEncuesta)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionEncuesta) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
-		
+
 	}
 
+	@Override
 	public void setIdi(String idi) {
-		this.idi=idi;
+		this.idi = idi;
 	}
 }

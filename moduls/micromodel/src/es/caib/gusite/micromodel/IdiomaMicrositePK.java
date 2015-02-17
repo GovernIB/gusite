@@ -16,19 +16,19 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class IdiomaMicrositePK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="IMI_CODIDI")
+	@XmlAttribute
+	@Column(name = "IMI_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="IMI_MICCOD")
+	@XmlAttribute
+	@Column(name = "IMI_MICCOD")
 	private Long codigoMicrosite;
 
-    public IdiomaMicrositePK() {
-    }
+	public IdiomaMicrositePK() {
+	}
 
 	public String getCodigoIdioma() {
 		return this.codigoIdioma;
@@ -46,6 +46,7 @@ public class IdiomaMicrositePK implements Serializable {
 		this.codigoMicrosite = codigoMicrosite;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,18 +54,20 @@ public class IdiomaMicrositePK implements Serializable {
 		if (!(other instanceof IdiomaMicrositePK)) {
 			return false;
 		}
-		IdiomaMicrositePK castOther = (IdiomaMicrositePK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoMicrosite == castOther.codigoMicrosite);
-    }
-    
+		IdiomaMicrositePK castOther = (IdiomaMicrositePK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoMicrosite == castOther.codigoMicrosite);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoMicrosite ^ (this.codigoMicrosite >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoMicrosite ^ (this.codigoMicrosite >>> 32)));
+
 		return hash;
-    }
+	}
 }

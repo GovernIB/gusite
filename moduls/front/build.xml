@@ -47,7 +47,6 @@
         	<include name="pop3.jar"/>
         	<include name="sac-api-client.jar" />
             <include name="servlet-api.jar"/>
-        	<include name="seyconsession-common.jar"/>
         	<include name="smtp.jar"/>
         </fileset>
     	

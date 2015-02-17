@@ -25,260 +25,276 @@ import javax.persistence.Transient;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
-@Table(name="GUS_CONVOCATORIA")
-public class Convocatoria implements Serializable {
+@Table(name = "GUS_CONVOCATORIA")
+public class Convocatoria extends AuditableModel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/** identifier field */
 	@Id
-	@SequenceGenerator(name="GUS_CONVOCATORIA_ID_GENERATOR", sequenceName="GUS_CONV_SEQ", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_CONVOCATORIA_ID_GENERATOR")
-	@Column(name="CODI")
-    private Long id;
+	@SequenceGenerator(name = "GUS_CONVOCATORIA_ID_GENERATOR", sequenceName = "GUS_CONV_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_CONVOCATORIA_ID_GENERATOR")
+	@Column(name = "CODI")
+	private Long id;
 
-    /** nullable persistent field */
-	@Column(name="NOMBRE")
-    private String nombre;
+	/** nullable persistent field */
+	@Column(name = "NOMBRE")
+	private String nombre;
 
-    /** nullable persistent field */
-	@Column(name="DESCRIPCION")
-    private String descripcion;
+	/** nullable persistent field */
+	@Column(name = "DESCRIPCION")
+	private String descripcion;
 
-    /** nullable persistent field */
+	/** nullable persistent field */
 	@Temporal(TemporalType.DATE)
-	@Column(name="DATA_ENVIO")
-    private Date ultimoEnvio;
+	@Column(name = "DATA_ENVIO")
+	private Date ultimoEnvio;
 
-    /** nullable persistent field */
-	@Column(name="REENVIO_ERROR")
-    private Boolean envioSiError;
+	/** nullable persistent field */
+	@Column(name = "REENVIO_ERROR")
+	private Boolean envioSiError;
 
-    /** nullable persistent field */
+	/** nullable persistent field */
 	@Transient
-    private Boolean envioSiConfirmado;
+	private Boolean envioSiConfirmado;
 
-    /** persistent field */
-	//bi-directional many-to-one association to GusDistribConvocatoria
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="CONVOCATORIA_ID")
+	/** persistent field */
+	// bi-directional many-to-one association to GusDistribConvocatoria
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CONVOCATORIA_ID")
 	private Set<DistribucionConvocatoria> destinatarios;
-    //private Set destinatarios;
-    
-    /** nullable persistent field */
-    @Column(name="OTROS_DEST")
-    private String otrosDestinatarios;
+	// private Set destinatarios;
 
-    /** nullable persistent field */
-    @Column(name="ASUNTO_MSG")
-    private String asuntoMsg;
+	/** nullable persistent field */
+	@Column(name = "OTROS_DEST")
+	private String otrosDestinatarios;
 
-    /** nullable persistent field */
-    @Lob()
-    @Column(name="TEXTO_MSG")
-    private String textoMsg;
+	/** nullable persistent field */
+	@Column(name = "ASUNTO_MSG")
+	private String asuntoMsg;
 
-    /** nullable persistent field */
-    @ManyToOne
-	@JoinColumn(name="MICROSITE_ID")
-    private es.caib.gusite.micromodel.Microsite microsite;
+	/** nullable persistent field */
+	@Lob()
+	@Column(name = "TEXTO_MSG")
+	private String textoMsg;
 
-    /** nullable persistent field */
-    @ManyToOne
-	@JoinColumn(name="ENCUESTA_ID")
-    private es.caib.gusite.micromodel.Encuesta encuesta;
+	/** nullable persistent field */
+	@ManyToOne
+	@JoinColumn(name = "MICROSITE_ID")
+	private es.caib.gusite.micromodel.Microsite microsite;
 
-    /** nullable persistent field */
-    @ManyToOne
-	@JoinColumn(name="RESPUESTA_CORREO_ID")
-    private es.caib.gusite.micromodel.Respuesta respuestaCorreo;
+	/** nullable persistent field */
+	@ManyToOne
+	@JoinColumn(name = "ENCUESTA_ID")
+	private es.caib.gusite.micromodel.Encuesta encuesta;
 
-    /** nullable persistent field */
-    @ManyToOne
-	@JoinColumn(name="PREGUNTA_CONFIRMACION_ID")
-    private es.caib.gusite.micromodel.Pregunta preguntaConfirmacion;
+	/** nullable persistent field */
+	@ManyToOne
+	@JoinColumn(name = "RESPUESTA_CORREO_ID")
+	private es.caib.gusite.micromodel.Respuesta respuestaCorreo;
 
-    /** nullable persistent field */
-    @ManyToOne
-	@JoinColumn(name="RESPUESTA_CONFIRMACION_ID")
-    private es.caib.gusite.micromodel.Respuesta respuestaConfirmacion;
-    
-    /** full constructor */
-    public Convocatoria(String nombre, String descripcion, Date ultimoEnvio, Boolean envioSiError, Boolean envioSiConfirmado, String otrosDestinatarios, String asuntoMsg, String textoMsg, es.caib.gusite.micromodel.Microsite microsite, es.caib.gusite.micromodel.Encuesta encuesta, es.caib.gusite.micromodel.Respuesta respuestaCorreo, es.caib.gusite.micromodel.Pregunta preguntaConfirmacion, es.caib.gusite.micromodel.Respuesta respuestaConfirmacion, Set<DistribucionConvocatoria> destinatarios) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.ultimoEnvio = ultimoEnvio;
-        this.envioSiError = envioSiError;
-        this.envioSiConfirmado = envioSiConfirmado;
-        this.destinatarios = destinatarios;
-        this.otrosDestinatarios = otrosDestinatarios;
-        this.asuntoMsg = asuntoMsg;
-        this.textoMsg = textoMsg;
-        this.microsite = microsite;
-        this.encuesta = encuesta;
-        this.respuestaCorreo = respuestaCorreo;
-        this.preguntaConfirmacion = preguntaConfirmacion;
-        this.respuestaConfirmacion = respuestaConfirmacion;
-    }
+	/** nullable persistent field */
+	@ManyToOne
+	@JoinColumn(name = "PREGUNTA_CONFIRMACION_ID")
+	private es.caib.gusite.micromodel.Pregunta preguntaConfirmacion;
 
-    /** default constructor */
-    public Convocatoria() {
-    	this.destinatarios = Collections.EMPTY_SET;
-    }
+	/** nullable persistent field */
+	@ManyToOne
+	@JoinColumn(name = "RESPUESTA_CONFIRMACION_ID")
+	private es.caib.gusite.micromodel.Respuesta respuestaConfirmacion;
 
-    /** minimal constructor */
-    public Convocatoria(Set<DistribucionConvocatoria> destinatarios) {
-        this.destinatarios = destinatarios;
-    }
+	/** full constructor */
+	public Convocatoria(String nombre, String descripcion, Date ultimoEnvio,
+			Boolean envioSiError, Boolean envioSiConfirmado,
+			String otrosDestinatarios, String asuntoMsg, String textoMsg,
+			es.caib.gusite.micromodel.Microsite microsite,
+			es.caib.gusite.micromodel.Encuesta encuesta,
+			es.caib.gusite.micromodel.Respuesta respuestaCorreo,
+			es.caib.gusite.micromodel.Pregunta preguntaConfirmacion,
+			es.caib.gusite.micromodel.Respuesta respuestaConfirmacion,
+			Set<DistribucionConvocatoria> destinatarios) {
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.ultimoEnvio = ultimoEnvio;
+		this.envioSiError = envioSiError;
+		this.envioSiConfirmado = envioSiConfirmado;
+		this.destinatarios = destinatarios;
+		this.otrosDestinatarios = otrosDestinatarios;
+		this.asuntoMsg = asuntoMsg;
+		this.textoMsg = textoMsg;
+		this.microsite = microsite;
+		this.encuesta = encuesta;
+		this.respuestaCorreo = respuestaCorreo;
+		this.preguntaConfirmacion = preguntaConfirmacion;
+		this.respuestaConfirmacion = respuestaConfirmacion;
+	}
 
-    public Long getId() {
-        return this.id;
-    }
+	/** default constructor */
+	public Convocatoria() {
+		this.destinatarios = Collections.EMPTY_SET;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/** minimal constructor */
+	public Convocatoria(Set<DistribucionConvocatoria> destinatarios) {
+		this.destinatarios = destinatarios;
+	}
 
-    public String getNombre() {
-        return this.nombre;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getDescripcion() {
-        return this.descripcion;
-    }
+	public String getNombre() {
+		return this.nombre;
+	}
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    public Date getUltimoEnvio() {
-        return this.ultimoEnvio;
-    }
+	public String getDescripcion() {
+		return this.descripcion;
+	}
 
-    public void setUltimoEnvio(Date ultimoEnvio) {
-        this.ultimoEnvio = ultimoEnvio;
-    }
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-    public Boolean getEnvioSiError() {
-        return this.envioSiError;
-    }
+	public Date getUltimoEnvio() {
+		return this.ultimoEnvio;
+	}
 
-    public void setEnvioSiError(Boolean envioSiError) {
-        this.envioSiError = envioSiError;
-    }
+	public void setUltimoEnvio(Date ultimoEnvio) {
+		this.ultimoEnvio = ultimoEnvio;
+	}
 
-    public Boolean getEnvioSiConfirmado() {
-        return this.envioSiConfirmado;
-    }
+	public Boolean getEnvioSiError() {
+		return this.envioSiError;
+	}
 
-    public void setEnvioSiConfirmado(Boolean envioSiConfirmado) {
-        this.envioSiConfirmado = envioSiConfirmado;
-    }
+	public void setEnvioSiError(Boolean envioSiError) {
+		this.envioSiError = envioSiError;
+	}
 
-    public String getOtrosDestinatarios() {
-        return this.otrosDestinatarios;
-    }
+	public Boolean getEnvioSiConfirmado() {
+		return this.envioSiConfirmado;
+	}
 
-    public void setOtrosDestinatarios(String otrosDestinatarios) {
-        this.otrosDestinatarios = otrosDestinatarios;
-    }
+	public void setEnvioSiConfirmado(Boolean envioSiConfirmado) {
+		this.envioSiConfirmado = envioSiConfirmado;
+	}
 
-    public String getAsuntoMsg() {
-        return this.asuntoMsg;
-    }
+	public String getOtrosDestinatarios() {
+		return this.otrosDestinatarios;
+	}
 
-    public void setAsuntoMsg(String asuntoMsg) {
-        this.asuntoMsg = asuntoMsg;
-    }
+	public void setOtrosDestinatarios(String otrosDestinatarios) {
+		this.otrosDestinatarios = otrosDestinatarios;
+	}
 
-    public String getTextoMsg() {
-        return this.textoMsg;
-    }
+	public String getAsuntoMsg() {
+		return this.asuntoMsg;
+	}
 
-    public void setTextoMsg(String textoMsg) {
-        this.textoMsg = textoMsg;
-    }
+	public void setAsuntoMsg(String asuntoMsg) {
+		this.asuntoMsg = asuntoMsg;
+	}
 
-    public es.caib.gusite.micromodel.Microsite getMicrosite() {
-        return this.microsite;
-    }
+	public String getTextoMsg() {
+		return this.textoMsg;
+	}
 
-    public void setMicrosite(es.caib.gusite.micromodel.Microsite microsite) {
-        this.microsite = microsite;
-    }
+	public void setTextoMsg(String textoMsg) {
+		this.textoMsg = textoMsg;
+	}
 
-    public es.caib.gusite.micromodel.Encuesta getEncuesta() {
-        return this.encuesta;
-    }
+	public es.caib.gusite.micromodel.Microsite getMicrosite() {
+		return this.microsite;
+	}
 
-    public void setEncuesta(es.caib.gusite.micromodel.Encuesta encuesta) {
-        this.encuesta = encuesta;
-    }
+	public void setMicrosite(es.caib.gusite.micromodel.Microsite microsite) {
+		this.microsite = microsite;
+	}
 
-    public es.caib.gusite.micromodel.Respuesta getRespuestaCorreo() {
-        return this.respuestaCorreo;
-    }
+	public es.caib.gusite.micromodel.Encuesta getEncuesta() {
+		return this.encuesta;
+	}
 
-    public void setRespuestaCorreo(es.caib.gusite.micromodel.Respuesta respuestaCorreo) {
-        this.respuestaCorreo = respuestaCorreo;
-    }
+	public void setEncuesta(es.caib.gusite.micromodel.Encuesta encuesta) {
+		this.encuesta = encuesta;
+	}
 
-    public es.caib.gusite.micromodel.Pregunta getPreguntaConfirmacion() {
-        return this.preguntaConfirmacion;
-    }
+	public es.caib.gusite.micromodel.Respuesta getRespuestaCorreo() {
+		return this.respuestaCorreo;
+	}
 
-    public void setPreguntaConfirmacion(es.caib.gusite.micromodel.Pregunta preguntaConfirmacion) {
-        this.preguntaConfirmacion = preguntaConfirmacion;
-    }
+	public void setRespuestaCorreo(
+			es.caib.gusite.micromodel.Respuesta respuestaCorreo) {
+		this.respuestaCorreo = respuestaCorreo;
+	}
 
-    public es.caib.gusite.micromodel.Respuesta getRespuestaConfirmacion() {
-        return this.respuestaConfirmacion;
-    }
+	public es.caib.gusite.micromodel.Pregunta getPreguntaConfirmacion() {
+		return this.preguntaConfirmacion;
+	}
 
-    public void setRespuestaConfirmacion(es.caib.gusite.micromodel.Respuesta respuestaConfirmacion) {
-        this.respuestaConfirmacion = respuestaConfirmacion;
-    }
+	public void setPreguntaConfirmacion(
+			es.caib.gusite.micromodel.Pregunta preguntaConfirmacion) {
+		this.preguntaConfirmacion = preguntaConfirmacion;
+	}
 
-    public Set<DistribucionConvocatoria> getDestinatarios() {
-        return this.destinatarios;
-    }
+	public es.caib.gusite.micromodel.Respuesta getRespuestaConfirmacion() {
+		return this.respuestaConfirmacion;
+	}
 
-    public void setDestinatarios(Set<DistribucionConvocatoria> destinatarios) {
-        this.destinatarios = destinatarios;
-    }
+	public void setRespuestaConfirmacion(
+			es.caib.gusite.micromodel.Respuesta respuestaConfirmacion) {
+		this.respuestaConfirmacion = respuestaConfirmacion;
+	}
 
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
-    }
+	public Set<DistribucionConvocatoria> getDestinatarios() {
+		return this.destinatarios;
+	}
+
+	public void setDestinatarios(Set<DistribucionConvocatoria> destinatarios) {
+		this.destinatarios = destinatarios;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("id", this.getId()).toString();
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Convocatoria))
+		}
+		if (!(obj instanceof Convocatoria)) {
 			return false;
+		}
 		Convocatoria other = (Convocatoria) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (this.id == null) {
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!this.id.equals(other.id)) {
 			return false;
+		}
 		return true;
 	}
 

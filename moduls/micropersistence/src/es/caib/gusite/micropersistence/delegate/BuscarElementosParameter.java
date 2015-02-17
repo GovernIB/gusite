@@ -11,9 +11,8 @@ public class BuscarElementosParameter {
 	public String idioma;
 	public String where;
 
-	public BuscarElementosParameter(Map<?, ?> parametros,
-			Map<?, ?> traduccion, String idmicrosite, String idtipo,
-			String idioma) {
+	public BuscarElementosParameter(Map<?, ?> parametros, Map<?, ?> traduccion,
+			String idmicrosite, String idtipo, String idioma) {
 		this.parametros = parametros;
 		this.traduccion = traduccion;
 		this.idmicrosite = idmicrosite;
@@ -22,7 +21,7 @@ public class BuscarElementosParameter {
 	}
 
 	public BuscarElementosParameter() {
-		parametros = new HashMap<String, String>();
-		traduccion = new HashMap<String, String>();
+		this.parametros = new HashMap<String, String>();
+		this.traduccion = new HashMap<String, String>();
 	}
 }

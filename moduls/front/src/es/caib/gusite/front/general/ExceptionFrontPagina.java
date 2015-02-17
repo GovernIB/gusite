@@ -1,8 +1,9 @@
 package es.caib.gusite.front.general;
 
-
 /**
- *  Clase ExceptionFrontPagina se lanzará cuando se genere una excepción en el front al cargar una página.
+ * Clase ExceptionFrontPagina se lanzará cuando se genere una excepción en el
+ * front al cargar una página.
+ * 
  * @author Indra
  */
 public class ExceptionFrontPagina extends ExceptionFront {
@@ -11,9 +12,10 @@ public class ExceptionFrontPagina extends ExceptionFront {
 	public static final int HTTP_NOT_FOUND = 404;
 	private int httpCode = 0;
 
-	public ExceptionFrontPagina () {};
-	
-	public ExceptionFrontPagina (String msg) {
+	public ExceptionFrontPagina() {
+	};
+
+	public ExceptionFrontPagina(String msg) {
 		super(msg);
 	}
 
@@ -25,7 +27,7 @@ public class ExceptionFrontPagina extends ExceptionFront {
 		super(message, ne);
 	}
 
-	public ExceptionFrontPagina (String msg, int httpCode) {
+	public ExceptionFrontPagina(String msg, int httpCode) {
 		super(msg);
 		this.setHttpCode(httpCode);
 	}
@@ -34,13 +36,13 @@ public class ExceptionFrontPagina extends ExceptionFront {
 		super(message, ne);
 		this.setHttpCode(httpCode);
 	}
-	
+
 	public void setHttpCode(int httpCode) {
 		this.httpCode = httpCode;
 	}
 
 	public int getHttpCode() {
-		return httpCode;
+		return this.httpCode;
 	}
-	
-}	
+
+}

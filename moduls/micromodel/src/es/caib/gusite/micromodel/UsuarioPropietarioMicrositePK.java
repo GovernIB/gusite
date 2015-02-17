@@ -11,20 +11,20 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class UsuarioPropietarioMicrositePK implements Serializable {
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
-	
-	@Column(name="MIU_CODMIC")
+
+	@Column(name = "MIU_CODMIC")
 	private Long idmicrosite;
-	
-	@Column(name="MIU_CODUSU")
+
+	@Column(name = "MIU_CODUSU")
 	private Long idusuario;
 
-    public UsuarioPropietarioMicrositePK() {
-    }
+	public UsuarioPropietarioMicrositePK() {
+	}
 
 	public Long getIdmicrosite() {
-		return idmicrosite;
+		return this.idmicrosite;
 	}
 
 	public void setIdmicrosite(Long idmicrosite) {
@@ -32,13 +32,14 @@ public class UsuarioPropietarioMicrositePK implements Serializable {
 	}
 
 	public Long getIdusuario() {
-		return idusuario;
+		return this.idusuario;
 	}
 
 	public void setIdusuario(Long idusuario) {
 		this.idusuario = idusuario;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -46,19 +47,20 @@ public class UsuarioPropietarioMicrositePK implements Serializable {
 		if (!(other instanceof UsuarioPropietarioMicrositePK)) {
 			return false;
 		}
-		UsuarioPropietarioMicrositePK castOther = (UsuarioPropietarioMicrositePK)other;
-		return 
-			this.idmicrosite.equals(castOther.idmicrosite)
-			&& (this.idusuario == castOther.idusuario);
+		UsuarioPropietarioMicrositePK castOther = (UsuarioPropietarioMicrositePK) other;
+		return this.idmicrosite.equals(castOther.idmicrosite)
+				&& (this.idusuario == castOther.idusuario);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.idmicrosite.hashCode();
-		hash = hash * prime + ((int) (this.idusuario ^ (this.idusuario >>> 32)));
-		
+		hash = hash * prime
+				+ ((int) (this.idusuario ^ (this.idusuario >>> 32)));
+
 		return hash;
-    }
+	}
 }

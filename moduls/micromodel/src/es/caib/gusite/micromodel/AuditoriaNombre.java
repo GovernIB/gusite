@@ -7,65 +7,65 @@ import java.util.Date;
  */
 public class AuditoriaNombre {
 
-    public static int CREAR = 0;
-    public static int MODIFICAR = 1;
-    public static int ELIMINAR = 2;
+	public static int CREAR = 0;
+	public static int MODIFICAR = 1;
+	public static int ELIMINAR = 2;
 
-    private String usuario;
+	private String usuario;
 
-    private Date fecha;
+	private Date fecha;
 
-    private String operacion;
+	private String operacion;
 
-    private String entidad;
+	private String entidad;
 
-    private String idEntidad;
+	private String idEntidad;
 
-    public AuditoriaNombre(Auditoria auditoria) {
-        this.usuario = auditoria.getUsuario();
-        this.fecha = auditoria.getFecha();
-        this.operacion = auditoria.estado(auditoria.getOperacion());
-        this.entidad = auditoria.getEntidad();
-        this.idEntidad = auditoria.getIdEntidad();
-    }
+	public AuditoriaNombre(Auditoria auditoria) {
+		this.usuario = auditoria.getUsuario();
+		this.fecha = auditoria.getFecha();
+		this.operacion = auditoria.estado(auditoria.getOperacion());
+		this.entidad = auditoria.getEntidad();
+		this.idEntidad = auditoria.getIdEntidad();
+	}
 
-    public String getUsuario() {
-        return usuario;
-    }
+	public String getUsuario() {
+		return this.usuario;
+	}
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
 
-    public Date getFecha() {
-        return fecha;
-    }
+	public Date getFecha() {
+		return this.fecha;
+	}
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
 
-    public String getOperacion() {
-        return operacion;
-    }
+	public String getOperacion() {
+		return this.operacion;
+	}
 
-    public void setOperacion(String operacion) {
-        this.operacion = operacion;
-    }
+	public void setOperacion(String operacion) {
+		this.operacion = operacion;
+	}
 
-    public String getEntidad() {
-        return entidad;
-    }
+	public String getEntidad() {
+		return this.entidad;
+	}
 
-    public void setEntidad(String entidad) {
-        this.entidad = entidad;
-    }
+	public void setEntidad(String entidad) {
+		this.entidad = entidad;
+	}
 
-    public String getIdEntidad() {
-        return idEntidad;
-    }
+	public String getIdEntidad() {
+		return this.idEntidad;
+	}
 
-    public void setIdEntidad(String idEntidad) {
-        this.idEntidad = idEntidad;
-    }
+	public void setIdEntidad(String idEntidad) {
+		this.idEntidad = idEntidad;
+	}
 }

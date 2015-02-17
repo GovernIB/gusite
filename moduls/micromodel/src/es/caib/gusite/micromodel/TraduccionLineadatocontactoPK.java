@@ -16,19 +16,19 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionLineadatocontactoPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="RID_CODIDI")
+	@XmlAttribute
+	@Column(name = "RID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="RID_FLICOD")
+	@XmlAttribute
+	@Column(name = "RID_FLICOD")
 	private Long codigoLineadatocontacto;
-	
+
 	public String getCodigoIdioma() {
-		return codigoIdioma;
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -36,7 +36,7 @@ public class TraduccionLineadatocontactoPK implements Serializable {
 	}
 
 	public Long getCodigoLineadatocontacto() {
-		return codigoLineadatocontacto;
+		return this.codigoLineadatocontacto;
 	}
 
 	public void setCodigoLineadatocontacto(Long codigoLineadatocontacto) {
@@ -44,8 +44,9 @@ public class TraduccionLineadatocontactoPK implements Serializable {
 	}
 
 	public TraduccionLineadatocontactoPK() {
-    }
+	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,21 @@ public class TraduccionLineadatocontactoPK implements Serializable {
 		if (!(other instanceof TraduccionLineadatocontactoPK)) {
 			return false;
 		}
-		TraduccionLineadatocontactoPK castOther = (TraduccionLineadatocontactoPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoLineadatocontacto == castOther.codigoLineadatocontacto);
+		TraduccionLineadatocontactoPK castOther = (TraduccionLineadatocontactoPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoLineadatocontacto == castOther.codigoLineadatocontacto);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoLineadatocontacto ^ (this.codigoLineadatocontacto >>> 32)));
-		
+		hash = hash
+				* prime
+				+ ((int) (this.codigoLineadatocontacto ^ (this.codigoLineadatocontacto >>> 32)));
+
 		return hash;
-    }
+	}
 }

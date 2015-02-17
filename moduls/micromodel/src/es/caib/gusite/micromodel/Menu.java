@@ -20,110 +20,114 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Menu. Bean que define un Menu. 
- * Modela la tabla de BBDD GUS_MENU
+ * Clase Menu. Bean que define un Menu. Modela la tabla de BBDD GUS_MENU
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlSeeAlso({Contenido.class})
+@XmlSeeAlso({ Contenido.class })
 @Entity
-@Table(name="GUS_MENU")
-public class Menu implements Traducible2 {
+@Table(name = "GUS_MENU")
+public class Menu extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 1505040618105464154L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_MENU_ID_GENERATOR", sequenceName="GUS_SEQMEN", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_MENU_ID_GENERATOR")
-	@Column(name="MNU_CODI")
+	@SequenceGenerator(name = "GUS_MENU_ID_GENERATOR", sequenceName = "GUS_SEQMEN", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_MENU_ID_GENERATOR")
+	@Column(name = "MNU_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="MNU_ORDEN")
-    private int orden;
+	@XmlAttribute
+	@Column(name = "MNU_ORDEN")
+	private int orden;
 
-    @XmlAttribute
-	@Column(name="MNU_PADRE")
-    private Long padre;
+	@XmlAttribute
+	@Column(name = "MNU_PADRE")
+	private Long padre;
 
-    @XmlAttribute
-	@Column(name="MNU_VISIB")
+	@XmlAttribute
+	@Column(name = "MNU_VISIB")
 	private String visible;
 
-    @XmlAttribute
-	@Column(name="MNU_MODO")
+	@XmlAttribute
+	@Column(name = "MNU_MODO")
 	private String modo;
 
-    @XmlElement
-    @ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="MNU_IMGMEN")
-    private Archivo imagenmenu;
+	@XmlElement
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MNU_IMGMEN")
+	private Archivo imagenmenu;
 
-    @XmlElement
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="CON_MNUCOD")
-	@MapKey(name="id")
+	@XmlElement
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CON_MNUCOD")
+	@MapKey(name = "id")
 	@Fetch(FetchMode.SUBSELECT)
 	@OrderBy("orden ASC")
-    private List<Contenido> contenidos = new ArrayList<Contenido>();
+	private List<Contenido> contenidos = new ArrayList<Contenido>();
 
-  	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@JoinColumn(name="MDI_MNUCOD")
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MDI_MNUCOD")
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@Fetch(FetchMode.SUBSELECT)
-    @MapKey(name="id.codigoIdioma")
-  	private Map<String, TraduccionMenu> traducciones = new HashMap<String, TraduccionMenu>();
+	@MapKey(name = "id.codigoIdioma")
+	private Map<String, TraduccionMenu> traducciones = new HashMap<String, TraduccionMenu>();
 
-//	@XmlElement
-    @ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="MNU_MICCOD")
+	// @XmlElement
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "MNU_MICCOD")
 	private Microsite microsite;
 
-  	@Transient
-  	private String idi = Idioma.getIdiomaPorDefecto();
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionMenu> getTranslates() {
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionMenu> getTranslates() {
 
-        return traducciones;
-    }
+		return this.traducciones;
+	}
 
-    public void setTranslates(Map<String, TraduccionMenu> traducciones) {
-        this.traducciones = traducciones;
-    }
+	public void setTranslates(Map<String, TraduccionMenu> traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public int getOrden()
-    {
-        return orden;
-    }
+	public int getOrden() {
+		return this.orden;
+	}
 
-    public void setOrden(int orden)
-    {
-        this.orden = orden;
-    }
+	public void setOrden(int orden) {
+		this.orden = orden;
+	}
 
-    public Microsite getMicrosite() {
-		return microsite;
+	public Microsite getMicrosite() {
+		return this.microsite;
 	}
 
 	public void setMicrosite(Microsite microsite) {
@@ -131,7 +135,7 @@ public class Menu implements Traducible2 {
 	}
 
 	public Archivo getImagenmenu() {
-		return imagenmenu;
+		return this.imagenmenu;
 	}
 
 	public void setImagenmenu(Archivo imagenmenu) {
@@ -139,7 +143,7 @@ public class Menu implements Traducible2 {
 	}
 
 	public List<Contenido> getContenidos() {
-		return contenidos;
+		return this.contenidos;
 	}
 
 	public void setContenidos(List<Contenido> contenidos) {
@@ -147,7 +151,7 @@ public class Menu implements Traducible2 {
 	}
 
 	public Long getPadre() {
-		return padre;
+		return this.padre;
 	}
 
 	public void setPadre(Long padre) {
@@ -155,7 +159,7 @@ public class Menu implements Traducible2 {
 	}
 
 	public String getVisible() {
-		return visible;
+		return this.visible;
 	}
 
 	public void setVisible(String visible) {
@@ -163,64 +167,73 @@ public class Menu implements Traducible2 {
 	}
 
 	public String getModo() {
-		return modo;
+		return this.modo;
 	}
 
 	public void setModo(String modo) {
 		this.modo = modo;
 	}
-	
+
 	// Metodo para poder leer la coleccion del XML
-	
-	public void addContenidos (Contenido con) {
-		contenidos.add(con);
+
+	public void addContenidos(Contenido con) {
+		this.contenidos.add(con);
 	}
 
 	public void addTraduccionMap(String lang, TraduccionMenu traduccion) {
-        setTraduccion(lang, traduccion);
-    }
-
-	public Map<String, TraduccionMenu> getTraducciones() {
-
-		return traducciones;
+		this.setTraduccion(lang, traduccion);
 	}
 
+	@Override
+	public Map<String, TraduccionMenu> getTraducciones() {
+
+		return this.traducciones;
+	}
+
+	@Override
 	public void setTraducciones(Map traducciones) {
 		this.traducciones = traducciones;
 	}
-	
+
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
-	
+
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
-	
+
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
-	
+
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
-	
+
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionMenu)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionMenu) traduccion);
+		}
 	}
-	
+
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
-	
+
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
-	
+
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}

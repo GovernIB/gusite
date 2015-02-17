@@ -1,5 +1,6 @@
 package es.caib.gusite.microback.ajax;
 
+import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.logging.Log;
@@ -22,20 +23,24 @@ public class AjaxCheckUriAction extends Action {
 
     protected static Log log = LogFactory.getLog(AjaxCheckUriAction.class);
 
-    private static final String EXISTE = "<datos><dato>existe</dato></datos>";
-    private static final String OK = "<datos><dato>OK</dato></datos>";
-    private static final String ERROR = "<datos><dato>ERROR</dato></datos>";
+    private static final String OPEN = "<datos><dato>";
+    private static final String CLOSE = "</dato></datos>";
+    private static final String ERROR = "error";
+    private static final String BUSCAR_NUEVA = "buscar";
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
         String txtrespuesta="<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-        String uri = request.getParameter("URI");
+        String uri = Cadenas.string2uri(request.getParameter("URI"));
         String type = request.getParameter("type");
         String idioma = request.getParameter("idioma");
+        Long id = Long.parseLong(request.getParameter("id"));
         UriType currentType = UriType.valueOf(type.toUpperCase());
 
-        txtrespuesta += check(uri, currentType, idioma);
+        txtrespuesta += OPEN;
+        txtrespuesta += check(uri, currentType, idioma, id, 0);
+        txtrespuesta += CLOSE;
 
         response.reset();
         response.setContentType("text/xml;charset=utf-8");
@@ -50,44 +55,57 @@ public class AjaxCheckUriAction extends Action {
         return null;
     }
 
-    private String check(String uri, UriType type, String idioma) {
+    private String check(String uri, UriType type, String idioma, Long id, Integer count) {
 
-        String msg;
+        String msg = uri;
         try {
             switch (type) {
                 case MIC_URI:
                     MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
                     Microsite microsite = micrositeDelegate.obtenerMicrositebyUri(uri);
-                    msg = (microsite == null) ? OK : EXISTE;
+                    if (microsite != null && !microsite.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
                     break;
 
                 case CID_URI:
                     ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
                     Contenido contenido = contenidoDelegate.obtenerContenidoDesdeUri(idioma, uri);
-                    msg = (contenido.getTraducciones().isEmpty()) ? OK : EXISTE;
+                    if (contenido != null && !contenido.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
                     break;
 
                 case EID_URI:
                     EncuestaDelegate encuestaDelegate = DelegateUtil.getEncuestaDelegate();
                     Encuesta encuesta = encuestaDelegate.obtenerEncuestaDesdeUri(idioma, uri);
-                    msg = (encuesta.getTraducciones().isEmpty()) ? OK : EXISTE;
+                    if (encuesta != null && !encuesta.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
                     break;
 
                 case NID_URI:
                     NoticiaDelegate noticiaDelegate = DelegateUtil.getNoticiasDelegate();
                     Noticia noticia = noticiaDelegate.obtenerNoticiaDesdeUri(idioma, uri);
-                    msg = (noticia.getTraducciones().isEmpty()) ? OK : EXISTE;
+                    if (noticia != null && !noticia.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
                     break;
 
                 case TPI_URI:
                     TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
                     Tipo tipo = tipoDelegate.obtenerTipoDesdeUri(idioma, uri);
-                    msg = (tipo.getTraducciones().isEmpty()) ? OK : EXISTE;
+                    if (tipo != null && !tipo.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
                     break;
 
                 default:
                     msg = ERROR;
                     break;
+            }
+            if (msg.equals(BUSCAR_NUEVA)) {
+                msg = check(uri + "_" + count.toString(), type, idioma, id, count++);
             }
 
         } catch (DelegateException e) {

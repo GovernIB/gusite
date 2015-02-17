@@ -17,116 +17,130 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
+
 /**
- * Clase Componente. Bean que define un Componente. 
- * Modela la tabla de BBDD GUS_COMPOS
+ * Clase Componente. Bean que define un Componente. Modela la tabla de BBDD
+ * GUS_COMPOS
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_COMPOS")
-public class Componente implements Traducible2 {
+@Table(name = "GUS_COMPOS")
+public class Componente extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 5072614956105180822L;
 
-    @XmlAttribute
+	@XmlAttribute
 	@Id
-	@SequenceGenerator(name="GUS_COMPONENTE_ID_GENERATOR", sequenceName="GUS_SEQCMP", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GUS_COMPONENTE_ID_GENERATOR")
-	@Column(name="CMP_CODI")
+	@SequenceGenerator(name = "GUS_COMPONENTE_ID_GENERATOR", sequenceName = "GUS_SEQCMP", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_COMPONENTE_ID_GENERATOR")
+	@Column(name = "CMP_CODI")
 	private Long id;
 
-    @XmlAttribute
-	@Column(name="CMP_MICCOD")
+	@XmlAttribute
+	@Column(name = "CMP_MICCOD")
 	private Long idmicrosite;
-	
-	//bi-directional many-to-one association to GusDocus
-    @XmlElement
-    @ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="CMP_IMGBUL")
+
+	// bi-directional many-to-one association to GusDocus
+	@XmlElement
+	@ManyToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CMP_IMGBUL")
 	private Archivo imagenbul;
 
-	//bi-directional many-to-one association to GusTpnoti
-    @XmlElement
-    @ManyToOne
-	@JoinColumn(name="CMP_TIPO")
+	// bi-directional many-to-one association to GusTpnoti
+	@XmlElement
+	@ManyToOne
+	@JoinColumn(name = "CMP_TIPO")
 	private Tipo tipo;
 
-    @XmlAttribute
-    @Column(name="CMP_NOMBRE")
-    private String nombre;
+	@XmlAttribute
+	@Column(name = "CMP_NOMBRE")
+	private String nombre;
 
-    @XmlAttribute
-    @Column(name="CMP_SOLOIM")
+	@XmlAttribute
+	@Column(name = "CMP_SOLOIM")
 	private String soloimagen;
 
-    @XmlAttribute
-    @Column(name="CMP_FILAS")
+	@XmlAttribute
+	@Column(name = "CMP_FILAS")
 	private String filas;
 
-    @XmlAttribute
-    @Column(name="CMP_NUMELE")
+	@XmlAttribute
+	@Column(name = "CMP_NUMELE")
 	private Integer numelementos;
 
-    @XmlAttribute
-    @Column(name="CMP_ORDEN")
+	@XmlAttribute
+	@Column(name = "CMP_ORDEN")
 	private Integer ordenacion;
 
-    @Transient
-    private String idi = Idioma.getIdiomaPorDefecto();
+	@Transient
+	private String idi = Idioma.getIdiomaPorDefecto();
 
-  	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-  	@JoinColumn(name="CPI_CMPCOD")
-  	@MapKey(name="id.codigoIdioma")
-  	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "CPI_CMPCOD")
+	@MapKey(name = "id.codigoIdioma")
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@Fetch(FetchMode.SUBSELECT)
-  	private Map<String, TraduccionComponente> traducciones = new HashMap<String, TraduccionComponente>();
+	private Map<String, TraduccionComponente> traducciones = new HashMap<String, TraduccionComponente>();
 
-    @XmlElement(name = "traducciones")
-    @XmlJavaTypeAdapter(TraduccionAdapter.class)
-    public Map<String, TraduccionComponente> getTranslates() {
-        return traducciones;
-    }
+	@XmlElement
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CMP_PPLCOD")
+	private PersonalizacionPlantilla personalizacionPlantilla;
 
-    public void setTranslates(Map<String, TraduccionComponente> traducciones) {
-        this.traducciones = traducciones;
-    }
+	@XmlElement(name = "traducciones")
+	@XmlJavaTypeAdapter(TraduccionAdapter.class)
+	public Map<String, TraduccionComponente> getTranslates() {
+		return this.traducciones;
+	}
 
-    public Map<String, TraduccionComponente> getTraducciones() {
-        return traducciones;
-    }
+	public void setTranslates(Map<String, TraduccionComponente> traducciones) {
+		this.traducciones = traducciones;
+	}
 
-    public void setTraducciones(Map traducciones) {
-        this.traducciones = traducciones;
-    }
+	@Override
+	public Map<String, TraduccionComponente> getTraducciones() {
+		return this.traducciones;
+	}
+
+	@Override
+	public void setTraducciones(Map traducciones) {
+		this.traducciones = traducciones;
+	}
 
 	public String getFilas() {
-		return filas;
+		return this.filas;
 	}
 
 	public void setFilas(String filas) {
 		this.filas = filas;
 	}
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	@Override
 	public Long getIdmicrosite() {
-		return idmicrosite;
+		return this.idmicrosite;
 	}
 
 	public void setIdmicrosite(Long idmicrosite) {
@@ -134,7 +148,7 @@ public class Componente implements Traducible2 {
 	}
 
 	public Archivo getImagenbul() {
-		return imagenbul;
+		return this.imagenbul;
 	}
 
 	public void setImagenbul(Archivo imagenbul) {
@@ -142,7 +156,7 @@ public class Componente implements Traducible2 {
 	}
 
 	public String getNombre() {
-		return nombre;
+		return this.nombre;
 	}
 
 	public void setNombre(String nombre) {
@@ -150,7 +164,7 @@ public class Componente implements Traducible2 {
 	}
 
 	public Integer getNumelementos() {
-		return numelementos;
+		return this.numelementos;
 	}
 
 	public void setNumelementos(Integer numelementos) {
@@ -158,7 +172,7 @@ public class Componente implements Traducible2 {
 	}
 
 	public Integer getOrdenacion() {
-		return ordenacion;
+		return this.ordenacion;
 	}
 
 	public void setOrdenacion(Integer ordenacion) {
@@ -166,7 +180,7 @@ public class Componente implements Traducible2 {
 	}
 
 	public String getSoloimagen() {
-		return soloimagen;
+		return this.soloimagen;
 	}
 
 	public void setSoloimagen(String soloimagen) {
@@ -174,51 +188,67 @@ public class Componente implements Traducible2 {
 	}
 
 	public Tipo getTipo() {
-		return tipo;
+		return this.tipo;
 	}
 
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
 
+	public PersonalizacionPlantilla getPersonalizacionPlantilla() {
+		return this.personalizacionPlantilla;
+	}
+
+	public void setPersonalizacionPlantilla(
+			PersonalizacionPlantilla personalizacionPlantilla) {
+		this.personalizacionPlantilla = personalizacionPlantilla;
+	}
+
 	public void addTraduccionMap(String lang, TraduccionComponente traduccion) {
-        setTraduccion(lang, traduccion);
-    }
+		this.setTraduccion(lang, traduccion);
+	}
 
+	@Override
 	public Traduccion getTraduccion() {
-		return (Traduccion) traducciones.get(Idioma.getIdiomaPorDefecto());
+		return this.traducciones.get(Idioma.getIdiomaPorDefecto());
 	}
 
+	@Override
 	public Traduccion getTraduccion(String idioma) {
-		return (Traduccion) traducciones.get(idioma);
+		return this.traducciones.get(idioma);
 	}
 
+	@Override
 	public void setTraduccion(String idioma, Traduccion traduccion) {
-        if (traduccion == null) {
-            traducciones.remove(idioma);
-        } else {
-            traducciones.put(idioma, (TraduccionComponente)traduccion);
-        }
+		if (traduccion == null) {
+			this.traducciones.remove(idioma);
+		} else {
+			this.traducciones.put(idioma, (TraduccionComponente) traduccion);
+		}
 	}
 
+	@Override
 	public Traduccion getTraduce() {
-		return (Traduccion) traducciones.get(idi);
+		return this.traducciones.get(this.idi);
 	}
 
+	@Override
 	public Map getTraduccionMap() {
-		return traducciones;
+		return this.traducciones;
 	}
 
+	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);
 	}
 
+	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
 
 	public String getIdi() {
-		return idi;
+		return this.idi;
 	}
 
 }

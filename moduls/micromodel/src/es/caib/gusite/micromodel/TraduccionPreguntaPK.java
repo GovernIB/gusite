@@ -16,22 +16,22 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Embeddable
 public class TraduccionPreguntaPK implements Serializable {
 
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-    @XmlAttribute
-	@Column(name="PID_CODIDI")
+	@XmlAttribute
+	@Column(name = "PID_CODIDI")
 	private String codigoIdioma;
 
-    @XmlAttribute
-	@Column(name="PID_PRECOD")
+	@XmlAttribute
+	@Column(name = "PID_PRECOD")
 	private Long codigoPregunta;
 
-    public TraduccionPreguntaPK() {
-    }
+	public TraduccionPreguntaPK() {
+	}
 
-    public String getCodigoIdioma() {
-		return codigoIdioma;
+	public String getCodigoIdioma() {
+		return this.codigoIdioma;
 	}
 
 	public void setCodigoIdioma(String codigoIdioma) {
@@ -39,13 +39,14 @@ public class TraduccionPreguntaPK implements Serializable {
 	}
 
 	public Long getCodigoPregunta() {
-		return codigoPregunta;
+		return this.codigoPregunta;
 	}
 
 	public void setCodigoPregunta(Long codigoPregunta) {
 		this.codigoPregunta = codigoPregunta;
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -53,19 +54,20 @@ public class TraduccionPreguntaPK implements Serializable {
 		if (!(other instanceof TraduccionPreguntaPK)) {
 			return false;
 		}
-		TraduccionPreguntaPK castOther = (TraduccionPreguntaPK)other;
-		return 
-			this.codigoIdioma.equals(castOther.codigoIdioma)
-			&& (this.codigoPregunta == castOther.codigoPregunta);
+		TraduccionPreguntaPK castOther = (TraduccionPreguntaPK) other;
+		return this.codigoIdioma.equals(castOther.codigoIdioma)
+				&& (this.codigoPregunta == castOther.codigoPregunta);
 
-    }
-    
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.codigoIdioma.hashCode();
-		hash = hash * prime + ((int) (this.codigoPregunta ^ (this.codigoPregunta >>> 32)));
-		
+		hash = hash * prime
+				+ ((int) (this.codigoPregunta ^ (this.codigoPregunta >>> 32)));
+
 		return hash;
-    }
+	}
 }

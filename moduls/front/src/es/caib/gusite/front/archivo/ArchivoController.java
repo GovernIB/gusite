@@ -160,24 +160,6 @@ public class ArchivoController extends FrontController {
 
 	}
 
-	private Archivo archivopub(Archivo archivo) throws IOException {
-
-		/*
-		 * if ((archivo != null) && (archivo.getDatos() != null)) { if
-		 * (!forzarDownload(mapping, form, request)) {
-		 * response.setContentType(archivo.getMime());
-		 * response.setHeader("Content-Disposition", "inline; filename=\"" +
-		 * archivo.getNombre() + "\""); } else {
-		 * response.setContentType("application/octet-stream");
-		 * response.setHeader("Content-Disposition", "attachment; filename=\"" +
-		 * archivo.getNombre() + "\""); } response.setContentLength(new
-		 * Long(archivo.getPeso()).intValue());
-		 * response.getOutputStream().write(archivo.getDatos()); } else { throw
-		 * new Exception(); }
-		 */
-		return null;
-	}
-
 	/**
 	 * 
 	 * Este método comprueba que en el parametro 'ctrl' del request se ha pasado
@@ -198,13 +180,9 @@ public class ArchivoController extends FrontController {
 		 * return retorno;
 		 */
 
-		// primero, comprobar que 'ctrl' tiene el formato correcto
-		String SSSSS;
-		Long xxx;
 		Long yyy;
-		SSSSS = ctrl.substring(0, 5);
-		xxx = new Long(
-				ctrl.substring(5, ctrl.indexOf(Microfront.separatordocs)));
+		ctrl.substring(0, 5);
+		new Long(ctrl.substring(5, ctrl.indexOf(Microfront.separatordocs)));
 		yyy = new Long(ctrl.substring(
 				ctrl.indexOf(Microfront.separatordocs) + 2, ctrl.length()));
 

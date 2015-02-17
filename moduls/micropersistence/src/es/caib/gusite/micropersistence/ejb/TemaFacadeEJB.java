@@ -8,23 +8,23 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.DelegateException;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import es.caib.gusite.micromodel.Auditoria;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.Temafaq;
+import es.caib.gusite.micromodel.TraduccionTemafaq;
+
 /**
  * SessionBean para manipular los temas de las FAQS.
- *
- * @ejb.bean
- *  name="sac/micropersistence/TemaFacade"
- *  jndi-name="es.caib.gusite.micropersistence.TemaFacade"
- *  type="Stateless"
- *  view-type="remote"
- *  transaction-type="Container"
- *
+ * 
+ * @ejb.bean name="sac/micropersistence/TemaFacade"
+ *           jndi-name="es.caib.gusite.micropersistence.TemaFacade"
+ *           type="Stateless" view-type="remote" transaction-type="Container"
+ * 
  * @ejb.transaction type="Required"
  * 
  * @author Indra
@@ -34,211 +34,233 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 	private static final long serialVersionUID = 7011958120088531376L;
 
 	/**
-     * @ejb.create-method
-     * @ejb.permission unchecked="true"
-     */
-    public void ejbCreate() throws CreateException {
-        super.ejbCreate();
-    }
+	 * @ejb.create-method
+	 * @ejb.permission unchecked="true"
+	 */
+	@Override
+	public void ejbCreate() throws CreateException {
+		super.ejbCreate();
+	}
 
-    /**
-     * Inicializo los parámetros de la consulta....
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public void init(Long site) {
-    	super.tampagina = 10;
-    	super.pagina = 0;
-    	super.select = "select tema";
-    	super.from = " from Temafaq tema join tema.traducciones trad ";
-    	super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite=" + site.toString();
-    	super.whereini = " ";
-    	super.orderby = "";
+	/**
+	 * Inicializo los parámetros de la consulta....
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init(Long site) {
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select tema";
+		super.from = " from Temafaq tema join tema.traducciones trad ";
+		super.where = " where trad.id.codigoIdioma='"
+				+ Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite="
+				+ site.toString();
+		super.whereini = " ";
+		super.orderby = "";
 
-    	super.camposfiltro = new String[] {"trad.nombre"};
-    	super.cursor = 0;
-    	super.nreg = 0;
-    	super.npags = 0;
-    }
+		super.camposfiltro = new String[] { "trad.nombre" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
 
-    /**
-     * Inicializo los parámetros de la consulta....
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public void init() {
-    	super.tampagina = 10;
-    	super.pagina = 0;
-    	super.select = "select tema";
-    	super.from = " from Temafaq tema join tema.traducciones trad ";
-    	super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "'";
-    	super.whereini = " ";
-    	super.orderby = "";
+	/**
+	 * Inicializo los parámetros de la consulta....
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init() {
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select tema";
+		super.from = " from Temafaq tema join tema.traducciones trad ";
+		super.where = " where trad.id.codigoIdioma='"
+				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.whereini = " ";
+		super.orderby = "";
 
-    	super.camposfiltro = new String[] {"trad.nombre"};
-    	super.cursor = 0;
-    	super.nreg = 0;
-    	super.npags = 0;
-    }    
-    
-    /**
-     * Crea o actualiza un tema
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public Long grabarTema(Temafaq tema) {
+		super.camposfiltro = new String[] { "trad.nombre" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
 
-        Session session = getSession();
-        try {
-            boolean nuevo = (tema.getId() == null) ? true : false;
-            Transaction tx = session.beginTransaction();
-            this.microsite = (Microsite) session.get(Microsite.class, tema.getIdmicrosite());
+	/**
+	 * Crea o actualiza un tema
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public Long grabarTema(Temafaq tema) {
 
-            Map<String, TraduccionTemafaq> listaTraducciones = new HashMap<String, TraduccionTemafaq>();
-            if (nuevo) {
-                Iterator<TraduccionTemafaq> it = tema.getTraducciones().values().iterator();
-                while (it.hasNext()) {
-                    TraduccionTemafaq trd = it.next();
-                    listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
-                }
-                tema.setTraducciones(null);
-            }
+		Session session = this.getSession();
+		try {
+			boolean nuevo = (tema.getId() == null) ? true : false;
+			Transaction tx = session.beginTransaction();
 
-            session.saveOrUpdate(tema);
-            session.flush();
+			Map<String, TraduccionTemafaq> listaTraducciones = new HashMap<String, TraduccionTemafaq>();
+			if (nuevo) {
+				Iterator<TraduccionTemafaq> it = tema.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionTemafaq trd = it.next();
+					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
+				}
+				tema.setTraducciones(null);
+			}
 
-            if (nuevo) {
-                for (TraduccionTemafaq trad : listaTraducciones.values()) {
-                    trad.getId().setCodigoTema(tema.getId());
-                    session.saveOrUpdate(trad);
-                }
-                session.flush();
-                tema.setTraducciones(listaTraducciones);
-            }
+			session.saveOrUpdate(tema);
+			session.flush();
 
-            tx.commit();
-            close(session);
+			if (nuevo) {
+				for (TraduccionTemafaq trad : listaTraducciones.values()) {
+					trad.getId().setCodigoTema(tema.getId());
+					session.saveOrUpdate(trad);
+				}
+				session.flush();
+				tema.setTraducciones(listaTraducciones);
+			}
 
-            int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
-            gravarAuditoria(Temafaq.class.getSimpleName(), tema.getId().toString(), op);
+			tx.commit();
+			this.close(session);
 
-            return tema.getId();
+			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			this.grabarAuditoria(tema, op);
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } catch (DelegateException e) {
-            throw new EJBException(e);
-        } finally {
-            close(session);
-        }
-    }
+			return tema.getId();
 
-    /**
-     * Obtiene un tema
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public Temafaq obtenerTema(Long id) {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	Temafaq tema = (Temafaq) session.get(Temafaq.class, id);
-            return tema;
+	/**
+	 * Obtiene un tema
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Temafaq obtenerTema(Long id) {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			Temafaq tema = (Temafaq) session.get(Temafaq.class, id);
+			return tema;
 
-    /**
-     * Lista todos los temas
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public List<?> listarTemas() {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	parametrosCons(); // Establecemos los parámetros de la paginación
-        	Query query = session.createQuery(select + from + where + orderby);
-            query.setFirstResult(cursor - 1);
-            query.setMaxResults(tampagina);
-        	return query.list();
-        	
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+	/**
+	 * Lista todos los temas
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<?> listarTemas() {
 
-    /**
-     * borra un tema
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public void borrarTema(Long id) {
+		Session session = this.getSession();
+		try {
+			this.parametrosCons(); // Establecemos los parámetros de la
+									// paginación
+			Query query = session.createQuery(this.select + this.from
+					+ this.where + this.orderby);
+			query.setFirstResult(this.cursor - 1);
+			query.setMaxResults(this.tampagina);
+			return query.list();
 
-        Session session = getSession();
-        try {
-            Temafaq temafaq = (Temafaq) session.get(Temafaq.class, id);
-            this.microsite = (Microsite) session.get(Microsite.class, temafaq.getIdmicrosite());
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        	session.createQuery("delete from TraduccionTemafaq ttema where ttema.id.codigoTema = " + id).executeUpdate();
-        	session.createQuery("delete from Temafaq tfaq where tfaq.id = " + id).executeUpdate();
-            session.flush();
-            close(session);
+	/**
+	 * borra un tema
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarTema(Long id) {
 
-            gravarAuditoria(Actividadagenda.class.getSimpleName(), id.toString(), Auditoria.ELIMINAR);
+		Session session = this.getSession();
+		try {
+			Temafaq temafaq = (Temafaq) session.get(Temafaq.class, id);
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } catch (DelegateException e) {
-            throw new EJBException(e);
-        } finally {
-            close(session);
-        }
-    }
-    
-    /**
-     * Lista todos los temas para usar en Combos
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    public List<?> listarCombo(Long idmicrosite) {
+			session.createQuery(
+					"delete from TraduccionTemafaq ttema where ttema.id.codigoTema = "
+							+ id).executeUpdate();
+			session.createQuery(
+					"delete from Temafaq tfaq where tfaq.id = " + id)
+					.executeUpdate();
+			session.flush();
+			this.close(session);
 
-        Session session = getSession();
-        try {
-            String consulta = "select tema from Temafaq tema join tema.traducciones trad where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite = " + idmicrosite.toString();
-        	Query query = session.createQuery(consulta.toString());
-        	return query.list();
-        	
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+			this.grabarAuditoria(temafaq, Auditoria.ELIMINAR);
 
-    /**
-     * Comprueba que el elemento pertenece al Microsite
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
-     */
-    public boolean checkSite(Long site, Long id) {
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
-        Session session = getSession();
-        try {
-        	Query query = session.createQuery("select tema from Temafaq tema where tema.idmicrosite = " + site.toString() + " and tema.id = " + id.toString());
-        	return query.list().isEmpty();
+	/**
+	 * Lista todos los temas para usar en Combos
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<?> listarCombo(Long idmicrosite) {
 
-        } catch (HibernateException he) {
-            throw new EJBException(he);
-        } finally {
-            close(session);
-        }
-    }
+		Session session = this.getSession();
+		try {
+			String consulta = "select tema from Temafaq tema join tema.traducciones trad where trad.id.codigoIdioma = '"
+					+ Idioma.getIdiomaPorDefecto()
+					+ "' and tema.idmicrosite = " + idmicrosite.toString();
+			Query query = session.createQuery(consulta.toString());
+			return query.list();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+
+	/**
+	 * Comprueba que el elemento pertenece al Microsite
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public boolean checkSite(Long site, Long id) {
+
+		Session session = this.getSession();
+		try {
+			Query query = session
+					.createQuery("select tema from Temafaq tema where tema.idmicrosite = "
+							+ site.toString()
+							+ " and tema.id = "
+							+ id.toString());
+			return query.list().isEmpty();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 
 }

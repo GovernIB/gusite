@@ -8,33 +8,29 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-public class UsernamePasswordCallbackHandler
-implements CallbackHandler 
-{
-    private String username;
-    private String password;
+public class UsernamePasswordCallbackHandler implements CallbackHandler {
+	private String username;
+	private String password;
 
-    public UsernamePasswordCallbackHandler(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+	public UsernamePasswordCallbackHandler(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 
-    public void handle(Callback[] callbacks)
-            throws IOException, UnsupportedCallbackException {
-        for (int i = 0; i < callbacks.length; i++) {
-            if (callbacks[i] instanceof NameCallback) {
-                NameCallback ncb = (NameCallback) callbacks[i];
-                ncb.setName(username);
-            }
-            else if (callbacks[i] instanceof PasswordCallback) {
-                PasswordCallback pcb = (PasswordCallback) callbacks[i];
-                pcb.setPassword(password.toCharArray());
-            }
-            else {
-                throw new UnsupportedCallbackException
-                        (callbacks[i], "Unrecognized Callback");
-            }
-        }
-    }
+	@Override
+	public void handle(Callback[] callbacks) throws IOException,
+			UnsupportedCallbackException {
+		for (Callback callback : callbacks) {
+			if (callback instanceof NameCallback) {
+				NameCallback ncb = (NameCallback) callback;
+				ncb.setName(this.username);
+			} else if (callback instanceof PasswordCallback) {
+				PasswordCallback pcb = (PasswordCallback) callback;
+				pcb.setPassword(this.password.toCharArray());
+			} else {
+				throw new UnsupportedCallbackException(callback,
+						"Unrecognized Callback");
+			}
+		}
+	}
 }
-

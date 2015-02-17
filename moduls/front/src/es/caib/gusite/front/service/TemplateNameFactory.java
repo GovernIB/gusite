@@ -82,35 +82,35 @@ public class TemplateNameFactory {
 	public String listarContactos(Microsite microsite) {
 		return "contacto/listarcontactos";
 	}
-	
+
 	public String contacto(Microsite microsite) {
 		return "contacto/contacto";
 	}
-	
+
 	public String envioContacto(Microsite microsite) {
 		return "contacto/enviocontacto";
 	}
-	
+
 	public String encuesta(Microsite microsite) {
 		return "encuesta/encuesta";
 	}
-	
+
 	public String envioEncuesta(Microsite microsite) {
 		return "encuesta/envioencuesta";
 	}
-	
+
 	public String cercar(Microsite microsite) {
 		return "cercador/cercar";
 	}
-	
+
 	public String tawItem(Microsite microsite) {
 		return "general/tawitem";
 	}
-	
+
 	public String mailing(Microsite microsite) {
 		return "usuariomsg/msggenerico";
 	}
-	
+
 	public String menuPreview(Microsite microsite) {
 		return "home/menupreview";
 	}
@@ -126,5 +126,5 @@ public class TemplateNameFactory {
 	public String componenteElementos(Microsite microsite) {
 		return "componentes :: elementos";
 	}
-	
+
 }

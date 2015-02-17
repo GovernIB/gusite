@@ -23,7 +23,7 @@ import javax.servlet.ServletException;
 /**
  * Action Intranet <P>
  *  Definición Struts:<BR>
- *  action path="/intranethome" <BR> 
+ *  action path="/intranet/home" <BR> 
  *  unknown="true" <BR>
  *  forward name="intranet" path=/v4/home/intranet.jsp
  * @author Indra

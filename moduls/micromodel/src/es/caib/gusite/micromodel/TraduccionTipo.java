@@ -4,51 +4,57 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Clase TraduccionTipo. Encapsula los datos  que pueden tener valor en diferentes idiomas del objeto Tipo.
+ * Clase TraduccionTipo. Encapsula los datos que pueden tener valor en
+ * diferentes idiomas del objeto Tipo.
+ * 
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name="GUS_TPNIDI")
-public class TraduccionTipo  implements Traduccion{
+@Table(name = "GUS_TPNIDI")
+public class TraduccionTipo implements Traduccion {
 
 	private static final long serialVersionUID = 3384380781846326766L;
 
-	public TraduccionTipo()   { }
+	public TraduccionTipo() {
+	}
 
-    @XmlElement
+	@XmlElement
 	@EmbeddedId
 	private TraduccionTipoPK id;
 
-    @XmlAttribute
-	@Column(name="TPI_NOMBRE")
+	@XmlAttribute
+	@Column(name = "TPI_NOMBRE")
 	private String nombre;
-    
-    @XmlAttribute
-	@Column(name="TPI_URI")
+
+	@XmlAttribute
+	@Column(name = "TPI_URI")
 	private String uri;
-    
-    public String getUri() {
-  		return uri;
-  	}
 
-  	public void setUri(String uri) {
-  		this.uri = uri;
-  	}
+	public String getUri() {
+		return this.uri;
+	}
 
-    public String getNombre(){
-        return nombre;
-    }
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
 
-    public void setNombre(String nombre){
-        this.nombre = nombre;
-    }
+	public String getNombre() {
+		return this.nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
 	public TraduccionTipoPK getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(TraduccionTipoPK id) {
