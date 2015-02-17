@@ -234,13 +234,12 @@
 				<include name="commons-io-1.3.2.jar" />
 				<include name="commons-digester.jar" />
 				<include name="commons-fileupload-1.2.2.jar" />
-				<include name="javassist-3.12.0.GA.jar" />
+				<include name="javassist-3.16.1-GA.jar" />
 				<include name="lucene-core-3.6.2.jar" />
 				<include name="lucene-spellchecker-3.6.2.jar" />
 				<include name="sac-api-client.jar"/>
                 <include name="htmllexer.jar" />
                 <include name="jtidy-r938.jar" />
-                <include name="htmllexer.jar" />
 			</zipfileset>
 			<zipfileset dir="${lib}/axis2-1.5" prefix="lib">
 				<!--
