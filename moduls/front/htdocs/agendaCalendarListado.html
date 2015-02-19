@@ -14,7 +14,9 @@ Objetos:
 	#gusuri.listarAgendaFechaFormateada(MVS_microsite,MVS_idioma,valorDatos.value): devuelve la URL hacia el evento con la fecha en cuestión
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -178,12 +180,12 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 														th:case="2" th:remove="tag"> <span
 															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 == 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 == 0))"
 															th:with="diasmes=29" th:remove="tag">
-																<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
+																<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
 														</span> 
 														<span
 															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 != 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 != 0))"
 															th:with="diasmes=28" th:remove="tag">
-																<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
+																<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
 														</span>
 													</span> 
 													<span th:case="*" th:remove="tag"> 
@@ -191,7 +193,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 													<span
 														th:if="(${safeMes}!=4) and (${safeMes}!=6) and (${safeMes}!=9) and (${safeMes}!=11)"
 														th:with="diasmes=31" th:remove="tag">
-															<tr th:replace="agendaCalendarListado :: filasTabla"></tr>
+															<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
 													</span>
 
 													<span
@@ -248,7 +250,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 							</div>
 							<!--  Meses inicialmente escondidos -->
 							<div th:if="${i}!=(${nummesesaretroceder}+1)" style="display: none;">
-								<span th:replace="agendaCalendarListado :: tablaCalendario" th:remove="tag"> </span>
+								<span gus:replace="agendaCalendarListado :: tablaCalendario" th:remove="tag"> </span>
 							</div>
 						</span>
 					</div>

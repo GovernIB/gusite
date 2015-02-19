@@ -16,7 +16,9 @@ Objetos:
 	#gusuri.archivopub(MVS_microsite,elementosMenu.imagenmenu):devuelve la URL hacia el archivo correspondiente
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
@@ -52,13 +54,13 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			<!-- MVS_contenido: devuelve un contenido listo para ser visualizado por el público -->
 			<div th:if="${MVS_contenido} !=null"
 				th:with="idcontenido=${MVS_contenido.id}" th:remove="tag">
-				<div th:replace="general/menu :: contenido" th:remove="tag"></div>
+				<div gus:replace="general/menu :: contenido" th:remove="tag"></div>
 			</div>
 			<!-- MVS_menu_cont_notic: devuelve la opción de menú que hay que resaltar -->
 			<div th:if="${MVS_menu_cont_notic} !=null"
 				th:with="idcontenido=${MVS_menu_cont_notic}"
 				th:type="java.lang.String" th:remove="tag">
-				<div th:replace="general/menu :: contenido" th:remove="tag"></div>
+				<div gus:replace="general/menu :: contenido" th:remove="tag"></div>
 			</div>
 			<div
 				th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null)"

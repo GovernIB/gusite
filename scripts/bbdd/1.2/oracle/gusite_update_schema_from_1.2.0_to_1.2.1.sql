@@ -26,13 +26,15 @@ ALTER table "GUS_TPNOTI" ADD (
 Create table "GUS_FR_TEMA" (
 	"FTE_CODI" Number(19,0) NOT NULL ,
 	"FTE_VERSION" Varchar2 (2) NOT NULL ,
-	"FTE_TEMA_PADRE" Number(19,0) NOT NULL ,
+	"FTE_TEMA_PADRE" Number(19,0) ,
 	"FTE_NOMBRE" Varchar2 (255) NOT NULL  UNIQUE ,
 	"FTE_CSS" Number,
 	"FTE_ACTUALIZACION" Date Default SYSDATE NOT NULL ,
  Constraint "GUS_FTE_PK" primary key ("FTE_CODI") 
 ) 
 /
+
+-- ALTER table gus_fr_tema modify(fte_tema_padre null);
 
 Create table "GUS_FR_PLANTILLA" (
 	"PLA_CODI" Number(19,0) NOT NULL ,

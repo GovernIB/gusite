@@ -830,4 +830,43 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	public void setAcceso(String acceso) {
 		this.acceso = acceso;
 	}
+	
+	
+	/**
+	 * toString
+	 * 
+	 * @return String
+	 */
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+
+		buffer.append(getClass().getName()).append("@")
+				.append(Integer.toHexString(hashCode())).append(" [");
+		buffer.append("id").append("='").append(getId()).append("' ");
+		buffer.append("]");
+
+		return buffer.toString();
+	}
+
+	public boolean equals(Object other) {
+		if ((this == other))
+			return true;
+		if ((other == null))
+			return false;
+		if (!(other instanceof Plantilla))
+			return false;
+		Plantilla castOther = (Plantilla) other;
+
+		return ((this.getId() == castOther.getId()) || (this.getId() != null
+				&& castOther.getId() != null && this.getId().equals(
+				castOther.getId())));
+	}
+
+	public int hashCode() {
+		int result = 17;
+
+		result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
+
+		return result;
+	}	
 }

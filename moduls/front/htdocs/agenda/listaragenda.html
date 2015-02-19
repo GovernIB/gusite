@@ -19,7 +19,8 @@ Objetos:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
 <title th:if="${MVS_micrositetitulo} !=null"
@@ -60,8 +61,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 				<h3 th:text="#{listaragenda.calendario}">Calendari</h3>
 				<!-- MVS_datos_agenda_calendario: devuelve los datos del calendario -->
 				<div th:if="${MVS_datos_agenda_calendario}!=null">
-					<div th:replace="agendaCalendarListado :: calendario">Agenda
-										Calendario</div>
+					<div gus:replace="agendaCalendarListado :: calendario">Agenda Calendario</div>
 				</div>				
 			</div>
 			<!-- MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer> -->

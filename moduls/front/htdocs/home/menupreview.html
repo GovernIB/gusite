@@ -5,12 +5,13 @@ Este código muestra la información previa antes de acceder a la intranet.
 
 Variables:
 	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos
 	MVS_microsite: devuelve un microsite a partir de su clave unica
 	MVS_idioma: devuelve el idioma correspondiente
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Generator"
@@ -25,7 +26,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link th:remove="tag" th:utext="${MVS_css}" />
 <script type="text/javascript" src="resources/js/globales.js"
 	th:src="@{/resources/js/globales.js}"></script>
-<script th:replace="general/scriptmenu :: script"></script>
+<script gus:replace="general/scriptmenu :: script"></script>
 </head>
 <body>
 	<div>
@@ -37,7 +38,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 				<div
 					th:id="(${MVS_microsite.tipomenu}=='1')==true ? 'marcLateral':'marcLateralAmbIcones'"
 					id="">
-					<div th:replace="general/menupreview :: menupreview"
+					<div gus:replace="general/menupreview :: menupreview"
 						th:remove="tag"></div>
 				</div>
 			</div>
@@ -45,7 +46,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 		</div>
 			<!-- pie -->
 			<div class="col-md-12 column" th:remove="tag">
-				<footer th:replace="general/pie :: pie">Footer</footer>
+				<footer gus:replace="general/pie :: pie">Footer</footer>
 			</div>
 		
 	</div>

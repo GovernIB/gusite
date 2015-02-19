@@ -23,8 +23,7 @@ public class FrontController {
 
 	/**
 	 * TODO: mover a un WebBindingInitializer
-	 * (http://docs.spring.io/spring/docs/
-	 * 3.0.x/reference/mvc.html#mvc-ann-webdatabinder)
+	 * (http://docs.spring.io/spring/docs/3.0.x/reference/mvc.html#mvc-ann-webdatabinder)
 	 * 
 	 * @param binder
 	 */

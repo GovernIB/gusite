@@ -16,7 +16,8 @@ Objetos:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <!-- MVS_encuesta: devuelve una encuesta en cuestión-->
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
@@ -107,7 +108,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 																		</li>
 																	</div>
 																	<div th:if="${j.nrespuestas} ==null" th:remove="tag">
-																		<li th:replace="encuesta/envioencuesta :: liRespuestas"></li>
+																		<li gus:replace="encuesta/envioencuesta :: liRespuestas"></li>
 																	</div>
 																</div>
 															</ul>
@@ -119,14 +120,14 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 														</div>
 													</div>
 													<div th:if="${total}!=0" th:remove="tag">
-														<div th:replace="encuesta/envioencuesta :: totalDistintoValor"
+														<div gus:replace="encuesta/envioencuesta :: totalDistintoValor"
 															th:remove="tag"></div>
 													</div>
 												</div>
 											</div>
 										</div>
 										<div th:if="${elementoEncuesta.nrespuestas} ==null" th:remove="tag">
-											<div th:replace="encuesta/envioencuesta :: variableTotal"
+											<div gus:replace="encuesta/envioencuesta :: variableTotal"
 												th:remove="tag"></div>
 										</div>
 									</div>

@@ -189,7 +189,6 @@ public class OperacioMailingController extends BaseController {
 
 	@Override
 	public String setServicio() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

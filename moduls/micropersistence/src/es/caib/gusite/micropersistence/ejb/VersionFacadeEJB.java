@@ -22,7 +22,7 @@ import es.caib.gusite.micromodel.Version;
  * @ejb.transaction type="Required"
  * 
  */
-public abstract class VersionFacadeEJB extends HibernateEJB {
+public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 
 	private static final long serialVersionUID = -2076446869522196666L;
 

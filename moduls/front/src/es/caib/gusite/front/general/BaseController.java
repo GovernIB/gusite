@@ -77,7 +77,6 @@ public abstract class BaseController extends FrontController {
 		this.menucaib(microsite, model, lang);
 
 		this.cargarServicio(microsite, model);
-		this.montarUrl(microsite, model);
 		this.cargarCampanya(microsite, model, lang, pcampa);
 
 		return microsite;
@@ -140,13 +139,14 @@ public abstract class BaseController extends FrontController {
 
 		/*
 		 * TODO: Esto lo hace de modo poco elegante. Investigar cómo
-		 * previsualizar //chequear la visibilidad del site String previ=
-		 * ""+request.getSession().getAttribute("previsualiza"); String misite
-		 * =""+request.getSession().getAttribute("misite");
+		 * previsualizar 
+		 * chequear la visibilidad del site 
+		 * String previ = ""+request.getSession().getAttribute("previsualiza"); 
+		 * String misite = ""+request.getSession().getAttribute("misite");
 		 * 
-		 * if
-		 * (!previ.equals("si")||!microsite.getId().toString().equals(misite)){
-		 * if (!microsite.getVisible().equals("S")) { throw new
+		 * if (!previ.equals("si")||!microsite.getId().toString().equals(misite)) {
+		 * 	if (!microsite.getVisible().equals("S")) { 
+		 * 		throw new
 		 * Exception(" [Configuracion microsite]: El site no es visible"); } }
 		 */
 
@@ -524,32 +524,6 @@ public abstract class BaseController extends FrontController {
 	public abstract String setServicio();
 
 	/**
-	 * Método que mete en el request el valor de la url del servlet que se está
-	 * ejecutando en estos momentos.
-	 * 
-	 * TODO: esto no puede hacerse a partir del request, claro
-	 * 
-	 * @param request
-	 */
-	private void montarUrl(Microsite microsite, Model model)
-			throws ExceptionFrontMicro {
-		// Por ahora ponemos siempre la url de la home
-		/*
-		 * if (errorbase) url=request.getContextPath() + "/home.do?"; else
-		 * url=request.getContextPath() + request.getServletPath() + "?";
-		 * 
-		 * Enumeration<?> paramNames = request.getParameterNames();
-		 * while(paramNames.hasMoreElements()) { String paramName =
-		 * (String)paramNames.nextElement(); String paramValue =
-		 * request.getParameter(paramName); if
-		 * ((!paramName.equals(Microfront.PLANG)) &&
-		 * (!paramName.equals(Microfront.PSTAT))) url += paramName + "=" +
-		 * paramValue + "&"; } request.setAttribute("MVS_seulet", url);
-		 */
-		model.addAttribute("MVS_seulet", "/" + microsite.getClaveunica() + "/");
-	}
-
-	/**
 	 * Mete en el request el html de la campaña.
 	 * 
 	 * @param request
@@ -616,41 +590,6 @@ public abstract class BaseController extends FrontController {
 		return tmp;
 	}
 
-	/**
-	 * TODO: eliminar este método cuando en las plantillas ya se usen los datos
-	 * 
-	 * @param microsite
-	 * @param model
-	 * @param lang
-	 * @return
-	 * @deprecated
-	 */
-	protected String mollapan(List<PathItem> pathList) {
-
-		StringBuffer stbuf = new StringBuffer("");
-		boolean primero = true;
-		for (PathItem item : pathList) {
-
-			stbuf.append("<li>");
-			if (!primero) {
-				stbuf.append("&gt;");
-			}
-
-			if (item.hasHref()) {
-				stbuf.append("<a href=\"").append(item.getHref()).append("\">")
-						.append(item.getLabel()).append("</a>");
-			} else {
-				stbuf.append(item.getLabel());
-			}
-
-			stbuf.append("</li>");
-			primero = false;
-
-		}
-
-		return stbuf.toString();
-
-	}
 
 	/**
 	 * Crea la miga de pan genérica

@@ -22,7 +22,7 @@ import es.caib.gusite.micromodel.TemaFront;
  * @ejb.transaction type="Required"
  * 
  */
-public abstract class TemaFrontFacadeEJB extends HibernateEJB {
+public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 
 	private static final long serialVersionUID = -2076446869522196666L;
 

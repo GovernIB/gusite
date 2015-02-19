@@ -299,7 +299,7 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Método privado para guardar el recorrido que ha realizado el usuario por
-	 * el microsite. TODO: eliminar la generación de html aquí
+	 * el microsite.
 	 * 
 	 * @param microsite
 	 * @param model
@@ -310,9 +310,6 @@ public class HomeController extends BaseController {
 
 		List<PathItem> path = super.getBasePath(microsite, model, lang);
 
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
-
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
 
@@ -320,7 +317,7 @@ public class HomeController extends BaseController {
 
 	/**
 	 * Método privado para guardar el recorrido que ha realizado el usuario por
-	 * el microsite. TODO: eliminar la generación de html aquí
+	 * el microsite.
 	 * 
 	 * @param microsite
 	 * @param model
@@ -332,9 +329,6 @@ public class HomeController extends BaseController {
 
 		List<PathItem> path = super.getBasePath(microsite, model, lang);
 		path.add(new PathItem(this.getMessage("mapa.mapa", lang)));
-
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
@@ -353,9 +347,6 @@ public class HomeController extends BaseController {
 			Idioma lang) {
 		List<PathItem> path = super.getBasePath(microsite, model, lang);
 		path.add(new PathItem(this.getMessage("mapa.mapa", lang)));
-
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);

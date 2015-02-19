@@ -22,7 +22,7 @@ import es.caib.gusite.micromodel.Plantilla;
  * @ejb.transaction type="Required"
  * 
  */
-public abstract class PlantillaFacadeEJB extends HibernateEJB {
+public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 
 	private static final long serialVersionUID = -2076446869522196666L;
 

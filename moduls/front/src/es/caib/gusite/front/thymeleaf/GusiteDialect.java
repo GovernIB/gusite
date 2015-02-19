@@ -6,15 +6,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.context.IProcessingContext;
 import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.dialect.IExpressionEnhancingDialect;
 import org.thymeleaf.processor.IProcessor;
 
 import es.caib.gusite.front.service.FrontUrlFactory;
+import es.caib.gusite.front.service.TemplateNameFactory;
 
+@Component("GusiteDialect")
 public class GusiteDialect extends AbstractDialect implements
 		IExpressionEnhancingDialect {
+
+	@Autowired
+	protected FrontUrlFactory urlFactory;
+
+	@Autowired
+	protected TemplateNameFactory templateNameFactory;
 
 	public GusiteDialect() {
 		super();
@@ -31,22 +41,19 @@ public class GusiteDialect extends AbstractDialect implements
 	@Override
 	public Set<IProcessor> getProcessors() {
 		final Set<IProcessor> processors = new HashSet<IProcessor>();
-		processors.add(new GusiteDialectProcessor());
+		processors.add(new GusiteReplaceProcessorWrapper());
+		processors.add(new GusiteDecoratorProcessor());
 		return processors;
-	}
-
-	private static final Map<String, Object> EXPRESSION_OBJECTS;
-
-	static {
-		Map<String, Object> objects = new HashMap<String, Object>();
-		objects.put("gusuri", new FrontUrlFactory());
-		EXPRESSION_OBJECTS = Collections.unmodifiableMap(objects);
 	}
 
 	@Override
 	public Map<String, Object> getAdditionalExpressionObjects(
 			IProcessingContext arg0) {
-		return EXPRESSION_OBJECTS;
+		Map<String, Object> objects = new HashMap<String, Object>();
+		objects.put("gusuri", this.urlFactory);
+		objects.put("gustpl", this.templateNameFactory);
+		Map<String, Object> eo = Collections.unmodifiableMap(objects);
+		return eo;
 	}
 
 }

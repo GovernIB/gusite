@@ -4,7 +4,9 @@ Descripción:
 Este código muestra el mensaje genérico en caso de no poder mostrar la página.
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
@@ -17,13 +19,13 @@ Este código muestra el mensaje genérico en caso de no poder mostrar la página
 Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
-<script th:replace="general/scriptmenu :: script"></script>
+<script gus:replace="general/scriptmenu :: script"></script>
 </head>
 <body>
 	<!-- contenidor -->
 	<div id="contenedor">
 		<!-- capçal -->
-		<div th:replace="error/errorgenerico :: cabeceraReducida">Cabecera</div>
+		<div gus:replace="error/errorgenerico :: cabeceraReducida">Cabecera</div>
 		<!--  Fi capçal -->
 		<!-- continguts -->
 		<div id="continguts">

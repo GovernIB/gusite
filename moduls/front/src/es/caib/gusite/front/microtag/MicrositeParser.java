@@ -456,13 +456,9 @@ public class MicrositeParser {
 				if (tridato.getValue1().equals("V1.4")) {
 					/*
 					 * //TODO cnavarro: falta cambiar parsecomponente thymeleaf
-					 * ComponenteDelegate compodel =
-					 * DelegateUtil.getComponentesDelegate(); Componente
-					 * componente = compodel.obtenerComponente( new
-					 * Long(Long.parseLong(tridato.getValue2())) );
-					 * analysis.hshTags.put(key, this.getHtmlElementos(site,
-					 * componente.getTipo().getId(), idioma, request,
-					 * response));
+					 * ComponenteDelegate compodel = DelegateUtil.getComponentesDelegate(); 
+					 * Componente componente = compodel.obtenerComponente( new Long(Long.parseLong(tridato.getValue2())) );
+					 * analysis.hshTags.put(key, this.getHtmlElementos(site, componente.getTipo().getId(), idioma, request, response));
 					 */
 					analysis.hshTags.put(
 							key,

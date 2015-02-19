@@ -1,17 +1,16 @@
 package es.caib.gusite.micromodel;
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
 import java.sql.Clob;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -44,9 +43,9 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PPL_FTECOD")
-	private TemaFront temaFront;
+	private TemaFront tema;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PPL_PLACOD", nullable = false)
 	private Plantilla plantilla;
 
@@ -68,8 +67,9 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	 * Contenido de la plantilla
 	 */
 
+	@Lob
 	@Column(name = "PPL_CONTENIDO")
-	private Clob contenido;
+	private String contenido;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "personalizacionPlantilla")
 	private Set<Tipo> tipos = new HashSet<Tipo>(0);
@@ -88,12 +88,12 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 		this.titulo = titulo;
 	}
 
-	public PersonalizacionPlantilla(Microsite microsite, TemaFront temaFront,
-			Plantilla plantilla, String titulo, Long orden, Clob contenido,
+	public PersonalizacionPlantilla(Microsite microsite, TemaFront tema,
+			Plantilla plantilla, String titulo, Long orden, String contenido,
 			Set<Tipo> tipos, Set<Contenido> contenidos,
 			Set<Componente> componentes) {
 		this.microsite = microsite;
-		this.temaFront = temaFront;
+		this.tema = tema;
 		this.plantilla = plantilla;
 		this.titulo = titulo;
 		this.orden = orden;
@@ -103,7 +103,6 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 		this.componentes = componentes;
 	}
 
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -120,12 +119,12 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 		this.microsite = microsite;
 	}
 
-	public TemaFront getTemaFront() {
-		return this.temaFront;
+	public TemaFront getTema() {
+		return this.tema;
 	}
 
-	public void setTemaFront(TemaFront temaFront) {
-		this.temaFront = temaFront;
+	public void setTema(TemaFront tema) {
+		this.tema = tema;
 	}
 
 	public Plantilla getPlantilla() {
@@ -161,11 +160,11 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	/**
 	 * * Contenido de la plantilla
 	 */
-	public Clob getContenido() {
+	public String getContenido() {
 		return this.contenido;
 	}
 
-	public void setContenido(Clob contenido) {
+	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}
 
@@ -198,29 +197,24 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	 * 
 	 * @return String
 	 */
-	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append(this.getClass().getName()).append("@")
-				.append(Integer.toHexString(this.hashCode())).append(" [");
-		buffer.append("id").append("='").append(this.getId()).append("' ");
+		buffer.append(getClass().getName()).append("@")
+				.append(Integer.toHexString(hashCode())).append(" [");
+		buffer.append("id").append("='").append(getId()).append("' ");
 		buffer.append("]");
 
 		return buffer.toString();
 	}
 
-	@Override
 	public boolean equals(Object other) {
-		if ((this == other)) {
+		if ((this == other))
 			return true;
-		}
-		if ((other == null)) {
+		if ((other == null))
 			return false;
-		}
-		if (!(other instanceof PersonalizacionPlantilla)) {
+		if (!(other instanceof PersonalizacionPlantilla))
 			return false;
-		}
 		PersonalizacionPlantilla castOther = (PersonalizacionPlantilla) other;
 
 		return ((this.getId() == castOther.getId()) || (this.getId() != null
@@ -228,12 +222,10 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 				castOther.getId())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result
-				+ (this.getId() == null ? 0 : this.getId().hashCode());
+		result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
 
 		return result;
 	}

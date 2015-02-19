@@ -6,7 +6,6 @@ Este código muestra el pie de página.
 Variables:
 	MVS_microsite: devuelve un microsite a partir de su clave unica
 	MVS_idioma: devuelve el idioma correspondiente
-	MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos
 	MVS_listaidiomas: devuelve la lista de idiomas disponibles
 	MVS_listacabecera: devuelve una lista de arrays para la cabecera
 
@@ -17,7 +16,9 @@ Objetos:
 	
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
@@ -51,9 +52,6 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 										<div class="centre">
 											<div class="tamanyLletra"></div>
 											<span class="idiomes"> 
-											<!-- MVS_seulet: devuelve el valor de la url que se está utilizando en estos momentos -->
-											<span
-												th:if="${MVS_seulet} !=null" th:remove="tag"> 
 												<!-- MVS_listaidiomas: devuelve la lista de idiomas disponibles -->
 												<span
 													th:with="tamano=${#lists.size(MVS_listaidiomas)}"
@@ -78,7 +76,6 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 															th:remove="tag">-</span>
 													</span>
 												</span>
-											</span>
 											</span>
 										</div>
 									</div>
@@ -168,7 +165,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 				</div>
 			</div>
 			<div th:if="${MVS_microsite.tipopie} !=null" th:remove="tag">
-				<div th:replace="general/pie :: tipoPie">Tipo Pie</div>
+				<div gus:replace="general/pie :: tipoPie">Tipo Pie</div>
 			</div> 
 		</div>
 	</footer>

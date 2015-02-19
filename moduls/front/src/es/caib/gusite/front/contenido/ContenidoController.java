@@ -50,8 +50,6 @@ public class ContenidoController extends BaseController {
 	private MicrositeParser microparser;
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -244,9 +242,6 @@ public class ContenidoController extends BaseController {
 
 		}
 		path.add(new PathItem(titol));
-
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);

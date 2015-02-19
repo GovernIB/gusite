@@ -47,8 +47,6 @@ public class NoticiasController extends BaseController {
 	protected NoticiasDataService noticiasDataService;
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -244,11 +242,8 @@ public class NoticiasController extends BaseController {
 		String desctiponoticia = ((TraduccionTipo) tipo.getTraduccion(lang
 				.getLang())).getNombre();
 		if (!StringUtils.isEmpty(desctiponoticia)) {
-			path.add(new PathItem(desctiponoticia, this.urlFactory
-					.listarNoticias(microsite, lang, tipo)));
+			path.add(new PathItem(desctiponoticia, this.urlFactory.listarElementos(microsite, lang, tipo)));
 		}
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
 
@@ -273,8 +268,6 @@ public class NoticiasController extends BaseController {
 		// TODO: añadir el título de la noticia?
 		path.add(new PathItem(this.getMessage("noticia.detalle", lang),
 				this.urlFactory.noticia(microsite, lang, noticia)));
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
 
@@ -313,8 +306,6 @@ public class NoticiasController extends BaseController {
 	}
 
 	/**
-	 * TODO: noticia debería ser el nemotecnico de la noticia
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -394,8 +385,6 @@ public class NoticiasController extends BaseController {
 	}
 
 	/**
-	 * TODO: documento debería ser el nemotecnico de la noticia
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model

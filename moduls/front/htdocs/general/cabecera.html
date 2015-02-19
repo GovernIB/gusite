@@ -13,7 +13,9 @@ Objetos:
 	#gusuri.home(MVS_microsite,MVS_idioma): devuelve la URL hacia la home
 	-->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
@@ -47,7 +49,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 							<div th:if="${MVS2_pathdata} !=null" th:remove="tag">
 								<ul id="mollaPa">
 
-									<li th:replace="mollaPan :: mollaPan" th:remove="tag">Listado
+									<li gus:replace="mollaPan :: mollaPan" th:remove="tag">Listado
 										agenda</li>								
 								</ul>
 							</div>

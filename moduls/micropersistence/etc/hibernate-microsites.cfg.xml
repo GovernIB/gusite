@@ -89,5 +89,7 @@
   <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioRespuesta"/>
   <mapping class="es.caib.gusite.micromodel.Version" />
 
+  <mapping resource="named-queries.hbm.xml"/>
+
  </session-factory>
 </hibernate-configuration>

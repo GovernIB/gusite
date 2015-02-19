@@ -85,8 +85,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -104,8 +102,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -123,8 +119,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -142,8 +136,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -163,8 +155,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -183,8 +173,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -203,8 +191,6 @@ public class CercadorController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -224,7 +210,6 @@ public class CercadorController extends BaseController {
 
 	@Override
 	public String setServicio() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

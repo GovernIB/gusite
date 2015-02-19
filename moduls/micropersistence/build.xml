@@ -195,7 +195,7 @@
             </manifest>
             <metainf dir="${ejb.gen.etc}" includes="*.xml" excludes="hibernate-microsites.cfg.xml"/>
             <fileset dir="${ejb.gen.etc}" includes="hibernate-microsites.cfg.xml"/>
-            <fileset dir="${ejb.etc}" includes="ehcache-microsites.xml storerolsac.jks" />
+            <fileset dir="${ejb.etc}" includes="named-queries.hbm.xml,ehcache-microsites.xml storerolsac.jks" />
         </jar>
     </target>
 

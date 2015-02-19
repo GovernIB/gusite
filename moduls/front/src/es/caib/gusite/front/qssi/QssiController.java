@@ -36,8 +36,6 @@ public class QssiController extends BaseController {
 	protected ContactosDataService contactosDataService;
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model

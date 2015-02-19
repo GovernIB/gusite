@@ -11,7 +11,8 @@ Variables:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <title th:if="${MVS_micrositetitulo} !=null"
 	th:text="(${MVS_micrositetitulo}) + ' - Home'">Home</title>
@@ -39,9 +40,9 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 							<div class="col-md-5 column" th:remove="tag">
 								<div id="agenda">
 									<h2 th:utext="#{agenda.agenda}">Agenda prototipo</h2>
-									<div th:replace="agendaCalendarListado :: listado">Listado
+									<div gus:replace="agendaCalendarListado :: listado">Listado
 										agenda</div>
-									<div th:replace="agendaCalendarListado :: calendario">Agenda
+									<div gus:replace="agendaCalendarListado :: calendario">Agenda
 										Calendario</div>
 								</div>
 							</div>
@@ -53,7 +54,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 						<div
 							th:remove="(${MVS_home_datos_noticias_listado}=='-1')==true ? all : tag">
 							<div class="col-md-7 column" th:remove="tag">
-								<div th:replace="noticiasListado :: noticias">Noticias Listado</div>
+								<div gus:replace="noticiasListado :: noticias">Noticias Listado</div>
 							</div>
 						</div>
 					</div>	

@@ -13,8 +13,9 @@ Variables:
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	gus:decorator="layout">
 <head>
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
 <title th:if="${MVS_micrositetitulo} !=null"
@@ -89,7 +90,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 										<h4 class="tituloPreguntaIE" th:text="${i.tema}">i tema</h4>
 										<table class="falsa">
 											<tr>
-												<td><span th:replace="faq/listarfaqs :: contenidoIE"
+												<td><span gus:replace="faq/listarfaqs :: contenidoIE"
 													th:remove="tag">Contenido IE</span></td>
 											</tr>
 										</table>

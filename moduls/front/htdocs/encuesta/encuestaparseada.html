@@ -5,7 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
@@ -231,7 +232,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 																						th:remove="tag"> <span
 																							th:with="compId=(${respuesta.id} + '_' + ${pregunta.id})"
 																							th:remove="tag"> <span
-																								th:replace="encuesta/encuestaparseada :: MapParamVariables"
+																								gus:replace="encuesta/encuestaparseada :: MapParamVariables"
 																								th:remove="tag"></span>
 																						</span>
 																					</span>
@@ -253,7 +254,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 														th:with="obligatoriedad=${#strings.replace(obligatoriedad,'{1}',min)}"
 														th:remove="tag">
 														<div
-															th:replace="encuesta/encuestaparseada :: encuestaPregunta"
+															gus:replace="encuesta/encuestaparseada :: encuestaPregunta"
 															th:remove="tag"></div>
 													</div>
 												</div>
@@ -265,14 +266,14 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 														th:with="obligatoriedad=${#strings.replace(obligatoriedad,'{1}',max)}"
 														th:remove="tag">
 														<div
-															th:replace="encuesta/encuestaparseada :: encuestaPregunta"
+															gus:replace="encuesta/encuestaparseada :: encuestaPregunta"
 															th:remove="tag"></div>
 													</div>
 												</div>
 											</div>
 											<div th:if="(${min}==0) and (${max}==0)" th:remove="tag">												
 												<div
-													th:replace="encuesta/encuestaparseada :: encuestaPregunta"
+													gus:replace="encuesta/encuestaparseada :: encuestaPregunta"
 													th:remove="tag"></div>
 											</div>
 										</div>
@@ -281,13 +282,13 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 												<div th:with="obligatoriedad=#{encuesta.obligatoria}"
 													th:remove="tag">
 													<div
-														th:replace="encuesta/encuestaparseada :: encuestaPregunta"
+														gus:replace="encuesta/encuestaparseada :: encuestaPregunta"
 														th:remove="tag"></div>
 												</div>
 											</div>
 											<div th:unless="(${min}==1)" th:remove="tag">
 												<div
-													th:replace="encuesta/encuestaparseada :: encuestaPregunta"
+													gus:replace="encuesta/encuestaparseada :: encuestaPregunta"
 													th:remove="tag"></div>
 											</div>
 										</div>
@@ -504,7 +505,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 												<div
 													th:with="obligatoriedad=${#strings.replace(obligatoriedad,'{1}',min)}"
 													th:remove="tag">
-													<div th:replace="encuesta/encuestaparseada :: botonEnvio"
+													<div gus:replace="encuesta/encuestaparseada :: botonEnvio"
 														th:remove="tag"></div>
 												</div>
 											</div>
@@ -515,7 +516,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 												<div
 													th:with="obligatoriedad=${#strings.replace(obligatoriedad,'{1}',max)}"
 													th:remove="tag">
-													<div th:replace="encuesta/encuestaparseada :: botonEnvio"
+													<div gus:replace="encuesta/encuestaparseada :: botonEnvio"
 														th:remove="tag"></div>
 												</div>
 											</div>
@@ -625,7 +626,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 															</script>
 																	
 																</div>
-																<div th:replace="encuesta/encuestaparseada :: botonEnvio"
+																<div gus:replace="encuesta/encuestaparseada :: botonEnvio"
 																th:remove="tag"></div>
 										</div>
 									</div>			
@@ -633,12 +634,12 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 										<div th:if="(${min}==1)" th:remove="tag">										
 											<div th:with="obligatoriedad=#{encuesta.obligatoria}"
 												th:remove="tag">
-												<div th:replace="encuesta/encuestaparseada :: botonEnvio"
+												<div gus:replace="encuesta/encuestaparseada :: botonEnvio"
 													th:remove="tag"></div>
 											</div>
 										</div>
 										<div th:unless="(${min}==1)" th:remove="tag">												
-											<div th:replace="encuesta/encuestaparseada :: botonEnvio"
+											<div gus:replace="encuesta/encuestaparseada :: botonEnvio"
 												th:remove="tag"></div>
 										</div>
 									</div>

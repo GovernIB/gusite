@@ -18,7 +18,8 @@ Objetos:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
 	MVS_tipolistado: devuelve el tipo de listado que mostrará -->
@@ -40,7 +41,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <body>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="campanya">
-		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
+		<div gus:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
 			campana Menu</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
@@ -51,11 +52,11 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 		<div
 			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'" class="contenedorNoticiasListadas">	
 			<div
-				th:replace="general/inc_llistats_capcelera_buscador :: capcelera_buscador"
+				gus:replace="general/inc_llistats_capcelera_buscador :: capcelera_buscador"
 				th:remove="tag">Listado cabecera buscador</div>
 			<!-- MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer> -->
 			<div th:if="${MVS_parametros_pagina.nreg}!=0" th:remove="tag">
-				<div th:replace="general/inc_llistats_info_cursor :: infoCursor"
+				<div gus:replace="general/inc_llistats_info_cursor :: infoCursor"
 					th:remove="tag">Listado info cursor</div>
 				<div id="noticiesLlistat">
 					<ul style="text-align: justify">
@@ -97,7 +98,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 										</span>
 									</span> <!--MVS_menu_cont_notic: devuelve la opción de menú que hay que resaltar-->
 										<span th:if="${MVS_menu_cont_notic} ==null" th:remove="tag">
-											<span th:replace="noticia/listarnoticias :: idcontenidoValue"
+											<span gus:replace="noticia/listarnoticias :: idcontenidoValue"
 											th:remove="tag"></span>
 									</span> <span th:if="${elementoListado.traduce.subtitulo} !=null"
 										th:remove="tag"> <span class="enllas"
@@ -110,7 +111,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 						</div>
 					</ul>
 				</div>
-				<div th:replace="general/inc_llistats_paginacio :: paginacio">Listado
+				<div gus:replace="general/inc_llistats_paginacio :: paginacio">Listado
 					paginación</div>
 			</div>
 		</div>

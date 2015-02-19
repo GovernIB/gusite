@@ -257,8 +257,6 @@ public class EncuestasController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -573,8 +571,6 @@ public class EncuestasController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model

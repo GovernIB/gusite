@@ -53,8 +53,6 @@ public class ContactosController extends BaseController {
 	protected ContactosDataService contactosDataService;
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -120,8 +118,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -143,8 +139,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -166,8 +160,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -189,8 +181,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -252,8 +242,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -495,8 +483,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -516,8 +502,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -537,8 +521,6 @@ public class ContactosController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model

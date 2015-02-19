@@ -15,9 +15,9 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  * 
  * @author Indra
  * 
- *         (esta clase recibe un objeto Microsite y genera codigo html) TODO
- *         cambiar los getXXXX() por generaXXXX() TODO esta clase parece una
- *         duplicacion de microback.MParserHTML
+ *         (esta clase recibe un objeto Microsite y genera codigo html) 
+ *         TODO cambiar los getXXXX() por generaXXXX() 
+ *         TODO esta clase parece una duplicacion de microback.MParserHTML
  * 
  */
 public class MParserHTML {

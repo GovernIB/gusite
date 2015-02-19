@@ -10,7 +10,8 @@ Variables:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <!-- MVS_micrositetitulo: titulo del microsite en cuestión
 	MVS_tipolistado: tipo de listado que mostrará -->
@@ -31,11 +32,11 @@ Variables:
 <body>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="campanya">
-		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado campana Menu</div>
+		<div gus:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado campana Menu</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
-		<div th:replace="noticia/listardocumentosanual :: listadoDocumentos">Lista documentos</div>
+		<div gus:replace="noticia/listardocumentosanual :: listadoDocumentos">Lista documentos</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 </body>

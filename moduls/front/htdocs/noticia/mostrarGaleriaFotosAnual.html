@@ -17,7 +17,8 @@ Objetos:
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
 <head>
 <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
 	MVS_tipolistado: devuelve el tipo de listado que mostrará -->
@@ -26,7 +27,7 @@ Objetos:
 	título - tipo listado</title>
 <!-- Parte añadida para usar el layout decorator "<section>"-->
 <section th:remove="tag" layout:fragment="scriptExtra">
-	<div th:replace="noticia/mostrarGaleriaFotos :: lightboxResources"></div>
+	<div gus:replace="noticia/mostrarGaleriaFotos :: lightboxResources"></div>
 </section>
 <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
 Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
@@ -43,13 +44,13 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <body>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="campanya">
-		<div th:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
+		<div gus:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
 			campana Menu</div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
-		<div th:replace="noticia/mostrarGaleriaFotos :: GaleriaFotos"></div>
+		<div gus:replace="noticia/mostrarGaleriaFotos :: GaleriaFotos"></div>
 	</section>
 	<!-- Parte añadida para usar el layout decorator "<section>"-->
 </body>

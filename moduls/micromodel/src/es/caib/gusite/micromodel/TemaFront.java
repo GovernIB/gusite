@@ -1,15 +1,13 @@
 package es.caib.gusite.micromodel;
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -49,8 +47,8 @@ public class TemaFront extends AuditableModel implements Auditable,
 	private Archivo css;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FTE_TEMA_PADRE", nullable = false)
-	private TemaFront tempaPadre;
+	@JoinColumn(name = "FTE_TEMA_PADRE")
+	private TemaFront temaPadre;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FTE_VERSION", nullable = false)
@@ -70,29 +68,27 @@ public class TemaFront extends AuditableModel implements Auditable,
 	@Column(name = "FTE_ACTUALIZACION", nullable = false, length = 7)
 	private Date actualizacion;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tempaPadre")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "temaPadre")
 	private Set<TemaFront> temasHijos = new HashSet<TemaFront>(0);
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "temaFront")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
 	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
 			0);
 
 	public TemaFront() {
 	}
 
-	public TemaFront(TemaFront tempaPadre, Version version, String nombre,
-			Date actualizacion) {
-		this.tempaPadre = tempaPadre;
+	public TemaFront(Version version, String nombre, Date actualizacion) {
 		this.version = version;
 		this.nombre = nombre;
 		this.actualizacion = actualizacion;
 	}
 
-	public TemaFront(Archivo css, TemaFront tempaPadre, Version version,
+	public TemaFront(Archivo css, TemaFront temaPadre, Version version,
 			String nombre, Date actualizacion, Set<TemaFront> temasHijos,
 			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
 		this.css = css;
-		this.tempaPadre = tempaPadre;
+		this.temaPadre = temaPadre;
 		this.version = version;
 		this.nombre = nombre;
 		this.actualizacion = actualizacion;
@@ -100,7 +96,6 @@ public class TemaFront extends AuditableModel implements Auditable,
 		this.personalizacionesPlantilla = personalizacionesPlantilla;
 	}
 
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -120,12 +115,12 @@ public class TemaFront extends AuditableModel implements Auditable,
 		this.css = css;
 	}
 
-	public TemaFront getTempaPadre() {
-		return this.tempaPadre;
+	public TemaFront getTemaPadre() {
+		return this.temaPadre;
 	}
 
-	public void setTempaPadre(TemaFront tempaPadre) {
-		this.tempaPadre = tempaPadre;
+	public void setTempPadre(TemaFront tempPadre) {
+		this.temaPadre = tempPadre;
 	}
 
 	public Version getVersion() {
@@ -180,29 +175,24 @@ public class TemaFront extends AuditableModel implements Auditable,
 	 * 
 	 * @return String
 	 */
-	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append(this.getClass().getName()).append("@")
-				.append(Integer.toHexString(this.hashCode())).append(" [");
-		buffer.append("id").append("='").append(this.getId()).append("' ");
+		buffer.append(getClass().getName()).append("@")
+				.append(Integer.toHexString(hashCode())).append(" [");
+		buffer.append("id").append("='").append(getId()).append("' ");
 		buffer.append("]");
 
 		return buffer.toString();
 	}
 
-	@Override
 	public boolean equals(Object other) {
-		if ((this == other)) {
+		if ((this == other))
 			return true;
-		}
-		if ((other == null)) {
+		if ((other == null))
 			return false;
-		}
-		if (!(other instanceof TemaFront)) {
+		if (!(other instanceof TemaFront))
 			return false;
-		}
 		TemaFront castOther = (TemaFront) other;
 
 		return ((this.getId() == castOther.getId()) || (this.getId() != null
@@ -210,12 +200,10 @@ public class TemaFront extends AuditableModel implements Auditable,
 				castOther.getId())));
 	}
 
-	@Override
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result
-				+ (this.getId() == null ? 0 : this.getId().hashCode());
+		result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
 
 		return result;
 	}

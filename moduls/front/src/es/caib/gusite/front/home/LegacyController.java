@@ -35,7 +35,7 @@ import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 /**
  * Convierte peticiones antiguas a nuevas.
  * 
- * @author brujula-at4 TODO: en curso
+ * @author at4.net
  */
 @Controller
 public class LegacyController extends FrontController {

@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -37,7 +38,7 @@ import es.caib.gusite.micropersistence.util.JBossUtils;
  * 
  * @author Indra
  */
-public abstract class HibernateEJB implements SessionBean {
+public abstract class HibernateEJB extends HibernateTrulyStatelessEJB implements SessionBean {
 
 	private static final long serialVersionUID = -3971398698181242398L;
 
@@ -64,76 +65,6 @@ public abstract class HibernateEJB implements SessionBean {
 
 	// List de idiomas
 	protected List<?> langs;
-
-	@Override
-	public void setSessionContext(SessionContext ctx) {
-		this.ctx = ctx;
-	}
-
-	public void ejbCreate() throws CreateException {
-		this.getSessionFactory();
-	}
-
-	protected SessionFactory getSessionFactory() {
-		return HibernateLocator.getSessionFactory();
-	}
-
-	@Override
-	public void ejbRemove() {
-	}
-
-	protected Session getSession() {
-
-		try {
-			this.restartSessionFactoryIfDatasourceModified();
-			Session session = this.getSessionFactory().openSession();
-			session.setFlushMode(FlushMode.COMMIT);
-
-			return session;
-
-		} catch (HibernateException e) {
-			throw new EJBException(e);
-		}
-	}
-
-	private void restartSessionFactoryIfDatasourceModified() {
-
-		if (this.isDatasourceModified()) {
-			HibernateLocator.resetSessionFactory();
-		}
-	}
-
-	static Object ds; // jboss.resource.adapter.jdbc.WrappedDataSource
-
-	private boolean isDatasourceModified() {
-
-		String dsJndiname = System.getProperty("es.caib.gusite.db.jndiname");
-		Object ds = JBossUtils.lookupLocal("java:" + dsJndiname);
-		if (null == HibernateEJB.ds) {
-			HibernateEJB.ds = ds;
-			return false;
-		} else {
-			if (ds != HibernateEJB.ds) {
-				HibernateEJB.ds = ds;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected void close(Session session) {
-
-		if (session != null && session.isOpen()) {
-			try {
-				if (session.isDirty()) {
-					log.warn("Closing dirty session!!");
-				}
-				session.close();
-			} catch (HibernateException e) {
-				log.error(e);
-			}
-		}
-	}
 
 	/**
 	 * Devuelve los parámetros de la consulta en una Hash
@@ -360,109 +291,6 @@ public abstract class HibernateEJB implements SessionBean {
 	public String getUsuarioEJB() {
 		Principal principal = this.ctx.getCallerPrincipal();
 		return principal.getName();
-	}
-
-	/*
-	 * Los roles de usuario son inclusivos. Los siguientes métodos permiten
-	 * saber si un usuario tiene los permisos de un determinado rol, bien porque
-	 * sea su rol, o porque tenga uno superior.
-	 */
-
-	protected boolean userIsSystem() {
-		return this.ctx.isCallerInRole("gussystem");
-	}
-
-	protected boolean userIsAdmin() {
-		return this.userIsSystem() || this.ctx.isCallerInRole("gusadmin");
-	}
-
-	protected boolean userIsSuper() {
-		return this.userIsAdmin() || this.ctx.isCallerInRole("gussuper");
-	}
-
-	protected boolean userIsOper() {
-		return this.userIsSuper() || this.ctx.isCallerInRole("gusoper");
-	}
-
-	protected boolean userIs(String role) {
-		if ("gusoper".equals(role)) {
-			return this.userIsOper();
-		} else if ("gussuper".equals(role)) {
-			return this.userIsSuper();
-		} else if ("gusadmin".equals(role)) {
-			return this.userIsAdmin();
-		} else if ("gussystem".equals(role)) {
-			return this.userIsSystem();
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Comprueba si un usuario puede acceder a un Microsite
-	 */
-	protected Usuario getUsuario(Session session) throws HibernateException {
-
-		Criteria criteriUsu = session.createCriteria(Usuario.class);
-		criteriUsu.add(Restrictions.eq("username", this.ctx.getCallerPrincipal()
-				.getName()));
-		// List usuaris = criteriUsu.list();
-		List<?> usuaris;
-
-		try {
-			usuaris = criteriUsu.list();
-		} catch (HibernateException he) {
-			throw new EJBException(he);
-		}
-
-		if (usuaris.isEmpty()) {
-			throw new EJBException("El usuario actual no existe!");
-		}
-		return (Usuario) usuaris.get(0);
-	}
-
-	protected void grabarAuditoria(Auditable entidad, int operacion) {
-		if (entidad.getIdmicrosite() != null) {
-			this.grabarAuditoria(entidad.getIdmicrosite(), entidad, operacion);
-		} else {
-			// No hay microsite
-			this.grabarAuditoria(null, entidad, operacion);
-		}
-
-	}
-
-	protected void grabarAuditoria(Long idmicrosite, Auditable entidad,
-			int operacion) {
-
-		Auditoria auditoria = new Auditoria();
-		auditoria.setEntidad(entidad.getClass().getSimpleName());
-		auditoria.setIdEntidad(entidad.getAuditKey());
-		auditoria.setIdmicrosite(idmicrosite);
-		auditoria.setOperacion(operacion);
-		this.grabarAuditoria(auditoria);
-
-	}
-
-	/**
-	 * Crea o actualiza una Auditoria
-	 */
-	private Long grabarAuditoria(Auditoria auditoria) {
-
-		Session session = this.getSession();
-		try {
-			Transaction tx = session.beginTransaction();
-			auditoria.setFecha(new Date());
-			auditoria.setUsuario(this.getUsuario(session).getUsername());
-			session.saveOrUpdate(auditoria);
-			session.flush();
-			tx.commit();
-			return auditoria.getId();
-
-		} catch (HibernateException he) {
-			throw new EJBException(he);
-		} finally {
-			this.close(session);
-		}
 	}
 
 }

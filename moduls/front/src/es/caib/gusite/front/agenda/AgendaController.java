@@ -37,8 +37,6 @@ public class AgendaController extends BaseController {
 	private static Log log = LogFactory.getLog(AgendaController.class);
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -90,8 +88,6 @@ public class AgendaController extends BaseController {
 	}
 
 	/**
-	 * TODO: tipo debería ser el nemotecnico del tipo
-	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -157,9 +153,6 @@ public class AgendaController extends BaseController {
 		path.add(new PathItem(this.getMessage("agenda.agenda", lang),
 				this.urlFactory.listarAgenda(microsite, lang)));
 
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
-
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);
 
@@ -182,9 +175,6 @@ public class AgendaController extends BaseController {
 
 		List<PathItem> path = this.cargarMollapan(microsite, model, lang);
 		path.add(new PathItem(this.getMessage("agenda.evento", lang)));
-
-		// TODO: eliminar cuando se actualicen las plantillas
-		model.addAttribute("MVS2_mollapan", this.mollapan(path));
 
 		// Datos para la plantilla
 		model.addAttribute("MVS2_pathdata", path);

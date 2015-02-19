@@ -22,7 +22,7 @@ import es.caib.gusite.micromodel.Auditoria;
  * @ejb.transaction type="Required"
  * 
  */
-public abstract class ArchivoTemaFrontFacadeEJB extends HibernateEJB {
+public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 
 	private static final long serialVersionUID = -2076446869522196666L;
 
