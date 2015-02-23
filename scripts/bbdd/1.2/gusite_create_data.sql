@@ -1,5 +1,5 @@
 -- És necessari insertar l'usuari administrador amb el que s'accedirà al backoffice
-Insert into GUS_MUSUAR (MSU_CODI,MSU_USERNA,MSU_PASSWO,MSU_NOMBRE,MSU_OBSERV,MSU_PERFIL) values (10000000,'rolsac','rolsac','Usuario tests','agarcia@at4.net','sacadmin');
+Insert into GUS_MUSUAR (MSU_CODI,MSU_USERNA,MSU_PASSWO,MSU_NOMBRE,MSU_OBSERV,MSU_PERFIL) values (10000000,'gusite','gusite','Usuario tests','agarcia@at4.net','gusadmin');
 
 
 -- Insertar els idiomes 
