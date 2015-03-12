@@ -11,7 +11,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>Microsites - Govern de les Illes Balears</title>
-	
+
+    <script type="text/javascript" src="js/subMenus.js"></script>
 	<!-- estils -->
 	<link href="css/estils-v.4.1.css" rel="stylesheet" type="text/css" media="screen" />
 	<!-- /estils -->

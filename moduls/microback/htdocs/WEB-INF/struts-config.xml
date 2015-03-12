@@ -4,9 +4,7 @@
 
 <struts-config>
 
-
 <form-beans>
-	
 	<!-- ***************************************************************** -->
     <!-- ****************** Formularios de búsquedas ********************* -->
 	<!-- ***************************************************************** -->
@@ -31,9 +29,12 @@
 	<form-bean name="BuscaOrdenaMicroUsuarioActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaMicroUsuarioActionForm"/>
 	<form-bean name="BuscaOrdenaUsuarioActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaUsuarioActionForm"/>
 	<form-bean name="BuscaOrdenaAuditoriasActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaAuditoriasActionForm"/>
-				
+    <form-bean name="BuscaOrdenaPerPlantillasActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaPerPlantillasActionForm"/>
+    <form-bean name="BuscaOrdenaTemaFrontActionForm" type="es.caib.gusite.microback.actionform.busca.BuscaOrdenaTemaFrontActionForm"/>
+
 	<!-- Formulario de listado general -->
-	<form-bean name="listaActionForm" type="es.caib.gusite.microback.actionform.listaActionForm"/>    
+	<form-bean name="listaActionForm" type="es.caib.gusite.microback.actionform.listaActionForm"/>
+
 
 	<!-- ***************************************************************** -->
     <!-- ******************* Formularios de detalle ********************** -->
@@ -60,6 +61,29 @@
  	    <form-property name="ficherosnom" type="java.lang.String[]"/>
 	    <form-property name="ficherosbor" type="boolean[]" initial="false"/>
 	</form-bean>
+    
+    <form-bean name="PerPlantillasForm" type="es.caib.gusite.microback.actionform.formulario.PerPlantillasForm"
+               className="es.caib.gusite.microback.config.TraFormBeanConfig">
+        <form-property name="id" type="java.lang.Long"/>
+        <form-property name="titulo" type="java.lang.String"/>
+        <form-property name="orden" type="java.lang.Long"/>
+        <form-property name="idPlantilla" type="java.lang.Long"/>
+        <form-property name="plantilla" type="java.lang.String"/>
+        <form-property name="contenido" type="java.lang.String"/>
+    </form-bean>
+
+    <form-bean name="TemaFrontForm" type="es.caib.gusite.microback.actionform.formulario.TemaFrontForm"
+            className="es.caib.gusite.microback.config.TraFormBeanConfig">
+        <form-property name="id" type="java.lang.Long"/>
+        <form-property name="nombre" type="java.lang.String"/>
+        <form-property name="temaPadre" type="java.lang.Long"/>
+        <form-property name="personalizacionesPlantilla" type="java.util.ArrayList"/>
+        <form-property name="archivos" type="java.util.ArrayList"/>
+        <form-property name="seleccionados" type="java.lang.String[]"/>
+        <form-property name="archi" type="org.apache.struts.upload.FormFile"/>
+        <form-property name="idArxiu" type="java.lang.Long"/>
+        <form-property name="operacion" type="java.lang.String"/>
+    </form-bean>
 
 	<form-bean name="componenteForm" type="es.caib.gusite.microback.actionform.formulario.componenteForm"
     	className="es.caib.gusite.microback.config.TraFormBeanConfig">
@@ -256,7 +280,6 @@
 	    <form-property name="imagenesid"  type="java.lang.Long[]"/>		
  	    <form-property name="imagenesnom" type="java.lang.String[]"/>
 	    <form-property name="imagenesbor" type="boolean[]" initial="false"/>
-
 	</form-bean>
 
 	<form-bean name="microForm" type="es.caib.gusite.microback.actionform.formulario.microForm"
@@ -317,6 +340,8 @@
     	<form-property name="uri" type="java.lang.String"/>
 		<form-property name="versio" type="java.lang.String"/>
 		<form-property name="acceso" type="java.lang.String"/>
+        <form-property name="desarrollo" type="java.lang.String"/>
+        <form-property name="tema" type="java.lang.Long"/>
 	</form-bean>
 
 	<form-bean name="formularioconForm" type="es.caib.gusite.microback.actionform.formulario.formularioconForm">
@@ -456,25 +481,25 @@
    	</action>
    	
 	<action path="/listarServicios" type="es.caib.gusite.microback.action.ServiciosAction">
-      <forward name="listarservicios" path="/listarservicios.jsp"/>
+        <forward name="listarservicios" path="/listarservicios.jsp"/>
     </action>
 
 	<action path="/listartinycomponentes" type="es.caib.gusite.microback.action.ComponentesTinyAction">
-      <forward name="listarcomponentes" path="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"/>
+        <forward name="listarcomponentes" path="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"/>
     </action>    
     
 	<action path="/recursos" name="BuscaOrdenaRecursoActionForm"
 		type="es.caib.gusite.microback.action.RecursosAction" unknown="false">
-      <forward name="listarrecursos" path="/listaRecursos.jsp"/>
-	  <forward name="listarecursostiny" path="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"/>      
+        <forward name="listarrecursos" path="/listaRecursos.jsp"/>
+        <forward name="listarecursostiny" path="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"/>
     </action>
 	<action path="/estadisticagen" name="BuscaOrdenaEstadisticaGenActionForm"
 		type="es.caib.gusite.microback.action.EstadisticasGenAction" unknown="false">
-      <forward name="listarestadistica" path="/listaEstadisticasGen.jsp"/>
+        <forward name="listarestadistica" path="/listaEstadisticasGen.jsp"/>
     </action>
 	<action path="/estadisticaind" name="BuscaOrdenaEstadisticaIndActionForm"
 		type="es.caib.gusite.microback.action.EstadisticasIndAction" unknown="false">
-      <forward name="listarestadistica" path="/listaEstadisticasInd.jsp"/>
+        <forward name="listarestadistica" path="/listaEstadisticasInd.jsp"/>
     </action>
     
 	<action path="/estadisticaenc" type="es.caib.gusite.microback.action.EstadisticasEncuestasAction" unknown="false">
@@ -495,10 +520,9 @@
     
     <action path="/enccerca" type="es.caib.gusite.microback.action.EstadisticaEncuestaCercaAction" unknown="false">
 		<forward name="mostraresultcerca" path="/listaEstadisitcasEncCerca.jsp"/>		
-	</action> 
+	</action>
 	
-    <action path="/back" 
-         type="es.caib.gusite.back.indra.actions.BackRequestAction"/>    
+    <action path="/back" type="es.caib.gusite.back.indra.actions.BackRequestAction"/>
     
 	<!-- ***************************************************************** -->
     <!-- ************** Acciones de busqueda y ordenacion **************** -->
@@ -506,180 +530,203 @@
 
 	<action path="/noticias" name="BuscaOrdenaNoticiaActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaNoticiasAction" >
-      <forward name="listarNotis" path="/listaNoticias.jsp"/>
-      <forward name="listarTipos" path="/tipos.do"/>
+        <forward name="listarNotis" path="/listaNoticias.jsp"/>
+        <forward name="listarTipos" path="/tipos.do"/>
     </action>
-    
+
+    <action path="/perPlantillas" name="BuscaOrdenaPerPlantillasActionForm"
+            type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaPerPlantillasAction" >
+        <forward name="perPlantillas" path="/listaPerPlantillas.jsp"/>
+    </action>
+
+    <action path="/temaFront" name="BuscaOrdenaTemaFrontActionForm"
+            type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaTemaFrontAction" >
+        <forward name="temaFront" path="/listaFrontTemas.jsp"/>
+    </action>
+
 	<action path="/componentes" name="BuscaOrdenaComponenteActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaComponentesAction" >
-      <forward name="listarComponentes" path="/listaComponentes.jsp"/>
+        <forward name="listarComponentes" path="/listaComponentes.jsp"/>
     </action>
     
 	<action path="/encuestas" name="BuscaOrdenaEncuestaActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaEncuestasAction" >
-      <forward name="listarEncuestas" path="/listaEncuestas.jsp"/>
+        <forward name="listarEncuestas" path="/listaEncuestas.jsp"/>
     </action>
     
     <action path="/convocatorias" name="BuscaOrdenaConvocatoriaActionForm"
     	type="es.caib.gusite.microback.action.buscaordena.buscaordenaConvocatoriasAction">
-      <forward name="listarconvocatorias" path="/listaConvocatorias.jsp"/>
+        <forward name="listarconvocatorias" path="/listaConvocatorias.jsp"/>
     </action>
     
     <action path="/ldistribucion" name="BuscaOrdenaLDistribucionActionForm"
     	type="es.caib.gusite.microback.action.buscaordena.buscaordenaLDistribucionAction">
-      <forward name="listadistribucion" path="/listaDistribucion.jsp"/>
+        <forward name="listadistribucion" path="/listaDistribucion.jsp"/>
     </action>
     
     <action path="/escogerDistribConvoc" name="BuscaOrdenaSeleccionarLDistribucionActionForm"
     	type="es.caib.gusite.microback.action.buscaordena.buscaordenaSeleccionarLDistribucionAction">
-      <forward name="listadistribucion" path="/seleccionarListaDistribucion.jsp"/>
+        <forward name="listadistribucion" path="/seleccionarListaDistribucion.jsp"/>
     </action>
 
     <action path="/agendas" name="BuscaOrdenaAgendaActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaAgendaAction" >
-      <forward name="listarAgendas" path="/listaAgendas.jsp"/>
+        <forward name="listarAgendas" path="/listaAgendas.jsp"/>
     </action>
         
 	<action path="/actividades" name="BuscaOrdenaActividadActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaActividadesAction" >
-      <forward name="listarActivis" path="/listaActividades.jsp"/>
+        <forward name="listarActivis" path="/listaActividades.jsp"/>
     </action>
 
 	<action path="/temas" name="BuscaOrdenaTemaActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaTemasAction" >
-      <forward name="listarTemas" path="/listaTemas.jsp"/>
+        <forward name="listarTemas" path="/listaTemas.jsp"/>
     </action>
 
 	<action path="/faqs" name="BuscaOrdenaFaqActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaFaqsAction" >
-      <forward name="listarFaqs" path="/listaFaqs.jsp"/>
+        <forward name="listarFaqs" path="/listaFaqs.jsp"/>
     </action>
 
 	<action path="/tipos" name="BuscaOrdenaTipoActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaTiposAction" >
-      <forward name="listarTipos" path="/listaTipos.jsp"/>
-      <forward name="listarTiposMantenimiento" path="/listaTiposMantenimientos.jsp"/>
+        <forward name="listarTipos" path="/listaTipos.jsp"/>
+        <forward name="listarTiposMantenimiento" path="/listaTiposMantenimientos.jsp"/>
     </action>
     
    	<action path="/frqssis" name="BuscaOrdenaFrqssiActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaFrqssisAction" >
-      <forward name="listarFrqssis" path="/listaFrqssis.jsp"/>
+        <forward name="listarFrqssis" path="/listaFrqssis.jsp"/>
     </action>
 
     <action path="/formularios" name="BuscaOrdenaFormularioActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.buscaordenaFormularioAction" >
-      <forward name="listarFormus" path="/listaFormularios.jsp"/>
+        <forward name="listarFormus" path="/listaFormularios.jsp"/>
     </action>
 
 	<action path="/microsites"  name="BuscaOrdenaMicrositeActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.BuscaordenaMicrositesAction" >
-      <forward name="listarMicrosites" path="/listaMicrosites.jsp"/>
+        <forward name="listarMicrosites" path="/listaMicrosites.jsp"/>
     </action>
     
 	<action path="/microUsuarios" name="BuscaOrdenaMicroUsuarioActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaMicroUsuariosAction" >
-      <forward name="listarUsuarios" path="/listaUsuariosMicrosite.jsp"/>
-      <forward name="listarMicrositesdelusu" path="/listaMicrositesdelusu.jsp"/>
+        <forward name="listarUsuarios" path="/listaUsuariosMicrosite.jsp"/>
+        <forward name="listarMicrositesdelusu" path="/listaMicrositesdelusu.jsp"/>
     </action>
     
 	<action path="/usuarios"  name="BuscaOrdenaUsuarioActionForm"
 		type="es.caib.gusite.microback.action.buscaordena.BuscaordenaUsuarioAction" >
-      <forward name="listarUsuarios" path="/listaUsuarios.jsp"/>
+        <forward name="listarUsuarios" path="/listaUsuarios.jsp"/>
     </action>
 
 	<action path="/auditorias"  name="BuscaOrdenaAuditoriasActionForm"
 			type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaAuditoriasAction" >
 		<forward name="listarAuditorias" path="/listaAuditorias.jsp"/>
 	</action>
-    
+
 	<!-- ***************************************************************** -->
     <!-- ******************* Acciones de Edición ************************* -->
 	<!-- ***************************************************************** -->
 
     <action path="/noticiasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaNoticiasAction" >
-      <forward name="detalleNoti" path="/detalleNoticia.jsp"/>
-      <forward name="listarNoticias" path="/noticias.do"/>
+        <forward name="detalleNoti" path="/detalleNoticia.jsp"/>
+        <forward name="listarNoticias" path="/noticias.do"/>
+    </action>
+
+    <action path="/perPlantillasAcc" name="listaActionForm"
+            scope="request" type="es.caib.gusite.microback.action.lista.ListaPerPlantillaAction" >
+        <forward name="detallePerPlantilla" path="/detallePerPlantillas.jsp"/>
+        <forward name="listarPerPlantillas" path="/perPlantillas.do"/>
+        <forward name="crearPerPlantilla" path="/crearPerPlantilla.jsp"/>
+    </action>
+
+    <action path="/temaFrontAcc" name="listaActionForm"
+            scope="request" type="es.caib.gusite.microback.action.lista.ListaTemaFrontAction" >
+        <forward name="detalleTemaFront" path="/detalleTemaFront.jsp"/>
+        <forward name="listarTemaFront" path="/temaFront.do"/>
     </action>
 
     <action path="/componentesAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaComponentesAction" >
-      <forward name="detalleCompo" path="/detalleComponente.jsp"/>
-      <forward name="listarComponentes" path="/componentes.do"/>
+        <forward name="detalleCompo" path="/detalleComponente.jsp"/>
+        <forward name="listarComponentes" path="/componentes.do"/>
     </action>
 
     <action path="/encuestasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaEncuestasAction" >
-      <forward name="detalleEncuesta" path="/detalleEncuesta.jsp"/>
+        <forward name="detalleEncuesta" path="/detalleEncuesta.jsp"/>
     </action>
     
     <action path="/convocatoriasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaConvocatoriasAction" >
-      <forward name="detalleConvocatoria" path="/detalleConvocatoria.jsp"/>
+        <forward name="detalleConvocatoria" path="/detalleConvocatoria.jsp"/>
     </action>
 
     <action path="/ldistribucionAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaLDistribucionAction" >
-      <forward name="detalleLDistribucion" path="/detalleLDistribucion.jsp"/>
+        <forward name="detalleLDistribucion" path="/detalleLDistribucion.jsp"/>
     </action>
     
     <action path="/escogerDistribConvocAcc" name="BuscaOrdenaSeleccionarLDistribucionActionForm"
     	scope="request" type="es.caib.gusite.microback.action.lista.listaSeleccionarLDistribucionAction">
-      <forward name="detalleConvocatoria" path="/convocatoriaEdita.do"/>
+        <forward name="detalleConvocatoria" path="/convocatoriaEdita.do"/>
     </action>
 
     <action path="/preguntasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaPreguntasAction" >
-      <forward name="detalle" path="/detallePregunta.jsp"/>
+        <forward name="detalle" path="/detallePregunta.jsp"/>
     </action>
 
     <action path="/respuestasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaRespuestasAction" >
-      <forward name="detalle" path="/detalleRespuesta.jsp"/>
+        <forward name="detalle" path="/detalleRespuesta.jsp"/>
     </action>
 
     <action path="/contenidosAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaContenidosAction" >
-      <forward name="detalleConte" path="/detalleContenido.jsp"/>
-       <forward name="info" path="/infoContenido.jsp"/>
+        <forward name="detalleConte" path="/detalleContenido.jsp"/>
+        <forward name="info" path="/infoContenido.jsp"/>
     </action>
 
     <action path="/agendasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaAgendasAction" >
-      <forward name="detalleAgenda" path="/detalleAgenda.jsp"/>
-      <forward name="listarAgendas" path="/agendas.do"/>
+        <forward name="detalleAgenda" path="/detalleAgenda.jsp"/>
+        <forward name="listarAgendas" path="/agendas.do"/>
     </action>
 
     <action path="/actividadesAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaActividadesAction" >
-      <forward name="detalleActivi" path="/detalleActividad.jsp"/>
-      <forward name="listarActividades" path="/actividades.do"/>
+        <forward name="detalleActivi" path="/detalleActividad.jsp"/>
+        <forward name="listarActividades" path="/actividades.do"/>
     </action>
 
     <action path="/temasAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaTemasAction" >
-      <forward name="detalleTema" path="/detalleTema.jsp"/>
+        <forward name="detalleTema" path="/detalleTema.jsp"/>
     </action>
 
     <action path="/faqsAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaFaqsAction" >
-      <forward name="detalleFaq" path="/detalleFaq.jsp"/>
+        <forward name="detalleFaq" path="/detalleFaq.jsp"/>
     </action>
 
     <action path="/tiposAcc" name="listaActionForm"
-		scope="request" type="es.caib.gusite.microback.action.lista.listaTiposAction" >
-      <forward name="detalleTipo" path="/detalleTipo.jsp"/>
-      <forward name="listarTipos" path="/tipos.do"/>
+            scope="request" type="es.caib.gusite.microback.action.lista.listaTiposAction" >
+        <forward name="detalleTipo" path="/detalleTipo.jsp"/>
+        <forward name="listarTipos" path="/tipos.do"/>
     </action>
-    
-   <action path="/frqssisAcc" name="listaActionForm"
-		scope="request" type="es.caib.gusite.microback.action.lista.listaFrqssisAction" >
-      <forward name="detalleFrqssi" path="/detalleFrqssi.jsp"/>
-    </action>    
+
+    <action path="/frqssisAcc" name="listaActionForm"
+            scope="request" type="es.caib.gusite.microback.action.lista.listaFrqssisAction" >
+        <forward name="detalleFrqssi" path="/detalleFrqssi.jsp"/>
+    </action>
 
     <action path="/microAcc" name="listaActionForm"
-		scope="request" type="es.caib.gusite.microback.action.lista.errorMicroAction" >
-		<forward name="general" path="/microGeneral.jsp"/>
+            scope="request" type="es.caib.gusite.microback.action.lista.errorMicroAction" >
+        <forward name="general" path="/microGeneral.jsp"/>
     </action>
 
     <action path="/menuAcc" name="listaActionForm"
@@ -689,79 +736,90 @@
 
     <action path="/formulariosAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaFormulariosAction" >
-      <forward name="detalleFormu" path="/detalleFormulario.jsp"/>
-      <forward name="listarFormu" path="/formularios.do"/>
+        <forward name="detalleFormu" path="/detalleFormulario.jsp"/>
+        <forward name="listarFormu" path="/formularios.do"/>
     </action>
     
     <action path="/lineaFormuAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaLineasFormuAction" >
-      <forward name="detalleLineaFormu" path="/detalleLineaFormulario.jsp"/>
+        <forward name="detalleLineaFormu" path="/detalleLineaFormulario.jsp"/>
     </action>
 
     <action path="/micrositesAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.listaMicrositesAction" >
-      <forward name="detalleMicrosite" path="/inicio.jsp"/>
-      <forward name="crearMicrosite" path="/home.do"/>
+        <forward name="detalleMicrosite" path="/inicio.jsp"/>
+        <forward name="crearMicrosite" path="/home.do"/>
     </action>
 
     <action path="/microusuariosAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.ListaMicroUsuariosAction" >
-      <forward name="detalleMicrousuario" path="/detalleMicrousuario.jsp"/>
+        <forward name="detalleMicrousuario" path="/detalleMicrousuario.jsp"/>
     </action>
 
     <action path="/usuariosAcc" name="listaActionForm"
 		scope="request" type="es.caib.gusite.microback.action.lista.ListaUsuariosAction" >
-      <forward name="detalleUsuario" path="/detalleUsuario.jsp"/>
+        <forward name="detalleUsuario" path="/detalleUsuario.jsp"/>
     </action>
 
 	<!-- ***************************************************************** -->
     <!-- ******************* Acciones de Multiples *********************** -->
 	<!-- ***************************************************************** -->
 
-    <action path="/noticiaEdita" name="noticiaForm" input="/noticiasAcc.do" 
+    <action path="/noticiaEdita" name="noticiaForm" input="/noticiasAcc.do"
 	    scope="session" type="es.caib.gusite.microback.action.edita.noticiasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleNoticia.jsp"/>
+        <forward name="detalle" path="/detalleNoticia.jsp"/>
+    </action>
+
+    <action path="/temaFrontEdita" name="TemaFrontForm" input="/temaFrontAcc.do"
+            scope="session" type="es.caib.gusite.microback.action.edita.TemaFrontEditaAction" unknown="false">
+        <forward name="detalle" path="/detalleTemaFront.jsp"/>
+        <forward name="detallePlantilla" path="/crearPerPlantilla.jsp"/>
+    </action>
+
+    <action path="/perPlantillasEdita" name="PerPlantillasForm" input="/perPlantillasAcc.do"
+            scope="session" type="es.caib.gusite.microback.action.edita.PerPlantillasEditaAction" unknown="false">
+        <forward name="detalle" path="/detallePerPlantillas.jsp"/>
     </action>
 
     <action path="/componenteEdita" name="componenteForm" input="/componentesAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.componentesEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleComponente.jsp"/>
+        <forward name="detalle" path="/detalleComponente.jsp"/>
     </action>
 
     <action path="/encuestaEdita" name="encuestaForm" input="/encuestasAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.encuestasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleEncuesta.jsp"/>
+        <forward name="detalle" path="/detalleEncuesta.jsp"/>
     </action>
     
     <action path="/convocatoriaEdita" name="convocatoriaForm" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.convocatoriasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleConvocatoria.jsp"/>      
+        <forward name="detalle" path="/detalleConvocatoria.jsp"/>
     </action>
     
     <action path="/ldistribucionEdita" name="ldistribucionForm" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.ldistribucionEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleLDistribucion.jsp"/>
+        <forward name="detalle" path="/detalleLDistribucion.jsp"/>
     </action>
 
     <action path="/correoEdita" name="correoForm" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.correoEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleCorreo.jsp"/>      
+        <forward name="detalle" path="/detalleCorreo.jsp"/>
     </action>
 
     <action path="/preguntaEdita" name="preguntaForm" input="/preguntasAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.preguntasEditaAction" unknown="false">
-      <forward name="detalle" path="/detallePregunta.jsp"/>
+        <forward name="detalle" path="/detallePregunta.jsp"/>
     </action>
 
     <action path="/respuestaEdita" name="respuestaForm" input="/respuestasAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.respuestasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleRespuesta.jsp"/>
+        <forward name="detalle" path="/detalleRespuesta.jsp"/>
     </action>
 
     <action path="/contenidoEdita" name="contenidoForm" input="/contenidosAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.contenidosEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleContenido.jsp"/>
-      <forward name="info" path="/infoContenido.jsp"/>
+        <forward name="detalle" path="/detalleContenido.jsp"/>
+        <forward name="info" path="/infoContenido.jsp"/>
     </action>
 
     <action path="/docsEdita" name="docsForm" scope="request" 
@@ -770,79 +828,79 @@
 
     <action path="/agendaEdita" name="agendaForm" input="/agendasAcc.do"
 	    scope="session" type="es.caib.gusite.microback.action.edita.agendasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleAgenda.jsp"/>
+        <forward name="detalle" path="/detalleAgenda.jsp"/>
     </action>
 
     <action path="/actividadEdita" name="actividadForm" input="/actividadesAcc.do"
     	scope="session" type="es.caib.gusite.microback.action.edita.actividadesEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleActividad.jsp"/>
+        <forward name="detalle" path="/detalleActividad.jsp"/>
     </action>
 
     <action path="/temaEdita" name="temaForm" input="/temasAcc.do"
     	scope="session" type="es.caib.gusite.microback.action.edita.temasEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleTema.jsp"/>
+        <forward name="detalle" path="/detalleTema.jsp"/>
     </action>
 
     <action path="/faqEdita" name="faqForm" input="/faqsAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.faqsEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleFaq.jsp"/>
+        <forward name="detalle" path="/detalleFaq.jsp"/>
     </action>
 
     <action path="/tipoEdita" name="tiponotForm" input="/tiposAcc.do"
     	scope="session" type="es.caib.gusite.microback.action.edita.tiposEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleTipo.jsp"/>
+        <forward name="detalle" path="/detalleTipo.jsp"/>
     </action>
     
     <action path="/frqssiEdita" name="frqssiForm" input="/frqssisAcc.do"
     	scope="session" type="es.caib.gusite.microback.action.edita.frqssisEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleFrqssi.jsp"/>
+        <forward name="detalle" path="/detalleFrqssi.jsp"/>
     </action>    
 
     <action path="/menuEdita" name="menuForm" input="/menuAcc.do"
 	    scope="session" type="es.caib.gusite.microback.action.edita.menuEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleMenu.jsp"/>
-      <forward name="info" path="/infoContenido.jsp"/>
+        <forward name="detalle" path="/detalleMenu.jsp"/>
+        <forward name="info" path="/infoContenido.jsp"/>
     </action>
 
     <action path="/microEdita" name="microForm" input="/microAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.microEditaAction" unknown="false">
-      <forward name="general" path="/microGeneral.jsp"/>
-      <forward name="cabpie" path="/microCabpie.jsp"/>
-      <forward name="home" path="/detallePaginaInicio.jsp"/>
-      <forward name="info" path="/info.jsp"/>
-      <forward name="inicio" path="/inicio.jsp"></forward>
-      <forward name="refresco" path="/pleaseWaitGeneral.jsp"></forward>
+        <forward name="general" path="/microGeneral.jsp"/>
+        <forward name="cabpie" path="/microCabpie.jsp"/>
+        <forward name="home" path="/detallePaginaInicio.jsp"/>
+        <forward name="info" path="/info.jsp"/>
+        <forward name="inicio" path="/inicio.jsp"></forward>
+        <forward name="refresco" path="/pleaseWaitGeneral.jsp"></forward>
     </action>
     
     <action path="/paginaInicioEdita" name="microForm" input="/microAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.paginaInicioEditaAction" unknown="false">
-      <forward name="home" path="/detallePaginaInicio.jsp"/>
-      <forward name="info" path="/info.jsp"/>
-      <forward name="inicio" path="/inicio.jsp"></forward>
+        <forward name="home" path="/detallePaginaInicio.jsp"/>
+        <forward name="info" path="/info.jsp"/>
+        <forward name="inicio" path="/inicio.jsp"></forward>
     </action>
 
     <action path="/cabeceraPieEdita" name="microForm" input="/microAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.cabeceraPieEditaAction" unknown="false">
-      <forward name="general" path="/microGeneral.jsp"/>
-      <forward name="cabpie" path="/microCabpie.jsp"/>
-      <forward name="home" path="/detallePaginaInicio.jsp"/>
-      <forward name="inicio" path="/inicio.jsp"></forward>
-      <forward name="refresco" path="/pleaseWaitCabPie.jsp"></forward>
+        <forward name="general" path="/microGeneral.jsp"/>
+        <forward name="cabpie" path="/microCabpie.jsp"/>
+        <forward name="home" path="/detallePaginaInicio.jsp"/>
+        <forward name="inicio" path="/inicio.jsp"></forward>
+        <forward name="refresco" path="/pleaseWaitCabPie.jsp"></forward>
     </action>    
 
     <action path="/formularioEdita" name="formularioconForm" input="/formulariosAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.formulariosEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleFormulario.jsp"/>
+        <forward name="detalle" path="/detalleFormulario.jsp"/>
     </action>
 
     <action path="/lineaformularioEdita" name="lineaFormularioForm" input="/lineaFormuAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.lineaFormularioEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleLineaFormulario.jsp"/>
+        <forward name="detalle" path="/detalleLineaFormulario.jsp"/>
     </action> 
 
     <action path="/usuarioEdita" name="usuarioForm" input="/usuariosAcc.do" 
 	    scope="session" type="es.caib.gusite.microback.action.edita.UsuarioEditaAction" unknown="false">
-      <forward name="detalle" path="/detalleUsuario.jsp"/>
+        <forward name="detalle" path="/detalleUsuario.jsp"/>
     </action>
 
     <action path="/exportar" type="es.caib.gusite.microback.action.util.ExportarAction" scope="request" unknown="false"/>
@@ -871,21 +929,22 @@
     </action>    	 
 
 	<action path="/visorw3c" type="es.caib.gusite.microback.action.VisorW3cAction" unknown="false">
-			<forward name="visorw3c" path="/visorw3c.jsp"/>
+        <forward name="visorw3c" path="/visorw3c.jsp"/>
 	</action>	
 
 	<action path="/accesibilitat" type="es.caib.gusite.microback.action.AccesibilidadAction" unknown="false">
-			<forward name="acce" path="/accesibilitat.jsp"/>
+        <forward name="acce" path="/accesibilitat.jsp"/>
 	</action>	
 
 	<action path="/procesow3ctesteandopintastatus" type="es.caib.gusite.microback.action.ProcesoW3CTesteandoValorStatusBar" unknown="false">
-			<forward name="detallestatusbar" path="/procesow3ctesteandopintastatus.jsp"/>
-	</action>	
+        <forward name="detallestatusbar" path="/procesow3ctesteandopintastatus.jsp"/>
+	</action>
 
     <!-- Acciones para ajax -->
     
 	<action path="/ajaxBarraEstado" type="es.caib.gusite.microback.ajax.AjaxValorBarraEstadoAction" unknown="false"/>
 	<action path="/ajaxCheckUri" type="es.caib.gusite.microback.ajax.AjaxCheckUriAction" unknown="false"/>
+    <action path="/ajaxPlantillasPer" type="es.caib.gusite.microback.ajax.AjaxPlantillasPerAction" unknown="false"/>
 
 </action-mappings>
 

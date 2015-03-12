@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
 	<script type="text/javascript" src="js/rArxius.js"></script>
+    <script type="text/javascript" src="js/subMenus.js"></script>
 	 <!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="css/estils-v.4.1_ie6.css" media="screen" />
 	<![endif]-->

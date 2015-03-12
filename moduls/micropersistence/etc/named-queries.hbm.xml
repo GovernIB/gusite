@@ -82,4 +82,28 @@ order by
 	<query-param name="plantilla" type="java.lang.String" />
 </query>
 
+<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.searchByTema"><![CDATA[
+    FROM PersonalizacionPlantilla pp
+    WHERE pp.tema.id = :tema]]>
+        <query-param name="tema" type="java.lang.Long" />
+</query>
+
+<query name="es.caib.gusite.micromodel.ArchivoTemaFront.searchByTema"><![CDATA[
+    FROM ArchivoTemaFront atf
+    WHERE atf.tema.id = :tema]]>
+        <query-param name="tema" type="java.lang.Long" />
+</query>
+
+<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.countByMicrosite"><![CDATA[
+    SELECT count(*)
+    FROM PersonalizacionPlantilla pp
+    WHERE pp.microsite.id = :microsite]]>
+    <query-param name="microsite" type="java.lang.Long" />
+</query>
+
+<query name="es.caib.gusite.micromodel.TemaFront.listarTemaFrontPadres"><![CDATA[
+    FROM TemaFront tf
+    WHERE tf.temaPadre is null
+    ORDER BY tf.nombre]]>
+</query>
 </hibernate-mapping>

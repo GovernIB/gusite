@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="js/jquery-ui-1.10.4/jquery-1.10.2.js"></script>
  	<script type="text/javascript" src="js/llistat.js"></script>
  	<script type="text/javascript" src="js/jquery-ui-1.10.4/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="js/subMenus.js"></script>
  	
 	<script type="text/javascript">
 	<!--

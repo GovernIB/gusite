@@ -40,7 +40,7 @@ public class Plantilla extends AuditableModel implements Auditable,
 	@Column(name = "PLA_CODI", unique = true, nullable = false, scale = 0)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PLA_VERSION", nullable = false)
 	private Version version;
 

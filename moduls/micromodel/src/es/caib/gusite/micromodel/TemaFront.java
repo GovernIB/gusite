@@ -25,8 +25,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name = "GUS_FR_TEMA", uniqueConstraints = @UniqueConstraint(columnNames = "FTE_NOMBRE"))
-public class TemaFront extends AuditableModel implements Auditable,
-		java.io.Serializable {
+public class TemaFront extends AuditableModel implements Auditable, java.io.Serializable {
 
 	/**
 	 * serialVersionUID
@@ -46,18 +45,17 @@ public class TemaFront extends AuditableModel implements Auditable,
 	@JoinColumn(name = "FTE_CSS")
 	private Archivo css;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_TEMA_PADRE")
 	private TemaFront temaPadre;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_VERSION", nullable = false)
 	private Version version;
 
 	/**
 	 * Nom del tema
 	 */
-
 	@Column(name = "FTE_NOMBRE", unique = true, nullable = false)
 	private String nombre;
 
@@ -72,8 +70,10 @@ public class TemaFront extends AuditableModel implements Auditable,
 	private Set<TemaFront> temasHijos = new HashSet<TemaFront>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
-	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
-			0);
+	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(0);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
+    private Set<ArchivoTemaFront> archivoTemaFronts = new HashSet<ArchivoTemaFront>(0);
 
 	public TemaFront() {
 	}
@@ -119,7 +119,7 @@ public class TemaFront extends AuditableModel implements Auditable,
 		return this.temaPadre;
 	}
 
-	public void setTempPadre(TemaFront tempPadre) {
+	public void setTemaPadre(TemaFront tempPadre) {
 		this.temaPadre = tempPadre;
 	}
 
@@ -170,7 +170,15 @@ public class TemaFront extends AuditableModel implements Auditable,
 		this.personalizacionesPlantilla = personalizacionesPlantilla;
 	}
 
-	/**
+    public Set<ArchivoTemaFront> getArchivoTemaFronts() {
+        return archivoTemaFronts;
+    }
+
+    public void setArchivoTemaFronts(Set<ArchivoTemaFront> archivoTemaFronts) {
+        this.archivoTemaFronts = archivoTemaFronts;
+    }
+
+    /**
 	 * toString
 	 * 
 	 * @return String

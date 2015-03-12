@@ -5,10 +5,15 @@ import java.util.List;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import es.caib.gusite.micromodel.PersonalizacionPlantilla;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import org.hibernate.HibernateException;
 
 import es.caib.gusite.micromodel.ArchivoTemaFront;
 import es.caib.gusite.micromodel.Auditoria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * SessionBean para consultar ArchivoTemaFront.
@@ -44,17 +49,27 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 *                 } "
 	 */
 	public ArchivoTemaFront crearArchivoTemaFront(ArchivoTemaFront instance) {
+
 		log.debug("persisting ArchivoTemaFront instance");
+        Session session = this.getSession();
 		try {
-			ArchivoTemaFront ret = (ArchivoTemaFront) this.getSession().get(
-					ArchivoTemaFront.class, this.getSession().save(instance));
+            if (instance.getArchivo().getIdmicrosite() == null) {
+                instance.getArchivo().setIdmicrosite(new Long(0));
+            }
+            DelegateUtil.getArchivoDelegate().insertarArchivo(instance.getArchivo());
+			ArchivoTemaFront ret = (ArchivoTemaFront) session.get(ArchivoTemaFront.class, session.save(instance));
+            session.flush();
+            session.close();
 			this.grabarAuditoria(ret, Auditoria.CREAR);
 			return ret;
 
 		} catch (HibernateException re) {
 			log.error("persist failed", re);
 			throw new EJBException(re);
-		} finally {
+		} catch (DelegateException re) {
+            log.error("persist failed", re);
+            throw new EJBException(re);
+        } finally {
 			log.debug("finished add ArchivoTemaFront instance");
 		}
 	}
@@ -87,10 +102,15 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 * @ejb.permission role-name="${role.system},${role.admin}"
 	 */
 	public void borrarArchivoTemaFront(ArchivoTemaFront instance) {
+
 		log.debug("deleting ArchivoTemaFront instance");
+        Session session = this.getSession();
 		try {
-			this.getSession().delete(instance);
+			session.delete(instance);
+            session.flush();
+            session.close();
 			this.grabarAuditoria(instance, Auditoria.ELIMINAR);
+
 		} catch (HibernateException e) {
 			log.error("delete failed", e);
 			throw new EJBException(e);
@@ -107,6 +127,7 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 */
 	@SuppressWarnings("unchecked")
 	public List<ArchivoTemaFront> listarArchivoTemaFront() {
+
 		log.debug("listar ArchivoTemaFront");
 		try {
 			List<ArchivoTemaFront> instances = this.getSession()
@@ -117,11 +138,11 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 				log.debug("get successful, instances found");
 			}
 			return instances;
+
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
 		}
-
 	}
 
 	/**
@@ -130,21 +151,59 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public ArchivoTemaFront obtenerArchivoTemaFront(java.lang.Long id) {
+	public ArchivoTemaFront obtenerArchivoTemaFront(Long id) {
+
 		log.debug("getting ArchivoTemaFront instance with id: " + id);
+        Session session = this.getSession();
 		try {
-			ArchivoTemaFront instance = (ArchivoTemaFront) this.getSession()
-					.get(ArchivoTemaFront.class, id);
+			ArchivoTemaFront instance = (ArchivoTemaFront) session.get(ArchivoTemaFront.class, id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
 				log.debug("get successful, instance found");
 			}
+            session.close();
 			return instance;
+
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
 		}
 	}
 
+    /**
+     * Borra un listado de PersonalizacionPlantilla por ids
+     * @ejb.interface-method
+     * @ejb.permission role-name="${role.system},${role.admin}"
+     */
+    public void borrarArchivosTemaFront(List<Long> ids) {
+
+        log.debug("deleting ArchivoTemaFront list");
+        Session session = this.getSession();
+        try {
+            String hql = "delete from ArchivoTemaFront as archTF";
+            hql += " where archTF.id in (:list)";
+            Query query = session.createQuery(hql);
+            query.setParameterList("list", ids);
+            query.executeUpdate();
+            session.close();
+
+        } catch (HibernateException e) {
+            log.error("delete failed", e);
+            throw new EJBException(e);
+        } finally {
+            log.debug("finished deleting PersonalizacionPlantilla instance");
+        }
+    }
+
+    /**
+     * Busca Archivos por searchByPlantilla
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public List<ArchivoTemaFront> searchByTema(Long tema) {
+        Query query = getNamedQuery("es.caib.gusite.micromodel.ArchivoTemaFront.searchByTema");
+        query.setParameter("tema", tema);
+        return (List<ArchivoTemaFront>) query.list();
+    }
 }

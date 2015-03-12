@@ -1,6 +1,5 @@
 package es.caib.gusite.micromodel;
 
-import java.sql.Clob;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -37,11 +36,11 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	@Column(name = "PPL_CODI", unique = true, nullable = false, scale = 0)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PPL_MICCOD")
 	private Microsite microsite;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PPL_FTECOD")
 	private TemaFront tema;
 

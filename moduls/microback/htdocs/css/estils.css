@@ -18,6 +18,10 @@ h3 { font:normal 1em Georgia, "Times New Roman", Times, serif; padding-bottom:.5
 #botonera span.grup { border-right:1px solid #ccc; margin-right:10px; }
 #botonera button, #botonera input, #botonera select { vertical-align:middle; margin-right:10px; }
 
+.botonera { border:1px solid #ffbd77; padding:7px 10px; margin:10px 0 20px 0; }
+.botonera span.grup { border-right:1px solid #ccc; margin-right:10px; }
+.botonera button, .botonera input, .botonera select { vertical-align:middle; margin-right:10px; }
+
 /* molla pa */
 
 #mollapa { list-style:none; margin:5px 0 10px 0; padding:0 0 5px 0; font-size:.9em; border-bottom:1px solid #e3e3e3; }

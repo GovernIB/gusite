@@ -92,6 +92,7 @@
 			<logic:equal name="puedoeditar" value="1">
 				<li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestservicios" /></a></li>
 			</logic:equal>
+            <li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestaparen" /></a></li>
 		</ul>
 
 		<div id="formulario">
@@ -189,16 +190,6 @@
 									<td><label><html:radio property="visible" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="visible" value="N" />&nbsp;No</label></td>
 								</tr>
 								<tr class="par">
-									<td class="etiqueta"><bean:message key="micro.menu" /> &gt;</td>
-									<td>
-										<html:select property="tipomenu">
-											<html:option value="0"><bean:message key="micro.menu.nohay" /></html:option>
-											<html:option value="1"><bean:message key="micro.menu.siniconos" /></html:option>
-											<html:option value="2"><bean:message key="micro.menu.coniconos" /></html:option>
-										</html:select>
-									</td>
-								</tr>
-								<tr>
 									<td class="etiqueta"><bean:message key="micro.idiomas" /> &gt;</td>
 									<td>
 										<logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="x">
@@ -212,36 +203,6 @@
 										</logic:iterate>
 									</td>
 								</tr>
-								<tr class="par">
-									<td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
-									<td><span><bean:message key="micro.csspatron" />:</span>
-										<label class="N"><html:radio property="estiloCSSPatron" value="N" /><bean:message key="micro.negre" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-										<label class="A"><html:radio property="estiloCSSPatron" value="A" /><bean:message key="micro.blau" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-										<label class="R"><html:radio property="estiloCSSPatron" value="R" /><bean:message key="micro.vermell" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-										<label class="V"><html:radio property="estiloCSSPatron" value="V" /><bean:message key="micro.verd" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-										<label class="G"><html:radio property="estiloCSSPatron" value="G" /><bean:message key="micro.groc" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-										<label class="M"><html:radio property="estiloCSSPatron" value="M" /><bean:message key="micro.magenta" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
-									</td>
-								</tr>
-								<tr class="par">
-									<td class="etiqueta"></td>
-									<td>
-										<div id="microManagedFileCSS">
-											<span><bean:message key="micro.csspropio" />:</span>
-											<html:hidden property="estiloCSSid" />
-											<logic:notEmpty name="microForm" property="estiloCSSnom">
-												<html:text property="estiloCSSnom"/>
-												<button type="button" title="<bean:message key="boton.eliminar" />" onclick="borraFile(this,'estiloCSS','estiloCSSid','estiloCSSbor','estiloCSSnom');"><img src="imgs/botons/borrar.gif" alt="<bean:message key="boton.eliminar" />" /></button>
-												<button type="button" title="<bean:message key="op.12" />" onclick="abrirDoc('<bean:write name="microForm" property="estiloCSSid"/>');"><img src="imgs/botons/previsualitzar.gif" alt="<bean:message key="op.12" />" /></button>
-											</logic:notEmpty>
-										</div>
-										<logic:empty name="microForm" property="estiloCSSnom">
-											<html:file property="estiloCSS" size="30"/>
-											&nbsp; - &nbsp;<button type="button" title="<bean:message key="micro.descargaestilo" />" onclick="abrirWindow('/sacmicrofront/css/estilos01_blau.css');"><img src="imgs/botons/css_descargar.gif" alt="" /></button>
-										</logic:empty>
-									</td>
-								</tr>
-
 								<logic:equal name="puedoeditar" value="1">
 									<tr>
 										<td class="etiqueta"><bean:message key="micro.domini" /> &gt;</td>
@@ -272,14 +233,6 @@
                                         <td class="etiqueta"><bean:message key="micro.indique.rol" /> &gt;</td>
                                         <td><html:text property="rol" size="30" maxlength="150" /></td>
                                     </tr>
-									<tr>
-										<td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
-										<td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
-									</tr>
-									<tr class="par">
-										<td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
-										<td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
-									</tr>
 
 									<!-- TEST -->
 									<tr>
@@ -417,6 +370,70 @@
 				</table>
 				<input type="hidden" name="servofr" value="100" />
 			</div>
+
+            <div id="capa_Aparen" class="capaFormIdioma">
+                <table cellpadding="0" cellspacing="0" class="edicio">
+                    <tr>
+                        <td class="etiqueta"><bean:message key="micro.desarrollo" /> &gt;</td>
+                        <td><html:checkbox property="desarrollo" value="S" disabled="false" /></td>
+                    </tr>
+                    <tr class="par">
+                        <td class="etiqueta"><bean:message key="micro.menu" /> &gt;</td>
+                        <td>
+                            <html:select property="tipomenu">
+                                <html:option value="0"><bean:message key="micro.menu.nohay" /></html:option>
+                                <html:option value="1"><bean:message key="micro.menu.siniconos" /></html:option>
+                                <html:option value="2"><bean:message key="micro.menu.coniconos" /></html:option>
+                            </html:select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
+                        <td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
+                    </tr>
+                    <tr class="par">
+                        <td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
+                        <td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
+                    </tr>
+                    <tr>
+                        <td class="etiqueta"><bean:message key="micro.tema" /> &gt;</td>
+                        <td>
+                            <html:select property="tema">
+                                <html:options collection="MVS_temas" labelProperty="nombre" property="id"/>
+                            </html:select>
+                        </td>
+                    </tr>
+                    <tr class="par">
+                        <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
+                        <td><span><bean:message key="micro.csspatron" />:</span>
+                            <label class="N"><html:radio property="estiloCSSPatron" value="N" /><bean:message key="micro.negre" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                            <label class="A"><html:radio property="estiloCSSPatron" value="A" /><bean:message key="micro.blau" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                            <label class="R"><html:radio property="estiloCSSPatron" value="R" /><bean:message key="micro.vermell" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                            <label class="V"><html:radio property="estiloCSSPatron" value="V" /><bean:message key="micro.verd" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                            <label class="G"><html:radio property="estiloCSSPatron" value="G" /><bean:message key="micro.groc" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                            <label class="M"><html:radio property="estiloCSSPatron" value="M" /><bean:message key="micro.magenta" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    <tr class="par">
+                        <td class="etiqueta"></td>
+                        <td>
+                            <div id="microManagedFileCSS">
+                                <span><bean:message key="micro.csspropio" />:</span>
+                                <html:hidden property="estiloCSSid" />
+                                <logic:notEmpty name="microForm" property="estiloCSSnom">
+                                    <html:text property="estiloCSSnom"/>
+                                    <button type="button" title="<bean:message key="boton.eliminar" />" onclick="borraFile(this,'estiloCSS','estiloCSSid','estiloCSSbor','estiloCSSnom');"><img src="imgs/botons/borrar.gif" alt="<bean:message key="boton.eliminar" />" /></button>
+                                    <button type="button" title="<bean:message key="op.12" />" onclick="abrirDoc('<bean:write name="microForm" property="estiloCSSid"/>');"><img src="imgs/botons/previsualitzar.gif" alt="<bean:message key="op.12" />" /></button>
+                                </logic:notEmpty>
+                            </div>
+                            <logic:empty name="microForm" property="estiloCSSnom">
+                                <html:file property="estiloCSS" size="30"/>
+                                &nbsp; - &nbsp;<button type="button" title="<bean:message key="micro.descargaestilo" />" onclick="abrirWindow('/sacmicrofront/css/estilos01_blau.css');"><img src="imgs/botons/css_descargar.gif" alt="" /></button>
+                            </logic:empty>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
 		</div>
 	</html:form>

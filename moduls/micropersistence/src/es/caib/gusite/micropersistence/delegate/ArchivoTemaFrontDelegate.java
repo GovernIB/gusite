@@ -8,6 +8,7 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.ArchivoTemaFront;
+import es.caib.gusite.micromodel.PersonalizacionPlantilla;
 import es.caib.gusite.micropersistence.intf.ArchivoTemaFrontFacade;
 import es.caib.gusite.micropersistence.intf.ArchivoTemaFrontFacadeHome;
 import es.caib.gusite.micropersistence.util.ArchivoTemaFrontFacadeUtil;
@@ -52,7 +53,7 @@ public class ArchivoTemaFrontDelegate implements StatelessDelegate {
 	public void borrarArchivoTemaFront(ArchivoTemaFront instance)
 			throws DelegateException {
 		try {
-			this.getFacade().actualizarArchivoTemaFront(instance);
+			this.getFacade().borrarArchivoTemaFront(instance);
 		} catch (RemoteException re) {
 			throw new DelegateException(re);
 		}
@@ -88,6 +89,31 @@ public class ArchivoTemaFrontDelegate implements StatelessDelegate {
 			throw new DelegateException(re);
 		}
 	}
+
+    /**
+     * Borra un listado de PersonalizacionPlantilla por ids
+     * @ejb.interface-method
+     * @ejb.permission role-name="${role.system},${role.admin}"
+     */
+    public void borrarArchivosTemaFront(List<Long> ids) throws DelegateException {
+        try {
+            this.getFacade().borrarArchivosTemaFront(ids);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
+    /**
+     * Busca Archivos por searchByPlantilla
+     */
+    public List<ArchivoTemaFront> searchByTema(Long tema) throws DelegateException {
+        try {
+            return getFacade().searchByTema(tema);
+        }
+        catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
 
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */

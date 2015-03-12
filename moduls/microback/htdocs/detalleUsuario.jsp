@@ -22,6 +22,7 @@
 	<script type="text/javascript" src="js/detall.js"></script>
 	<script type="text/javascript" src="js/form.js"></script>
 	<script type="text/javascript" src="js/llistat.js"></script>
+    <script type="text/javascript" src="js/subMenus.js"></script>
 	<script type="text/javascript">
 	<!--
 		var pagMicros = "microUsuarios.do?accion=lista&id=";

@@ -42,6 +42,16 @@ ul#menu li { display:inline; }
 ul#menu li a { display:block; float:left; font:bold 1em Arial, Helvetica, sans-serif; color:#fff; text-decoration:none; padding:.5em 2em; background-color:#e57700; border-right:1px solid #be6200; border-bottom:0 !important; }
 ul#menu li a:hover { background-color:#9c5000; }
 
+#cMenu { width:100%; border:0; background-color:#e57700; border-bottom:1px solid #be6200; }
+#cMenu td { width:16%; text-align:center; border-right:1px solid #be6200; border-collapse:collapse; padding:2px; }
+#cMenu td a { display:block; text-decoration:none; color:#494949; width:100%; padding:5px 0; outline:none; color:#fff; font-weight:bold; }
+#cMenu td a:hover { background-color:#be6200; }
+
+.submenu { display:none; position:absolute; top:0; left:0; background-color:#fff; border:1px solid #9c5000; z-index:2; text-align:center; }
+.submenu p { padding:7px 0; color:#fff; background-color:#9c5000; margin:0; }
+.submenu a { display:block; padding:4px 0; font-size:.9em; width:100%; text-decoration:none; color:#000; }
+.submenu a:hover { background-color:#f2e6d9; }
+
 #continguts { padding:0 1em 2em 1em; background-color:#fff; border-bottom:1em solid #fff; }
 
 ul#botonera { float:left; width:6%; list-style:none; margin-right:2%; margin-bottom:2em; background-color:#fff; }

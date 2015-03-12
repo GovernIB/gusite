@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="js/jquery-1.2.6.pack.js"></script>
 	<script type="text/javascript" src="js/comuns.js"></script>
 	<script type="text/javascript" src="js/llistat.js"></script>
+    <script type="text/javascript" src="js/subMenus.js"></script>
 	<script type="text/javascript">
 	<!--
 		// enllaços

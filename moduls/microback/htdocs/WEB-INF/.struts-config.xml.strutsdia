@@ -841,3 +841,6 @@
  <PROCESS-ITEM ID="#ajaxCheckUri" NAME="action98"
   PATH="/ajaxCheckUri" SHAPE="32,5938,0,0" TYPE="action" model-entity="StrutsProcessItem"/>
 </PROCESS>
+<PROCESS-ITEM ID="#ajaxPlantillasPer" NAME="action99"
+  PATH="/ajaxPlantillasPer" SHAPE="32,5938,0,0" TYPE="action" model-entity="StrutsProcessItem"/>
+</PROCESS>

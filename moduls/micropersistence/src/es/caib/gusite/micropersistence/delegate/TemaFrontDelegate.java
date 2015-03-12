@@ -72,6 +72,21 @@ public class TemaFrontDelegate implements StatelessDelegate {
 		}
 	}
 
+    /**
+     * Lista todos los TemaFront ordenados
+     *
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    @SuppressWarnings("unchecked")
+    public List<TemaFront> listarTemaFrontOrden(String ordre) throws DelegateException {
+        try {
+            return this.getFacade().listarTemaFrontOrden(ordre);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
 	/**
 	 * Obtiene un TemaFront
 	 * 
@@ -86,6 +101,28 @@ public class TemaFrontDelegate implements StatelessDelegate {
 			throw new DelegateException(re);
 		}
 	}
+
+    /**
+     * Eliminar una lista de plantillas
+     */
+    public void borrarTemaFronts(List<Long> ids) throws DelegateException {
+        try {
+            getFacade().borrarTemaFronts(ids);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
+    /**
+     * Lista todos los TemaFront padres
+     */
+    public List<TemaFront> listarTemaFrontPadres() throws DelegateException {
+        try {
+            return getFacade().listarTemaFrontPadres();
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
 
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */

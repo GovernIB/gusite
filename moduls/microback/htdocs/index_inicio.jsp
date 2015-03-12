@@ -47,6 +47,7 @@
 				<ul>
 					<li><a href="microEdita.do?accion=general&idsite=<bean:write name="MVS_microsite" property="id"/>"><bean:message key="index.inicio.general" /></a></li>
 					<li><a href="cabeceraPieEdita.do?accion=cabpie&idsite=<bean:write name="MVS_microsite" property="id"/>"><bean:message key="index.inicio.cappeu" /></a></li>
+                    <li><a href="perPlantillas.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.plantillas" /></a></li>
 						<logic:iterate id="i" name="MVS_menugenerico" indexId="indice">
 							<logic:equal name="i" property="value" value="Listados">
 								<li><a href="tipos.do"><bean:message key="index.inicio.listados" /></a></li>
@@ -56,7 +57,7 @@
 					<li><a href="paginaInicioEdita.do?idsite=<bean:write name="MVS_microsite" property="id"/>"><bean:message key="index.inicio.home" /></a></li>
 					<logic:equal name="puedoeditar" value="1">
 					<li><a href="microUsuarios.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.usuarios" /></a></li>
-					</logic:equal>	
+					</logic:equal>
 				</ul>
 				
 			</div>

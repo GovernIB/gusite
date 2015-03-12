@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
+import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -23,10 +24,6 @@ import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.utils.General;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
-import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
-import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
 import es.caib.gusite.utilities.rolsacAPI.APIUtil;
 import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
@@ -100,6 +97,8 @@ public class microEditaAction extends BaseAction  {
 
     			Long idmicrosite = new Long(request.getParameter("idsite"));
             	micrositeBean = micrositeDelegate.obtenerMicrosite(idmicrosite);
+                TemaFrontDelegate temaFrontDelegate = DelegateUtil.getTemaFrontDelegate();
+                List<TemaFront> temasFront = temaFrontDelegate.listarTemaFront();
 
                 if (!(Base.hasMicrositePermiso(request, idmicrosite))) {
                 	
@@ -116,6 +115,7 @@ public class microEditaAction extends BaseAction  {
             	//Guardem les dades del Microsite en el Formulari
                 setBeantoForm(micrositeBean, microForm);
 
+                request.getSession().setAttribute("MVS_temas", temasFront);
                	request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
                	               	
                	Base.micrositeRefreshByBean(micrositeBean, request);
@@ -285,6 +285,11 @@ public class microEditaAction extends BaseAction  {
     	micrositeBean.setIdiomas((String[]) microForm.get("idiomas"));
     	micrositeBean.setFuncionalidadTraduccion();
     	micrositeBean.setServiciosOfrecidos((String[]) microForm.get("servofr"));
+        Long idTema = (Long) microForm.get("tema");
+        micrositeBean.setTema(DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idTema));
+
+        String desarrollo = ((String) microForm.get("desarrollo")).equals("") ? "N" : "S";
+        micrositeBean.setDesarrollo(desarrollo);
     	
         FormFile imagen1 = (FormFile) microForm.get("imagenPrincipal");
         
@@ -454,6 +459,8 @@ public class microEditaAction extends BaseAction  {
         microForm.set("uri", micrositeBean.getUri());
         microForm.set("versio", micrositeBean.getVersio());
 		microForm.set("acceso", micrositeBean.getAcceso());
+        microForm.set("desarrollo", micrositeBean.getDesarrollo());
+        microForm.set("tema", micrositeBean.getTema().getId());
 
     	microForm.set("idiomas", micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
     	micrositeBean.setFuncionalidadTraduccion();

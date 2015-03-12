@@ -10,17 +10,26 @@
         	 <bean:define id="puedoeditar" value="1" />
     	 </logic:equal>
      </logic:present>
-          
+
 	<!-- menu -->
-	<ul id="menu">
-		<li><a href="index.do"><bean:message key="menu2.gestion.microsites"/></a></li>
+    <table id="cMenu" cellpadding="0" cellspacing="0">
+        <tbody><tr>
+		<td><a href="index.do"><bean:message key="menu2.gestion.microsites"/></a></td>
 		<logic:equal name="puedoeditar" value="1">
-			<li><a href="usuarios.do"><bean:message key="menu2.gestion.usuarios"/></a></li>
-			<li><a href="consola.do?accion=consola"><bean:message key="log.consola" /></a></li>
-			<li><a href="importar.do?accion=importar"><bean:message key="boton.importar" /></a></li>
-			<li><a href="archivo.do?accion=exportarArchivosMicrosites">Exportar archivos de todos los Microsites</a></li>
-			<li><a href="auditorias.do?accion=listarAuditorias"><bean:message key="auditoria.consultar" /></a></li>
+			<td><a href="usuarios.do"><bean:message key="menu2.gestion.usuarios"/></a></td>
+            <td><a href="temaFront.do"><bean:message key="menu2.gestion.temes"/></a></td>
+            <td><a href="#" onmouseup="voreMenu(this, event, 'mFerramentes');"><bean:message key="menu.ferramentes" /></a></td>
 		</logic:equal>
-	</ul>
+        </tr></tbody>
+    </table>
 	<!-- /menu -->
+    <!-- submenu -->
+    <div id="mFerramentes" class="submenu">
+        <p><bean:message key="menu.ferramentes" /></p>
+        <a href="importar.do?accion=importar"><bean:message key="boton.importar" /></a>
+        <a href="archivo.do?accion=exportarArchivosMicrosites">Exportar archivos de todos los Microsites</a>
+        <a href="auditorias.do?accion=listarAuditorias"><bean:message key="auditoria.consultar" /></a>
+    </div>
+    <!-- /submenu -->
+
 			

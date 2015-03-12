@@ -39,11 +39,11 @@ public class ArchivoTemaFront extends AuditableModel implements Auditable,
 	@Column(name = "ARC_CODI", unique = true, nullable = false, precision = 22, scale = 0)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ARC_FTECOD", nullable = false)
 	private TemaFront tema;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ARC_DOCCOD")
 	private Archivo archivo;
 

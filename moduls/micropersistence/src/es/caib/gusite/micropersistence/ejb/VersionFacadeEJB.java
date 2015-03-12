@@ -9,6 +9,7 @@ import org.hibernate.HibernateException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Version;
+import org.hibernate.Session;
 
 /**
  * SessionBean para consultar Version.
@@ -44,10 +45,13 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 *                 } "
 	 */
 	public Version crearVersion(Version instance) {
+
 		log.debug("persisting Version instance");
+        Session session = this.getSession();
 		try {
-			Version ret = (Version) this.getSession().get(Version.class,
-					this.getSession().save(instance));
+			Version ret = (Version) session.get(Version.class, session.save(instance));
+            session.flush();
+            session.close();
 			this.grabarAuditoria(ret, Auditoria.CREAR);
 			return ret;
 
@@ -67,11 +71,15 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public void actualizarVersion(Version instance) {
+
 		log.debug("updating Version instance");
+        Session session = this.getSession();
 		try {
 			// Now update the data.
-			this.getSession().update(instance);
+            session.update(instance);
+            session.close();
 			this.grabarAuditoria(instance, Auditoria.MODIFICAR);
+
 		} catch (HibernateException e) {
 			log.error("update failed", e);
 			throw new EJBException(e);
@@ -87,10 +95,14 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * @ejb.permission role-name="${role.system},${role.admin}"
 	 */
 	public void borrarVersion(Version instance) {
+
 		log.debug("deleting Version instance");
+        Session session = this.getSession();
 		try {
-			this.getSession().delete(instance);
+            session.delete(instance);
+            session.close();
 			this.grabarAuditoria(instance, Auditoria.ELIMINAR);
+
 		} catch (HibernateException e) {
 			log.error("delete failed", e);
 			throw new EJBException(e);
@@ -121,7 +133,6 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 			log.error("get failed", re);
 			throw new EJBException(re);
 		}
-
 	}
 
 	/**

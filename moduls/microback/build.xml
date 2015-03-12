@@ -195,6 +195,7 @@
 	    	<lib dir="${lib.dir}/webcaib">
 	    		<include name="commons-betwixt-0.8.jar"/>
 	    		<include name="quartz-1.8.5.jar"/>
+                <include name="json.jar"/>
 	    		<!--<include name="struts.jar"/>-->
 	        </lib>
 

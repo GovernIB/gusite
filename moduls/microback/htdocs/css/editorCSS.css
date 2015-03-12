@@ -1,0 +1,48 @@
+body {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#formulario {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#description {
+    position: absolute;
+    width: 500px;
+    height: 300px;
+}
+
+#description.fullScreen {
+    height: auto;
+    width: auto;
+    border: 0;
+    margin: 0;
+    position: fixed !important;
+    top: 250px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.fullScreen {
+    overflow: hidden
+}
+
+.btnFullScreen {
+    color: black;
+    cursor: pointer;
+    font: 10px arial;
+    padding: 5px;
+    text-align: center;
+    border: medium solid transparent;
+    display: inline-block;
+}
+
+.btnFullScreen:hover {
+    border: medium solid lightgray;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 12px 0 lightblue;
+}

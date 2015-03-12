@@ -229,7 +229,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	/**
 	 * Tema a aplicar
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MIC_FTECOD")
 	private TemaFront tema;
 

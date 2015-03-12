@@ -1,6 +1,5 @@
 package es.caib.gusite.micropersistence.delegate;
 
-
 import java.util.List;
 
 import es.caib.gusite.micromodel.PersonalizacionPlantilla;
@@ -11,7 +10,6 @@ import javax.naming.NamingException;
 import es.caib.gusite.micropersistence.intf.PersonalizacionPlantillaFacade;
 import es.caib.gusite.micropersistence.intf.PersonalizacionPlantillaFacadeHome;
 import es.caib.gusite.micropersistence.util.PersonalizacionPlantillaFacadeUtil;
-
 
 /**
  * Delegate para manipular PersonalizacionPlantilla.
@@ -51,7 +49,7 @@ public class PersonalizacionPlantillaDelegate implements StatelessDelegate{
      */
     public void borrarPersonalizacionPlantilla(PersonalizacionPlantilla instance) throws DelegateException {
         try {
-        	getFacade().actualizarPersonalizacionPlantilla(instance);
+        	getFacade().borrarPersonalizacionPlantilla(instance);
         }
         catch (RemoteException re) {
 			throw new DelegateException(re);
@@ -101,6 +99,17 @@ public class PersonalizacionPlantillaDelegate implements StatelessDelegate{
 		}
     }
 
+    /**
+     * Busca PersonalizacionPlantilla por searchByMicrosite
+     */
+    public List<PersonalizacionPlantilla> searchByMicrosite(Long microsite, String ordre, Integer pagina, Integer max) throws DelegateException {
+        try {
+            return getFacade().searchByMicrosite(microsite, ordre, pagina, max);
+        }
+        catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
 
     /**
      * Busca PersonalizacionPlantilla por searchByMicrosite
@@ -116,7 +125,41 @@ public class PersonalizacionPlantillaDelegate implements StatelessDelegate{
 		}
     }
 
+    /**
+     * Busca PersonalizacionPlantilla por searchByPlantilla
+     */
+    public List<PersonalizacionPlantilla> searchByTema(Long tema) throws DelegateException {
+        try {
+            return getFacade().searchByTema(tema);
+        }
+        catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
 
+    /**
+     * Eliminar una lista de plantillas
+     */
+    public void borrarPersonalizacionPlantillas(List<Long> ids) throws DelegateException {
+        try {
+            getFacade().borrarPersonalizacionPlantillas(ids);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
+    /**
+     * Contar PersonalizacionPlantilla por Microsite
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Long countByMicrosite(Long microsite) throws DelegateException {
+        try {
+            return getFacade().countByMicrosite(microsite);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
     /* ========================================================= */
     /* ======================== REFERENCIA AL FACADE  ========== */
     /* ========================================================= */

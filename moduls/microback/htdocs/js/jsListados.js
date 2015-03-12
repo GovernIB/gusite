@@ -171,5 +171,32 @@
 	    accFormLista.submit();
 	
 	}
-	
-		
+
+    function borraVariosArchivos() {
+        var accFormLista = document.getElementById('accFormularioLista');
+        var nselec = 0;
+
+        if (accFormLista.seleccionados.length == undefined) {
+            if (accFormLista.seleccionados.checked) {
+                nselec = 1;
+            }
+        } else {
+            for (var i = 0; i < accFormLista.seleccionados.length; i++) {
+                if (accFormLista.seleccionados[i].checked) {
+                    nselec++;
+                }
+            }
+        }
+
+        if (nselec == 0) {
+            alert (alert1);
+            return;
+        }
+
+        if (!confirm(alert2)) {
+            return;
+        }
+
+        accFormLista.accion.value='borrarArchivos';
+        accFormLista.submit();
+    }
