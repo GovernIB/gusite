@@ -208,9 +208,10 @@
 		var accidmicro = document.getElementById('idmicro');
 		var acciduser = document.getElementById('iduser').value;
 	    var url = 'microUsuarios.do?accion=nuevomicro&idmicro=' + accidmicro.value + '&iduser=' + acciduser;
-	    
-	    document.location = url;
-	    
+
+        if (accidmicro.value !== "") {
+            document.location = url;
+        }
 	}
 	
 	function borravariosmicro() {
