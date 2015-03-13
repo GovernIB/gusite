@@ -29,6 +29,8 @@
        
        <!--  Fijar a S, para habilitar caché de templates thymeleaf en producción -->
        es.caib.gusite.front.templateCaching=N
+
+        es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
        
     </attribute>
 
