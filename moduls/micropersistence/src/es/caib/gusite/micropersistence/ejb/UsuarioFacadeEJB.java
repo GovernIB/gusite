@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -215,6 +216,12 @@ public abstract class UsuarioFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
+            String sql = "delete from UsuarioPropietarioMicrosite upm";
+            sql += " where upm.pk.idusuario = :id";
+            Query query = session.createQuery(sql);
+            query.setParameter("id", id);
+            query.executeUpdate();
+
 			Usuario usuario = (Usuario) session.get(Usuario.class, id);
 			if (!this.userIs(usuario.getPerfil())) {
 				throw new SecurityException(
