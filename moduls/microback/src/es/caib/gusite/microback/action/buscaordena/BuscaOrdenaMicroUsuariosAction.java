@@ -157,7 +157,9 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 			uaCriteria.setIdioma("ca");
 
 			UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-			mic.setNombreUA(ua.getNombre());
+            if (ua != null) {
+                mic.setNombreUA(ua.getNombre());
+            }
 
 			// FIXME amartin: esto hace lentísimo el proceso de carga de los microsites asignados al usuario
 			// si éste posee un número elevado de los mismos.

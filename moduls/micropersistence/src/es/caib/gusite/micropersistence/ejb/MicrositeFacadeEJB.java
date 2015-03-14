@@ -248,9 +248,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		try {
 			Criteria criteri = session
 					.createCriteria(UsuarioPropietarioMicrosite.class);
-			criteri.add(Restrictions.eq("idmicrosite", upm.getPk()
+			criteri.add(Restrictions.eq("pk.idmicrosite", upm.getPk()
 					.getIdmicrosite()));
-			criteri.add(Restrictions.eq("idusuario", upm.getPk().getIdusuario()));
+			criteri.add(Restrictions.eq("pk.idusuario", upm.getPk().getIdusuario()));
 			UsuarioPropietarioMicrosite upm2 = (UsuarioPropietarioMicrosite) criteri
 					.uniqueResult();
 
