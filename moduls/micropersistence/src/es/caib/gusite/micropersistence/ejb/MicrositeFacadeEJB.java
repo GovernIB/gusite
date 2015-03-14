@@ -980,11 +980,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			String hql = "select usuario ";
-			hql += " from UsuarioPropietarioMicrosite upm, Usuario usuario ";
-			hql += " where upm.idmicrosite = "
-					+ idmicrosite.longValue()
-					+ " and  usuario.id = upm.idusuario order by usuario.username";
+			String hql = "select usuario";
+			hql += " from UsuarioPropietarioMicrosite upm, Usuario usuario";
+			hql += " where upm.pk.idmicrosite = ";
+            hql += idmicrosite.longValue();
+            hql += " and  usuario.id = upm.pk.idusuario order by usuario.username";
 
 			Query query = session.createQuery(hql);
 			return query.list();
