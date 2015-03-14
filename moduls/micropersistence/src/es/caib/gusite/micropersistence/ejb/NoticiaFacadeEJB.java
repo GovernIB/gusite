@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -38,11 +39,6 @@ import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
-import es.caib.gusite.micropersistence.delegate.BuscarElementosParameter;
-import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
-import es.caib.gusite.micropersistence.delegate.NoticiaServiceItf;
 import es.caib.gusite.micropersistence.intf.DominioInterface;
 
 /**
@@ -153,6 +149,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			if (nuevo) {
 				for (TraduccionNoticia trad : listaTraducciones.values()) {
 					trad.getId().setCodigoNoticia(noticia.getId());
+                    if (trad.getDocu() != null) {
+                        DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocu());
+                    }
 					session.saveOrUpdate(trad);
 				}
 				session.flush();
@@ -169,7 +168,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
-		} finally {
+		} catch (DelegateException e) {
+            throw new EJBException(e);
+        } finally {
 			this.close(session);
 		}
 	}

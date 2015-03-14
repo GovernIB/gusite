@@ -207,6 +207,7 @@ public class noticiasEditaAction extends BaseAction
             TraduccionNoticia traduccionNoticiaBean = (TraduccionNoticia) noticiaBean.getTraduccion("" + lenguajes.get(i));
             TraduccionNoticia traduccionNoticiaForm = (TraduccionNoticia) traducciones.get(i);
             if (traduccionNoticiaBean != null) {
+                traduccionNoticiaBean.getDocu().setIdmicrosite(noticiaBean.getIdmicrosite());
                 traduccionNoticiaForm.setDocu(traduccionNoticiaBean.getDocu());
                 traducciones.set(i, traduccionNoticiaForm);
             }
@@ -253,7 +254,7 @@ public class noticiasEditaAction extends BaseAction
             TraduccionNoticia traduccion = (TraduccionNoticia) noticiaBean.getTraduccion("" + lenguajes.get(i));
             if (traduccion != null) {
                 if (archivoValido(ficheros[i])) {
-                    traduccion.setDocu(populateArchivo(traduccion.getDocu(), ficheros[i], null, null));
+                    traduccion.setDocu(populateArchivo(traduccion.getDocu(), ficheros[i], noticiaBean.getIdmicrosite(), null));
                 } else if (ficherosbor[i]) {
                     traduccion.setDocu(null);
                 }

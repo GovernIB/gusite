@@ -186,18 +186,18 @@
 	<target name="assemble02GUSITE" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
 				
 		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR -->
-		<sql
-			driver="org.sqlite.JDBC"
-		    url="jdbc:sqlite:.svn/wc.db"
-		    userid=""
-		    password=""
-			classpath="lib/sqlite-jdbc-3.7.15-M1.jar" 
-			escapeprocessing="false"
-			print="yes" expandProperties="true" showheaders="false" showtrailers="false" output="svnversion.properties">
-			<![CDATA[
-				SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;
-			]]>
-		</sql>
+		<!--<sql-->
+			<!--driver="org.sqlite.JDBC"-->
+		    <!--url="jdbc:sqlite:.svn/wc.db"-->
+		    <!--userid=""-->
+		    <!--password=""-->
+			<!--classpath="lib/sqlite-jdbc-3.7.15-M1.jar" -->
+			<!--escapeprocessing="false"-->
+			<!--print="yes" expandProperties="true" showheaders="false" showtrailers="false" output="svnversion.properties">-->
+			<!--<![CDATA[-->
+				<!--SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;-->
+			<!--]]>-->
+		<!--</sql>-->
 		
 		<!-- Obtenemos la revisión SVN del proyecto desde el archivo de propiedades generado justo antes -->
 		<property file="svnversion.properties"/>
@@ -209,7 +209,7 @@
 				<attribute name="Version" value="${project.version}"/>
 				<attribute name="Built-By" value="${project.author}"/>
 				<attribute name="Build-Jdk" value="${java.version}"/>
-				<attribute name="SVN-revision" value="${svn.revision}"/>
+				<!--<attribute name="SVN-revision" value="${svn.revision}"/>-->
 			</manifest>
 
 			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
