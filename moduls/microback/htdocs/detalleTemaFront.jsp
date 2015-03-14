@@ -18,6 +18,8 @@
 
     <!-- Javascript -->
     <script type="text/javascript" src="js/jquery/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="js/funciones.js"></script>
+    <script type="text/javascript" src="moduls/funcions.js"></script>
     <script type="text/javascript" src="js/subMenus.js"></script>
     <script type="text/javascript" src="js/jsListados.js"></script>
     <script type="text/javascript" src="js/guardarTemaPlantilla.js"></script>
@@ -65,19 +67,36 @@
 
         <input type="hidden" value='<bean:write name="TemaFrontForm" property="id"/>' />
         <table cellpadding="0" cellspacing="0" class="edicio">
-            <tr>
+            <tr class="par">
                 <td class="etiqueta"><bean:message key="frontTemas.edicion.titulo" /></td>
                 <td>
                     <html:text property="nombre" maxlength="16" />
                 </td>
             </tr>
-            <tr class="par">
+            <tr>
                 <td class="etiqueta"><bean:message key="frontTemas.edicion.padre" /></td>
                 <td>
                     <html:select property="temaPadre">
                         <option value="" selected>Please select an option...</option>
                         <html:options collection="temasFrontPadres" labelProperty="nombre" property="id"/>
                     </html:select>
+                </td>
+            </tr>
+            <tr class="par">
+                <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
+                <td>
+                    <div id="microManagedFileCSS">
+                        <html:hidden property="cssId" />
+                        <logic:notEmpty name="TemaFrontForm" property="cssNom">
+                            <html:text property="cssNom"/>
+                            <button type="button" title="<bean:message key="boton.eliminar" />" onclick="borraFile(this,'css','cssId','cssBor','cssNom');"><img src="imgs/botons/borrar.gif" alt="<bean:message key="boton.eliminar" />" /></button>
+                            <%--<button type="button" title="<bean:message key="op.12" />" onclick="abrirDoc('<bean:write name="TemaFrontForm" property="cssId"/>');"><img src="imgs/botons/previsualitzar.gif" alt="<bean:message key="op.12" />" /></button>--%>
+                        </logic:notEmpty>
+                    </div>
+                    <logic:empty name="TemaFrontForm" property="cssNom">
+                        <html:file property="css" size="30"/>
+                        &nbsp; - &nbsp;<button type="button" title="<bean:message key="micro.descargaestilo" />" onclick="abrirWindow('/sacmicrofront/css/estilos01_blau.css');"><img src="imgs/botons/css_descargar.gif" alt="" /></button>
+                    </logic:empty>
                 </td>
             </tr>
         </table>

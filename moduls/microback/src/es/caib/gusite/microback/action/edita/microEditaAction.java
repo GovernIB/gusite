@@ -460,7 +460,9 @@ public class microEditaAction extends BaseAction  {
         microForm.set("versio", micrositeBean.getVersio());
 		microForm.set("acceso", micrositeBean.getAcceso());
         microForm.set("desarrollo", micrositeBean.getDesarrollo());
-        microForm.set("tema", micrositeBean.getTema().getId());
+        if (micrositeBean.getTema() != null) {
+            microForm.set("tema", micrositeBean.getTema().getId());
+        }
 
     	microForm.set("idiomas", micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
     	micrositeBean.setFuncionalidadTraduccion();

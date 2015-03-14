@@ -81,7 +81,7 @@
                 </button>
             </span>
             <span class="grup">
-                <button class="btnGuardar" type="submit" title='<bean:message key="operacion.guardar"/>'>
+                <button class="btnGuardar" type="button" title='<bean:message key="operacion.guardar"/>'>
                     <img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
                 </button>
             </span>

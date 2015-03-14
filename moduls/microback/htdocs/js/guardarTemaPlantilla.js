@@ -4,9 +4,14 @@
 $(document).ready(function () {
 
     $(".btnGuardar").click(function() {
-        var form = $(".accion");
-        form.val("guardar");
-        form.submit();
+        if ($("input[name=titulo]").val() !== "") {
+            var form = $(".accion");
+            form.val("guardar");
+            form.submit();
+            document.getElementById("accFormulario").submit()
+        } else {
+            alert("Falta títol.")
+        }
     });
 
     $("#tipus").change(function () {

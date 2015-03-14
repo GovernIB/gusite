@@ -81,6 +81,10 @@
         <form-property name="archivos" type="java.util.ArrayList"/>
         <form-property name="seleccionados" type="java.lang.String[]"/>
         <form-property name="archi" type="org.apache.struts.upload.FormFile"/>
+        <form-property name="css" type="org.apache.struts.upload.FormFile"/>
+        <form-property name="cssId"  type="java.lang.Long"/>
+        <form-property name="cssNom" type="java.lang.String"/>
+        <form-property name="cssBor" type="boolean" initial="false"/>
         <form-property name="idArxiu" type="java.lang.Long"/>
         <form-property name="operacion" type="java.lang.String"/>
     </form-bean>

@@ -55,7 +55,17 @@
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mConfiguracio');"><bean:message key="menu.configuracion" /></a></td>
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mContinguts');"><bean:message key="menu.contenidos" /></a></td>
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mRecursos');"><bean:message key="menu.recursos" /></a></td>
-			<td><a href="#" onmouseup="voreMenu(this, event, 'mEstadistiques');"><bean:message key="menu.estadisticas" /></a></td>
+            <logic:notEqual name="MVS_microsite" property="versio" value="v5">
+                <td><a href="#" onmouseup="voreMenu(this, event, 'mEstadistiques');"><bean:message key="menu.estadisticas" /></a></td>
+            </logic:notEqual>
+            <logic:equal name="MVS_microsite" property="versio" value="v5">
+                <logic:present name="MVS_microsite" property="analytics">
+                    <td><a href="<bean:write name="MVS_microsite" property="analytics"/>"><bean:message key="menu.analytics" /></a></td>
+                </logic:present>
+                <logic:notPresent name="MVS_microsite" property="analytics">
+                    <td><a href="#" onmouseup="alert('<bean:message key="menu.noAnalytics" />')"><bean:message key="menu.analytics" /></a></td>
+                </logic:notPresent>
+            </logic:equal>
 			<logic:equal name="puedoeditar" value="1">
 				<td><a href="#" onmouseup="voreMenu(this, event, 'mFerramentes');"><bean:message key="menu.ferramentes" /></a></td>
 			</logic:equal>
@@ -96,18 +106,18 @@
 					</logic:iterate>
 		</logic:present>
 	</div>
-	<div id="mEstadistiques" class="submenu">
-		<p><bean:message key="menu.estadisticas" /></p>
-		<logic:present name="MVS_microsite">			
-					<a href="estadisticagen.do" target="escritori"><bean:message key="menu.estadisticas.gen" /></a>
-					<a href="estadisticaind.do" target="escritori"><bean:message key="menu.estadisticas.ind" /></a>
-						<logic:iterate id="i" name="MVS_menugenerico" indexId="indice">
-							<logic:equal name="i" property="value" value="Encuestas">
-								<a href="estadisticaenc.do" target="escritori"><bean:message key="index.inicio.statenc" /></a>
-							</logic:equal>
-						</logic:iterate>		
-		</logic:present>		
-	</div>
+    <div id="mEstadistiques" class="submenu">
+        <p><bean:message key="menu.estadisticas" /></p>
+        <logic:present name="MVS_microsite">
+            <a href="estadisticagen.do" target="escritori"><bean:message key="menu.estadisticas.gen" /></a>
+            <a href="estadisticaind.do" target="escritori"><bean:message key="menu.estadisticas.ind" /></a>
+            <logic:iterate id="i" name="MVS_menugenerico" indexId="indice">
+                <logic:equal name="i" property="value" value="Encuestas">
+                    <a href="estadisticaenc.do" target="escritori"><bean:message key="index.inicio.statenc" /></a>
+                </logic:equal>
+            </logic:iterate>
+        </logic:present>
+    </div>
 	<div id="mFerramentes" class="submenu">
 		<logic:present name="MVS_microsite">
 			<logic:equal name="puedoeditar" value="1">

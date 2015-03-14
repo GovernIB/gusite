@@ -54,7 +54,7 @@ public class TemaFrontEditaAction extends BaseAction {
         }
 
         cargarPerTemaFront(request, temaFrontForm);
-        List<TemaFront> temaFronts = temaFrontDelegate.listarTemaFront();
+        List<TemaFront> temaFronts = temaFrontDelegate.listarTemaFrontPadres();
         request.setAttribute("temasFrontPadres", temaFronts);
         return mapping.findForward("detalle");
     }
@@ -168,17 +168,42 @@ public class TemaFrontEditaAction extends BaseAction {
         }
 
         if (temaFront.getCss() != null) {
-            temaFrontForm.set("css", temaFront.getCss());
+//            temaFrontForm.set("css", temaFront.getCss());
+            temaFrontForm.set("cssId", temaFront.getCss().getId());
+            temaFrontForm.set("cssNom", temaFront.getCss().getNombre());
         }
     }
 
     private TemaFront setFormToBean(TemaFrontForm temaFrontForm, TemaFront temaFront) throws DelegateException {
 
         temaFront.setNombre((String) temaFrontForm.get("nombre"));
+        Archivo archivo = subirCSS(temaFrontForm);
+        temaFront.setCss(archivo);
         Long id = (Long) temaFrontForm.get("temaPadre");
         TemaFront temaPadre = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(id);
         temaFront.setTemaPadre(temaPadre);
 
         return temaFront;
     }
+
+    private Archivo subirCSS(TemaFrontForm temaFrontForm) throws DelegateException {
+
+        Archivo archivo = null;
+        if (temaFrontForm.get("css") != null) {
+            FormFile file = (FormFile) temaFrontForm.get("css");
+            if (archivoValido(file)) {
+                try {
+                    archivo = populateArchivo(null, file, null, null);
+                } catch (IOException e) {
+                    archivo = null;
+                }
+            }
+        }
+        if (archivo.getIdmicrosite() == null) {
+            archivo.setIdmicrosite(new Long(0));
+        }
+        DelegateUtil.getArchivoDelegate().insertarArchivo(archivo);
+        return archivo;
+    }
+
 }

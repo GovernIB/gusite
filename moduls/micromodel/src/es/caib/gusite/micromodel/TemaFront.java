@@ -41,7 +41,7 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	/**
 	 * CSS General del tema
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_CSS")
 	private Archivo css;
 
