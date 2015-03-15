@@ -207,8 +207,10 @@ public class noticiasEditaAction extends BaseAction
             TraduccionNoticia traduccionNoticiaBean = (TraduccionNoticia) noticiaBean.getTraduccion("" + lenguajes.get(i));
             TraduccionNoticia traduccionNoticiaForm = (TraduccionNoticia) traducciones.get(i);
             if (traduccionNoticiaBean != null) {
-                traduccionNoticiaBean.getDocu().setIdmicrosite(noticiaBean.getIdmicrosite());
-                traduccionNoticiaForm.setDocu(traduccionNoticiaBean.getDocu());
+                if (traduccionNoticiaBean.getDocu() != null) {
+                    traduccionNoticiaBean.getDocu().setIdmicrosite(noticiaBean.getIdmicrosite());
+                    traduccionNoticiaForm.setDocu(traduccionNoticiaBean.getDocu());
+                }
                 traducciones.set(i, traduccionNoticiaForm);
             }
         }

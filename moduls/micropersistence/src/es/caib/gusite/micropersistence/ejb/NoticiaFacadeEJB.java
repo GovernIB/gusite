@@ -11,7 +11,7 @@ import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
-
+import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,13 +32,6 @@ import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.IndexEncontrado;
 import es.caib.gusite.lucene.model.IndexResultados;
 import es.caib.gusite.lucene.model.ModelFilterObject;
-import es.caib.gusite.micromodel.Archivo;
-import es.caib.gusite.micromodel.Auditoria;
-import es.caib.gusite.micromodel.Idioma;
-import es.caib.gusite.micromodel.IndexObject;
-import es.caib.gusite.micromodel.Noticia;
-import es.caib.gusite.micromodel.TraduccionNoticia;
-import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.intf.DominioInterface;
 
 /**
@@ -129,13 +122,12 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 		Session session = this.getSession();
 		boolean nuevo = (noticia.getId() == null) ? true : false;
+        Transaction tx = session.beginTransaction();
 		try {
-			Transaction tx = session.beginTransaction();
 			Map<String, TraduccionNoticia> listaTraducciones = new HashMap<String, TraduccionNoticia>();
 
 			if (nuevo) {
-				Iterator<TraduccionNoticia> it = noticia.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionNoticia> it = noticia.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionNoticia trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
@@ -159,7 +151,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			}
 
 			tx.commit();
-			this.close(session);
+			session.close();
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(noticia, op);
@@ -167,12 +159,14 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			return noticia.getId();
 
 		} catch (HibernateException he) {
+            tx.rollback();
+            session.close();
 			throw new EJBException(he);
 		} catch (DelegateException e) {
+            tx.rollback();
+            session.close();
             throw new EJBException(e);
-        } finally {
-			this.close(session);
-		}
+        }
 	}
 
 	/**
@@ -249,12 +243,10 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		Session session = this.getSession();
 		try {
 			Noticia noticia = (Noticia) session.get(Noticia.class, id);
-			Noticia newnoticia = this.clonar4Hibernate(noticia);
+            Noticia newnoticia = this.clonar4Hibernate(noticia);
+            session.close();
+            this.grabarNoticia(newnoticia);
 
-			Transaction tx = session.beginTransaction();
-			session.saveOrUpdate(newnoticia);
-			session.flush();
-			tx.commit();
 			// indexInsertaNoticia(newnoticia, null);
 			return newnoticia.getId();
 
@@ -672,16 +664,19 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			if (newnoticia.getImagen() != null) {
 				newnoticia.getImagen().setId(null);
 			}
-			newnoticia.setTraduccionMap(noticia.getTraduccionMap());
-			Iterator<?> iter = newnoticia.getTraduccionMap().keySet()
-					.iterator();
+
+            Map<String, TraduccionNoticia> traducciones = new HashMap();
+            for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
+                TraduccionNoticia traduccionNoticia = clonarTraduccion(trad);
+                traduccionNoticia.getId().setCodigoIdioma(trad.getId().getCodigoIdioma());
+                traducciones.put(trad.getId().getCodigoIdioma(), traduccionNoticia);
+            }
+            newnoticia.setTraduccionMap(traducciones);
+
+			Iterator<?> iter = newnoticia.getTraduccionMap().keySet().iterator();
 			while (iter.hasNext()) {
 				String key = (String) iter.next();
-				TraduccionNoticia tranot = (TraduccionNoticia) newnoticia
-						.getTraduccionMap().get(key);
-				if ((tranot != null) && (tranot.getDocu() != null)) {
-					tranot.getDocu().setId(null);
-				}
+				TraduccionNoticia tranot = (TraduccionNoticia) newnoticia.getTraduccionMap().get(key);
 				if (tranot == null) {
 					tranot = new TraduccionNoticia();
 					tranot.setTitulo("");
@@ -695,6 +690,61 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 		return newnoticia;
 	}
+
+    private TraduccionNoticia clonarTraduccion(TraduccionNoticia traduccionNoticia) {
+
+        TraduccionNoticia tradNotiNew = new TraduccionNoticia();
+        if (traduccionNoticia.getDocu() != null) {
+            tradNotiNew.setDocu(clonarArchivo(traduccionNoticia.getDocu().getId()));
+        }
+        tradNotiNew.setUri(generarNuevaUri(traduccionNoticia.getId().getCodigoIdioma(), traduccionNoticia.getUri(), 0));
+        tradNotiNew.setFuente(traduccionNoticia.getFuente());
+        tradNotiNew.setLaurl(traduccionNoticia.getLaurl());
+        tradNotiNew.setSubtitulo(traduccionNoticia.getSubtitulo());
+        tradNotiNew.setTexto(traduccionNoticia.getTexto());
+        tradNotiNew.setTitulo(traduccionNoticia.getTitulo());
+        tradNotiNew.setUrlnom(traduccionNoticia.getUrlnom());
+        tradNotiNew.setId(new TraduccionNoticiaPK());
+
+        return tradNotiNew;
+    }
+
+    private String generarNuevaUri(String idioma, String uri, int count) {
+
+        String newUri = uri.concat("_").concat(String.valueOf(count));
+        Noticia noticia = this.obtenerNoticiaDesdeUri(idioma, newUri);
+        while (noticia != null) {
+            count++;
+            newUri = uri.concat("_").concat(String.valueOf(count));
+            noticia = this.obtenerNoticiaDesdeUri(idioma, newUri);
+        }
+
+        return newUri;
+    }
+
+    private Archivo clonarArchivo(Long id) {
+
+        Archivo archivo;
+        Archivo nuevoArchivo = new Archivo();
+        try {
+            archivo = DelegateUtil.getArchivoDelegate().obtenerArchivo(id);
+
+            nuevoArchivo.setId(null);
+            nuevoArchivo.setMime(archivo.getMime());
+            nuevoArchivo.setNombre(archivo.getNombre());
+            nuevoArchivo.setPeso(archivo.getPeso());
+            nuevoArchivo.setDatos(archivo.getDatos());
+            nuevoArchivo.setPagina(archivo.getPagina());
+            nuevoArchivo.setIdmicrosite(archivo.getIdmicrosite());
+            nuevoArchivo.setTraduccionMap(archivo.getTraduccionMap());
+            nuevoArchivo.setIdi(archivo.getIdi());
+
+        } catch (DelegateException e) {
+            nuevoArchivo = null;
+        }
+
+        return nuevoArchivo;
+    }
 
 	/***************************************************************************************/
 	/******************* INDEXACION ************************************/
