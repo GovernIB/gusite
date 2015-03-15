@@ -55,6 +55,7 @@
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mConfiguracio');"><bean:message key="menu.configuracion" /></a></td>
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mContinguts');"><bean:message key="menu.contenidos" /></a></td>
 			<td><a href="#" onmouseup="voreMenu(this, event, 'mRecursos');"><bean:message key="menu.recursos" /></a></td>
+            <logic:present name="MVS_microsite">
             <logic:notEqual name="MVS_microsite" property="versio" value="v5">
                 <td><a href="#" onmouseup="voreMenu(this, event, 'mEstadistiques');"><bean:message key="menu.estadisticas" /></a></td>
             </logic:notEqual>
@@ -66,6 +67,7 @@
                     <td><a href="#" onmouseup="alert('<bean:message key="menu.noAnalytics" />')"><bean:message key="menu.analytics" /></a></td>
                 </logic:notPresent>
             </logic:equal>
+            </logic:present>
 			<logic:equal name="puedoeditar" value="1">
 				<td><a href="#" onmouseup="voreMenu(this, event, 'mFerramentes');"><bean:message key="menu.ferramentes" /></a></td>
 			</logic:equal>

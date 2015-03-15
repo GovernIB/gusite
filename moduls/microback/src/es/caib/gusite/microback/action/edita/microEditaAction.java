@@ -55,6 +55,7 @@ public class microEditaAction extends BaseAction  {
 
 		TiposervicioDelegate tipoServicioDelegate = DelegateUtil.getTiposervicioDelegate();
 		MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
+        TemaFrontDelegate temaFrontDelegate = DelegateUtil.getTemaFrontDelegate();
 		
 		String[] roles = new String[]{"gussystem", "gusadmin", "gusoper", "gussuper"};
 		Microsite micrositeBean = new Microsite();
@@ -76,6 +77,8 @@ public class microEditaAction extends BaseAction  {
            	micrositeBean.setTiposServicios(tipoServicioDelegate.listarTipos());
             request.getSession().setAttribute("MVS_microsite", micrositeBean);
            	request.getSession().removeAttribute("microForm");
+            List<TemaFront> temasFront = temaFrontDelegate.listarTemaFront();
+            request.getSession().setAttribute("MVS_temas", temasFront);
 
     		return mapping.findForward("general");
     		
@@ -97,7 +100,6 @@ public class microEditaAction extends BaseAction  {
 
     			Long idmicrosite = new Long(request.getParameter("idsite"));
             	micrositeBean = micrositeDelegate.obtenerMicrosite(idmicrosite);
-                TemaFrontDelegate temaFrontDelegate = DelegateUtil.getTemaFrontDelegate();
                 List<TemaFront> temasFront = temaFrontDelegate.listarTemaFront();
 
                 if (!(Base.hasMicrositePermiso(request, idmicrosite))) {
