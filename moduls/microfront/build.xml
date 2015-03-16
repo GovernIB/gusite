@@ -185,8 +185,8 @@
 					lib/spring-web-3.2.0.RELEASE.jar
 					lib/spring-webmvc-3.2.0.RELEASE.jar
             		lib/sac-api-client.jar
-            		lib/slf4j-api-1.6.1.jar
         			lib/wsdl4j.jar
+        			lib/slf4j-jboss-logging.jar
         		"/>
             </manifest>
 

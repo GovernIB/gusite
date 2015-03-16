@@ -54,8 +54,7 @@
 	<classpathentry kind="lib" path="lib/webcaib/pdfbox-app-1.8.4.jar"/>
 	<classpathentry kind="lib" path="lib/webcaib/poi.jar"/>
 	<classpathentry kind="lib" path="lib/webcaib/quartz-1.8.5.jar"/>
-	<classpathentry kind="lib" path="lib/webcaib/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/webcaib/slf4j-simple-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/webcaib/slf4j-jboss-logging.jar"/>
 	<classpathentry kind="lib" path="lib/webcaib/struts.jar"/>
 	<classpathentry kind="lib" path="lib/webcaib/taw.jar"/>
 	<classpathentry kind="lib" path="lib/webcaib/wai.jar"/>

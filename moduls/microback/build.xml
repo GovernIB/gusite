@@ -165,8 +165,7 @@
         			lib/commons-fileupload-1.2.2.jar
         			lib/commons-io-1.3.2.jar
         			lib/commons-lang-2.1.jar
-        			lib/slf4j-api-1.6.1.jar
-        			lib/slf4j-simple-1.6.1.jar
+        			lib/slf4j-jboss-logging.jar
         			lib/antlr-2.7.6.jar 
         			lib/javassist-3.16.1-GA.jar
         			lib/jcommon-1.0.0.jar

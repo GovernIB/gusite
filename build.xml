@@ -267,8 +267,6 @@
 				<include name="jericho-html-2.5.jar" />
 				<include name="jfreechart-1.0.14.jar"/>
 			    <include name="poi.jar" />
-				<include name="slf4j-api-1.6.1.jar" />
-				<include name="slf4j-simple-1.6.1.jar" />
 				<include name="struts.jar" />
 			    <include name="taw.jar" />
 			    <include name="wai.jar" />
