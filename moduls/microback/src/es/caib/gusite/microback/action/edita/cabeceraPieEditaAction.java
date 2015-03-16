@@ -1,14 +1,12 @@
 package es.caib.gusite.microback.action.edita;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.gusite.micromodel.IdiomaMicrosite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -43,8 +41,8 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
  *  
  *  @author Indra
  */
-public class cabeceraPieEditaAction extends BaseAction 
-{
+public class cabeceraPieEditaAction extends BaseAction {
+
     protected static Log log = LogFactory.getLog(cabeceraPieEditaAction.class);
 
 	public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -70,36 +68,34 @@ public class cabeceraPieEditaAction extends BaseAction
         	
     		}
   
-    	} else if((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.guardar"))) {
-	
-	    		//Guardamos los cambios en BBDD
-	    		Microsite micrositeBean = guardar(request, microForm);
-			    
-		        //Al cambiar las propiedades generales es necesario un refresco de Microsite
-	            //Antes se le pedía al usuario que apretara un link
-	           	Base.micrositeRefreshByBean(micrositeBean, request);
-	           	Base.menuRefresh(request);
-	    		
-	    		return mapping.findForward("refresco");
-    	
-    	} else if ((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.traducir"))) { 
-	 			
-	    		//Traducimos el formulario y añadimos los atributos de la petición para Configuración General
-	 			Microsite micrositeBean = traducir (request, microForm, "CABPIE");
+    	} else if ((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.guardar"))) {
 
-				//Al cambiar las propiedades generales es necesario un refresco de Microsite
-	            //Antes se le pedía al usuario que apretara un link
-	           	Base.micrositeRefreshByBean(micrositeBean, request);
-	           	Base.menuRefresh(request);
+            //Guardamos los cambios en BBDD
+	    	Microsite micrositeBean = guardar(request, microForm);
+			    
+		    //Al cambiar las propiedades generales es necesario un refresco de Microsite
+	        //Antes se le pedía al usuario que apretara un link
+	        Base.micrositeRefreshByBean(micrositeBean, request);
+	        Base.menuRefresh(request);
+	    		
+	    	return mapping.findForward("refresco");
+    	
+    	} else if ((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.traducir"))) {
+
+            //Traducimos el formulario y añadimos los atributos de la petición para Configuración General
+	 		Microsite micrositeBean = traducir (request, microForm, "CABPIE");
+
+			//Al cambiar las propiedades generales es necesario un refresco de Microsite
+	        //Antes se le pedía al usuario que apretara un link
+	        Base.micrositeRefreshByBean(micrositeBean, request);
+	        Base.menuRefresh(request);
 	 			
-				return mapping.findForward("cabpie");
-		} 
+			return mapping.findForward("cabpie");
+		}
 
     	 addMessageError(request, "peticion.error");
          return mapping.findForward("info");
- 
     }
-	
     
     /**
      * Método que traduce un formulario de Configuración de Microsite
@@ -108,55 +104,55 @@ public class cabeceraPieEditaAction extends BaseAction
      * @param dForm		formulario dinámico enviado por usuario
      * @throws Exception
      */
-    private Microsite traducir (HttpServletRequest request, microForm microForm, String configuracion) throws Exception  {	
+    private Microsite traducir (HttpServletRequest request, microForm microForm, String configuracion) throws Exception  {
 
-    	MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
+        MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
     	TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
     	String idiomaOrigen = "ca";
 
         TraduccionMicrosite microOrigen = (TraduccionMicrosite) microForm.get("traducciones", 0);
         Microsite micrositeBean =  micrositeDelegate.obtenerMicrosite((Long)microForm.get("id"));
 
-       Iterator<?> itTradFichas = ((ArrayList<?>) microForm.get("traducciones")).iterator();                
-       Iterator<String> itLang = traductor.getListLang().iterator(); 
-            
-            while (itLang.hasNext()){
-                
-            	TraduccionMicrosite microDesti = (TraduccionMicrosite) itTradFichas.next();
-            	String idiomaDesti = itLang.next();
-            	
-            	//Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
-            	if (micrositeBean.getIdiomas().contains(idiomaDesti)) {
-            	
-	            	if (!idiomaOrigen.equals(idiomaDesti)) {
-	            		traductor.setDirTraduccio(idiomaOrigen, idiomaDesti);
-	            		
-	            		if (traductor.traducir(microOrigen, microDesti, configuracion)) {
-	            			request.setAttribute("mensajes", "traduccioCorrecte");
-	            		}
-	            		else {
-	            			request.setAttribute("mensajes", "traduccioIncorrecte");
-	            			break;
-	            		}
-	            	}
-            	}
-            }
-            
-			if (request.getAttribute("mensajes").equals("traduccioCorrecte")) addMessage(request, "mensa.traduccion.confirmacion");
-			 else addMessageError(request, "mensa.traduccion.error");
-           
-			log.info("Traducción Configuración Microsite - Id: " + (Long) microForm.get("id"));
-			
-    	    //Metemos en el request el CSS que utilizará el tinymce
-    	    micrositeBean.setMvsCssTiny(tagCSS(micrositeBean.getEstiloCSS()));
-          	
-           	request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
-           	
-           	return micrositeBean;
+        Iterator<?> itTradFichas = ((ArrayList<?>) microForm.get("traducciones")).iterator();
+        Iterator<String> itLang = traductor.getListLang().iterator();
 
+        while (itLang.hasNext()) {
+
+            TraduccionMicrosite microDesti = (TraduccionMicrosite) itTradFichas.next();
+            String idiomaDesti = itLang.next();
+            	
+            //Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
+            if (micrositeBean.getIdiomas().contains(idiomaDesti)) {
+
+                if (!idiomaOrigen.equals(idiomaDesti)) {
+                    traductor.setDirTraduccio(idiomaOrigen, idiomaDesti);
+
+                    if (traductor.traducir(microOrigen, microDesti, configuracion)) {
+                        request.setAttribute("mensajes", "traduccioCorrecte");
+                    } else {
+                        request.setAttribute("mensajes", "traduccioIncorrecte");
+                        break;
+	            	}
+	            }
+            }
+        }
+
+        if (request.getAttribute("mensajes").equals("traduccioCorrecte")) {
+            addMessage(request, "mensa.traduccion.confirmacion");
+        } else {
+            addMessageError(request, "mensa.traduccion.error");
+        }
+
+        log.info("Traducción Configuración Microsite - Id: " + (Long) microForm.get("id"));
+			
+    	//Metemos en el request el CSS que utilizará el tinymce
+    	micrositeBean.setMvsCssTiny(tagCSS(micrositeBean.getEstiloCSS()));
+          	
+        request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
+           	
+        return micrositeBean;
     } 	
-    
-    
+
     /**
      * Método que guarda los cambios de un formulario de Configuración de Microsite
      * @param request	petición de usuario
@@ -172,21 +168,20 @@ public class cabeceraPieEditaAction extends BaseAction
 		Date fecha = new Date();
   		String [] fechaHora = {DateFormat.getDateInstance(DateFormat.LONG, new Locale("ca","ES")).format(fecha).replaceAll("/", "de"),
   							   DateFormat.getTimeInstance(DateFormat.LONG, new Locale("ca","ES")).format(fecha).replaceAll("/", "de")};
-  		
-        		//Guardamos cambios en BBDD
-	            micrositeDelegate.grabarMicrosite(micrositeBean);
-	             	
-		       log.info("Configuración Microsite modificada - Id: " + (Long) microForm.get("id"));
 
-		        micrositeBean.setMvsCssTiny(tagCSS(micrositeBean.getEstiloCSS()));
+        //Guardamos cambios en BBDD
+	    micrositeDelegate.grabarMicrosite(micrositeBean);
+	             	
+		log.info("Configuración Microsite modificada - Id: " + (Long) microForm.get("id"));
+
+		micrositeBean.setMvsCssTiny(tagCSS(micrositeBean.getEstiloCSS()));
     
-	    	    micrositeBean.setMensajeInfo(
-	    	    		getResources(request).getMessage("micro.modifcabpie") + 
-	    	    		getResources(request).getMessage("micro.info.ultimamodificacio.microsite", fechaHora));
+	    micrositeBean.setMensajeInfo(
+                getResources(request).getMessage("micro.modifcabpie") +
+	    	    getResources(request).getMessage("micro.info.ultimamodificacio.microsite", fechaHora));
 	           	
-	    	    request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
-	    	    
-	    	   return micrositeBean; 
+        request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
+	    return micrositeBean;
     }    
     
     /**
@@ -212,13 +207,9 @@ public class cabeceraPieEditaAction extends BaseAction
     	micrositeBean.setOpt7((String)microForm.get("opt7"));
     	micrositeBean.setTipocabecera((String)microForm.get("tipocabecera"));
     	micrositeBean.setTipopie((String)microForm.get("tipopie"));
-		
-		VOUtils.populate(micrositeBean, microForm);  // form --> bean de las traducciones
 
         return micrositeBean;
-	
-    }	
-    
+    }
     
     /**
      * Método que guarda los cambios de un formulario de Configuración de Microsite
@@ -231,7 +222,6 @@ public class cabeceraPieEditaAction extends BaseAction
     	Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
     	setBeantoForm(micrositeBean, microForm);
 
-	        	
 	    //Guardamos los atributos de petición necesarios
 	    request.setAttribute("microForm", microForm);
 	    request.setAttribute("tituloMicro", ((TraduccionMicrosite)micrositeBean.getTraduccion()).getTitulo() );
@@ -239,8 +229,7 @@ public class cabeceraPieEditaAction extends BaseAction
 	    //Metemos en el request el CSS que utilizará el tinymce
 	    request.setAttribute("MVS_css_tiny",tagCSS(micrositeBean.getEstiloCSS()));   
     }     
-    
-    
+
     
     /**
      * Método que vuelca el Bean de Microsite al formulario
@@ -266,9 +255,7 @@ public class cabeceraPieEditaAction extends BaseAction
     	microForm.set("claveunica",micrositeBean.getClaveunica());
       	
     	VOUtils.describe(microForm, micrositeBean);  // bean --> form de las traducciones
-	
-    }    
-    
+    }
 
 	//MCR v1.1
     /*
