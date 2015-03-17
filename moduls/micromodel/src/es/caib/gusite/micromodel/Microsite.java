@@ -190,7 +190,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	 */
 	@XmlAttribute
 	@Column(name = "MIC_DESARROLLO", nullable = false, length = 1)
-	private String desarrollo;
+	private String desarrollo = "N";
 
 	@Transient
 	private List<?> tiposServicios;

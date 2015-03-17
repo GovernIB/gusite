@@ -76,6 +76,7 @@
 	<classpathentry kind="lib" path="lib/thymeleaf/thymeleaf-layout-dialect-1.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/jasper/jsp-api.jar"/>
 	<classpathentry kind="lib" path="lib/jboss/mail.jar"/>
+	<classpathentry kind="lib" path="lib/webcaib/json.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -46,8 +46,6 @@ public abstract class HibernateEJB extends HibernateTrulyStatelessEJB implements
 
 	protected static Log log = LogFactory.getLog(HibernateEJB.class);
 
-	protected SessionContext ctx = null;
-
 	// Parámetros de consulta paginada
 	protected int tampagina = 0; // tamaño de la página
 	protected int pagina = 0; // página actual
