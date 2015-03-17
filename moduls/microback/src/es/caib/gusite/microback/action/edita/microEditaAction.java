@@ -288,7 +288,9 @@ public class microEditaAction extends BaseAction  {
     	micrositeBean.setFuncionalidadTraduccion();
     	micrositeBean.setServiciosOfrecidos((String[]) microForm.get("servofr"));
         Long idTema = (Long) microForm.get("tema");
-        micrositeBean.setTema(DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idTema));
+        if (idTema != null) {
+            micrositeBean.setTema(DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idTema));
+        }
 
         String desarrollo = ((String) microForm.get("desarrollo")).equals("") ? "N" : "S";
         micrositeBean.setDesarrollo(desarrollo);

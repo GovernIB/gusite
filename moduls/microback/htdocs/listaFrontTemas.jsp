@@ -55,6 +55,9 @@
 
             <jsp:include page="/moduls/mensajes.jsp"/>
             <input type="hidden" name="accion" value=""/>
+            <html:form action="/temaFrontAcc.do" styleId="accFormularioLista">
+                <html:hidden property="accion" />
+            </html:form>
         </logic:equal>
 
         <logic:notEqual name="parametrosPagina" property="nreg" value="0">

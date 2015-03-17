@@ -371,7 +371,7 @@
 				<input type="hidden" name="servofr" value="100" />
 			</div>
 
-            <div id="capa_Aparen" class="capaFormIdioma">
+            <div id="capa_Aparen" class="capaFormIdioma" style="display:none;">
                 <table cellpadding="0" cellspacing="0" class="edicio">
                     <tr>
                         <td class="etiqueta"><bean:message key="micro.desarrollo" /> &gt;</td>
@@ -395,14 +395,17 @@
                         <td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
                         <td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
                     </tr>
+                    <logic:equal name="MVS_microsite" property="versio" value="v5">
                     <tr>
                         <td class="etiqueta"><bean:message key="micro.tema" /> &gt;</td>
                         <td>
                             <html:select property="tema">
+                                <html:option value=""> </html:option>
                                 <html:options collection="MVS_temas" labelProperty="nombre" property="id"/>
                             </html:select>
                         </td>
                     </tr>
+                    </logic:equal>
                     <tr class="par">
                         <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
                         <td><span><bean:message key="micro.csspatron" />:</span>
