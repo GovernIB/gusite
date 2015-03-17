@@ -51,8 +51,11 @@
             </logic:present>
         </div>
 
-        <jsp:include page="/moduls/mensajes.jsp"/>
         <input type="hidden" name="accion" value=""/>
+        <jsp:include page="/moduls/mensajes.jsp"/>
+        <html:form action="/perPlantillasAcc.do" styleId="accFormularioLista">
+            <html:hidden property="accion" />
+        </html:form>
     </logic:equal>
 
     <logic:notEqual name="parametrosPagina" property="nreg" value="0">

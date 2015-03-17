@@ -2,7 +2,6 @@ package es.caib.gusite.microback.action.edita;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.TemaFrontForm;
-import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.logging.Log;
@@ -27,6 +26,7 @@ public class TemaFrontEditaAction extends BaseAction {
     protected static Log log = LogFactory.getLog(TemaFrontEditaAction.class);
 
     private static final String VERSION_DEFAULT = "50";
+    private static final String CONTEXT = "es.caib.gusite.context.front";
 
     public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -93,11 +93,20 @@ public class TemaFrontEditaAction extends BaseAction {
             temaFrontDelegate.crearTemaFront(temaFront);
         } else {
             temaFront = temaFrontDelegate.obtenerTemaFront(id);
+            Long cssId = (temaFront.getCss() != null) ? temaFront.getCss().getId() : null;
             temaFront = setFormToBean(temaFrontForm, temaFront);
             temaFrontDelegate.actualizarTemaFront(temaFront);
+            if (borrarCSS(cssId, temaFront)) {
+                DelegateUtil.getArchivoDelegate().borrarArchivo(cssId);
+            }
+
         }
         addMessage(request, "frontTemas.info.modifica");
         setBeanToForm(temaFront, temaFrontForm);
+    }
+
+    private boolean borrarCSS(Long cssId, TemaFront temaFront) {
+        return cssId != null && (temaFront.getCss() == null || (temaFront.getCss() != null && cssId != temaFront.getCss().getId()));
     }
 
     private void cargarPerTemaFront(HttpServletRequest request, TemaFrontForm temaFrontForm) throws DelegateException {
@@ -119,10 +128,16 @@ public class TemaFrontEditaAction extends BaseAction {
                 TemaFront tema = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(id);
                 archivoTemaFront.setTema(tema);
                 archivoTemaFront.setArchivo(populateArchivo(null, file, null, null));
-                archivoTemaFront.setPath(Cadenas.string2uri(archivoTemaFront.getArchivo().getNombre()));
+                String path = generarPath(tema.getNombre(), archivoTemaFront.getArchivo().getNombre());
+                archivoTemaFront.setPath(path);
                 archivoTemaFrontDelegate.crearArchivoTemaFront(archivoTemaFront);
             }
         }
+    }
+
+    private String generarPath(String temaUri, String nom) {
+
+        return System.getProperty(CONTEXT).concat("/ft/").concat(temaUri).concat("/").concat(nom);
     }
 
     private void elimiarArchivos(TemaFrontForm temaFrontForm) throws DelegateException {
@@ -160,15 +175,18 @@ public class TemaFrontEditaAction extends BaseAction {
         ArrayList personalizacionesPlantilla = new ArrayList<PersonalizacionPlantilla>(temaFront.getPersonalizacionesPlantilla());
         if (personalizacionesPlantilla.size() > 0) {
             temaFrontForm.set("personalizacionesPlantilla", personalizacionesPlantilla);
+        } else {
+            temaFrontForm.set("personalizacionesPlantilla", new ArrayList<PersonalizacionPlantilla>());
         }
 
         ArrayList archivos = new ArrayList<ArchivoTemaFront>(temaFront.getArchivoTemaFronts());
         if (archivos.size() > 0) {
             temaFrontForm.set("archivos", archivos);
+        } else {
+            temaFrontForm.set("archivos", new ArrayList<ArchivoTemaFront>());
         }
 
         if (temaFront.getCss() != null) {
-//            temaFrontForm.set("css", temaFront.getCss());
             temaFrontForm.set("cssId", temaFront.getCss().getId());
             temaFrontForm.set("cssNom", temaFront.getCss().getNombre());
         }
@@ -177,32 +195,48 @@ public class TemaFrontEditaAction extends BaseAction {
     private TemaFront setFormToBean(TemaFrontForm temaFrontForm, TemaFront temaFront) throws DelegateException {
 
         temaFront.setNombre((String) temaFrontForm.get("nombre"));
-        Archivo archivo = subirCSS(temaFrontForm);
-        temaFront.setCss(archivo);
-        Long id = (Long) temaFrontForm.get("temaPadre");
-        TemaFront temaPadre = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(id);
+        Long idPadre = (Long) temaFrontForm.get("temaPadre");
+        TemaFront temaPadre = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idPadre);
         temaFront.setTemaPadre(temaPadre);
+
+        Archivo css = temaFront.getCss();
+        FormFile file = (FormFile) temaFrontForm.get("css");
+        if (file.getFileName() != "") {
+            if (css == null || (css.getId() != temaFrontForm.get("cssId"))) {
+                Archivo archivo = subirCSS(file);
+                temaFront.setCss(archivo);
+                temaFrontForm.set("cssId", temaFront.getCss().getId());
+                temaFrontForm.set("cssNom", temaFront.getCss().getNombre());
+            }
+        } else {
+            temaFront.setCss(null);
+            temaFrontForm.set("css", null);
+            temaFrontForm.set("cssId", null);
+            temaFrontForm.set("cssNom", null);
+        }
 
         return temaFront;
     }
 
-    private Archivo subirCSS(TemaFrontForm temaFrontForm) throws DelegateException {
+    private Archivo subirCSS(FormFile file) throws DelegateException {
 
         Archivo archivo = null;
-        if (temaFrontForm.get("css") != null) {
-            FormFile file = (FormFile) temaFrontForm.get("css");
-            if (archivoValido(file)) {
-                try {
-                    archivo = populateArchivo(null, file, null, null);
-                } catch (IOException e) {
-                    archivo = null;
-                }
+        if (archivoValido(file)) {
+            try {
+                archivo = populateArchivo(null, file, null, null);
+            } catch (IOException e) {
+                archivo = null;
             }
         }
-        if (archivo.getIdmicrosite() == null) {
+
+        if (archivo != null && archivo.getIdmicrosite() == null) {
             archivo.setIdmicrosite(new Long(0));
         }
-        DelegateUtil.getArchivoDelegate().insertarArchivo(archivo);
+
+        if (archivo != null) {
+            DelegateUtil.getArchivoDelegate().insertarArchivo(archivo);
+        }
+
         return archivo;
     }
 

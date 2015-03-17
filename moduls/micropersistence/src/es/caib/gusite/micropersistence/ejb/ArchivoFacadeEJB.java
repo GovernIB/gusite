@@ -286,8 +286,9 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			}
 			session.delete(a);
 			session.flush();
-			this.close(session);
+            session.close();
 
+            a.setIdmicrosite(null);
 			this.grabarAuditoria(a, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
