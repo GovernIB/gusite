@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "GUS_MICUSU")
+@Table(name = "GUS_USURESP")
 public class UsuarioPropietarioRespuesta implements ValueObject {
 
 	private static final long serialVersionUID = 1L;

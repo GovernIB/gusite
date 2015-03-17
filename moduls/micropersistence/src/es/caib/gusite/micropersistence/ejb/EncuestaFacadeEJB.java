@@ -730,12 +730,11 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					+ idEncuesta.toString();
 
 			Query query = session.createQuery(hql);
-			Iterator<?> it = query.iterate();
-			Hashtable<Long, RespuestaDato> hash = new Hashtable<Long, RespuestaDato>();
-			while (it.hasNext()) {
-				RespuestaDato element = (RespuestaDato) it.next();
-				hash.put(element.getIdrespueta(), element);
-			}
+            List<RespuestaDato> list = query.list();
+            Hashtable<Long, RespuestaDato> hash = new Hashtable<Long, RespuestaDato>();
+            for (RespuestaDato res : list) {
+                hash.put(res.getIdrespueta(), res);
+            }
 			return hash;
 
 		} catch (HibernateException he) {
@@ -965,7 +964,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			String hql = "select res.id.idrespuesta from UsuarioPropietarioRespuesta res where res.idusuario = "
+			String hql = "select res.id.idrespuesta from UsuarioPropietarioRespuesta res where res.id.idusuario = "
 					+ idUsuario.toString();
 			Query query = session.createQuery(hql);
 			return query.list();

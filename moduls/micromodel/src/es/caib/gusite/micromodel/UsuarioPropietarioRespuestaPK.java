@@ -16,11 +16,11 @@ public class UsuarioPropietarioRespuestaPK implements Serializable {
 	 */
 	private static final long serialVersionUID = 5044841446839856028L;
 
-	@Column(name = "MIU_CODMIC")
+    @Column(name = "USR_CODRESP")
 	private Long idrespuesta;
 
-	@Column(name = "MIU_CODUSU")
-	private Long idusuario;
+    @Column(name = "USR_CODUSU")
+    private Long idusuario;
 
 	public UsuarioPropietarioRespuestaPK() {
 	}

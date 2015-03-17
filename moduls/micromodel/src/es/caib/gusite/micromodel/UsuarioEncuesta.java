@@ -1,10 +1,6 @@
 package es.caib.gusite.micromodel;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 
 /**
  * Clase UsuarioEncuesta. Bean que define usuario que ha contestado una
@@ -12,6 +8,8 @@ import javax.persistence.SequenceGenerator;
  * 
  * @author pedro melia
  */
+@Entity
+@Table(name = "GUS_USUARIENC")
 public class UsuarioEncuesta implements ValueObject {
 
 	private static final long serialVersionUID = 1L;
@@ -19,7 +17,7 @@ public class UsuarioEncuesta implements ValueObject {
 	@Id
 	@SequenceGenerator(name = "GUS_USUARIOENCUESTA_ID_GENERATOR", sequenceName = "GUS_SEQTIP", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_USUARIOENCUESTA_ID_GENERATOR")
-	@Column(name = "MSU_CODI")
+	@Column(name = "USE_CODI")
 	private Long id;
 
 	@Column(name = "USE_NOMBRE")
