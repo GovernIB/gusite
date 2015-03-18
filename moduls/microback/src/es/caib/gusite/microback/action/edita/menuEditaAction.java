@@ -177,12 +177,16 @@ public class menuEditaAction extends BaseAction
                 }
 
     			for (int j = 0; j < nlangs; j++) {
-    				TraduccionMenu traduccion = (TraduccionMenu)menu1.getTraduccion(""+langs.get(j));
-    				if (traduccion!= null)	 	trad[(nlangs*i)+j]= ""+traduccion.getNombre();
-    				else 						trad[(nlangs*i)+j]= "";
+    				TraduccionMenu traduccion = (TraduccionMenu) menu1.getTraduccion("" + langs.get(j));
+    				if (traduccion != null && traduccion.getNombre() != null) {
+                        trad[(nlangs*i) + j] = "" + traduccion.getNombre();
+                    } else {
+                        trad[(nlangs*i) + j] = "";
+                    }
     			}
 				
 			}
+
 			if (obj instanceof Contenido) {
 				Contenido con=(Contenido)obj;
 				ids[i]=con.getId();
