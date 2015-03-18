@@ -20,6 +20,7 @@
  	<script type="text/javascript" src="js/llistat.js"></script>
  	<script type="text/javascript" src="js/jquery-ui-1.10.4/jquery-ui-1.10.4.custom.min.js"></script>
     <script type="text/javascript" src="js/subMenus.js"></script>
+    <script type="text/javascript" src="js/nuevoMicro.js"></script>
  	
 	<script type="text/javascript">
 	<!--
@@ -113,6 +114,7 @@
 
 		<html:form action="/microUsuarios.do"  styleId="accFormSearch">
 			<html:hidden property="ordenacion" />
+            <input type="hidden" id="accion" name="accion" />
 			<input type="hidden" id="iduser" name="iduser" value="<bean:write name="elusu" />">
 			<div id="botonera">
 			
