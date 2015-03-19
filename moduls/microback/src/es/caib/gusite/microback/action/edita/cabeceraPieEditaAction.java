@@ -6,7 +6,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import es.caib.gusite.micromodel.IdiomaMicrosite;
+import es.caib.gusite.micromodel.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -18,9 +18,6 @@ import es.caib.gusite.microback.actionform.formulario.microForm;
 import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
-import es.caib.gusite.micromodel.Archivo;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 
@@ -207,6 +204,16 @@ public class cabeceraPieEditaAction extends BaseAction {
     	micrositeBean.setOpt7((String)microForm.get("opt7"));
     	micrositeBean.setTipocabecera((String)microForm.get("tipocabecera"));
     	micrositeBean.setTipopie((String)microForm.get("tipopie"));
+
+        List<TraduccionMicrosite> llista = (List<TraduccionMicrosite>) microForm.get("traducciones");
+        List<Idioma> langs = DelegateUtil.getIdiomaDelegate().listarIdiomas();
+        for (int i = 0; i < langs.size(); i++) {
+            Idioma lang = langs.get(i);
+            TraduccionMicrosite traduccion = (TraduccionMicrosite) micrositeBean.getTraduccion(lang.getCodigoEstandar());
+            llista.get(i).setId(traduccion.getId());
+            traduccion = llista.get(i);
+            micrositeBean.setTraduccion(lang.getCodigoEstandar(), traduccion);
+        }
 
         return micrositeBean;
     }

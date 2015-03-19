@@ -66,57 +66,65 @@
 
         <html:form action="/perPlantillasEdita.do" method="POST" enctype="multipart/form-data"  styleId="accFormulario">
 
-        <input class="accion" type="hidden" name="accion" value=""/>
+            <input class="accion" type="hidden" name="accion" value=""/>
 
-        <!-- botonera -->
-        <div id="botonera">
-            <span class="grup">
-                <logic:notPresent name="MVS_microsite">
-                <button type="button" title='<bean:message key="frontTemas.volvermantenimiento"/>' onclick='document.location.href="temaFrontEdita.do?id=<bean:write name="TemaFrontForm" property="id"/>";'>
-                </logic:notPresent>
-                <logic:present name="MVS_microsite">
-                <button type="button" title='<bean:message key="frontTemas.volvermantenimiento"/>' onclick='document.location.href="perPlantillas.do?idsite=<bean:write name="MVS_microsite" property="id"/>";'>
+            <!-- botonera -->
+            <div id="botonera">
+                <span class="grup">
+                    <logic:notPresent name="MVS_microsite">
+                    <button type="button" title='<bean:message key="frontTemas.volvermantenimiento"/>' onclick='document.location.href="temaFrontEdita.do?id=<bean:write name="TemaFrontForm" property="id"/>";'>
+                    </logic:notPresent>
+                    <logic:present name="MVS_microsite">
+                    <button type="button" title='<bean:message key="frontTemas.volvermantenimiento"/>' onclick='document.location.href="perPlantillas.do?idsite=<bean:write name="MVS_microsite" property="id"/>";'>
+                    </logic:present>
+                        <img src="imgs/botons/tornar.gif" alt='<bean:message key="plantilla.volvermantenimiento"/>' />
+                    </button>
+                </span>
+                <span class="grup">
+                    <button class="btnGuardar" type="button" title='<bean:message key="operacion.guardar"/>'>
+                        <img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
+                    </button>
+                </span>
+            </div>
+
+            <table cellpadding="0" cellspacing="0" class="edicio">
+                <tr>
+                    <td class="etiqueta"><bean:message key="plantilla.edicion.titulo" /></td>
+                    <td>
+                        <html:text property="titulo" maxlength="16" />
+                    </td>
+                </tr>
+                <tr class="par">
+                    <td class="etiqueta"><bean:message key="plantilla.edicion.tipo" /></td>
+                    <td>
+                        <input type="hidden" value='<bean:write name="PerPlantillasForm" property="idPlantilla"/>' />
+                        <html:text property="plantilla" maxlength="16" readonly="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="etiqueta"><bean:message key="plantilla.edicion.contenido"/></td>
+                    <td>
+                        <button type="button" class="btnEditor btnFullScreen"><bean:message key="perPlantillaFull" /></button>
+                        <button type="button" class="btnEditor btnAyuda"><bean:message key="perPlantillaAyuda" /></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <html:textarea property="contenido"/>
+                        <div id="description"/>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="ayuda" style="display:none">
+                <logic:present name="PerPlantillaForm" property="clob">
+                    <html:textarea name="PerPlantillaForm" property="clob"/>
                 </logic:present>
-                    <img src="imgs/botons/tornar.gif" alt='<bean:message key="plantilla.volvermantenimiento"/>' />
-                </button>
-            </span>
-            <span class="grup">
-                <button class="btnGuardar" type="button" title='<bean:message key="operacion.guardar"/>'>
-                    <img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
-                </button>
-            </span>
-        </div>
-
-        <table cellpadding="0" cellspacing="0" class="edicio">
-            <tr>
-                <td class="etiqueta"><bean:message key="plantilla.edicion.titulo" /></td>
-                <td>
-                    <html:text property="titulo" maxlength="16" />
-                </td>
-            </tr>
-            <tr class="par">
-                <td class="etiqueta"><bean:message key="plantilla.edicion.tipo" /></td>
-                <td>
-                    <input type="hidden" value='<bean:write name="PerPlantillasForm" property="idPlantilla"/>' />
-                    <html:text property="plantilla" maxlength="16" readonly="true" />
-                </td>
-            </tr>
-            <tr>
-                <td class="etiqueta"><bean:message key="plantilla.edicion.contenido"/></td>
-                <td>
-                    <button type="button" class="btnFullScreen"><bean:message key="perPlantillaFull" /></button>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <html:textarea property="contenido"/>
-                    <div id="description"/>
-                </td>
-            </tr>
-        </table>
+            </div>
         </html:form>
     </div>
+
 </div>
 
 </body>

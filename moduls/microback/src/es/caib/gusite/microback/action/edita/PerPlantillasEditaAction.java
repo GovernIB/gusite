@@ -116,6 +116,11 @@ public class PerPlantillasEditaAction extends BaseAction {
         if (personalizacionPlantilla.getContenido() != null) {
             perPlantillasForm.set("contenido", personalizacionPlantilla.getContenido());
         }
+
+        if (personalizacionPlantilla.getPlantilla().getDescripcion() != null) {
+            String clob = personalizacionPlantilla.getPlantilla().getDescripcion();
+            perPlantillasForm.set("clob", clob);
+        }
     }
 
     private PersonalizacionPlantilla setFormToBean(PerPlantillasForm perPlantillasForm, PersonalizacionPlantilla personalizacionPlantilla) throws DelegateException {
