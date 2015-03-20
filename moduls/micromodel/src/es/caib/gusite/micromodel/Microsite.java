@@ -740,14 +740,13 @@ public class Microsite extends AuditableModel implements Traducible2 {
 		if (!traductorHabilitat()) {
 			return;
 		}
-		if (this.idiomas.contains("ca") & (this.idiomas.size() > 1)) {
+		if (this.idiomas.size() > 1) {
 			this.funcionalidadTraduccion = true;
 		}
 	}
 
 	public static boolean traductorHabilitat() {
-		return System.getProperty("es.caib.gusite.integracion.traductor")
-				.equals("S");
+		return System.getProperty("es.caib.gusite.integracion.traductor").equals("S");
 	}
 
 	public String getMvsCssTiny() {
