@@ -124,7 +124,7 @@ public class ExportarAction extends BaseAction {
 			    agregaXmlAZIP(rutaXML, nombreXML, out);
 			    
 			    // Agregamos, si los hubiese, los archivos asociados al XML dentro de un directorio aparte dentro del ZIP.
-			    Set<Archivo> documentos = extraerArchivosMicrosite(micro);
+			    Archivo[] documentos = extraerArchivosMicrosite(micro);
 		    	
 		    	// Creamos la entrada en el ZIP para el directorio que contendrá los archivos.
 		    	// El API de archivos ZIP de Java detecta que es un directorio al acabar en "/".
@@ -189,37 +189,35 @@ public class ExportarAction extends BaseAction {
     	}
 	}
 
-	private Set<Archivo> extraerArchivosMicrosite(MicrositeCompleto microsite) {
+	private Archivo[] extraerArchivosMicrosite(MicrositeCompleto microsite) {
 
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		Set<Archivo> archivos = new HashSet<Archivo>();
+		Map<Long, Archivo> archivos = new HashMap<Long, Archivo>();
 		try {
 			for (Iterator iter = microsite.getDocus().iterator(); iter.hasNext();) {
 				Archivo archivo = (Archivo) iter.next();
-				archivos.add(obtenerArchivo(archivo, archivoDelegate));
+				archivos.put(archivo.getId(), obtenerArchivo(archivo, archivoDelegate));
 			}
 
 			if (microsite.getImagenPrincipal() != null) {
-				archivos.add(obtenerArchivo(microsite.getImagenPrincipal(), archivoDelegate));
+				archivos.put(microsite.getImagenPrincipal().getId(), obtenerArchivo(microsite.getImagenPrincipal(), archivoDelegate));
 			}
 
 			if (microsite.getImagenCampanya() != null) {
-				archivos.add(obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate));
+				archivos.put(microsite.getImagenCampanya().getId(), obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate));
 			}
 
-			if (microsite.getEstiloCSS() != null) {
-				if (microsite.getEstiloCSS().getDatos() != null) {
-					archivos.add(obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate));
-				}
+			if (microsite.getEstiloCSS() != null && microsite.getEstiloCSS().getDatos() != null) {
+                archivos.put(microsite.getEstiloCSS().getId(), obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate));
 			}
 
 			for (Object menu : microsite.getMenus()) {
 				if (((Menu) menu).getImagenmenu() != null) {
-					archivos.add(obtenerArchivo(((Menu) menu).getImagenmenu(), archivoDelegate));
+					archivos.put(((Menu) menu).getImagenmenu().getId(), obtenerArchivo(((Menu) menu).getImagenmenu(), archivoDelegate));
 				}
 				for (Contenido contenido : ((Menu) menu).getContenidos()) {
 					if (contenido.getImagenmenu() != null) {
-						archivos.add(obtenerArchivo(contenido.getImagenmenu(), archivoDelegate));
+						archivos.put(contenido.getImagenmenu().getId(), obtenerArchivo(contenido.getImagenmenu(), archivoDelegate));
 					}
 				}
 			}
@@ -227,43 +225,53 @@ public class ExportarAction extends BaseAction {
 			for (Object agenda : microsite.getAgendas()) {
 				for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
 					if (trad.getDocumento() != null) {
-						archivos.add(obtenerArchivo(trad.getDocumento(), archivoDelegate));
+						archivos.put(trad.getDocumento().getId(), obtenerArchivo(trad.getDocumento(), archivoDelegate));
 					}
 					if (trad.getImagen() != null) {
-						archivos.add(obtenerArchivo(trad.getImagen(), archivoDelegate));
+						archivos.put(trad.getImagen().getId(), obtenerArchivo(trad.getImagen(), archivoDelegate));
 					}
 				}
 			}
 
 			for (Object noticia : microsite.getNoticias()) {
 				if (((Noticia) noticia).getImagen() != null) {
-					archivos.add(obtenerArchivo(((Noticia) noticia).getImagen(), archivoDelegate));
+					archivos.put(((Noticia) noticia).getImagen().getId(), obtenerArchivo(((Noticia) noticia).getImagen(), archivoDelegate));
 				}
 				for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
 					if (trad.getDocu() != null) {
-						archivos.add(obtenerArchivo(trad.getDocu(), archivoDelegate));
+						archivos.put(trad.getDocu().getId(), obtenerArchivo(trad.getDocu(), archivoDelegate));
 					}
 				}
 			}
 
 			for (Object componente : microsite.getComponentes()) {
 				if (((Componente) componente).getImagenbul() != null) {
-					archivos.add(obtenerArchivo(((Componente) componente).getImagenbul(), archivoDelegate));
+					archivos.put(((Componente) componente).getImagenbul().getId(), obtenerArchivo(((Componente) componente).getImagenbul(), archivoDelegate));
 				}
 			}
 
 			for (Object encuesta : microsite.getEncuestas()) {
 				for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
 					if (pregunta.getImagen() != null) {
-						archivos.add(obtenerArchivo(pregunta.getImagen(), archivoDelegate));
+						archivos.put(pregunta.getImagen().getId(), obtenerArchivo(pregunta.getImagen(), archivoDelegate));
 					}
 				}
 			}
 
+            if (microsite.getTema() != null) {
+                if (microsite.getTema().getCss() != null) {
+                    archivos.put(microsite.getTema().getCss().getId(), obtenerArchivo(microsite.getTema().getCss(), archivoDelegate));
+                }
+                for (ArchivoTemaFront archTF : microsite.getTema().getArchivoTemaFronts()) {
+                    archivos.put(archTF.getArchivo().getId(), obtenerArchivo(archTF.getArchivo(), archivoDelegate));
+                }
+            }
+
 		} catch (DelegateException e) {
 			e.printStackTrace();
 		}
-		return archivos;
+
+		return archivos.values().toArray(new Archivo[archivos.values().size()]);
 	}
 
 	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {

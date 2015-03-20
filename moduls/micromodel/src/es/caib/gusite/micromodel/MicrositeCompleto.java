@@ -69,7 +69,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@Column(name = "MIC_CODUNI")
 	private int idUA;
 
-	// TEST
 	@XmlAttribute
 	@Column(name = "MIC_ANALYTICS")
 	private String analytics;
@@ -77,7 +76,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@XmlAttribute
 	@Column(name = "MIC_URI")
 	private String uri;
-	// TEST
 
 	@XmlAttribute
 	@Temporal(TemporalType.DATE)
@@ -299,16 +297,16 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<Encuesta> encuestas = new HashSet();
 
-	@XmlElement
+    @XmlElement
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "microsite")
 	@Fetch(FetchMode.SUBSELECT)
-	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
-			0);
+	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(0);
 
 	/**
 	 * Tema a aplicar
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+    @XmlElement
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MIC_FTECOD")
 	private TemaFront tema;
 
@@ -322,8 +320,8 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@Transient
 	private String idi = Idioma.getIdiomaPorDefecto();
 
-	@XmlElement(name = "idiomaMicrosite", type = IdiomaMicrosite.class)
-	@XmlElementWrapper(name = "idiomas")
+    @XmlElement(name = "idiomaMicrosite", type = IdiomaMicrosite.class)
+    @XmlElementWrapper(name = "idiomas")
 	public Set getIdiomas() {
 		return this.idiomas;
 	}
@@ -428,7 +426,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 		return this.formularioscontacto;
 	}
 
-	// TEST
 	public String getAnalytics() {
 		return this.analytics;
 	}
@@ -444,8 +441,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
-
-	// TEST
 
 	public void setFormularioscontacto(Set formularioscontacto) {
 		this.formularioscontacto = formularioscontacto;
@@ -724,7 +719,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	}
 
 	// Metodos para poder leer las colecciones del XML
-
 	public void addIdioma(String idi) {
 		IdiomaMicrosite idioma = new IdiomaMicrosite();
 		idioma.setId(new IdiomaMicrositePK());
@@ -833,8 +827,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 		return this.personalizacionesPlantilla;
 	}
 
-	public void setPersonalizacionesPlantilla(
-			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
+	public void setPersonalizacionesPlantilla(Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
 		this.personalizacionesPlantilla = personalizacionesPlantilla;
 	}
 

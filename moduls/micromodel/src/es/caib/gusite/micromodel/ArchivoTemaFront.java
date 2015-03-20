@@ -12,6 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Tabla que contiene los archivos (imágenes, js, etc.) utilizados en los
@@ -19,11 +23,10 @@ import javax.persistence.UniqueConstraint;
  * 
  * @author at4.net
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name = "GUS_FR_ARCHIVO", uniqueConstraints = @UniqueConstraint(columnNames = {
-		"ARC_FTECOD", "ARC_PATH" }))
-public class ArchivoTemaFront extends AuditableModel implements Auditable,
-		java.io.Serializable {
+@Table(name = "GUS_FR_ARCHIVO", uniqueConstraints = @UniqueConstraint(columnNames = {"ARC_FTECOD", "ARC_PATH" }))
+public class ArchivoTemaFront extends AuditableModel implements Auditable, java.io.Serializable {
 
 	/**
 	 * serialVersionUID
@@ -33,6 +36,7 @@ public class ArchivoTemaFront extends AuditableModel implements Auditable,
 	/**
 	 * Identificador de documento
 	 */
+    @XmlAttribute
 	@SequenceGenerator(name = "generator", sequenceName = "GUS_SEQARC")
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
@@ -43,6 +47,7 @@ public class ArchivoTemaFront extends AuditableModel implements Auditable,
 	@JoinColumn(name = "ARC_FTECOD", nullable = false)
 	private TemaFront tema;
 
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ARC_DOCCOD")
 	private Archivo archivo;
@@ -50,7 +55,7 @@ public class ArchivoTemaFront extends AuditableModel implements Auditable,
 	/**
 	 * Ruta virtual del archivo
 	 */
-
+    @XmlAttribute
 	@Column(name = "ARC_PATH", length = 256)
 	private String path;
 

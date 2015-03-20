@@ -2,21 +2,15 @@ package es.caib.gusite.micromodel;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
-import java.sql.Clob;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Tabla que identifica las plantillas que se pueden implementar (sobreescribir)
@@ -24,22 +18,24 @@ import javax.persistence.UniqueConstraint;
  * 
  * @author at4.net
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_FR_PLANTILLA", uniqueConstraints = @UniqueConstraint(columnNames = "PLA_NOMBRE"))
-public class Plantilla extends AuditableModel implements Auditable,
-		java.io.Serializable {
+public class Plantilla extends AuditableModel implements Auditable, Serializable {
 
 	/**
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
 
+    @XmlAttribute
 	@SequenceGenerator(name = "generator", sequenceName = "GUS_SEQPLA")
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
 	@Column(name = "PLA_CODI", unique = true, nullable = false, scale = 0)
 	private Long id;
 
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PLA_VERSION", nullable = false)
 	private Version version;
@@ -47,27 +43,27 @@ public class Plantilla extends AuditableModel implements Auditable,
 	/**
 	 * Nombre (identificador) de la plantilla
 	 */
-
+    @XmlAttribute
 	@Column(name = "PLA_NOMBRE", unique = true, nullable = false)
 	private String nombre;
 
 	/**
 	 * Descripción y documentación de la plantilla
 	 */
-
-	@Column(name = "PLA_DESCRIPCION")
-	private Clob descripcion;
+    @XmlAttribute
+    @Lob
+    @Column(name = "PLA_DESCRIPCION")
+	private String descripcion;
 
 	/**
 	 * Título de la plantilla
 	 */
-
+    @XmlAttribute
 	@Column(name = "PLA_TITULO", nullable = false)
 	private String titulo;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "plantilla")
-	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
-			0);
+	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(0);
 
 	public Plantilla() {
 	}
@@ -78,7 +74,7 @@ public class Plantilla extends AuditableModel implements Auditable,
 		this.titulo = titulo;
 	}
 
-	public Plantilla(Version version, String nombre, Clob descripcion,
+	public Plantilla(Version version, String nombre, String descripcion,
 			String titulo,
 			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
 		this.version = version;
@@ -119,11 +115,11 @@ public class Plantilla extends AuditableModel implements Auditable,
 	/**
 	 * * Descripción y documentación de la plantilla
 	 */
-	public Clob getDescripcion() {
+	public String getDescripcion() {
 		return this.descripcion;
 	}
 
-	public void setDescripcion(Clob descripcion) {
+	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
@@ -142,8 +138,7 @@ public class Plantilla extends AuditableModel implements Auditable,
 		return this.personalizacionesPlantilla;
 	}
 
-	public void setPersonalizacionesPlantilla(
-			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
+	public void setPersonalizacionesPlantilla(Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
 		this.personalizacionesPlantilla = personalizacionesPlantilla;
 	}
 

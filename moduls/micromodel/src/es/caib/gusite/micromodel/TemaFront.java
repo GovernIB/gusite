@@ -17,12 +17,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.*;
 
 /**
  * Tema del front
  * 
  * @author at4.net
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_FR_TEMA", uniqueConstraints = @UniqueConstraint(columnNames = "FTE_NOMBRE"))
 public class TemaFront extends AuditableModel implements Auditable, java.io.Serializable {
@@ -32,6 +34,7 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	 */
 	private static final long serialVersionUID = 1L;
 
+    @XmlAttribute
 	@SequenceGenerator(name = "generator", sequenceName = "GUS_SEQFTE")
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
@@ -41,14 +44,17 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	/**
 	 * CSS General del tema
 	 */
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_CSS")
 	private Archivo css;
 
+//    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_TEMA_PADRE")
 	private TemaFront temaPadre;
 
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "FTE_VERSION", nullable = false)
 	private Version version;
@@ -56,12 +62,14 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	/**
 	 * Nom del tema
 	 */
+    @XmlAttribute
 	@Column(name = "FTE_NOMBRE", unique = true, nullable = false)
 	private String nombre;
 
 	/**
 	 * Data d'actualització del tema
 	 */
+    @XmlAttribute
 	@Temporal(TemporalType.DATE)
 	@Column(name = "FTE_ACTUALIZACION", nullable = false, length = 7)
 	private Date actualizacion;
@@ -72,6 +80,7 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
 	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(0);
 
+    @XmlElement
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
     private Set<ArchivoTemaFront> archivoTemaFronts = new HashSet<ArchivoTemaFront>(0);
 
@@ -165,8 +174,7 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 		return this.personalizacionesPlantilla;
 	}
 
-	public void setPersonalizacionesPlantilla(
-			Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
+	public void setPersonalizacionesPlantilla(Set<PersonalizacionPlantilla> personalizacionesPlantilla) {
 		this.personalizacionesPlantilla = personalizacionesPlantilla;
 	}
 

@@ -87,6 +87,20 @@ public class PlantillaDelegate implements StatelessDelegate {
 		}
 	}
 
+    /**
+     * Obtiene un Plantilla por nombre
+     *
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Plantilla obtenerPlantillaPorNombre(String nombre) throws DelegateException {
+        try {
+            return this.getFacade().obtenerPlantillaPorNombre(nombre);
+        } catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

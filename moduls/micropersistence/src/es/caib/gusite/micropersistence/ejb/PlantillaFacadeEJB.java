@@ -9,6 +9,8 @@ import org.hibernate.HibernateException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Plantilla;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * SessionBean para consultar Plantilla.
@@ -39,15 +41,16 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * Crea un Plantilla
 	 * 
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},\${role.admin},${role.super},${role.oper
-	 *                 } "
+	 * @ejb.permission role-name="${role.system},\${role.admin},${role.super},${role.oper} "
 	 */
 	public Plantilla crearPlantilla(Plantilla instance) {
+
 		log.debug("persisting Plantilla instance");
+        Session session = this.getSession();
 		try {
-			Plantilla ret = (Plantilla) this.getSession().get(Plantilla.class,
-					this.getSession().save(instance));
+			Plantilla ret = (Plantilla) session.get(Plantilla.class, session.save(instance));
+            session.flush();
+            session.close();
 			this.grabarAuditoria(ret, Auditoria.CREAR);
 			return ret;
 
@@ -146,5 +149,18 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 			throw new EJBException(re);
 		}
 	}
+
+    /**
+     * Obtiene un Plantilla por nombre
+     *
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public Plantilla obtenerPlantillaPorNombre(String nombre) {
+
+        Query query = getNamedQuery("es.caib.gusite.micromodel.Plantilla.obtenerPlantillaPorNombre");
+        query.setParameter("nombre", nombre);
+        return (Plantilla) query.uniqueResult();
+    }
 
 }

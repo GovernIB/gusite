@@ -376,6 +376,17 @@ public class ImportarAction extends BaseAction {
             }
         }
 
+        if (micro.getTema() != null) {
+            if (micro.getTema().getCss() != null) {
+                micro.getTema().getCss().setDatos(archivos.get(micro.getTema().getCss().getId()).getDatos());
+            }
+            for (ArchivoTemaFront archTF : micro.getTema().getArchivoTemaFronts()) {
+                if (archTF.getArchivo() != null && archivos.get(archTF.getArchivo().getId()) != null) {
+                    archTF.getArchivo().setDatos(archivos.get(archTF.getArchivo().getId()).getDatos());
+                }
+            }
+        }
+
         return micro;
     }
 
@@ -438,6 +449,7 @@ public class ImportarAction extends BaseAction {
 		Set contactos = mic.getFormularioscontacto();
 		Set compos = mic.getComponentes();
 		Set encuestas = mic.getEncuestas();
+        Set perPlantillas = mic.getPersonalizacionesPlantilla();
 
         // Elimino del bean los objetos que grabaré posteriormente
         mic.setActividades(null);
@@ -452,6 +464,7 @@ public class ImportarAction extends BaseAction {
         mic.setFormularioscontacto(null);
         mic.setComponentes(null);
         mic.setEncuestas(null);
+        mic.setPersonalizacionesPlantilla(null);
 
 		/*
 		 * Se realizan las importaciones objeto o objeto debido al particular
@@ -529,6 +542,7 @@ public class ImportarAction extends BaseAction {
 			insertaComponentes(compos, mic, request);
 			insertaEncuestas(encuestas, mic, request);
 			insertaDocus(docus, mic, request); // cambio orden
+            insertarPerPlantillas(perPlantillas, mic, request);
 
 			tablamapeos.put(new String("MIC_" + idmicroant), idmicronuevo.longValue());
 
@@ -723,6 +737,7 @@ public class ImportarAction extends BaseAction {
 				tpnuevo.setId(null);
 				tpnuevo.setIdmicrosite(mic.getId().longValue());
 				// creamos los tipos de noticias
+                tpnuevo = generarNuevasUrisTipo(tpnuevo);
 				idtpnotic_nueva = bdTipo.grabarTipo(tpnuevo);
 				tablamapeos.put(new String("TPN_" + tp.getId()), idtpnotic_nueva);
 				lista1.add(tpnuevo);
@@ -746,6 +761,7 @@ public class ImportarAction extends BaseAction {
                             notnueva.getImagen().setId(null);
                         }
 
+                        notnueva = generarNuevasUrisNoti(notnueva);
 						bdNoticia.grabarNoticia(notnueva);
 
                         if (idDoc != null) {
@@ -768,7 +784,7 @@ public class ImportarAction extends BaseAction {
 			addImportLogVisualStackTrace(request, mensaje, ex.getStackTrace());
 		}
 	}
-	
+
 	/**
 	 *  Esta función crea los Formularios QSSI
 	 *  en el nuevo Microsite
@@ -994,6 +1010,7 @@ public class ImportarAction extends BaseAction {
                             connuevo.getImagenmenu().setId(null);
                         }
 
+                        connuevo = generarNuevasUrisCont(connuevo);
 						bdConte.grabarContenido(connuevo);
 
                         if (idDoc != null) {
@@ -1051,6 +1068,7 @@ public class ImportarAction extends BaseAction {
                             connuevo.getImagenmenu().setId(null);
                         }
 
+                        connuevo = generarNuevasUrisCont(connuevo);
 						bdConte.grabarContenido(connuevo);
 
                         if (idDoc != null) {
@@ -1101,6 +1119,7 @@ public class ImportarAction extends BaseAction {
 
                 List<Pregunta> preguntas = encnueva.getPreguntas();
                 encnueva.setPreguntas(null);
+                encnueva = generarNuevasUrisEnc(encnueva);
                 Long idNew = bdEncu.grabarEncuesta(encnueva);
 				encnueva.setId(idNew);
                 insertarPreguntas(encnueva, preguntas, bdEncu);
@@ -1151,6 +1170,58 @@ public class ImportarAction extends BaseAction {
             resp.setId(null);
             resp.setIdpregunta(preg.getId());
             bdEncu.grabarRespuesta(resp);
+        }
+    }
+
+    private void insertarPerPlantillas(Set perPlantillas, MicrositeCompleto mic, HttpServletRequest request) {
+
+        ResourceBundle rb = ResourceBundle.getBundle("sac-microback-messages");
+        StringBuffer stlog = new StringBuffer("");
+        Set<PersonalizacionPlantilla> lista = new HashSet<PersonalizacionPlantilla>();
+        PersonalizacionPlantillaDelegate personalizacionPlantillaDelegate = DelegateUtil.getPersonalizacionPlantillaDelegate();
+        PlantillaDelegate plantillaDelegate = DelegateUtil.getPlantillaDelegate();
+        VersionDelegate versionDelegate = DelegateUtil.getVersionDelegate();
+        MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
+
+        try {
+            Iterator<?> it = perPlantillas.iterator();
+
+            while (it.hasNext()) {
+                PersonalizacionPlantilla perPlantilla = (PersonalizacionPlantilla) it.next();
+                PersonalizacionPlantilla perPlantillaNueva = (PersonalizacionPlantilla) BeanUtils.cloneBean(perPlantilla);
+
+                Plantilla plantilla = perPlantillaNueva.getPlantilla();
+                Version version = plantilla.getVersion();
+                Version versionBD = versionDelegate.obtenerVersion(version.getVersion());
+                if (versionBD == null) {
+                    version = versionDelegate.crearVersion(version);
+                }
+
+                plantilla.setVersion(version);
+                plantilla = plantillaDelegate.obtenerPlantillaPorNombre(plantilla.getNombre());
+                if (plantilla == null) {
+                    plantilla.setId(null);
+                    plantilla = plantillaDelegate.crearPlantilla(plantilla);
+                }
+
+                Microsite site = micrositeDelegate.obtenerMicrosite(mic.getId());
+                perPlantillaNueva.setMicrosite(site);
+                perPlantillaNueva.setId(null);
+                perPlantillaNueva.setPlantilla(plantilla);
+                perPlantillaNueva = personalizacionPlantillaDelegate.crearPersonalizacionPlantilla(perPlantillaNueva);
+
+//                tablamapeos.put(new String("ENC_" + enc.getId()), encnueva.getId());
+                lista.add(perPlantillaNueva);
+                stlog.append(perPlantillaNueva.getId() + " ");
+            }
+
+            mic.setPersonalizacionesPlantilla(lista);
+            addImportLogVisual(request, "logimport.perPlantillas: " + stlog.toString());
+
+        } catch (Exception ex) {
+            addImportLogVisual(request, (String) rb.getObject("logimport.perPlantillas") + ": " + stlog.toString());
+            mensaje += (String) rb.getObject("logimport.perPlantillas.error") + ": <br/>" + ex.toString() + "<br/>";
+            addImportLogVisualStackTrace(request, mensaje, ex.getStackTrace());
         }
     }
 
@@ -1920,5 +1991,93 @@ public class ImportarAction extends BaseAction {
 	private void addImportLogVisualStackTrace(HttpServletRequest request, String mensaje, StackTraceElement[] mensajes) {
 		MicroLog.addLogVisualStackTrace(request, "{i" + _hashcode + "} " + mensaje, mensajes);
 	}
+
+    private Tipo generarNuevasUrisTipo(Tipo tipo) {
+
+        TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
+        for (TraduccionTipo trad : tipo.getTraducciones().values()) {
+            try {
+                int count = 0;
+                String newUri = trad.getUri();
+                Tipo tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                while (tipoUri != null) {
+                    newUri = trad.getUri() + "_" + count;
+                    tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    count++;
+                }
+                trad.setUri(newUri);
+
+            } catch (DelegateException de) {
+                trad = null;
+            }
+        }
+        return tipo;
+    }
+
+    private Noticia generarNuevasUrisNoti(Noticia noticia) {
+
+        NoticiaDelegate noticiaDelegate = DelegateUtil.getNoticiasDelegate();
+        for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
+            try {
+                int count = 0;
+                String newUri = trad.getUri();
+                Noticia noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                while (noticiaUri != null) {
+                    newUri = trad.getUri() + "_" + count;
+                    noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    count++;
+                }
+                trad.setUri(newUri);
+
+            } catch (DelegateException de) {
+                trad = null;
+            }
+        }
+        return noticia;
+    }
+
+    private Contenido generarNuevasUrisCont(Contenido contenido) {
+
+        ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
+        for (TraduccionContenido trad : contenido.getTraducciones().values()) {
+            try {
+                int count = 0;
+                String newUri = trad.getUri();
+                Contenido contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                while (contenidoUri != null) {
+                    newUri = trad.getUri() + "_" + count;
+                    contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    count++;
+                }
+                trad.setUri(newUri);
+
+            } catch (DelegateException de) {
+                trad = null;
+            }
+        }
+        return contenido;
+    }
+
+    private Encuesta generarNuevasUrisEnc(Encuesta encuesta) {
+
+        EncuestaDelegate encuestaDelegate = DelegateUtil.getEncuestaDelegate();
+        for (TraduccionEncuesta trad : encuesta.getTraducciones().values()) {
+            try {
+                int count = 0;
+                String newUri = trad.getUri();
+                Encuesta encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                while (encuestaUri != null) {
+                    newUri = trad.getUri() + "_" + count;
+                    encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    count++;
+                }
+                trad.setUri(newUri);
+
+            } catch (DelegateException de) {
+                trad = null;
+            }
+        }
+        return encuesta;
+    }
 
 }

@@ -17,12 +17,7 @@ import java.util.StringTokenizer;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 
 import es.caib.gusite.lucene.model.Catalogo;
@@ -341,9 +336,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			MicrositeCompleto site = (MicrositeCompleto) session.get(
-					MicrositeCompleto.class, id);
-			return site;
+			MicrositeCompleto site = (MicrositeCompleto) session.get(MicrositeCompleto.class, id);
+            if (site.getTema() != null) {
+                Hibernate.initialize(site.getTema().getArchivoTemaFronts());
+            }
+            return site;
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -435,8 +432,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				site.setIdiomas(idiomas);
 
 				UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
-				Usuario usu = usudel.obtenerUsuariobyUsername(super
-						.getUsuarioEJB());
+				Usuario usu = usudel.obtenerUsuariobyUsername(this.getUsuario(session).getUsername());
 				UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(
 						site.getId(), usu.getId());
 				session.save(upm);
@@ -590,6 +586,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			session.createQuery(
 					"delete IdiomaMicrosite imic where imic.id.codigoMicrosite = "
 							+ id.toString()).executeUpdate();
+            session.createQuery(
+                    "delete PersonalizacionPlantilla perPla where perPla.microsite.id = "
+                            + id.toString()).executeUpdate();
 			session.createQuery(
 					"delete Microsite mic where mic.id = " + id.toString())
 					.executeUpdate();

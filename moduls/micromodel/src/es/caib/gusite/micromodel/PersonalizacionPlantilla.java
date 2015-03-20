@@ -1,5 +1,6 @@
 package es.caib.gusite.micromodel;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -14,22 +15,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * Personalización de una plantilla
  * 
  * @author at4.net
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_FR_PERPLA")
-public class PersonalizacionPlantilla extends AuditableModel implements
-		Auditable, java.io.Serializable {
+public class PersonalizacionPlantilla extends AuditableModel implements Auditable, Serializable {
 
 	/**
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
 
+    @XmlAttribute
 	@SequenceGenerator(name = "generator", sequenceName = "GUS_SEQPPL")
 	@Id
 	@GeneratedValue(strategy = SEQUENCE, generator = "generator")
@@ -40,10 +46,12 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	@JoinColumn(name = "PPL_MICCOD")
 	private Microsite microsite;
 
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PPL_FTECOD")
 	private TemaFront tema;
 
+    @XmlElement
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PPL_PLACOD", nullable = false)
 	private Plantilla plantilla;
@@ -51,21 +59,21 @@ public class PersonalizacionPlantilla extends AuditableModel implements
 	/**
 	 * Título de la plantilla
 	 */
-
+    @XmlAttribute
 	@Column(name = "PPL_TITULO", nullable = false)
 	private String titulo;
 
 	/**
 	 * Número de orden de la personalización de plantilla
 	 */
-
+    @XmlAttribute
 	@Column(name = "PPL_ORDEN", precision = 22, scale = 0)
 	private Long orden;
 
 	/**
 	 * Contenido de la plantilla
 	 */
-
+    @XmlAttribute
 	@Lob
 	@Column(name = "PPL_CONTENIDO")
 	private String contenido;

@@ -106,4 +106,10 @@ order by
     WHERE tf.temaPadre is null
     ORDER BY tf.nombre]]>
 </query>
+
+<query name="es.caib.gusite.micromodel.Plantilla.obtenerPlantillaPorNombre"><![CDATA[
+    FROM Plantilla pla
+    WHERE pla.nombre = :nombre]]>
+    <query-param name="nombre" type="java.lang.String" />
+</query>
 </hibernate-mapping>

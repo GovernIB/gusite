@@ -10,12 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 /**
  * Versión de front / identifica las versiones para su implementación en temas
  * 
  * @author at4.net
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_FR_VERSION", uniqueConstraints = @UniqueConstraint(columnNames = "FVE_NOMBRE"))
 public class Version implements Auditable, java.io.Serializable {
@@ -38,6 +42,7 @@ public class Version implements Auditable, java.io.Serializable {
 	/**
 	 * Versión de GUSITE para la que se ha desarrollado el tema
 	 */
+    @XmlAttribute
 	@Id
 	@Column(name = "FVE_VERSION", unique = true, nullable = false, length = 2)
 	private String version;
@@ -45,7 +50,7 @@ public class Version implements Auditable, java.io.Serializable {
 	/**
 	 * Nom del tema
 	 */
-
+    @XmlAttribute
 	@Column(name = "FVE_NOMBRE", unique = true, nullable = false)
 	private String nombre;
 
