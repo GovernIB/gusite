@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -82,6 +83,7 @@ public class noticiasEditaAction extends BaseAction
                 for (String lang : noticiaBean.getTraducciones().keySet()) {
                 	TraduccionNoticia trad = noticiaBean.getTraducciones().get(lang);
                     if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
+						//TODO: ¿qué se intentaba hacer aquí? no funciona si se rellena sólo el texto 
                     	/* NPE!! cuando trad.getId es null
                         eliminar.add(trad.getId().getCodigoIdioma());
                         */
@@ -89,6 +91,12 @@ public class noticiasEditaAction extends BaseAction
                     } else if (trad.getUri().equals("")) {
                         trad.setUri(Cadenas.string2uri(trad.getTitulo()));
                     }
+					if (trad.getId() == null) {
+						TraduccionNoticiaPK tradId = new TraduccionNoticiaPK();
+						tradId.setCodigoNoticia(noticiaBean.getId());
+						tradId.setCodigoIdioma(lang);
+						trad.setId(tradId);
+					}
                 }
                 for (String key : eliminar) {
                     noticiaBean.getTraducciones().remove(key);

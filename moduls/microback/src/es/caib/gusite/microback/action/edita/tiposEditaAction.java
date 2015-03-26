@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -120,10 +121,13 @@ public class tiposEditaAction extends BaseAction {
                             TraduccionTipo traduccio = new TraduccionTipo();
                             traduccio.setNombre(llista.get(i).getNombre());
                             traduccio.setUri(llista.get(i).getUri());
+
+        					if (traduccio.getId() == null) {
+        						TraduccionTipoPK tradId = new TraduccionTipoPK();
+        						traduccio.setId(tradId);
+        					}
                             traduccio.getId().setCodigoTipo(tipo.getId());
                             traduccio.getId().setCodigoIdioma(((Idioma) langs.get(i)).getLang());
-                            
-
                             tipo.getTraducciones().put(((Idioma) langs.get(i)).getLang(), traduccio);
                         }
                     }

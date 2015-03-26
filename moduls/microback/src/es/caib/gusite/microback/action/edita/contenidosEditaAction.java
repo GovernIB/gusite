@@ -30,6 +30,7 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionContenidoPK;
 import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -88,9 +89,16 @@ public class contenidosEditaAction extends BaseAction
 					for (String lang : contenido.getTraducciones().keySet()) {
 						TraduccionContenido trad = contenido.getTraducciones().get(lang);
 						if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
+							//TODO: ¿qué se intentaba hacer aquí? no funciona si se rellena sólo el texto 
 							eliminar.add(lang);
 						} else if (trad.getUri().equals("")) {
 							trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+						}
+						if (trad.getId() == null) {
+							TraduccionContenidoPK tradId = new TraduccionContenidoPK();
+							tradId.setCodigoContenido(contenido.getId());
+							tradId.setCodigoIdioma(lang);
+							trad.setId(tradId);
 						}
 					}
 					for (String key : eliminar) {
