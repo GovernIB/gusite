@@ -291,5 +291,8 @@ public class Pregunta extends AuditableModel implements Traducible2 {
 	@Override
 	public void setIdi(String idi) {
 		this.idi = idi;
+		for (Respuesta respuesta : this.respuestas) {
+			respuesta.setIdi(idi);
+		}
 	}
 }

@@ -15,7 +15,7 @@ public class UsuarioEncuesta implements ValueObject {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "GUS_USUARIOENCUESTA_ID_GENERATOR", sequenceName = "GUS_SEQTIP", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "GUS_USUARIOENCUESTA_ID_GENERATOR", sequenceName = "GUS_SEQUSUENC", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_USUARIOENCUESTA_ID_GENERATOR")
 	@Column(name = "USE_CODI")
 	private Long id;
