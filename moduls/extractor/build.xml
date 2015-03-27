@@ -88,6 +88,9 @@
     <target name="jar.javadoc" depends="prepare">
         <javadoc
             destdir="${jar.doc.api}"
+			encoding="${javac.encoding}"
+			docencoding="${javac.encoding}"
+			charset="${javac.encoding}"
             classpathref="jar.class.path"
             packagenames="${package}.*"
             overview="${jar.doc}/overview.html"
