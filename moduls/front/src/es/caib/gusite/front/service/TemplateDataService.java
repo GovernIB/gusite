@@ -19,8 +19,6 @@ public class TemplateDataService {
 
 	protected static Log log = LogFactory.getLog(TemplateDataService.class);
 
-
-
 	public PersonalizacionPlantilla getPlantilla(Long idPerPla) throws ExceptionFront {
 		try {
 			PersonalizacionPlantillaDelegate ppdel = DelegateUtil.getPersonalizacionPlantillaDelegate();
@@ -32,17 +30,17 @@ public class TemplateDataService {
 		}
 	}
 
-
 	/**
 	 * Plantillas aplicables al microsite
+	 * 
 	 * @param microsite
 	 * @return
 	 * @throws ExceptionFront
 	 */
-	@Cacheable(value="plantillasSite", condition="#microsite.desarrollo != 'S'")
+	@Cacheable(value = "plantillasSite", condition = "#microsite.desarrollo != 'S'")
 	public List<PersonalizacionPlantilla> getPlantillasAplicables(Microsite microsite) throws ExceptionFront {
 		try {
-			//TODO: EJBs como beans spring
+			// TODO: EJBs como beans spring
 			PersonalizacionPlantillaDelegate ppdel = DelegateUtil.getPersonalizacionPlantillaDelegate();
 			List<PersonalizacionPlantilla> ret = ppdel.searchByMicrosite(microsite.getId());
 			return ret;
@@ -52,15 +50,15 @@ public class TemplateDataService {
 		}
 	}
 
-	
 	public PersonalizacionPlantilla getPlantilla(Microsite microsite, String plantilla) throws ExceptionFront {
-		for (PersonalizacionPlantilla pp : this.getPlantillasAplicables(microsite)) {
-			if (pp.getPlantilla().getNombre().equals(plantilla)) {
-				return pp;
+		if (microsite != null) {
+			for (PersonalizacionPlantilla pp : this.getPlantillasAplicables(microsite)) {
+				if (pp.getPlantilla().getNombre().equals(plantilla)) {
+					return pp;
+				}
 			}
 		}
 		return null;
 	}
-
 
 }

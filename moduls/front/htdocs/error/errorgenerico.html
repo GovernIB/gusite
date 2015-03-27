@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código nos muestra mensaje de error genérico.
+<!--/*
 
-Variables:
-	MVS_errparam: devuelve String de error de contenido de un site
-	MVS_microsite: devuelve un microsite a partir de su clave unica
--->
+	Pantalla de mensaje de error genérico.
+
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"	
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
@@ -14,15 +11,19 @@ Variables:
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
-<!-- MVS_errparam: devuelve String de error de contenido de un site -->
-<title th:if="${MVS_errparam.aviso} !=null"
-	th:text="${MVS_errparam.aviso}"></title>
-<script type="text/javascript" src="/resources/js/globales.js"
-	th:src="@{/resources/js/globales.js}"></script>
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
+<title th:if="${MVS_errparam.aviso} !=null" th:text="${MVS_errparam.aviso}"></title>
+<script type="text/javascript" src="/resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
 <link th:remove="tag" th:utext="${MVS_css}" />
 <script gus:replace="general/scriptmenu :: script"></script>
 </head>
@@ -30,13 +31,10 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 	<!-- contenidor -->
 	<div id="contenedor">
 		<!-- capçal -->
-		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
-		<div
-		 	th:if="${MVS_microsite}!=null"
-			th:remove="(${MVS_microsite.tipocabecera}=='0')==true ? all : none"
-			id="" th:fragment="cabeceraReducida">
-			<div
-				th:remove="(${MVS_microsite.tipocabecera}=='2')==true ? all : none">
+		<div th:if="${MVS_microsite}!=null"
+			 th:remove="(${MVS_microsite.tipocabecera}=='0') ? all : none"
+			 id="" th:fragment="cabeceraReducida">
+			<div th:remove="(${MVS_microsite.tipocabecera}=='2') ? all : none">
 				<div id="capsal">
 					<div>
 						<a href="index.html" id="lang" name="lang" accesskey="0"
@@ -48,9 +46,8 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 				</div>
 			</div>
 			<div
-				th:remove="(${MVS_microsite.tipocabecera}=='1')==true ? all : tag"
-				th:utext="${MVS_microsite.traduce.cabecerapersonal}">Cabecera
-				personal microsite</div>
+				th:remove="(${MVS_microsite.tipocabecera}=='1') ? all : tag"
+				th:utext="${MVS_microsite.traduce.cabecerapersonal}">Cabecera personal microsite</div>
 		</div>
 		<!--  Fi capçal -->
 		<!-- continguts -->

@@ -11,12 +11,12 @@ Variables:
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
-	th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : none">
+	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
 		var nodo='p'+'${MVS_contenido.id}';
 		window.onload = function() { menuJS(nodo); };
 		</script>
 <script type="text/javascript" th:if="${MVS_contenido}==null and ${MVS_microsite}!=null"
-	th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : none">
+	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
 		var nodo='0';
 		</script>
 <script th:fragment="script" type="text/javascript">

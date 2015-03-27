@@ -1,12 +1,10 @@
-var	thRoot="//dgtic/web/proyectos/ADCaib/_gforge_caib_svn/gusite-1.2_tc/moduls/front/htdocs";		// In an exploded war, this is usually webapp root
+var	thRoot="//dgtic/web/proyectos/ADCaib/_gforge_caib_svn/gusite-1.2_tc/moduls/front/htdocs";	// In an exploded war, this is usually webapp root
 var	thPath="./";		// In an exploded war, this is usually WEB-INF/<some-path>
-var     thDebug = true;
+var thDebug = true;
 
 
 //PARA DEFINIR VARIABLES
 var thVars = [
-            
-           
             [ "MVS_css",     "resources/css/estils.css" ],
             [ "MVS_micrositetitulo",     "Título Microsite Thymol" ],
             [ "MVS_home_campanya",        "Campaña Thymol" ],

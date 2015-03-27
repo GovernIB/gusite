@@ -31,10 +31,24 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
          <bean id="loginInterceptor" class="es.caib.gusite.front.interceptor.LoginInterceptor"></bean>
      </mvc:interceptors>
 
+	<bean id="hotLoadingTemplateResolver" class="org.thymeleaf.templateresolver.FileTemplateResolver">
+		<property name="prefix" value="#{systemProperties['es.caib.gusite.front.templateHotLoadingPath']}" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
+		<property name="cacheable" value="false" />
+		<property name="characterEncoding" value="UTF-8" />
+		<!-- 
+			un hack para que no se use este template resolver con templateCaching = 'S': ponerlo detrás del springTemplateResolver 
+			TODO: usar spring profiles
+		-->
+		<property name="order" value="#{systemProperties['es.caib.gusite.front.templateCaching']=='S'?4:1}" />
+	</bean>
+
+
 	<bean id="gusiteTemplateResolver"
 		class="es.caib.gusite.front.thymeleaf.GusiteTemplateResolver">
 		<property name="templateMode" value="HTML5" />
-		<property name="order" value="1" />
+		<property name="order" value="2" />
 		<property name="resolvablePatterns">
 			<set>
 				<value>db:*</value>
@@ -59,13 +73,14 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 		<property name="suffix" value=".html" />
 		<property name="templateMode" value="HTML5" />
 		<property name="cacheable" value="#{systemProperties['es.caib.gusite.front.templateCaching']=='S'}" />
-		<property name="order" value="2" />
+		<property name="order" value="3" />
 	</bean>
 
 	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
 		<property name="templateResolvers">
 			<set>
 				<ref bean="gusiteTemplateResolver"/>
+				<ref bean="hotLoadingTemplateResolver"/>
 				<ref bean="springTemplateResolver"/>
 			</set>
 		</property>

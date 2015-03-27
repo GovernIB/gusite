@@ -86,8 +86,7 @@ public class ErrorMicrosite {
 	 * @param descripcion
 	 * @param accion
 	 */
-	public ErrorMicrosite(String aviso, String mensaje, String descripcion,
-			String accion) {
+	public ErrorMicrosite(String aviso, String mensaje, String descripcion, String accion) {
 		this.aviso = aviso;
 		this.mensaje = mensaje;
 		this.descripcion = descripcion;

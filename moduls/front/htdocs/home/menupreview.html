@@ -36,7 +36,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 			<!-- menu -->
 			<div th:if="${MVS_microsite} !=null" th:remove="tag">
 				<div
-					th:id="(${MVS_microsite.tipomenu}=='1')==true ? 'marcLateral':'marcLateralAmbIcones'"
+					th:id="(${MVS_microsite.tipomenu}=='1') ? 'marcLateral':'marcLateralAmbIcones'"
 					id="">
 					<div gus:replace="general/menupreview :: menupreview"
 						th:remove="tag"></div>

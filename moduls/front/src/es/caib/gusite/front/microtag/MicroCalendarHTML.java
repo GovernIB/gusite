@@ -24,10 +24,8 @@ public class MicroCalendarHTML {
 	 * @param idioma
 	 * @return String
 	 */
-	public static String getTableCalendar(Long idsite, int anyo, int mes,
-			String idioma) {
-		return getTableCalendarEvent(idsite, anyo, mes, idioma,
-				new Hashtable<Object, Object>());
+	public static String getTableCalendar(Long idsite, int anyo, int mes, String idioma) {
+		return getTableCalendarEvent(idsite, anyo, mes, idioma, new Hashtable<Object, Object>());
 	}
 
 	/**
@@ -41,13 +39,11 @@ public class MicroCalendarHTML {
 	 * @param diaseventos
 	 * @return String Código HTML
 	 */
-	public static String getTableCalendarEvent(Long idsite, int anyo, int mes,
-			String idioma, Hashtable<Object, Object> diaseventos) {
+	public static String getTableCalendarEvent(Long idsite, int anyo, int mes, String idioma, Hashtable<Object, Object> diaseventos) {
 		String retorno = "";
 		retorno += getTableCalendarHead(anyo, mes, idioma);
 		retorno += getTableCalendarTH(idioma);
-		retorno += getTableCalendarContenido(idsite, anyo, mes, idioma,
-				diaseventos);
+		retorno += getTableCalendarContenido(idsite, anyo, mes, idioma, diaseventos);
 		retorno += "</table>";
 		return retorno;
 	}
@@ -62,12 +58,9 @@ public class MicroCalendarHTML {
 	 */
 	private static String getTableCalendarHead(int anyo, int mes, String idioma) {
 		String retorno = "";
-		ResourceBundle rb = ResourceBundle.getBundle(
-				"ApplicationResources_front", new Locale(idioma.toUpperCase(),
-						idioma.toUpperCase()));
+		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
 
-		retorno += "<table class=\"calendariTabla\" cellpadding=\"0\" cellspacing=\"0\" summary=\""
-				+ rb.getString("calendario.sumario") + "\">";
+		retorno += "<table class=\"calendariTabla\" cellpadding=\"0\" cellspacing=\"0\" summary=\"" + rb.getString("calendario.sumario") + "\">";
 		retorno += "<caption>";
 		switch (mes) {
 		case 1:
@@ -122,31 +115,22 @@ public class MicroCalendarHTML {
 	private static String getTableCalendarTH(String idioma) {
 		String retorno = "";
 
-		ResourceBundle rb = ResourceBundle.getBundle(
-				"ApplicationResources_front", new Locale(idioma.toUpperCase(),
-						idioma.toUpperCase()));
+		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
 		retorno = "<tr>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.lunes") + "\">"
-				+ rb.getString("calendario.lunes.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.martes") + "\">"
-				+ rb.getString("calendario.martes.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.miercoles") + "\">"
-				+ rb.getString("calendario.miercoles.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.jueves") + "\">"
-				+ rb.getString("calendario.jueves.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.viernes") + "\">"
-				+ rb.getString("calendario.viernes.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.sabado") + "\">"
-				+ rb.getString("calendario.sabado.abrv") + "</abbr></th>";
-		retorno += "<th scope=\"col\"><abbr title=\""
-				+ rb.getString("calendario.domingo") + "\">"
-				+ rb.getString("calendario.domingo.abrv") + "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.lunes") + "\">" + rb.getString("calendario.lunes.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.martes") + "\">" + rb.getString("calendario.martes.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.miercoles") + "\">" + rb.getString("calendario.miercoles.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.jueves") + "\">" + rb.getString("calendario.jueves.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.viernes") + "\">" + rb.getString("calendario.viernes.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.sabado") + "\">" + rb.getString("calendario.sabado.abrv")
+				+ "</abbr></th>";
+		retorno += "<th scope=\"col\"><abbr title=\"" + rb.getString("calendario.domingo") + "\">" + rb.getString("calendario.domingo.abrv")
+				+ "</abbr></th>";
 		retorno += "</tr>";
 
 		return retorno;
@@ -163,8 +147,7 @@ public class MicroCalendarHTML {
 	 * @param diaseventos
 	 * @return String
 	 */
-	private static String getTableCalendarContenido(Long idsite, int anyo,
-			int mes, String idioma, Hashtable<Object, Object> diaseventos) {
+	private static String getTableCalendarContenido(Long idsite, int anyo, int mes, String idioma, Hashtable<Object, Object> diaseventos) {
 		String retorno = "";
 		int cuentadias = 1;
 		int cuentapares = 1;
@@ -184,10 +167,8 @@ public class MicroCalendarHTML {
 
 		for (int j = 1; j < diasmes + 1; j++) {
 			if (diaseventos.get(new Long(j)) != null) {
-				retorno += "<td class=\"acte\"><a href=\""
-						+ MicroURI.uriAgenda(idsite,
-								(String) diaseventos.get(new Long(j)), idioma)
-						+ "\">" + j + "</td>";
+				retorno += "<td class=\"acte\"><a href=\"" + MicroURI.uriAgenda(idsite, (String) diaseventos.get(new Long(j)), idioma) + "\">" + j
+						+ "</td>";
 			} else {
 				retorno += "<td>" + j + "</td>";
 			}

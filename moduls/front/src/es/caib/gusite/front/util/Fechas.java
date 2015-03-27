@@ -29,8 +29,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 	 * @param conrango
 	 * @return boolean
 	 */
-	public static boolean vigente(Date fechaini, Date fechafin,
-			Date fechaacomparar, boolean conrango) {
+	public static boolean vigente(Date fechaini, Date fechafin, Date fechaacomparar, boolean conrango) {
 		boolean retorno = false;
 
 		Calendar ca = Calendar.getInstance();
@@ -53,8 +52,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 		}
 
 		if (fechafin == null) {
-			cf = new GregorianCalendar(ca.get(Calendar.YEAR) + 1,
-					ca.get(Calendar.MONTH) + 1, ca.get(Calendar.DATE));
+			cf = new GregorianCalendar(ca.get(Calendar.YEAR) + 1, ca.get(Calendar.MONTH) + 1, ca.get(Calendar.DATE));
 		} else {
 			if (!conrango) {
 				cf.setTime(fechafin);
@@ -65,8 +63,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 			}
 		}
 
-		if ((fechaacomparar.getTime() > ci.getTime().getTime())
-				&& (fechaacomparar.getTime() < cf.getTime().getTime())) {
+		if ((fechaacomparar.getTime() > ci.getTime().getTime()) && (fechaacomparar.getTime() < cf.getTime().getTime())) {
 			retorno = true;
 		}
 
@@ -83,8 +80,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 	 * @param fechaacomparar
 	 * @return boolean
 	 */
-	public static boolean between(Date fechaini, Date fechafin,
-			Date fechaacomparar) {
+	public static boolean between(Date fechaini, Date fechafin, Date fechaacomparar) {
 		boolean retorno = false;
 
 		Calendar ca = new GregorianCalendar();
@@ -102,8 +98,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 		if (fechafin == null) {
 			ca.setTime(fechaacomparar);
 			ci.setTime(fechaini);
-			if ((ci.get(Calendar.YEAR) == ca.get(Calendar.YEAR))
-					&& (ci.get(Calendar.MONTH) == ca.get(Calendar.MONTH))
+			if ((ci.get(Calendar.YEAR) == ca.get(Calendar.YEAR)) && (ci.get(Calendar.MONTH) == ca.get(Calendar.MONTH))
 					&& (ci.get(Calendar.DATE) == ca.get(Calendar.DATE))) {
 				retorno = true;
 			}
@@ -114,8 +109,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 			cf.setTime(fechafin);
 			cf.set(Calendar.HOUR_OF_DAY, 23);
 			cf.set(Calendar.MINUTE, 59);
-			if ((fechaacomparar.getTime() > ci.getTime().getTime())
-					&& (fechaacomparar.getTime() < cf.getTime().getTime())) {
+			if ((fechaacomparar.getTime() > ci.getTime().getTime()) && (fechaacomparar.getTime() < cf.getTime().getTime())) {
 				retorno = true;
 			}
 		}
@@ -133,8 +127,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 	 * @param minutosFin
 	 * @return boolean
 	 */
-	public static boolean betweenHours(Date fechaacomparar, int horaInicio,
-			int minutosInicio, int horaFin, int minutosFin) {
+	public static boolean betweenHours(Date fechaacomparar, int horaInicio, int minutosInicio, int horaFin, int minutosFin) {
 
 		boolean retorno = false;
 
@@ -153,8 +146,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 		cFin.set(Calendar.HOUR_OF_DAY, horaFin);
 		cFin.set(Calendar.MINUTE, minutosFin);
 
-		if ((fechaacomparar.getTime() >= cInicio.getTime().getTime())
-				&& (fechaacomparar.getTime() <= cFin.getTime().getTime())) {
+		if ((fechaacomparar.getTime() >= cInicio.getTime().getTime()) && (fechaacomparar.getTime() <= cFin.getTime().getTime())) {
 			retorno = true;
 		}
 
@@ -244,8 +236,7 @@ public class Fechas extends es.caib.gusite.utilities.date.Fechas {
 		// se ponen fechas imaginarias en el caso de que hayan nulos
 		// cf --> un anyo más con respecto al actual
 		if (fechaacomparar == null) {
-			cf = new GregorianCalendar(ca.get(Calendar.YEAR) + 1,
-					ca.get(Calendar.MONTH) + 1, ca.get(Calendar.DATE));
+			cf = new GregorianCalendar(ca.get(Calendar.YEAR) + 1, ca.get(Calendar.MONTH) + 1, ca.get(Calendar.DATE));
 		} else {
 			cf.setTime(fechaacomparar);
 		}

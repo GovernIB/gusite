@@ -24,8 +24,7 @@ public class UriLocaleResolver extends AbstractLocaleResolver {
 			}
 		}
 		if (req.getParameter("lang") != null) {
-			return new Locale(req.getParameter("lang").toUpperCase(), req
-					.getParameter("lang").toUpperCase());
+			return new Locale(req.getParameter("lang").toUpperCase(), req.getParameter("lang").toUpperCase());
 		}
 
 		return this.getDefaultLocale();
@@ -33,8 +32,7 @@ public class UriLocaleResolver extends AbstractLocaleResolver {
 	}
 
 	@Override
-	public void setLocale(HttpServletRequest req, HttpServletResponse resp,
-			Locale loc) {
+	public void setLocale(HttpServletRequest req, HttpServletResponse resp, Locale loc) {
 
 		resp.setLocale(loc);
 

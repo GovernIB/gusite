@@ -15,9 +15,9 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  * 
  * @author Indra
  * 
- *         (esta clase recibe un objeto Microsite y genera codigo html) 
- *         TODO cambiar los getXXXX() por generaXXXX() 
- *         TODO esta clase parece una duplicacion de microback.MParserHTML
+ *         (esta clase recibe un objeto Microsite y genera codigo html) TODO
+ *         cambiar los getXXXX() por generaXXXX() TODO esta clase parece una
+ *         duplicacion de microback.MParserHTML
  * 
  */
 public class MParserHTML {
@@ -36,14 +36,10 @@ public class MParserHTML {
 	public StringBuffer getHtmlCampanya(Microsite microsite, String idioma) {
 		StringBuffer retorno = new StringBuffer();
 
-		if ((microsite.getTraduccion(idioma) != null)
-				&& (microsite.getImagenCampanya() != null)) {
-			String Titulo = ((TraduccionMicrosite) microsite
-					.getTraduccion(idioma)).getTitulo();
-			String SubtituloCampanya = ((TraduccionMicrosite) microsite
-					.getTraduccion(idioma)).getSubtitulocampanya();
-			String TituloCampanya = ((TraduccionMicrosite) microsite
-					.getTraduccion(idioma)).getTitulocampanya();
+		if ((microsite.getTraduccion(idioma) != null) && (microsite.getImagenCampanya() != null)) {
+			String Titulo = ((TraduccionMicrosite) microsite.getTraduccion(idioma)).getTitulo();
+			String SubtituloCampanya = ((TraduccionMicrosite) microsite.getTraduccion(idioma)).getSubtitulocampanya();
+			String TituloCampanya = ((TraduccionMicrosite) microsite.getTraduccion(idioma)).getTitulocampanya();
 			String UrlCampanya = microsite.getUrlcampanya();
 
 			if (Titulo == null) {
@@ -57,26 +53,20 @@ public class MParserHTML {
 			}
 
 			retorno.append("<div id=\"enllasDest\" style=\"background:url("
-					+ MicroURI.uriImg(Microfront.RMICROSITE, microsite.getId()
-							.longValue(), microsite.getImagenCampanya().getId()
-							.longValue()) + ") no-repeat #fff;\" >");
+					+ MicroURI.uriImg(Microfront.RMICROSITE, microsite.getId().longValue(), microsite.getImagenCampanya().getId().longValue())
+					+ ") no-repeat #fff;\" >");
 			retorno.append("<h2 class=\"invisible\">Destaquem</h2>");
 			if (UrlCampanya != null) {
-				retorno.append("<a id=\"enllas\" href=\"" + UrlCampanya
-						+ "\" title=\"" + SubtituloCampanya + "\">");
-				retorno.append("<span class=\"frase1\">" + TituloCampanya
-						+ "</span>");
+				retorno.append("<a id=\"enllas\" href=\"" + UrlCampanya + "\" title=\"" + SubtituloCampanya + "\">");
+				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
 				retorno.append("<br />");
-				retorno.append("<span class=\"frase2\">" + SubtituloCampanya
-						+ "</span>");
+				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
 				retorno.append("</a></div>");
 			} else {
 				retorno.append("<div id=\"enllas\" >");
-				retorno.append("<span class=\"frase1\">" + TituloCampanya
-						+ "</span>");
+				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
 				retorno.append("<br />");
-				retorno.append("<span class=\"frase2\">" + SubtituloCampanya
-						+ "</span>");
+				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
 				retorno.append("</div></div>");
 			}
 			retorno.append("<div id=\"enllasDestPeu\"></div>");
@@ -95,16 +85,13 @@ public class MParserHTML {
 	 * @param obligatorio
 	 * @return StringBuffer Código HTML
 	 */
-	public StringBuffer getTagSelect(String nombre, ArrayList<?> valores,
-			String tipo, int lineas, int obligatorio) {
+	public StringBuffer getTagSelect(String nombre, ArrayList<?> valores, String tipo, int lineas, int obligatorio) {
 		StringBuffer retorno = new StringBuffer();
 		/*
 		 * <select name="6"> <select name="6" size="4" multiple> <option
 		 * value="a">a</option> </select>
 		 */
-		retorno.append("<select name=\""
-				+ ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "")
-				+ nombre);
+		retorno.append("<select name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
 		retorno.append("\" id=\"" + nombre + "\"");
 		if (tipo.equals(Contacto.RTYPE_SELECTORMULTIPLE)) {
 			if (lineas <= 1) {
@@ -119,8 +106,7 @@ public class MParserHTML {
 		Iterator<?> iter = valores.iterator();
 		while (iter.hasNext()) {
 			String opcion = (String) iter.next();
-			retorno.append("<option value=\"" + opcion + "\">" + opcion
-					+ "</option>");
+			retorno.append("<option value=\"" + opcion + "\">" + opcion + "</option>");
 		}
 
 		retorno.append("</select> " + ((obligatorio == 1) ? "*" : ""));
@@ -137,16 +123,11 @@ public class MParserHTML {
 	 * @param obligatorio
 	 * @return StringBuffer
 	 */
-	public StringBuffer getTagTextarea(String nombre, int columnas, int lineas,
-			int obligatorio) {
+	public StringBuffer getTagTextarea(String nombre, int columnas, int lineas, int obligatorio) {
 		StringBuffer retorno = new StringBuffer();
 		// <textarea name="5" cols="34" rows="5"></textarea>
-		retorno.append("<textarea name=\""
-				+ ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "")
-				+ nombre);
-		retorno.append("\" id=\"" + nombre + "\" cols=\"" + columnas
-				+ "\" rows=\"" + lineas + "\"></textarea> "
-				+ ((obligatorio == 1) ? "*" : ""));
+		retorno.append("<textarea name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
+		retorno.append("\" id=\"" + nombre + "\" cols=\"" + columnas + "\" rows=\"" + lineas + "\"></textarea> " + ((obligatorio == 1) ? "*" : ""));
 		return retorno;
 	}
 
@@ -159,16 +140,12 @@ public class MParserHTML {
 	 * @param obligatorio
 	 * @return StringBuffer
 	 */
-	public StringBuffer getTagText(String nombre, int longitudtexto,
-			int obligatorio) {
+	public StringBuffer getTagText(String nombre, int longitudtexto, int obligatorio) {
 		StringBuffer retorno = new StringBuffer();
 		// <input name="4" id="4" type="text" />
-		retorno.append("<input name=\""
-				+ ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "")
-				+ nombre);
+		retorno.append("<input name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
 		retorno.append("\" id=\"" + nombre);
-		retorno.append("\" type=\"text\" size=\"" + (longitudtexto + 2)
-				+ "\" maxlength=\"" + longitudtexto + "\" /> "
+		retorno.append("\" type=\"text\" size=\"" + (longitudtexto + 2) + "\" maxlength=\"" + longitudtexto + "\" /> "
 				+ ((obligatorio == 1) ? "*" : ""));
 		return retorno;
 	}
@@ -206,8 +183,7 @@ public class MParserHTML {
 					if (nprop == 2) { // al segundo hay que comprobar si tiene
 										// comillas y quitarselas
 						if (strpropertyid[1].indexOf("\"") != -1) {
-							retorno = strpropertyid[1].substring(1,
-									strpropertyid[1].length() - 1);
+							retorno = strpropertyid[1].substring(1, strpropertyid[1].length() - 1);
 						} else {
 							retorno = strpropertyid[1];
 						}
@@ -244,8 +220,7 @@ public class MParserHTML {
 		int longi2 = cadena.indexOf("</b>");
 		retorno2 = cadena.substring(longi + 3, (longi2));
 		retorno = retorno.substring(0, (retorno.length() - 1));
-		retorno = "<a href=" + (retorno.substring(13)) + "&language=" + idioma
-				+ "\">" + retorno2 + "</a>";
+		retorno = "<a href=" + (retorno.substring(13)) + "&language=" + idioma + "\">" + retorno2 + "</a>";
 
 		return retorno;
 	}
@@ -267,9 +242,7 @@ public class MParserHTML {
 		// Por ahora, para que funcione, añadimos /sites/resources/
 
 		if ((idsite != null) && (idcss != null)) {
-			retorno = "<link href=\"/sites/"
-					+ MicroURI.uriImg(Microfront.RMICROSITE,
-							idsite.longValue(), idcss.longValue())
+			retorno = "<link href=\"/sites/" + MicroURI.uriImg(Microfront.RMICROSITE, idsite.longValue(), idcss.longValue())
 					+ "\" rel=\"stylesheet\" type=\"text/css\" />";
 			retorno += "<link href=\"/sites/resources/css/estils_print.css\" rel=\"stylesheet\" type=\"text/css\" media=\"print\" />";
 		} else {
@@ -306,11 +279,9 @@ public class MParserHTML {
 	 */
 	public int getNumeroaleatorio(int maximo) {
 		Random rand = new Random();
-		Microfront.contadorbanner = new Long(
-				Microfront.contadorbanner.longValue() + 1);
+		Microfront.contadorbanner = new Long(Microfront.contadorbanner.longValue() + 1);
 
-		Long operando1 = new Long(Microfront.contadorbanner.longValue()
-				+ rand.nextInt(maximo));
+		Long operando1 = new Long(Microfront.contadorbanner.longValue() + rand.nextInt(maximo));
 
 		Long operando2 = new Long(maximo);
 		int resto = operando1.intValue() % operando2.intValue();

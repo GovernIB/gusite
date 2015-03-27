@@ -7,13 +7,10 @@ import es.caib.gusite.front.general.Microfront;
 
 public class Cadenas {
 
-	private static String[][] canvis = new String[][] { { " I ", " i " },
-			{ " O ", " o " }, { " De ", " de " }, { " Del ", " del " },
-			{ " D'", " d'" }, { " A ", " a " }, { " En ", " en " },
-			{ " El ", " el " }, { " L'", " l'" }, { " La ", " la " },
-			{ " Als ", " als " }, { " Els ", " els " }, { " Les ", " les " },
-			{ " Al ", " al " }, { " Amb ", " amb " }, { " Que ", " que " },
-			{ " Per ", " per " }, { "l.L", "l·l" }, { "l·L", "l·l" } };
+	private static String[][] canvis = new String[][] { { " I ", " i " }, { " O ", " o " }, { " De ", " de " }, { " Del ", " del " },
+			{ " D'", " d'" }, { " A ", " a " }, { " En ", " en " }, { " El ", " el " }, { " L'", " l'" }, { " La ", " la " }, { " Als ", " als " },
+			{ " Els ", " els " }, { " Les ", " les " }, { " Al ", " al " }, { " Amb ", " amb " }, { " Que ", " que " }, { " Per ", " per " },
+			{ "l.L", "l·l" }, { "l·L", "l·l" } };
 
 	/**
 	 * Este método divide el string en palabras y las pasa a un arraylist
@@ -78,19 +75,16 @@ public class Cadenas {
 
 	}
 
-	protected static void replace(String original, StringBuffer texte,
-			String patro, String canvi) {
+	protected static void replace(String original, StringBuffer texte, String patro, String canvi) {
 
 		final int LONG_CANVI = canvi.length();
 
 		if (patro.length() != LONG_CANVI) {
-			throw new RuntimeException(
-					"els patrons de canvis a Format han de tenir la mateixa llargada!");
+			throw new RuntimeException("els patrons de canvis a Format han de tenir la mateixa llargada!");
 		}
 
 		// per cada ocurrencia del canvi feim el canvi en el texte original
-		for (int index = original.indexOf(patro); index != -1; index = original
-				.indexOf(patro, index + LONG_CANVI)) {
+		for (int index = original.indexOf(patro); index != -1; index = original.indexOf(patro, index + LONG_CANVI)) {
 			texte.replace(index, index + LONG_CANVI, canvi);
 		}
 
@@ -120,11 +114,9 @@ public class Cadenas {
 	 *            número de elementos del vector de mensajes que se pasaran al
 	 *            string
 	 */
-	public static String statcktrace2String(StackTraceElement[] mensajes,
-			int numelementos) {
+	public static String statcktrace2String(StackTraceElement[] mensajes, int numelementos) {
 		StringBuffer stlog = new StringBuffer("");
-		int mensmostrados = (mensajes.length < numelementos) ? mensajes.length
-				: numelementos;
+		int mensmostrados = (mensajes.length < numelementos) ? mensajes.length : numelementos;
 		for (int x = 0; x < mensmostrados; x++) {
 			stlog.append(mensajes[x].getClassName());
 			stlog.append(" (");

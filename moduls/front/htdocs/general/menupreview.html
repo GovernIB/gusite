@@ -24,7 +24,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 		<!-- MVS_menu: devuelve el menú principal de un microsite listo para ser visualizado por el público -->
 		<div th:if="${MVS_menu} !=null" th:remove="tag">
 			<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
-			<div th:remove="(${MVS_microsite.tipomenu}=='2')==true ? all : tag">
+			<div th:remove="(${MVS_microsite.tipomenu}=='2') ? all : tag">
 				<!-- menu -->
 				<ul >
 					<li th:each="i:${MVS_menu}">
@@ -73,7 +73,7 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 					</li>
 				</ul>
 			</div>
-			<div th:remove="(${MVS_microsite.tipomenu}=='1')==true ? all : tag">
+			<div th:remove="(${MVS_microsite.tipomenu}=='1') ? all : tag">
 				<!-- menu con iconos -->
 				<div th:each="elementoMenu:${MVS_menu}" th:remove="tag">
 					<h3 th:if="${elementoMenu.imagenmenu} !=null">

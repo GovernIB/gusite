@@ -50,18 +50,14 @@ public class ParserHtmlJavascript extends MParserHTML {
 	 * @param idioma
 	 * @return StringBuffer con el pegote de html
 	 */
-	public StringBuffer getHtmlEncuesta(HttpServletRequest request,
-			Long idmicrosite, String idencuesta, String idioma) {
+	public StringBuffer getHtmlEncuesta(HttpServletRequest request, Long idmicrosite, String idencuesta, String idioma) {
 		StringBuffer retorno = new StringBuffer();
 
-		ResourceBundle rb = ResourceBundle.getBundle(
-				"ApplicationResources_front", new Locale(idioma.toUpperCase(),
-						idioma.toUpperCase()));
+		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
 
 		try {
 			// u91856 29/06/2011 Respostes que venen donades fixes
-			Map param = (request == null) ? null : (HashMap) request
-					.getSession().getAttribute(Microfront.ENCPARAM);
+			Map param = (request == null) ? null : (HashMap) request.getSession().getAttribute(Microfront.ENCPARAM);
 			if (param == null) {
 				param = new HashMap();
 			} else {
@@ -80,54 +76,39 @@ public class ParserHtmlJavascript extends MParserHTML {
 					CertsPrincipal principal = null;
 					principal = CertsPrincipal.getCurrent();
 					// principal = (CertsPrincipal) request.getUserPrincipal();
-					String identificacio = rb.getString(
-							"encuesta.identificacion").replaceAll("\\{1\\}",
-							principal.getFullName());
+					String identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", principal.getFullName());
 					retorno.append(identificacio);
 				} catch (Exception e) {
-					log.error("Error en la identificación del usuario en la encuesta: "
-							+ idencuesta + " ---> " + e);
-					throw new Exception(
-							"Error en la identificación del usuario");
+					log.error("Error en la identificación del usuario en la encuesta: " + idencuesta + " ---> " + e);
+					throw new Exception("Error en la identificación del usuario");
 				}
 			} else {
 				// retorno.append(rb.getString("encuesta.anonima"));
 			}
 			retorno.append("<br><br>");
 
-			if ((encuesta.getVisible().equals("S"))
-					&& (Fechas.vigente(encuesta.getFpublicacion(),
-							encuesta.getFcaducidad()))) {
+			if ((encuesta.getVisible().equals("S")) && (Fechas.vigente(encuesta.getFpublicacion(), encuesta.getFcaducidad()))) {
 
 				retorno.append("<form name=\"encuesta\" th:action=\"@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}\" method=\"post\" id=\"encuesta\">\n");
-				retorno.append("<input type=\"hidden\" name=\"idsite\" value=\""
-						+ idmicrosite + "\">\n");
-				retorno.append("<input type=\"hidden\" name=\"lang\" value=\""
-						+ idioma + "\">\n");
-				retorno.append("<input type=\"hidden\" name=\"cont\" value=\""
-						+ idencuesta + "\">\n");
+				retorno.append("<input type=\"hidden\" name=\"idsite\" value=\"" + idmicrosite + "\">\n");
+				retorno.append("<input type=\"hidden\" name=\"lang\" value=\"" + idioma + "\">\n");
+				retorno.append("<input type=\"hidden\" name=\"cont\" value=\"" + idencuesta + "\">\n");
 				retorno.append("<input type=\"hidden\" name=\"enccomp\" value=\"yes\">\n");
 
 				StringBuffer scriptValidar = new StringBuffer();
-				scriptValidar
-						.append("<script>\n function comptaChecks(pregunta){ \n");
+				scriptValidar.append("<script>\n function comptaChecks(pregunta){ \n");
 				scriptValidar.append("	 var num=0; \n");
-				scriptValidar
-						.append("	 for (i=0; i<eval('document.encuesta.' + pregunta + '.length'); i++){ \n");
-				scriptValidar
-						.append("	 	if (eval('document.encuesta.' + pregunta + '[i].checked')==true) \n");
+				scriptValidar.append("	 for (i=0; i<eval('document.encuesta.' + pregunta + '.length'); i++){ \n");
+				scriptValidar.append("	 	if (eval('document.encuesta.' + pregunta + '[i].checked')==true) \n");
 				scriptValidar.append("	 		num++; \n");
 				scriptValidar.append("	 } \n");
 				scriptValidar.append("	 return num;  \n } \n \n");
 
 				scriptValidar.append("function marcaCheck(idResp, idChk){ \n");
-				scriptValidar
-						.append("	 if (eval('document.encuesta.T' + idResp + '_' + idChk).value.length==0) { \n");
-				scriptValidar
-						.append("	 	document.getElementById(idResp + '_' + idChk).checked = false;\n");
+				scriptValidar.append("	 if (eval('document.encuesta.T' + idResp + '_' + idChk).value.length==0) { \n");
+				scriptValidar.append("	 	document.getElementById(idResp + '_' + idChk).checked = false;\n");
 				scriptValidar.append("	 }else{ \n");
-				scriptValidar
-						.append("	 	document.getElementById(idResp + '_' + idChk).checked = true;\n");
+				scriptValidar.append("	 	document.getElementById(idResp + '_' + idChk).checked = true;\n");
 				scriptValidar.append("   } \n} \n \n");
 
 				scriptValidar.append("function getChecked(radioObj) {\n");
@@ -136,16 +117,13 @@ public class ParserHtmlJavascript extends MParserHTML {
 				scriptValidar.append("	 if(radioLength == undefined){\n");
 				scriptValidar.append("   	if(radioObj.checked) return true;\n");
 				scriptValidar.append("		else false; }\n");
-				scriptValidar
-						.append("	 for(var i = 0; i < radioLength; i++) {\n");
-				scriptValidar
-						.append("		if(radioObj[i].checked) return true;\n");
+				scriptValidar.append("	 for(var i = 0; i < radioLength; i++) {\n");
+				scriptValidar.append("		if(radioObj[i].checked) return true;\n");
 				scriptValidar.append("	 }\n");
 				scriptValidar.append("	 return false;\n");
 				scriptValidar.append("} \n \n");
 
-				scriptValidar
-						.append("function validaencuesta(){\n var txtError = \"\"; \n");
+				scriptValidar.append("function validaencuesta(){\n var txtError = \"\"; \n");
 
 				Iterator iter = encuesta.getPreguntas().iterator();
 				while (iter.hasNext()) { // Preguntas de una encuesta
@@ -154,95 +132,52 @@ public class ParserHtmlJavascript extends MParserHTML {
 					pregunta.setIdi(idioma);
 
 					obligatoriedad = "";
-					if ((pregunta.getVisible().equals("S"))
-							&& (pregunta.getVisiblecmp().equals("S"))) {
-						Integer max = (pregunta.getMaxContestadas() != null) ? pregunta
-								.getMaxContestadas() : new Integer(0);
-						Integer min = (pregunta.getMinContestadas() != null) ? pregunta
-								.getMinContestadas() : new Integer(0);
+					if ((pregunta.getVisible().equals("S")) && (pregunta.getVisiblecmp().equals("S"))) {
+						Integer max = (pregunta.getMaxContestadas() != null) ? pregunta.getMaxContestadas() : new Integer(0);
+						Integer min = (pregunta.getMinContestadas() != null) ? pregunta.getMinContestadas() : new Integer(0);
 						if ("S".equals(pregunta.getMultiresp())) {
 							if (min != 0 && max != 0) {
 								// obligatoriedad = new String
 								// (rb.getSting("clau").getBytes("ISO-8859-1"),"UTF-8");
-								obligatoriedad = rb
-										.getString("encuesta.respcont.minmax");
-								obligatoriedad = obligatoriedad.replaceAll(
-										"\\{1\\}", min.toString()).replaceAll(
-										"\\{2\\}", max.toString());
+								obligatoriedad = rb.getString("encuesta.respcont.minmax");
+								obligatoriedad = obligatoriedad.replaceAll("\\{1\\}", min.toString()).replaceAll("\\{2\\}", max.toString());
 
-								scriptValidar.append("if (comptaChecks(\"C"
-										+ pregunta.getId() + "\") > " + max
-										+ " || comptaChecks(\"C"
-										+ pregunta.getId() + "\") < " + min
-										+ ") ");
-								scriptValidar
-										.append(" txtError = txtError + \"\\n"
-												+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta
-														.getTraduce())
-														.getTitulo()
-														: "Error en traduccion"
-																+ "\"")
-												+ "\";\n");
+								scriptValidar.append("if (comptaChecks(\"C" + pregunta.getId() + "\") > " + max + " || comptaChecks(\"C"
+										+ pregunta.getId() + "\") < " + min + ") ");
+								scriptValidar.append(" txtError = txtError + \"\\n"
+										+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta.getTraduce()).getTitulo()
+												: "Error en traduccion" + "\"") + "\";\n");
 							} else if (min != 0) {
-								obligatoriedad = rb
-										.getString("encuesta.respcont.min");
-								obligatoriedad = obligatoriedad.replaceAll(
-										"\\{1\\}", min.toString());
+								obligatoriedad = rb.getString("encuesta.respcont.min");
+								obligatoriedad = obligatoriedad.replaceAll("\\{1\\}", min.toString());
 
-								scriptValidar.append("if (comptaChecks(\"C"
-										+ pregunta.getId() + "\") < " + min
-										+ ") ");
-								scriptValidar
-										.append(" txtError = txtError + \"\\n"
-												+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta
-														.getTraduce())
-														.getTitulo()
-														: "Error en traduccion"
-																+ "\"")
-												+ "\";\n");
+								scriptValidar.append("if (comptaChecks(\"C" + pregunta.getId() + "\") < " + min + ") ");
+								scriptValidar.append(" txtError = txtError + \"\\n"
+										+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta.getTraduce()).getTitulo()
+												: "Error en traduccion" + "\"") + "\";\n");
 							} else if (max != 0) {
-								obligatoriedad = rb
-										.getString("encuesta.respcont.max");
-								obligatoriedad = obligatoriedad.replaceAll(
-										"\\{1\\}", max.toString());
+								obligatoriedad = rb.getString("encuesta.respcont.max");
+								obligatoriedad = obligatoriedad.replaceAll("\\{1\\}", max.toString());
 
-								scriptValidar.append("if (comptaChecks(\"C"
-										+ pregunta.getId() + "\") > " + max
-										+ ") ");
-								scriptValidar
-										.append(" txtError = txtError + \"\\n"
-												+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta
-														.getTraduce())
-														.getTitulo()
-														: "Error en traduccion"
-																+ "\"")
-												+ "\";\n");
+								scriptValidar.append("if (comptaChecks(\"C" + pregunta.getId() + "\") > " + max + ") ");
+								scriptValidar.append(" txtError = txtError + \"\\n"
+										+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta.getTraduce()).getTitulo()
+												: "Error en traduccion" + "\"") + "\";\n");
 							}
 						} else { // Resposta simple
 							if (min == 1) {
-								obligatoriedad = rb
-										.getString("encuesta.obligatoria");
+								obligatoriedad = rb.getString("encuesta.obligatoria");
 
-								scriptValidar
-										.append("	if (!getChecked(document.encuesta.R"
-												+ pregunta.getId() + ")) \n");
-								scriptValidar
-										.append(" txtError = txtError + \"\\n"
-												+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta
-														.getTraduce())
-														.getTitulo()
-														: "Error en traduccion"
-																+ "\"")
-												+ "\";\n");
+								scriptValidar.append("	if (!getChecked(document.encuesta.R" + pregunta.getId() + ")) \n");
+								scriptValidar.append(" txtError = txtError + \"\\n"
+										+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta.getTraduce()).getTitulo()
+												: "Error en traduccion" + "\"") + "\";\n");
 							}
 						}
 						retorno.append("<div id=\"enquestaPreguntaCom\">\n");
 						retorno.append("<h3>"
-								+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta
-										.getTraduce()).getTitulo()
-										+ " "
-										+ obligatoriedad : "&nbsp;")
-								+ "</h3>\n");
+								+ ((pregunta.getTraduce() != null) ? ((TraduccionPregunta) pregunta.getTraduce()).getTitulo() + " " + obligatoriedad
+										: "&nbsp;") + "</h3>\n");
 
 						if (pregunta.getImagen() != null) {
 							retorno.append("<p><img th:src=\"@{${#gusuri.archivopub(MVS_microsite,pregunta.imagen)}}\" alt=\"\" /></p>\n");
@@ -276,84 +211,53 @@ public class ParserHtmlJavascript extends MParserHTML {
 								disabledRadio = " disabled ";
 							}
 
-							String compId = respuesta.getId() + "_"
-									+ pregunta.getId();
+							String compId = respuesta.getId() + "_" + pregunta.getId();
 
 							if (pregunta.getMultiresp().equals("S")) {
 								if (respuesta.getTipo().equals("I")) {
 									disabledChk = " disabled ";
 								}
 
-								retorno.append("<input type=\"checkbox\" id=\""
-										+ compId + "\" name=\"C"
-										+ pregunta.getId() + "\" value=\""
-										+ respuesta.getId() + "\""
-										+ disabledChk + checked + ">");
+								retorno.append("<input type=\"checkbox\" id=\"" + compId + "\" name=\"C" + pregunta.getId() + "\" value=\""
+										+ respuesta.getId() + "\"" + disabledChk + checked + ">");
 							} else {
-								scriptRadioDisabled += "document.getElementById(\""
-										+ compId + "\").disabled=true;\n";
+								scriptRadioDisabled += "document.getElementById(\"" + compId + "\").disabled=true;\n";
 
-								retorno.append("<input type=\"radio\"id=\""
-										+ compId + "\"name=\"R"
-										+ pregunta.getId() + "\" value=\""
-										+ respuesta.getId() + "\"" + checked
-										+ ">");
+								retorno.append("<input type=\"radio\"id=\"" + compId + "\"name=\"R" + pregunta.getId() + "\" value=\""
+										+ respuesta.getId() + "\"" + checked + ">");
 							}
 
-							retorno.append(((respuesta.getTraduce() != null) ? ((TraduccionRespuesta) respuesta
-									.getTraduce()).getTitulo() : "&nbsp;"));
+							retorno.append(((respuesta.getTraduce() != null) ? ((TraduccionRespuesta) respuesta.getTraduce()).getTitulo() : "&nbsp;"));
 							retorno.append("</label>\n");
 
 							if (respuesta.getTipo().equals("I")) {
-								scriptTxtDisabled += "document.encuesta.T"
-										+ respuesta.getId() + "_"
-										+ pregunta.getId()
-										+ ".readonly=true;\n";
+								scriptTxtDisabled += "document.encuesta.T" + respuesta.getId() + "_" + pregunta.getId() + ".readonly=true;\n";
 								// retorno.append("<input type=\"text\" name=\"T"
 								// + respuesta.getId() + "_" + pregunta.getId()
 								// + "\"" + readonly + ">");
-								String onKeyUp = "onKeyUp=\"marcaCheck('"
-										+ respuesta.getId() + "','"
-										+ pregunta.getId() + "');\"";
-								retorno.append("<br><TEXTAREA COLS=\"120\" ROWS=\"2\" "
-										+ onKeyUp
-										+ " name=\"T"
-										+ respuesta.getId()
-										+ "_"
-										+ pregunta.getId()
-										+ "\""
-										+ disabledTxt
-										+ "></TEXTAREA>");
+								String onKeyUp = "onKeyUp=\"marcaCheck('" + respuesta.getId() + "','" + pregunta.getId() + "');\"";
+								retorno.append("<br><TEXTAREA COLS=\"120\" ROWS=\"2\" " + onKeyUp + " name=\"T" + respuesta.getId() + "_"
+										+ pregunta.getId() + "\"" + disabledTxt + "></TEXTAREA>");
 								if (param.get(respuesta.getId()) != null) {
-									retorno.append("<script>document.getElementById(\"encuesta\").T"
-											+ respuesta.getId()
-											+ "_"
-											+ pregunta.getId()
-											+ ".value='"
-											+ (String) param.get(respuesta
-													.getId()) + "';</script>");
+									retorno.append("<script>document.getElementById(\"encuesta\").T" + respuesta.getId() + "_" + pregunta.getId()
+											+ ".value='" + (String) param.get(respuesta.getId()) + "';</script>");
 								}
 							}
 							retorno.append("</li>\n");
 						}
 						if (!"".equals(disabledRadio)) {
-							retorno.append("<script>\n" + scriptRadioDisabled
-									+ "\n" + scriptTxtDisabled
-									+ "</script>\n\n");
+							retorno.append("<script>\n" + scriptRadioDisabled + "\n" + scriptTxtDisabled + "</script>\n\n");
 						}
 
 						retorno.append("</ul>\n");
 						retorno.append("</div>\n");
 					}
 				}
-				scriptValidar
-						.append("; \n if (txtError == \"\") { \n document.encuesta.submit(); \n } else { \n alert(\""
-								+ rb.getString("encuesta.condiciones")
-								+ "\" + txtError); } }\n</script>\n");
+				scriptValidar.append("; \n if (txtError == \"\") { \n document.encuesta.submit(); \n } else { \n alert(\""
+						+ rb.getString("encuesta.condiciones") + "\" + txtError); } }\n</script>\n");
 
 				retorno.append("<div id=\"botoneraCom\"><label><input type=\"button\" onClick = \"validaencuesta();\" name=\"btnanar\" value=\""
-						+ rb.getString("encuesta.enviar")
-						+ "\" /></label></div>\n");
+						+ rb.getString("encuesta.enviar") + "\" /></label></div>\n");
 				retorno.append("</form>\n");
 				if (encuesta.getMostrar().equalsIgnoreCase("S")) {
 					retorno.append("<p style=\"text-align:center;\"><a th:href=\"@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}\" th:text=\"#{encuesta.verresultados}\"></a></p>\n");
@@ -363,9 +267,7 @@ public class ParserHtmlJavascript extends MParserHTML {
 			} else {
 				// encuesta no visible o caducada
 				retorno.append("<div id=\"enquestaPreguntaCom\">\n");
-				retorno.append("<h3>"
-						+ ((encuesta.getTraduce() != null) ? ((TraduccionEncuesta) encuesta
-								.getTraduce()).getTitulo() : "&nbsp;")
+				retorno.append("<h3>" + ((encuesta.getTraduce() != null) ? ((TraduccionEncuesta) encuesta.getTraduce()).getTitulo() : "&nbsp;")
 						+ "</h3>\n");
 				retorno.append("<p style=\"text-align:center;\" th:text=\"#{encuesta.caducada}\"></p>\n");
 				retorno.append("<p style=\"text-align:center;\"><a th:href=\"@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}\" th:text=\"#{encuesta.verresultados}\"></a></p>\n");

@@ -6,9 +6,9 @@ import java.io.InputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thymeleaf.templateresolver.TemplateResolver;
 import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.resourceresolver.IResourceResolver;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 import es.caib.gusite.front.general.ExceptionFront;
 import es.caib.gusite.front.service.TemplateDataService;
@@ -25,7 +25,7 @@ public class GusiteTemplateResolver extends TemplateResolver {
 	private final static String PREFIX = "db:";
 	private final static String DEVPREFIX = "devdb:";
 	protected static Log log = LogFactory.getLog(GusiteTemplateResolver.class);
-	
+
 	@Autowired
 	private TemplateDataService templateDataService;
 
@@ -45,8 +45,7 @@ public class GusiteTemplateResolver extends TemplateResolver {
 	}
 
 	@Override
-	protected String computeResourceName(
-			TemplateProcessingParameters templateProcessingParameters) {
+	protected String computeResourceName(TemplateProcessingParameters templateProcessingParameters) {
 		String templateName = templateProcessingParameters.getTemplateName();
 		if (templateName.startsWith(DEVPREFIX)) {
 			return templateName.substring(DEVPREFIX.length());
@@ -57,10 +56,8 @@ public class GusiteTemplateResolver extends TemplateResolver {
 
 	private class GusiteResourceResolver implements IResourceResolver {
 		@Override
-		public InputStream getResourceAsStream(
-				TemplateProcessingParameters templateProcessingParameters,
-				String resourceName) {
-			
+		public InputStream getResourceAsStream(TemplateProcessingParameters templateProcessingParameters, String resourceName) {
+
 			PersonalizacionPlantilla template;
 			try {
 				template = templateDataService.getPlantilla(Long.valueOf(resourceName));
@@ -68,9 +65,9 @@ public class GusiteTemplateResolver extends TemplateResolver {
 					return new ByteArrayInputStream(template.getContenido().getBytes());
 				}
 			} catch (NumberFormatException e) {
-				log.error("Problema resolviendo recurso:" + resourceName , e);
+				log.error("Problema resolviendo recurso:" + resourceName, e);
 			} catch (ExceptionFront e) {
-				log.error("Problema resolviendo recurso:" + resourceName , e);
+				log.error("Problema resolviendo recurso:" + resourceName, e);
 			}
 			return null;
 		}

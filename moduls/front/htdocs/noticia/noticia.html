@@ -1,116 +1,66 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código muestra la noticia en cuestión.
+<!--/*
 
-Variables: 
-	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	MVS_noticia: devuelve la noticia en cuestión 
-	MVS_microsite: devuelve un microsite a partir de su clave unica
-	MVS_tiponoticia: devuelve el tipo de noticia
-	MVS_idsite: devuelve el id del site en cuestión
-	
-Objetos:
-	#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen): devuelve la URL hacia el archivo en cuestión
-	-->
+Ficha de noticia
+
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
 <head>
-<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	 MVS_noticia: devuelve la noticia en cuestión -->
-<title th:if="${MVS_noticia} !=null"
-	th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_noticia.traduce.titulo}">Microsite
-	título - Noticia traduce título</title>	
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
-<section th:remove="tag" layout:fragment="cssExtra">
-<!-- css específico para esta página -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estilsListarNoticias.css"
-	th:href="@{/resources/css/estilsListarNoticias.css}"></link>
-</section>
+<title th:if="${MVS_noticia} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_noticia.traduce.titulo}">Microsite título - Noticia traduce título</title>	
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
+<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsListarNoticias.css" th:href="@{/resources/css/estilsListarNoticias.css}"></link>
 </head>
 <body>
-	<!-- Parte añadida para usar el layout decorator "<section>"-->
-	<section th:remove="tag" layout:fragment="campanya">
-		<!-- campanya -->
-		<div gus:replace="general/inc_llistats_campana_menu :: campanaMenu">Listado
-			campana Menu</div>
-		<!-- fin campanya -->
-	</section>
-	<!-- Parte añadida para usar el layout decorator "<section>"-->
-	<!-- Parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
-		<!-- informacio con o sin menu -->
-		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
-		<div th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
-			id="" class="noticiasInfo">
-			<!-- titol -->
-			<!-- MVS_tiponoticia: devuelve el tipo de noticia -->
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="noticiasInfo">
 			<h2 th:text="#{noticia.detalle}+' '+${MVS_tiponoticia}"></h2>
-			<!-- informacio -->
-			<div id="infoNoticia">
-				<!-- MVS_noticia: devuelve la noticia en cuestión -->
-				<div th:if="${MVS_noticia.traduce} !=null" th:remove="tag">
-					<h3 id="titolNoticia" th:text="${MVS_noticia.traduce.titulo}">
-						traduce título</h3>
-					<p id="subtitol" th:text="${MVS_noticia.traduce.subtitulo}">
-						traduce título</p>
-					<div th:if="${MVS_noticia.imagen}" th:remove="tag">
-						<!-- #gusuri.archivopub(MVS_microsite,MVS_noticia.imagen): devuelve la URL hacia el archivo en cuestión -->
-						<img id="imgNoticia" src="archivopub.html"
-							th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}"
-							alt="" th:width="${MVS_anchoImg}" />
-					</div>
-					<p id="fontNoticia" th:if="${MVS_noticia.fpublicacion}!=null"
-						th:with="publicacion=${#calendars.format(MVS_noticia.fpublicacion, 'dd/MM/yyyy')}">
-						<span th:text="${publicacion}" th:remove="tag"></span> <span
-							th:if="${MVS_noticia.traduce.fuente}!=null"
-							th:text="' - ' + ${MVS_noticia.traduce.fuente}" th:remove="tag"></span>
+			<div id="infoNoticia" th:if="${MVS_noticia.traduce} !=null">
+				<h3 id="titolNoticia" th:text="${MVS_noticia.traduce.titulo}"> traduce título</h3>
+				<p id="subtitol" th:text="${MVS_noticia.traduce.subtitulo}"> traduce título</p>
+				<img th:if="${MVS_noticia.imagen}" id="imgNoticia" src="archivopub.html"
+					th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}"
+					alt="" th:width="${MVS_anchoImg}" />
+				<p id="fontNoticia" th:if="${MVS_noticia.fpublicacion}!=null"
+					th:with="publicacion=${#calendars.format(MVS_noticia.fpublicacion, 'dd/MM/yyyy')}">
+					<span th:text="${publicacion}" th:remove="tag">dd/MM/yyyy</span> 
+					<span th:if="${MVS_noticia.traduce.fuente}!=null" th:text="' - ' + ${MVS_noticia.traduce.fuente}" th:remove="tag">Fuente</span>
+				</p>
+				<p th:utext="${MVS_noticia.traduce.texto}" th:remove="tag">Contenido texto html de la noticia</p>
+				<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
+					<p th:utext="#{noticia.descdocumento}">
+						Per a <strong>més informació</strong> podeu descarregar el següent document
 					</p>
-					<p th:utext="${MVS_noticia.traduce.texto}" th:remove="tag">traduce
-						texto</p>
-					<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
-						<p th:utext="#{noticia.descdocumento}">
-							Per a <strong>més informació</strong> podeu descarregar el
-							següent document
-						</p>
-						<p>
-							<span
-								th:text="#{general.archivo} + ' '+ ${MVS_noticia.traduce.docu.mime} + ', ' + ${MVS_noticia.traduce.docu.peso} + ' bytes - '"
-								th:remove="tag">Arxiu traduce docu mime , traduce docu
-								peso bytes -</span>
-							<!-- #gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu): devuelve la URL hacia el archivo en cuestión -->
-							<a href="archivopub.html"
-								th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}"
-								target="blank" th:text="${MVS_noticia.traduce.docu.nombre}">traduce
-								docu nombre</a>
-						</p>
-					</div>
-					<div th:if="${MVS_noticia.traduce.laurl} !=null" th:remove="tag">
-						<p>
-							<span th:with="externa=${MVS_noticia.traduce.laurl}"
-								th:remove="tag" th:type="java.lang.String"> <!-- MVS_idsite: devuelve el id del site en cuestión -->
-								<span th:with="sitio=${MVS_idsite}" th:remove="tag"> 
-								<a th:href="@{${MVS_noticia.traduce.laurl}}"
-									th:target="(${#strings.indexOf(externa,sitio)}==-1)? '__blanck' : '_self'">
-										<span th:if="${MVS_noticia.traduce.urlnom} !=null"
-										th:text="${MVS_noticia.traduce.urlnom}" th:remove="tag">
-											traduce url nom</span> <span
-										th:if="${MVS_noticia.traduce.urlnom} ==null"
-										th:text="#{url.adicional}" th:remove="tag">Informació
-											Addicional</span>
-								</a>
-							</span>
-							</span>
-						</p>
-					</div>
+					<p>
+						<span
+							th:text="#{general.archivo} + ' '+ ${MVS_noticia.traduce.docu.mime} + ', ' + ${MVS_noticia.traduce.docu.peso} + ' bytes - '"
+							th:remove="tag">Arxiu pdf, 24265 bytes - </span>
+						<a href="archivopub.html"
+							th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}"
+							target="blank" th:text="${MVS_noticia.traduce.docu.nombre}">nombre de archivo</a>
+					</p>
 				</div>
+				<p 
+					th:if="${MVS_noticia.traduce.laurl} !=null"
+					th:with="externa=${MVS_noticia.traduce.laurl}">
+					<a th:href="@{${MVS_noticia.traduce.laurl}}"
+						th:target="${#strings.startsWith(externa,'http')}? '_blank' : '_self'"
+						th:text="${MVS_noticia.traduce.urlnom} !=null ? ${MVS_noticia.traduce.urlnom} : #{url.adicional}">
+						Informació Addicional</a>
+				</p>
 			</div>
 		</div>
 		<!-- fin informacio -->

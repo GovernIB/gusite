@@ -1,50 +1,41 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código muestra el mensaje genérico en caso de no poder mostrar la página.
--->
+<!--/*
+	Plantilla de mensaje de email usada en el mailing
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	>
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Generator"  th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})"/>
 <title th:text="#{msg.titulo}">Missatge:</title>
-<script type="text/javascript" src="/resources/js/globales.js"
-	th:src="@{/resources/js/globales.js}"></script>
+<script type="text/javascript" src="/resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
 <link th:remove="tag" th:utext="${MVS_css}"/>
 
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
-<script gus:replace="general/scriptmenu :: script"></script>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
 </head>
 <body>
-	<!-- contenidor -->
 	<div id="contenedor">
-		<!-- capçal -->
 		<div gus:replace="error/errorgenerico :: cabeceraReducida">Cabecera</div>
-		<!--  Fi capçal -->
-		<!-- continguts -->
 		<div id="continguts">
-			<!-- missatge -->
 			<div id="missatge">
 				<strong> 
 					<span th:text="#{msg.titulo}" th:remove="tag">Missatge:</span>
-					<span th:if="${msg} !=null" th:remove="tag"> 
-						<span th:text="${msg}" th:remove="tag"></span>
-					</span>
+					<span th:if="${MVS_msg} !=null" th:text="${MVS_msg}" th:remove="tag">Contenido del mensaje</span>
 				</strong>
 			</div>
-			<!-- fi missatge -->
 		</div>
-		<div th:if="${msg} ==null" th:remove="tag">
-			<div id="info"></div>
-		</div>
-		<!-- fi continguts -->
-	</div>
-	<!-- fi contenidor -->
+		<div th:if="${MVS_msg} ==null" id="info"></div>
+</div>
 </body>
 </html>

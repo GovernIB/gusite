@@ -9,8 +9,7 @@ public class NoticiaCriteria extends BaseCriteria {
 		super(filtro, pagina, ordenacion);
 	}
 
-	public NoticiaCriteria(String filtro, int pagina, String ordenacion,
-			int anyo) {
+	public NoticiaCriteria(String filtro, int pagina, String ordenacion, int anyo) {
 		super(filtro, pagina, ordenacion);
 		this.anyo = anyo;
 	}

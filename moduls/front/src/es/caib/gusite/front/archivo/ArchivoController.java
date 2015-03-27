@@ -23,8 +23,9 @@ import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
 /**
- * @author brujula-at4
+ * Controlador para servir archivos subidos al microsite, contenidos, etcétera.
  * 
+ * @author brujula-at4
  */
 @Controller
 public class ArchivoController extends FrontController {
@@ -32,22 +33,24 @@ public class ArchivoController extends FrontController {
 	private static Log log = LogFactory.getLog(ArchivoController.class);
 
 	/**
-	 * nemotecnico del tipo
+	 * Archivo {id} del microsite {uri}
 	 * 
-	 * @param lang
 	 * @param uri
-	 * @return
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
+	 * @param id
+	 *            Identificador de archivo
+	 * @return bytes y encabezados para la petición del archivo
 	 * @throws IOException
 	 */
 	@RequestMapping("{uri}/f/{id}")
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI,
-			@PathVariable("id") Long idFile) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile) throws IOException {
 
 		Microsite microsite = null;
 		try {
-			microsite = this.dataService.getMicrositeByUri(URI.uri,
-					DEFAULT_IDIOMA);
+			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
 				log.error("Microsite " + URI.uri + " no encontrado");
 				// TODO: 404?
@@ -64,8 +67,7 @@ public class ArchivoController extends FrontController {
 
 				if ((archivo != null) && (archivo.getDatos() == null)) {
 
-					byte[] datos = ArchivoUtil
-							.obtenerDatosArchivoEnFilesystem(archivo);
+					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
 					archivo.setDatos(datos);
 
 				}
@@ -73,12 +75,9 @@ public class ArchivoController extends FrontController {
 			}
 
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.setContentType(MediaType.parseMediaType(archivo
-					.getMime()));
-			responseHeaders.setContentLength(new Long(archivo.getPeso())
-					.intValue());
-			return new ResponseEntity<byte[]>(archivo.getDatos(),
-					responseHeaders, HttpStatus.CREATED);
+			responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
+			responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+			return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
@@ -96,21 +95,25 @@ public class ArchivoController extends FrontController {
 	}
 
 	/**
+	 * Archivo de nombre "filename" del microsite {uri}. El nombre se recibe en
+	 * el RequestParam {@link Microfront.PNAME}
 	 * 
-	 * @param lang
 	 * @param uri
-	 * @return
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
+	 * @param filename
+	 *            Nombre del archivo
+	 * @return bytes y encabezados para la petición del archivo
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "{uri}/f/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI,
-			@RequestParam(Microfront.PNAME) String filename) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename) throws IOException {
 
 		Microsite microsite = null;
 		try {
-			microsite = this.dataService.getMicrositeByUri(URI.uri,
-					DEFAULT_IDIOMA);
+			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
 				log.error("Microsite " + URI.uri + " no encontrado");
 				// TODO: 404?
@@ -120,16 +123,14 @@ public class ArchivoController extends FrontController {
 			}
 
 			// TODO: if (this.checkControl(ctrl, idFile)) {
-			Archivo archivo = this.dataService.obtenerArchivo(
-					microsite.getId(), filename);
+			Archivo archivo = this.dataService.obtenerArchivo(microsite.getId(), filename);
 			// amartin: Si los datos del archivo son nulos en la BD, vamos a
 			// buscarlo a Filesystem.
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 
 				if ((archivo != null) && (archivo.getDatos() == null)) {
 
-					byte[] datos = ArchivoUtil
-							.obtenerDatosArchivoEnFilesystem(archivo);
+					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
 					archivo.setDatos(datos);
 
 				}
@@ -138,12 +139,9 @@ public class ArchivoController extends FrontController {
 
 			// TODO:filename?
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.setContentType(MediaType.parseMediaType(archivo
-					.getMime()));
-			responseHeaders.setContentLength(new Long(archivo.getPeso())
-					.intValue());
-			return new ResponseEntity<byte[]>(archivo.getDatos(),
-					responseHeaders, HttpStatus.CREATED);
+			responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
+			responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+			return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
@@ -171,7 +169,7 @@ public class ArchivoController extends FrontController {
 	 * 
 	 * @return boolean
 	 */
-	public boolean checkControl(String ctrl, Long idelemento) {
+	private boolean checkControl(String ctrl, Long idelemento) {
 
 		/*
 		 * TODO: //comprobar si solicitamos por nombre el archivo. Si es
@@ -183,8 +181,7 @@ public class ArchivoController extends FrontController {
 		Long yyy;
 		ctrl.substring(0, 5);
 		new Long(ctrl.substring(5, ctrl.indexOf(Microfront.separatordocs)));
-		yyy = new Long(ctrl.substring(
-				ctrl.indexOf(Microfront.separatordocs) + 2, ctrl.length()));
+		yyy = new Long(ctrl.substring(ctrl.indexOf(Microfront.separatordocs) + 2, ctrl.length()));
 
 		if (!idelemento.equals(yyy)) {
 			return false;

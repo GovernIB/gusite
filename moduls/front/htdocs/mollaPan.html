@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código devuelve la molla de Pan del recorrido realizado por el usuario
+<!--/*
 
-Variables: 
-	MVS2_pathdata: devuelve el recorrido que ha realizado el usuario por el microsite, la miga de pan
--->
+	Imprime la miga de pan
+
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -17,18 +15,12 @@ Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>	
 </head>
 <body>
-	<div th:fragment="mollaPan" th:remove="tag">
-		<!--MVS2_pathdata devuelve el recorrido que ha realizado el usuario por el microsite, la miga de pan. -->
-		<div th:each="item,iterStat : ${MVS2_pathdata}"
-			th:with="indice=${iterStat.index}" th:remove="tag">
-			<li><span th:if="${indice} != 0" th:text="'&gt;'"
-				th:remove="tag"></span> <span th:if="${item.href} !=null"
-				th:remove="tag"> <a th:href="@{${item.href}}"
-					th:utext="${item.label}">Label</a>
-			</span> <span th:if="${item.href} ==null" th:remove="tag"> <span
-					th:utext="${item.label}" th:remove="tag">Label</span>
-			</span></li>
-		</div>
-	</div>
+	<ul th:fragment="mollaPan" id="mollaPa">
+		<li th:each="item,iterStat : ${MVS2_pathdata}" th:with="indice=${iterStat.index}">
+			<span th:if="${indice} != 0" th:remove="tag">&gt;</span> 
+			<a th:if="${item.href}!=null" th:href="@{${item.href}}" th:utext="${item.label}">Molla de pa</a>
+			<span th:if="${item.href}==null" th:utext="${item.label}" th:remove="tag">Molla de pa</span>
+		</li>
+	</ul>
 </body>
 </html>

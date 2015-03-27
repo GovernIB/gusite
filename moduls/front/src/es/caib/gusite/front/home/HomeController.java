@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Front;
@@ -20,7 +20,10 @@ import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.microtag.MParserHTML;
-import es.caib.gusite.micromodel.Agenda;
+import es.caib.gusite.front.view.AccesibilidadView;
+import es.caib.gusite.front.view.HomeView;
+import es.caib.gusite.front.view.MapaView;
+import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
@@ -32,7 +35,7 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
  * 
  */
 @Controller
-public class HomeController extends BaseController {
+public class HomeController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(HomeController.class);
 
@@ -46,48 +49,44 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang}")
-	public String home(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView home(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		Microsite microsite = null;
+		HomeView view = new HomeView();
 		try {
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
 
-			this.cargarCampanya(microsite, model, lang);
+			// microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 
-			if (microsite.getPlantilla().equals(Microfront.HOME_CONTENIDO)
-					&& !StringUtils.isEmpty(microsite.getUrlhome())) {
+			this.cargarCampanya(view);
+
+			if (microsite.getPlantilla().equals(Microfront.HOME_CONTENIDO) && !StringUtils.isEmpty(microsite.getUrlhome())) {
 				// home tipo
 				// "Escoger una página de contenido propio del microsite"
-				UriComponentsBuilder uri = UriComponentsBuilder
-						.fromUriString(microsite.getUrlhome());
+				UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(microsite.getUrlhome());
 				uri.replaceQueryParam(Microfront.PLANG, lang.getLang());
 				uri.replaceQueryParam(Microfront.PCAMPA, "yes");
 				String fw = "forward:/" + uri.build().toUriString();
-				return fw;
+				return modelForView(fw, view);
 
 			} else {
 				// Home tipo
 				// "Pàgina por defecto proporcionada por la herramienta"
-				this.cargarNoticias(microsite, model, lang);
-				this.cargarAgenda(microsite, model, lang);
+				this.cargarNoticias(view.getMicrosite(), view.getLang(), view);
+				this.cargarAgenda(view.getMicrosite(), view.getLang(), view);
 
 			}
 
-			this.cargarMollapan(microsite, model, lang);
+			this.cargarMollapan(view, lang);
 
-			return this.templateNameFactory.home(microsite);
+			return modelForView(this.templateNameFactory.home(microsite), view);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 
 	}
@@ -98,13 +97,11 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}")
-	public String home(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView home(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.home(URI, DEFAULT_IDIOMA, model, pcampa);
+		return this.home(URI, DEFAULT_IDIOMA, pcampa);
 
 	}
 
@@ -115,24 +112,19 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang}/mapa")
-	public String mapa(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView mapa(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		Microsite microsite = null;
-		try {
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 
-			this.cargarMollapanMapa(microsite, model, lang);
+		MapaView view = new MapaView();
+		try {
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			this.cargarMollapanMapa(view);
+			return modelForView(this.templateNameFactory.mapa(view.getMicrosite()), view);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
-
-		return this.templateNameFactory.mapa(microsite);
 
 	}
 
@@ -142,13 +134,11 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/mapa")
-	public String mapa(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView mapa(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.mapa(URI, DEFAULT_IDIOMA, model, pcampa);
+		return this.mapa(URI, DEFAULT_IDIOMA, pcampa);
 
 	}
 
@@ -159,23 +149,20 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang}/accessibility")
-	public String accessibility(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView accessibility(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		Microsite microsite = null;
+		AccesibilidadView view = new AccesibilidadView();
 		try {
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
 
-			this.cargarMollapanAccessibilitat(microsite, model, lang);
+			this.cargarMollapanAccessibilitat(view);
+			return modelForView(this.templateNameFactory.accessibilitat(microsite), view);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
-		return this.templateNameFactory.accessibilitat(microsite);
 
 	}
 
@@ -185,11 +172,9 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/accessibility")
-	public String accessibility(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView accessibility(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_EN), model, pcampa);
+		return this.accessibility(URI, new Idioma(LANG_EN), pcampa);
 
 	}
 
@@ -199,11 +184,9 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/accessibilitat")
-	public String accessibilitat(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView accessibilitat(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_CA), model, pcampa);
+		return this.accessibility(URI, new Idioma(LANG_CA), pcampa);
 
 	}
 
@@ -213,11 +196,9 @@ public class HomeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/accesibilidad")
-	public String accesibilidad(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView accesibilidad(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_ES), model, pcampa);
+		return this.accessibility(URI, new Idioma(LANG_ES), pcampa);
 
 	}
 
@@ -236,8 +217,7 @@ public class HomeController extends BaseController {
 	 * @param microsite
 	 * @throws ExceptionFrontPagina
 	 */
-	private void cargarAgenda(Microsite microsite, Model model, Idioma lang)
-			throws ExceptionFrontPagina {
+	private void cargarAgenda(Microsite microsite, Idioma lang, HomeView view) throws ExceptionFrontPagina {
 		if (!this.existeServicio(microsite, lang, Microfront.RAGENDA)) {
 			// TODO: error 404
 			return;
@@ -246,12 +226,8 @@ public class HomeController extends BaseController {
 		// MParserAgenda parseagenda = new MParserAgenda();
 
 		try {
-			model.addAttribute("MVS_datos_agenda_calendario",
-					this.dataService.getDatosCalendario(microsite, lang));
-
-			List<Agenda> listaagenda2 = this.dataService.getDatosListadoHome(
-					microsite, lang);
-			model.addAttribute("MVS_home_datos_agenda_listado", listaagenda2);
+			view.setDatosAgendaCalendario(this.dataService.getDatosCalendario(microsite, lang));
+			view.setDatosAgendaListado(this.dataService.getDatosListadoHome(microsite, lang));
 
 		} catch (DelegateException e) {
 			throw new ExceptionFrontPagina(e);
@@ -267,8 +243,7 @@ public class HomeController extends BaseController {
 	 * @param microsite
 	 * @throws ExceptionFrontPagina
 	 */
-	private void cargarNoticias(Microsite microsite, Model model, Idioma lang)
-			throws ExceptionFrontPagina {
+	private void cargarNoticias(Microsite microsite, Idioma lang, HomeView view) throws ExceptionFrontPagina {
 
 		if (!this.existeServicio(microsite, lang, Front.RNOTICIA)) {
 			// TODO: error 404
@@ -277,9 +252,8 @@ public class HomeController extends BaseController {
 
 		try {
 			// NOTICIAS
-			List<Noticia> listanoticias = this.dataService.getNoticiasHome(
-					microsite, lang);
-			model.addAttribute("MVS_home_datos_noticias_listado", listanoticias);
+			List<Noticia> listanoticias = this.dataService.getNoticiasHome(microsite, lang);
+			view.setDatosNoticiasListado(listanoticias);
 
 		} catch (DelegateException e) {
 			throw new ExceptionFrontPagina(e);
@@ -291,10 +265,9 @@ public class HomeController extends BaseController {
 	 * 
 	 * @param model
 	 */
-	private void cargarCampanya(Microsite microsite, Model model, Idioma lang) {
+	private void cargarCampanya(HomeView view) {
 		MParserHTML parsehtml = new MParserHTML();
-		model.addAttribute("MVS_home_campanya",
-				parsehtml.getHtmlCampanya(microsite, lang.getLang()).toString());
+		view.setHomeCampanya(parsehtml.getHtmlCampanya(view.getMicrosite(), view.getLang().getLang()).toString());
 	}
 
 	/**
@@ -306,12 +279,11 @@ public class HomeController extends BaseController {
 	 * @param lang
 	 * @return string recorrido en el microsite
 	 */
-	private void cargarMollapan(Microsite microsite, Model model, Idioma lang) {
+	private void cargarMollapan(HomeView view, Idioma lang) {
 
-		List<PathItem> path = super.getBasePath(microsite, model, lang);
-
+		List<PathItem> path = super.getBasePath(view);
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 
 	}
 
@@ -324,14 +296,13 @@ public class HomeController extends BaseController {
 	 * @param lang
 	 * @return string recorrido en el microsite
 	 */
-	private void cargarMollapanMapa(Microsite microsite, Model model,
-			Idioma lang) {
+	private void cargarMollapanMapa(PageView view) {
 
-		List<PathItem> path = super.getBasePath(microsite, model, lang);
-		path.add(new PathItem(this.getMessage("mapa.mapa", lang)));
+		List<PathItem> path = super.getBasePath(view);
+		path.add(new PathItem(this.getMessage("mapa.mapa", view.getLang())));
 
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 	}
 
 	/**
@@ -343,13 +314,14 @@ public class HomeController extends BaseController {
 	 *            idioma
 	 * @return string recorrido en el microsite
 	 */
-	private void cargarMollapanAccessibilitat(Microsite microsite, Model model,
-			Idioma lang) {
-		List<PathItem> path = super.getBasePath(microsite, model, lang);
-		path.add(new PathItem(this.getMessage("mapa.mapa", lang)));
+	private void cargarMollapanAccessibilitat(PageView view) {
+		List<PathItem> path = super.getBasePath(view);
+		// TODO: esto estaba así en microfront, pero debe ser un error pues pone
+		// el mismo path que el mapa
+		path.add(new PathItem(this.getMessage("mapa.mapa", view.getLang())));
 
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 	}
 
 }

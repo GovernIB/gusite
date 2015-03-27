@@ -1,18 +1,9 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código muestra la tabla con el calendario.
+<!--/*
 
-Variables: 
-	MVS_microsite: microsite actual
-	MVS_idioma: idioma actual
-	MVS_home_datos_agenda_listado: devuelve el listado de eventos
-	MVS_datos_agenda_calendario: devuelve los datos del calendario
-	
-Objetos:
-	#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,i.finicio): devuelve la URL hacia el acto que se ejecutará en la fecha en cuestión
-	#gusuri.listarAgendaFechaFormateada(MVS_microsite,MVS_idioma,valorDatos.value): devuelve la URL hacia el evento con la fecha en cuestión
--->
+Tabla con el calendario y listado de eventos
+
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
@@ -20,51 +11,46 @@ Objetos:
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estils.css"></link>
+	<!--  
+	<script type="text/javascript" src="http://cdn.jsdelivr.net/thymol/latest/thymol.min.js"></script>
+	-->
+	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
 </head>
 <body>
 	
 	<div th:fragment="listado">
-		<div th:with="gc=${#calendars.createNow()}" th:remove="tag">
 			<!--  retrocedemos 2 meses-->
-			<div th:with="anteriorMes=(${#calendars.month(gc)}-2)" th:remove="tag">
-				<div id="agendaLlistat">
-					<!-- MVS_home_datos_agenda_listado devuelve el listado de eventos-->
-					<div th:if="${#lists.size(MVS_home_datos_agenda_listado)} !=0" th:remove="tag">
-						<p>
-							<strong th:text="#{microhtml.proximosactos} + ':'">Próxims actes programats</strong>
-						</p>
-						<ul>
-							<li th:remove="tag">
-								<ul th:each="i : ${MVS_home_datos_agenda_listado}"
-									th:remove="tag">
-									<li
-										th:with="midia=${#calendars.format(i.finicio,'dd/MM/yyyy')},mihora=${#calendars.format(i.finicio,'HH:mm')}">
-										<div th:text="${midia}" th:remove="tag"></div>
-										<div th:if="${mihora} !='00:00'"
-											th:text="#{agenda.cuando}+ ' ' + ${mihora}" th:remove="tag">
-										</div> <br />
-										<div th:each="traduccionIdioma:${i.traducciones}"
-											th:remove="tag">
-											<!-- #gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,i.finicio) devuelve la URL hacia el acto que se ejecutará en la fecha en cuestión -->
-											<a
-												th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,i.finicio)}}"
-												th:text="${traduccionIdioma.value.titulo}"></a>
-										</div>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-					<div th:if="${#lists.size(MVS_home_datos_agenda_listado)} ==0"
-						th:remove="tag">
-						<p th:text="#{microhtml.noactos}">No hi ha cap acte programat</p>
-					</div>
-				</div>
+		<div
+			th:with="gc=${#calendars.createNow()},anteriorMes=(${#calendars.month(gc)}-2)" 
+			id="agendaLlistat">
+			<div th:if="${#lists.size(MVS_home_datos_agenda_listado)}!=0" th:remove="tag">
+				<p>
+					<strong th:text="#{microhtml.proximosactos} + ':'">Próxims actes programats</strong>
+				</p>
+				<ul>
+					<li th:each="evento : ${MVS_home_datos_agenda_listado}"
+						th:with="midia=${#calendars.format(evento.finicio,'dd/MM/yyyy')},mihora=${#calendars.format(evento.finicio,'HH:mm')}">
+						<div th:text="${midia}" th:remove="tag"></div>
+						<div th:if="${mihora} !='00:00'"
+							th:text="#{agenda.cuando}+ ' ' + ${mihora}" th:remove="tag">
+						</div> <br />
+						<a
+							th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"
+							th:text="${evento.traduce.titulo}"></a>
+					</li>
+				</ul>
 			</div>
+			<p th:if="${#lists.size(MVS_home_datos_agenda_listado)} ==0" th:text="#{microhtml.noactos}">No hi ha cap acte programat</p>
 		</div>
 	</div>
 	

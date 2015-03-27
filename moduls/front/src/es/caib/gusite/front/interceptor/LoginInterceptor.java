@@ -28,22 +28,21 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	private static final String path = "org.springframework.web.servlet.HandlerMapping.pathWithinHandlerMapping";
 
 	@Override
-	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+		if (request.getServletPath().startsWith("/resources/")) {
+			// No hacemos nada con los recursos estáticos
+			return true;
+		}
 		Map varMap = (Map) request.getAttribute(varName);
 		String siteKey = (String) varMap.get("uri");
 		try {
-			MicrositeDelegate micrositeDelegate = DelegateUtil
-					.getMicrositeDelegate();
-			Microsite microsite = micrositeDelegate
-					.obtenerMicrositebyUri(siteKey);
+			MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
+			Microsite microsite = micrositeDelegate.obtenerMicrositebyUri(siteKey);
 			if (this.redirigir(microsite, request)) {
 				String redirect = (String) request.getAttribute(path);
-				request.getSession().setAttribute("redirect",
-						redirect.substring(1));
-				response.sendRedirect(this.frontUrlFactory
-						.intranetLogin(request.getContextPath()));
+				request.getSession().setAttribute("redirect", redirect.substring(1));
+				response.sendRedirect(this.frontUrlFactory.intranetLogin(request.getContextPath()));
 			} else if (this.denegarAcceso(microsite, request)) {
 				return false;
 			}
@@ -60,17 +59,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 	private boolean redirigir(Microsite microsite, HttpServletRequest request) {
 
-		return (microsite != null && microsite.getAcceso() != null && request
-				.getUserPrincipal() == null)
-				&& (microsite.getAcceso().equals("R") || microsite.getAcceso()
-						.equals("M"));
+		return (microsite != null && microsite.getAcceso() != null && request.getUserPrincipal() == null)
+				&& (microsite.getAcceso().equals("R") || microsite.getAcceso().equals("M"));
 	}
 
-	private boolean denegarAcceso(Microsite microsite,
-			HttpServletRequest request) {
+	private boolean denegarAcceso(Microsite microsite, HttpServletRequest request) {
 
-		return microsite != null && microsite.getAcceso() != null
-				&& microsite.getAcceso().equals("M")
-				&& !request.isUserInRole(microsite.getRol());
+		return microsite != null && microsite.getAcceso() != null && microsite.getAcceso().equals("M") && !request.isUserInRole(microsite.getRol());
 	}
 }

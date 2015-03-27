@@ -1,133 +1,99 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código nos muestra el listado de la agenda.
+<!--/*
+ 
+	Página de agenda del microsite
 
-Variables:
-	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
-						   trozo de html que muestra la imagen de la campaña
-	MVS_microsite: devuelve un microsite a partir de su clave unica
-	MVS_datos_agenda_calendario: devuelve los datos del calendario
-	MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer>
-	MVS_agenda_lista: devuelve el listado de eventos de la agenda
-	MVS_seulet_sin: devuelve el listado de elementos sin la pagina
-	
-Objetos:
-	#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,eventos.finicio): devuelve la URL hacia el acto que se ejecutará en la fecha en cuestión
--->
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
 <head>
-<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
 <title th:if="${MVS_micrositetitulo} !=null"
 	th:text="(${MVS_micrositetitulo}) + '-' + #{agenda.agenda}"></title>	
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
-<section th:remove="tag" layout:fragment="cssExtra">
-<!-- css específico para esta página -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estilsAgenda.css"
-	th:href="@{/resources/css/estilsAgenda.css}"></link>
-</section>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
+<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsAgenda.css" th:href="@{/resources/css/estilsAgenda.css}"></link>
 </head>
 <body>
-	<!-- parte añadida para usar el layout decorator "<section>"-->
-	<section th:remove="tag" layout:fragment="campanya">
-		<!-- campanya -->
-		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
-						   trozo de html que muestra la imagen de la campaña -->
-		<div th:if="${MVS_home_tmp_campanya} !=null"
-			th:utext="${MVS_home_tmp_campanya}" th:remove="tag">Campaña temporal del home</div>
-		<!-- fin campanya -->
-	</section>
-	<!-- parte añadida para usar el layout decorator "<section>"-->
-	<!-- parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
 		<!-- informacio con o sin menu -->
-		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
 		<div
-			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
-			id="">
+			th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'">
 			<!-- titol -->
 			<h2 th:text="#{agenda.agenda}">Agenda</h2>
 			<p>&nbsp;</p>		
 			<div id="calendariLateral">
 				<h3 th:text="#{listaragenda.calendario}">Calendari</h3>
-				<!-- MVS_datos_agenda_calendario: devuelve los datos del calendario -->
 				<div th:if="${MVS_datos_agenda_calendario}!=null">
 					<div gus:replace="agendaCalendarListado :: calendario">Agenda Calendario</div>
 				</div>				
 			</div>
-			<!-- MVS_parametros_pagina: devuelve un listado de parametros de un Map<String, Integer> -->
-			<div th:if="${MVS_parametros_pagina.nreg}!=0" th:remove="tag">
-				<div id="agendaLlistat">								
-					<h3 th:text="#{listaragenda.proximosactos}"></h3>
-					<ul>
-					<!-- MVS_agenda_lista: devuelve el listado de eventos de la agenda -->
-						<li th:each="eventos:${MVS_agenda_lista}" th:remove="tag">
-						<ul th:remove="tag">
-							<li>
-								<div
-									th:with="inicio=${#calendars.format(eventos.finicio, 'dd/MM/yyyy')}"	th:remove="tag">
-									<div th:text="${inicio}" th:remove="tag"></div>
-									<div th:with="horai=${#calendars.format(eventos.finicio, 'HH:mm')}" th:remove="tag">
-										<div th:if="${horai} !='00:00'" th:remove="tag"
-											th:text="#{agenda.cuando}+ ' ' + ${horai}"></div>
-										&nbsp; <strong th:text="${eventos.actividad.traduce.nombre}"></strong>
-										<br /> 
-										<!--#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,eventos.finicio): devuelve la URL hacia el acto que se ejecutará en la fecha en cuestión
-										 -->
-										<a href="agenda.html"
-											th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,eventos.finicio)}}"				
-											th:text="${eventos.traduce.titulo}">Traduce titulo</a>
-									</div>
-								</div>
-							</li>
-							</ul>
-						</li>
-					</ul>
-					<!-- MVS_seulet_sin: devuelve el listado de elementos sin la pagina -->
-					<p th:with="SeuletRelativeURL=${MVS_seulet_sin}">
-				<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+			<div th:if="${MVS_parametros_pagina.nreg}!=0" id="agendaLlistat">								
+				<h3 th:text="#{listaragenda.proximosactos}"></h3>
+				<ul>
+					<li th:each="evento:${MVS_agenda_lista}">
+						<div
+							th:with="inicio=${#calendars.format(evento.finicio, 'dd/MM/yyyy')}" th:remove="tag">
+							<div th:text="${inicio}" th:remove="tag"></div>
+							<div th:with="horai=${#calendars.format(evento.finicio, 'HH:mm')}" th:remove="tag">
+								<div th:if="${horai} !='00:00'" th:remove="tag"
+									th:text="#{agenda.cuando}+ ' ' + ${horai}"></div>
+								&nbsp; <strong th:text="${evento.actividad.traduce.nombre}"></strong>
+								<br /> 
+								<a href="agenda.html"
+									th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"				
+									th:text="${evento.traduce.titulo}">Título del evento</a>
+							</div>
+						</div>
+					</li>
+				</ul>
+				
+				<!-- MVS_seulet_sin: devuelve el listado de elementos sin la pagina -->
+				<p>
+					<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
 					&lt;&lt; <a
-					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.inicio})}"
+					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}"
 					th:text="#{general.param.inicio}">Inici</a>&nbsp;
-				</span> <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+					</span> 
+					<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
 					&lt; <a
-					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.anterior})}"
+					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.anterior})}"
 					th:text="#{general.param.anterior}">Anterior</a>&nbsp;
-				</span> 
-				<span th:if="${MVS_agenda_lista} !=null">				
-				- <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
-					cursor</span> a <span th:text="${MVS_parametros_pagina.cursor_final}"
-					th:remove="tag">cursor final</span> de <span
-					th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">pagina
-					nreg</span> - 
-				</span>	
-					<span
-					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
-					th:remove="tag"><a
-					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.siguiente})}"
-					th:text="#{general.param.siguiente}">Següent</a> &gt;&gt; 
-				</span><span
-					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
-					th:remove="tag"> <a
-					th:href="@{${SeuletRelativeURL}(pagina=${MVS_parametros_pagina.final})}"
-					th:text="#{general.param.final}">Fi</a> &gt;
-				</span>
-			</p>
-				</div>
+					</span> 
+					<span th:if="${MVS_agenda_lista}!=null">				
+					- <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
+						cursor</span> a <span th:text="${MVS_parametros_pagina.cursor_final}"
+						th:remove="tag">cursor final</span> de <span
+						th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">pagina
+						nreg</span> - 
+					</span>	
+						<span
+						th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+						th:remove="tag"><a
+						th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}"
+						th:text="#{general.param.siguiente}">Següent</a> &gt;&gt; 
+					</span><span
+						th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+						th:remove="tag"> <a
+						th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}"
+						th:text="#{general.param.final}">Fi</a> &gt;
+					</span>
+				</p>
 			</div>
 		</div>
 		<!-- fin informacio -->
 	</section>
-	<!-- parte añadida para usar el layout decorator "<section>"-->
 </body>
 </html>
 

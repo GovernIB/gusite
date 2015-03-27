@@ -10,16 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
+import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Idioma;
-import es.caib.gusite.micromodel.Microsite;
 
 @Controller
-public class PreviewController extends BaseController {
+public class PreviewController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(PreviewController.class);
 
@@ -31,24 +32,18 @@ public class PreviewController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/menupreview/")
-	public String menuPreview(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView menuPreview(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
-		Microsite microsite = null;
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
+		PageView view = new PageView();
 		try {
-
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
-			return this.templateNameFactory.menuPreview(microsite);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			return this.modelForView(this.templateNameFactory.menuPreview(view.getMicrosite()), view);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
 	}
 

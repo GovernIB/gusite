@@ -1,5 +1,18 @@
 // Document JavaScript
 
+//Funciones generales estáticas. Antes estaban en scriptmenu
+var nodo='0'; //Nodo actual del menú
+
+function onClickAnyo(anyo) {
+	document.getElementById("filtro").value = ''; 
+	establecerAnyoEnBuscador(anyo);
+}
+
+function establecerAnyoEnBuscador(anyo) {
+	document.getElementById("tanyo").value = anyo; 
+}	
+
+
 /* mostrar calendari de l'agenda */
 
 function mostrarCalendari() {
@@ -17,6 +30,7 @@ var menuJS = {
 		if($('marcLateral') != null) {
 			As = $('marcLateral').getElementsByTagName('a');
 			var nodoX;
+			//return;
 			for(i=0;i<As.length;i++) {		
 				if(As[i].className == 'pareADon') {
 					menuJS.obrir(As[i]);

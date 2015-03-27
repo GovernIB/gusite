@@ -10,13 +10,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.service.ContactosDataService;
+import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Frqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
@@ -28,7 +30,7 @@ import es.caib.gusite.micromodel.TraduccionFrqssi;
  * 
  */
 @Controller
-public class QssiController extends BaseController {
+public class QssiController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(QssiController.class);
 
@@ -42,59 +44,44 @@ public class QssiController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/qssi/{qssi}/")
-	public String qssi(@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			@PathVariable("qssi") long idQssi, Model model,
+	public ModelAndView qssi(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("qssi") long idQssi, Model model,
 			HttpServletRequest req) {
 
-		Microsite microsite = null;
+		PageView view = new PageView();
 		try {
-
-			microsite = super.loadMicrosite(URI.uri, lang, model);
-			Frqssi qssi = this.dataService.getFormularioQssi(microsite, lang,
-					idQssi);
+			Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+			view.setMicrosite(microsite);
+			view.setLang(lang);
+			Frqssi qssi = this.dataService.getFormularioQssi(microsite, lang, idQssi);
 
 			// comprobacion de microsite
-			if (qssi.getIdmicrosite().longValue() != microsite.getId()
-					.longValue()) {
+			if (qssi.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
-				return this.getForwardError(microsite, lang, model,
-						ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 			}
 
 			String Urlqssi = System.getProperty("es.caib.gusite.frqssi.url");
 			String laurl;
 			if (qssi.getCentro() != null && qssi.getTipoescrito() != null) {
-				laurl = Urlqssi + "&centre=" + qssi.getCentro()
-						+ "&tipus_escrit=" + qssi.getTipoescrito() + "&asunto="
-						+ ((TraduccionFrqssi) qssi.getTraduce()).getNombre()
-						+ "?idioma=" + lang.getLang();
+				laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&tipus_escrit=" + qssi.getTipoescrito() + "&asunto="
+						+ ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang.getLang();
 			} else {
 				if (qssi.getCentro() != null) {
-					laurl = Urlqssi
-							+ "&centre="
-							+ qssi.getCentro()
-							+ "&asunto="
-							+ ((TraduccionFrqssi) qssi.getTraduce())
-									.getNombre() + "?idioma=" + lang.getLang();
+					laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma="
+							+ lang.getLang();
 				} else {
-					laurl = Urlqssi
-							+ "&asunto="
-							+ ((TraduccionFrqssi) qssi.getTraduce())
-									.getNombre() + "?idioma=" + lang.getLang();
+					laurl = Urlqssi + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang.getLang();
 				}
 			}
 
-			return "redirect:" + laurl;
+			return new ModelAndView("redirect:" + laurl);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 
 	}

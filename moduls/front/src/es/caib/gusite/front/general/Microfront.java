@@ -126,7 +126,6 @@ public class Microfront {
 	// nombre de los keys en el mapa externo
 	static public final String MAP_EXT_MCHTML = "mcHTML";
 
-	static public final String UO_PORTAVOZ = "270677"; // caib: 270677 nuestra:
-														// 51079
+	static public final String UO_PORTAVOZ = "270677"; // caib: 270677 nuestra:51079
 
 }

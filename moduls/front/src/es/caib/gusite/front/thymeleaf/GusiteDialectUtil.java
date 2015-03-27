@@ -9,16 +9,17 @@ public class GusiteDialectUtil {
 
 	/**
 	 * Obtiene la plantilla final configurada
+	 * 
 	 * @param arguments
 	 * @param templateName
 	 * @return
 	 */
 	public static String computeTemplateName(Arguments arguments, String templateName) {
 
-        Microsite microsite = (Microsite)arguments.getContext().getVariables().get("MVS_microsite");
-        TemplateNameFactory templateNameFactory = (TemplateNameFactory)arguments.getExpressionObjects().get("gustpl");
-        if (microsite!=null && templateNameFactory != null) {
-        	
+		Microsite microsite = (Microsite) arguments.getContext().getVariables().get("MVS_microsite");
+		TemplateNameFactory templateNameFactory = (TemplateNameFactory) arguments.getExpressionObjects().get("gustpl");
+		if (microsite != null && templateNameFactory != null) {
+
 			if (templateName.contains("::")) {
 				// Se trata de un fragment
 				int index = templateName.indexOf("::");
@@ -28,10 +29,10 @@ public class GusiteDialectUtil {
 			} else {
 				templateName = templateNameFactory.getPlantilla(microsite, templateName);
 			}
-        }
-        
-        return templateName;
-		
+		}
+
+		return templateName;
+
 	}
 
 }

@@ -41,8 +41,7 @@ public class CorreoEngineService {
 	public CorreoEngineService() {
 	}
 
-	public void initCorreo(String subject, boolean isHTMLFormat,
-			StringBuffer body) {
+	public void initCorreo(String subject, boolean isHTMLFormat, StringBuffer body) {
 		this.mail_subject = subject;
 		this.mail_mensaje = body;
 		if (isHTMLFormat) {
@@ -50,8 +49,7 @@ public class CorreoEngineService {
 		}
 	}
 
-	public void initCorreo(String destinatario, String subject,
-			boolean isHTMLFormat, StringBuffer body) {
+	public void initCorreo(String destinatario, String subject, boolean isHTMLFormat, StringBuffer body) {
 		this.listadestinatarios.add(destinatario);
 		this.mail_subject = subject;
 		this.mail_mensaje = body;
@@ -72,10 +70,8 @@ public class CorreoEngineService {
 	 */
 	private static boolean isDebugMode() {
 
-		String debugModeString = System
-				.getProperty("es.caib.gusite.email.debugMode");
-		boolean debugMode = ("S".equals(debugModeString) || "s"
-				.equals(debugModeString));
+		String debugModeString = System.getProperty("es.caib.gusite.email.debugMode");
+		boolean debugMode = ("S".equals(debugModeString) || "s".equals(debugModeString));
 
 		return debugMode;
 
@@ -102,8 +98,7 @@ public class CorreoEngineService {
 				tmpok = false;
 			} else {
 				if (!this.send(destinatario)) {
-					log.error("Error enviando correo a destinatario: "
-							+ destinatario);
+					log.error("Error enviando correo a destinatario: " + destinatario);
 					tmpok = false;
 				}
 			}
@@ -111,8 +106,7 @@ public class CorreoEngineService {
 			// recorrer la lista de destinatarios y enviar
 			for (int i = 0; i < this.listadestinatarios.size(); i++) {
 				if (!this.send(this.listadestinatarios.get(i))) {
-					log.error("Error enviando correo a destinatario: "
-							+ this.listadestinatarios.get(i));
+					log.error("Error enviando correo a destinatario: " + this.listadestinatarios.get(i));
 					tmpok = false;
 				}
 			}
@@ -134,8 +128,7 @@ public class CorreoEngineService {
 			InitialContext ctx = new InitialContext();
 			Session sesion = (Session) ctx.lookup("java:/es.caib.gusite.mail");
 			MimeMessage mensaje = new MimeMessage(sesion);
-			mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					destinatario));
+			mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
 			mensaje.setSubject(this.mail_subject);
 
 			MimeBodyPart messageBodyPart = new MimeBodyPart();
@@ -145,11 +138,8 @@ public class CorreoEngineService {
 			boolean hayfile = false;
 			File file = null;
 
-			if (!this.mail_file.isEmpty()
-					&& this.mail_file.get(0).available() > 0
-					&& this.mail_fileName.get(0) != "") {
-				file = new File(System.getProperty("java.io.tmpdir")
-						+ file.separator + this.mail_fileName.get(0));
+			if (!this.mail_file.isEmpty() && this.mail_file.get(0).available() > 0 && this.mail_fileName.get(0) != "") {
+				file = new File(System.getProperty("java.io.tmpdir") + file.separator + this.mail_fileName.get(0));
 				hayfile = true;
 				for (int i = 0; i < this.mail_file.size(); i++) {
 					messageBodyPart = new MimeBodyPart();
@@ -162,10 +152,7 @@ public class CorreoEngineService {
 					}
 					this.mail_file.get(i).close();
 					fileOs.close();
-					DataSource ds = new FileDataSource(
-							System.getProperty("java.io.tmpdir")
-									+ file.separator
-									+ this.mail_fileName.get(i));
+					DataSource ds = new FileDataSource(System.getProperty("java.io.tmpdir") + file.separator + this.mail_fileName.get(i));
 
 					messageBodyPart.setDataHandler(new DataHandler(ds));
 					messageBodyPart.setFileName(this.mail_fileName.get(i));

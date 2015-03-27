@@ -30,8 +30,12 @@
        <!--  Fijar a S, para habilitar caché de templates thymeleaf en producción -->
        es.caib.gusite.front.templateCaching=N
 
-        es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
+	   <!-- Ruta en la que se almacenan las plantillas en tiempo de desarrollo. Debe estar deshabilitado templateCaching para q se tenga en cuenta -->
+	   es.caib.gusite.front.templateHotLoadingPath=/home/web/proyectos/ADCaib/gusite/plantillasDev/
+	   
        
+        es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
+
     </attribute>
 
 </mbean>

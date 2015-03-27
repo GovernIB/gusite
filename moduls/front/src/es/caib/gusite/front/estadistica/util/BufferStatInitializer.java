@@ -36,8 +36,7 @@ public class BufferStatInitializer implements ServletContextListener {
 
 		try {
 			List<Estadistica> bufferEstadisticas = new ArrayList<Estadistica>();
-			event.getServletContext().setAttribute("bufferStats",
-					bufferEstadisticas);
+			event.getServletContext().setAttribute("bufferStats", bufferEstadisticas);
 
 		} catch (Exception e) {
 			log.warn("El buffer d' estadístiques no s'ha carregat correctament");

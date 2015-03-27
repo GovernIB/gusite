@@ -23,7 +23,8 @@ public class FrontController {
 
 	/**
 	 * TODO: mover a un WebBindingInitializer
-	 * (http://docs.spring.io/spring/docs/3.0.x/reference/mvc.html#mvc-ann-webdatabinder)
+	 * (http://docs.spring.io/spring/docs/
+	 * 3.0.x/reference/mvc.html#mvc-ann-webdatabinder)
 	 * 
 	 * @param binder
 	 */
@@ -37,10 +38,8 @@ public class FrontController {
 
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
-				if (text == null || text.length() != 2
-						|| !text.matches("[a-zA-Z][a-zA-Z]")) {
-					throw new IllegalArgumentException(
-							"No es un identificador de idioma");
+				if (text == null || text.length() != 2 || !text.matches("[a-zA-Z][a-zA-Z]")) {
+					throw new IllegalArgumentException("No es un identificador de idioma");
 				}
 				this.setValue(new Idioma(text.toLowerCase()));
 			}
@@ -54,29 +53,25 @@ public class FrontController {
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
 				if (text.startsWith("resources")) {
-					throw new IllegalArgumentException(
-							"No es un identificador de sitio web");
+					throw new IllegalArgumentException("No es un identificador de sitio web");
 				}
 				this.setValue(new SiteId(text));
 			}
 		});
-		binder.registerCustomEditor(TipoNoticiaId.class,
-				new PropertyEditorSupport() {
-					@Override
-					public String getAsText() {
-						return ((TipoNoticiaId) this.getValue()).nemotecnic;
-					}
+		binder.registerCustomEditor(TipoNoticiaId.class, new PropertyEditorSupport() {
+			@Override
+			public String getAsText() {
+				return ((TipoNoticiaId) this.getValue()).nemotecnic;
+			}
 
-					@Override
-					public void setAsText(String text)
-							throws IllegalArgumentException {
-						if (text.length() < 3 || StringUtils.isNumeric(text)) {
-							throw new IllegalArgumentException(
-									"No es un nemotècnico válido");
-						}
-						this.setValue(new TipoNoticiaId(text));
-					}
-				});
+			@Override
+			public void setAsText(String text) throws IllegalArgumentException {
+				if (text.length() < 3 || StringUtils.isNumeric(text)) {
+					throw new IllegalArgumentException("No es un nemotècnico válido");
+				}
+				this.setValue(new TipoNoticiaId(text));
+			}
+		});
 	}
 
 	public class SiteId {
@@ -126,8 +121,19 @@ public class FrontController {
 	 */
 	protected String getMessage(String uri, Idioma lang) {
 
-		return this.messageSource.getMessage(uri, null, new Locale(lang
-				.getLang().toUpperCase(), lang.getLang().toUpperCase()));
+		return this.getMessage(uri, lang.getLang());
+	}
+
+	/**
+	 * Obtiene una cadena de mensaje
+	 * 
+	 * @param uri
+	 * @param lang
+	 * @return
+	 */
+	protected String getMessage(String uri, String lang) {
+
+		return this.messageSource.getMessage(uri, null, new Locale(lang.toUpperCase(), lang.toUpperCase()));
 	}
 
 	/**
@@ -137,45 +143,32 @@ public class FrontController {
 	 *            request, Microsite microsite, ErrorMicrosite errorMicrosite
 	 * @exception Exception
 	 */
-	protected String getForwardError(Microsite microsite, Idioma lang,
-			Model model, String ambitError) {
+	protected String getForwardError(Microsite microsite, Idioma lang, Model model, String ambitError) {
 
 		ErrorMicrosite errorMicrosite;
 
 		if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
 
 			if (microsite != null) {
-				errorMicrosite = new ErrorMicrosite(
-						ErrorMicrosite.ERROR_MICRO_TIT,
-						ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId());
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId());
 			} else {
-				errorMicrosite = new ErrorMicrosite(
-						ErrorMicrosite.ERROR_MICRO_TIT,
-						ErrorMicrosite.ERROR_MICRO_MSG_NULL);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL);
 			}
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
-			errorMicrosite = new ErrorMicrosite(
-					ErrorMicrosite.ERROR_PAGINA_TIT,
-					ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT,
-					ErrorMicrosite.ERROR_DOCU_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG);
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT,
-					ErrorMicrosite.ERROR_ACCES_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG);
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
-			errorMicrosite = new ErrorMicrosite(
-					ErrorMicrosite.ERROR_SESSIO_TIT,
-					ErrorMicrosite.ERROR_SESSIO_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG);
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		} else {
-			errorMicrosite = new ErrorMicrosite(
-					ErrorMicrosite.ERROR_PAGINA_TIT,
-					ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
 			model.addAttribute("MVS_errparam", errorMicrosite);
 		}
 

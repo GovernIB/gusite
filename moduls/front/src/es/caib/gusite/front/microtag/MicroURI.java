@@ -21,8 +21,7 @@ public class MicroURI {
 	 */
 	public static String uriImg(String constante, long iditem, long iddoc) {
 		String retorno = "";
-		retorno = "archivopub.do?ctrl=" + constante + iditem
-				+ Microfront.separatordocs + iddoc + "&id=" + iddoc;
+		retorno = "archivopub.do?ctrl=" + constante + iditem + Microfront.separatordocs + iddoc + "&id=" + iddoc;
 		return retorno;
 	}
 
@@ -36,9 +35,7 @@ public class MicroURI {
 	 */
 	public static String uriNoticia(Long idsite, Long iditem, String idioma) {
 		String retorno = "";
-		retorno = "noticia.do?" + Microfront.PIDSITE + "=" + idsite + "&"
-				+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-				+ "=" + idioma;
+		retorno = "noticia.do?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "=" + idioma;
 		return retorno;
 	}
 
@@ -52,9 +49,7 @@ public class MicroURI {
 	 */
 	public static String uriAgenda(Long idsite, String iditem, String idioma) {
 		String retorno = "";
-		retorno = "agenda.do?" + Microfront.PIDSITE + "=" + idsite + "&"
-				+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-				+ "=" + idioma;
+		retorno = "agenda.do?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "=" + idioma;
 		return retorno;
 	}
 
@@ -68,9 +63,7 @@ public class MicroURI {
 	 */
 	public static String uriContenido(Long idsite, String iditem, String idioma) {
 		String retorno = "";
-		retorno = "contenido.do?" + Microfront.PIDSITE + "=" + idsite + "&"
-				+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-				+ "=" + idioma;
+		retorno = "contenido.do?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "=" + idioma;
 		return retorno;
 	}
 
@@ -84,9 +77,7 @@ public class MicroURI {
 	 */
 	public static String uriContacto(Long idsite, Long iditem, String idioma) {
 		String retorno = "";
-		retorno = "contacto.do?" + Microfront.PIDSITE + "=" + idsite + "&"
-				+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-				+ "=" + idioma;
+		retorno = "contacto.do?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "=" + idioma;
 		return retorno;
 	}
 
@@ -102,11 +93,9 @@ public class MicroURI {
 	public static String uriGeneral(String recurso, Long idsite, String idioma) {
 		String retorno = "";
 		if (recurso.indexOf("?") != -1) {
-			retorno = recurso + "&" + Microfront.PIDSITE + "=" + idsite + "&"
-					+ Microfront.PLANG + "=" + idioma;
+			retorno = recurso + "&" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PLANG + "=" + idioma;
 		} else {
-			retorno = recurso + "?" + Microfront.PIDSITE + "=" + idsite + "&"
-					+ Microfront.PLANG + "=" + idioma;
+			retorno = recurso + "?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PLANG + "=" + idioma;
 		}
 		return retorno;
 	}
@@ -121,17 +110,14 @@ public class MicroURI {
 	 * @param idioma
 	 * @return String una uri
 	 */
-	public static String uriGeneral(String recurso, Long idsite, String iditem,
-			String idioma) {
+	public static String uriGeneral(String recurso, Long idsite, String iditem, String idioma) {
 		String retorno = "";
 		if (recurso.indexOf("?") != -1) {
-			retorno = recurso + "&" + Microfront.PIDSITE + "=" + idsite + "&"
-					+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-					+ "=" + idioma;
+			retorno = recurso + "&" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "="
+					+ idioma;
 		} else {
-			retorno = recurso + "?" + Microfront.PIDSITE + "=" + idsite + "&"
-					+ Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG
-					+ "=" + idioma;
+			retorno = recurso + "?" + Microfront.PIDSITE + "=" + idsite + "&" + Microfront.PCONT + "=" + iditem + "&" + Microfront.PLANG + "="
+					+ idioma;
 		}
 		return retorno;
 	}

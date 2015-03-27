@@ -1,62 +1,50 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código muestra el listado de las noticias que hay
+<!--/*
 
-Variables: 
-	MVS_home_datos_noticias_listado: devuelve el listado de noticias
+Este código muestra el módulo de listado de las noticias 
 
-Objetos:
-	#gusuri.archivopub(MVS_microsite,noticia.imagen): devuelve la URL hacia el archivo en cuestión
-	#gusuri.noticia(MVS_microsite,MVS_idioma,noticia): devuelve la URL hacia la noticia en cuestión
--->
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>	
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estils.css"></link>
+	<!--  
+	<script type="text/javascript" src="http://cdn.jsdelivr.net/thymol/latest/thymol.min.js"></script>
+	-->
+	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
+
 </head>
 <body>
 	<div th:fragment="noticias">
 		<div id="noticies">
 			<h2 th:text="#{noticia.noticias}">Notícies</h2>
-			<!--MVS_home_datos_noticias_listado devuelve el listado de noticias-->
-			<div th:if="${#lists.size(MVS_home_datos_noticias_listado)} !=0"
-				th:remove="tag">
-				<ul>
-					<div th:each="noticia : ${MVS_home_datos_noticias_listado}"
-						th:remove="tag">
-						<div th:if="${noticia.tipo.tipoelemento}==${T(es.caib.gusite.front.general.Front).ELEM_NOTICIA}"
-							th:remove="tag">
-							<li>
-								<div th:if="${noticia.imagen}!=null" th:remove="tag">
-									<!-- #gusuri.archivopub(MVS_microsite,noticia.imagen): devuelve la URL hacia el archivo en cuestión -->
-									<img
-										th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
-										width="48" height="48" alt="" />
-								</div>
-								<div th:if="${noticia.fpublicacion}!=null" th:remove="tag"
-									th:with="anoPublicacion=${#strings.substring(noticia.fpublicacion,0,4)},mesPublicacion=${#strings.substring(noticia.fpublicacion,5,7)},diaPublicacion=${#strings.substring(noticia.fpublicacion,8,10)},publicacionFecha=${#calendars.create(anoPublicacion,mesPublicacion,diaPublicacion)},publicacion=${#calendars.format(publicacionFecha, 'dd/MM/yyyy')},idioma=${#strings.toLowerCase(MVS_idioma)}">
-									<div th:text="${publicacion} + ' ' + '-'" th:remove="tag"></div>
-									<em th:text="${noticia.tipo.traduce.nombre}"></em> <br />
-									<!-- #gusuri.noticia(MVS_microsite,MVS_idioma,noticia): devuelve la URL hacia la noticia en cuestión -->
-									<a
-										th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
-										th:text="${noticia.traduce.titulo}">Noticia titulo</a>
-								</div>
-							</li>
-						</div>
+			<ul th:if="${#lists.size(MVS_home_datos_noticias_listado)} !=0">
+				<li th:each="noticia : ${MVS_home_datos_noticias_listado}" th:if="${noticia.tipo.tipoelemento}==${T(es.caib.gusite.front.general.Front).ELEM_NOTICIA}">
+					<img th:if="${noticia.imagen}!=null"
+						th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
+						width="48" height="48" alt="" />
+					<div th:if="${noticia.fpublicacion}!=null" th:remove="tag"
+						th:with="anoPublicacion=${#strings.substring(noticia.fpublicacion,0,4)},mesPublicacion=${#strings.substring(noticia.fpublicacion,5,7)},diaPublicacion=${#strings.substring(noticia.fpublicacion,8,10)},publicacionFecha=${#calendars.create(anoPublicacion,mesPublicacion,diaPublicacion)},publicacion=${#calendars.format(publicacionFecha, 'dd/MM/yyyy')},idioma=${#strings.toLowerCase(MVS_idioma)}">
+						<div th:text="${publicacion} + ' ' + '-'" th:remove="tag"></div>
+						<em th:text="${noticia.tipo.traduce.nombre}"></em> <br />
+						<a
+							th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
+							th:text="${noticia.traduce.titulo}">Noticia titulo</a>
 					</div>
-				</ul>
-			</div>
-			<div th:if="${#lists.size(MVS_home_datos_noticias_listado)} ==0"
-				th:remove="tag">
-				<p th:text="#{microhtml.nonoticias}">No hi ha cap notícia</p>
-			</div>
+				</li>
+			</ul>
+			<p th:if="${#lists.size(MVS_home_datos_noticias_listado)} ==0" th:text="#{microhtml.nonoticias}">No hi ha cap notícia</p>
 		</div>
 	</div>
 

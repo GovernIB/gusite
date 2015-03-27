@@ -25,7 +25,7 @@ import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 @Service
 public class FrontUrlFactory {
@@ -36,8 +36,7 @@ public class FrontUrlFactory {
 
 	protected static final String CONTEXT_KEY = "es.caib.gusite.context.front";
 
-	public String traduccionEnlacePie(String context, String url,
-			String idioma, String palabraBuscada) {
+	public String traduccionEnlacePie(String context, String url, String idioma, String palabraBuscada) {
 
 		String urlTraducida = "";
 
@@ -54,19 +53,15 @@ public class FrontUrlFactory {
 		Boolean idiomaContact = false;
 
 		for (int i = 1; i < urlSeparada.length; i++) {
-			if ((urlSeparada[i].contentEquals("ca"))
-					|| (urlSeparada[i].contentEquals("es"))
-					|| (urlSeparada[i].contentEquals("en"))
-					|| (urlSeparada[i].contentEquals("de"))
-					|| (urlSeparada[i].contentEquals("fr"))) {
+			if ((urlSeparada[i].contentEquals("ca")) || (urlSeparada[i].contentEquals("es")) || (urlSeparada[i].contentEquals("en"))
+					|| (urlSeparada[i].contentEquals("de")) || (urlSeparada[i].contentEquals("fr"))) {
 
 				idiomaFinal = false;
 				idiomaContact = true;
 
 				urlTraducida = urlTraducida + "/" + idioma;
 
-			} else if ((urlSeparada[i].contentEquals("contacte"))
-					|| (urlSeparada[i].contentEquals("contacto"))
+			} else if ((urlSeparada[i].contentEquals("contacte")) || (urlSeparada[i].contentEquals("contacto"))
 					|| (urlSeparada[i].contentEquals("contact"))) {
 
 				if (idiomaContact == true) {
@@ -92,21 +87,17 @@ public class FrontUrlFactory {
 					}
 				}
 				idiomaFinal = false;
-			} else if ((urlSeparada[i].contentEquals("cercar"))
-					|| (urlSeparada[i].contentEquals("buscar"))
+			} else if ((urlSeparada[i].contentEquals("cercar")) || (urlSeparada[i].contentEquals("buscar"))
 					|| (urlSeparada[i].contentEquals("search"))) {
 
 				if (idioma.equals("es")) {
-					urlTraducida = urlTraducida + "/" + "buscar" + "/?cerca="
-							+ palabraBuscada + "&lang=" + idioma;
+					urlTraducida = urlTraducida + "/" + "buscar" + "/?cerca=" + palabraBuscada + "&lang=" + idioma;
 				}
 				if (idioma.equals("ca")) {
-					urlTraducida = urlTraducida + "/" + "cercar" + "/?cerca="
-							+ palabraBuscada + "&lang=" + idioma;
+					urlTraducida = urlTraducida + "/" + "cercar" + "/?cerca=" + palabraBuscada + "&lang=" + idioma;
 				}
 				if (idioma.equals("en")) {
-					urlTraducida = urlTraducida + "/" + "search" + "/?cerca="
-							+ palabraBuscada + "&lang=" + idioma;
+					urlTraducida = urlTraducida + "/" + "search" + "/?cerca=" + palabraBuscada + "&lang=" + idioma;
 				}
 
 				idiomaFinal = true;
@@ -137,28 +128,20 @@ public class FrontUrlFactory {
 
 	public String encuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return this.microsite(microsite, lang)
-				+ "encuesta/"
-				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "encuesta/" + ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()
+				+ "/";
 	}
 
-	public String envioencuesta(Microsite microsite, Idioma lang,
-			Encuesta encuesta) {
+	public String envioencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return this.microsite(microsite, lang)
-				+ "envioencuesta/"
-				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "envioencuesta/"
+				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 
-	public String resultadosencuesta(Microsite microsite, Idioma lang,
-			Encuesta encuesta) {
+	public String resultadosencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return this.microsite(microsite, lang)
-				+ "resultados/"
-				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "resultados/" + ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()
+				+ "/";
 	}
 
 	public String menuPreview(Microsite microsite, Idioma lang) {
@@ -176,24 +159,19 @@ public class FrontUrlFactory {
 		return this.microsite(microsite, lang) + "msggenerico/";
 	}
 
-	public String tawItemContenido(Microsite microsite, Idioma lang,
-			Contenido contenido) {
+	public String tawItemContenido(Microsite microsite, Idioma lang, Contenido contenido) {
 
-		return this.microsite(microsite, lang) + "tawitem/contenido/"
-				+ contenido.getId();
+		return this.microsite(microsite, lang) + "tawitem/contenido/" + contenido.getId();
 	}
 
 	public String tawItemAgenda(Microsite microsite, Idioma lang, Agenda agenda) {
 
-		return this.microsite(microsite, lang) + "tawitem/agenda/"
-				+ agenda.getId();
+		return this.microsite(microsite, lang) + "tawitem/agenda/" + agenda.getId();
 	}
 
-	public String tawItemNoticia(Microsite microsite, Idioma lang,
-			Noticia noticia) {
+	public String tawItemNoticia(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return this.microsite(microsite, lang) + "tawitem/noticia/"
-				+ noticia.getId();
+		return this.microsite(microsite, lang) + "tawitem/noticia/" + noticia.getId();
 	}
 
 	public String intranetLogin(String contextPath) {
@@ -242,8 +220,7 @@ public class FrontUrlFactory {
 		return this.microsite(microsite, lang) + "agenda/";
 	}
 
-	public String listarAgendaFechaSinPagina(Microsite microsite, Idioma lang,
-			Date fecha, String mcont, String pcampa) {
+	public String listarAgendaFechaSinPagina(Microsite microsite, Idioma lang, Date fecha, String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
 		ret.append(this.listarAgendaFecha(microsite, lang, fecha));
@@ -253,8 +230,7 @@ public class FrontUrlFactory {
 		return this.addParams(ret.toString(), params);
 	}
 
-	public String listarAgendaSinPagina(Microsite microsite, Idioma lang,
-			String mcont, String pcampa) {
+	public String listarAgendaSinPagina(Microsite microsite, Idioma lang, String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
 		ret.append(this.listarAgenda(microsite, lang));
@@ -264,17 +240,14 @@ public class FrontUrlFactory {
 		return this.addParams(ret.toString(), params);
 	}
 
-	private static SimpleDateFormat agendaFechaFormat = new SimpleDateFormat(
-			"yyyyMMdd");
+	private static SimpleDateFormat agendaFechaFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public String listarAgendaFecha(Microsite microsite, Idioma lang, Date fecha) {
 
-		return this.listarAgenda(microsite, lang)
-				+ agendaFechaFormat.format(fecha);
+		return this.listarAgenda(microsite, lang) + agendaFechaFormat.format(fecha);
 	}
 
-	public String listarAgendaFechaFormateada(Microsite microsite, Idioma lang,
-			String fechaEvento) {
+	public String listarAgendaFechaFormateada(Microsite microsite, Idioma lang, String fechaEvento) {
 
 		return this.listarAgenda(microsite, lang) + fechaEvento;
 	}
@@ -299,17 +272,12 @@ public class FrontUrlFactory {
 		return this.microsite(microsite) + "f/" + id;
 	}
 
-	public String contenido(Microsite microsite, Idioma lang,
-			Contenido contenido) {
+	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
 
-		return this.microsite(microsite, lang)
-				+ "c/"
-				+ ((TraduccionContenido) contenido.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "c/" + ((TraduccionContenido) contenido.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 
-	public String contenido(Microsite microsite, Idioma lang,
-			Contenido contenido, String pcampa) {
+	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {
 
 		String ret = this.contenido(microsite, lang, contenido);
 		if (!StringUtils.isEmpty(pcampa)) {
@@ -320,10 +288,7 @@ public class FrontUrlFactory {
 
 	public String listarElementos(Microsite microsite, Idioma lang, Tipo tipo) {
 
-		return this.microsite(microsite, lang)
-				+ "l/"
-				+ ((TraduccionTipo) tipo.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "l/" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
 	}
 
 	public String qssi(Microsite microsite, Idioma lang, Long qssi) {
@@ -339,8 +304,7 @@ public class FrontUrlFactory {
 		return this.listarElementos(microsite, lang, tipo);
 	}
 
-	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo,
-			String anyo) {
+	public String listarAnual(Microsite microsite, Idioma lang, Tipo tipo, String anyo) {
 
 		String any = anyo;
 
@@ -385,23 +349,25 @@ public class FrontUrlFactory {
 
 	public String noticia(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return this.microsite(microsite, lang)
-				+ "n/"
-				+ ((TraduccionNoticia) noticia.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		return this.noticia(microsite, lang, noticia, null);
 	}
 
-	public String noticiaDescarga(Microsite microsite, Idioma lang,
-			Noticia noticia) {
+	public String noticia(Microsite microsite, Idioma lang, Noticia noticia, String mcont) {
 
-		return this.microsite(microsite, lang)
-				+ "d/"
-				+ ((TraduccionNoticia) noticia.getTraduccion(lang.getLang()
-						.toLowerCase())).getUri() + "/";
+		if (!StringUtils.isEmpty(mcont)) {
+			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/" + "?" + Microfront.MCONT + "=" + mcont;
+		} else {
+			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		}
 	}
 
-	public String noticiaDescarga(Microsite microsite, Idioma lang,
-			String noticia) {
+
+	public String noticiaDescarga(Microsite microsite, Idioma lang, Noticia noticia) {
+
+		return this.microsite(microsite, lang) + "d/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+	}
+
+	public String noticiaDescarga(Microsite microsite, Idioma lang, String noticia) {
 
 		return this.microsite(microsite, lang) + "d/" + noticia + "/";
 	}
@@ -413,8 +379,7 @@ public class FrontUrlFactory {
 
 	public String microsite(Microsite microsite, Idioma lang) {
 
-		return "/" + microsite.getUri() + "/" + lang.getLang().toLowerCase()
-				+ "/";
+		return "/" + microsite.getUri() + "/" + lang.getLang().toLowerCase() + "/";
 	}
 
 	public String home(Microsite microsite, Idioma lang) {
@@ -429,15 +394,11 @@ public class FrontUrlFactory {
 	 * @param lang
 	 * @return
 	 */
-	public String ua(UnitatAdministrativaDTO ua, Idioma lang) {
-		String uaUrl = "/govern/organigrama/area.do?lang=" + lang.getLang()
-				+ "&coduo=" + ua.getId();
-		uaUrl = System.getProperty("es.caib.gusite.portal.url") + uaUrl;
-		return uaUrl;
+	public String ua(UnidadData ua, Idioma lang) {
+		return ua.getUrl();
 	}
 
-	public String listarContactosSinPagina(Microsite microsite, Idioma lang,
-			BaseCriteria criteria) {
+	public String listarContactosSinPagina(Microsite microsite, Idioma lang, BaseCriteria criteria) {
 		StringBuilder ret = new StringBuilder();
 		ret.append(this.listarContactos(microsite, lang));
 
@@ -452,8 +413,7 @@ public class FrontUrlFactory {
 		return this.addParams(ret.toString(), params);
 	}
 
-	public String listarNoticiasSinPagina(Microsite microsite, Idioma lang,
-			Tipo tipo, NoticiaCriteria criteria, String mcont, String pcampa) {
+	public String listarNoticiasSinPagina(Microsite microsite, Idioma lang, Tipo tipo, NoticiaCriteria criteria, String mcont, String pcampa) {
 
 		StringBuilder ret = new StringBuilder();
 		ret.append(this.listarNoticias(microsite, lang, tipo));
@@ -504,11 +464,10 @@ public class FrontUrlFactory {
 	 * @param lang
 	 * @return
 	 */
-	public String legatyToFrontUri(String legacyUri, Idioma lang) {
+	public String legacyToFrontUri(String legacyUri, Idioma lang) {
 
 		if (this.isLocalLegacyUri(legacyUri)) {
-			UriComponentsBuilder uri = UriComponentsBuilder
-					.fromUriString(legacyUri);
+			UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(legacyUri);
 			uri.replaceQueryParam(Microfront.PLANG, lang.getLang());
 			return "/" + uri.build().toUriString();
 		} else {
@@ -526,10 +485,7 @@ public class FrontUrlFactory {
 	public boolean isLocalLegacyUri(String legacyUri) {
 		// TODO: es mejorable, pero debería funcionar comprobar que ni comienza
 		// por / ni contiene marca de protocolo, y lleva parámetro de site
-		return !legacyUri.startsWith("/")
-				&& !legacyUri.contains("://")
-				&& (legacyUri.indexOf("idsite=") >= 0 || legacyUri
-						.indexOf("mkey=") >= 0);
+		return !legacyUri.startsWith("/") && !legacyUri.contains("://") && (legacyUri.indexOf("idsite=") >= 0 || legacyUri.indexOf("mkey=") >= 0);
 
 	}
 }

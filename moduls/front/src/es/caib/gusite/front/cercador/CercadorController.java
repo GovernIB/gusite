@@ -7,205 +7,210 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
+import es.caib.gusite.front.view.CercarView;
+import es.caib.gusite.lucene.model.IndexEncontrado;
 import es.caib.gusite.lucene.model.IndexResultados;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 
+/**
+ * Gestiona las búsquedas textuales en el microsite
+ * 
+ * @author at4.net
+ * 
+ */
 @Controller
-public class CercadorController extends BaseController {
+public class CercadorController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(CercadorController.class);
 
 	/**
+	 * Post de búsqueda textual en el microsite
 	 * 
-	 * @param lang
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang}/search/")
-	public String cercar(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView cercar(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
+			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		Microsite microsite = null;
+		CercarView view = new CercarView();
 		try {
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
 
 			// metodo buscar(); de Bdcercador.java
-			IndexResultados resultado;
-
-			try {
-
-				IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
-				String words = "" + req.getParameter("cerca");
-				String idi = "" + req.getSession().getAttribute("MVS_idioma");
-
-				model.addAttribute("MVS_busquedaBuscador", words);
-
-				resultado = indexo.buscar("" + microsite.getId().longValue(),
-						idi, null, words, true);
-
-			} catch (Exception e) {
-				log.error("Error en la busqueda: " + e);
-				return this.getForwardError(microsite, lang, model,
-						ErrorMicrosite.ERROR_AMBIT_ACCES);
-
-			}
-
+			IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+			IndexResultados resultado = indexo.buscar("" + microsite.getId().longValue(), lang.getLang(), null, cerca, true);
 			// hasta aqui metodo buscar();
-
-			model.addAttribute("MVS_listado_buscador", resultado);
-			this.cargarMollapan(microsite, model, lang);
-			return this.templateNameFactory.cercar(microsite);
+			
+			for (IndexEncontrado res : resultado.getLista()) {
+				//Las urls están "hard-coded" en formato legacy
+				String url = res.getUrl();
+				if (url.startsWith("/sacmicrofront/")) {
+					//Quitamos el contextpath hardcoded
+					url = url.substring(15);
+				}
+				res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
+			}
+			
+			view.setBusqueda(cerca);
+			view.setListado(resultado);
+			this.cargarMollapan(view);
+			return this.modelForView(this.templateNameFactory.cercar(microsite), view);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (DelegateException e) {
+			log.error("Error en la busqueda: " + e);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
 		}
 
 	}
 
 	/**
-	 * @param lang
+	 * Post de búsqueda textual en el microsite en castellano
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/buscar/")
-	public String cercarEs(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarEs(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercar(URI, new Idioma(LANG_ES), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req);
 	}
 
 	/**
-	 * @param lang
+	 * Post de búsqueda textual en el microsite en catalán
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/cercar/")
-	public String cercarCa(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarCa(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercar(URI, new Idioma(LANG_CA), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req);
 	}
 
 	/**
-	 * @param lang
+	 * Post de búsqueda textual en el microsite en inglés
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/search/")
-	public String cercarEn(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarEn(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercar(URI, new Idioma(LANG_EN), model, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req);
 	}
 
 	/**
-	 * @param lang
+	 * Get de búsqueda textual en el microsite
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/search/")
-	public String cercarGet(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView cercarGet(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
+			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercar(URI, lang, model, mcont, pcampa, req);
+		return this.cercar(URI, lang, cerca, mcont, pcampa, req);
 
 	}
 
 	/**
-	 * @param lang
+	 * Get de búsqueda textual en el microsite en castellano
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/buscar/")
-	public String cercarEsGet(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarEsGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercarGet(URI, new Idioma(LANG_ES), model, mcont, pcampa,
-				req);
+		return this.cercarGet(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req);
 	}
 
 	/**
-	 * @param lang
+	 * Get de búsqueda textual en el microsite en catalán
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/cercar/")
-	public String cercarCaGet(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarCaGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercarGet(URI, new Idioma(LANG_CA), model, mcont, pcampa,
-				req);
+		return this.cercarGet(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req);
 	}
 
 	/**
-	 * @param lang
+	 * Get de búsqueda textual en el microsite en inglés
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param cerca
+	 *            Texto a buscar
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/search/")
-	public String cercarEnGet(
-			@PathVariable("uri") SiteId URI,
-			Model model,
+	public ModelAndView cercarEnGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercarGet(URI, new Idioma(LANG_EN), model, mcont, pcampa,
-				req);
+		return this.cercarGet(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req);
 	}
 
 	@Override
@@ -222,23 +227,16 @@ public class CercadorController extends BaseController {
 	 * @param lang
 	 */
 
-	private void cargarMollapan(Microsite microsite, Model model, Idioma lang) {
+	private void cargarMollapan(CercarView view) {
 
-		List<PathItem> path = super.getBasePath(microsite, model, lang);
+		List<PathItem> path = super.getBasePath(view);
 
-		/*
-		 * original: path.add(new PathItem(getMessage("contacto.formulario",
-		 * lang), this.urlFactory.contacto(microsite, lang, contacto)));
-		 * 
-		 * Mejor usar el título del formulario:
-		 */
+		String titulo = this.getMessage("cercar.resultados", view.getLang());
 
-		String titulo = this.getMessage("cercar.resultados", lang);
-
-		path.add(new PathItem(titulo, this.urlFactory.cercar(microsite, lang)));
+		path.add(new PathItem(titulo, this.urlFactory.cercar(view.getMicrosite(), view.getLang())));
 
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 
 	}
 

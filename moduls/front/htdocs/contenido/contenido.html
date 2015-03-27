@@ -1,71 +1,44 @@
 <!DOCTYPE html>
-<!--
-Descripción: 
-Este código nos muestra un contenido traducido.
+<!--/*
 
-Variables:
-	MVS_contenido: devuelve un contenido listo para ser visualizado por el público
-	MVS_micrositetitulo: devuelve el titulo del microsite en cuestión
-	MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
-						   trozo de html que muestra la imagen de la campaña
-	MVS_microsite: devuelve un microsite a partir de su clave unica
-	MVS_tipobeta: devuelve un String con el tipo
-	-->
+Página de contenido
+
+*/-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
 <head>
-<!-- MVS_contenido: devuelve un contenido listo para ser visualizado por el público -->
-<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
 <title th:if="${MVS_contenido.traduce} !=null"
 	th:text="${MVS_micrositetitulo} + '-' + ${MVS_contenido.traduce.titulo}">-</title>	
-<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
-<section th:remove="tag" layout:fragment="cssExtra">
-<!-- css específico para esta página -->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estilsContenido.css"
-	th:href="@{/resources/css/estilsContenido.css}"></link>
-</section>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
+<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsContenido.css"	th:href="@{/resources/css/estilsContenido.css}"></link>
+<script th:inline="javascript" type="text/javascript" th:if="${MVS_microsite.tipomenu}!='2'">
+		var nodo='p' + /*[[${MVS_contenido.id}]]*/;
+</script>
 </head>
 <body>
-	<!-- campanya -->
-	<!-- parte añadida para usar el layout decorator "<section>"-->
-	<section th:remove="tag" layout:fragment="campanya">
-		<!-- MVS_home_tmp_campanya: devuelve un string preparado para insertar en un html, que contiene el 
-						   trozo de html que muestra la imagen de la campaña -->
-		<div th:if="${MVS_home_tmp_campanya} !=null"
-			th:utext="${MVS_home_tmp_campanya}" th:remove="tag">Campaña temporal microsite</div>
-	</section>
-	<!-- parte añadida para usar el layout decorator "<section>"-->
-	<!-- fin campanya -->
-	<!-- informacio con o sin menu -->
-	<!-- parte añadida para usar el layout decorator "<section>"-->
 	<section th:remove="tag" layout:fragment="content">
 		&nbsp;
-		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
-		<div
-			th:id="(${MVS_microsite.tipomenu}=='0')==true ? 'infoNoMenu':'info'"
-			id="">
-			<div th:if="${MVS_contenido.traduce} !=null">
-				<!-- MVS_tipobeta: devuelve un String con el tipo -->
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">
+			<div th:if="${MVS_contenido.traduce} != null">
 				<div th:if="${MVS_tipobeta}=='beta'"
 					th:utext="${MVS_contenido.traduce.txbeta}">Contenido traducido beta</div>
 				<div th:unless="${MVS_tipobeta}=='beta'"
 					th:utext="${MVS_contenido.traduce.texto}">Contenido traducido NO beta</div>
 			</div>
 		</div>
-		<!-- fin informacio -->
 	</section>
-	<!-- parte añadida para usar el layout decorator "<section>"-->
-	<!-- fin continguts -->
-	<!-- fin contenedor -->
 </body>
 </html>
-
-
-

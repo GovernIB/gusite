@@ -16,9 +16,14 @@ import org.thymeleaf.processor.IProcessor;
 import es.caib.gusite.front.service.FrontUrlFactory;
 import es.caib.gusite.front.service.TemplateNameFactory;
 
+/**
+ * Dialecto thymeleaf para GUSITE.
+ * 
+ * @author at4.net
+ * 
+ */
 @Component("GusiteDialect")
-public class GusiteDialect extends AbstractDialect implements
-		IExpressionEnhancingDialect {
+public class GusiteDialect extends AbstractDialect implements IExpressionEnhancingDialect {
 
 	@Autowired
 	protected FrontUrlFactory urlFactory;
@@ -26,18 +31,27 @@ public class GusiteDialect extends AbstractDialect implements
 	@Autowired
 	protected TemplateNameFactory templateNameFactory;
 
+	/**
+	 * Prefijo para los atributos del dialecto
+	 */
+	public static final String PREFIX = "gus";
+
 	public GusiteDialect() {
 		super();
 	}
 
-	// All of this dialect's attributes and/or tags
-	// will start with 'gus:'
+	/**
+	 * @see #PREFIX
+	 */
 	@Override
 	public String getPrefix() {
 		return "gus";
 	}
 
-	// The processors.
+	/**
+	 * Añade los processors {@link GusiteReplaceProcessorWrapper} y
+	 * {@link GusiteDecoratorProcessor}
+	 */
 	@Override
 	public Set<IProcessor> getProcessors() {
 		final Set<IProcessor> processors = new HashSet<IProcessor>();
@@ -46,9 +60,12 @@ public class GusiteDialect extends AbstractDialect implements
 		return processors;
 	}
 
+	/**
+	 * Añade los expression objects #gusuri: {@link #urlFactory} y #gustpl:
+	 * {@link #templateNameFactory}<br/>
+	 */
 	@Override
-	public Map<String, Object> getAdditionalExpressionObjects(
-			IProcessingContext arg0) {
+	public Map<String, Object> getAdditionalExpressionObjects(IProcessingContext arg0) {
 		Map<String, Object> objects = new HashMap<String, Object>();
 		objects.put("gusuri", this.urlFactory);
 		objects.put("gustpl", this.templateNameFactory);

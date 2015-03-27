@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author brujula-at4
  */
 @Controller
-public class IntranetLoginController extends BaseController {
+public class IntranetLoginController extends BaseViewController {
 
 	@RequestMapping("intranetLogin")
 	public String login(HttpServletRequest request) {
 
-		String redirect = (String) request.getSession()
-				.getAttribute("redirect");
+		String redirect = (String) request.getSession().getAttribute("redirect");
 		return "redirect:" + redirect;
 	}
 

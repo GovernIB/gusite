@@ -24,6 +24,7 @@ public class MenuFront extends Menu {
 		super.setTraduccionMap(menu.getTraduccionMap());
 		super.setVisible(menu.getVisible());
 		super.setModo(menu.getModo());
+		super.setIdi(menu.getIdi());
 	}
 
 	public ArrayList getListacosas() {

@@ -1,17 +1,8 @@
 <!DOCTYPE html>
 <!--/*
-Descripción: 
-Este código es la plantilla base de la mayoría de páginas web ya que en él hemos integrado el código común
-en la mayoría de páginas, para reutilizar el código.
 
-Variables: 
-	MVS_home_campanya: MVS_home_campanya devuelve un string preparado para insertar en un html.
-					   Ese string contiene el trozo de html que muestra la imagen de la campaña.
-	MVS_microsite: devuelve un microsite a partir de su clave unica
-	MVS_micrositekeywords: keywords del microsite
-	MVS_micrositedescription: keywords del microsite
-	MVS_micrositeanalytics: clave analytics del microsite
-	MVS_css: devuelve la hoja de estilos css correspondiente
+Plantilla base que monta la estructura general del resto de páginas web de microsite.
+
 */-->
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org" 
@@ -21,19 +12,21 @@ Variables:
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Generator"
 	th:content="(#{microsites.name})+';version:'+(#{microsites.version})+';build:'+(#{microsites.build})" />
-<!-- Meta utilizado para adaptar la escala del responsive en los dispositivos moviles limitandola para
-    que no se vea demasiado grande. tambien se evita el zoom -->
+
+<!-- Adapta la escala del responsive en los dispositivos moviles -->
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-<!--/* Al utilizar layout:title-pattern="$content_title" se define que el titulo de las páginas que usen el layout como plantilla
-base sea el propio titulo de cada pagina */-->
+
+<!--/* Al utilizar layout:title-pattern="$content_title" se indica que el titulo de las páginas que usen el layout como plantilla base sea el propio titulo de cada pagina */-->
 <title layout:title-pattern="$CONTENT_TITLE">Layout page</title>
 
-<meta name="keywords"  th:content="${MVS_micrositekeywords}"></meta>
-<meta name="description" th:content="${MVS_micrositedescription}"></meta>
+<!--/* Tags meta keywords y description del microsite */-->
+<meta name="keywords" th:content="${MVS_micrositekeywords}" th:if="${!#strings.isEmpty(MVS_micrositekeywords)}"></meta>
+<meta name="description" th:content="${MVS_micrositedescription}" th:if="${!#strings.isEmpty(MVS_micrositedescription)}"></meta>
 
-<!-- Javascript para introducir clave analytics -->
-<script th:inline="javascript">
+
+<!--/* Javascript para introducir clave analytics */-->
+<script th:inline="javascript" th:if="${!#strings.isEmpty(MVS_micrositeanalytics)}">
 /*<![CDATA[*/
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 
@@ -51,115 +44,73 @@ base sea el propio titulo de cada pagina */-->
 </script>
 
 <!-- Bootstrap -->
-<link href="resources/bootstrap/css/bootstrap.min.css"
-	th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
-	rel="stylesheet" media="screen" />
-<script src="resources/js/jquery/jquery-1.11.0.min.js"
-	th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
-<script src="resources/bootstrap/js/bootstrap.min.js"
-	th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<link href="resources/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+<script src="resources/js/jquery/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
 <!-- Fin bootstrap -->
-
 <!-- Reset default bootstrap elements -->
-<link href="resources/bootstrap/css/bootstrap-reset.css"
-	th:href="@{/resources/bootstrap/css/bootstrap-reset.css}"
-	rel="stylesheet" media="screen" />
+<link href="resources/bootstrap/css/bootstrap-reset.css" th:href="@{/resources/bootstrap/css/bootstrap-reset.css}" rel="stylesheet" media="screen" />
 <!-- Fin reset bootstrap -->
+<script type="text/javascript" src="resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
 
-<script type="text/javascript" src="resources/js/globales.js"
-	th:src="@{/resources/js/globales.js}"></script>
-
+<!--/* TAGS css específics pel microsite  */-->
 <link th:remove="tag" th:utext="${MVS_css}" />
 
-<!--/*  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
-Al ejecutarse dinámicamente, se eliminará automáticamente el .css */-->
-<link rel="stylesheet" type="text/css" media="all"
-	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>
+<!--/* css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina */-->
+<link href="resources/css/estilsLogo.css" th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet" media="screen" />
 
-<!--.css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina -->
-<link href="resources/css/estilsLogo.css"
-	th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet"
-	media="screen" />
-
-<script gus:replace="general/scriptmenu :: script"></script>
-
-<!-- Parte añadida para usar el layout decorator "<section>"-->
-<section th:remove="tag" layout:fragment="scriptExtra"></section>
-
-	<!--/* Permite añadir cssExtra a la plantilla  */-->
-	<section th:remove="tag" layout:fragment="cssExtra"></section>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	
+	NOTA: 
+		- el soporte para thymol está roto. Es necesario implementar el dialecto gus para soportar gus:replace
+		- por otro lado, la extensión para thymol de layout dialect está en desarrollo: https://github.com/ultraq/thymeleaf-layout-dialect-js/ 
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estils.css"></link>
+	<!--  
+	<script type="text/javascript" src="http://cdn.jsdelivr.net/thymol/latest/thymol.min.js"></script>
+	-->
+	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
 </head>
 <body class="bodyFontSize">
 	<div id="contenedor">
 		<!-- Cabecera-->
-		<div class="row clearfix" th:remove="tag">
-			<div class="col-md-12 column" th:remove="tag">
-				<!-- capçal -->
-				<!--/*  
-				<header gus:replace="__${#gustpl.cabecera()}__">Header</header>
-				*/-->
-				<header gus:replace="general/cabecera::cabecera">Header</header>
-				<!-- fin capçal -->
-			</div>
-		</div>
-		<!-- continguts -->
+		<header gus:replace="general/cabecera::cabecera">Cabecera del web</header>
+		<!-- Contenido -->
 		<div id="continguts">
-			<!-- Parte añadida para usar el layout decorator "<section>"-->
-			<section th:remove="tag" layout:fragment="campanya">
+			<div th:remove="tag" layout:fragment="campanya">
 				<!-- campanya -->
-				<!--MVS_home_campanya devuelve un string preparado para insertar en un html.
-	 			Ese string contiene el trozo de html que muestra la imagen de la campaña.-->
-				<div th:if="${MVS_home_campanya} !=null"
-					th:utext="${MVS_home_campanya}" th:remove="tag">Campaña del
-					home</div>
+				<div th:if="${MVS_home_campanya} !=null" th:utext="${MVS_home_campanya}" th:remove="tag">Campaña del home</div>
+				<div th:if="${MVS_home_tmp_campanya} !=null" th:utext="${MVS_home_tmp_campanya}" th:remove="tag">Campaña del home redir</div>
 				<!-- fin campanya -->
-			</section>
-			<!-- Parte añadida para usar el layout decorator "</section>"-->
-			<div class="row clearfix" th:remove="tag">
-				<div class="col-md-4 column" th:remove="tag">
-					<!-- Parte añadida para usar el layout decorator "<section>"-->
-					<section th:remove="tag" layout:fragment="menuLateral">
-						<!-- menu -->
-						<!--MVS_microsite devuelve un microsite a partir de su clave unica  -->
-						<div th:if="${MVS_microsite} !=null" th:remove="tag">
-							<div
-								th:remove="(${MVS_microsite.tipomenu}=='0')==true ? all : none"
-								th:id="(${MVS_microsite.tipomenu}=='1')==true ? 'marcLateral':((${MVS_microsite.tipomenu}=='2')==true ? 'marcLateralAmbIcones')"
-								class="menuAccessibilitat" id="">
-								<div gus:replace="general/menu :: menu">Menu1</div>
-							</div>
-						</div>
-						<!-- fin menu -->
-					</section>
-				</div>
-				<!-- Contenido info -->
-				<div class="col-md-8 column" th:remove="tag">
-					<!-- Contenido variable -->
-					<div class="row clearfix" th:remove="tag">
-						<!-- Parte añadida para usar el layout decorator "<section>"-->
-						<section th:remove="tag" layout:fragment="content"></section>
-						<!-- Parte añadida para usar el layout decorator "</section>"-->
+			</div>
+			<!--/* Sección del menú lateral */-->
+			<section th:remove="tag" layout:fragment="menuLateral">
+				<!-- menu -->
+				<div th:if="${MVS_microsite} != null" th:remove="tag">
+					<div
+						th:if="${MVS_microsite.tipomenu}!='0'"
+						th:id="${MVS_microsite.tipomenu}=='1' ? 'marcLateral': (${MVS_microsite.tipomenu}=='2' ? 'marcLateralAmbIcones')"
+						class="menuAccessibilitat" id="marcLateral">
+						<div gus:replace="general/menu :: menu">Menú general</div>
 					</div>
 				</div>
-			</div>
+				<!-- fin menu -->
+			</section>
+			<!--/* Sección del menú contenido específico de la página */-->
+			<section th:remove="tag" layout:fragment="content"></section>
 		</div>
-		<!-- fin informacio -->
-
-		<!-- fin continguts -->
-
-		<!-- Parte añadida para usar el layout decorator "<section>"-->
-		<section th:remove="tag" layout:fragment="scriptExtraBody1">
-		</section>
-		<!-- Parte añadida para usar el layout decorator "<section>"-->
-		<section th:remove="tag" layout:fragment="scriptExtraBody2">
-		</section>
+		<!--/* Secciones para añadir scripts extra en el body */-->
+		<script layout:fragment="scriptExtraBody1"></script>
+		<script layout:fragment="scriptExtraBody2"></script>
 		<!-- footer -->
-		<div class="row clearfix" th:remove="tag">
-			<!-- pie -->
-			<div class="col-md-12 column" th:remove="tag">
-				<footer gus:replace="general/pie :: pie">Footer</footer>
-			</div>
-		</div>
+		<footer gus:replace="general/pie :: pie">Pie de página</footer>
 	</div>
 </body>
 </html>

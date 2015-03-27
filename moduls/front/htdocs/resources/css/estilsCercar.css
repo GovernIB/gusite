@@ -1041,17 +1041,6 @@ div#info, div#infoNoMenu{
 	padding: 0;
 }
 
-div#info, div#infoNoMenu,div#info h2, div#infoNoMenu h2{
-	width: 100% !important;
-	max-width: 100% !important;
-	margin-right: auto;
-	margin-left: auto;
-	text-align: center;
-	
-}
-
-
-
 
 
 /* MEDIA QUERIES RESPONSIVE*/

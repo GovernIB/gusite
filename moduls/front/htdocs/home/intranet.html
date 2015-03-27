@@ -22,18 +22,15 @@ Variables:
 Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>	
-<!-- MVS_css: devuelve la hoja de estilos css correspondiente -->
 <link th:remove="tag" th:utext="${MVS_css}" />
 </head>
-<!-- TESTEAR SI ESTO FUNCIONA -->
 <body th:attr="onload='javascript:window.focus();'">
 	<br />
 	<br />
 	<table cellpadding="10">
 		<tr>
 			<td align="center">
-				<h4 th:text="#{pleasewait.peticion}">La seva petició s`està 
-					processant</h4>
+				<h4 th:text="#{pleasewait.peticion}">La seva petició s`està processant</h4>
 				<h4 th:text="#{pleasewait.favor}">Esperi, si us plau</h4>
 			</td>
 		</tr>

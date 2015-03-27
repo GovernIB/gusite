@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="02gusite" default="usage">
+<project name="gusite" default="main">
 
 	<property name="project.version" value="${ant.project.name}"/>
 	<property name="home" value="."/>
@@ -36,46 +36,6 @@
 	<property name="etc.appwebcaib" value="${etc}/appwebcaib"/>
 		
 	<!-- *******************   TASQUES GENERALS  ****************************   -->
-	<!-- ====================================================================== -->
-	<!-- usage                                                                  -->
-	<!-- ====================================================================== -->
-	<target name="usage">
-		<echo>
-			---------------------------------------------------------------------------------------------------
-			Tasques del projecte :
-
-			****** Tasques d'ajuda :
-			system : informacio sobre la versio de l'ant emprada
-			usage : aquesta ajuda
-			properties : mostra les propietats definides
-			info : system + usage + properties
-
-			****** Tasques de preparacio :
-			prepare : fitxa l'estructura de directoris necessaria per la construccio de l'aplicacio
-
-			****** Tasques d'actualitzaciÃ³ de components :
-			update.XXX.jar : re-construeix el producte final (caib.ear) actualitzant nomes el component jar XXX
-			update.XXX.war : re-construeix el producte final (caib.ear) actualitzant nomes el component war XXX
-
-			Els components existents (valors de XXX) son :
-			boib, forum*, hemeroteca*, moduls**, pidip, portal**, root**, sac,link,fitxer
-			* nomes tenen component jar
-			** nomes tenen component war
-
-			****** Tasques de documentacio i control
-			todo : genera al directori ../todo un informe de les coses que estan documentades al codi com que queden per fer
-			doc-pdf : genera al directori ../doc un fitxer PDF amb la documentacio del projecte
-			doc-html : genera al directori ../doc/html la documentacio del projecte en format html
-			doc-print : genera al directori ../doc/print la documentacio del projecte en format html per imprimir
-			doc-api : genera la documentaciÃ³ javadoc pels components dins dels directori ../doc/api
-
-			****** Tasques de construccio :
-			assemble : construeix el ear amb tots els components existents
-			main : construeix tota l'aplicacio
-			---------------------------------------------------------------------------------------------------
-		</echo>
-	</target>
-
 
 	<!-- ================================================================== -->
 	<!-- properties                                                         -->
@@ -104,12 +64,6 @@
 
 
 	<!-- ================================================================== -->
-	<!-- info                                                               -->
-	<!-- ================================================================== -->
-	<target name="info" depends="usage,properties"/>
-
-
-	<!-- ================================================================== -->
 	<!-- prepare                                                            -->
 	<!-- ================================================================== -->
 	<target name="prepare" description="Crea los directorios necesarios para la construcción de la aplicación">
@@ -134,12 +88,17 @@
 	<!-- update                                                             -->
 	<!-- ================================================================== -->
 	<target name="update.XDOCLET" description="Actualiza los módulos que generan clases con XDOCLET.">
+		<antcall target="update.plugins"/>
 		<antcall target="update.utilities"/>
 		<antcall target="update.extractor"/>
 		<antcall target="update.lucene"/>
 		<antcall target="update.micromodel"/>
 		<antcall target="update.micropersistence"/>
 		<antcall target="update.microintegracion"/>
+	</target>
+
+	<target name="update.plugins" description="Actualizar plugins">
+		<ant dir="plugins" target="main" inheritall="false"/>
 	</target>
 
 	<target name="update.utilities" description="Actualizar utilidades que pertenecian a webcaib">
@@ -183,21 +142,21 @@
 	<!--																	-->
 	<!--	necessites declarar 'project.author' en el teu build properties -->
 	<!-- ================================================================== -->
-	<target name="assemble02GUSITE" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
+	<target name="assemble" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
 				
 		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR -->
-		<!--<sql-->
-			<!--driver="org.sqlite.JDBC"-->
-		    <!--url="jdbc:sqlite:.svn/wc.db"-->
-		    <!--userid=""-->
-		    <!--password=""-->
-			<!--classpath="lib/sqlite-jdbc-3.7.15-M1.jar" -->
-			<!--escapeprocessing="false"-->
-			<!--print="yes" expandProperties="true" showheaders="false" showtrailers="false" output="svnversion.properties">-->
-			<!--<![CDATA[-->
-				<!--SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;-->
-			<!--]]>-->
-		<!--</sql>-->
+		<sql
+			driver="org.sqlite.JDBC"
+		    url="jdbc:sqlite:.svn/wc.db"
+		    userid=""
+		    password=""
+			classpath="lib/sqlite-jdbc-3.7.15-M1.jar" 
+			escapeprocessing="false"
+			print="yes" expandProperties="true" showheaders="false" showtrailers="false" output="svnversion.properties">
+			<![CDATA[
+				SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;
+			]]>
+		</sql>
 		
 		<!-- Obtenemos la revisión SVN del proyecto desde el archivo de propiedades generado justo antes -->
 		<property file="svnversion.properties"/>
@@ -226,6 +185,7 @@
 				<include name="sac-micropersistence.jar" />
 				<include name="sac-micropersistence-client.jar" />
 				<include name="utilities.jar" />
+				<include name="plugins.jar" />
 			</fileset>
 
 			<!-- Librerías de utilidades comunes para los jar y wars -->
@@ -292,56 +252,24 @@
 		
 	</target>
 
-	<target name="assemble02GUSITEStandAlone" description="Actualiza el EAR con los componentes generados para micoristes en StandAlone.">
-		<delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
-		<ear earfile="${product.dir}/02${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application2.xml" manifest="${etc.appgusite}/manifest.mf">
-			<manifest>
-				<attribute name="Created-By" value="brujula-at4"/>
-			</manifest>
-
-			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
-
-			<!-- Incluimos los .war y .jar generados con la aplicación para gusite-->
-			<fileset dir="${moduls.dir}">
-				<include name="sac-microfront.war" />
-				<include name="sac-front.war" />
-				<include name="sac-microback.war" />
-				<include name="lucene.jar" />
-				<include name="micromodel.jar" />
-				<include name="sac-micropersistence.jar" />
-				<include name="sac-micropersistence-client.jar" />
-				<include name="microintegracion.jar" />
-				<include name="utilities.jar" />
-			</fileset>
-		</ear>
-	</target>
-
 	<!-- ================================================================== -->
 	<!-- main                                                               -->
 	<!-- ================================================================== -->
-	<target name="main02GUSITE" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE">
-		<antcall target="propagateGUSITE">
+	<target name="main" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE">
+		<antcall target="propagate">
 			<param name="task" value="main"/>
 		</antcall>
 
-		<antcall target="assemble02GUSITE"/>
-		<antcall target="deploy02GUSITE"/>
-	</target>
-
-	<target name="main02GUSITEStandAlone" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE StandAlone">
-		<antcall target="propagateGUSITE">
-			<param name="task" value="main"/>
-		</antcall>
-
-		<antcall target="assemble02GUSITEStandAlone"/>
-		<antcall target="deploy02GUSITE"/>
+		<antcall target="assemble"/>
+		<antcall target="deploy"/>
 	</target>
 
 
 	<!-- ================================================================== -->
 	<!-- propagate                                                          -->
 	<!-- ================================================================== -->
-	<target name="propagateGUSITE">
+	<target name="propagate">
+		<ant dir="plugins" target="${task}" inheritall="false"/>
 		<ant dir="moduls/utilities" target="${task}" inheritall="false"/>
 		<ant dir="moduls/extractor" target="${task}" inheritall="false"/>
 		<ant dir="moduls/lucene" target="${task}" inheritall="false"/>
@@ -357,15 +285,8 @@
 	<!-- ================================================================== -->
 	<!-- deploy                                                             -->
 	<!-- ================================================================== -->
-	<target name="deploy02GUSITE">
+	<target name="deploy">
 		<copy file="${product.dir}/${projecte.name.gusite}.ear" todir="${deploy.dir}"/>
-	</target>
-
-	<target name="copiarAOTROS">
-		<copy file="${moduls.dir}/micromodel.jar" todir="${home}/../01rolsac/lib"/>
-		<copy file="${moduls.dir}/sac-micropersistence.jar" todir="${home}/../01rolsac/lib"/>
-		<copy file="${moduls.dir}/micromodel.jar" todir="${home}/../03webcaib/lib"/>
-		<copy file="${moduls.dir}/sac-micropersistence.jar" todir="${home}/../03webcaib/lib"/>
 	</target>
 
 </project>

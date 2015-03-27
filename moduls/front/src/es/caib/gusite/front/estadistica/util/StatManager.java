@@ -36,10 +36,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Agenda agenda,
-			int publico, List<Estadistica> buffer) throws DelegateException {
-		return grabarStat(agenda.getIdmicrosite(), agenda.getId(),
-				Front.RAGENDA, publico, buffer);
+	public static List<Estadistica> grabarestadistica(Agenda agenda, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(agenda.getIdmicrosite(), agenda.getId(), Front.RAGENDA, publico, buffer);
 	}
 
 	/**
@@ -52,11 +50,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(
-			ListaDistribucion lDistrib, int publico, List<Estadistica> buffer)
-			throws DelegateException {
-		return grabarStat(lDistrib.getMicrosite().getId(), lDistrib.getId(),
-				Front.RLDISTRIB, publico, buffer);
+	public static List<Estadistica> grabarestadistica(ListaDistribucion lDistrib, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(lDistrib.getMicrosite().getId(), lDistrib.getId(), Front.RLDISTRIB, publico, buffer);
 	}
 
 	/**
@@ -68,10 +63,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Contacto contacto,
-			int publico, List<Estadistica> buffer) throws DelegateException {
-		return grabarStat(contacto.getIdmicrosite(), contacto.getId(),
-				Front.RCONTACTO, publico, buffer);
+	public static List<Estadistica> grabarestadistica(Contacto contacto, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(contacto.getIdmicrosite(), contacto.getId(), Front.RCONTACTO, publico, buffer);
 	}
 
 	/**
@@ -84,11 +77,9 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Contenido contenido,
-			Long idmicrosite, int publico, List<Estadistica> buffer)
+	public static List<Estadistica> grabarestadistica(Contenido contenido, Long idmicrosite, int publico, List<Estadistica> buffer)
 			throws DelegateException {
-		return grabarStat(idmicrosite, contenido.getId(), Front.RCONTENIDO,
-				publico, buffer);
+		return grabarStat(idmicrosite, contenido.getId(), Front.RCONTENIDO, publico, buffer);
 	}
 
 	/**
@@ -102,8 +93,7 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Long idmicrosite,
-			int publico, List<Estadistica> buffer) throws DelegateException {
+	public static List<Estadistica> grabarestadistica(Long idmicrosite, int publico, List<Estadistica> buffer) throws DelegateException {
 		return grabarStat(idmicrosite, idmicrosite, Front.RFAQ, publico, buffer);
 	}
 
@@ -118,9 +108,7 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Long idmicrosite,
-			String tipo, int publico, List<Estadistica> buffer)
-			throws DelegateException {
+	public static List<Estadistica> grabarestadistica(Long idmicrosite, String tipo, int publico, List<Estadistica> buffer) throws DelegateException {
 		return grabarStat(idmicrosite, idmicrosite, tipo, publico, buffer);
 	}
 
@@ -133,10 +121,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Noticia noticia,
-			int publico, List<Estadistica> buffer) throws DelegateException {
-		return grabarStat(noticia.getIdmicrosite(), noticia.getId(),
-				Front.RNOTICIA, publico, buffer);
+	public static List<Estadistica> grabarestadistica(Noticia noticia, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(noticia.getIdmicrosite(), noticia.getId(), Front.RNOTICIA, publico, buffer);
 	}
 
 	/**
@@ -148,10 +134,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Microsite microsite,
-			int publico, List<Estadistica> buffer) throws DelegateException {
-		return grabarStat(microsite.getId(), microsite.getId(),
-				Front.RMICROSITE, publico, buffer);
+	public static List<Estadistica> grabarestadistica(Microsite microsite, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(microsite.getId(), microsite.getId(), Front.RMICROSITE, publico, buffer);
 	}
 
 	/**
@@ -163,10 +147,8 @@ public class StatManager {
 	 * @return List
 	 * @throws DelegateException
 	 */
-	public static List<Estadistica> grabarestadistica(Encuesta encuesta,
-			int publico, List<Estadistica> buffer) throws DelegateException {
-		return grabarStat(encuesta.getIdmicrosite(), encuesta.getId(),
-				Front.RENCUESTA, publico, buffer);
+	public static List<Estadistica> grabarestadistica(Encuesta encuesta, int publico, List<Estadistica> buffer) throws DelegateException {
+		return grabarStat(encuesta.getIdmicrosite(), encuesta.getId(), Front.RENCUESTA, publico, buffer);
 	}
 
 	/**
@@ -178,8 +160,7 @@ public class StatManager {
 	 * @param ref
 	 * @throws DelegateException
 	 */
-	private static List<Estadistica> grabarStat(Long idmicrosite, Long iditem,
-			String ref, int publico, List<Estadistica> buffer)
+	private static List<Estadistica> grabarStat(Long idmicrosite, Long iditem, String ref, int publico, List<Estadistica> buffer)
 			throws DelegateException {
 
 		// La grabación de estadísticas no se realiza en el rango de horas de 1
@@ -187,8 +168,7 @@ public class StatManager {
 		// conflictos con el backup de BBDD
 		Integer mes = new Integer(Fechas.formatfechaactual2Stats());
 		EstadisticaDelegate statdel = DelegateUtil.getEstadisticaDelegate();
-		Estadistica stat = statdel.obtenerEstadistica(idmicrosite, iditem, ref,
-				mes, new Integer(publico));
+		Estadistica stat = statdel.obtenerEstadistica(idmicrosite, iditem, ref, mes, new Integer(publico));
 		stat.setAccesos(stat.getAccesos() + 1);
 
 		if (!Fechas.betweenHours(new Date(), 1, 0, 2, 0)) {

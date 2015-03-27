@@ -10,15 +10,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import es.caib.gusite.front.general.Microfront;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.idioma.IdiomaCriteria;
-import es.caib.rolsac.api.v2.idioma.IdiomaQueryServiceAdapter;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 /**
  * Clase MenuCabecera. Utilizado para trabajar con las cabeceras del microsite
+ * TODO: esto debería estar ligado a un plugin de menú corporativo
  * 
  * @author Indra
  * 
@@ -29,7 +25,7 @@ public class MenuCabecera {
 	 * Se guardará en cada hash una entrada por idioma. Y a su vez, el `value`
 	 * del hash será un ArrayList con el listado correspondiente.
 	 */
-	private static Hashtable<String, Collection<?>> uos = new Hashtable<String, Collection<?>>();
+	private static Hashtable<String, Collection<UnidadData>> uos = new Hashtable<String, Collection<UnidadData>>();
 	private static Log log = LogFactory.getLog(MenuCabecera.class);
 
 	/**
@@ -37,18 +33,17 @@ public class MenuCabecera {
 	 */
 	static {
 		log.info("Refresco de menu estático de PortalCAIB en Microsites realizado.");
-		refrescarMenu();
+		//refrescarMenu();
 	}
 
 	/**
 	 * Método público para refrescar el Menu de los microsites
-	 */
+	 * TODO: esto no se ejecuta automaticamente. Debería estar en el plugin de menú corporativo
 	public static void refrescarMenu() {
 
 		try {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-			List<IdiomaQueryServiceAdapter> listaIdiomas = rqs
-					.llistarIdiomes(new IdiomaCriteria());
+			List<IdiomaQueryServiceAdapter> listaIdiomas = rqs.llistarIdiomes(new IdiomaCriteria());
 
 			// Rellenamos array de idiomas.
 			List<String> idiomas = new ArrayList<String>();
@@ -56,26 +51,21 @@ public class MenuCabecera {
 				idiomas.add(idioma.getLang());
 			}
 
-			String idUOGovern = System
-					.getProperty("es.caib.gusite.codigoUO.govern");
+			String idUOGovern = System.getProperty("es.caib.gusite.codigoUO.govern");
 			if (idUOGovern == null) {
-				throw new RuntimeException(
-						"No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
+				throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 			}
 
 			Long UO_GOVERN_IB = new Long(idUOGovern);
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
 			uaCriteria.setId(UO_GOVERN_IB.toString());
 
-			UnitatAdministrativaQueryServiceAdapter ua = rqs
-					.obtenirUnitatAdministrativa(uaCriteria);
-			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua
-					.llistarFilles(new UnitatAdministrativaCriteria());
+			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua.llistarFilles(new UnitatAdministrativaCriteria());
 
 			for (String lang : idiomas) {
-				Collection<UnitatAdministrativaQueryServiceAdapter> nuevasUAs = new ArrayList<UnitatAdministrativaQueryServiceAdapter>();
-				Iterator<UnitatAdministrativaQueryServiceAdapter> it = listaUAs
-						.iterator();
+				Collection<UnitatAdministrativaDTO> nuevasUAs = new ArrayList<UnitatAdministrativaDTO>();
+				Iterator<UnitatAdministrativaQueryServiceAdapter> it = listaUAs.iterator();
 
 				// La conselleria de Portavoz se trata a parte.
 				UnitatAdministrativaQueryServiceAdapter conse;
@@ -92,25 +82,25 @@ public class MenuCabecera {
 			e.printStackTrace();
 		}
 	}
+	 */
+	
 
 	/**
 	 * Devuelve un listado de las consellerias
 	 * 
 	 * @param lang
 	 * @return ArrayList
-	 */
-	public static Collection<?> getUos(String lang) {
+	public static Collection<UnidadData> getUos(String lang) {
 
-		Collection<?> lista = uos.get(lang);
+		Collection<UnidadData> lista = uos.get(lang);
 		if (lista == null) {
 			return lista;
 		}
 		try {
-			Collection listaDef = new ArrayList();
-			Iterator<?> conseDef = lista.iterator();
+			Collection<UnitatAdministrativaDTO> listaDef = new ArrayList<UnitatAdministrativaDTO>();
+			Iterator<UnitatAdministrativaDTO> conseDef = lista.iterator();
 			while (conseDef.hasNext()) {
-				UnitatAdministrativaQueryServiceAdapter cons = (UnitatAdministrativaQueryServiceAdapter) conseDef
-						.next();
+				UnitatAdministrativaQueryServiceAdapter cons = (UnitatAdministrativaQueryServiceAdapter) conseDef.next();
 				if (!cons.getId().toString().equals(Microfront.UO_PORTAVOZ)) {
 					listaDef.add(cons);
 				}
@@ -123,5 +113,12 @@ public class MenuCabecera {
 
 		return lista;
 	}
+	 */
 
+	public static Collection<UnidadData> getUos(String lang) {
+		//TODO: implementar en el plugin
+		Collection<UnidadData> lista = uos.get(lang);
+		return lista;
+	}
+	
 }

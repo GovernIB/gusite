@@ -1,7 +1,5 @@
 package es.caib.gusite.front.mailing;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -15,66 +13,55 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.service.CorreoEngineService;
+import es.caib.gusite.front.view.MailingView;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.ListaDistribucion;
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.Tiposervicio;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.LDistribucionDelegate;
 
 @Controller
-public class OperacioMailingController extends BaseController {
+public class OperacioMailingController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(OperacioMailingController.class);
-	Microsite microsite = null;
-	DelegateBase _delegateBase;
-	List listaDistrib = null;
 
 	/**
 	 * 
 	 * @param lang
 	 * @param uri
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/msggenerico/")
-	public String mailing(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView mailing(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, 
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		ResourceBundle rb = ResourceBundle.getBundle(
-				"ApplicationResources_front", req.getLocale());
+		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", req.getLocale());
+
+		MailingView view = new MailingView();
 		try {
-			this.microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
+			List<?> listaDistrib;
 			// bdSuscripcion constructor
-			try {
-				this._delegateBase = new DelegateBase();
+			DelegateBase delegateBase = new DelegateBase();
 
-				if ((this.microsite != null)
-						&& (this.existeServicio(Microfront.RLDISTRIB,
-								lang.getLang()))) {
-					// recogerlista de bdSuscripcion
-					this.listaDistrib = this._delegateBase
-							.obtenerListadoDistribucionMicrosite(this.microsite
-									.getId());
-					// hasta aqui recogerlista de bdSuscripcion
-				}
-			} catch (Exception e) {
-				log.error("Error en la busqueda: " + e);
-				return this.getForwardError(this.microsite, lang, model,
-						ErrorMicrosite.ERROR_AMBIT_ACCES);
+			if ((microsite != null) && (this.existeServicio(microsite, lang, Microfront.RLDISTRIB))) {
+				// recogerlista de bdSuscripcion
+				listaDistrib = delegateBase.obtenerListadoDistribucionMicrosite(microsite.getId());
+				// hasta aqui recogerlista de bdSuscripcion
+			} else {
+				log.error("No hay microsite o no existe el servicio");
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
 			}
 			// hasta aqui bdSuscripcion
 
@@ -82,20 +69,15 @@ public class OperacioMailingController extends BaseController {
 			String assumpte = "";
 			if ("alta".equals(req.getParameter(Microfront.PACTION))) {
 				// metodo alta() de bdSuscripcion
-				LDistribucionDelegate distribDel = DelegateUtil
-						.getLlistaDistribucionDelegate();
+				LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
 				if (req.getParameter(Microfront.PEMAIL) != null
-						&& (req.getParameter(Microfront.PEMAIL))
-								.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$")
+						&& (req.getParameter(Microfront.PEMAIL)).matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$")
 						&& req.getParameter(Microfront.PDISTRIB) != null) {
-					Long idLista = Long.parseLong(req
-							.getParameter(Microfront.PDISTRIB));
-					if (DelegateUtil.getLlistaDistribucionDelegate()
-							.obtenerListaDistribucion(idLista).getPublico()) {
+					Long idLista = Long.parseLong(req.getParameter(Microfront.PDISTRIB));
+					if (DelegateUtil.getLlistaDistribucionDelegate().obtenerListaDistribucion(idLista).getPublico()) {
 						String email = req.getParameter(Microfront.PEMAIL);
 						distribDel.anadeCorreo(idLista, email);
-						if ("no".equals(""
-								+ req.getSession().getAttribute("MVS_stat"))) {
+						if ("no".equals("" + req.getSession().getAttribute("MVS_stat"))) {
 							log.info("Skip Estadistica, preview conten");
 						}
 					} else {
@@ -111,18 +93,14 @@ public class OperacioMailingController extends BaseController {
 			} else if ("baixa".equals(req.getParameter(Microfront.PACTION))) {
 				// metodo baixa() de bdSuscripcion
 				if (req.getParameter(Microfront.PEMAIL) != null) {
-					for (Object l : this.listaDistrib) {
-						LDistribucionDelegate distribDel = DelegateUtil
-								.getLlistaDistribucionDelegate();
-						distribDel.borrarCorreo(
-								((ListaDistribucion) l).getId(),
-								req.getParameter(Microfront.PEMAIL));
-						if ("no".equals(""
-								+ req.getSession().getAttribute("MVS_stat"))) {
+					for (Object l : listaDistrib) {
+						LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
+						distribDel.borrarCorreo(((ListaDistribucion) l).getId(), req.getParameter(Microfront.PEMAIL));
+						if ("no".equals("" + req.getSession().getAttribute("MVS_stat"))) {
 							log.info("Skip Estadistica, preview conten");
 						}
 					}
-					model.addAttribute("msg", rb.getString("mailing.baixa"));
+					view.setMsg(rb.getString("mailing.baixa"));
 				} else {
 					throw new Exception("Faltan parámetros");
 				}
@@ -130,65 +108,28 @@ public class OperacioMailingController extends BaseController {
 				assumpte = rb.getString("mailing.assumpte.baixa");
 				body.append(rb.getString("mailing.body.baixa"));
 			}
-			if (this.microsite.getIdiomas()
-					.contains(req.getLocale().toString())) {
-				body.append(((TraduccionMicrosite) this.microsite
-						.getTraduccion(req.getLocale().toString())).getTitulo());
+			if (microsite.getIdiomas().contains(req.getLocale().toString())) {
+				body.append(((TraduccionMicrosite) microsite.getTraduccion(req.getLocale().toString())).getTitulo());
 			} else {
-				body.append(((TraduccionMicrosite) this.microsite.getTraduce())
-						.getTitulo());
+				body.append(((TraduccionMicrosite) microsite.getTraduce()).getTitulo());
 			}
 
 			CorreoEngineService mail = new CorreoEngineService();
-			mail.initCorreo(req.getParameter(Microfront.PEMAIL), assumpte,
-					false, body);
+			mail.initCorreo(req.getParameter(Microfront.PEMAIL), assumpte, false, body);
 			mail.enviarCorreo();
+			return this.modelForView(this.templateNameFactory.mailing(microsite), view);
+
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(this.microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			return this.getForwardError(this.microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
-		return this.templateNameFactory.mailing(this.microsite);
-	}
-
-	/**
-	 * Método que devuelve si el servicio que se solicita es ofrecido o no por
-	 * el microsite.
-	 * 
-	 * @param refservicio
-	 *            una referencia a un servicio
-	 * @return boolean true si el tipo de servicio del microsite es igual a
-	 *         refservicio
-	 */
-	public boolean existeServicio(String refservicio, String idioma) {
-		boolean tmp = false;
-		try {
-			ArrayList<?> listserofr = this._delegateBase
-					.obtenerListadoServiciosMicrosite(this.microsite, idioma);
-			// chequeamos el servicio
-			Iterator<?> iter2 = listserofr.iterator();
-			while (iter2.hasNext()) {
-				Tiposervicio tiposervicio = (Tiposervicio) iter2.next();
-				if (tiposervicio.getReferencia().equals(refservicio)) {
-					tmp = true;
-				}
-				if (tmp) {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			log.error("[existeServicio] con el servicio '" + refservicio + "' "
-					+ e.getMessage());
-		}
-		return tmp;
 	}
 
 	@Override
 	public String setServicio() {
-		return null;
+		return Microfront.RLDISTRIB;
 	}
 }

@@ -38,16 +38,13 @@ public class MParserQssi extends MParserHTML {
 	 * @param idioma
 	 * @return StringBuffer con el pegote de html
 	 */
-	public StringBuffer getHtmlQssi(Long idmicrosite, String ideqssi,
-			String idioma) {
+	public StringBuffer getHtmlQssi(Long idmicrosite, String ideqssi, String idioma) {
 		StringBuffer retorno = new StringBuffer();
 
-		ResourceBundle.getBundle("ApplicationResources_front", new Locale(
-				idioma.toUpperCase(), idioma.toUpperCase()));
+		ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
 
 		try {
-			ResourceBundle rb2 = ResourceBundle
-					.getBundle("sac-microback-messages");
+			ResourceBundle rb2 = ResourceBundle.getBundle("sac-microback-messages");
 			String Urlqssi = (String) rb2.getObject("frqssi.url");
 			FrqssiDelegate qssidel = DelegateUtil.getFrqssiDelegate();
 			Long idcont = new Long(Long.parseLong(ideqssi));
@@ -56,38 +53,20 @@ public class MParserQssi extends MParserHTML {
 
 			this.qssi.setIdi(idioma);
 			String laurl;
-			if (this.qssi.getCentro() != null
-					&& this.qssi.getTipoescrito() != null) {
-				laurl = Urlqssi
-						+ "&centre="
-						+ this.qssi.getCentro()
-						+ "&tipus_escrit="
-						+ this.qssi.getTipoescrito()
-						+ "&asunto="
-						+ URLEncoder.encode(((TraduccionFrqssi) this.qssi
-								.getTraduce()).getNombre(), "UTF-8")
-						+ "&idioma=" + idioma;
+			if (this.qssi.getCentro() != null && this.qssi.getTipoescrito() != null) {
+				laurl = Urlqssi + "&centre=" + this.qssi.getCentro() + "&tipus_escrit=" + this.qssi.getTipoescrito() + "&asunto="
+						+ URLEncoder.encode(((TraduccionFrqssi) this.qssi.getTraduce()).getNombre(), "UTF-8") + "&idioma=" + idioma;
 			} else {
 				if (this.qssi.getCentro() != null) {
-					laurl = Urlqssi
-							+ "&centre="
-							+ this.qssi.getCentro()
-							+ "&asunto="
-							+ URLEncoder.encode(((TraduccionFrqssi) this.qssi
-									.getTraduce()).getNombre(), "UTF-8")
-							+ "&idioma=" + idioma;
+					laurl = Urlqssi + "&centre=" + this.qssi.getCentro() + "&asunto="
+							+ URLEncoder.encode(((TraduccionFrqssi) this.qssi.getTraduce()).getNombre(), "UTF-8") + "&idioma=" + idioma;
 				} else {
-					laurl = Urlqssi
-							+ "&asunto="
-							+ URLEncoder.encode(((TraduccionFrqssi) this.qssi
-									.getTraduce()).getNombre(), "UTF-8")
-							+ "&idioma=" + idioma;
+					laurl = Urlqssi + "&asunto=" + URLEncoder.encode(((TraduccionFrqssi) this.qssi.getTraduce()).getNombre(), "UTF-8") + "&idioma="
+							+ idioma;
 				}
 			}
 
-			String enlace = "<a href=\"" + laurl + "\">"
-					+ ((TraduccionFrqssi) this.qssi.getTraduce()).getNombre()
-					+ "</a>";
+			String enlace = "<a href=\"" + laurl + "\">" + ((TraduccionFrqssi) this.qssi.getTraduce()).getNombre() + "</a>";
 			retorno.append(enlace);
 
 		} catch (Exception e) {

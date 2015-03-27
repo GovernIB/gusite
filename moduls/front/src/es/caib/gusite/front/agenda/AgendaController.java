@@ -10,127 +10,124 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import es.caib.gusite.front.general.BaseController;
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.general.bean.ResultadoBusqueda;
+import es.caib.gusite.front.view.AgendaFechaView;
+import es.caib.gusite.front.view.AgendaView;
+import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 
 /**
+ * Gestiona las peticiones de páginas de agenda
  * 
  * @author brujula-at4
  * 
  */
 @Controller
-public class AgendaController extends BaseController {
+public class AgendaController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(AgendaController.class);
 
 	/**
-	 * @param lang
+	 * Eventos de la agenda para una fecha determinada
+	 * 
 	 * @param uri
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
+	 * @param fecha
+	 *            en formato yyyyMMdd
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang}/agenda/{fecha}")
-	public String agenda(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
+	public ModelAndView agenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("fecha") @DateTimeFormat(pattern = "yyyyMMdd") Date fecha,
-			Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			HttpServletRequest req) {
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina, HttpServletRequest req) {
 
-		Microsite microsite = null;
+		AgendaFechaView view = new AgendaFechaView();
 		try {
 
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
-			ResultadoBusqueda<Agenda> eventos = this.dataService
-					.getListadoAgenda(microsite, lang, fecha, pagina);
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
 
-			SimpleDateFormat agendaFechaEvento = new SimpleDateFormat(
-					"dd/MM/yyyy");
+			ResultadoBusqueda<Agenda> eventos = this.dataService.getListadoAgenda(microsite, lang, fecha, pagina);
 
-			model.addAttribute("MVS_agenda_lista", eventos.getResultados());
-			model.addAttribute("MVS_agenda_diaevento",
-					agendaFechaEvento.format(fecha));
-			model.addAttribute("MVS_seulet_sin", this.urlFactory
-					.listarAgendaFechaSinPagina(microsite, lang, fecha, mcont,
-							pcampa));
-			model.addAttribute("MVS_parametros_pagina", eventos.getParametros());
+			SimpleDateFormat agendaFechaEvento = new SimpleDateFormat("dd/MM/yyyy");
 
-			this.cargarMollapan(microsite, fecha, model, lang);
+			view.setAgendaLista(eventos.getResultados());
+			view.setAgendaDiaevento(agendaFechaEvento.format(fecha));
+			view.setSeuletSin(this.urlFactory.listarAgendaFechaSinPagina(microsite, lang, fecha, mcont, pcampa));
+			view.setParametrosPagina(eventos.getParametros());
 
-			return this.templateNameFactory.listarAgendaFecha(microsite);
+			this.cargarMollapan(view, fecha);
+
+			return this.modelForView(this.templateNameFactory.listarAgendaFecha(microsite), view);
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
 
 	}
 
 	/**
-	 * @param lang
+	 * Página de agenda de microsite
+	 * 
 	 * @param uri
-	 * @param model
+	 *            Uri de microsite
+	 * @param lang
+	 *            Idioma de la petición
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang}/agenda/")
-	public String agenda(
-			@PathVariable("uri") SiteId URI,
-			@PathVariable("lang") Idioma lang,
-			Model model,
+	public ModelAndView agenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
 			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion) {
 
-		Microsite microsite = null;
+		AgendaView view = new AgendaView();
 		try {
 
-			microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
-			ResultadoBusqueda<Agenda> eventos = this.dataService
-					.getListadoAgenda(microsite, lang, new AgendaCriteria(
-							filtro, pagina, ordenacion));
+			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			Microsite microsite = view.getMicrosite();
 
-			model.addAttribute("MVS_seulet_sin", this.urlFactory
-					.listarAgendaSinPagina(microsite, lang, mcont, pcampa));
-			model.addAttribute("MVS_parametros_pagina", eventos.getParametros());
-			model.addAttribute("MVS_datos_agenda_calendario",
-					this.dataService.getDatosCalendario(microsite, lang));
-			model.addAttribute("MVS_agenda_lista", eventos.getResultados());
+			ResultadoBusqueda<Agenda> eventos = this.dataService.getListadoAgenda(microsite, lang, new AgendaCriteria(filtro, pagina, ordenacion));
 
-			this.cargarMollapan(microsite, model, lang);
+			view.setSeuletSin(this.urlFactory.listarAgendaSinPagina(microsite, lang, mcont, pcampa));
+			view.setParametrosPagina(eventos.getParametros());
+			view.setAgendaLista(eventos.getResultados());
+			view.setDatosAgendaCalendario(this.dataService.getDatosCalendario(microsite, lang));
 
-			return this.templateNameFactory.listarAgenda(microsite);
+			this.cargarMollapan(view);
+
+			return this.modelForView(this.templateNameFactory.listarAgenda(microsite), view);
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(microsite, lang, model,
-					ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
 
 	}
@@ -145,16 +142,14 @@ public class AgendaController extends BaseController {
 	 * @return
 	 * @return string recorrido en el microsite
 	 */
-	private List<PathItem> cargarMollapan(Microsite microsite, Model model,
-			Idioma lang) {
+	private List<PathItem> cargarMollapan(PageView view) {
 
-		List<PathItem> path = super.getBasePath(microsite, model, lang);
+		List<PathItem> path = super.getBasePath(view);
 
-		path.add(new PathItem(this.getMessage("agenda.agenda", lang),
-				this.urlFactory.listarAgenda(microsite, lang)));
+		path.add(new PathItem(this.getMessage("agenda.agenda", view.getLang()), this.urlFactory.listarAgenda(view.getMicrosite(), view.getLang())));
 
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 
 		return path;
 
@@ -170,14 +165,13 @@ public class AgendaController extends BaseController {
 	 * @return
 	 * @return string recorrido en el microsite
 	 */
-	private List<PathItem> cargarMollapan(Microsite microsite, Date fecha,
-			Model model, Idioma lang) {
+	private List<PathItem> cargarMollapan(PageView view, Date fecha) {
 
-		List<PathItem> path = this.cargarMollapan(microsite, model, lang);
-		path.add(new PathItem(this.getMessage("agenda.evento", lang)));
+		List<PathItem> path = this.cargarMollapan(view);
+		path.add(new PathItem(this.getMessage("agenda.evento", view.getLang())));
 
 		// Datos para la plantilla
-		model.addAttribute("MVS2_pathdata", path);
+		view.setPathData(path);
 
 		return path;
 
