@@ -24,10 +24,9 @@ import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.utils.General;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 /**
  * Action que edita las propiedades de un microsite <BR>
@@ -428,14 +427,8 @@ public class microEditaAction extends BaseAction  {
      */
     private void setBeantoForm(Microsite micrositeBean, microForm microForm) throws Exception  {
     	
-    	RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-
-    	// Obtenemos la unidad administrativa.
-    	UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-		uaCriteria.setId(String.valueOf(micrositeBean.getUnidadAdministrativa()));
-		uaCriteria.setIdioma("ca");
-		
-		UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+		OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
+		UnidadData ua = op.getUnidadData(micrositeBean.getUnidadAdministrativa(), "ca");
         microForm.set("nombreUA", ua!= null? ua.getNombre() : "");
         microForm.set("idUA", new Integer(micrositeBean.getUnidadAdministrativa()));
        	

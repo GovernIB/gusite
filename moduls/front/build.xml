@@ -2,179 +2,156 @@
 
 <project name="sac.front" default="main" basedir=".">
 
-    <property name="modul" value="front"/>
-    <property name="package" value="es.caib.gusite.front"/>
+	<property name="modul" value="front" />
+	<property name="package" value="es.caib.gusite.front" />
 
-	<property name="home.dir" location="${basedir}/../.."/>
+	<property name="home.dir" location="${basedir}/../.." />
 	<property file="${home.dir}/build.${user.name}.properties" />
-	<property file="${home.dir}/default.properties"/>
+	<property file="${home.dir}/default.properties" />
 
-    <property name="output.dir" location="${home.dir}/output"/>
-    <property name="modul.output.dir" location="${output.dir}/${modul}"/>
+	<property name="output.dir" location="${home.dir}/output" />
+	<property name="modul.output.dir" location="${output.dir}/${modul}" />
 
-    <property name="lib.dir" location="${home.dir}/lib"/>
-	<property name="axis.dir" location="${lib.dir}/axis-1.4"/>
-    <property name="xdoclet.dir" location="${lib.dir}/xdoclet123"/>
-    <property name="jasper.dir" location="${lib.dir}/jasper"/>
+	<property name="lib.dir" location="${home.dir}/lib" />
+	<property name="axis.dir" location="${lib.dir}/axis-1.4" />
+	<property name="xdoclet.dir" location="${lib.dir}/xdoclet123" />
+	<property name="jasper.dir" location="${lib.dir}/jasper" />
 
-    <property name="web.src" location="${basedir}/src"/>
-    <property name="web.etc" location="${basedir}/etc"/>
-    <property name="web.doc" location="${basedir}/doc"/>
-    <property name="web.htdocs" location="${basedir}/htdocs"/>
-    <property name="web.htdocs.webinf" location="${basedir}/htdocs/WEB-INF"/>
+	<property name="web.src" location="${basedir}/src" />
+	<property name="web.etc" location="${basedir}/etc" />
+	<property name="web.doc" location="${basedir}/doc" />
+	<property name="web.htdocs" location="${basedir}/htdocs" />
+	<property name="web.htdocs.webinf" location="${basedir}/htdocs/WEB-INF" />
 
-    <property name="web.gen.src" location="${modul.output.dir}/gen-src"/>
-    <property name="web.classes" location="${modul.output.dir}/classes"/>
-    <property name="web.webapp" location="${modul.output.dir}/webapp"/>
+	<property name="web.gen.src" location="${modul.output.dir}/gen-src" />
+	<property name="web.classes" location="${modul.output.dir}/classes" />
+	<property name="web.webapp" location="${modul.output.dir}/webapp" />
 
-    <property name="doc" location="${output.dir}/doc"/>
-    <property name="web.doc.api" location="${doc}/api/${modul}"/>
-    <property name="web.product" location="${output.dir}/moduls"/>
+	<property name="doc" location="${output.dir}/doc" />
+	<property name="web.doc.api" location="${doc}/api/${modul}" />
+	<property name="web.doc.spring" location="${doc}/spring/${modul}" />
+	<property name="web.product" location="${output.dir}/moduls" />
 
-    <path id="web.class.path">
-	    <fileset dir="${web.product}">
-	    	<include name="lucene.jar" />
-	    	<include name="micromodel.jar"/>
-            <include name="utilities.jar"/>
-	    	<include name="sac-micropersistence-client.jar"/>
+	<path id="web.class.path">
+		<fileset dir="${web.product}">
+			<include name="lucene.jar" />
+			<include name="micromodel.jar" />
+			<include name="plugins.jar" />
+			<include name="utilities.jar" />
+			<include name="sac-micropersistence-client.jar" />
 		</fileset>
 
-        <fileset dir="${lib.dir}">
-        	<include name="commons-logging.jar"/>
-        	<include name="ejb-2_0.jar" />
-        	<include name="imap.jar"/>
-        	<include name="mailapi.jar"/>
-        	<include name="pop3.jar"/>
-        	<include name="sac-api-client.jar" />
-            <include name="servlet-api.jar"/>
-        	<include name="smtp.jar"/>
-        </fileset>
-    	
-    	<fileset dir="${lib.dir}/jboss">
-    		<include name="hibernate-core.jar"/>
-    		<include name="hibernate-annotations.jar"/>
-    		<include name="ejb3-persistence.jar"/>
-			<include name="mail.jar"/>
-			<include name="activation.jar"/>
-    	</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="commons-logging.jar" />
+			<include name="ejb-2_0.jar" />
+			<include name="imap.jar" />
+			<include name="mailapi.jar" />
+			<include name="pop3.jar" />
+			<include name="sac-api-client.jar" />
+			<include name="servlet-api.jar" />
+			<include name="smtp.jar" />
+		</fileset>
+
+		<fileset dir="${lib.dir}/jboss">
+			<include name="hibernate-core.jar" />
+			<include name="hibernate-annotations.jar" />
+			<include name="ejb3-persistence.jar" />
+			<include name="mail.jar" />
+			<include name="activation.jar" />
+		</fileset>
 
 		<fileset dir="${lib.dir}/webcaib">
-		    <include name="chartbuilder.jar"/>
-		    <include name="commons-beanutils-1.8.3.jar"/>
-		    <include name="commons-collections-3.2.1.jar"/>
-			<include name="commons-fileupload-1.2.2.jar"/>
-		    <include name="commons-lang-2.1.jar"/>
-			<include name="quartz-1.8.5.jar"/>
+			<include name="chartbuilder.jar" />
+			<include name="commons-beanutils-1.8.3.jar" />
+			<include name="commons-collections-3.2.1.jar" />
+			<include name="commons-fileupload-1.2.2.jar" />
+			<include name="commons-lang-2.1.jar" />
+			<include name="quartz-1.8.5.jar" />
 		</fileset>
 		<fileset dir="${lib.dir}/spring">
-			<include name="spring-*.jar"/>
+			<include name="spring-*.jar" />
 		</fileset>
-    	<fileset dir="${lib.dir}/thymeleaf">
-    		<include name="*.jar"/>
-	    </fileset>
-    </path>
-
-	<path id="compile.class.path">
-		<path refid="web.class.path"/>
-		<pathelement path="${output.dir}/microback/classes"/> 
+		<fileset dir="${lib.dir}/thymeleaf">
+			<include name="*.jar" />
+		</fileset>
 	</path>
 
-    <path id="doclet.class.path">
-        <fileset dir="${xdoclet.dir}">
-            <include name="*.jar"/>
-        </fileset>
-        <path refid="web.class.path"/>
-    </path>
+	<path id="compile.class.path">
+		<path refid="web.class.path" />
+		<pathelement path="${output.dir}/microback/classes" />
+	</path>
 
-    <path id="jspc.class.path">
-        <fileset dir="${jasper.dir}">
-            <include name="*.jar"/>
-        </fileset>
-        <path refid="web.class.path"/>
-    </path>
+	<path id="doclet.class.path">
+		<fileset dir="${xdoclet.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<path refid="web.class.path" />
+	</path>
 
-    <target name="init">
-        <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask" classpathref="doclet.class.path" />
+	<path id="jspc.class.path">
+		<fileset dir="${jasper.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<path refid="web.class.path" />
+	</path>
 
-        <tstamp>
-            <format property="TODAY" pattern="dd-MM-yy"/>
-        </tstamp>
+	<target name="init">
+		<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask" classpathref="doclet.class.path" />
 
-        <fail unless="front.auth.domain" message="La propiedad front.auth.domain no está definida en default.properties"/>
-    </target>
+		<tstamp>
+			<format property="TODAY" pattern="dd-MM-yy" />
+		</tstamp>
 
-    <!-- Crea tots els directoris de treball necessaris -->
-    <target name="prepare">
-        <mkdir dir="${web.gen.src}"/>
-        <mkdir dir="${web.classes}"/>
-        <mkdir dir="${web.webapp}"/>
-        <mkdir dir="${web.doc.api}"/>
-        <mkdir dir="${web.product}"/>
+		<fail unless="front.auth.domain" message="La propiedad front.auth.domain no está definida en default.properties" />
+	</target>
 
-        <copy file="${web.etc}\ApplicationResources_front.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\ApplicationResources_front_es.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\ApplicationResources_front_en.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\ApplicationResources_front_ca.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\ApplicationResources_front_de.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\ApplicationResources_front_fr.properties" todir="${web.gen.src}"/>
-    	<copy file="${web.etc}\storerolsac.jks" todir="${web.gen.src}"/>
-    </target>
+	<!-- Crea tots els directoris de treball necessaris -->
+	<target name="prepare">
+		<mkdir dir="${web.gen.src}" />
+		<mkdir dir="${web.classes}" />
+		<mkdir dir="${web.webapp}" />
+		<mkdir dir="${web.doc.api}" />
+		<mkdir dir="${web.product}" />
 
-    <target name="web.gen.all" depends="prepare,init">
-    	<webdoclet
-            destdir="${web.gen.src}"
-            excludedtags="@version,@author"
-            force="false"
-            verbose="true"
-            >
+		<copy file="${web.etc}\ApplicationResources_front.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\ApplicationResources_front_es.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\ApplicationResources_front_en.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\ApplicationResources_front_ca.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\ApplicationResources_front_de.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\ApplicationResources_front_fr.properties" todir="${web.gen.src}" />
+		<copy file="${web.etc}\storerolsac.jks" todir="${web.gen.src}" />
+	</target>
 
-            <fileset dir="${web.src}">
-                <include name="**/*.java"/>
-            </fileset>
+	<target name="web.gen.all" depends="prepare,init">
+		<webdoclet destdir="${web.gen.src}" excludedtags="@version,@author" force="false" verbose="true">
 
-        	<jbosswebxml
-                destdir="${web.htdocs.webinf}"
-                version="${jboss.version}"
-                xmlencoding="UTF-8"
-                validatexml="true"
-                mergedir="${web.merge.jboss}"
-                securityDomain="${front.auth.domain}"
-                />
-        </webdoclet>
+			<fileset dir="${web.src}">
+				<include name="**/*.java" />
+			</fileset>
 
-    	<replace file="${web.htdocs.webinf}/web.xml">
-    		<replacefilter token="@role.system@" value="${role.system}"/>
-            <replacefilter token="@role.admin@" value="${role.admin}"/>
-            <replacefilter token="@role.super@" value="${role.super}"/>
-            <replacefilter token="@role.oper@" value="${role.oper}"/>
-        </replace>
-    </target>
+			<jbosswebxml destdir="${web.htdocs.webinf}" version="${jboss.version}" xmlencoding="UTF-8" validatexml="true" mergedir="${web.merge.jboss}" securityDomain="${front.auth.domain}" />
+		</webdoclet>
 
-    <target name="web.compile" depends="web.gen.all">
-         <javac
-            destdir="${web.classes}"
-            classpathref="compile.class.path"
-            debug="${javac.debug}"
-            deprecation="${javac.deprecation}"
-            optimize="${javac.optimize}"
-			encoding="${javac.encoding}"
-			source="${javac.source}"
-			target="${javac.target}"
-			includeantruntime="false"
-            >
-            <src path="${web.src}"/>
-        </javac>
-    </target>
+		<replace file="${web.htdocs.webinf}/web.xml">
+			<replacefilter token="@role.system@" value="${role.system}" />
+			<replacefilter token="@role.admin@" value="${role.admin}" />
+			<replacefilter token="@role.super@" value="${role.super}" />
+			<replacefilter token="@role.oper@" value="${role.oper}" />
+		</replace>
+	</target>
 
-    <target name="web.war" depends="web.compile">
-        <delete file="${web.product}/sac-${modul}.war" quiet="yes"/>
-        <war warfile="${web.product}/sac-${modul}.war"
-            basedir="${web.htdocs}"
-        	 webxml="${web.htdocs.webinf}/web.xml"
-        	>
-            <manifest>
-                <attribute name="Created-By" value="brujula-at4"/>
-            	<attribute name="Class-Path" value="
+	<target name="web.compile" depends="web.gen.all">
+		<javac destdir="${web.classes}" classpathref="compile.class.path" debug="${javac.debug}" deprecation="${javac.deprecation}" optimize="${javac.optimize}" encoding="${javac.encoding}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
+			<src path="${web.src}" />
+		</javac>
+	</target>
+
+	<target name="web.war" depends="web.compile">
+		<delete file="${web.product}/sac-${modul}.war" quiet="yes" />
+		<war warfile="${web.product}/sac-${modul}.war" basedir="${web.htdocs}" webxml="${web.htdocs.webinf}/web.xml">
+			<manifest>
+				<attribute name="Created-By" value="brujula-at4" />
+				<attribute name="Class-Path" value="
             		lib/slf4j-jboss-logging.jar
 					lib/aopalliance-1.0.jar
 					lib/javassist-3.16.1-GA.jar
@@ -192,46 +169,82 @@
         			lib/axis-ws4ee.jar
         			lib/commons-discovery-0.2.jar
 		        	lib/sac-api-client.jar
-        		"/>
-            </manifest>
+        		" />
+			</manifest>
 
-            <classes dir="${web.classes}"/>
-        	<classes dir="${web.gen.src}" includes="*.properties, *.jks"/>
-        	
-        	<lib dir="${lib.dir}">
-        		<include name="commons-fileupload-1.2.2.jar"/>
-				<include name="urlrewritefilter-4.0.3.jar"/>
-    	    </lib>
-        	<lib dir="${lib.dir}/thymeleaf">
-        		<include name="*.jar"/>
-    	    </lib>
-        	
-        </war>
-    </target>
+			<classes dir="${web.classes}" />
+			<classes dir="${web.gen.src}" includes="*.properties, *.jks" />
 
-    <target name="web.javadoc" depends="web.gen.all">
-        <javadoc
-            destdir="${web.doc.api}"
-            classpathref="web.class.path"
-            packagenames="${package}.*"
-            overview="${web.doc}/overview.html"
-            windowtitle="API del componente web ${modul}"
-            doctitle="API del componente web ${modul}"
-            bottom="brujula-at4">
+			<lib dir="${lib.dir}">
+				<include name="commons-fileupload-1.2.2.jar" />
+				<include name="urlrewritefilter-4.0.3.jar" />
+			</lib>
+			<lib dir="${lib.dir}/thymeleaf">
+				<include name="*.jar" />
+			</lib>
 
-            <sourcepath>
-                <pathelement path="${web.gen.src}"/>
-                <pathelement path="${web.src}"/>
-            </sourcepath>
+		</war>
+	</target>
 
-            <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
-            <link href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/"/>
-            <link href="http://jakarta.apache.org/struts/api/"/>
-        </javadoc>
-    </target>
+	<target name="web.javadoc" depends="web.gen.all">
+		<javadoc 
+			destdir="${web.doc.api}" 
+			encoding="${javac.encoding}" docencoding="${javac.encoding}" charset="${javac.encoding}" 
+			classpathref="web.class.path" 
+			packagenames="${package}.*" 
+			overview="${web.doc}/overview.html" 
+			windowtitle="API del componente web ${modul}" 
+			doctitle="API del componente web ${modul}" 
+			bottom="brujula-at4"
+			use="true">
 
-    <target name="doc" depends="web.javadoc" description="Realiza las tareas de documentación "/>
+			<sourcepath>
+				<pathelement path="${web.gen.src}" />
+				<pathelement path="${web.src}" />
+			</sourcepath>
 
-    <target name="main" depends="web.war" description="Construye el war"/>
+			<link href="http://docs.spring.io/spring-framework/docs/3.2.0.RELEASE/javadoc-api/" />
+			<link href="http://docs.oracle.com/javase/6/docs/api/" />
+			<link href="http://docs.oracle.com/javaee/6/api/" />
+			<link href="../micromodel/" resolveLink="false" />
+			<link href="../micropersistence/" resolveLink="false" />
+		</javadoc>
+	</target>
+
+	<path id="springdoclet.classpath">
+		<fileset dir="${lib.dir}/spring/doclet">
+			<include name=".jar" />
+		</fileset>
+		<pathelement location="${lib.dir}/spring/doclet/springdoclet-0.0.1.jar" />
+		<pathelement location="${lib.dir}/spring/doclet/groovy-all-1.7.2.jar" />
+	</path>
+
+	<target name="web.springdoc">
+		<javadoc 
+			destdir="${web.doc.spring}" 
+			encoding="${javac.encoding}" 
+			classpathref="web.class.path" 
+			packagenames="${package}.*"
+			>
+
+			<doclet name="org.springdoclet.SpringDoclet" pathref="springdoclet.classpath">
+				<param name="-d" value="${web.doc.spring}" />
+				<param name="-linkpath" value="../../api/front/" />
+				<!-- springdoclet no soporta esto
+				<param name="-charset" value="${javac.encoding}"/>
+				-->
+			</doclet>
+
+			<sourcepath>
+				<pathelement path="${web.gen.src}" />
+				<pathelement path="${web.src}" />
+			</sourcepath>
+
+		</javadoc>
+	</target>
+
+	<target name="doc" depends="web.javadoc,web.springdoc" description="Realiza las tareas de documentación " />
+
+	<target name="main" depends="web.war" description="Construye el war" />
 
 </project>

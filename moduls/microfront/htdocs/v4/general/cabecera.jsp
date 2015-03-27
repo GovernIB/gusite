@@ -50,7 +50,7 @@
 									<logic:present name="MVS2_uos" >
 									<logic:iterate id="i" name="MVS2_uos">
 										<logic:notEqual name="i" property="id" value="2">						
-											<li>&nbsp;-&nbsp;<a href="/govern/organigrama/area.do?lang=<%=((String)request.getSession().getAttribute("MVS_idioma")).toLowerCase() %>&amp;coduo=<bean:write name="i" property="id"/>"><bean:write name="i" property="abreviatura"/></a></li>
+											<li>&nbsp;-&nbsp;<a href="<bean:write name="i" property="url"/>"><bean:write name="i" property="abreviatura"/></a></li>
 										</logic:notEqual>
 									</logic:iterate>
 									</logic:present>

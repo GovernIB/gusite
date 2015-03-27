@@ -34,6 +34,7 @@
     <path id="web.class.path">
 	    <fileset dir="${web.product}">
 	    	<include name="lucene.jar" />
+			<include name="plugins.jar" />
 	    	<include name="micromodel.jar"/>
 	        <include name="sac-micropersistence-client.jar"/>
             <include name="utilities.jar"/>
@@ -45,7 +46,9 @@
         	<include name="imap.jar"/>
         	<include name="mailapi.jar"/>
         	<include name="pop3.jar"/>
+	<!--
         	<include name="sac-api-client.jar" />
+    -->
             <include name="servlet-api.jar"/>
         	<include name="smtp.jar"/>
         </fileset>
@@ -184,7 +187,6 @@
 					lib/spring-expression-3.2.0.RELEASE.jar
 					lib/spring-web-3.2.0.RELEASE.jar
 					lib/spring-webmvc-3.2.0.RELEASE.jar
-            		lib/sac-api-client.jar
         			lib/wsdl4j.jar
         			lib/slf4j-jboss-logging.jar
         		"/>
@@ -206,6 +208,9 @@
     <target name="web.javadoc" depends="web.gen.all">
         <javadoc
             destdir="${web.doc.api}"
+			encoding="${javac.encoding}"
+			docencoding="${javac.encoding}"
+			charset="${javac.encoding}"
             classpathref="web.class.path"
             packagenames="${package}.*"
             overview="${web.doc}/overview.html"

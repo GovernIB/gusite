@@ -20,10 +20,9 @@ import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 /**
  * Action que prepara el listado de Microsites <BR>
@@ -61,16 +60,11 @@ public class BuscaordenaMicrositesAction extends Action {
      	           
         //saco los nombres de uas para cada microsite
 		Iterator<?> iter = listamicros.iterator();
-		RolsacQueryService rqs = APIUtil.getRolsacQueryService();
+		OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 		
 		while (iter.hasNext()) {
     		Microsite mic = (Microsite) iter.next();
-
-    		UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-    		uaCriteria.setId(String.valueOf(mic.getUnidadAdministrativa()));
-    		uaCriteria.setIdioma("ca");
-    		
-    		UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+    		UnidadData ua = op.getUnidadData(mic.getUnidadAdministrativa(), "ca");
 			if (ua != null) {
 				mic.setNombreUA(ua.getNombre());
 

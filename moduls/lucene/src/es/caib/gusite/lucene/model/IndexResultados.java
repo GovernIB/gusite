@@ -4,7 +4,7 @@ import java.util.List;
 
 public class IndexResultados {
 
-    private List lista;
+    private List<IndexEncontrado> lista;
     private int numEncontrados;
     private long duracionBusqueda;
     private String consultaOriginal;
@@ -12,7 +12,7 @@ public class IndexResultados {
     private String saltos;
 
 
-    public IndexResultados(List lista, int numEncontrados, long duracionBusqueda, String consultaOriginal, String consultaSugerida, String saltos) {
+    public IndexResultados(List<IndexEncontrado> lista, int numEncontrados, long duracionBusqueda, String consultaOriginal, String consultaSugerida, String saltos) {
         this.lista = lista;
         this.numEncontrados = numEncontrados;
         this.duracionBusqueda = duracionBusqueda;
@@ -45,11 +45,11 @@ public class IndexResultados {
         this.duracionBusqueda = duracionBusqueda;
     }
 
-    public List getLista() {
+    public List<IndexEncontrado> getLista() {
         return lista;
     }
 
-    public void setLista(List lista) {
+    public void setLista(List<IndexEncontrado> lista) {
         this.lista = lista;
     }
 

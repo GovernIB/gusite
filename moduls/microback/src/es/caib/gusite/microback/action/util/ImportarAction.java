@@ -33,10 +33,8 @@ import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.ImportarForm;
 import es.caib.gusite.microback.utils.betwixt.Configurator;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 /**
  * Action que importa un microsite <P>
@@ -393,10 +391,7 @@ public class ImportarAction extends BaseAction {
     private boolean tieneUA(MicrositeCompleto micro, HttpServletRequest request, ResourceBundle rb) {
 
         try {
-            RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-            UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-            uaCriteria.setId(String.valueOf(micro.getIdUA()));
-            UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+            UnidadData ua = PluginFactory.getInstance().getOrganigramaProvider().getUnidadData(micro.getIdUA(), "ca");
 
             return (ua == null) ? false : true;
 

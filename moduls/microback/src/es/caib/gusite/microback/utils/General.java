@@ -1,42 +1,34 @@
 package es.caib.gusite.microback.utils;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import es.caib.gusite.micromodel.Idioma;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaOrdenacio;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
  * 
- * @author amartin
+ * @author at4.net
  *
  */
 public class General {
 	
-	public static ArrayList<UnitatAdministrativaQueryServiceAdapter> obtenerListaUAs() {
+	public static Collection<UnidadListData> obtenerListaUAs() {
     	
-    	RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-       	List<UnitatAdministrativaQueryServiceAdapter> listaUAs = null;
-       	
        	try {
-       		       		
-       		UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-           	uaCriteria.setIdioma(Idioma.getIdiomaPorDefecto());
-           	uaCriteria.setOrdenar( new UnitatAdministrativaOrdenacio[]{UnitatAdministrativaOrdenacio.orden_asc} );
-       		listaUAs = rqs.llistarUnitatsAdministratives(uaCriteria);
+	       		
+       		return PluginFactory.getInstance().getOrganigramaProvider().getUnidades(Idioma.getIdiomaPorDefecto());
 						
-		} catch (QueryServiceException e) {
+		} catch (PluginException e) {
 			
 			e.printStackTrace();
 			
 		}
        	
-       	return new ArrayList<UnitatAdministrativaQueryServiceAdapter>(listaUAs);
+       	return new ArrayList<UnidadListData>();
        	    	
     }
 

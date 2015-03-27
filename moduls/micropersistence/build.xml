@@ -32,6 +32,7 @@
     <path id="ejb.class.path">
 	    <fileset dir="${ejb.product}">
 	    	<include name="lucene.jar" />
+			<include name="plugins.jar" />
 	    	<include name="micromodel.jar"/>
 	    	<include name="utilities.jar"/>
 	    </fileset>
@@ -153,6 +154,7 @@
             <replacefilter token="@hibernate.jndi@" value="${hibernate.jndi}"/>
             <replacefilter token="@datasource.jndi.micro@" value="${datasource.jndi.micro}"/>
             <replacefilter token="@hibernate.dialect@" value="${hibernate.dialect}"/>
+		    <replacefilter token="@hibernate.jdbc.use_streams_for_binary@" value="${hibernate.jdbc.use_streams_for_binary}"/>
             <replacefilter token="@hibernate.cache.provider_class@" value="${hibernate.cache.provider_class}"/>
         	<replacefilter token="@hibernate.cache.region.factory_class@" value="${hibernate.cache.region.factory_class}"/>
             <replacefilter token="@hibernate.show_sql@" value="${hibernate.show_sql}"/>
@@ -214,6 +216,9 @@
     <target name="ejb.javadoc" depends="ejb.gen.all">
         <javadoc
             destdir="${ejb.doc.api}"
+			encoding="${javac.encoding}"
+			docencoding="${javac.encoding}"
+			charset="${javac.encoding}"
             classpathref="ejb.class.path"
             packagenames="${package}.*"
             overview="${ejb.doc}/overview.html"
@@ -227,6 +232,9 @@
             <link href="http://java.sun.com/j2se/1.4.1/docs/api/"/>
             <link href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/"/>
             <link href="http://hibernate.bluemars.net/hib_docs/api/"/>
+		
+			<link href="../micromodel/" resolveLink="false"/>
+
         </javadoc>
     </target>
 

@@ -1,5 +1,7 @@
 package es.caib.gusite.microback.action.buscaordena;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,12 +30,11 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
  * Action que prepara el listado de microsites de Usuario <BR>
@@ -50,7 +51,7 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 
 	protected static Log log = LogFactory.getLog(es.caib.gusite.microback.action.buscaordena.BuscaOrdenaMicroUsuariosAction.class);
 	
-	private static List<UnitatAdministrativaQueryServiceAdapter> cacheListaUAs = null;
+	private static Collection<UnidadListData> cacheListaUAs = null;
 	private static Date fechaUltimaComprobacionCacheUas = null;
 	private static final int MAX_MILISEGUNDOS_COMPROBACION_UAS = 300000; // 5 minutos
 	
@@ -111,32 +112,26 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 		
 	}
 	
-	private static List<UnitatAdministrativaQueryServiceAdapter> obtenerListaUAsCacheada() throws QueryServiceException {
-		
-		Date fechaLlamada = new Date();
-		
-		// Si es la primera llamada o se ha sobrepasado el tiempo de caché, actualizamos lista de UAs obtenidas vía WS. 
-		if (fechaUltimaComprobacionCacheUas == null || 
-				(fechaLlamada.getTime() - fechaUltimaComprobacionCacheUas.getTime() > MAX_MILISEGUNDOS_COMPROBACION_UAS)) {
-			
-			// Obtener UAs.
-			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-			uaCriteria.setIdioma(Idioma.getIdiomaPorDefecto());
-			
-			// Actualizar caché de UAs.
-			cacheListaUAs = rqs.llistarUnitatsAdministratives(uaCriteria);
-			
-			// Actualizar fecha de modificación de caché.
-			fechaUltimaComprobacionCacheUas = new Date();
-			
-		}
-		
-		return cacheListaUAs;
-		
-	}
+    private static Collection<UnidadListData> obtenerListaUAsCacheada() throws PluginException {
 
-	private void listadoMicroSitesUsuario(HttpServletRequest request) throws DelegateException, QueryServiceException {
+        Date fechaLlamada = new Date();
+
+        // Si es la primera llamada o se ha sobrepasado el tiempo de caché, actualizamos lista de UAs obtenidas vía WS.
+        if (fechaUltimaComprobacionCacheUas == null ||
+                (fechaLlamada.getTime() - fechaUltimaComprobacionCacheUas.getTime() > MAX_MILISEGUNDOS_COMPROBACION_UAS)) {
+
+            // Actualizar caché de UAs.
+            cacheListaUAs = PluginFactory.getInstance().getOrganigramaProvider().getUnidades(Idioma.getIdiomaPorDefecto());
+
+            // Actualizar fecha de modificación de caché.
+            fechaUltimaComprobacionCacheUas = new Date();
+
+        }
+
+        return cacheListaUAs;
+    }
+
+	private void listadoMicroSitesUsuario(HttpServletRequest request) throws DelegateException, PluginException {
 		
 		/***************************************************************/
 		/*************** LISTADO MICROSITES POR USUARIO *****/
@@ -147,16 +142,12 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 		
 		List listamicros = microde.listarMicrodeluser("" + request.getParameter("id"));
 		Iterator iter = listamicros.iterator();
+		OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 		
 		while (iter.hasNext()) {
 			
 			Microsite mic = (Microsite) iter.next();
-			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-			uaCriteria.setId(String.valueOf(mic.getUnidadAdministrativa()));
-			uaCriteria.setIdioma("ca");
-
-			UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+			UnidadData ua = op.getUnidadData(mic.getUnidadAdministrativa(), "ca");
             if (ua != null) {
                 mic.setNombreUA(ua.getNombre());
             }
@@ -169,10 +160,10 @@ public class BuscaOrdenaMicroUsuariosAction extends BaseAction {
 		}
 		
 		// Generamos el mapa de idUA => nombreUA (así sólo hacemos una llamda al WS).			
-		List<UnitatAdministrativaQueryServiceAdapter> listaUAs = obtenerListaUAsCacheada();
-		Map<Long, String> mapaUAs = new HashMap<Long, String>();
+		Collection<UnidadListData> listaUAs = obtenerListaUAsCacheada();
+		Map<Serializable, String> mapaUAs = new HashMap<Serializable, String>();
 		
-		for (UnitatAdministrativaQueryServiceAdapter ua : listaUAs) {
+		for (UnidadListData ua : listaUAs) {
 			mapaUAs.put(ua.getId(), ua.getNombre());
 		}
 		

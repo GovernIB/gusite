@@ -14,7 +14,6 @@ import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micropersistence.intf.IndexerFacadeLocal;
 import es.caib.gusite.micropersistence.intf.IndexerFacadeLocalHome;
 import es.caib.gusite.micropersistence.util.IndexerFacadeUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
 
 /**
  * Business delegate para manipular el indice.
@@ -169,8 +168,6 @@ public class IndexerDelegate implements StatelessDelegate {
 		try {
 			this.local.reindexarMicrosite(idsite);
 		} catch (EJBException e) {
-			throw new DelegateException(e);
-		} catch (QueryServiceException e) {
 			throw new DelegateException(e);
 		}
 	}

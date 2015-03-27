@@ -1,4 +1,4 @@
-package es.caib.gusite.utilities.rolsacAPI;
+package es.caib.gusite.plugins.rolsac;
 
 import es.caib.rolsac.api.v2.estadistica.EstadisticaInsertService;
 import es.caib.rolsac.api.v2.general.BeanUtils;

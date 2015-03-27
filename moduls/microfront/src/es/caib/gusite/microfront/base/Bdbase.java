@@ -13,6 +13,7 @@ import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
 import es.caib.gusite.utilities.auth.ClientPrincipal;
+
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,14 +35,10 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
-import es.caib.rolsac.api.v2.edifici.EdificiDTO;
-import es.caib.rolsac.api.v2.edifici.EdificiQueryServiceAdapter;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaDTO;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 
 /**
@@ -151,6 +148,10 @@ public abstract class Bdbase {
     	}
    }
 		
+	private boolean isEmpty(String url) {
+		return url == null || url.length() < 1; 
+	}
+
 	protected void direccionPie(Long coduo, String lang) throws Exception {
 		
     	// DIRECCION DEL PIE DE PAGINA
@@ -158,70 +159,57 @@ public abstract class Bdbase {
     	ResourceBundle rb =	ResourceBundle.getBundle("ApplicationResources_front", new java.util.Locale(lang, lang));
     	StringBuilder direccion = new StringBuilder("");
     	
-    	RolsacQueryService rqs = APIUtil.getRolsacQueryService();
     	
-    	// Obtener UA.
-    	UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-    	uaCriteria.setId(coduo.toString());
-    	uaCriteria.setIdioma(lang);
-    	UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+    	OrganigramaProvider organigramaProvider = PluginFactory.getInstance().getOrganigramaProvider();
+		UnidadData unidadData = organigramaProvider.getUnidadData(coduo, lang);
     	
-    	// Obtener edificios asociados y construir dirección.
-    	EdificiCriteria edificiCriteria = new EdificiCriteria();
-    	List<EdificiQueryServiceAdapter> edificios = ua.llistarEdificis(edificiCriteria);
-    	
-    	String idUOPresidencia = System.getProperty("es.caib.gusite.codigoUO.presidencia");
-		if (idUOPresidencia == null)
-			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.presidencia");
-		
-		Long UO_PRESIDENCIA = new Long(idUOPresidencia);
-    	
-		if (edificios.size() > 0) {
-			
-			EdificiDTO edificio = edificios.get(0);
-    		
-   			String absUrl =  System.getProperty("es.caib.gusite.portal.url");
-	    	String tel = null;
-	    	String fax = null;
-	    	
-   			if (UO_PRESIDENCIA.compareTo(coduo) == 0)
-   				direccion.append("<a href=\"" + absUrl + "/govern/presidencia.do?lang=").append(lang).append("\">").append(ua.getNombre());
-   			else
-   				direccion.append("<a href=\"" + absUrl +"/govern/organigrama/area.do?coduo=").append(coduo).append("&lang=").append(lang).append("\">").append(ua.getNombre());
-   			
-   			direccion.append("</a>");
-   			direccion.append("<a href=\"" + absUrl + "/govern/organigrama/planol.do?coduo=").append(coduo).append("&lang=").append(lang).append("\">");
-   			direccion.append(": ").append(edificio.getDireccion()).append(" - ").append(edificio.getCodigoPostal()).append(" ").append(edificio.getPoblacion()).append("</a><br />");
-   			
-   			// Preferencia del (tel, fax) de la Unidad Organica sobre el del edificio
-			if (ua.getTelefono() != null && ua.getTelefono().length() > 0)
-				tel = ua.getTelefono();
-			else if (edificio.getTelefono() != null && edificio.getTelefono().length() > 0)
-				tel = edificio.getTelefono();
-			
-			if (tel != null && tel.length() > 0)
-				direccion.append(rb.getString("WEB_ILL067")).append(" ").append(tel);
+		if (unidadData == null) {
+			log.info("No hay datos de dirección");
+			return;
+		}
 
-			if (ua.getFax() != null && ua.getFax().length() > 0)
-				fax = ua.getFax();
-			else if (edificio.getFax() != null && edificio.getFax().length() > 0)
-				fax = edificio.getFax();
+		if (!isEmpty(unidadData.getUrl())) {
+			direccion.append("<a href=\"").append(unidadData.getUrl()).append("\">");
+			direccion.append(unidadData.getNombre());
+			direccion.append("</a>");
+		} else {
+			direccion.append(unidadData.getNombre());
+		}
 
-			if (tel != null && tel.length() > 0 && fax != null && fax.length() > 0)
-				direccion.append(" - ");
-			
-			if (fax != null && fax.length() > 0)
-				direccion.append(rb.getString("WEB_ILL068")).append(" ").append(fax);
-			
-			if (microsite.getDomini() != null && microsite.getDomini().length() > 0) {
-   				direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=").append(microsite.getDomini()).append(">").append(microsite.getDomini()).append("</a>");
-    		} else {
-   				if (ua.getUrl()!= null && ua.getUrl().length()>0)
-   					direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=").append(ua.getUrl()).append(">").append(ua.getUrl()).append("</a>");
-   			}
-    		
-    	}
-    	
+		if (!isEmpty(unidadData.getDireccion())) {
+			if (!isEmpty(unidadData.getUrlPlano())) {
+				direccion.append("<a href=\"").append(unidadData.getUrlPlano()).append("\">");
+				//TODO: asumimos que si hay dirección, también hay cp y pob 
+				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
+				.append(unidadData.getPoblacion()).append("</a><br/>");
+			} else {
+				//TODO: asumimos que si hay dirección, también hay cp y pob 
+				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
+				.append(unidadData.getPoblacion()).append("<br/>");
+			}
+		}
+
+		if (!isEmpty(unidadData.getTelefono())) {
+			direccion.append(rb.getString("WEB_ILL067")).append(" ").append(unidadData.getTelefono());
+		}
+
+
+		if (!isEmpty(unidadData.getTelefono()) && !isEmpty(unidadData.getFax())) {
+			direccion.append(" - ");
+		}
+
+		if (!isEmpty(unidadData.getFax())) {
+			direccion.append(rb.getString("WEB_ILL068")).append(" ").append(unidadData.getFax());
+		}
+
+		if (microsite.getDomini() != null && microsite.getDomini().length() > 0) {
+			direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
+					.append(microsite.getDomini()).append(">").append(microsite.getDomini()).append("</a>");
+		} else if (!isEmpty(unidadData.getUrl())) {
+				direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
+						.append(unidadData.getUrl()).append(">").append(unidadData.getUrl()).append("</a>");
+		}
+
     	_request.setAttribute("direccion", direccion.toString());
 		
 	}
@@ -446,34 +434,27 @@ public abstract class Bdbase {
 		StringBuffer tmp = new StringBuffer(" ");
 		
 		try {
-			
-		    RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-		    UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-    		uaCriteria.setId(String.valueOf(microsite.getUnidadAdministrativa()));
-    		uaCriteria.setIdioma(idioma);
-    		
-    		UnitatAdministrativaDTO ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+
+	    	OrganigramaProvider organigramaProvider = PluginFactory.getInstance().getOrganigramaProvider();
+			UnidadData ua = organigramaProvider.getUnidadData(microsite.getUnidadAdministrativa(), idioma);
 		    
-			while ( (ua != null) && (ua.getId().longValue() != 1) ) {
+			while ( (ua != null) && Long.valueOf(ua.getIdUnidad().toString()) != 1 ) {
 				
 				StringBuffer uaSbuf = new StringBuffer(ua.getNombre());
 				
 				Cadenas.initAllTab(uaSbuf); //primera letra en mayusculas
 				String uaTexto = Cadenas.initTab(uaSbuf.toString()); // articulos a minusculas
-				String uaUrl = "/govern/organigrama/area.do?lang=" + idioma + "&coduo=" + ua.getId();
-				
-				// CANVI ERRADA ACCES A ORGANIGRAMA DES DE MICROSITE AMB DOMINI ASSOCIAT
-					uaUrl =  System.getProperty("es.caib.gusite.portal.url") + uaUrl;
-				// FI CANVI
+				String uaUrl = ua.getUrl();
 				
 				tmp.insert(0, "<a href=\"" + uaUrl + "\">" + uaTexto + "</a>" + " > " );
 				
-				if (ua.getPadre() != null) {
+				if (ua.getIdUnidadPadre() != null) {
 					
-					// Actualizamos condición del criteria, conservando idioma.
-					uaCriteria.setId(String.valueOf(ua.getPadre()));
-		    		// Obtenemos siguiente UA.
-					ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+					try {
+						ua = organigramaProvider.getUnidadData(ua.getIdUnidadPadre(), idioma);
+					} catch (PluginException e) {
+						log.error(e);
+					}
 					
 				} else {
 					

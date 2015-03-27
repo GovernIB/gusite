@@ -8,11 +8,11 @@ import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.AuditoriaDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
@@ -22,6 +22,8 @@ import org.apache.struts.action.ActionMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,7 +41,7 @@ public class BuscaOrdenaAuditoriasAction extends Action {
 
     protected static Log log = LogFactory.getLog(BuscaOrdenaAuditoriasAction.class);
 
-    private static List<UnitatAdministrativaQueryServiceAdapter> cacheListaUAs = null;
+    private static Collection<UnidadListData> cacheListaUAs = null;
     private static Date fechaUltimaComprobacionCacheUas = null;
     private static final int MAX_MILISEGUNDOS_COMPROBACION_UAS = 300000; // 5 minutos
 
@@ -79,10 +81,10 @@ public class BuscaOrdenaAuditoriasAction extends Action {
         }
 
         // Generamos el mapa de idUA => nombreUA (así sólo hacemos una llamda al WS).
-        List<UnitatAdministrativaQueryServiceAdapter> listaUAs = obtenerListaUAsCacheada();
-        Map<Long, String> mapaUAs = new HashMap<Long, String>();
+        Collection<UnidadListData> listaUAs = obtenerListaUAsCacheada();
+        Map<Serializable, String> mapaUAs = new HashMap<Serializable, String>();
 
-        for (UnitatAdministrativaQueryServiceAdapter ua : listaUAs) {
+        for (UnidadListData ua : listaUAs) {
             mapaUAs.put(ua.getId(), ua.getNombre());
         }
 
@@ -101,7 +103,7 @@ public class BuscaOrdenaAuditoriasAction extends Action {
         return mapping.findForward("listarAuditorias");
     }
 
-    private static List<UnitatAdministrativaQueryServiceAdapter> obtenerListaUAsCacheada() throws QueryServiceException {
+    private static Collection<UnidadListData> obtenerListaUAsCacheada() throws PluginException {
 
         Date fechaLlamada = new Date();
 
@@ -109,13 +111,8 @@ public class BuscaOrdenaAuditoriasAction extends Action {
         if (fechaUltimaComprobacionCacheUas == null ||
                 (fechaLlamada.getTime() - fechaUltimaComprobacionCacheUas.getTime() > MAX_MILISEGUNDOS_COMPROBACION_UAS)) {
 
-            // Obtener UAs.
-            RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-            UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-            uaCriteria.setIdioma(Idioma.getIdiomaPorDefecto());
-
             // Actualizar caché de UAs.
-            cacheListaUAs = rqs.llistarUnitatsAdministratives(uaCriteria);
+            cacheListaUAs = PluginFactory.getInstance().getOrganigramaProvider().getUnidades(Idioma.getIdiomaPorDefecto());
 
             // Actualizar fecha de modificación de caché.
             fechaUltimaComprobacionCacheUas = new Date();

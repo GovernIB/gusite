@@ -3,7 +3,7 @@
 <project name="microintegracion" default="main" basedir=".">
 
     <property name="modul" value="microintegracion"/>
-    <property name="package" value="es.indra.gusite.microintegracion"/>
+    <property name="package" value="es.caib.gusite.microintegracion"/>
 
 	<property name="home.dir" location="${basedir}/../.."/>
 	<property file="${home.dir}/build.${user.name}.properties" />
@@ -109,6 +109,9 @@
     <target name="jar.javadoc" depends="prepare">
         <javadoc
             destdir="${jar.doc.api}"
+			encoding="${javac.encoding}"
+			docencoding="${javac.encoding}"
+			charset="${javac.encoding}"
             classpathref="jar.class.path"
             packagenames="${package}.*"
             overview="${jar.doc}/overview.html"

@@ -10,10 +10,9 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.idioma.IdiomaCriteria;
-import es.caib.rolsac.api.v2.idioma.IdiomaQueryServiceAdapter;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 
 /**
  * Clase que traduce las propiedades de los beans del módulo Rolsac
@@ -42,12 +41,12 @@ public class Traductor extends AutomaticTranslationService {
 	 */
 	public Traductor() throws Exception {
 		
-		RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-		List<IdiomaQueryServiceAdapter> listaIdiomas = rqs.llistarIdiomes(new IdiomaCriteria());
+    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
+		List<Idioma> listaIdiomas = idiomaDelegate.listarIdiomas();
 		
-		Map<Integer, IdiomaQueryServiceAdapter> mapIdiomas = new HashMap<Integer, IdiomaQueryServiceAdapter>();
+		Map<Integer, Idioma> mapIdiomas = new HashMap<Integer, Idioma>();
 		
-		for (IdiomaQueryServiceAdapter idioma : listaIdiomas)
+		for (Idioma idioma : listaIdiomas)
 			mapIdiomas.put(idioma.getOrden(), idioma);
 		
 		List<String> idiomasTraductor = new ArrayList<String>();

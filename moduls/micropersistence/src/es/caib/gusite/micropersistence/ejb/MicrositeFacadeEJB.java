@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,11 +60,10 @@ import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
+import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
 
 /**
  * SessionBean para consultar Microsite.
@@ -1104,22 +1104,16 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			filter.setRestringido(site.getRestringido());
 
 			List<?> langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
-			List<UnitatAdministrativaQueryServiceAdapter> listaPadres = new ArrayList<UnitatAdministrativaQueryServiceAdapter>();
+			List<UnidadData> listaPadres = new ArrayList<UnidadData>();
 
-			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-			uaCriteria.setId(String.valueOf(site.getUnidadAdministrativa()));
-			UnitatAdministrativaQueryServiceAdapter ua = rqs
-					.obtenirUnitatAdministrativa(uaCriteria);
+			OrganigramaProvider rqs = PluginFactory.getInstance().getOrganigramaProvider();
+			UnidadData ua = rqs.getUnidadData(site.getUnidadAdministrativa(), "ca");
 
-			Long idPadre = ua.getPadre();
+			Serializable idPadre = ua.getIdUnidadPadre();
 			while (idPadre != null) {
-				uaCriteria = new UnitatAdministrativaCriteria();
-				uaCriteria.setId(String.valueOf(idPadre));
-				UnitatAdministrativaQueryServiceAdapter padre = rqs
-						.obtenirUnitatAdministrativa(uaCriteria);
+				UnidadData padre = rqs.getUnidadData(idPadre, "ca");
 				listaPadres.add(padre);
-				idPadre = padre.getPadre();
+				idPadre = padre.getIdUnidadPadre();
 			}
 
 			for (int i = 0; i < langs.size(); i++) {
@@ -1142,22 +1136,15 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				String txids = Catalogo.KEY_SEPARADOR;
 				String txtexto = " "; // espacio en blanco, que es para
 										// tokenizar
-				UnitatAdministrativaQueryServiceAdapter uaSel = null;
+				UnidadData uaSel = null;
 
 				for (int j = 0; j < listaPadres.size(); j++) {
 					uaSel = listaPadres.get(j);
 
 					txids += uaSel.getId() + Catalogo.KEY_SEPARADOR;
-					uaCriteria = new UnitatAdministrativaCriteria();
-					uaCriteria.setId(String.valueOf(uaSel.getId()));
-					uaCriteria.setIdioma(idioma);
-
-					ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-
+					ua = rqs.getUnidadData(uaSel.getIdUnidad(), idioma);
 					if (ua != null) {
-						txtexto += ua.getNombre() + " "; // espacio en blanco,
-															// que es para
-															// tokenizar
+						txtexto += ua.getNombre() + " "; // espacio en blanco, que es para tokenizar
 					}
 				}
 
@@ -1178,7 +1165,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
-		} catch (QueryServiceException e) {
+		} catch (PluginException e) {
 			throw new EJBException(e);
 		} catch (DelegateException e) {
 			throw new EJBException(e);

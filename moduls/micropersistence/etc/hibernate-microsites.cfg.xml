@@ -6,6 +6,9 @@
  <session-factory>
   <property name="connection.datasource">java:/@datasource.jndi.micro@</property>
   <property name="dialect">@hibernate.dialect@</property>
+  <property name="hibernate.jdbc.use_streams_for_binary">@hibernate.jdbc.use_streams_for_binary@</property>
+  <property name="jdbc.use_streams_for_binary">@hibernate.jdbc.use_streams_for_binary@</property>
+
   
   <!-- TODO amartin: ¿por qué se repiten estas propiedades? -->
   <property name="show_sql">@hibernate.show_sql@</property>

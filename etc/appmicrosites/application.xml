@@ -6,6 +6,7 @@
     <display-name>MICROSITES</display-name>
     <description/>
 
+    <module><java>plugins.jar</java></module>
     <module><java>utilities.jar</java></module>
     <module><java>lucene.jar</java></module>
     <module><java>micromodel.jar</java></module>

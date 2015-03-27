@@ -1,7 +1,6 @@
 package es.caib.gusite.microfront.base;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -31,11 +30,6 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
-import es.caib.gusite.utilities.rolsacAPI.APIUtil;
-import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
-import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
 
 
 /**
@@ -213,7 +207,8 @@ public class DelegateBase {
 	 * @param idioma String con el idioma
 	 * @return Collection Coleccion de objetos "UnitatAdministrativaQueryServiceAdapter"
 	 * @throws Exception
-	 */
+	 * 
+	 * TODO: parece que no se usa
 	public Collection<?> obtenerUacentres(Long coduo, String idioma) throws Exception  {
 		
 		try {
@@ -239,6 +234,7 @@ public class DelegateBase {
 		}
 	
 	}
+	 */
 	
 	/**
 	 * Obtenr los detalles de una Unidad Administrativa
@@ -246,11 +242,14 @@ public class DelegateBase {
 	 * @param idioma idioma String con el idioma
 	 * @return  UnitatAdministrativaQueryServiceAdapter Objeto UnitatAdministrativaQueryServiceAdapter
 	 * @throws Exception
-	 */
+	 * 
+	 * TODO: parece que no se usa
+		 
 	public UnitatAdministrativaQueryServiceAdapter getUaDetails(String coduo, String idioma) throws Exception  {
 		
 		try {
 		
+			
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
 	    	
 	    	// Obtener UA.
@@ -268,6 +267,7 @@ public class DelegateBase {
 		}
 		
 	}
+	 */
 	
 	
 /* ****************      METODOS   PRIVADOS          ******************* */

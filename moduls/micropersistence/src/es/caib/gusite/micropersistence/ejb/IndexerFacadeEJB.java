@@ -68,7 +68,7 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
+import es.caib.gusite.plugins.PluginException;
 
 /**
  * SessionBean para indexar Microsites.
@@ -551,14 +551,13 @@ public abstract class IndexerFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void reindexarMicrosite(Long idsite) throws QueryServiceException {
+	public void reindexarMicrosite(Long idsite) {
 
 		Session session = this.getSession();
 		try {
 			log.info("Inicio indexacion micro " + idsite);
 
-			ModelFilterObject filter = DelegateUtil.getMicrositeDelegate()
-					.obtenerFilterObject(idsite);
+			ModelFilterObject filter = DelegateUtil.getMicrositeDelegate().obtenerFilterObject(idsite);
 			List langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
 
 			String hql = "";

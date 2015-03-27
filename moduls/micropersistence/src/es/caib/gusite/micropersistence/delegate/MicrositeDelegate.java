@@ -17,7 +17,6 @@ import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micropersistence.intf.MicrositeFacade;
 import es.caib.gusite.micropersistence.intf.MicrositeFacadeHome;
 import es.caib.gusite.micropersistence.util.MicrositeFacadeUtil;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
 
 /**
  * Business delegate para manipular Microsite.
@@ -389,7 +388,7 @@ public class MicrositeDelegate implements StatelessDelegate {
 	}
 
 	public ModelFilterObject obtenerFilterObject(Long idsite)
-			throws DelegateException, QueryServiceException {
+			throws DelegateException {
 		try {
 			return this.getFacade().obtenerFilterObject(idsite);
 		} catch (RemoteException e) {
