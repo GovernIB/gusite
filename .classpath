@@ -13,6 +13,7 @@
 	<classpathentry kind="src" path="output/micropersistence/gen-src"/>
 	<classpathentry kind="src" path="plugins/src"/>
 	<classpathentry kind="src" path="plugins/rolsac/src"/>
+	<classpathentry kind="src" path="plugins/base/src"/>
 	<classpathentry kind="lib" path="lib/axis-1.4/axis.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-1.5/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-1.5/axiom-api-1.2.8.jar"/>

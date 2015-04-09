@@ -13,7 +13,7 @@ import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
-@Service
+@Service("OrganigramaProvider")
 public class DefaultOrganigramaProvider implements OrganigramaProvider {
 
 	private static Log log = LogFactory.getLog(DefaultOrganigramaProvider.class);
@@ -48,6 +48,11 @@ public class DefaultOrganigramaProvider implements OrganigramaProvider {
 	@Override
 	public Collection<UnidadListData> getUnidades(String lang) throws PluginException {
 		return getUnidadesPrincipales(lang);
+	}
+
+	@Override
+	public Collection<UnidadListData> getUnidadesHijas(Serializable unidadId, String lang) throws PluginException {
+		return new ArrayList<UnidadListData>();
 	}
 
 	
