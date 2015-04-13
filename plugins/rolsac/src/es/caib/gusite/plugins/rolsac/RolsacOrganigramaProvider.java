@@ -47,6 +47,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 
 			// La conselleria de Portavoz se trata a parte.
 			for (UnitatAdministrativaQueryServiceAdapter conse : listaUAs) {
+				conse.setIdioma(lang);
 				nuevasUAs.add( transform2UnidadListData(conse) );
 			}
 			return nuevasUAs;
@@ -90,6 +91,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			// La conselleria de Portavoz se trata a parte.
 			for (UnitatAdministrativaQueryServiceAdapter conse : listaUAs) {
 				if (!conse.getId().toString().equals(UO_PORTAVOZ)) {
+					conse.setIdioma(lang);
 					nuevasUAs.add( transform2UnidadListData(conse) );
 				}
 			}
@@ -128,6 +130,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			Collection<UnidadListData> nuevasUAs = new ArrayList<UnidadListData>();
 
 			for (UnitatAdministrativaQueryServiceAdapter conse : listaUAs) {
+				conse.setIdioma(lang);
 				nuevasUAs.add( transform2UnidadListData(conse) );
 			}
 			return nuevasUAs;
@@ -163,6 +166,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 				return null;
 			}
 
+			ua.setIdioma(lang);
 			return transform2UnidadData(ua);
 	
 		} catch (QueryServiceException e) {
@@ -224,7 +228,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		if (idUOGovern == null) {
 			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 		}
-		if (!ua.getPadre().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
+		if (ua.getPadre() != null && !ua.getPadre().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
 			unidadData.setIdUnidadPadre(ua.getPadre()); 
 		}
 		

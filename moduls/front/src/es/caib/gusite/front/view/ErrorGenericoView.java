@@ -20,6 +20,9 @@ public class ErrorGenericoView extends PageView {
 		this.setCauseView(causeView);
 	}
 
+	public ErrorGenericoView() {
+	}
+
 	public void setCauseView(PageView causeView) {
 		this.causeView = causeView;
 	}

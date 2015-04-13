@@ -772,7 +772,7 @@ Create table "GUS_MICROS" (
 	"MIC_MNUCRP" Varchar2 (1 CHAR) Default 'N',
 	"MIC_CSSPTR" Varchar2 (1 CHAR),
 	"MIC_DOMINI" Varchar2 (150),
-	"MIC_URI" Varchar2 (32 CHAR) NOT NULL  UNIQUE ,
+	"MIC_URI" Varchar2 (32 CHAR) NOT NULL Constraint "UQ_GUS_MICROS_2" UNIQUE ,
 	"MIC_ANALYTICS" Varchar2 (60 CHAR),
 	"MIC_VERSION" Varchar2 (2),
 	"MIC_TIPO_ACCESO" Varchar2 (1),
