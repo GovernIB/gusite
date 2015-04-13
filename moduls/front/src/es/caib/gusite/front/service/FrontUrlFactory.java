@@ -21,10 +21,12 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.Traduccion;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
+import es.caib.gusite.micromodel.Traducible2;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 
 @Service
@@ -128,19 +130,41 @@ public class FrontUrlFactory {
 
 	public String encuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return this.microsite(microsite, lang) + "encuesta/" + ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()
-				+ "/";
+		return this.microsite(microsite, lang) + "encuesta/" + ((TraduccionEncuesta) this.getTraducion(encuesta, lang) ).getUri() + "/";
+	}
+
+	/**
+	 * TODO: Implementar en una clase de utilidades. Coger de configuración los idiomas alternativos.
+	 * @param traducible
+	 * @param lang
+	 * @return
+	 */
+	private Traduccion getTraducion(Traducible2 traducible, Idioma lang) {
+		Traduccion ret = traducible.getTraduccion(lang.getLang().toLowerCase());
+		if (ret != null) {
+			return ret;
+		}
+		String[] idiomas = {"ca", "es", "en"};
+		if (ret == null) {
+			for (String idioma : idiomas) {
+				if (traducible.getTraduccion(idioma) != null) {
+					return traducible.getTraduccion(idioma);
+				}
+			}
+		}
+		//TODO: esto generará un NPE seguro
+		return null;
 	}
 
 	public String envioencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
 		return this.microsite(microsite, lang) + "envioencuesta/"
-				+ ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+				+ ((TraduccionEncuesta) this.getTraducion(encuesta, lang)).getUri() + "/";
 	}
 
 	public String resultadosencuesta(Microsite microsite, Idioma lang, Encuesta encuesta) {
 
-		return this.microsite(microsite, lang) + "resultados/" + ((TraduccionEncuesta) encuesta.getTraduccion(lang.getLang().toLowerCase())).getUri()
+		return this.microsite(microsite, lang) + "resultados/" + ((TraduccionEncuesta) this.getTraducion(encuesta, lang)).getUri()
 				+ "/";
 	}
 
@@ -273,8 +297,8 @@ public class FrontUrlFactory {
 	}
 
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
-
-		return this.microsite(microsite, lang) + "c/" + ((TraduccionContenido) contenido.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		
+		return this.microsite(microsite, lang) + "c/" + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
 	}
 
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {
@@ -288,7 +312,7 @@ public class FrontUrlFactory {
 
 	public String listarElementos(Microsite microsite, Idioma lang, Tipo tipo) {
 
-		return this.microsite(microsite, lang) + "l/" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "l/" + ((TraduccionTipo) this.getTraducion(tipo, lang)).getUri() + "/";
 	}
 
 	public String qssi(Microsite microsite, Idioma lang, Long qssi) {
@@ -355,16 +379,16 @@ public class FrontUrlFactory {
 	public String noticia(Microsite microsite, Idioma lang, Noticia noticia, String mcont) {
 
 		if (!StringUtils.isEmpty(mcont)) {
-			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/" + "?" + Microfront.MCONT + "=" + mcont;
+			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/" + "?" + Microfront.MCONT + "=" + mcont;
 		} else {
-			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/";
 		}
 	}
 
 
 	public String noticiaDescarga(Microsite microsite, Idioma lang, Noticia noticia) {
 
-		return this.microsite(microsite, lang) + "d/" + ((TraduccionNoticia) noticia.getTraduccion(lang.getLang().toLowerCase())).getUri() + "/";
+		return this.microsite(microsite, lang) + "d/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/";
 	}
 
 	public String noticiaDescarga(Microsite microsite, Idioma lang, String noticia) {
@@ -457,8 +481,8 @@ public class FrontUrlFactory {
 
 	/**
 	 * Convierte una url interna (relativa) legacy a una válida para front.
-	 * Antes comprueba que se trate de una uri interna TODO: hacer que confierta
-	 * a la URL final de front, para evitar una redirección
+	 * Antes comprueba que se trate de una uri interna 
+	 * TODO: hacer que convierta a la URL final de front, para evitar una redirección
 	 * 
 	 * @param urlredireccionada
 	 * @param lang

@@ -53,8 +53,8 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang}/{tipo}/{tipoId}/contenido.do", params = Microfront.PIDSITE)
-	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma prevLang, @PathVariable("tipo") char tipo,
-			@PathVariable("tipoId") String tipoId, @RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
+			@PathVariable("tipoId") String tipoId, @RequestParam(Microfront.PIDSITE) Long idSite,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 
@@ -97,8 +97,8 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang}/{tipo}/{tipoId}/contenido.do", params = "mkey")
-	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma prevLang, @PathVariable("tipo") char tipo,
-			@PathVariable("tipoId") String tipoId, @RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
+			@PathVariable("tipoId") String tipoId, @RequestParam("mkey") String mkey,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 
@@ -128,7 +128,7 @@ public class LegacyController extends FrontController {
 	protected ContactosDataService contactosDataService;
 
 	/**
-	 * Urls de contenido antiguo. contactos.do?mkey=M94&lang=ca z
+	 * Urls de contenido antiguo. contacto.do?mkey=M94&lang=ca z
 	 * 
 	 * @throws DelegateException
 	 */
@@ -166,6 +166,47 @@ public class LegacyController extends FrontController {
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
 			return this.contacto(microsite.getId(), lang, idContacto, model, pcampa);
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		}
+	}
+
+	/**
+	 * Urls de contenido antiguo. contactos.do?mkey=M94&lang=ca z
+	 * 
+	 * @throws DelegateException
+	 */
+	@RequestMapping(value = "contactos.do", params = { Microfront.PIDSITE })
+	public String contactos(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException {
+
+		Microsite microsite = null;
+		try {
+			microsite = this.dataService.getMicrosite(idSite, lang);
+			return "redirect:" + this.urlFactory.listarContactos(microsite, lang);
+
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		}
+	}
+
+	/**
+	 * Urls de contenido antiguo. contactos.do?mkey=M94&lang=es&cont=213 z
+	 * 
+	 * @throws DelegateException
+	 */
+	@RequestMapping(value = "contactos.do", params = "mkey")
+	public String contactos(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+			Model model,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException {
+		Microsite microsite = null;
+		try {
+			microsite = this.dataService.getMicrositeByKey(mkey, lang);
+			return "redirect:" + this.urlFactory.listarContactos(microsite, lang);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
 			// TODO: 404?
@@ -796,7 +837,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang}/{tipo}/{tipoId}/archivopub.do", params = { Microfront.PCTRL, "id" })
-	public String archivopubRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma prevLang, @PathVariable("tipo") char tipo,
+	public String archivopubRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
 			@PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PCTRL) String ctrl, @RequestParam(value = "id") Long id,
 			Model model) {
 
