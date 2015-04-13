@@ -119,8 +119,6 @@ public class Bdestadisticasgen {
 			
 			if (statg.getReferencia().equals(Microback.RAGENDA))
 				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RAGENDA));
-			else if (statg.getReferencia().equals(Microback.RBANNER))
-				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RBANNER));
 			else if (statg.getReferencia().equals(Microback.RCONTACTO))
 				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RCONTACTO));
 			else if (statg.getReferencia().equals(Microback.RCONTENIDO))
@@ -133,6 +131,12 @@ public class Bdestadisticasgen {
 				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RENCUESTA));
 			else if (statg.getReferencia().equals(Microback.RQSSI))
 				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RQSSI));
+			else if (statg.getReferencia().equals(Microback.RBANNER))
+				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RBANNER));
+			else if (statg.getReferencia().equals(Microback.RPROCEDIMIENTO))
+				statg.setNombreservicio((String) Microback.RSERVICIOS.get(Microback.RPROCEDIMIENTO));
+			else 
+				statg.setNombreservicio(statg.getReferencia());
 
 		}
 

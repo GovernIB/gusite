@@ -12,7 +12,6 @@ public class Microback {
 
 	// Estas variables coinciden con el campo TPS_REF de la tabla GUS_TIPSER
 	static public final String RAGENDA = "GND00";
-	static public final String RBANNER = "BNNR0";
 	static public final String RCONTACTO = "CNTCT";
 	static public final String RCONTENIDO = "CNTSP";
 	static public final String RFAQ = "FQS00";
@@ -24,16 +23,23 @@ public class Microback {
 	static public final String microsites_build = "30/08/2010";
 	static public final String _HOSTCAIB = "www.caib.es";
 	
+	// obsoletos, se mantienen para la información estadística
+	static public final String RBANNER = "BNNR0";
+	static public final String RPROCEDIMIENTO = "PRCDM";
+	
 	static public Hashtable<String, String> RSERVICIOS = new Hashtable<String, String>();
 	static {
 		RSERVICIOS.put(RAGENDA, "Agenda");
-		RSERVICIOS.put(RBANNER, "Banners");
 		RSERVICIOS.put(RCONTACTO, "Contacto");
 		RSERVICIOS.put(RCONTENIDO, "Contenido");
 		RSERVICIOS.put(RFAQ, "Faqs");
 		RSERVICIOS.put(RNOTICIA, "Elementos");
 		RSERVICIOS.put(RENCUESTA, "Encuestas");
 		RSERVICIOS.put(RQSSI, "Formularos QSSI");
+		
+		//Obsoletos, se mantienen para la información estadística
+		RSERVICIOS.put(RBANNER, "Banners");
+		RSERVICIOS.put(RPROCEDIMIENTO, "Procedimientos");
 	}
 
 	// maximo entero (debido a un bug de la jvm de produccion)
