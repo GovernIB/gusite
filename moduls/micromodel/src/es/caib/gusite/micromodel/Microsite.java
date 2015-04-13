@@ -217,8 +217,8 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@Fetch(FetchMode.SUBSELECT)
 	private Map<String, TraduccionMicrosite> traducciones = new HashMap<String, TraduccionMicrosite>();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "IMI_MICCOD")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy="microsite")
+	//@JoinColumn("microsite")
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
 
@@ -471,26 +471,33 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	}
 
 	public void setIdiomas(String[] idiomas) {
+		//Eliminamos los inexistentes
+		Set<IdiomaMicrosite> nuevosIdiomas = new HashSet<IdiomaMicrosite>();
 
-		for (String idioma2 : idiomas) {
+		//Añadimos los nuevos
+		for (String lang : idiomas) {
 			boolean existe = false;
-			Iterator iter = this.idiomas.iterator();
-			while (iter.hasNext()) {
-				IdiomaMicrosite idiMicro = (IdiomaMicrosite) iter.next();
-				if (idiMicro.getId().getCodigoIdioma().compareTo(idioma2) == 0) {
+			for (IdiomaMicrosite idiMicro : this.idiomas) {
+				if (idiMicro.getId().getCodigoIdioma().compareTo(lang) == 0) {
 					existe = true;
+					nuevosIdiomas.add(idiMicro);
+					break;
 				}
 			}
 			if (!existe) {
 				IdiomaMicrosite idioma = new IdiomaMicrosite();
 				idioma.setId(new IdiomaMicrositePK());
-				idioma.getId().setCodigoIdioma(idioma2);
+				idioma.getId().setCodigoIdioma(lang);
 				if (this.id != null) {
 					idioma.getId().setCodigoMicrosite(this.id);
 				}
-				this.idiomas.add(idioma);
+				nuevosIdiomas.add(idioma);
 			}
 		}
+		
+		this.setIdiomas(nuevosIdiomas);
+
+		
 	}
 
 	public String getUrlhome() {

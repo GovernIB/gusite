@@ -20,11 +20,11 @@ public class IdiomaMicrositePK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@XmlAttribute
-	@Column(name = "IMI_CODIDI")
+	@Column(name = "IMI_CODIDI", nullable=false)
 	private String codigoIdioma;
 
 	@XmlAttribute
-	@Column(name = "IMI_MICCOD")
+	@Column(name = "IMI_MICCOD", nullable=false)
 	private Long codigoMicrosite;
 
 	public IdiomaMicrositePK() {
