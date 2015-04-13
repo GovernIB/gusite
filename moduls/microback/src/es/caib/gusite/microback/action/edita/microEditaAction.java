@@ -1,6 +1,7 @@
 package es.caib.gusite.microback.action.edita;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -133,9 +134,6 @@ public class microEditaAction extends BaseAction  {
       		micrositeBean = setFormtoBean(microForm);
 
     		//Guardamos cambios en BBDD
-			if (micrositeBean.getUri() == null || micrositeBean.getUri().equals("")) {
-				micrositeBean.setUri(Cadenas.string2uri(((TraduccionMicrosite) micrositeBean.getTraduccion(Idioma.getIdiomaPorDefecto())).getTitulo()));
-			}
             micrositeDelegate.grabarMicrosite(micrositeBean);
 
             if (microForm.get("id") == null) {
@@ -199,6 +197,7 @@ public class microEditaAction extends BaseAction  {
 
         Iterator<?> itTradFichas = ((ArrayList<?>) microForm.get("traducciones")).iterator();                
         Iterator<String> itLang = traductor.getListLang().iterator(); 
+        List<String> idiomasMicro = Arrays.asList(micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
         
         while (itLang.hasNext()) {
             
@@ -206,7 +205,7 @@ public class microEditaAction extends BaseAction  {
         	String idiomaDesti = itLang.next();
         	
         	//Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
-        	if (micrositeBean.getIdiomas().contains(idiomaDesti)) {
+        	if (idiomasMicro.contains(idiomaDesti)) {
 
         		if (!idiomaOrigen.equals(idiomaDesti)) {
         			

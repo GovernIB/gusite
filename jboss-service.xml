@@ -4,6 +4,8 @@
     <!-- Set properties using the properties file style. -->
     <attribute name="Properties">
 	   es.caib.gusite.integracion.traductor=S
+	   es.caib.gusite.integracion.traductor.servidor=scatwnt1.caib.es:8080
+	   
 	   es.caib.gusite.portal.url=https://proves.caib.es	   
 	   es.caib.gusite.intentosMailing=5
 	   es.caib.gusite.db.jndiname=es.caib.microsite.db

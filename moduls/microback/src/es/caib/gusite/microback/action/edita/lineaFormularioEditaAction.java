@@ -1,5 +1,6 @@
 package es.caib.gusite.microback.action.edita;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -319,13 +320,14 @@ public class lineaFormularioEditaAction extends BaseAction
             etiq[0] = etiquetas[0];
            
            itLang = traductor.getListLang().iterator(); 
+           List<String> idiomasMicro = Arrays.asList(micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
             while (itLang.hasNext()){
             	
             	String idiomaDesti = itLang.next();
             	TraduccionLineadatocontacto lineadatocontactoDesti = new TraduccionLineadatocontacto();
             	lineadatocontactoDesti.setTexto(etiquetas[indexIdioma]);
 			   	//Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
-            	if (micrositeBean.getIdiomas().contains(idiomaDesti)) {
+            	if (idiomasMicro.contains(idiomaDesti)) {
 
 	            	if (!idiomaOrigen.equals(idiomaDesti)) {
 	            		traductor.setDirTraduccio(idiomaOrigen, idiomaDesti);

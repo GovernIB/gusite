@@ -112,6 +112,7 @@ public class cabeceraPieEditaAction extends BaseAction {
 
         Iterator<?> itTradFichas = ((ArrayList<?>) microForm.get("traducciones")).iterator();
         Iterator<String> itLang = traductor.getListLang().iterator();
+        List<String> idiomasMicro = Arrays.asList(micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
 
         while (itLang.hasNext()) {
 
@@ -119,7 +120,7 @@ public class cabeceraPieEditaAction extends BaseAction {
             String idiomaDesti = itLang.next();
             	
             //Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
-            if (micrositeBean.getIdiomas().contains(idiomaDesti)) {
+            if (idiomasMicro.contains(idiomaDesti)) {
 
                 if (!idiomaOrigen.equals(idiomaDesti)) {
                     traductor.setDirTraduccio(idiomaOrigen, idiomaDesti);
