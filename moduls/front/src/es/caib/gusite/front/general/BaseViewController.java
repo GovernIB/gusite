@@ -133,9 +133,13 @@ public abstract class BaseViewController extends FrontController {
 				throw new ExceptionFrontMicro(" [Configuracion microsite]: Se debe indicar algún microsite");
 			}
 
+			/**
+			 * Esta comprobación ahora se hace en el interceptor
 			if (!"S".equals(microsite.getVisible())) {
 				throw new ExceptionFrontMicro(" [Configuracion microsite]: El site no es visible");
 			}
+			 * 
+			 */
 
 		} catch (DelegateException e) {
 			throw new ExceptionFrontMicro(e);
@@ -166,18 +170,6 @@ public abstract class BaseViewController extends FrontController {
 
 		String analytics_mic = microsite.getAnalytics();
 		view.setMicrositeAnalytics(analytics_mic);
-
-		/*
-		 * TODO: Esto lo hace de modo poco elegante. Investigar cómo
-		 * previsualizar chequear la visibilidad del site String previ =
-		 * ""+request.getSession().getAttribute("previsualiza"); String misite =
-		 * ""+request.getSession().getAttribute("misite");
-		 * 
-		 * if
-		 * (!previ.equals("si")||!microsite.getId().toString().equals(misite)) {
-		 * if (!microsite.getVisible().equals("S")) { throw new
-		 * Exception(" [Configuracion microsite]: El site no es visible"); } }
-		 */
 
 		return microsite;
 	}
@@ -415,13 +407,13 @@ public abstract class BaseViewController extends FrontController {
 			}
 			if (micrositetra != null) {
 				if ((micrositetra.getTxtop1() != null) && (micrositetra.getUrlop1() != null)) {
-					trio = new Tridato(micrositetra.getTxtop1(), micrositetra.getUrlop1());
+					trio = new Tridato(micrositetra.getTxtop1(), urlFactory.legacyToFrontUri(micrositetra.getUrlop1(), lang));
 					if (microsite.getOpt1().equals("S")) {
 						lista.add(trio);
 					}
 				}
 				if ((micrositetra.getTxtop2() != null) && (micrositetra.getUrlop2() != null)) {
-					trio = new Tridato(micrositetra.getTxtop2(), micrositetra.getUrlop2());
+					trio = new Tridato(micrositetra.getTxtop2(), urlFactory.legacyToFrontUri(micrositetra.getUrlop2(), lang));
 					if (microsite.getOpt2().equals("S")) {
 						lista.add(trio);
 					}
