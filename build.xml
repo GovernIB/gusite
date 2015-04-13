@@ -168,7 +168,7 @@
 				<attribute name="Version" value="${project.version}"/>
 				<attribute name="Built-By" value="${project.author}"/>
 				<attribute name="Build-Jdk" value="${java.version}"/>
-				<!--<attribute name="SVN-revision" value="${svn.revision}"/>-->
+				<attribute name="SVN-revision" value="${svn.revision}"/>
 			</manifest>
 
 			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
