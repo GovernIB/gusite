@@ -271,7 +271,7 @@ public class MicrositeDelegate implements StatelessDelegate {
 	 * @return lista de Strings
 	 * @throws DelegateException
 	 */
-	public List<?> listarUsernamesbyMicrosite(Long idmicrosite)
+	public List<Usuario> listarUsernamesbyMicrosite(Long idmicrosite)
 			throws DelegateException {
 		try {
 			return this.getFacade().listarUsernamesbyMicrosite(idmicrosite);

@@ -143,6 +143,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				site.setIdiomas((Set<IdiomaMicrosite>) null);
 
 				site.setClaveunica(this.obtenerClaveUnica(site));
+				
+				if (site.getUri() == null || site.getUri().equals("")) {
+					site.setUri(site.getClaveunica());
+				}
+				
 			}
 
 			session.saveOrUpdate(site);
@@ -975,7 +980,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarUsernamesbyMicrosite(Long idmicrosite) {
+	@SuppressWarnings("unchecked")
+	public List<Usuario> listarUsernamesbyMicrosite(Long idmicrosite) {
 
 		Session session = this.getSession();
 		try {
@@ -986,7 +992,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
             hql += " and  usuario.id = upm.pk.idusuario order by usuario.username";
 
 			Query query = session.createQuery(hql);
-			return query.list();
+			return (List<Usuario>)query.list();
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
