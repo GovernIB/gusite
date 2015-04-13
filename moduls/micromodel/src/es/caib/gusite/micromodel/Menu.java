@@ -76,8 +76,7 @@ public class Menu extends AuditableModel implements Traducible2 {
 	private Archivo imagenmenu;
 
 	@XmlElement
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "CON_MNUCOD")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy="menu")
 	@MapKey(name = "id")
 	@Fetch(FetchMode.SUBSELECT)
 	@OrderBy("orden ASC")
