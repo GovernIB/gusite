@@ -650,8 +650,12 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 					"from Menu menu where menu.microsite.id = "
 							+ idmicro.toString()).list();
 
-			for (int i = 0; i < menus.size(); i++) {
-				Menu m = menus.get(i);
+			Map<Long, Menu> menusIdx = new HashMap<Long, Menu>();
+			for (Menu m : menus) {
+				menusIdx.put(m.getId(), m);
+			}
+			
+			for (Menu m : menus) {
 
 				int indice_m = -1;
 				for (int j = 0; j < ids.length; j++) {
@@ -737,7 +741,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 						if (indice != -1) {
 							con.setOrden(ordenes[indice].intValue());
-							con.getMenu().setId(idPadres[indice]);
+							con.setMenu(menusIdx.get(idPadres[indice]));
 							con.setVisible(visibles[indice]);
 							session.saveOrUpdate(con);
 							session.flush();
