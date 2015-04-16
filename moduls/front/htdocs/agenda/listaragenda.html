@@ -36,7 +36,7 @@
 			<div id="calendariLateral">
 				<h3 th:text="#{listaragenda.calendario}">Calendari</h3>
 				<div th:if="${MVS_datos_agenda_calendario}!=null">
-					<div gus:replace="agendaCalendarListado :: calendario">Agenda Calendario</div>
+					<div gus:replace="general/agendaCalendarListado :: calendario">Agenda Calendario</div>
 				</div>				
 			</div>
 			<div th:if="${MVS_parametros_pagina.nreg}!=0" id="agendaLlistat">								

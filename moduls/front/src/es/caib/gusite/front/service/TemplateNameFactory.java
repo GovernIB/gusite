@@ -146,15 +146,15 @@ public class TemplateNameFactory {
 	}
 
 	public String moduloAgenda(Microsite microsite) {
-		return getPlantilla(microsite, "agendaCalendarListado :: calendario");
+		return getPlantilla(microsite, "general/agendaCalendarListado :: calendario");
 	}
 
 	public String moduloNoticiasHome(Microsite microsite) {
-		return getPlantilla(microsite, "noticiasListado :: noticias");
+		return getPlantilla(microsite, "general/noticiasListado :: noticias");
 	}
 
 	public String componenteElementos(Microsite microsite) {
-		return getPlantilla(microsite, "componentes :: elementos");
+		return getPlantilla(microsite, "general/componentes :: elementos");
 	}
 
 	public String cabecera(Microsite microsite) {

@@ -166,12 +166,12 @@ Tabla con el calendario y listado de eventos
 														th:case="2" th:remove="tag"> <span
 															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 == 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 == 0))"
 															th:with="diasmes=29" th:remove="tag">
-																<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
+																<tr gus:replace="general/agendaCalendarListado :: filasTabla"></tr>
 														</span> 
 														<span
 															th:if="((${safeAnyo} % 100 == 0) and (${safeAnyo} % 400 != 0)) or ((${safeAnyo} % 100 != 0) and (${safeAnyo} % 4 != 0))"
 															th:with="diasmes=28" th:remove="tag">
-																<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
+																<tr gus:replace="general/agendaCalendarListado :: filasTabla"></tr>
 														</span>
 													</span> 
 													<span th:case="*" th:remove="tag"> 
@@ -179,7 +179,7 @@ Tabla con el calendario y listado de eventos
 													<span
 														th:if="(${safeMes}!=4) and (${safeMes}!=6) and (${safeMes}!=9) and (${safeMes}!=11)"
 														th:with="diasmes=31" th:remove="tag">
-															<tr gus:replace="agendaCalendarListado :: filasTabla"></tr>
+															<tr gus:replace="general/agendaCalendarListado :: filasTabla"></tr>
 													</span>
 
 													<span
@@ -236,7 +236,7 @@ Tabla con el calendario y listado de eventos
 							</div>
 							<!--  Meses inicialmente escondidos -->
 							<div th:if="${i}!=(${nummesesaretroceder}+1)" style="display: none;">
-								<span gus:replace="agendaCalendarListado :: tablaCalendario" th:remove="tag"> </span>
+								<span gus:replace="general/agendaCalendarListado :: tablaCalendario" th:remove="tag"> </span>
 							</div>
 						</span>
 					</div>
