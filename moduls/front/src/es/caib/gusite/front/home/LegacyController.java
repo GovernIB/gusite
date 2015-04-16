@@ -978,4 +978,44 @@ public class LegacyController extends FrontController {
 
 	}
 
+	
+	/**
+	 * Urls de contenido antiguo.
+	 * /taw.do?ttr=CNTSP&idioma=ca&id=24454&idsite=1364
+	 * 
+	 * @throws DelegateException
+	 */
+	@RequestMapping("taw.do")
+	public String taw(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam("idioma") Idioma lang,
+			@RequestParam("id") Long idCont,
+			@RequestParam("ttr") String ttr,
+			Model model) throws DelegateException {
+
+		Microsite microsite = null;
+		try {
+			microsite = this.dataService.getMicrosite(idSite, lang);
+
+			String url = "";
+			if (ttr.equals(Microfront.RNOTICIA)) {
+				url = this.urlFactory.tawItemNoticia(microsite, lang, this.noticiasDataService.loadNoticia(idCont, lang));
+			} else if (ttr.equals(Microfront.RAGENDA)) {
+				url = this.urlFactory.tawItemAgenda(microsite, lang, this.dataService.loadAgenda(idCont, lang));
+			} else if (ttr.equals(Microfront.RCONTENIDO)) {
+				url = this.urlFactory.tawItemContenido(microsite, lang, this.contenidoDataService.getContenido(microsite, idCont, lang.getLang()));
+			}
+			
+			return "redirect:" + url;
+
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+		}
+	}
+
+
 }

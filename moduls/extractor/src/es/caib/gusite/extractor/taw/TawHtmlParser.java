@@ -55,6 +55,10 @@ public class TawHtmlParser {
 	        	
 				for(int i = 0; i < pautas.getLength(); i++)
 		            try {
+		            	if (pautas.getPuntoVerificacion(i).getId().equals("3.2")) {
+		            		//El punto 3.2 comprueba el doctype, que en html5 no existe.
+		            		continue;
+		            	}
 		                pautas.getPuntoVerificacion(i).analizar(parser, resultado.getUrlNode());
 		                
 		            } catch(ClassCastException cEx) {

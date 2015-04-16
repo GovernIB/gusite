@@ -21,6 +21,7 @@ import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.bean.ResultadoBusqueda;
+import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
@@ -155,6 +156,22 @@ public class FrontDataService {
 
 		return ret;
 	}
+	
+	public Agenda loadAgenda(Long idCont, Idioma lang) throws ExceptionFrontPagina {
+
+		try {
+			AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+			Agenda ret = agendadel.obtenerAgenda(idCont);
+			ret.setIdi(lang.getLang());
+			if (ret.getActividad() != null) {
+				ret.getActividad().setIdi(lang.getLang());
+			}
+			return ret;
+		} catch (DelegateException e) {
+			throw new ExceptionFrontPagina(" [loadAgenda, id=" + idCont + ", idioma=" + lang.getLang()
+					+ " ] Error=" + e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
+		}
+	}	
 
 	private void traducelista(List<Agenda> listaeventos, String lang) {
 		for (Agenda agenda : listaeventos) {
@@ -338,5 +355,7 @@ public class FrontDataService {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
+
+
 
 }

@@ -68,7 +68,7 @@ public class Testeador {
 			TawHtmlParser tawhtmlparser = new TawHtmlParser();
 			return tawhtmlparser.parse(url);
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
