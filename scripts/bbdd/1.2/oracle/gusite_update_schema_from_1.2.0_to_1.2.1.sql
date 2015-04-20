@@ -195,4 +195,25 @@ CREATE SEQUENCE "GUS_SEQPPL"
 CREATE SEQUENCE "GUS_SEQARC"
 /
 
+-------------------------------------------------
+-- Cambios 1.2.1b
+------------------------------------------------
+
+create or replace
+Function GUS_NEXTVAL ( secuencia IN varchar2 ) RETURN  varchar2
+IS
+ dynsql VARCHAR2(1000);
+ ret NUMBER;
+
+BEGIN
+
+  dynsql := 'SELECT ' || secuencia || '.NEXTVAL FROM DUAL';
+  EXECUTE IMMEDIATE dynsql into ret;
+
+RETURN ret;
+
+END;
+/
+
+
 
