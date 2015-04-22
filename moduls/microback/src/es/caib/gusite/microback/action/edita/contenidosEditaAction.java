@@ -23,6 +23,7 @@ import es.caib.gusite.microback.actionform.formulario.contenidoForm;
 import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
+import es.caib.gusite.microintegracion.traductor.TraductorException;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
 import es.caib.gusite.micromodel.Accesibilidad;
 import es.caib.gusite.micromodel.Archivo;
@@ -59,7 +60,7 @@ public class contenidosEditaAction extends BaseAction
 	protected static Log log = LogFactory.getLog(contenidosEditaAction.class);
 
 
-	public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
 		ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
     	MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
@@ -285,8 +286,9 @@ public class contenidosEditaAction extends BaseAction
      * @param contenidoForm		formulario dinámico enviado por usuario
      * @throws Exception
      * @author Indra
+     * @throws TraductorException 
      */
-    private void traducir (HttpServletRequest request, contenidoForm contenidoForm) throws Exception  {	
+    private void traducir (HttpServletRequest request, contenidoForm contenidoForm) throws TraductorException  {	
 
     		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
     		String idiomaOrigen = "ca";

@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 
@@ -37,32 +38,39 @@ public class Traductor extends AutomaticTranslationService {
 	 * 
 	 * Carga los códigos de Idioma de la capa de negocio para la traducción
 	 * e inicia una Hashtable para saber el origen-destino de la traducción
+	 * @throws TraductorException 
 	 * 
 	 */
-	public Traductor() throws Exception {
+	public Traductor() throws TraductorException {
 		
-    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-		List<Idioma> listaIdiomas = idiomaDelegate.listarIdiomas();
+		try {
+	    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
+			List<Idioma> listaIdiomas;
+			listaIdiomas = idiomaDelegate.listarIdiomas();
 		
-		Map<Integer, Idioma> mapIdiomas = new HashMap<Integer, Idioma>();
-		
-		for (Idioma idioma : listaIdiomas)
-			mapIdiomas.put(idioma.getOrden(), idioma);
-		
-		List<String> idiomasTraductor = new ArrayList<String>();
-		List<String> idiomas = new ArrayList<String>();
-		
-		
-		//Se ordenan por defecto los idiomas según el campo orden
-		for (int i = 1; i <= mapIdiomas.size(); i++ ) {
-			idiomas.add(mapIdiomas.get(i).getLang());
-			idiomasTraductor.add(mapIdiomas.get(i).getLangTraductor());
+			Map<Integer, Idioma> mapIdiomas = new HashMap<Integer, Idioma>();
+			
+			for (Idioma idioma : listaIdiomas)
+				mapIdiomas.put(idioma.getOrden(), idioma);
+			
+			List<String> idiomasTraductor = new ArrayList<String>();
+			List<String> idiomas = new ArrayList<String>();
+			
+			
+			//Se ordenan por defecto los idiomas según el campo orden
+			for (int i = 1; i <= mapIdiomas.size(); i++ ) {
+				idiomas.add(mapIdiomas.get(i).getLang());
+				idiomasTraductor.add(mapIdiomas.get(i).getLangTraductor());
+			}
+			
+			_listLang = idiomas;
+			_listLangTraductor = idiomasTraductor;
+			
+			iniHshIdiomes();
+		} catch (DelegateException e) {
+			log.error(e);
+			throw new TraductorException(e.getMessage(), e);
 		}
-		
-		_listLang = idiomas;
-		_listLangTraductor = idiomasTraductor;
-		
-		iniHshIdiomes();
 		
 	}
 	

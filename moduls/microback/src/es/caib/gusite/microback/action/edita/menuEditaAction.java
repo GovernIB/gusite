@@ -344,7 +344,7 @@ public class menuEditaAction extends BaseAction
 
     	//Lista de Idiomas
 		List<String> listLang = traductor.getListLang();
-			
+
 		//Tabla temporal que guarda las traducciones del formulario
 		String[] traducciones = (String[]) menuForm.get("traducciones");  // traducciones de los menús
     	int indiceT = 0;

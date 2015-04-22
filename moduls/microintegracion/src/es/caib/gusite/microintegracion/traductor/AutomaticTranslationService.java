@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,9 +45,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param input	texto a traducir
 	 * @return	String	texto traducido
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	protected String translate(String input) throws Exception {
+	protected String translate(String input) throws TraductorException {
 
 		try {			
 			AutomaticTranslationServiceStub stub = new AutomaticTranslationServiceStub(_translationServerUrl);
@@ -76,11 +78,15 @@ public class AutomaticTranslationService {
 
 			return manageColors(convertStreamToString(getOutput(params)));
 
-		} catch (TraductorException traEx) {
-		    throw traEx;
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			throw new Exception(e); 
+		} catch (AxisFault e) {
+			log.error(e);
+			throw new TraductorException("AxisFault:" + e.getMessage(), e);
+		} catch (RemoteException e) {
+			log.error(e);
+			throw new TraductorException("RemoteException:" + e.getMessage(), e);
+		} catch (IOException e) {
+			log.error(e);
+			throw new TraductorException("IOException:" + e.getMessage(), e);
 		}
 	}
 
@@ -89,9 +95,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param translationDirection	dirección de traducción
 	 * @return Param				devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setTranslationDirection(String translationDirection) throws Exception {
+	private Param setTranslationDirection(String translationDirection) throws TraductorException {
 
 		String transDirName = "TRANSLATION_DIRECTION";
 		String eMessage = "Error al carregar el la direcció de traducció";
@@ -103,9 +109,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param subjectArea	area de traducción
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setSubjectArea(String subjectArea) throws Exception {
+	private Param setSubjectArea(String subjectArea) throws TraductorException  {
 
 	    String subjectAreaName = "SUBJECT_AREAS";
 		String eMessage = "Error al carregar l' àrea de traducció";
@@ -117,9 +123,9 @@ public class AutomaticTranslationService {
      * 
      * @param subjectArea   area de traducción
      * @return Param        devuelve el parámetro con el texto y el valor
-     * @throws Exception
+	 * @throws TraductorException 
      */
-    private Param setDialegSetting(String dialegSetting) throws Exception {
+    private Param setDialegSetting(String dialegSetting) throws TraductorException {
 
         String dialegSettingName = "DIALEG_SETTING";
         String eMessage = "Error al carregar el dialeg de la traducció";
@@ -131,20 +137,17 @@ public class AutomaticTranslationService {
      * 
      * @param subjectArea   area de traducción
      * @return Param        devuelve el parámetro con el texto y el valor
-     * @throws Exception
+     * @throws TraductorException 
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      */
-    private Param setParamValue(String name, String value, String error) throws Exception {
+    private Param setParamValue(String name, String value, String error) throws TraductorException {
 
-        try {
-            Param param = (Param) getObject(Param.class);
-            param.setName(name);
-            param.setValue(value);
-            return param;
+        Param param = (Param) getObject(Param.class);
+        param.setName(name);
+        param.setValue(value);
+        return param;
 
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new Exception(error);
-        }
     }
 
 	/**
@@ -152,9 +155,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param input		input de traducción (texto a traducir)
 	 * @return Param	devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setInput(String input) throws Exception {
+	private Param setInput(String input) throws TraductorException {
 
 		String inputName = "INPUT";
 		String eMessage = "Error al carregar l' entrada a traduir";
@@ -166,9 +169,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param colorMarkups	Marcadores de color (Si/no)
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setColorMarkups(String colorMarkups) throws Exception {
+	private Param setColorMarkups(String colorMarkups) throws TraductorException {
 
 	    String inputName = "COLOR_MARKUPS";
 		String eMessage = "Error al carregar el parámetre COLOR_M";
@@ -180,9 +183,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param markUnknowns	Marcar las palabras desconocidas (Si/no)
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setMarkUnknowns(String markUnknowns) throws Exception {
+	private Param setMarkUnknowns(String markUnknowns) throws TraductorException {
 
 		String inputName = "MARK_UNKNOWNS";
 		String eMessage = "Error al carregar el parámetre M_UNKN";
@@ -194,9 +197,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param markConstants	Marcar las constantes (Si/no)
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setMarkConstants(String markConstants) throws Exception {
+	private Param setMarkConstants(String markConstants) throws TraductorException {
 
 		String inputName = "MARK_CONSTANTS";
 		String eMessage = "Error al carregar el parámetre M_CONS";
@@ -208,9 +211,9 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param markCompounds	Marcar las palabras desconocidas (Si/no)
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
+	 * @throws TraductorException 
 	 */
-	private Param setMarkCompounds(String markCompounds) throws Exception {
+	private Param setMarkCompounds(String markCompounds) throws TraductorException {
 
 		String inputName = "MARK_COMPOUNDS";
 		String eMessage = "Error al carregar el parámetre M_COMP";
@@ -222,9 +225,8 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param markAlternatives	Marcar las palabras con más de una acepción (Si/no)
 	 * @return Param		devuelve el parámetro con el texto y el valor
-	 * @throws Exception
 	 */
-	private Param setMarkAlternatives(String markAlternatives) throws Exception {
+	private Param setMarkAlternatives(String markAlternatives) throws TraductorException {
 
 		String inputName = "MARK_ALTERNATIVES";
 		String eMessage = "Error al carregar el parámetre M_ALTE";
@@ -236,20 +238,15 @@ public class AutomaticTranslationService {
      * 
      * @param markAlternatives  Marcar las palabras con más de una acepción (Si/no)
      * @return Param        devuelve el parámetro con el texto y el valor
-     * @throws Exception
+	 * @throws TraductorException 
      */
-    private Param setParamTxtValue(String name, String txtValue, String error) throws Exception {
+    private Param setParamTxtValue(String name, String txtValue, String error) throws TraductorException {
 
-        try {
-            Param param = (Param) getObject(Param.class);
-            param.setName(name);
-            param.setTxtValue(txtValue);
-            return param;
+        Param param = (Param) getObject(Param.class);
+        param.setName(name);
+        param.setTxtValue(txtValue);
+        return param;
 
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new Exception(error);
-        }
     }
 
 	/**
@@ -257,27 +254,22 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param params		Listado de parámetros de traductor
 	 * @return InputStream	devuelve los datos traducidos en un Stream
-	 * @throws Exception
+	 * @throws IOException 
 	 */
-	private InputStream getOutput(ParamListType params) throws Exception {
+	private InputStream getOutput(ParamListType params) throws IOException {
 
 		String outputName = "OUTPUT";
 		String eMessage = "Error al recuperar el text traduit";
 		InputStream is = null;
 
-		try {
-		    for (Param param : params.getParam()) {
-		        if(param.getName().equals(outputName)) {
-		            is= param.getBinValue().getInputStream();
-		            break;
-		        }
-		    }
-		    return is;
+	    for (Param param : params.getParam()) {
+	        if(param.getName().equals(outputName)) {
+	            is= param.getBinValue().getInputStream();
+	            break;
+	        }
+	    }
+	    return is;
 
-		} catch (Exception e) {
-		    log.error(e.getMessage());
-		    throw new Exception(eMessage);
-		}
 	}
 
 	/**
@@ -285,19 +277,30 @@ public class AutomaticTranslationService {
 	 * 
 	 * @param type
 	 * @return	ADBBean
+	 * @throws TraductorException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 * @throws java.lang.Exception
 	 */
-    private org.apache.axis2.databinding.ADBBean getObject(java.lang.Class type) throws java.lang.Exception{
-        return (org.apache.axis2.databinding.ADBBean) type.newInstance();
+    private org.apache.axis2.databinding.ADBBean getObject(java.lang.Class type) throws TraductorException {
+        try {
+			return (org.apache.axis2.databinding.ADBBean) type.newInstance();
+		} catch (InstantiationException e) {
+			log.error(e);
+			throw new TraductorException(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			log.error(e);
+			throw new TraductorException(e.getMessage(), e);
+		}
      }
 
     /**
      * Método que convierte el Stream de datos traducidos en un String
      * @param is	Stream de datos traducidos por el traductor Lucy
      * @return	String	texto traducido de tipo String
-     * @throws Exception 
+     * @throws TraductorException 
      */
-    private String convertStreamToString(InputStream is) throws Exception {
+    private String convertStreamToString(InputStream is) throws TraductorException {
 
         if (is == null) {
             log.error("Idioma no disponible en el traductor");

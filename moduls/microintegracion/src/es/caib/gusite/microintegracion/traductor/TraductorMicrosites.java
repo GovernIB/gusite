@@ -38,44 +38,9 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 
 	/**
 	 * Constructor por defecto de la clase. 
-	 * 
-	 * Carga los códigos de Idioma de la capa de negocio para la traducción
-	 * e inicia una Hashtable para saber el origen-destino de la traducción
-	 *  
 	 */
-	public TraductorMicrosites() throws Exception {
-		
-		/* agarcia: parece que esto no se usa
-    	//IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-    	
-    	//_listLangMicro = (List<String>) idiomaDelegate.listarLenguajes();
-    	//_listLangTraductorMicro = idiomaDelegate.listarLenguajesTraductor();
- 
-		iniHshIdiomes();
-		*/
-
+	public TraductorMicrosites() throws TraductorException {
 	}	
-	
-    /**
-     * Método que inicia la Hastable de relación entre lengujes de negocio
-     * e ids de traductor. Esta Hashtable se utiliza para guardar la propiedad
-     * _translationDirection
-     * 
-     * @throws DelegateException
-     */
-	/* agarcia: parece que esto no se usa
-    private void iniHshIdiomes() throws DelegateException {
-    	
-    	Iterator<String> itLang =  _listLangMicro.iterator();
-    	Iterator<String> itLangTraductor = _listLangTraductorMicro.iterator();
-
-        while (itLang.hasNext()){
-
-        	_hshIdiomesMicro.put(itLang.next(), itLangTraductor.next());
-
-        }
-    }	
-    */
 	
 	/**
 	 * Método que traduce las propiedades de un bean TraduccionMicrosite origen
@@ -85,10 +50,8 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param microDesti	bean de traducción de microsite destino
 	 * @param configuracion		String que indica al método que traduzca los campos de configuración general o los de Cabecera/Pie
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionMicrosite microOrigen, TraduccionMicrosite microDesti, String configuracion) throws Exception {
-		try {
+	public boolean traducir(TraduccionMicrosite microOrigen, TraduccionMicrosite microDesti, String configuracion) throws TraductorException {
 
 	    	if (configuracion.equals(CONFIGURACION_GENERAL)) {
 				if(null!=microOrigen.getTitulo())		microDesti.setTitulo(traducir(microOrigen.getTitulo(),MODE_TXT));
@@ -123,12 +86,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 
 	    	}
 	    	
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
     	return true;
 	}
 
@@ -140,19 +97,9 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param menuOrigen	bean de traducción de menú origen
 	 * @param menuDesti		bean de traducción de menú destino
 	 * @return	boolean		devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionMenu menuOrigen, TraduccionMenu menuDesti) throws Exception {
-		try {
-
-	    	if(null!=menuOrigen.getNombre())		menuDesti.setNombre(traducir(menuOrigen.getNombre(),MODE_TXT));
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
+	public boolean traducir(TraduccionMenu menuOrigen, TraduccionMenu menuDesti) throws TraductorException {
+    	if(null!=menuOrigen.getNombre())		menuDesti.setNombre(traducir(menuOrigen.getNombre(),MODE_TXT));
     	return true;
 	}	
 	
@@ -168,27 +115,19 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param indexIdioma				indice de Idioma dentro de la tabla selector
 	 * @param textoSelector				tabla de Strings con valores de selector
 	 * @return	boolean					devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionLineadatocontacto lineadatocontactoOrigen, TraduccionLineadatocontacto lineadatocontactoDesti, boolean boolSelector, int limiteSelector, int numLangs, int indexIdioma, String [] textoSelector) throws Exception {
-		try {
+	public boolean traducir(TraduccionLineadatocontacto lineadatocontactoOrigen, TraduccionLineadatocontacto lineadatocontactoDesti, boolean boolSelector, int limiteSelector, int numLangs, int indexIdioma, String [] textoSelector) throws TraductorException {
 			
-				if(null!=lineadatocontactoOrigen.getTexto())		lineadatocontactoDesti.setTexto(traducir(lineadatocontactoOrigen.getTexto(),MODE_TXT));
-				
-				if (boolSelector == true && (null!=textoSelector) ){
-	        		int indexIdiomaDefault = 0;
-					while(indexIdiomaDefault < (limiteSelector *numLangs)){
-						if (!textoSelector[indexIdiomaDefault].equals("")){
-							textoSelector[indexIdiomaDefault+indexIdioma]=(traducir(textoSelector[indexIdiomaDefault],MODE_TXT));
-						}
-						indexIdiomaDefault = indexIdiomaDefault + numLangs;
-					} 
+		if(null!=lineadatocontactoOrigen.getTexto())		lineadatocontactoDesti.setTexto(traducir(lineadatocontactoOrigen.getTexto(),MODE_TXT));
+		
+		if (boolSelector == true && (null!=textoSelector) ){
+    		int indexIdiomaDefault = 0;
+			while(indexIdiomaDefault < (limiteSelector *numLangs)){
+				if (!textoSelector[indexIdiomaDefault].equals("")){
+					textoSelector[indexIdiomaDefault+indexIdioma]=(traducir(textoSelector[indexIdiomaDefault],MODE_TXT));
 				}
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
+				indexIdiomaDefault = indexIdiomaDefault + numLangs;
+			} 
 		}
     	return true;
 	}
@@ -200,19 +139,10 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param actividadAgendaOrigen		bean de traducción de actividad origen
 	 * @param actividadAgendaDesti		bean de traducción de actividad destino
 	 * @return	boolean					devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionActividadagenda actividadAgendaOrigen, TraduccionActividadagenda actividadAgendaDesti) throws Exception {
-		try {
+	public boolean traducir(TraduccionActividadagenda actividadAgendaOrigen, TraduccionActividadagenda actividadAgendaDesti) throws TraductorException {
 
-	    	if(null!=actividadAgendaOrigen.getNombre())		actividadAgendaDesti.setNombre(traducir(actividadAgendaOrigen.getNombre(),MODE_TXT));
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
+    	if(null!=actividadAgendaOrigen.getNombre())		actividadAgendaDesti.setNombre(traducir(actividadAgendaOrigen.getNombre(),MODE_TXT));
     	return true;
 	}
 	
@@ -223,22 +153,14 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param agendaOrigen		bean de traducción de agenda origen
 	 * @param agendaDesti		bean de traducción de agenda destino
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionAgenda agendaOrigen, TraduccionAgenda agendaDesti) throws Exception {
-		try {
+	public boolean traducir(TraduccionAgenda agendaOrigen, TraduccionAgenda agendaDesti) throws TraductorException {
 
-		 	if(null != agendaOrigen.getTitulo())		agendaDesti.setTitulo(traducir(agendaOrigen.getTitulo(),MODE_TXT));
-		 	if(null != agendaOrigen.getDescripcion())	agendaDesti.setDescripcion(traducir(agendaOrigen.getDescripcion(),MODE_HTML));
-		 	if(null != agendaOrigen.getUrlnom())		agendaDesti.setUrlnom(traducir(agendaOrigen.getUrlnom(),MODE_TXT));
-		 	if(null!=agendaOrigen.getUrl())				agendaDesti.setUrl(traducir(agendaOrigen.getUrl(),MODE_TXT));
+	 	if(null != agendaOrigen.getTitulo())		agendaDesti.setTitulo(traducir(agendaOrigen.getTitulo(),MODE_TXT));
+	 	if(null != agendaOrigen.getDescripcion())	agendaDesti.setDescripcion(traducir(agendaOrigen.getDescripcion(),MODE_HTML));
+	 	if(null != agendaOrigen.getUrlnom())		agendaDesti.setUrlnom(traducir(agendaOrigen.getUrlnom(),MODE_TXT));
+	 	if(null!=agendaOrigen.getUrl())				agendaDesti.setUrl(traducir(agendaOrigen.getUrl(),MODE_TXT));
 	
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
     	return true;
 	}
 	
@@ -250,19 +172,10 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param tipoOrigen	bean de traducción de Tipo origen
 	 * @param tipoDesti		bean de traducción de Tipo destino
 	 * @return	boolean		devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
 	 */
-	public boolean traducir(TraduccionTipo tipoOrigen, TraduccionTipo tipoDesti) throws Exception {
-		try {
+	public boolean traducir(TraduccionTipo tipoOrigen, TraduccionTipo tipoDesti) throws TraductorException {
 
-	    	if(null!=tipoOrigen.getNombre())		tipoDesti.setNombre(traducir(tipoOrigen.getNombre(),MODE_TXT));
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
+    	if(null!=tipoOrigen.getNombre())		tipoDesti.setNombre(traducir(tipoOrigen.getNombre(),MODE_TXT));
     	return true;
 	}	
 	
@@ -274,25 +187,15 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param noticiaOrigen		bean de traducción de Noticia origen
 	 * @param noticiaDesti		bean de traducción de Noticia destino
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
+	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionNoticia noticiaOrigen, TraduccionNoticia noticiaDesti) throws Exception {
-		try {
-
-	    	if(null!=noticiaOrigen.getTitulo())		noticiaDesti.setTitulo(traducir(noticiaOrigen.getTitulo(),MODE_TXT));
-	    	if(null!=noticiaOrigen.getSubtitulo())	noticiaDesti.setSubtitulo(traducir(noticiaOrigen.getSubtitulo(),MODE_TXT));
-	    	if(null!=noticiaOrigen.getFuente())		noticiaDesti.setFuente(traducir(noticiaOrigen.getFuente(),MODE_TXT));
-	    	if(null!=noticiaOrigen.getLaurl())		noticiaDesti.setLaurl(traducir(noticiaOrigen.getLaurl(),MODE_TXT));
-	    	if(null!=noticiaOrigen.getUrlnom())		noticiaDesti.setUrlnom(traducir(noticiaOrigen.getUrlnom(),MODE_TXT));
-	    	if(null!=noticiaOrigen.getTexto())		noticiaDesti.setTexto(traducir(noticiaOrigen.getTexto(),MODE_HTML));
-	    	
-	    	
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
+	public boolean traducir(TraduccionNoticia noticiaOrigen, TraduccionNoticia noticiaDesti) throws TraductorException {
+    	if(null!=noticiaOrigen.getTitulo())		noticiaDesti.setTitulo(traducir(noticiaOrigen.getTitulo(),MODE_TXT));
+    	if(null!=noticiaOrigen.getSubtitulo())	noticiaDesti.setSubtitulo(traducir(noticiaOrigen.getSubtitulo(),MODE_TXT));
+    	if(null!=noticiaOrigen.getFuente())		noticiaDesti.setFuente(traducir(noticiaOrigen.getFuente(),MODE_TXT));
+    	if(null!=noticiaOrigen.getLaurl())		noticiaDesti.setLaurl(traducir(noticiaOrigen.getLaurl(),MODE_TXT));
+    	if(null!=noticiaOrigen.getUrlnom())		noticiaDesti.setUrlnom(traducir(noticiaOrigen.getUrlnom(),MODE_TXT));
+    	if(null!=noticiaOrigen.getTexto())		noticiaDesti.setTexto(traducir(noticiaOrigen.getTexto(),MODE_HTML));
     	return true;
 	}	
 	
@@ -304,19 +207,10 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param componenteOrigen	bean de traducción de Componente origen
 	 * @param componenteDesti	bean de traducción de Componente destino
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
+	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionComponente componenteOrigen, TraduccionComponente componenteDesti) throws Exception {
-		try {
-
-	    	if(null!=componenteOrigen.getTitulo())		componenteDesti.setTitulo(traducir(componenteOrigen.getTitulo(),MODE_TXT));
-
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
+	public boolean traducir(TraduccionComponente componenteOrigen, TraduccionComponente componenteDesti) throws TraductorException {
+    	if(null!=componenteOrigen.getTitulo())		componenteDesti.setTitulo(traducir(componenteOrigen.getTitulo(),MODE_TXT));
     	return true;
 	}	
 	
@@ -328,22 +222,16 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param contenidoOrigen	bean de traducción de contenido origen
 	 * @param contenidoDesti	bean de traducción de contenido destino
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
-	 * @throws Exception
+	 * @throws TraductorException 
+	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionContenido contenidoOrigen, TraduccionContenido contenidoDesti) throws Exception {
-		try {
+	public boolean traducir(TraduccionContenido contenidoOrigen, TraduccionContenido contenidoDesti) throws TraductorException {
 
-	    	if(null!=contenidoOrigen.getTitulo())		contenidoDesti.setTitulo(traducir(contenidoOrigen.getTitulo(),MODE_TXT));
-	    	if(null!=contenidoOrigen.getUrl())			contenidoDesti.setUrl(traducir(contenidoOrigen.getUrl(),MODE_TXT));
-			if(null!=contenidoOrigen.getTexto())		contenidoDesti.setTexto(traducir(contenidoOrigen.getTexto(),MODE_HTML));
-	    	if(null!=contenidoOrigen.getTxbeta())		contenidoDesti.setTxbeta(traducir(contenidoOrigen.getTxbeta(),MODE_HTML));
+    	if(null!=contenidoOrigen.getTitulo())		contenidoDesti.setTitulo(traducir(contenidoOrigen.getTitulo(),MODE_TXT));
+    	if(null!=contenidoOrigen.getUrl())			contenidoDesti.setUrl(traducir(contenidoOrigen.getUrl(),MODE_TXT));
+		if(null!=contenidoOrigen.getTexto())		contenidoDesti.setTexto(traducir(contenidoOrigen.getTexto(),MODE_HTML));
+    	if(null!=contenidoOrigen.getTxbeta())		contenidoDesti.setTxbeta(traducir(contenidoOrigen.getTxbeta(),MODE_HTML));
 			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			log.error(e.getMessage());
-			return false;
-		}
     	return true;
 	}
 	
@@ -356,31 +244,23 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param textTraduccio		texto a traducir
 	 * @param modeTraduccio		modo de traducción (HTML, TXT)
 	 * @return String			texto traducido
-	 * @throws Exception		lanza una nueva excepción proceso de traducción no ha funcionado
+	 * @throws TraductorException		lanza una nueva excepción proceso de traducción no ha funcionado
 	 */
-	private String traducir(String textTraduccio, String modeTraduccio) throws Exception {
+	private String traducir(String textTraduccio, String modeTraduccio) throws TraductorException {
   
-		try {
-
-			if (modeTraduccio == MODE_HTML) {
-				textTraduccio = TAG_INI_HTML + textTraduccio + TAG_FI_HTML;
-				_colorMarkups = ACTIVE;
-				_markUnknowns = ACTIVE;
-				_markAlternatives = ACTIVE;
-				
-			} else {
-					_colorMarkups = INACTIVE;
-					_markUnknowns = INACTIVE;
-					_markAlternatives = INACTIVE;
-			}
+		if (modeTraduccio == MODE_HTML) {
+			textTraduccio = TAG_INI_HTML + textTraduccio + TAG_FI_HTML;
+			_colorMarkups = ACTIVE;
+			_markUnknowns = ACTIVE;
+			_markAlternatives = ACTIVE;
+			
+		} else {
+				_colorMarkups = INACTIVE;
+				_markUnknowns = INACTIVE;
+				_markAlternatives = INACTIVE;
+		}
 
 		return translate(textTraduccio);		    	
-    	
-		} catch (Exception e) {
-
-			log.error(e.getMessage());
-			throw new Exception(e); 
-		}
 		
 	}
 	
