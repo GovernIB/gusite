@@ -25,16 +25,19 @@ import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoTemaFront;
 import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.Frqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.TemaFront;
 import es.caib.gusite.micromodel.Temafaq;
 import es.caib.gusite.micromodel.TraduccionFaq;
 import es.caib.gusite.micromodel.TraduccionTemafaq;
 import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
+import es.caib.gusite.micropersistence.delegate.ArchivoTemaFrontDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
@@ -42,6 +45,7 @@ import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
+import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
 
 @Service
 public class FrontDataService {
@@ -323,6 +327,24 @@ public class FrontDataService {
 		}
 	}
 
+	public TemaFront getTemaFrontByUri(String uri) throws ExceptionFrontPagina {
+		try {
+	        TemaFrontDelegate tfd = DelegateUtil.getTemaFrontDelegate();
+			return tfd.obtenerTemabyUri(uri);
+		} catch (DelegateException e) {
+			throw new ExceptionFrontPagina(e);
+		}
+	}
+
+	public List<ArchivoTemaFront> getArchivoTema(String uriTema, String filename) throws ExceptionFrontPagina {
+		try {
+	        ArchivoTemaFrontDelegate tfd = DelegateUtil.getArchivoTemaFrontDelegate();
+			return tfd.searchByTemaNombre(uriTema, filename);
+		} catch (DelegateException e) {
+			throw new ExceptionFrontPagina(e);
+		}
+	}
+
 	public Archivo obtenerArchivo(Long id) throws ExceptionFrontPagina {
 		try {
 			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
@@ -355,6 +377,7 @@ public class FrontDataService {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
+
 
 
 

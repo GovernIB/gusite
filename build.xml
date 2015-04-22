@@ -276,9 +276,9 @@
 		<ant dir="moduls/micromodel" target="${task}" inheritall="false"/>
 		<ant dir="moduls/micropersistence" target="${task}" inheritall="false"/>
 		<ant dir="moduls/microintegracion" target="${task}" inheritall="false"/>
+		<ant dir="moduls/front" target="${task}" inheritall="false"/>
 		<ant dir="moduls/microback" target="${task}" inheritall="false"/>
 		<ant dir="moduls/microfront" target="${task}" inheritall="false"/>
-		<ant dir="moduls/front" target="${task}" inheritall="false"/>
 	</target>
 
 

@@ -27,6 +27,7 @@ public class AjaxPlantillasPerAction extends Action {
     protected static Log log = LogFactory.getLog(AjaxPlantillasPerAction.class);
 
     private static final String PLANTILLA_VOID = "Plantilla en blanc";
+    private static final String PLANTILLA_BASE = "Codi de base";
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -45,10 +46,21 @@ public class AjaxPlantillasPerAction extends Action {
             json.put("titulo", PLANTILLA_VOID);
             json.put("plantilla", sel);
             jsonArray.put(json);
+
+            json = new JSONObject();
+            json.put("id", -1);
+            json.put("titulo", PLANTILLA_BASE);
+            json.put("plantilla", sel);
+            jsonArray.put(json);
+            
             for (PersonalizacionPlantilla pp : personalizacionesPlantilla) {
+            	if (pp.getTema() == null) {
+            		continue;
+            	}
+
                 json = new JSONObject();
                 json.put("id", pp.getId());
-                json.put("titulo", pp.getTitulo());
+                json.put("titulo", "Copiar plantilla " + pp.getTitulo() + " del tema " + pp.getTema().getNombre() );
                 json.put("plantilla", sel);
                 jsonArray.put(json);
             }

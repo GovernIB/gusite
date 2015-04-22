@@ -32,9 +32,11 @@
 							this.getElementsByTagName('input')[0].checked = false;
 						}
 					}
-					trs[j].ondblclick = function() {
-						id = this.getElementsByTagName('input')[0].value;
-						document.location = uriEdicion + id;
+					if (tbodys[i].id != 'listadoArchivos') {
+						trs[j].ondblclick = function() {
+							id = this.getElementsByTagName('input')[0].value;
+							document.location = uriEdicion + id;
+						}
 					}
 				}
 			}

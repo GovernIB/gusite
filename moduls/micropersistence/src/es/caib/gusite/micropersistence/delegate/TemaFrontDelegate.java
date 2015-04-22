@@ -113,6 +113,19 @@ public class TemaFrontDelegate implements StatelessDelegate {
         }
     }
 
+    
+	/**
+	 * Obtiene un Tema a partir de su URI.
+	 */
+	public TemaFront obtenerTemabyUri(String uri)
+			throws DelegateException {
+		try {
+			return this.getFacade().obtenerTemabyUri(uri);
+		} catch (RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
+    
     /**
      * Lista todos los TemaFront padres
      */

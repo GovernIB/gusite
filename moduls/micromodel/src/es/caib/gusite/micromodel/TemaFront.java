@@ -74,6 +74,10 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	@Column(name = "FTE_ACTUALIZACION", nullable = false, length = 7)
 	private Date actualizacion;
 
+	@XmlAttribute
+	@Column(name = "FTE_URI")
+	private String uri;
+    
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "temaPadre")
 	private Set<TemaFront> temasHijos = new HashSet<TemaFront>(0);
 
@@ -162,6 +166,15 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 		this.actualizacion = actualizacion;
 	}
 
+	public String getUri() {
+		return this.uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
+	
 	public Set<TemaFront> getTemasHijos() {
 		return this.temasHijos;
 	}

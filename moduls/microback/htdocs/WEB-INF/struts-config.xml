@@ -70,7 +70,7 @@
         <form-property name="idPlantilla" type="java.lang.Long"/>
         <form-property name="plantilla" type="java.lang.String"/>
         <form-property name="contenido" type="java.lang.String"/>
-        <form-property name="clob" type="java.lang.String"/>
+        <form-property name="ayuda" type="java.lang.String"/>
     </form-bean>
 
     <form-bean name="TemaFrontForm" type="es.caib.gusite.microback.actionform.formulario.TemaFrontForm"
@@ -78,6 +78,7 @@
         <form-property name="id" type="java.lang.Long"/>
         <form-property name="nombre" type="java.lang.String"/>
         <form-property name="temaPadre" type="java.lang.Long"/>
+    	<form-property name="uri" type="java.lang.String"/>
         <form-property name="personalizacionesPlantilla" type="java.util.ArrayList"/>
         <form-property name="archivos" type="java.util.ArrayList"/>
         <form-property name="seleccionados" type="java.lang.String[]"/>

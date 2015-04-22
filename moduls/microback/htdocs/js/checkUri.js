@@ -17,7 +17,8 @@ $(document).ready(function () {
     titulo2 = $("#titulo2");
     titulo3 = $("#titulo3");
     titulo4 = $("#titulo4");
-
+    tituloTema = $("#tituloTema");
+    
     uri.blur(function() {
         url = this.value;
         check(this.value, type, null, id)
@@ -45,30 +46,36 @@ $(document).ready(function () {
 
     titulo0.blur(function() {
         current = uri0;
-        var uri = (current.val() == "") ? this.value : current.val();
-        check(uri, type, "ca", id);
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, "ca", id);
     });
     titulo1.blur(function() {
         current = uri1;
-        var uri = (current.val() == "") ? this.value : current.val();
-        check(uri, type, "es", id);
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, "es", id);
     });
     titulo2.blur(function() {
         current = uri2;
-        var uri = (current.val() == "") ? this.value : current.val();
-        check(uri, type, "en", id);
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, "en", id);
     });
     titulo3.blur(function() {
         current = uri3;
-        var uri = (current.val() == "") ? this.value : current.val();
-        check(uri, type, "de", id);
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, "de", id);
     });
     titulo4.blur(function() {
         current = uri4;
-        var uri = (current.val() == "") ? this.value : current.val();
-        check(uri, type, "fr", id);
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, "fr", id);
     });
 
+    tituloTema.blur(function() {
+        current = uri;
+        uriTit = (current.val() == "") ? this.value : current.val();
+        check(uriTit, type, null, id);
+    });
+    
 });
 
 function check(uriCheck, typeCheck, idio, id) {

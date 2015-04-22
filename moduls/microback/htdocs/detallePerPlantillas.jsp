@@ -91,13 +91,13 @@
                 <tr>
                     <td class="etiqueta"><bean:message key="plantilla.edicion.titulo" /></td>
                     <td>
-                        <html:text property="titulo" maxlength="16" />
+                        <html:text property="titulo" maxlength="255" />
                     </td>
                 </tr>
                 <tr class="par">
                     <td class="etiqueta"><bean:message key="plantilla.edicion.tipo" /></td>
                     <td>
-                        <input type="hidden" value='<bean:write name="PerPlantillasForm" property="idPlantilla"/>' />
+                        <input type="hidden" name="idPlantilla" value='<bean:write name="PerPlantillasForm" property="idPlantilla"/>' />
                         <html:text property="plantilla" maxlength="16" readonly="true" />
                     </td>
                 </tr>
@@ -105,7 +105,6 @@
                     <td class="etiqueta"><bean:message key="plantilla.edicion.contenido"/></td>
                     <td>
                         <button type="button" class="btnEditor btnFullScreen"><bean:message key="perPlantillaFull" /></button>
-                        <button type="button" class="btnEditor btnAyuda"><bean:message key="perPlantillaAyuda" /></button>
                     </td>
                 </tr>
                 <tr>
@@ -117,11 +116,6 @@
                 </tr>
             </table>
 
-            <div class="ayuda" style="display:none">
-                <logic:present name="PerPlantillaForm" property="clob">
-                    <html:textarea name="PerPlantillaForm" property="clob"/>
-                </logic:present>
-            </div>
         </html:form>
     </div>
 

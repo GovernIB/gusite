@@ -1,6 +1,7 @@
 package es.caib.gusite.front.archivo;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +20,9 @@ import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.FrontController;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoTemaFront;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.TemaFront;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
 /**
@@ -60,24 +63,7 @@ public class ArchivoController extends FrontController {
 			}
 
 			// TODO: if (this.checkControl(ctrl, idFile)) {
-			Archivo archivo = this.dataService.obtenerArchivo(idFile);
-			// amartin: Si los datos del archivo son nulos en la BD, vamos a
-			// buscarlo a Filesystem.
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-
-				if ((archivo != null) && (archivo.getDatos() == null)) {
-
-					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-					archivo.setDatos(datos);
-
-				}
-
-			}
-
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
-			responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-			return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
+			return this.sirveArchivo(this.dataService.obtenerArchivo(idFile));
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
@@ -123,25 +109,7 @@ public class ArchivoController extends FrontController {
 			}
 
 			// TODO: if (this.checkControl(ctrl, idFile)) {
-			Archivo archivo = this.dataService.obtenerArchivo(microsite.getId(), filename);
-			// amartin: Si los datos del archivo son nulos en la BD, vamos a
-			// buscarlo a Filesystem.
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-
-				if ((archivo != null) && (archivo.getDatos() == null)) {
-
-					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-					archivo.setDatos(datos);
-
-				}
-
-			}
-
-			// TODO:filename?
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
-			responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-			return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
+			return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename));
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
@@ -222,4 +190,106 @@ public class ArchivoController extends FrontController {
 
 	}
 
+	/**
+	 * Archivo de nombre "filename" del tema {uri}. El nombre se recibe en
+	 * el RequestParam {@link Microfront.PNAME}
+	 * OJO: La url externa es ft/{uriTema}/files/{name}, pero esto no es soportado por spring, así que se modifica en UrlRewrite
+	 * @param filename
+	 *            Nombre del archivo
+	 * @return bytes y encabezados para la petición del archivo
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "ft/{uriTema}/", params = Microfront.PNAME)
+	@ResponseBody
+	public ResponseEntity<byte[]> archivoTema(@PathVariable("uriTema") String uriTema, @RequestParam(Microfront.PNAME) String filename) throws IOException {
+
+		try {
+			List<ArchivoTemaFront> archivos  = this.dataService.getArchivoTema(uriTema, filename);
+			if (archivos == null || archivos.size() < 1) {
+				log.error("Archivo " + filename + " no encontrado en tema " + uriTema);
+				// TODO: 404?
+				// return getForwardError (microsite, lang, model,
+				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return null;
+			}
+
+			Archivo archivo = null;
+			for (ArchivoTemaFront a : archivos) {
+				if (a.getArchivo().getNombre().equals(filename)) {
+					archivo = a.getArchivo();
+				}
+			}
+			return this.sirveArchivo(archivo);
+
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			// return getForwardError (microsite, lang, model,
+			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return null;
+		}
+
+	}
+	
+	
+	/**
+	 * Css del tema {uri}.
+	 * OJO: La url externa es ft/{uriTema}/css/estils-tema.css, pero esto no es soportado por spring, así que se modifica en UrlRewrite
+	 * @return bytes y encabezados para la petición del archivo
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "ft/{uriTema}/css")
+	@ResponseBody
+	public ResponseEntity<byte[]> cssTema(@PathVariable("uriTema") String uriTema) throws IOException {
+
+		TemaFront tema = null;
+		try {
+			tema = this.dataService.getTemaFrontByUri(uriTema);
+			if (tema == null || tema.getCss() == null) {
+				log.error("Css para tema " + uriTema + " no encontrado");
+				// TODO: 404?
+				// return getForwardError (microsite, lang, model,
+				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return null;
+			}
+
+			return this.sirveArchivo(tema.getCss());
+
+		} catch (ExceptionFrontPagina e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			// return getForwardError (microsite, lang, model,
+			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return null;
+		}
+
+	}
+
+	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo) throws IOException {
+		if (archivo == null) {
+			log.error("Archivo no encontrado");
+			// TODO: 404?
+			// return getForwardError (microsite, lang, model,
+			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return null;
+		}
+		// amartin: Si los datos del archivo son nulos en la BD, vamos a
+		// buscarlo a Filesystem.
+		if (ArchivoUtil.almacenarEnFilesystem()) {
+
+			if ((archivo != null) && (archivo.getDatos() == null)) {
+
+				byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
+				archivo.setDatos(datos);
+
+			}
+
+		}
+
+		// TODO:filename?
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
+		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+		return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
+	}
 }

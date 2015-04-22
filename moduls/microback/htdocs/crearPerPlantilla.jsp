@@ -71,7 +71,7 @@
                         <select id="tipus" size="1">
                             <option disabled selected> -- select an option -- </option>
                             <logic:iterate id="plan" name="plantillas" indexId="i">
-                                <option value="<bean:write name="plan" property="id"/>"><bean:write name="plan" property="nombre"/></option>
+                                <option value="<bean:write name="plan" property="id"/>"><bean:write name="plan" property="nombre"/>: <bean:write name="plan" property="titulo"/></option>
                             </logic:iterate>
                         </select>
                     </td>

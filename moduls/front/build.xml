@@ -211,6 +211,12 @@
 		</javadoc>
 	</target>
 
+	
+	<target name="templates.zip" description="Crea el archivo de plantillas base para usar en el backoffice, etc.">
+		<delete file="${web.product}/template-${modul}.zip" quiet="yes" />
+		<zip destfile="${web.product}/template-${modul}.zip" basedir="${web.htdocs}" includes="**/*.html, resources/**/*" />
+	</target>
+	
 	<path id="springdoclet.classpath">
 		<fileset dir="${lib.dir}/spring/doclet">
 			<include name=".jar" />
@@ -245,6 +251,6 @@
 
 	<target name="doc" depends="web.javadoc,web.springdoc" description="Realiza las tareas de documentación " />
 
-	<target name="main" depends="web.war" description="Construye el war" />
+	<target name="main" depends="web.war,templates.zip" description="Construye el war" />
 
 </project>

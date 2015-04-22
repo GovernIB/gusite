@@ -197,7 +197,7 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
     }
 
     /**
-     * Busca Archivos por searchByPlantilla
+     * Busca Archivos por searchByTema
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
      */
@@ -206,4 +206,17 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
         query.setParameter("tema", tema);
         return (List<ArchivoTemaFront>) query.list();
     }
+
+    /**
+     * Busca Archivos por searchByTemaNombre
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     */
+    public List<ArchivoTemaFront> searchByTemaNombre(String uriTema, String nombre) {
+        Query query = getNamedQuery("es.caib.gusite.micromodel.ArchivoTemaFront.searchByTemaNombre");
+        query.setParameter("uriTema", uriTema);
+        query.setParameter("nombre", nombre);
+        return (List<ArchivoTemaFront>) query.list();
+    }
+
 }

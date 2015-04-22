@@ -108,5 +108,17 @@
             <to>/resources/imgs/$2</to>
         </rule>
 
+	<!--  
+	 Spring no soporta extensiones en sus rutas, así que estas las modificamos antes
+	-->
+        <rule>
+            <from>/ft/(.*)/files/(.*)</from>
+            <to>/ft/$1/?name=$2</to>
+        </rule>
+        <rule>
+            <from>/ft/(.*)/css/estils-tema.css</from>
+            <to>/ft/$1/css</to>
+        </rule>
+
 </urlrewrite>
 

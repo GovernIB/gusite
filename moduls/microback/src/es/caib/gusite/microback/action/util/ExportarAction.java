@@ -114,7 +114,7 @@ public class ExportarAction extends BaseAction {
 	    		
 	    		// Generar ZIP con archivo XML y archivos adjuntos.
 	            String prefijoFechaHora = obtenerFechaHora(); 
-	            String nombreZIP = prefijoFechaHora + NOMBRE_BASE_ZIP;
+	            String nombreZIP = micro.getUri() + "_" + prefijoFechaHora + NOMBRE_BASE_ZIP;
 	    		String rutaZIP = tmpDir + nombreZIP;
 	    		
 	    		// Creamos el archivo ZIP.
@@ -258,6 +258,7 @@ public class ExportarAction extends BaseAction {
 				}
 			}
 
+			/* TODO: Esto es buggy... no se puede incluir el tema en la exportación del microsite
             if (microsite.getTema() != null) {
                 if (microsite.getTema().getCss() != null) {
                     archivos.put(microsite.getTema().getCss().getId(), obtenerArchivo(microsite.getTema().getCss(), archivoDelegate));
@@ -266,6 +267,7 @@ public class ExportarAction extends BaseAction {
                     archivos.put(archTF.getArchivo().getId(), obtenerArchivo(archTF.getArchivo(), archivoDelegate));
                 }
             }
+            */
 
 		} catch (DelegateException e) {
 			e.printStackTrace();

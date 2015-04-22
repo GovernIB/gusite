@@ -55,7 +55,19 @@ public class TemaFrontEditaAction extends BaseAction {
 
         cargarPerTemaFront(request, temaFrontForm);
         List<TemaFront> temaFronts = temaFrontDelegate.listarTemaFrontPadres();
-        request.setAttribute("temasFrontPadres", temaFronts);
+        if (temaFrontForm.get("id") != null) {
+        	//Hay que excluir el tema actual
+        	Long temaId = (Long)temaFrontForm.get("id");
+        	List<TemaFront> newTemaFronts = new ArrayList<TemaFront>();
+        	for (TemaFront t : temaFronts) {
+        		if (!t.getId().equals(temaId)) {
+        			newTemaFronts.add(t);
+        		}
+        	}
+            request.setAttribute("temasFrontPadres", newTemaFronts);
+        } else {
+            request.setAttribute("temasFrontPadres", temaFronts);
+        }
         return mapping.findForward("detalle");
     }
 
@@ -84,7 +96,7 @@ public class TemaFrontEditaAction extends BaseAction {
         TemaFrontDelegate temaFrontDelegate = DelegateUtil.getTemaFrontDelegate();
         TemaFront temaFront;
         Long id = (Long) temaFrontForm.get("id");
-        if (id == null) {
+        if (id == null || id < 1) {
             temaFront = new TemaFront();
             temaFront.setActualizacion(new Date());
             temaFront = setFormToBean(temaFrontForm, temaFront);
@@ -128,7 +140,7 @@ public class TemaFrontEditaAction extends BaseAction {
                 TemaFront tema = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(id);
                 archivoTemaFront.setTema(tema);
                 archivoTemaFront.setArchivo(populateArchivo(null, file, null, null));
-                String path = generarPath(tema.getNombre(), archivoTemaFront.getArchivo().getNombre());
+                String path = generarPath(tema.getUri(), archivoTemaFront.getArchivo().getNombre());
                 archivoTemaFront.setPath(path);
                 archivoTemaFrontDelegate.crearArchivoTemaFront(archivoTemaFront);
             }
@@ -137,7 +149,7 @@ public class TemaFrontEditaAction extends BaseAction {
 
     private String generarPath(String temaUri, String nom) {
 
-        return System.getProperty(CONTEXT).concat("/ft/").concat(temaUri).concat("/").concat(nom);
+        return System.getProperty(CONTEXT).concat("/ft/").concat(temaUri).concat("/files/").concat(nom);
     }
 
     private void elimiarArchivos(TemaFrontForm temaFrontForm) throws DelegateException {
@@ -168,6 +180,8 @@ public class TemaFrontEditaAction extends BaseAction {
 
         temaFrontForm.set("id", temaFront.getId());
         temaFrontForm.set("nombre", temaFront.getNombre());
+        temaFrontForm.set("uri", temaFront.getUri());
+        
         if (temaFront.getTemaPadre() != null) {
             temaFrontForm.set("temaPadre", temaFront.getTemaPadre().getId());
         }
@@ -195,13 +209,15 @@ public class TemaFrontEditaAction extends BaseAction {
     private TemaFront setFormToBean(TemaFrontForm temaFrontForm, TemaFront temaFront) throws DelegateException {
 
         temaFront.setNombre((String) temaFrontForm.get("nombre"));
+        temaFront.setUri((String) temaFrontForm.get("uri"));
+        
         Long idPadre = (Long) temaFrontForm.get("temaPadre");
         TemaFront temaPadre = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idPadre);
         temaFront.setTemaPadre(temaPadre);
 
         Archivo css = temaFront.getCss();
         FormFile file = (FormFile) temaFrontForm.get("css");
-        if (file.getFileName() != "") {
+        if (file != null && file.getFileName() != "") {
             if (css == null || (css.getId() != temaFrontForm.get("cssId"))) {
                 Archivo archivo = subirCSS(file);
                 temaFront.setCss(archivo);

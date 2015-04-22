@@ -35,7 +35,10 @@ public class AjaxCheckUriAction extends Action {
         String uri = Cadenas.string2uri(request.getParameter("URI"));
         String type = request.getParameter("type");
         String idioma = request.getParameter("idioma");
-        Long id = Long.parseLong(request.getParameter("id"));
+        Long id = (long)0;
+        if (request.getParameter("id") != null && !request.getParameter("id").equals("")) {
+        	id = Long.parseLong(request.getParameter("id"));
+        }
         UriType currentType = UriType.valueOf(type.toUpperCase());
 
         txtrespuesta += OPEN;
@@ -100,6 +103,15 @@ public class AjaxCheckUriAction extends Action {
                     }
                     break;
 
+                case FTR_URI:
+                    TemaFrontDelegate tfDelegate = DelegateUtil.getTemaFrontDelegate();
+                    TemaFront temaFront = tfDelegate.obtenerTemabyUri(uri);
+                    if (temaFront != null && !temaFront.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
+                    break;
+
+                    
                 default:
                     msg = ERROR;
                     break;
@@ -120,6 +132,7 @@ public class AjaxCheckUriAction extends Action {
         CID_URI,
         EID_URI,
         NID_URI,
-        TPI_URI
+        TPI_URI,
+        FTR_URI
     }
 }

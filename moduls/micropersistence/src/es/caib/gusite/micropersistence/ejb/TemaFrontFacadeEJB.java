@@ -9,6 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.ArchivoTemaFront;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.PersonalizacionPlantilla;
 import es.caib.gusite.micropersistence.delegate.ArchivoTemaFrontDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -19,6 +20,7 @@ import org.hibernate.*;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.TemaFront;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * SessionBean para consultar TemaFront.
@@ -260,6 +262,30 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
             log.debug("finished deleting PersonalizacionPlantilla instance");
         }
     }
+    
+	/**
+	 * Obtiene un Tema a partir de su URI.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public TemaFront obtenerTemabyUri(String uri) {
+
+		Session session = this.getSession();
+		try {
+			Criteria criteri = session.createCriteria(TemaFront.class);
+			criteri.add(Restrictions.eq("uri", uri));
+			TemaFront tema = (TemaFront) criteri.uniqueResult();
+			return tema;
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+
+    
 
     private List<Long> extraerIdsPerPlantilla(List<PersonalizacionPlantilla> perPlantillas) {
 

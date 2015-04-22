@@ -11,6 +11,7 @@ import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Plantilla;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 /**
  * SessionBean para consultar Plantilla.
@@ -113,7 +114,7 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 		log.debug("listar Plantilla");
 		try {
 			List<Plantilla> instances = this.getSession()
-					.createCriteria(Plantilla.class).list();
+					.createCriteria(Plantilla.class).addOrder(Order.asc("nombre")).list();
 			if (instances.size() == 0) {
 				log.debug("get successful, no instance found");
 			} else {

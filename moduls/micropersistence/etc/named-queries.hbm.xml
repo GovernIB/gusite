@@ -94,6 +94,16 @@ order by
         <query-param name="tema" type="java.lang.Long" />
 </query>
 
+<query name="es.caib.gusite.micromodel.ArchivoTemaFront.searchByTemaNombre"><![CDATA[
+    FROM ArchivoTemaFront atf
+    WHERE 
+    	atf.tema.uri = :uriTema AND
+    	atf.archivo.nombre = :nombre
+    	]]>
+        <query-param name="uriTema" type="java.lang.String" />
+        <query-param name="nombre" type="java.lang.String" />
+</query>
+
 <query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.countByMicrosite"><![CDATA[
     SELECT count(*)
     FROM PersonalizacionPlantilla pp

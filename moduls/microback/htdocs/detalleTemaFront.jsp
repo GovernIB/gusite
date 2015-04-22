@@ -24,6 +24,8 @@
     <script type="text/javascript" src="js/jsListados.js"></script>
     <script type="text/javascript" src="js/guardarTemaPlantilla.js"></script>
     <script type="text/javascript" src="js/rArxius.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
+    
 </head>
 <body>
 <div id="contenidor">
@@ -65,15 +67,21 @@
             </span>
         </div>
 
-        <input type="hidden" value='<bean:write name="TemaFrontForm" property="id"/>' />
+        <input type="hidden" name="id" value='<bean:write name="TemaFrontForm" property="id"/>' />
         <table cellpadding="0" cellspacing="0" class="edicio">
             <tr class="par">
                 <td class="etiqueta"><bean:message key="frontTemas.edicion.titulo" /></td>
                 <td>
-                    <html:text property="nombre" maxlength="16" />
+                    <html:text property="nombre" size="40" styleId="tituloTema" maxlength="255" />
                 </td>
             </tr>
-            <tr>
+			<tr>
+				<td class="etiqueta"><bean:message key="frontTemas.edicion.uri" /></td>
+				<td>
+					<html:text property="uri" size="40" maxlength="256"/></td>
+				<input type="hidden" name="type" value="ftr_uri" />
+			</tr>
+            <tr class="par">
                 <td class="etiqueta"><bean:message key="frontTemas.edicion.padre" /></td>
                 <td>
                     <html:select property="temaPadre">
@@ -82,121 +90,121 @@
                     </html:select>
                 </td>
             </tr>
-            <tr class="par">
-                <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
-                <td>
-                    <div id="microManagedFileCSS">
-                        <html:hidden property="cssId" />
-                        <logic:notEmpty name="TemaFrontForm" property="cssNom">
-                            <html:text property="cssNom"/>
-                            <button type="button" title="<bean:message key="boton.eliminar" />" onclick="borraFile(this,'css','cssId','cssBor','cssNom');"><img src="imgs/botons/borrar.gif" alt="<bean:message key="boton.eliminar" />" /></button>
-                            <%--<button type="button" title="<bean:message key="op.12" />" onclick="abrirDoc('<bean:write name="TemaFrontForm" property="cssId"/>');"><img src="imgs/botons/previsualitzar.gif" alt="<bean:message key="op.12" />" /></button>--%>
-                        </logic:notEmpty>
-                    </div>
-                    <logic:empty name="TemaFrontForm" property="cssNom">
-                        <html:file property="css" size="30"/>
-                        &nbsp; - &nbsp;<button type="button" title="<bean:message key="micro.descargaestilo" />" onclick="abrirWindow('/sacmicrofront/css/estilos01_blau.css');"><img src="imgs/botons/css_descargar.gif" alt="" /></button>
-                    </logic:empty>
-                </td>
-            </tr>
+	            <tr>
+	                <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
+	                <td>
+	                    <div id="microManagedFileCSS">
+	                        <html:hidden property="cssId" />
+	                        <logic:notEmpty name="TemaFrontForm" property="cssNom">
+	                            <html:text property="cssNom"/>
+	                            <button type="button" title="<bean:message key="boton.eliminar" />" onclick="borraFile(this,'css','cssId','cssBor','cssNom');"><img src="imgs/botons/borrar.gif" alt="<bean:message key="boton.eliminar" />" /></button>
+	                            <%--<button type="button" title="<bean:message key="op.12" />" onclick="abrirDoc('<bean:write name="TemaFrontForm" property="cssId"/>');"><img src="imgs/botons/previsualitzar.gif" alt="<bean:message key="op.12" />" /></button>--%>
+	                        </logic:notEmpty>
+	                    </div>
+	                    <logic:empty name="TemaFrontForm" property="cssNom">
+	                        <html:file property="css" size="30"/>
+	                    </logic:empty>
+	                </td>
+	            </tr>
         </table>
 
-        <div class="subList" style="margin:40px 50px 40px 50px;">
-            <div class="botonera">
-                <span class="grup">
-                    <button type="submit" title="<bean:message key="frontTemas.crear" />" onclick="crear();"><img src="imgs/botons/nou.gif" alt="<bean:message key="frontTemas.crear" />" /></button>
-                    <button type="submit" title='<bean:message key="operacion.borrar" />' onclick="borravarios();"><img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' /></button>
-	        	</span>
-            </div>
-
-            <table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
-                <thead>
-                <tr>
-                    <th width="33%">
-                        <bean:message key="frontTemas.edicion.plantillas.titulo" />&nbsp;
-                    </th>
-                    <th width="33%">
-                        <bean:message key="frontTemas.edicion.plantillas.plantill" />&nbsp;
-                    </th>
-                    <th width="33%">
-                        <bean:message key="frontTemas.edicion.plantillas.orden" />&nbsp;
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <logic:iterate id="i" name="TemaFrontForm" property="personalizacionesPlantilla" indexId="indice">
-                    <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
-                        <td class="check">
-                            <html:multibox property="seleccionados" styleClass="radio">
-                                <bean:write name="i" property="id"/>
-                            </html:multibox>
-                        </td>
-                        <td><bean:write name="i" property="titulo" /></td>
-                        <td><bean:write name="i" property="plantilla.nombre" /></td>
-                        <td><bean:write name="i" property="orden"/></td>
-                    </tr>
-                </logic:iterate>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="subList" style="margin:40px 50px 40px 50px;">
-            <div class="botonera">
-                <span class="grup">
-                    <button type="button" title="<bean:message key="frontTemas.crear" />" onclick="mostarGuardarArxiu('divGuardarArxiu','nou');"><img src="imgs/botons/nou.gif" alt="<bean:message key="frontTemas.crear" />" /></button>
-                    <%--<button type="button" title="<bean:message key="op.6" />" onclick="mostarGuardarArxiu('divGuardarArxiu','modificar');"><img src="imgs/menu/editar.gif" alt="<bean:message key="op.6" />" /></button>--%>
-                    <button type="submit" title='<bean:message key="operacion.borrar" />' onclick="borraVariosArchivos();"><img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' /></button>
-                </span>
-
-                <div id="divGuardarArxiu">
-                    <h2><bean:message key="conte.nuevoarchi"/></h2>
-                    <p><bean:message key="conte.nuevoarchimensa"/></p>
-                        <html:hidden property="idArxiu" value="0"/>
-                    <html:file property="archi" size="50"/>
-                    <div class="botonera">
-                        <button id="guardarArxiu" name="subirficheros" type="button" title='<bean:message key="op.15"/>'><img src="imgs/botons/guardar.gif" alt='<bean:message key="op.15"/>' /> &nbsp;<bean:message key="op.15"/></button>
-                        &nbsp; &nbsp; <button type="button" title='<bean:message key="boton.cerrar"/>' onclick="formEsconder();"><img src="imgs/botons/cerrar.gif" alt='<bean:message key="boton.cerrar"/>' /></button>
-                    </div>
-                    <html:hidden property="operacion" value=""/>
-                </div>
-
-            </div>
-
-            <table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
-                <thead>
-                <tr>
-                    <th width="25%">
-                        <bean:message key="frontTemas.edicion.archivos.tipo" />&nbsp;
-                    </th>
-                    <th width="25%">
-                        <bean:message key="frontTemas.edicion.archivos.nombre" />&nbsp;
-                    </th>
-                    <th width="25%">
-                        <bean:message key="frontTemas.edicion.archivos.tamanyo" />&nbsp;
-                    </th>
-                    <th width="25%">
-                        <bean:message key="frontTemas.edicion.archivos.url" />&nbsp;
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <logic:iterate id="i" name="TemaFrontForm" property="archivos" indexId="indice">
-                    <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
-                        <td class="check">
-                            <html:multibox property="seleccionados" styleClass="radio">
-                                <bean:write name="i" property="id"/>
-                            </html:multibox>
-                        </td>
-                        <td><bean:write name="i" property="archivo.mime" /></td>
-                        <td><bean:write name="i" property="archivo.nombre" /></td>
-                        <td><bean:write name="i" property="archivo.peso" /></td>
-                        <td><bean:write name="i" property="path"/></td>
-                    </tr>
-                </logic:iterate>
-                </tbody>
-            </table>
-        </div>
-
+        <logic:notEmpty name="TemaFrontForm" property="id">
+	        <div class="subList" style="margin:40px 50px 40px 50px;">
+	            <div class="botonera">
+	                <span class="grup">
+	                    <button type="submit" title="<bean:message key="frontTemas.crear" />" onclick="crear();"><img src="imgs/botons/nou.gif" alt="<bean:message key="frontTemas.crear" />" /></button>
+	                    <button type="submit" title='<bean:message key="operacion.borrar" />' onclick="borravarios();"><img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' /></button>
+		        	</span>
+	            </div>
+	
+	            <table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+	                <thead>
+	                <tr>
+	                    <th width="33%">
+	                        <bean:message key="frontTemas.edicion.plantillas.titulo" />&nbsp;
+	                    </th>
+	                    <th width="33%">
+	                        <bean:message key="frontTemas.edicion.plantillas.plantill" />&nbsp;
+	                    </th>
+	                    <th width="33%">
+	                        <bean:message key="frontTemas.edicion.plantillas.orden" />&nbsp;
+	                    </th>
+	                </tr>
+	                </thead>
+	                <tbody>
+	                <logic:iterate id="i" name="TemaFrontForm" property="personalizacionesPlantilla" indexId="indice">
+	                    <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+	                        <td class="check">
+	                            <html:multibox property="seleccionados" styleClass="radio">
+	                                <bean:write name="i" property="id"/>
+	                            </html:multibox>
+	                        </td>
+	                        <td><bean:write name="i" property="titulo" /></td>
+	                        <td><bean:write name="i" property="plantilla.nombre" /></td>
+	                        <td><bean:write name="i" property="orden"/></td>
+	                    </tr>
+	                </logic:iterate>
+	                </tbody>
+	            </table>
+	        </div>
+	
+	        <div class="subList" style="margin:40px 50px 40px 50px;">
+	            <div class="botonera">
+	                <span class="grup">
+	                    <button type="button" title="<bean:message key="frontTemas.crear" />" onclick="mostarGuardarArxiu('divGuardarArxiu','nou');"><img src="imgs/botons/nou.gif" alt="<bean:message key="frontTemas.crear" />" /></button>
+	                    <!--  <button type="button" title="<bean:message key="op.6" />" onclick="mostarGuardarArxiu('divGuardarArxiu','modificar');"><img src="imgs/menu/editar.gif" alt="<bean:message key="op.6" />" /></button>  -->
+	                    <button type="submit" title='<bean:message key="operacion.borrar" />' onclick="borraVariosArchivos();"><img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' /></button>
+	                </span>
+	
+	                <div id="divGuardarArxiu">
+	                    <h2><bean:message key="conte.nuevoarchi"/></h2>
+	                    <p><bean:message key="conte.nuevoarchimensa"/></p>
+	                        <html:hidden property="idArxiu" value="0"/>
+	                    <html:file property="archi" size="50"/>
+	                    <div class="botonera">
+	                        <button id="guardarArxiu" name="subirficheros" type="button" title='<bean:message key="op.15"/>'><img src="imgs/botons/guardar.gif" alt='<bean:message key="op.15"/>' /> &nbsp;<bean:message key="op.15"/></button>
+	                        &nbsp; &nbsp; <button type="button" title='<bean:message key="boton.cerrar"/>' onclick="formEsconder();"><img src="imgs/botons/cerrar.gif" alt='<bean:message key="boton.cerrar"/>' /></button>
+	                    </div>
+	                    <html:hidden property="operacion" value=""/>
+	                </div>
+	
+	            </div>
+	
+	            <table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+	                <thead>
+	                <tr>
+	                    <th width="15%">
+	                        <bean:message key="frontTemas.edicion.archivos.tipo" />&nbsp;
+	                    </th>
+	                    <th width="25%">
+	                        <bean:message key="frontTemas.edicion.archivos.nombre" />&nbsp;
+	                    </th>
+	                    <th width="15%">
+	                        <bean:message key="frontTemas.edicion.archivos.tamanyo" />&nbsp;
+	                    </th>
+	                    <th width="45%">
+	                        <bean:message key="frontTemas.edicion.archivos.url" />&nbsp;
+	                    </th>
+	                </tr>
+	                </thead>
+	                <tbody id="listadoArchivos">
+	                <logic:iterate id="i" name="TemaFrontForm" property="archivos" indexId="indice">
+	                    <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+	                        <td class="check">
+	                            <html:multibox property="seleccionados" styleClass="radio">
+	                                <bean:write name="i" property="id"/>
+	                            </html:multibox>
+	                        </td>
+	                        <td><bean:write name="i" property="archivo.mime" /></td>
+	                        <td><bean:write name="i" property="archivo.nombre" /></td>
+	                        <td><bean:write name="i" property="archivo.peso" /></td>
+	                        <td><a href="<bean:write name="i" property="path"/>" target="_blank"><bean:write name="i" property="path"/></a></td>
+	                    </tr>
+	                </logic:iterate>
+	                </tbody>
+	            </table>
+	        </div>
+		</logic:notEmpty>
     </div>
 </div>
 

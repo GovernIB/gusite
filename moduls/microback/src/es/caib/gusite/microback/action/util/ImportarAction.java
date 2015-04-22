@@ -20,6 +20,7 @@ import javax.xml.bind.Unmarshaller;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.logging.Log;
@@ -100,7 +101,7 @@ public class ImportarAction extends BaseAction {
                 MicrositeCompleto micro = (MicrositeCompleto) jaxbUnmarshaller.unmarshal(reader);
 
                 Map<Long, Archivo> listaArchivos = zipReaderArchivos(f, dirDescompresionZIP);
-                micro = importarArchivosMicrosite(micro, listaArchivos);
+                micro = importarArchivosMicrosite(micro, listaArchivos);((Menu)micro.getMenus().iterator().next()).getPadre();
 
                 addImportLogVisual(request, (String) rb.getObject("logimport.integridad.fin"));
 
@@ -374,6 +375,7 @@ public class ImportarAction extends BaseAction {
             }
         }
 
+		/* TODO: Esto es buggy... no se puede incluir el tema en la importación del microsite
         if (micro.getTema() != null) {
             if (micro.getTema().getCss() != null) {
                 micro.getTema().getCss().setDatos(archivos.get(micro.getTema().getCss().getId()).getDatos());
@@ -384,6 +386,8 @@ public class ImportarAction extends BaseAction {
                 }
             }
         }
+         * 
+         */
 
         return micro;
     }
@@ -445,6 +449,8 @@ public class ImportarAction extends BaseAction {
 		Set compos = mic.getComponentes();
 		Set encuestas = mic.getEncuestas();
         Set perPlantillas = mic.getPersonalizacionesPlantilla();
+        TemaFront temaFront = mic.getTema();
+
 
         // Elimino del bean los objetos que grabaré posteriormente
         mic.setActividades(null);
@@ -460,6 +466,7 @@ public class ImportarAction extends BaseAction {
         mic.setComponentes(null);
         mic.setEncuestas(null);
         mic.setPersonalizacionesPlantilla(null);
+        mic.setTema(null);
 
 		/*
 		 * Se realizan las importaciones objeto o objeto debido al particular
@@ -499,6 +506,11 @@ public class ImportarAction extends BaseAction {
                 idEstiloCSS = mic.getEstiloCSS().getId();
                 mic.getEstiloCSS().setId(null);
             }
+            
+            if (temaFront != null) {
+                relacionaTema(temaFront, mic, request);
+            }
+            
 
 			Long idmicronuevo = null;
 			if (tarea.equals("R")) {
@@ -513,6 +525,12 @@ public class ImportarAction extends BaseAction {
 				addImportLogVisual(request, "Reemplaçat Microsite: " + mic.getClaveunica());
 			} else {
                 mic.setId(null);
+                //El uri no puede repetirse
+                Microsite otroMicrosite = bdMicro.obtenerMicrositebyUri(mic.getUri());
+                if (otroMicrosite != null) {
+                	//El uri está duplicada, la dejamos vacía para que se inicialice
+                	mic.setUri(null);//
+                }
 				// crear
 				idmicronuevo = bdMicro.grabarMicrositeCompleto(mic);
 				addImportLogVisual(request, "Crear Nou Microsite: " + mic.getClaveunica());
@@ -561,6 +579,17 @@ public class ImportarAction extends BaseAction {
 		}
 		
 		return;
+	}
+
+	private void relacionaTema(TemaFront temaFront, MicrositeCompleto mic, HttpServletRequest request) throws Exception {
+		
+		TemaFrontDelegate tfDel = DelegateUtil.getTemaFrontDelegate();
+		TemaFront temaLocal = tfDel.obtenerTemabyUri(temaFront.getUri());
+		if (temaLocal == null) {
+			throw new Exception("El microsite requiere el tema " + temaFront.getUri() + " que no existe en esta implantación");
+		}
+		mic.setTema(temaLocal);
+		
 	}
 
 	/**
@@ -950,7 +979,6 @@ public class ImportarAction extends BaseAction {
 		ResourceBundle rb = ResourceBundle.getBundle("sac-microback-messages");
 		StringBuffer stlogmenu = new StringBuffer("");
 		StringBuffer stlogpagina = new StringBuffer("");
-		Long idmenu_nuevo;
 		Set<Menu> lista1 = new HashSet<Menu>();
 		List<Contenido> lista2 = new ArrayList<Contenido>();
 		Hashtable<Long, Long> mapeos = new Hashtable<Long, Long>();
@@ -972,7 +1000,7 @@ public class ImportarAction extends BaseAction {
 					Menu menunuevo = (Menu) BeanUtils.cloneBean(men);
 					menunuevo.setId(null);
 					menunuevo.setMicrosite(micrositeMenu);
-					List contenidos = menunuevo.getContenidos();
+					List<Contenido> contenidos = menunuevo.getContenidos();
 					menunuevo.setContenidos(null); // vacío los contenidos
 
                     idDoc = null;
@@ -990,10 +1018,8 @@ public class ImportarAction extends BaseAction {
 					mapeos.put(men.getId(), menunuevo.getId()); // anterior y nuevo del padre
 
 					// buscamos los contenidos de ese menu
-					Iterator<?> it1 = contenidos.iterator();
 					lista2 = new ArrayList<Contenido>();
-					while (it1.hasNext()) {
-						Contenido con = (Contenido) it1.next();
+					for (Contenido con : contenidos) {
 						// creo el contenido
 						Contenido connuevo = (Contenido) BeanUtils.cloneBean(con);
 						connuevo.setId(null);

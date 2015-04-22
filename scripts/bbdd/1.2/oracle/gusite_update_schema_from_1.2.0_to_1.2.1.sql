@@ -30,6 +30,7 @@ Create table "GUS_FR_TEMA" (
 	"FTE_NOMBRE" Varchar2 (255) NOT NULL  UNIQUE ,
 	"FTE_CSS" Number,
 	"FTE_ACTUALIZACION" Date Default SYSDATE NOT NULL ,
+	"FTE_URI" Varchar2 (32 CHAR) NOT NULL  UNIQUE ,
  Constraint "GUS_FTE_PK" primary key ("FTE_CODI") 
 ) 
 /
@@ -195,9 +196,6 @@ CREATE SEQUENCE "GUS_SEQPPL"
 CREATE SEQUENCE "GUS_SEQARC"
 /
 
--------------------------------------------------
--- Cambios 1.2.1b
-------------------------------------------------
 
 create or replace
 Function GUS_NEXTVAL ( secuencia IN varchar2 ) RETURN  varchar2

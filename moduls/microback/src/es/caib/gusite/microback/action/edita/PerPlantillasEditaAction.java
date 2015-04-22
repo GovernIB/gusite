@@ -1,5 +1,10 @@
 package es.caib.gusite.microback.action.edita;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.PerPlantillasForm;
 import es.caib.gusite.microback.actionform.formulario.TemaFrontForm;
@@ -92,13 +97,51 @@ public class PerPlantillasEditaAction extends BaseAction {
         Plantilla plantilla = DelegateUtil.getPlantillaDelegate().obtenerPlantilla(id);
         perPlantillasForm.set("plantilla", plantilla.getTitulo());
         perPlantillasForm.set("idPlantilla", plantilla.getId());
+        if (plantilla.getDescripcion() != null) {
+            perPlantillasForm.set("ayuda", plantilla.getDescripcion());
+        }
+        
         // Plantilla en blanco
         Long pp = Long.parseLong(request.getParameter("pp"));
-        PersonalizacionPlantilla personalizacionPlantilla = DelegateUtil.getPersonalizacionPlantillaDelegate().obtenerPersonalizacionPlantilla(pp);
-        if (personalizacionPlantilla != null) {
-            perPlantillasForm.set("contenido", personalizacionPlantilla.getContenido());
+        if (pp != null) {
+        	if (pp == -1) {
+                perPlantillasForm.set("contenido", this.obtenerContenidoPlantillaBase(request, plantilla) );
+        	} else {
+        		//plantilla existente
+                PersonalizacionPlantilla personalizacionPlantilla = DelegateUtil.getPersonalizacionPlantillaDelegate().obtenerPersonalizacionPlantilla(pp);
+                if (personalizacionPlantilla != null) {
+                    perPlantillasForm.set("contenido", personalizacionPlantilla.getContenido());
+                }
+        	}
         }
     }
+
+    private String obtenerContenidoPlantillaBase(HttpServletRequest request, Plantilla plantilla) {
+		//código de base, lo leemos del zip del tema
+		InputStream templatesZip = request.getSession().getServletContext().getResourceAsStream("/WEB-INF/template-front.zip");
+        ZipInputStream zis = new ZipInputStream(templatesZip);
+        ZipEntry entry;
+		try {
+			entry = zis.getNextEntry();
+	        String templateFileName = plantilla.getNombre() + ".html";
+	        while (entry != null) {
+	            if (entry.getName().equals(templateFileName)) {
+	            	StringBuilder s = new StringBuilder();
+	            	byte[] buffer = new byte[1024];
+	            	int read = 0;
+		    	    while ((read = zis.read(buffer, 0, 1024)) >= 0) {
+		    	    	s.append(new String(buffer, 0, read));
+		    	    }
+		    	    return s.toString();
+	    	     }
+	            entry = zis.getNextEntry();
+	        }
+	        return null;
+		} catch (IOException e) {
+			log.error(e);
+			return null;
+		}
+	}
 
     private void cargarPerPlantilla(HttpServletRequest request, PerPlantillasForm perPlantillasForm) throws DelegateException {
 
@@ -110,7 +153,7 @@ public class PerPlantillasEditaAction extends BaseAction {
     private void setBeanToForm(PersonalizacionPlantilla personalizacionPlantilla, PerPlantillasForm perPlantillasForm) {
 
         perPlantillasForm.set("id", personalizacionPlantilla.getId());
-        perPlantillasForm.set("plantilla", personalizacionPlantilla.getPlantilla().getTitulo());
+        perPlantillasForm.set("plantilla", personalizacionPlantilla.getPlantilla().getNombre());
         perPlantillasForm.set("titulo", personalizacionPlantilla.getTitulo());
         perPlantillasForm.set("idPlantilla", personalizacionPlantilla.getPlantilla().getId());
         if (personalizacionPlantilla.getContenido() != null) {
@@ -118,8 +161,7 @@ public class PerPlantillasEditaAction extends BaseAction {
         }
 
         if (personalizacionPlantilla.getPlantilla().getDescripcion() != null) {
-            String clob = personalizacionPlantilla.getPlantilla().getDescripcion();
-            perPlantillasForm.set("clob", clob);
+            perPlantillasForm.set("ayuda", personalizacionPlantilla.getPlantilla().getDescripcion());
         }
     }
 

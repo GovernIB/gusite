@@ -192,6 +192,9 @@
         	<classes dir="${web.classes}"/>
 
         	<classes dir="${web.gen.src}" includes="*.properties, *.jks"/>   
+	
+			<webinf dir="${web.product}" includes="template-front.zip" />
+			
 
 	    	<lib dir="${lib.dir}/webcaib">
 	    		<include name="commons-betwixt-0.8.jar"/>

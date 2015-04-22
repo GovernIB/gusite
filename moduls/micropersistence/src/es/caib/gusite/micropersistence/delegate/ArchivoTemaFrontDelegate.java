@@ -115,6 +115,18 @@ public class ArchivoTemaFrontDelegate implements StatelessDelegate {
         }
     }
 
+    /**
+     * Busca Archivos por searchByTemaNombre
+     */
+    public List<ArchivoTemaFront> searchByTemaNombre(String uriTema, String nombre) throws DelegateException {
+        try {
+            return getFacade().searchByTemaNombre(uriTema, nombre);
+        }
+        catch (RemoteException re) {
+            throw new DelegateException(re);
+        }
+    }
+
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

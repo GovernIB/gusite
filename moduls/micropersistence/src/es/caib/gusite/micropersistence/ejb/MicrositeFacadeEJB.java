@@ -99,8 +99,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "";
 		super.from = " from Microsite site join site.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 
@@ -127,8 +126,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			boolean nuevo = (site.getId() == null) ? true : false;
 
 			if (nuevo) {
-				Iterator<TraduccionMicrosite> it = site.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionMicrosite> it = site.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionMicrosite trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
@@ -143,11 +141,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				site.setIdiomas((Set<IdiomaMicrosite>) null);
 
 				site.setClaveunica(this.obtenerClaveUnica(site));
-				
+
 				if (site.getUri() == null || site.getUri().equals("")) {
 					site.setUri(site.getClaveunica());
 				}
-				
+
 			}
 
 			session.saveOrUpdate(site);
@@ -178,8 +176,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				Iterator<?> iter = listau.iterator();
 				while (iter.hasNext()) {
 					Usuario user = (Usuario) iter.next();
-					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(
-							site.getId(), user.getId());
+					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), user.getId());
 					session.save(upm);
 				}
 				// Ahora se asocian todos los usuarios system
@@ -187,8 +184,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				iter = listau.iterator();
 				while (iter.hasNext()) {
 					Usuario user = (Usuario) iter.next();
-					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(
-							site.getId(), user.getId());
+					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), user.getId());
 					session.save(upm);
 				}
 			}
@@ -218,8 +214,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.permission 
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarUsuarioPropietarioMicrosite(
-			UsuarioPropietarioMicrosite upm) {
+	public Long grabarUsuarioPropietarioMicrosite(UsuarioPropietarioMicrosite upm) {
 
 		Session session = this.getSession();
 		try {
@@ -241,18 +236,14 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.permission 
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void borrarUsuarioPropietarioMicrosite(
-			UsuarioPropietarioMicrosite upm) {
+	public void borrarUsuarioPropietarioMicrosite(UsuarioPropietarioMicrosite upm) {
 
 		Session session = this.getSession();
 		try {
-			Criteria criteri = session
-					.createCriteria(UsuarioPropietarioMicrosite.class);
-			criteri.add(Restrictions.eq("pk.idmicrosite", upm.getPk()
-					.getIdmicrosite()));
+			Criteria criteri = session.createCriteria(UsuarioPropietarioMicrosite.class);
+			criteri.add(Restrictions.eq("pk.idmicrosite", upm.getPk().getIdmicrosite()));
 			criteri.add(Restrictions.eq("pk.idusuario", upm.getPk().getIdusuario()));
-			UsuarioPropietarioMicrosite upm2 = (UsuarioPropietarioMicrosite) criteri
-					.uniqueResult();
+			UsuarioPropietarioMicrosite upm2 = (UsuarioPropietarioMicrosite) criteri.uniqueResult();
 
 			session.delete(upm2);
 			session.flush();
@@ -342,10 +333,10 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		Session session = this.getSession();
 		try {
 			MicrositeCompleto site = (MicrositeCompleto) session.get(MicrositeCompleto.class, id);
-            if (site.getTema() != null) {
-                Hibernate.initialize(site.getTema().getArchivoTemaFronts());
-            }
-            return site;
+			if (site.getTema() != null) {
+				Hibernate.initialize(site.getTema().getArchivoTemaFronts());
+			}
+			return site;
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -364,8 +355,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			String hql = "select mic" + " from MicrositeCompleto mic"
-					+ " where mic.claveunica = '" + key + "'";
+			String hql = "select mic" + " from MicrositeCompleto mic" + " where mic.claveunica = '" + key + "'";
 			Query query = session.createQuery(hql);
 			// List list = query.list();
 			// Criteria criteri =
@@ -399,8 +389,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			boolean nuevo = (site.getId() == null) ? true : false;
 
 			if (nuevo) {
-				Iterator<TraduccionMicrosite> it = site.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionMicrosite> it = site.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionMicrosite trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
@@ -415,6 +404,10 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				site.setIdiomas((Set<IdiomaMicrosite>) null);
 
 				site.setClaveunica(this.obtenerClaveUnica(site));
+				if (site.getUri() == null || site.getUri().equals("")) {
+					site.setUri(site.getClaveunica());
+				}
+
 			}
 			session.saveOrUpdate(site);
 			session.flush();
@@ -438,8 +431,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 				UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
 				Usuario usu = usudel.obtenerUsuariobyUsername(this.getUsuario(session).getUsername());
-				UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(
-						site.getId(), usu.getId());
+				UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), usu.getId());
 				session.save(upm);
 			}
 			session.flush();
@@ -475,14 +467,12 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			Transaction tx = session.beginTransaction();
 
 			// Primero: borrar los usuarios asociados
-			Criteria criteri = session
-					.createCriteria(UsuarioPropietarioMicrosite.class);
+			Criteria criteri = session.createCriteria(UsuarioPropietarioMicrosite.class);
 			criteri.add(Restrictions.eq("pk.idmicrosite", id));
 
 			Iterator<?> iter = criteri.list().iterator();
 			while (iter.hasNext()) {
-				UsuarioPropietarioMicrosite upm = (UsuarioPropietarioMicrosite) iter
-						.next();
+				UsuarioPropietarioMicrosite upm = (UsuarioPropietarioMicrosite) iter.next();
 				session.delete(upm);
 			}
 
@@ -490,26 +480,19 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			// la relación de usuarios con las respuestas de la encuesta
 			List<?> listIdRespu = this.idRespDeEncDelMicrosite(id);
 			if (!listIdRespu.isEmpty()) {
-				Criteria criteriUsuPropiResp = session
-						.createCriteria(UsuarioPropietarioRespuesta.class);
-				criteriUsuPropiResp.add(Restrictions.in("id.idrespuesta",
-						listIdRespu));
-				Iterator<?> iterUsuPropiResp = criteriUsuPropiResp.list()
-						.iterator();
+				Criteria criteriUsuPropiResp = session.createCriteria(UsuarioPropietarioRespuesta.class);
+				criteriUsuPropiResp.add(Restrictions.in("id.idrespuesta", listIdRespu));
+				Iterator<?> iterUsuPropiResp = criteriUsuPropiResp.list().iterator();
 				while (iterUsuPropiResp.hasNext()) {
-					UsuarioPropietarioRespuesta upm = (UsuarioPropietarioRespuesta) iterUsuPropiResp
-							.next();
+					UsuarioPropietarioRespuesta upm = (UsuarioPropietarioRespuesta) iterUsuPropiResp.next();
 					session.delete(upm);
 				}
 			}
 
 			// Tercero: borrar el microsite completo
-			MicrositeCompleto site = (MicrositeCompleto) session.get(
-					MicrositeCompleto.class, id);
+			MicrositeCompleto site = (MicrositeCompleto) session.get(MicrositeCompleto.class, id);
 
-			session.createQuery(
-					"delete Archivo arch where arch.idmicrosite = "
-							+ id.toString()).executeUpdate();
+			session.createQuery("delete Archivo arch where arch.idmicrosite = " + id.toString()).executeUpdate();
 
 			FaqDelegate faqDelegate = DelegateUtil.getFaqDelegate();
 			for (Iterator it = site.getFaqs().iterator(); it.hasNext();) {
@@ -526,24 +509,19 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				agendaDelegate.borrarAgenda(((Agenda) it.next()).getId());
 			}
 
-			ActividadDelegate actividadDelegate = DelegateUtil
-					.getActividadagendaDelegate();
+			ActividadDelegate actividadDelegate = DelegateUtil.getActividadagendaDelegate();
 			for (Iterator it = site.getActividades().iterator(); it.hasNext();) {
-				actividadDelegate.borrarActividad(((Actividadagenda) it.next())
-						.getId());
+				actividadDelegate.borrarActividad(((Actividadagenda) it.next()).getId());
 			}
 
-			NoticiaDelegate noticiaDelegate = DelegateUtil
-					.getNoticiasDelegate();
+			NoticiaDelegate noticiaDelegate = DelegateUtil.getNoticiasDelegate();
 			for (Iterator it = site.getNoticias().iterator(); it.hasNext();) {
 				noticiaDelegate.borrarNoticia(((Noticia) it.next()).getId());
 			}
 
-			ComponenteDelegate componenteDelegate = DelegateUtil
-					.getComponentesDelegate();
+			ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
 			for (Iterator it = site.getComponentes().iterator(); it.hasNext();) {
-				componenteDelegate.borrarComponente(((Componente) it.next())
-						.getId());
+				componenteDelegate.borrarComponente(((Componente) it.next()).getId());
 			}
 
 			TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
@@ -556,25 +534,19 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				frqssiDelegate.borrarFrqssi(((Frqssi) it.next()).getId());
 			}
 
-			ContactoDelegate contactoDelegate = DelegateUtil
-					.getContactoDelegate();
-			for (Iterator it = site.getFormularioscontacto().iterator(); it
-					.hasNext();) {
+			ContactoDelegate contactoDelegate = DelegateUtil.getContactoDelegate();
+			for (Iterator it = site.getFormularioscontacto().iterator(); it.hasNext();) {
 				contactoDelegate.borrarContacto(((Contacto) it.next()).getId());
 			}
 
-			EncuestaDelegate encuestaDelegate = DelegateUtil
-					.getEncuestaDelegate();
+			EncuestaDelegate encuestaDelegate = DelegateUtil.getEncuestaDelegate();
 			for (Iterator it = site.getEncuestas().iterator(); it.hasNext();) {
 				encuestaDelegate.borrarEncuesta(((Encuesta) it.next()).getId());
 			}
 
-			ContenidoDelegate contenidoDelegate = DelegateUtil
-					.getContenidoDelegate();
-			for (Object contenido : contenidoDelegate.listarAllContenidos(id
-					.toString())) {
-				contenidoDelegate.borrarContenido(((Contenido) contenido)
-						.getId());
+			ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
+			for (Object contenido : contenidoDelegate.listarAllContenidos(id.toString())) {
+				contenidoDelegate.borrarContenido(((Contenido) contenido).getId());
 			}
 
 			MenuDelegate menuDelegate = DelegateUtil.getMenuDelegate();
@@ -582,21 +554,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				menuDelegate.borrarMenu(((Menu) it.next()).getId());
 			}
 
-			session.createQuery(
-					"delete TraduccionMicrosite tra where tra.id.codigoMicrosite = "
-							+ id.toString()).executeUpdate();
-			session.createQuery(
-					"delete UsuarioPropietarioMicrosite upm where upm.pk.idmicrosite = "
-							+ id.toString()).executeUpdate();
-			session.createQuery(
-					"delete IdiomaMicrosite imic where imic.id.codigoMicrosite = "
-							+ id.toString()).executeUpdate();
-            session.createQuery(
-                    "delete PersonalizacionPlantilla perPla where perPla.microsite.id = "
-                            + id.toString()).executeUpdate();
-			session.createQuery(
-					"delete Microsite mic where mic.id = " + id.toString())
-					.executeUpdate();
+			session.createQuery("delete TraduccionMicrosite tra where tra.id.codigoMicrosite = " + id.toString()).executeUpdate();
+			session.createQuery("delete UsuarioPropietarioMicrosite upm where upm.pk.idmicrosite = " + id.toString()).executeUpdate();
+			session.createQuery("delete IdiomaMicrosite imic where imic.id.codigoMicrosite = " + id.toString()).executeUpdate();
+			session.createQuery("delete PersonalizacionPlantilla perPla where perPla.microsite.id = " + id.toString()).executeUpdate();
+			session.createQuery("delete Microsite mic where mic.id = " + id.toString()).executeUpdate();
 
 			this.indexBorraMicrosite(id);
 			session.flush();
@@ -625,11 +587,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			String hql = "SELECT RESP.id "
-					+ "FROM Encuesta ENC,  Pregunta PRE, Respuesta RESP "
-					+ "WHERE RESP.idpregunta = PRE.id "
-					+ "AND PRE.idencuesta = ENC.id " + "AND ENC.idmicrosite = "
-					+ idMicrosite.toString();
+			String hql = "SELECT RESP.id " + "FROM Encuesta ENC,  Pregunta PRE, Respuesta RESP " + "WHERE RESP.idpregunta = PRE.id "
+					+ "AND PRE.idencuesta = ENC.id " + "AND ENC.idmicrosite = " + idMicrosite.toString();
 
 			Query query = session.createQuery(hql);
 			List<?> queryList = query.list();
@@ -655,42 +614,31 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		try {
 			tx = session.beginTransaction();
 
-			MicrositeCompleto oldsite = this.obtenerMicrositeCompletobyKey(site
-					.getClaveunica());
+			MicrositeCompleto oldsite = this.obtenerMicrositeCompletobyKey(site.getClaveunica());
 			ArrayList<Long> listausuariosold = new ArrayList<Long>();
 
 			if (oldsite != null) {
 				// Primero: recoger todos los usuarios asociados al antiguo
 				// microsite y además borrar upm
-				String hql = "select usuMic"
-						+ " from UsuarioPropietarioMicrosite usuMic"
-						+ " where usuMic.pk.idmicrosite = "
-						+ oldsite.getId().toString();
+				String hql = "select usuMic" + " from UsuarioPropietarioMicrosite usuMic" + " where usuMic.pk.idmicrosite = " + oldsite.getId().toString();
 				Query query = session.createQuery(hql);
 				Iterator<?> iter = query.list().iterator();
 				while (iter.hasNext()) {
-					UsuarioPropietarioMicrosite upm = (UsuarioPropietarioMicrosite) iter
-							.next();
+					UsuarioPropietarioMicrosite upm = (UsuarioPropietarioMicrosite) iter.next();
 					listausuariosold.add(upm.getPk().getIdusuario());
 					session.delete(upm);
 				}
 
 				// Segundo: En el caso que el microsite tenga encuestas,
-				// borraremos la relación de usuarios con las respuestas de la
-				// encuesta
-				List<?> listIdRespu = this.idRespDeEncDelMicrosite(oldsite
-						.getId());
+				// borraremos la relación de usuarios con las respuestas de la encuesta
+				List<?> listIdRespu = this.idRespDeEncDelMicrosite(oldsite.getId());
 				if (!listIdRespu.isEmpty()) {
-					Criteria criteriUsuPropiResp = session
-							.createCriteria(UsuarioPropietarioRespuesta.class);
-					criteriUsuPropiResp.add(Restrictions.in("idrespuesta",
-							listIdRespu));
+					Criteria criteriUsuPropiResp = session.createCriteria(UsuarioPropietarioRespuesta.class);
+					criteriUsuPropiResp.add(Restrictions.in("id.idrespuesta", listIdRespu));
 
-					Iterator<?> iterUsuPropiResp = criteriUsuPropiResp.list()
-							.iterator();
+					Iterator<?> iterUsuPropiResp = criteriUsuPropiResp.list().iterator();
 					while (iterUsuPropiResp.hasNext()) {
-						UsuarioPropietarioRespuesta upm = (UsuarioPropietarioRespuesta) iterUsuPropiResp
-								.next();
+						UsuarioPropietarioRespuesta upm = (UsuarioPropietarioRespuesta) iterUsuPropiResp.next();
 						session.delete(upm);
 					}
 				}
@@ -755,10 +703,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			String sql = "select mic.id, mic.unidadAdministrativa, trad.titulo "
-					+ "from Microsite mic join mic.traducciones trad "
-					+ "where trad.id.codigoIdioma = '"
-					+ Idioma.getIdiomaPorDefecto() + "' order by trad.titulo";
+			String sql = "select mic.id, mic.unidadAdministrativa, trad.titulo " + "from Microsite mic join mic.traducciones trad "
+					+ "where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' order by trad.titulo";
 
 			Query query = session.createQuery(sql);
 
@@ -818,11 +764,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		@Override
 		public int compare(Object element1, Object element2) {
 
-			String nom1 = (((TraduccionMicrosite) ((Microsite) element1)
-					.getTraduccion("ca")).getTitulo() != null) ? ((TraduccionMicrosite) ((Microsite) element1)
+			String nom1 = (((TraduccionMicrosite) ((Microsite) element1).getTraduccion("ca")).getTitulo() != null) ? ((TraduccionMicrosite) ((Microsite) element1)
 					.getTraduccion("ca")).getTitulo() : "";
-			String nom2 = (((TraduccionMicrosite) ((Microsite) element2)
-					.getTraduccion("ca")).getTitulo() != null) ? ((TraduccionMicrosite) ((Microsite) element2)
+			String nom2 = (((TraduccionMicrosite) ((Microsite) element2).getTraduccion("ca")).getTitulo() != null) ? ((TraduccionMicrosite) ((Microsite) element2)
 					.getTraduccion("ca")).getTitulo() : "";
 
 			return nom1.toLowerCase().compareTo(nom2.toLowerCase());
@@ -872,9 +816,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			site.setServiciosSeleccionados(this.manejaListadoUltimosIds(
-					site.getServiciosSeleccionados(),
-					"" + idcontenido.longValue()));
+			site.setServiciosSeleccionados(this.manejaListadoUltimosIds(site.getServiciosSeleccionados(), "" + idcontenido.longValue()));
 			Transaction tx = session.beginTransaction();
 			session.saveOrUpdate(site);
 			session.flush();
@@ -899,9 +841,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		try {
 			String hql = "select mic.id, mic.unidadAdministrativa, trad.titulo ";
 			hql += " from UsuarioPropietarioMicrosite upm, Microsite mic join mic.traducciones trad ";
-			hql += " where upm.pk.idusuario="
-					+ usuario.getId().longValue()
-					+ " and mic.id = upm.pk.idmicrosite and trad.id.codigoIdioma = '"
+			hql += " where upm.pk.idusuario=" + usuario.getId().longValue() + " and mic.id = upm.pk.idmicrosite and trad.id.codigoIdioma = '"
 					+ Idioma.getIdiomaPorDefecto() + "' order by trad.titulo";
 
 			Query query = session.createQuery(hql);
@@ -943,9 +883,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		try {
 			String hql = "select mic.id, mic.unidadAdministrativa, trad.titulo ";
 			hql += " from UsuarioPropietarioMicrosite upm, Microsite mic join mic.traducciones trad ";
-			hql += " where upm.pk.idusuario = "
-					+ id
-					+ " and  mic.id = upm.pk.idmicrosite and trad.id.codigoIdioma = '"
+			hql += " where upm.pk.idusuario = " + id + " and  mic.id = upm.pk.idmicrosite and trad.id.codigoIdioma = '"
 					+ Idioma.getIdiomaPorDefecto() + "' order by trad.titulo";
 
 			Query query = session.createQuery(hql);
@@ -988,11 +926,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			String hql = "select usuario";
 			hql += " from UsuarioPropietarioMicrosite upm, Usuario usuario";
 			hql += " where upm.pk.idmicrosite = ";
-            hql += idmicrosite.longValue();
-            hql += " and  usuario.id = upm.pk.idusuario order by usuario.username";
+			hql += idmicrosite.longValue();
+			hql += " and  usuario.id = upm.pk.idusuario order by usuario.username";
 
 			Query query = session.createQuery(hql);
-			return (List<Usuario>)query.list();
+			return (List<Usuario>) query.list();
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -1028,8 +966,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @param newIdcontenido
 	 * @return
 	 */
-	private String manejaListadoUltimosIds(String oldlistado,
-			String newIdcontenido) {
+	private String manejaListadoUltimosIds(String oldlistado, String newIdcontenido) {
 
 		int _numMax = 5;
 		String _nulo = "-1";
@@ -1128,12 +1065,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 				// Titulo Microsite
 				if (site.getTraduccion(idioma) != null) {
-					trafilter.setMaintitle(((TraduccionMicrosite) site
-							.getTraduccion(idioma)).getTitulo());
+					trafilter.setMaintitle(((TraduccionMicrosite) site.getTraduccion(idioma)).getTitulo());
 				} else if (site.getTraduccion(Idioma.getIdiomaPorDefecto()) != null) {
-					trafilter.setMaintitle(((TraduccionMicrosite) site
-							.getTraduccion(Idioma.getIdiomaPorDefecto()))
-							.getTitulo());
+					trafilter.setMaintitle(((TraduccionMicrosite) site.getTraduccion(Idioma.getIdiomaPorDefecto())).getTitulo());
 				} else {
 					trafilter.setMaintitle("");
 				}
@@ -1150,7 +1084,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 					txids += uaSel.getId() + Catalogo.KEY_SEPARADOR;
 					ua = rqs.getUnidadData(uaSel.getIdUnidad(), idioma);
 					if (ua != null) {
-						txtexto += ua.getNombre() + " "; // espacio en blanco, que es para tokenizar
+						txtexto += ua.getNombre() + " "; // espacio en blanco,
+															// que es para
+															// tokenizar
 					}
 				}
 
@@ -1163,8 +1099,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				txtexto = " "; // espacio en blanco, que es para tokenizar
 
 				filter.setMateria_id((txids.length() == 1) ? null : txids);
-				trafilter.setMateria_text((txtexto.length() == 1) ? null
-						: txtexto);
+				trafilter.setMateria_text((txtexto.length() == 1) ? null : txtexto);
 
 				filter.addTraduccion(idioma, trafilter);
 			}
