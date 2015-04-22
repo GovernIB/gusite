@@ -48,7 +48,7 @@ public class HomeController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}")
 	public ModelAndView home(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		HomeView view = new HomeView();
@@ -111,7 +111,7 @@ public class HomeController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/mapa")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/mapa")
 	public ModelAndView mapa(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 
@@ -148,7 +148,7 @@ public class HomeController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/accessibility")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/accessibility")
 	public ModelAndView accessibility(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		AccesibilidadView view = new AccesibilidadView();

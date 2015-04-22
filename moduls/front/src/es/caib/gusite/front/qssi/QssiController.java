@@ -43,7 +43,7 @@ public class QssiController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/qssi/{qssi}/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/qssi/{qssi}/")
 	public ModelAndView qssi(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("qssi") long idQssi, Model model,
 			HttpServletRequest req) {
 

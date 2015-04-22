@@ -50,13 +50,55 @@ public class ContenidoController extends BaseViewController {
 	@Autowired
 	private MicrositeParser microparser;
 
+	
 	/**
 	 * @param lang
 	 * @param uri
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/c/{uriContenido}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/{uriContenido:.{3,}}")
+	public ModelAndView contenidoSmart(@PathVariable("uri") SiteId URI, 
+			
+			@PathVariable("lang") Idioma lang,
+			@PathVariable("uriContenido") UriContenido uriContenido, RedirectAttributes redir,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+			@RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
+
+		return this.contenido(URI, lang, uriContenido.nemotecnic, redir, mcont, pcampa, previsual, tipobeta, redi, request, response);
+
+	}
+
+	/**
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("{uri}/{uriContenido:.{3,}}")
+	public ModelAndView contenidoSmart(@PathVariable("uri") SiteId URI, 
+			
+			@PathVariable("uriContenido") UriContenido uriContenido, RedirectAttributes redir,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+			@RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
+
+		return this.contenido(URI, DEFAULT_IDIOMA, uriContenido.nemotecnic, redir, mcont, pcampa, previsual, tipobeta, redi, request, response);
+
+	}
+	
+	/**
+	 * @param lang
+	 * @param uri
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/c/{uriContenido}")
 	public ModelAndView contenido(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriContenido") String uriContenido, RedirectAttributes redir,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,

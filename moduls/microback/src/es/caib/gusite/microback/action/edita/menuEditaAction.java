@@ -95,6 +95,9 @@ public class menuEditaAction extends BaseAction
    				return mapping.findForward("info");
    			}
 
+   			//Antes de borrar, reordenamos
+    		listaObjetosMenu = setFormtoArrayAndSave(menuForm, micrositeBean);
+
    			Menu menu = menuDelegate.obtenerMenu(idMenu);
    			menuDelegate.borrarMenu(idMenu);
    			menuDelegate.Reordena(menu.getOrden(), 'b', menu.getMicrosite().getId());

@@ -37,7 +37,7 @@ public class FaqController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/faq")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/faq")
 	public ModelAndView listarfaqs(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 

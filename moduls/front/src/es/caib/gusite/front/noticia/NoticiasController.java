@@ -56,7 +56,7 @@ public class NoticiasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/l/{uriListaNoticia}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/l/{uriListaNoticia}")
 	public ModelAndView listarnoticias(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriListaNoticia") String uriListaNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -75,7 +75,7 @@ public class NoticiasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/l/{uriListaNoticia}/{anyo}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/l/{uriListaNoticia}/{anyo}")
 	public ModelAndView listarnoticias(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriListaNoticia") String uriListaNoticia,
 			@PathVariable("anyo") int anyo,
@@ -285,7 +285,7 @@ public class NoticiasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/n/{uriNoticia}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/n/{uriNoticia}")
 	public ModelAndView noticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriNoticia") String uriNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
@@ -351,7 +351,7 @@ public class NoticiasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/d/{uriDocumentoNoticia}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/d/{uriDocumentoNoticia}")
 	public ModelAndView documento(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriDocumentoNoticia") String uriDocumentoNoticia, Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,

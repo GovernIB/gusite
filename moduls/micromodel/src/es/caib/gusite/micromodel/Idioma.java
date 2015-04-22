@@ -104,6 +104,33 @@ public class Idioma implements ValueObject {
 		this.langTraductor = langTraductor;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lang == null) ? 0 : lang.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Idioma other = (Idioma) obj;
+		if (lang == null) {
+			if (other.lang != null)
+				return false;
+		} else if (other.lang == null) {
+			return false;
+		} else if (!lang.toLowerCase().equals(other.lang.toLowerCase()))
+			return false;
+		return true;
+	}
+
 	/*
 	 * TODO amartin: bidireccionalidad que dejamos comentada porque no aparecía
 	 * en el HBM y da problemas en la exportación

@@ -49,7 +49,7 @@ public class CercadorController extends BaseViewController {
 	 *            Texto a buscar
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang}/search/")
+	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/search/")
 	public ModelAndView cercar(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -152,7 +152,7 @@ public class CercadorController extends BaseViewController {
 	 *            Texto a buscar
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/search/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/search/")
 	public ModelAndView cercarGet(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import es.caib.gusite.front.general.BaseCriteria;
+import es.caib.gusite.front.general.FrontController;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.noticia.NoticiaCriteria;
 import es.caib.gusite.micromodel.Agenda;
@@ -297,8 +298,11 @@ public class FrontUrlFactory {
 	}
 
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
-		
-		return this.microsite(microsite, lang) + "c/" + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
+		if (lang.equals(FrontController.DEFAULT_IDIOMA)) {
+			return this.microsite(microsite) + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
+		} else {
+			return this.microsite(microsite, lang) + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
+		}
 	}
 
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {

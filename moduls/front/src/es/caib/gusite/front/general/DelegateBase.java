@@ -20,6 +20,7 @@ import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Tiposervicio;
 import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionMenu;
 import es.caib.gusite.micromodel.Traducible;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -332,7 +333,13 @@ public class DelegateBase {
 		while (iter.hasNext()) {
 			Menu menu = (Menu) iter.next();
 			MenuFront menufront = new MenuFront(menu);
+			menu.setIdi(idi);
 			menufront.setIdi(idi);
+
+			TraduccionMenu tramen = (TraduccionMenu) menu.getTraduccion(idi);
+			if (tramen.getNombre() == null || "".equals(tramen.getNombre())) {
+				continue;
+			}
 
 			// recorrer las paginas y coger las visibles y no caducadas
 			Iterator<?> iterpaginas = menu.getContenidos().iterator();
@@ -340,20 +347,17 @@ public class DelegateBase {
 				String iditmp = idi;
 				Contenido conte = (Contenido) iterpaginas.next();
 				TraduccionContenido tracon = (TraduccionContenido) conte.getTraduccion(idi);
-				if (tracon == null) {
-					iditmp = Idioma.getIdiomaPorDefecto();
-					tracon = (TraduccionContenido) conte.getTraduccion(iditmp);
+				if (tracon == null || tracon.getTitulo() == null || tracon.getTitulo().equals("")) {
+					continue;
 				}
-				if ((tracon != null) && (tracon.getTitulo() != null)) {
-					if ((conte.getVisible().equals("S")) && (Fechas.vigente(conte.getFpublicacion(), conte.getFcaducidad()))) {
-						conte.setIdi(iditmp);
-						if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
-							conte.setUrlExterna("true");
-						} else {
-							conte.setUrlExterna("false");
-						}
-						menufront.getListacosas().add(conte);
+				if ((conte.getVisible().equals("S")) && (Fechas.vigente(conte.getFpublicacion(), conte.getFcaducidad()))) {
+					conte.setIdi(iditmp);
+					if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
+						conte.setUrlExterna("true");
+					} else {
+						conte.setUrlExterna("false");
 					}
+					menufront.getListacosas().add(conte);
 				}
 			}
 
@@ -364,6 +368,13 @@ public class DelegateBase {
 				Menu submenu = (Menu) itermenus.next();
 				MenuFront menufrontsub = new MenuFront(submenu);
 				menufrontsub.setIdi(idi);
+				submenu.setIdi(idi);
+
+				TraduccionMenu trasubmen = (TraduccionMenu) submenu.getTraduccion(idi);
+				if (trasubmen.getNombre() == null || "".equals(trasubmen.getNombre())) {
+					continue;
+				}
+				
 
 				// recorrer las paginas y coger las visibles y no caducadas
 				Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
@@ -371,20 +382,17 @@ public class DelegateBase {
 					String iditmp = idi;
 					Contenido contesub = (Contenido) iterpaginassub.next();
 					TraduccionContenido tracon = (TraduccionContenido) contesub.getTraduccion(idi);
-					if (tracon == null) {
-						iditmp = Idioma.getIdiomaPorDefecto();
-						tracon = (TraduccionContenido) contesub.getTraduccion(iditmp);
+					if (tracon == null || tracon.getTitulo() == null || tracon.getTitulo().equals("")) {
+						continue;
 					}
-					if ((tracon != null) && (tracon.getTitulo() != null)) {
-						if ((contesub.getVisible().equals("S")) && (Fechas.vigente(contesub.getFpublicacion(), contesub.getFcaducidad()))) {
-							contesub.setIdi(iditmp);
-							if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
-								contesub.setUrlExterna("true");
-							} else {
-								contesub.setUrlExterna("false");
-							}
-							menufrontsub.getListacosas().add(contesub);
+					if ((contesub.getVisible().equals("S")) && (Fechas.vigente(contesub.getFpublicacion(), contesub.getFcaducidad()))) {
+						contesub.setIdi(iditmp);
+						if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
+							contesub.setUrlExterna("true");
+						} else {
+							contesub.setUrlExterna("false");
 						}
+						menufrontsub.getListacosas().add(contesub);
 					}
 				}
 

@@ -52,7 +52,7 @@ public class AgendaController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/agenda/{fecha}")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/agenda/{fecha}")
 	public ModelAndView agenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("fecha") @DateTimeFormat(pattern = "yyyyMMdd") Date fecha,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -97,7 +97,7 @@ public class AgendaController extends BaseViewController {
 	 *            Idioma de la petición
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/agenda/")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/agenda/")
 	public ModelAndView agenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,

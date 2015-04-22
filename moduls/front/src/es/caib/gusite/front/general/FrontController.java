@@ -58,18 +58,18 @@ public class FrontController {
 				this.setValue(new SiteId(text));
 			}
 		});
-		binder.registerCustomEditor(TipoNoticiaId.class, new PropertyEditorSupport() {
+		binder.registerCustomEditor(UriContenido.class, new PropertyEditorSupport() {
 			@Override
 			public String getAsText() {
-				return ((TipoNoticiaId) this.getValue()).nemotecnic;
+				return ((UriContenido) this.getValue()).nemotecnic;
 			}
 
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
-				if (text.length() < 3 || StringUtils.isNumeric(text)) {
+				if (text.length() < 3) {
 					throw new IllegalArgumentException("No es un nemotècnico válido");
 				}
-				this.setValue(new TipoNoticiaId(text));
+				this.setValue(new UriContenido(text));
 			}
 		});
 	}
@@ -84,9 +84,9 @@ public class FrontController {
 
 	}
 
-	public class TipoNoticiaId {
+	public class UriContenido {
 
-		public TipoNoticiaId(String text) {
+		public UriContenido(String text) {
 			this.nemotecnic = text;
 		}
 
@@ -95,7 +95,7 @@ public class FrontController {
 	}
 
 	private static Log log = LogFactory.getLog(FrontController.class);
-	protected static final Idioma DEFAULT_IDIOMA = new Idioma("ca");
+	public static final Idioma DEFAULT_IDIOMA = new Idioma("ca");
 	protected static final String LANG_EN = "en";
 	protected static final String LANG_CA = "ca";
 	protected static final String LANG_ES = "es";

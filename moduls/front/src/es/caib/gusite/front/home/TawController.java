@@ -45,7 +45,7 @@ public class TawController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/tawitem/contenido/{contenido}")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/contenido/{contenido}")
 	public ModelAndView tawContenido(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contenido") long idContenido,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
@@ -86,7 +86,7 @@ public class TawController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/tawitem/agenda/{agenda}")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/agenda/{agenda}")
 	public ModelAndView tawAgenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("agenda") long idAgenda,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
@@ -115,7 +115,7 @@ public class TawController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/tawitem/noticia/{noticia}")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/noticia/{noticia}")
 	public ModelAndView tawNoticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("noticia") long idNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {

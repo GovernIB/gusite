@@ -31,7 +31,7 @@ public class PreviewController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/menupreview/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/menupreview/")
 	public ModelAndView menuPreview(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {

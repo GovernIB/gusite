@@ -60,12 +60,12 @@
                 <td><a href="#" onmouseup="voreMenu(this, event, 'mEstadistiques');"><bean:message key="menu.estadisticas" /></a></td>
             </logic:notEqual>
             <logic:equal name="MVS_microsite" property="versio" value="v5">
-                <logic:present name="MVS_microsite" property="analytics">
+                <logic:notEmpty name="MVS_microsite" property="analytics">
                     <td><a href="#" onmouseup="window.open('https://www.google.com/analytics/', '_blank')"><bean:message key="menu.analytics" /></a></td>
-                </logic:present>
-                <logic:notPresent name="MVS_microsite" property="analytics">
+                </logic:notEmpty>
+                <logic:empty name="MVS_microsite" property="analytics">
                     <td><a href="#" onmouseup="alert('<bean:message key="menu.noAnalytics" />')"><bean:message key="menu.analytics" /></a></td>
-                </logic:notPresent>
+                </logic:empty>
             </logic:equal>
             </logic:present>
 			<logic:equal name="puedoeditar" value="1">

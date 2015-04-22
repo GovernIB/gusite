@@ -254,6 +254,13 @@ public class Bdestadisticasind {
 						  }
 					  }
 				  }
+				  /* Se mantienen los procedimientos por histórico */
+				  if (statg.getReferencia().equals(Microback.RPROCEDIMIENTO)) {
+					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RPROCEDIMIENTO));
+					  if (statg.getItem().intValue() == hist) 
+						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
+
+				  }
 				  if (statg.getReferencia().equals(Microback.RFAQ)) {
 					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RFAQ));
 					  if (statg.getItem().intValue() == hist) {

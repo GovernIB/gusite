@@ -62,7 +62,7 @@ public class EncuestasController extends BaseViewController {
 	 * @param uri
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/encuesta/{uriEncuesta}")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/encuesta/{uriEncuesta}")
 	public ModelAndView encuesta(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
@@ -214,7 +214,7 @@ public class EncuestasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang}/envioencuesta/{uriEncuesta}/")
+	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/envioencuesta/{uriEncuesta}/")
 	public ModelAndView enviarEncuesta(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -483,7 +483,7 @@ public class EncuestasController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/resultados/{uriEncuesta}/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/resultados/{uriEncuesta}/")
 	public ModelAndView resultadoEncuestas(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,

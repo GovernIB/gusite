@@ -27,7 +27,7 @@ public class RespuestaDato implements ValueObject {
 
 	@XmlAttribute
 	@Id
-	@SequenceGenerator(name = "GUS_RESPUESTA_ID_GENERATOR", sequenceName = "GUS_SEQRES", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "GUS_RESPUESTA_ID_GENERATOR", sequenceName = "GUS_SEQRDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_RESPUESTA_ID_GENERATOR")
 	@Column(name = "VOT_CODI")
 	private Long id;

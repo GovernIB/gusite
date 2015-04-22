@@ -68,7 +68,7 @@ public class ContactosController extends BaseViewController {
 	 *            Idioma de la petición
 	 * @return
 	 */
-	@RequestMapping("{uri}/{lang}/contact/")
+	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/contact/")
 	public ModelAndView listarcontactos(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
@@ -191,7 +191,7 @@ public class ContactosController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/contact/{contacto}/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/contact/{contacto}/")
 	public ModelAndView contacto(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
@@ -241,7 +241,7 @@ public class ContactosController extends BaseViewController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang}/contact/{contacto}/")
+	@RequestMapping(method = RequestMethod.POST, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/contact/{contacto}/")
 	public ModelAndView enviarContacto(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,

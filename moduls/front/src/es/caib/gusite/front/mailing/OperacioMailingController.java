@@ -40,7 +40,7 @@ public class OperacioMailingController extends BaseViewController {
 	 * @param uri
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang}/msggenerico/")
+	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/msggenerico/")
 	public ModelAndView mailing(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, 
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
