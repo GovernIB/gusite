@@ -335,7 +335,7 @@ public class menuEditaAction extends BaseAction
     private void traducir (HttpServletRequest request, menuForm menuForm) throws Exception  {	
 
     	MenuDelegate menuDelegate = DelegateUtil.getMenuDelegate();
-    	TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    	TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     	String idiomaOrigen = "ca";
 
      	Long idMicrosite = ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId();

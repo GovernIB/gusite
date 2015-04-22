@@ -177,7 +177,7 @@ public class actividadesEditaAction extends BaseAction
      */
     private void traducir (HttpServletRequest request, TraDynaActionForm actividadForm) throws Exception  {	
 
-		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
 		String idiomaOrigen = "ca";
 
 		TraduccionActividadagenda actividadagendaOrigen = (TraduccionActividadagenda) actividadForm.get("traducciones", 0);

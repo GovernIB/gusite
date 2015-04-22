@@ -187,7 +187,7 @@ public class microEditaAction extends BaseAction  {
      */
     private Microsite traducir (HttpServletRequest request, microForm microForm, String configuracion) throws Exception  {	
 
-		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
 		String idiomaOrigen = "ca";
 
 		//La traducción no depende de que esté guardados los datos sino del formulario

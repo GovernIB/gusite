@@ -289,7 +289,7 @@ public class lineaFormularioEditaAction extends BaseAction
      */
     private void traducir (HttpServletRequest request, lineaFormularioForm lineaFormularioForm) throws Exception  {	
 
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
             Microsite micrositeBean = (Microsite)request.getSession().getAttribute("MVS_microsite");
     		String idiomaOrigen = "ca";
     		String [] textoSelector = null;

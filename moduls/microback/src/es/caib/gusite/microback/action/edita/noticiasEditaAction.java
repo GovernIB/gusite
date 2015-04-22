@@ -364,7 +364,7 @@ public class noticiasEditaAction extends BaseAction
         boolean[] ficherosbor = (boolean[]) noticiaForm.get("ficherosbor");
     	
     	
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     		String idiomaOrigen = "ca";
 
             TraduccionNoticia noticiaOrigen = (TraduccionNoticia) noticiaForm.get("traducciones", 0);

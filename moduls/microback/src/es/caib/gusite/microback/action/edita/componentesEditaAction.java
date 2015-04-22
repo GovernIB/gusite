@@ -189,7 +189,7 @@ public class componentesEditaAction extends BaseAction
      */
     private void traducir (HttpServletRequest request, componenteForm componenteForm) throws Exception  {	
 
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     		String idiomaOrigen = "ca";
 
             TraduccionComponente ComponenteOrigen = (TraduccionComponente) componenteForm.get("traducciones", 0);

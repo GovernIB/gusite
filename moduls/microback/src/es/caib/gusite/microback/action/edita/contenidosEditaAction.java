@@ -290,7 +290,7 @@ public class contenidosEditaAction extends BaseAction
      */
     private void traducir (HttpServletRequest request, contenidoForm contenidoForm) throws TraductorException  {	
 
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     		String idiomaOrigen = "ca";
 
             TraduccionContenido contenidoOrigen = (TraduccionContenido) contenidoForm.get("traducciones", 0);

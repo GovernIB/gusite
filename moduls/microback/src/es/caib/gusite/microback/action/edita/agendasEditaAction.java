@@ -325,7 +325,7 @@ public class agendasEditaAction extends BaseAction {
      */
     private agendaForm traducir (HttpServletRequest request, agendaForm agendaForm) throws Exception  {	
 
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     		String idiomaOrigen = "ca";
 
     		TraduccionAgenda agendaOrigen = (TraduccionAgenda) agendaForm.get("traducciones", 0);

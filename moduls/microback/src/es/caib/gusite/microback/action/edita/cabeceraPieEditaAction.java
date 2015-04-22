@@ -104,7 +104,7 @@ public class cabeceraPieEditaAction extends BaseAction {
     private Microsite traducir (HttpServletRequest request, microForm microForm, String configuracion) throws Exception  {
 
         MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
-    	TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getAttribute("traductor");
+    	TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     	String idiomaOrigen = "ca";
 
         TraduccionMicrosite microOrigen = (TraduccionMicrosite) microForm.get("traducciones", 0);
