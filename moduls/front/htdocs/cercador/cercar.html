@@ -46,7 +46,7 @@ Resultados de una busqueda.
 						<i th:utext="#{cercar.primer.intento}">S`ha combinat tot el
 							text per a obtenir algun resultat</i>
 					</p>
-					<div th:if="${MVS_listado_buscador.consultaSugerida}!=null" th:remove="tag">
+					<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
 						<span style="font-size: 2; color: #ff0000"
 							th:utext="#{cercar.quisodecir} + ' : '">Potser va voler dir:</span>&nbsp; 
 							<a href="cercar.html"
