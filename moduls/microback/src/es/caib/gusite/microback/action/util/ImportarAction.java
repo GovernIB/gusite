@@ -100,8 +100,11 @@ public class ImportarAction extends BaseAction {
                 Reader reader = new InputStreamReader(fisXML, "ASCII");
                 MicrositeCompleto micro = (MicrositeCompleto) jaxbUnmarshaller.unmarshal(reader);
 
-                Map<Long, Archivo> listaArchivos = zipReaderArchivos(f, dirDescompresionZIP);
-                micro = importarArchivosMicrosite(micro, listaArchivos);((Menu)micro.getMenus().iterator().next()).getPadre();
+                File fileDirDescompresionZIP = new File(dirDescompresionZIP);
+                fileDirDescompresionZIP.mkdir();
+                ZipInputStream zis = new ZipInputStream(f.getArchi().getInputStream());
+                Map<Long, String> listaArchivos = zipReaderArchivos(dirDescompresionZIP, zis);
+                micro = importarArchivosMicrosite(micro, listaArchivos);
 
                 addImportLogVisual(request, (String) rb.getObject("logimport.integridad.fin"));
 
@@ -147,7 +150,7 @@ public class ImportarAction extends BaseAction {
             }
 
 		} catch (Exception e) {
-			log.error((String) rb.getObject("logimport.error"));
+			log.error((String) rb.getObject("logimport.error"), e);
 			addMessage(request, "peticion.error");
 			addImportLogVisualStackTrace(request, (String) rb.getObject("logimport.error"), e.getStackTrace());
 			return mapping.findForward("info");
@@ -242,21 +245,26 @@ public class ImportarAction extends BaseAction {
 
         return null;
     }
+    
+    private byte[] leerDatosPath (String path) throws IOException {
 
-    private Map<Long, Archivo> zipReaderArchivos(ImportarForm f, String dirDescompresionZIP) throws IOException {
+    	File newFile = new File(path);
+    	return Files.readAllBytes(newFile.toPath());
+    	
+    }
 
-        Map<Long, Archivo> listaArchivos = new HashMap<Long, Archivo>();
+    private Map<Long, String> zipReaderArchivos(String dirDescompresionZIP, ZipInputStream zis) throws IOException {
+
+        Map<Long, String> listaArchivos = new HashMap<Long, String>();
         try {
             byte[] buffer = new byte[1024];
 
-            File fileDirDescompresionZIP = new File(dirDescompresionZIP);
-            fileDirDescompresionZIP.mkdir();
-
-            ZipInputStream zis = new ZipInputStream(f.getArchi().getInputStream());
             ZipEntry ze = zis.getNextEntry();
 
             while (ze != null) {
                 String fileName = ze.getName();
+                String path = dirDescompresionZIP + File.separator + fileName;
+                
                 File newFile = new File(dirDescompresionZIP + File.separator + fileName);
                 log.debug("file unzip : " + newFile.getAbsoluteFile());
 
@@ -266,27 +274,17 @@ public class ImportarAction extends BaseAction {
                 if (ze.isDirectory()) {
                     newFile.mkdir();
 
-                } else {
+                } else if (!ze.getName().endsWith(".xml")) {
                     FileOutputStream fos = new FileOutputStream(newFile);
                     int len;
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
                     fos.close();
+                    String[] idName = newFile.getName().split("_");
+                    Long id = Long.parseLong(idName[0]);
+                    listaArchivos.put(id, path);
 
-                    if (ze.getName().endsWith(".xml")) {
-                        // Si es el archivo XML con el microsite importado, guardamos un InputStream que apunte a él para procesarlo justo después de descomprimir el ZIP.
-                    } else {
-                        byte[] data = Files.readAllBytes(newFile.toPath());
-                        Archivo archivo = new Archivo();
-                        String[] idName = newFile.getName().split("_");
-                        archivo.setId(Long.parseLong(idName[0]));
-                        archivo.setNombre(idName[1]);
-                        archivo.setDatos(data);
-                        archivo.setPeso(newFile.length());
-
-                        listaArchivos.put(archivo.getId(), archivo);
-                    }
                 }
 
                 ze = zis.getNextEntry();
@@ -305,33 +303,33 @@ public class ImportarAction extends BaseAction {
         }
     }
 
-    private MicrositeCompleto importarArchivosMicrosite(MicrositeCompleto micro, Map<Long, Archivo> archivos) {
+    private MicrositeCompleto importarArchivosMicrosite(MicrositeCompleto micro, Map<Long, String> archivos) throws IOException {
 
-        for (Object archivo : micro.getDocus().toArray()) {
-            if (archivos.get(((Archivo) archivo).getId()) != null) {
-                ((Archivo) archivo).setDatos(archivos.get(((Archivo) archivo).getId()).getDatos());
+        for (Archivo archivo : ((Set<Archivo>)micro.getDocus())) {
+            if (archivos.get(archivo.getId()) != null) {
+                archivo.setDatos( leerDatosPath(archivos.get(archivo.getId())) );
             } else {
                 log.error("Archivo no encontrado, posiblemente se perdio en la exportación o se elemino del ZIP.");
             }
         }
 
         if (micro.getImagenPrincipal() != null && archivos.get(micro.getImagenPrincipal().getId()) != null) {
-            micro.getImagenPrincipal().setDatos(archivos.get(micro.getImagenPrincipal().getId()).getDatos());
+            micro.getImagenPrincipal().setDatos( leerDatosPath(archivos.get(micro.getImagenPrincipal().getId())));
         }
         if (micro.getImagenCampanya() != null && archivos.get(micro.getImagenCampanya().getId()) != null) {
-            micro.getImagenCampanya().setDatos(archivos.get(micro.getImagenCampanya().getId()).getDatos());
+            micro.getImagenCampanya().setDatos( leerDatosPath(archivos.get(micro.getImagenCampanya().getId())));
         }
         if (micro.getEstiloCSS() != null && archivos.get(micro.getEstiloCSS().getId()) != null) {
-            micro.getEstiloCSS().setDatos(archivos.get(micro.getEstiloCSS().getId()).getDatos());
+            micro.getEstiloCSS().setDatos(leerDatosPath(archivos.get(micro.getEstiloCSS().getId())));
         }
 
         for (Object menu : micro.getMenus()) {
             if (((Menu) menu).getImagenmenu() != null && archivos.get(((Menu) menu).getImagenmenu()) != null) {
-                ((Menu) menu).getImagenmenu().setDatos(archivos.get(((Menu) menu).getImagenmenu().getId()).getDatos());
+                ((Menu) menu).getImagenmenu().setDatos(leerDatosPath(archivos.get(((Menu) menu).getImagenmenu().getId())));
             }
             for (Contenido contenido : ((Menu) menu).getContenidos()) {
                 if (contenido.getImagenmenu() != null && archivos.get(contenido.getImagenmenu().getId()) != null) {
-                    contenido.getImagenmenu().setDatos(archivos.get(contenido.getImagenmenu().getId()).getDatos());
+                    contenido.getImagenmenu().setDatos(leerDatosPath(archivos.get(contenido.getImagenmenu().getId())));
                 }
             }
         }
@@ -339,55 +337,41 @@ public class ImportarAction extends BaseAction {
         for (Object agenda : micro.getAgendas()) {
             for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
                 if (trad.getDocumento() != null && archivos.get(trad.getDocumento().getId()) != null) {
-                    trad.getDocumento().setDatos(archivos.get(trad.getDocumento().getId()).getDatos());
+                    trad.getDocumento().setDatos(leerDatosPath(archivos.get(trad.getDocumento().getId())));
                     trad.getDocumento().setId(null);
                 }
                 if (trad.getImagen() != null && archivos.get(trad.getImagen().getId()) != null) {
-                    trad.getImagen().setDatos(archivos.get(trad.getImagen().getId()).getDatos());
+                    trad.getImagen().setDatos(leerDatosPath(archivos.get(trad.getImagen().getId())));
                     trad.getImagen().setId(null);
                 }
             }
         }
 
-        for (Object noticia : micro.getNoticias()) {
-            if (((Noticia) noticia).getImagen() != null && archivos.get(((Noticia) noticia).getImagen().getId()) != null) {
-                ((Noticia) noticia).getImagen().setDatos(archivos.get(((Noticia) noticia).getImagen().getId()).getDatos());
+        for (Noticia noticia : (Set<Noticia>)micro.getNoticias()) {
+            if (noticia.getImagen() != null && archivos.get(noticia.getImagen().getId()) != null) {
+                noticia.getImagen().setDatos(leerDatosPath(archivos.get(noticia.getImagen().getId())));
             }
-            for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
+            for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
                 if (trad.getDocu() != null && archivos.get(trad.getDocu().getId()) != null) {
-                    trad.getDocu().setDatos(archivos.get(trad.getDocu().getId()).getDatos());
+                    trad.getDocu().setDatos(leerDatosPath(archivos.get(trad.getDocu().getId())));
                     trad.getDocu().setId(null);
                 }
             }
         }
 
-        for (Object componente : micro.getComponentes()) {
-            if (((Componente) componente).getImagenbul() != null && archivos.get(((Componente) componente).getImagenbul().getId()) != null) {
-                ((Componente) componente).getImagenbul().setDatos(archivos.get(((Componente) componente).getImagenbul().getId()).getDatos());
+        for (Componente componente : (Set<Componente>)micro.getComponentes()) {
+            if (componente.getImagenbul() != null && archivos.get(componente.getImagenbul().getId()) != null) {
+                componente.getImagenbul().setDatos(leerDatosPath(archivos.get(componente.getImagenbul().getId())));
             }
         }
 
         for (Object encuesta : micro.getEncuestas()) {
             for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
                 if (pregunta.getImagen() != null && archivos.get(pregunta.getImagen().getId()) != null) {
-                    pregunta.getImagen().setDatos(archivos.get(pregunta.getImagen().getId()).getDatos());
+                    pregunta.getImagen().setDatos(leerDatosPath(archivos.get(pregunta.getImagen().getId())));
                 }
             }
         }
-
-		/* TODO: Esto es buggy... no se puede incluir el tema en la importación del microsite
-        if (micro.getTema() != null) {
-            if (micro.getTema().getCss() != null) {
-                micro.getTema().getCss().setDatos(archivos.get(micro.getTema().getCss().getId()).getDatos());
-            }
-            for (ArchivoTemaFront archTF : micro.getTema().getArchivoTemaFronts()) {
-                if (archTF.getArchivo() != null && archivos.get(archTF.getArchivo().getId()) != null) {
-                    archTF.getArchivo().setDatos(archivos.get(archTF.getArchivo().getId()).getDatos());
-                }
-            }
-        }
-         * 
-         */
 
         return micro;
     }

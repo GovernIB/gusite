@@ -3,6 +3,7 @@ package es.caib.gusite.front.view;
 import java.util.Collection;
 import java.util.List;
 
+import es.caib.gusite.front.general.Version;
 import es.caib.gusite.front.general.bean.MenuFront;
 import es.caib.gusite.front.general.bean.Pardato;
 import es.caib.gusite.front.general.bean.Tridato;
@@ -47,6 +48,8 @@ public class LayoutView {
 	private String servicio;
 
 	private String homeTmpCampanya;
+	
+	private Version version;
 
 	/**
 	 *  
@@ -277,6 +280,19 @@ public class LayoutView {
 
 		return this.homeTmpCampanya;
 
+	}
+
+	public void setVersion(Version version) {
+		this.version = version;
+	}
+
+	/**
+	 * Datos de la versión de gusite en ejecución
+	 * @return
+	 */
+	@Variable("MVS_version")
+	public Version getVersion() {
+		return version;
 	}
 
 }

@@ -55,6 +55,9 @@ public abstract class BaseViewController extends FrontController {
 	@Autowired
 	private OrganigramaProvider organigramaProvider; 
 	
+	@Autowired
+	private Version version;
+	
 	/**
 	 * Realiza las tareas que antes realizaba el constructor de Bdbase
 	 * 
@@ -71,6 +74,7 @@ public abstract class BaseViewController extends FrontController {
 		String idi = lang.getLang().toUpperCase();
 		view.setIdioma(idi);
 		view.setLang(lang);
+		view.setVersion(version);
 
 		this.cargarSite(uri, lang, view);
 

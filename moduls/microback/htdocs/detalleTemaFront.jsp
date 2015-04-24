@@ -61,6 +61,14 @@
                 </button>
             </span>
             <span class="grup">
+				<button type="button" name="fichero1" title="<bean:message key="frontTemas.exportar" />" onclick="submitExportar(<bean:write name="TemaFrontForm" property="id"/>);">
+					<img src="imgs/botons/importar.gif" alt="<bean:message key="frontTemas.exportar" />" /> &nbsp;<bean:message key="frontTemas.exportar" />
+				</button>
+				<button type="button" name="fichero2" title="<bean:message key="frontTemas.importar" />" onclick="submitImportar(<bean:write name="TemaFrontForm" property="id"/>);">
+					<img src="imgs/botons/importar.gif" alt="<bean:message key="frontTemas.importar" />" /> &nbsp;<bean:message key="frontTemas.importar" />
+				</button>
+            </span>
+            <span class="grup">
                 <button class="btnGuardar" type="submit" title='<bean:message key="operacion.guardar"/>'>
                     <img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
                 </button>
@@ -213,7 +221,6 @@
 </body>
 </html>
 <script>
-    <!--
     var uriEdicion="perPlantillasEdita.do?id=";
     var alert1="<bean:message key="frontTemas.alert1"/>";
     var alert2="<bean:message key="frontTemas.alert2"/>";
@@ -223,5 +230,12 @@
     var mensa1='<bean:message key="conte.modifarchi"/>';
     var mensa2='<bean:message key="conte.alertamodifarchi"/>';
     var mensa3='<bean:message key="conte.nuevoarchimensa"/>';
-    -->
+
+	function submitExportar(idtema){
+		document.location="exportarTema.do?idtema="+idtema;
+	}
+	function submitImportar(idtema){
+		document.location="importarTema.do?idtema="+idtema;
+	}
+    
 </script>

@@ -393,6 +393,11 @@
        	<form-property name="tarea" type="java.lang.String" initial="C"/>
 	</form-bean>    	
 
+	<form-bean name="ImportarTemaForm" type="es.caib.gusite.microback.actionform.formulario.ImportarTemaForm">
+		<form-property name="archi" type="org.apache.struts.upload.FormFile"/>
+       	<form-property name="idtema" type="java.lang.Long"/>
+	</form-bean>    	
+
 	<form-bean name="convocatoriaForm" type="es.caib.gusite.microback.actionform.formulario.convocatoriaForm">
 		<form-property name="id" type="java.lang.Long"/>
        	<form-property name="nombre" type="java.lang.String"/>
@@ -911,8 +916,14 @@
 
     <action path="/exportar" type="es.caib.gusite.microback.action.util.ExportarAction" scope="request" unknown="false"/>
 
+    <action path="/exportarTema" type="es.caib.gusite.microback.action.util.ExportarTemaAction" scope="request" unknown="false"/>
+
     <action path="/importar" name="importarForm" type="es.caib.gusite.microback.action.util.ImportarAction" scope="request" unknown="false">
 	    <forward name="detalle" path="/importar.jsp"/>
+    </action>    	 
+
+    <action path="/importarTema" name="ImportarTemaForm" type="es.caib.gusite.microback.action.util.ImportarTemaAction" scope="request" unknown="false">
+	    <forward name="detalle" path="/importarTema.jsp"/>
     </action>    	 
 
     <action path="/consola" type="es.caib.gusite.microback.action.util.ConsolaAction" unknown="false">

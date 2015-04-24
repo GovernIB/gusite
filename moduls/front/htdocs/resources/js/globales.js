@@ -22,7 +22,18 @@ function mostrarCalendari() {
 		divs[i].style.display = (i==num) ? 'block' : 'none';
 	}
 }
-
+function cambiMes(click){
+if(click=="mesPosterior"){
+	if(window.$('agendaSelect').options[$('agendaSelect').selectedIndex+1]){
+		$('agendaSelect').value = $('agendaSelect').options[$('agendaSelect').selectedIndex+1].value;
+	}
+}else{
+	if(window.$('agendaSelect').options[$('agendaSelect').selectedIndex-1]){
+		$('agendaSelect').value = $('agendaSelect').options[$('agendaSelect').selectedIndex-1].value;
+	}
+}
+mostrarCalendari();
+};
 /* menu lateral */
 
 var menuJS = {

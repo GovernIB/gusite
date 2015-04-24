@@ -17,6 +17,7 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 	
 	<!-- Components base package -->
 	<context:component-scan base-package="es.caib.gusite.front" />
+	<context:property-placeholder location="classpath:version.properties" />
 
 	<!-- Static media files (imgs, css, js...). See RequestUtil.RESOURCE_PATTERN 
 		and open.jsp -->

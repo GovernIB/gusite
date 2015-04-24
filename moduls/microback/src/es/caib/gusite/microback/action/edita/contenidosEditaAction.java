@@ -31,6 +31,7 @@ import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.TraduccionAgendaPK;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionContenidoPK;
 import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
@@ -226,8 +227,10 @@ public class contenidosEditaAction extends BaseAction
     				
     			} else {
     				TraduccionContenido traduccio = new TraduccionContenido();
-//    				traduccio.setContenido(contenido);
-//    				traduccio.setIdioma((Idioma)langs.get(i));
+    				TraduccionContenidoPK idt = new TraduccionContenidoPK();
+    				idt.setCodigoContenido(contenido.getId());
+    				idt.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+    				traduccio.setId(idt);
     				traduccio.setTexto(llista.get(i).getTexto());
     				traduccio.setTitulo(llista.get(i).getTitulo());
     				traduccio.setTxbeta(llista.get(i).getTxbeta());

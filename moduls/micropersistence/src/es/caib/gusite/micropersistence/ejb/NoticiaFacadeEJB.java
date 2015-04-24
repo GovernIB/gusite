@@ -133,6 +133,13 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				noticia.setTraducciones(null);
+			} else {
+				//Damos de alta los nuevos archivos
+				for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
+                    if (trad.getDocu() != null && trad.getDocu().getId() == null) {
+                        DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocu());
+                    }
+				}
 			}
 
 			session.saveOrUpdate(noticia);

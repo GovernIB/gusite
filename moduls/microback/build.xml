@@ -192,7 +192,8 @@
         	<classes dir="${web.classes}"/>
 
         	<classes dir="${web.gen.src}" includes="*.properties, *.jks"/>   
-	
+			<classes dir="${web.product}" includes="version.properties" />
+
 			<webinf dir="${web.product}" includes="template-front.zip" />
 			
 

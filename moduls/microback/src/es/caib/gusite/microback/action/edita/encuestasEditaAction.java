@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -97,8 +98,10 @@ public class encuestasEditaAction extends BaseAction
 
 	    			} else {
 	    				TraduccionEncuesta traduccio = new TraduccionEncuesta();
-//	    				traduccio.setEncuesta(enc);
-//	    				traduccio.setIdioma((Idioma)langs.get(i));
+	    				TraduccionEncuestaPK idt = new TraduccionEncuestaPK();
+	    				idt.setCodigoEncuesta(enc.getId());
+	    				idt.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+	    				traduccio.setId(idt);
 	    				traduccio.setTitulo(llista.get(i).getTitulo());
 	    				traduccio.setUri(llista.get(i).getUri());
 	    				

@@ -25,6 +25,7 @@ import es.caib.gusite.micromodel.Pregunta;
 import es.caib.gusite.micromodel.Respuesta;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionPregunta;
+import es.caib.gusite.micromodel.TraduccionPreguntaPK;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 
@@ -130,10 +131,11 @@ public class preguntasEditaAction extends BaseAction
 
 	    			} else {
 	    				TraduccionPregunta traduccio = new TraduccionPregunta();
-//	    				traduccio.setPregunta(pre);
-//	    				traduccio.setIdioma((Idioma)langs.get(i));
+	    				TraduccionPreguntaPK idtp = new TraduccionPreguntaPK(); 
+	    				idtp.setCodigoPregunta(pre.getId());
+	    				idtp.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+	    				traduccio.setId(idtp);
 	    				traduccio.setTitulo(llista.get(i).getTitulo());
-	    				
 	    				pre.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);
 	    			}
 	    		}
@@ -220,7 +222,7 @@ public class preguntasEditaAction extends BaseAction
                 fdet.set("obligatorio", pre.getObligatorio());
                 fdet.set("maxContestadas", pre.getMaxContestadas());
                 fdet.set("minContestadas", pre.getMinContestadas());
-                if (pre.getMinContestadas() > 0){
+                if (pre.getMinContestadas() != null && pre.getMinContestadas() > 0){
                 	fdet.set("obligatoria",new Integer(1));
                 }else{
                 	fdet.set("obligatoria",new Integer(0));

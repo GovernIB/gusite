@@ -49,9 +49,9 @@ public class Plantilla extends AuditableModel implements Auditable, Serializable
 
 	/**
 	 * Descripción y documentación de la plantilla
+	 * Importante: fijado como String para que funcione también en postgres.
 	 */
     @XmlAttribute
-    @Lob
     @Column(name = "PLA_DESCRIPCION")
 	private String descripcion;
 

@@ -20,7 +20,9 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Temafaq;
 import es.caib.gusite.micromodel.TraduccionAgenda;
+import es.caib.gusite.micromodel.TraduccionEncuestaPK;
 import es.caib.gusite.micromodel.TraduccionFaq;
+import es.caib.gusite.micromodel.TraduccionFaqPK;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
@@ -103,8 +105,10 @@ public class faqsEditaAction extends BaseAction
 	    				faq.getTraducciones().get(((Idioma)langs1.get(i)).getLang()).setUrlnom(llista.get(i).getUrlnom());
 	    			} else {
 	    				TraduccionFaq traduccio = new TraduccionFaq();
-//	    				traduccio.setFaq(faq);
-//	    				traduccio.setIdioma((Idioma)langs1.get(i));
+	    				TraduccionFaqPK idt = new TraduccionFaqPK();
+	    				idt.setCodigoFaq(faq.getId());
+	    				idt.setCodigoIdioma( ((Idioma)langs1.get(i)).getLang());
+	    				traduccio.setId(idt);
 	    				traduccio.setPregunta(llista.get(i).getPregunta());
 	    				traduccio.setRespuesta(llista.get(i).getRespuesta());
 	    				traduccio.setUrl(llista.get(i).getUrl());

@@ -48,7 +48,11 @@ public class Archivo extends AuditableModel implements Indexable {
 	@Column(name = "DCM_TAMANO")
 	private long peso;
 
+	/* IMPORTANTE: 
+	 * 		Comentado para que funcione con postgres bytea. 
+	 * 		Parece ser que no afecta a oracle
 	@Lob
+	*/
 	@Column(name = "DCM_DATOS")
 	private byte[] datos;
 

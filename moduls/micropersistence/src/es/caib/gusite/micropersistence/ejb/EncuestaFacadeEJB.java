@@ -433,8 +433,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			Map<String, TraduccionPregunta> listaTraducciones = new HashMap<String, TraduccionPregunta>();
 
 			if (nuevo) {
-				Iterator<TraduccionPregunta> it = pre.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionPregunta> it = pre.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionPregunta trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);

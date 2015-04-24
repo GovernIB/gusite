@@ -1,6 +1,8 @@
 package es.caib.gusite.microback;
 
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Properties;
 
 /**
  * Clase básica de los microsites. 
@@ -18,9 +20,6 @@ public class Microback {
 	static public final String RNOTICIA = "NTCS0";
 	static public final String RENCUESTA = "NCSTS";
 	static public final String RQSSI = "FQSSI";
-	static public final String microsites_version = "3.1";
-	static public final String microsites_name = "CAIB - Microsites";
-	static public final String microsites_build = "30/08/2010";
 	static public final String _HOSTCAIB = "www.caib.es";
 	
 	// obsoletos, se mantienen para la información estadística
@@ -102,5 +101,21 @@ public class Microback {
 	//tipo de paginacion
 	static public final String ELEM_PAG_NORMAL = "0"; //paginacion tradicional
 	static public final String ELEM_PAG_ANUAL = "1"; //paginacion anual
+
+	static public String microsites_version = "unknown";
+	static public String microsites_name = "unknown";
+	static public String microsites_build = "unknown";
+
+	static {
+		try {
+			Properties versionsProperties = new Properties();
+			versionsProperties.load(Microback.class.getClassLoader().getResourceAsStream("version.properties"));
+			microsites_version = versionsProperties.getProperty("microsites.version");
+			microsites_name = versionsProperties.getProperty("microsites.name");
+			microsites_build = versionsProperties.getProperty("microsites.build") + "(r"+ versionsProperties.getProperty("svn.revision") +")";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

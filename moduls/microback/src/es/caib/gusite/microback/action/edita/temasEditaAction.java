@@ -18,7 +18,9 @@ import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Temafaq;
+import es.caib.gusite.micromodel.TraduccionEncuestaPK;
 import es.caib.gusite.micromodel.TraduccionTemafaq;
+import es.caib.gusite.micromodel.TraduccionTemafaqPK;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 
@@ -85,8 +87,10 @@ public class temasEditaAction extends BaseAction
     				tema.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setNombre(llista.get(i).getNombre());
     			} else {
     				TraduccionTemafaq traduccio = new TraduccionTemafaq();
-//    				traduccio.setTemafaq(tema);
-//    				traduccio.setIdioma((Idioma)langs.get(i));
+    				TraduccionTemafaqPK idt = new TraduccionTemafaqPK();
+    				idt.setCodigoTema(tema.getId());
+    				idt.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+    				traduccio.setId(idt);
     				traduccio.setNombre(llista.get(i).getNombre());
     				
     				tema.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);

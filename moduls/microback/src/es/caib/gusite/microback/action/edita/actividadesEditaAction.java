@@ -24,6 +24,7 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micromodel.TraduccionActividadagenda;
+import es.caib.gusite.micromodel.TraduccionActividadagendaPK;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micropersistence.delegate.ActividadDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -90,8 +91,10 @@ public class actividadesEditaAction extends BaseAction
 		    				activi.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setNombre(llista.get(i).getNombre());
 		    			} else {
 		    				TraduccionActividadagenda traduccio = new TraduccionActividadagenda();
-//		    				traduccio.setActividadAgenda(activi);
-//		    				traduccio.setIdioma((Idioma)langs.get(i));
+		    				TraduccionActividadagendaPK idta = new TraduccionActividadagendaPK();
+		    				idta.setCodigoActividadAgenda(activi.getId());
+		    				idta.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+		    				traduccio.setId(idta);
 		    				traduccio.setNombre(llista.get(i).getNombre());
 		    				
 		    				activi.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);

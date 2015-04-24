@@ -13,6 +13,7 @@ import javax.xml.bind.Marshaller;
 
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -30,7 +31,6 @@ import es.caib.gusite.micropersistence.util.log.MicroLog;
  *	scope="request" <BR>
  *  unknown="false"
  *  
- *  @author - Indra
  */
 public class ExportarAction extends BaseAction {
 
@@ -118,24 +118,16 @@ public class ExportarAction extends BaseAction {
 	    		String rutaZIP = tmpDir + nombreZIP;
 	    		
 	    		// Creamos el archivo ZIP.
-			    ZipOutputStream out = new ZipOutputStream(new FileOutputStream(rutaZIP));
+			    ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(rutaZIP));
 			    
 			    // Agregamos XML al ZIP.
-			    agregaXmlAZIP(rutaXML, nombreXML, out);
+			    agregaXmlAZIP(rutaXML, nombreXML, zipFile);
 			    
 			    // Agregamos, si los hubiese, los archivos asociados al XML dentro de un directorio aparte dentro del ZIP.
-			    Archivo[] documentos = extraerArchivosMicrosite(micro);
+			    incluirArchivosMicrosite(micro, zipFile);
 		    	
-		    	// Creamos la entrada en el ZIP para el directorio que contendrá los archivos.
-		    	// El API de archivos ZIP de Java detecta que es un directorio al acabar en "/".
-		    	out.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
-		    			    	
-		    	for (Archivo docu : documentos) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, docu, out);
-		    	}
-	            
 			    // Ofrecemos ZIP al usuario.
-		    	out.close();
+		    	zipFile.close();
 			    ofreceZIP(response, tmpDir, nombreZIP);
 			    
     		} catch (SecurityException e) {
@@ -189,91 +181,77 @@ public class ExportarAction extends BaseAction {
     	}
 	}
 
-	private Archivo[] extraerArchivosMicrosite(MicrositeCompleto microsite) {
+	private void incluirArchivosMicrosite(MicrositeCompleto microsite, ZipOutputStream zipFile) throws IOException, DelegateException {
 
+    	// Creamos la entrada en el ZIP para el directorio que contendrá los archivos.
+    	// El API de archivos ZIP de Java detecta que es un directorio al acabar en "/".
+	    zipFile.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		Map<Long, Archivo> archivos = new HashMap<Long, Archivo>();
-		try {
-			for (Iterator iter = microsite.getDocus().iterator(); iter.hasNext();) {
-				Archivo archivo = (Archivo) iter.next();
-				archivos.put(archivo.getId(), obtenerArchivo(archivo, archivoDelegate));
-			}
-
-			if (microsite.getImagenPrincipal() != null) {
-				archivos.put(microsite.getImagenPrincipal().getId(), obtenerArchivo(microsite.getImagenPrincipal(), archivoDelegate));
-			}
-
-			if (microsite.getImagenCampanya() != null) {
-				archivos.put(microsite.getImagenCampanya().getId(), obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate));
-			}
-
-			if (microsite.getEstiloCSS() != null && microsite.getEstiloCSS().getDatos() != null) {
-                archivos.put(microsite.getEstiloCSS().getId(), obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate));
-			}
-
-			for (Object menu : microsite.getMenus()) {
-				if (((Menu) menu).getImagenmenu() != null) {
-					archivos.put(((Menu) menu).getImagenmenu().getId(), obtenerArchivo(((Menu) menu).getImagenmenu(), archivoDelegate));
-				}
-				for (Contenido contenido : ((Menu) menu).getContenidos()) {
-					if (contenido.getImagenmenu() != null) {
-						archivos.put(contenido.getImagenmenu().getId(), obtenerArchivo(contenido.getImagenmenu(), archivoDelegate));
-					}
-				}
-			}
-
-			for (Object agenda : microsite.getAgendas()) {
-				for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
-					if (trad.getDocumento() != null) {
-						archivos.put(trad.getDocumento().getId(), obtenerArchivo(trad.getDocumento(), archivoDelegate));
-					}
-					if (trad.getImagen() != null) {
-						archivos.put(trad.getImagen().getId(), obtenerArchivo(trad.getImagen(), archivoDelegate));
-					}
-				}
-			}
-
-			for (Object noticia : microsite.getNoticias()) {
-				if (((Noticia) noticia).getImagen() != null) {
-					archivos.put(((Noticia) noticia).getImagen().getId(), obtenerArchivo(((Noticia) noticia).getImagen(), archivoDelegate));
-				}
-				for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
-					if (trad.getDocu() != null) {
-						archivos.put(trad.getDocu().getId(), obtenerArchivo(trad.getDocu(), archivoDelegate));
-					}
-				}
-			}
-
-			for (Object componente : microsite.getComponentes()) {
-				if (((Componente) componente).getImagenbul() != null) {
-					archivos.put(((Componente) componente).getImagenbul().getId(), obtenerArchivo(((Componente) componente).getImagenbul(), archivoDelegate));
-				}
-			}
-
-			for (Object encuesta : microsite.getEncuestas()) {
-				for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
-					if (pregunta.getImagen() != null) {
-						archivos.put(pregunta.getImagen().getId(), obtenerArchivo(pregunta.getImagen(), archivoDelegate));
-					}
-				}
-			}
-
-			/* TODO: Esto es buggy... no se puede incluir el tema en la exportación del microsite
-            if (microsite.getTema() != null) {
-                if (microsite.getTema().getCss() != null) {
-                    archivos.put(microsite.getTema().getCss().getId(), obtenerArchivo(microsite.getTema().getCss(), archivoDelegate));
-                }
-                for (ArchivoTemaFront archTF : microsite.getTema().getArchivoTemaFronts()) {
-                    archivos.put(archTF.getArchivo().getId(), obtenerArchivo(archTF.getArchivo(), archivoDelegate));
-                }
-            }
-            */
-
-		} catch (DelegateException e) {
-			e.printStackTrace();
+		for (Iterator iter = microsite.getDocus().iterator(); iter.hasNext();) {
+			Archivo archivo = (Archivo) iter.next();
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(archivo, archivoDelegate), zipFile);
 		}
 
-		return archivos.values().toArray(new Archivo[archivos.values().size()]);
+		if (microsite.getImagenPrincipal() != null) {
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getImagenPrincipal(), archivoDelegate), zipFile);
+		}
+
+		if (microsite.getImagenCampanya() != null) {
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate), zipFile);
+		}
+
+		if (microsite.getEstiloCSS() != null && microsite.getEstiloCSS().getDatos() != null) {
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate), zipFile);
+		}
+
+		for (Object menu : microsite.getMenus()) {
+			if (((Menu) menu).getImagenmenu() != null) {
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Menu) menu).getImagenmenu(), archivoDelegate), zipFile);
+			}
+			for (Contenido contenido : ((Menu) menu).getContenidos()) {
+				if (contenido.getImagenmenu() != null) {
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(contenido.getImagenmenu(), archivoDelegate), zipFile);
+				}
+			}
+		}
+
+		for (Object agenda : microsite.getAgendas()) {
+			for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
+				if (trad.getDocumento() != null) {
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getDocumento(), archivoDelegate), zipFile);
+				}
+				if (trad.getImagen() != null) {
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getImagen(), archivoDelegate), zipFile);
+				}
+			}
+		}
+
+		for (Object noticia : microsite.getNoticias()) {
+			if (((Noticia) noticia).getImagen() != null) {
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Noticia) noticia).getImagen(), archivoDelegate), zipFile);
+			}
+			for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
+				if (trad.getDocu() != null) {
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getDocu(), archivoDelegate), zipFile);
+				}
+			}
+		}
+
+		for (Object componente : microsite.getComponentes()) {
+			if (((Componente) componente).getImagenbul() != null) {
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Componente) componente).getImagenbul(), archivoDelegate), zipFile);
+			}
+		}
+
+		for (Object encuesta : microsite.getEncuestas()) {
+			for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
+				if (pregunta.getImagen() != null) {
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(pregunta.getImagen(), archivoDelegate), zipFile);
+				}
+			}
+		}
+
+
 	}
 
 	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {

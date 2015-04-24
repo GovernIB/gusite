@@ -52,7 +52,6 @@ public class IndexInicioAction extends Action  {
 		
 		
 		request.setAttribute("MVS_ultimsmodificats", obtenerListaUltimasModificaciones(request));
-		//request.setAttribute("MVS_einaversion", Microback.microsites_name + " v" + Microback.microsites_version + " build: " + Microback.microsites_build);
         return mapping.findForward("inicio");
     }
 	

@@ -43,31 +43,32 @@ public class FrontUrlFactory {
 
 		String urlTraducida = "";
 
-		String urlSinSites[] = url.split(context);
+		String urlSeparada[] = url.substring(context.length()).split("/");
 
-		String urlEditada = "";
+		//#657: urls de contenido sin /c 
+		if (urlSeparada.length == 3 && urlSeparada[2].length() > 2) {
+			//Es una url corta de contenido en el idioma por defecto
+			return "/" + urlSeparada[1] + "/" + idioma + "/" + urlSeparada[2] + "/";
+		}
 
-		urlEditada = urlEditada + urlSinSites[1];
-
-		String urlSeparada[] = urlEditada.split("/");
-
-		Boolean idiomaFinal = true;
-		Boolean sinBarraFinal = false;
-		Boolean idiomaContact = false;
-
+		
+		boolean anyadirIdiomaFinal = true;
+		boolean sinBarraFinal = false;
+		boolean usarIdiomaEnContact = false;
+		
 		for (int i = 1; i < urlSeparada.length; i++) {
 			if ((urlSeparada[i].contentEquals("ca")) || (urlSeparada[i].contentEquals("es")) || (urlSeparada[i].contentEquals("en"))
 					|| (urlSeparada[i].contentEquals("de")) || (urlSeparada[i].contentEquals("fr"))) {
 
-				idiomaFinal = false;
-				idiomaContact = true;
+				anyadirIdiomaFinal = false;
+				usarIdiomaEnContact = true;
 
 				urlTraducida = urlTraducida + "/" + idioma;
 
 			} else if ((urlSeparada[i].contentEquals("contacte")) || (urlSeparada[i].contentEquals("contacto"))
 					|| (urlSeparada[i].contentEquals("contact"))) {
 
-				if (idiomaContact == true) {
+				if (usarIdiomaEnContact) {
 					if (idioma.contentEquals("es")) {
 						urlTraducida = urlTraducida + "/" + "contact";
 					}
@@ -77,8 +78,7 @@ public class FrontUrlFactory {
 					if (idioma.contentEquals("en")) {
 						urlTraducida = urlTraducida + "/" + "contact";
 					}
-				}
-				if (idiomaContact == false) {
+				} else {
 					if (idioma.contentEquals("es")) {
 						urlTraducida = urlTraducida + "/" + "contacto";
 					}
@@ -89,7 +89,7 @@ public class FrontUrlFactory {
 						urlTraducida = urlTraducida + "/" + "contact";
 					}
 				}
-				idiomaFinal = false;
+				anyadirIdiomaFinal = false;
 			} else if ((urlSeparada[i].contentEquals("cercar")) || (urlSeparada[i].contentEquals("buscar"))
 					|| (urlSeparada[i].contentEquals("search"))) {
 
@@ -103,7 +103,7 @@ public class FrontUrlFactory {
 					urlTraducida = urlTraducida + "/" + "search" + "/?cerca=" + palabraBuscada + "&lang=" + idioma;
 				}
 
-				idiomaFinal = true;
+				anyadirIdiomaFinal = true;
 				sinBarraFinal = true;
 			} else {
 				urlTraducida = urlTraducida + "/" + urlSeparada[i];
@@ -115,14 +115,11 @@ public class FrontUrlFactory {
 			urlTraducida = "/" + urlSinDobleBarra[1];
 		}
 
-		if (idiomaFinal == false) {
-
+		if (!anyadirIdiomaFinal) {
 			urlTraducida = urlTraducida + "/";
-		} else if ((idiomaFinal == true) && (sinBarraFinal == true)) {
+		} else if (anyadirIdiomaFinal && sinBarraFinal) {
 			urlTraducida = urlTraducida + "";
-		}
-
-		else {
+		} else {
 			urlTraducida = urlTraducida + "/" + idioma + "/";
 		}
 

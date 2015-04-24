@@ -43,10 +43,10 @@ public class TemaFrontEditaAction extends BaseAction {
             crearActualizarTemaFront(request, temaFrontForm);
 
         } else if (esEliminarArchivos(request)) {
-            elimiarArchivos(temaFrontForm);
+            eliminarArchivos(temaFrontForm);
 
         } else if (esEliminarPerPlantillas(request)) {
-            elimiarPerPlantillas(temaFrontForm);
+            eliminarPerPlantillas(temaFrontForm);
 
         } else if (esSubirArchivo(temaFrontForm)) {
             subirArchivo(temaFrontForm);
@@ -125,6 +125,9 @@ public class TemaFrontEditaAction extends BaseAction {
 
         TemaFrontForm temaFrontSession = (TemaFrontForm) request.getSession().getAttribute("TemaFrontForm");
         Long id = (Long) temaFrontSession.get("id");
+        if (id == null) {
+        	id = Long.valueOf(request.getParameter("idtema"));
+        }
         TemaFront temaFront = DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(id);
         setBeanToForm(temaFront, temaFrontForm);
     }
@@ -152,7 +155,7 @@ public class TemaFrontEditaAction extends BaseAction {
         return System.getProperty(CONTEXT).concat("/ft/").concat(temaUri).concat("/files/").concat(nom);
     }
 
-    private void elimiarArchivos(TemaFrontForm temaFrontForm) throws DelegateException {
+    private void eliminarArchivos(TemaFrontForm temaFrontForm) throws DelegateException {
 
         ArchivoTemaFrontDelegate archivoTemaFrontDelegate = DelegateUtil.getArchivoTemaFrontDelegate();
         String[] seleccionados = (String[]) temaFrontForm.get("seleccionados");
@@ -164,7 +167,7 @@ public class TemaFrontEditaAction extends BaseAction {
         }
     }
 
-    private void elimiarPerPlantillas(TemaFrontForm temaFrontForm) throws DelegateException {
+    private void eliminarPerPlantillas(TemaFrontForm temaFrontForm) throws DelegateException {
 
         PersonalizacionPlantillaDelegate personalizacionPlantillaDelegate = DelegateUtil.getPersonalizacionPlantillaDelegate();
         String[] seleccionados = (String[]) temaFrontForm.get("seleccionados");

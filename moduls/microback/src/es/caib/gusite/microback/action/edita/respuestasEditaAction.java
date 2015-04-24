@@ -20,8 +20,10 @@ import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Pregunta;
 import es.caib.gusite.micromodel.Respuesta;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionEncuestaPK;
 import es.caib.gusite.micromodel.TraduccionPregunta;
 import es.caib.gusite.micromodel.TraduccionRespuesta;
+import es.caib.gusite.micromodel.TraduccionRespuestaPK;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 
@@ -109,8 +111,10 @@ public class respuestasEditaAction extends BaseAction
 
 	    			} else {
 	    				TraduccionRespuesta traduccio = new TraduccionRespuesta();
-//	    				traduccio.setRespuesta(res);
-//	    				traduccio.setIdioma((Idioma)langs.get(i));
+	    				TraduccionRespuestaPK idt = new TraduccionRespuestaPK();
+	    				idt.setCodigoRespuesta(res.getId());
+	    				idt.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+	    				traduccio.setId(idt);
 	    				traduccio.setTitulo(llista.get(i).getTitulo());
 	    				
 	    				res.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);

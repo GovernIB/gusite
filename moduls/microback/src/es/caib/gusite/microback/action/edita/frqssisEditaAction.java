@@ -19,7 +19,9 @@ import es.caib.gusite.micromodel.Frqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionEncuestaPK;
 import es.caib.gusite.micromodel.TraduccionFrqssi;
+import es.caib.gusite.micromodel.TraduccionFrqssiPK;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
 
@@ -89,8 +91,10 @@ public class frqssisEditaAction extends BaseAction
 	    				frqssi.getTraducciones().get(((Idioma)langs.get(i)).getLang()).setNombre(llista.get(i).getNombre());
 	    			} else {
 	    				TraduccionFrqssi traduccio = new TraduccionFrqssi();
-//	    				traduccio.setFrqssi(frqssi);
-//	    				traduccio.setIdioma((Idioma)langs.get(i));
+	    				TraduccionFrqssiPK idt = new TraduccionFrqssiPK();
+	    				idt.setCodigoFrqssi(frqssi.getId());
+	    				idt.setCodigoIdioma( ((Idioma)langs.get(i)).getLang());
+	    				traduccio.setId(idt);
 	    				traduccio.setNombre(llista.get(i).getNombre());
 	    				
 	    				frqssi.getTraducciones().put(((Idioma)langs.get(i)).getLang(), traduccio);
