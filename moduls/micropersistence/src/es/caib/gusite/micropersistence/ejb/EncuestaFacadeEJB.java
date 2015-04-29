@@ -1021,7 +1021,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			Iterator<?> iter = condicioUsu.iterator();
 			while (iter.hasNext()) {
 				String valor = (String) iter.next();
-				filtro += "res.idusuario =" + valor + " OR ";
+				filtro += "res.id.idusuario =" + valor + " OR ";
 			}
 
 			if (filtro.length() > 0) {
