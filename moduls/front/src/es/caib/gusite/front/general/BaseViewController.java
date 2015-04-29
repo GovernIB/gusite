@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
@@ -512,9 +513,22 @@ public abstract class BaseViewController extends FrontController {
 		view.setUos(getUos(idioma));
 	}
 	
+	/**
+	 * Plantillas aplicables al microsite
+	 * 
+	 * @param microsite
+	 * @return
+	 * @throws ExceptionFront
+	 */
+	@Cacheable(value = "uos")
 	private Collection<UnidadListData> getUos(String lang) {
-		//TODO: implementar en el plugin
-		Collection<UnidadListData> lista = this.organigramaProvider.getUnidadesPrincipales(lang);
+		Collection<UnidadListData> lista;
+		try {
+			lista = this.organigramaProvider.getUnidadesPrincipales(lang);
+		} catch (PluginException e) {
+			log.error(e);
+			return new ArrayList<UnidadListData>();
+		}
 		return lista;
 	}
 	

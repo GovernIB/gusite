@@ -301,7 +301,7 @@ public class LayoutView {
 	 * @return
 	 */
 	@Variable("MVS2_uos")
-	public Collection<UnidadData> getUos() {
+	public Collection<UnidadListData> getUos() {
 		return this.uos;
 	}
 
