@@ -24,7 +24,8 @@
 		var thDebug = false;
 	</script>
 </th:block>
-<link th:remove="tag" th:utext="${MVS_css}" />
+<!--/* TAGS css pel microsite  */-->
+<link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 <script gus:replace="general/scriptmenu :: script"></script>
 </head>
 <body>

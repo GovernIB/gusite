@@ -142,10 +142,10 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 				site.setClaveunica(this.obtenerClaveUnica(site));
 
-				if (site.getUri() == null || site.getUri().equals("")) {
-					site.setUri(site.getClaveunica());
-				}
+			}
 
+			if (site.getUri() == null || site.getUri().equals("")) {
+				site.setUri(site.getClaveunica());
 			}
 
 			session.saveOrUpdate(site);

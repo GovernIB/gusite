@@ -53,7 +53,7 @@ public class MenuCabecera {
 			}
 			
 		} catch (Exception e) {
-			log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB.");
+			log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB.", e);
 			e.printStackTrace();
 		}
 	}

@@ -89,9 +89,7 @@
 		<ul id="submenu">
 			<li class="selec"><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestgeneral" /></a></li>
 			<li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.campanya" /></a></li>
-			<logic:equal name="puedoeditar" value="1">
-				<li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestservicios" /></a></li>
-			</logic:equal>
+			<li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestservicios" /></a></li>
             <li><a href="#" onclick="mostrarForm(this);"><bean:message key="micro.pestaparen" /></a></li>
 		</ul>
 
@@ -172,6 +170,17 @@
 									<td class="etiqueta"><bean:message key="micro.uo" /> &gt;</td>
 									<td>
 										<logic:equal name="puedoeditar" value="1">
+											<html:hidden name="microForm" property="idUA" />
+							            		<html:text name="microForm" property="nombreUA" size="50" maxlength="256" readonly="true" />
+												<button type="button" title="<bean:message key="boton.seleccionar" />" onclick="abrirUA();"><img src="imgs/botons/cercar.gif" alt="<bean:message key="boton.seleccionar" />" /></button>
+										</logic:equal>
+										<logic:equal name="puedoeditar" value="0">
+											<html:hidden name="microForm" property="idUA" />
+							            		<html:text name="microForm" property="nombreUA" size="50" maxlength="256" disabled="true" readonly="true" />
+							            </logic:equal>
+									
+									<%--
+										<logic:equal name="puedoeditar" value="1">
 											<html:select name="microForm" property="idUA" styleId="idUA">
 												<html:option value=""><bean:message key="micro.uo" /></html:option>
 												<html:optionsCollection name="microForm" property="listaUAs" label="nombre" value="id" />
@@ -183,6 +192,7 @@
 												<html:optionsCollection name="microForm" property="listaUAs" label="nombre" value="id" />
 											</html:select>
 										</logic:equal>
+									 --%>
 									</td>
 								</tr>
 								<tr>
@@ -373,10 +383,12 @@
 
             <div id="capa_Aparen" class="capaFormIdioma" style="display:none;">
                 <table cellpadding="0" cellspacing="0" class="edicio">
-                    <tr>
-                        <td class="etiqueta"><bean:message key="micro.desarrollo" /> &gt;</td>
-                        <td><html:checkbox property="desarrollo" value="S" disabled="false" /></td>
-                    </tr>
+					<logic:equal name="puedoeditar" value="1">
+	                    <tr>
+	                        <td class="etiqueta"><bean:message key="micro.desarrollo" /> &gt;</td>
+	                        <td><html:checkbox property="desarrollo" value="S" disabled="false" /></td>
+	                    </tr>
+                    </logic:equal>
                     <tr class="par">
                         <td class="etiqueta"><bean:message key="micro.menu" /> &gt;</td>
                         <td>
@@ -487,7 +499,7 @@
 	}
 
 	function abrirUA() {
-        poprealcion = obrir("../sacbackold/organigrama/unidad/poparbol.do?idUA=0&action=&", "<bean:message key='boton.seleccionar'/>", 538, 440);
+        poprealcion = obrir("organigrama.jsp?idUA=0", "<bean:message key='boton.seleccionar'/>", 538, 440);
     }
     
     function obrir(url, name, x, y) {

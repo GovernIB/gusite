@@ -1,7 +1,13 @@
 package es.caib.gusite.front.view;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.Version;
 import es.caib.gusite.front.general.bean.MenuFront;
@@ -10,6 +16,7 @@ import es.caib.gusite.front.general.bean.Tridato;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
  * Plantilla base que monta la estructura general del resto de páginas web de microsite.
@@ -19,6 +26,52 @@ import es.caib.gusite.plugins.organigrama.UnidadData;
  */
 @TemplateView(TemplateView.LAYOUT)
 public class LayoutView {
+
+	/**
+	 * Genera el modelo spring para la vista, según sus variables
+	 * 
+	 * @param viewName
+	 * @param view
+	 * @return
+	 */
+	public static Map<String, Object> modelForView(LayoutView view) {
+
+		// TODO: cachear las variables (métodos) por vista
+		Map<String, Object> mv = new HashMap<String, Object>();
+		for (Method method : view.getClass().getMethods()) {
+			if (method.isAnnotationPresent(Variable.class)) {
+				String varName = method.getAnnotation(Variable.class).value();
+				try {
+					mv.put(varName, method.invoke(view));
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return mv;
+	}
+	
+	public static class ArchivoCSS {
+		
+		public ArchivoCSS(String src) {
+			this.src = src;
+		}
+		public ArchivoCSS(String src, String media) {
+			this.src = src;
+			this.media = media;
+		}
+		public String src = "";
+		public String media = "";
+		
+	}
 
 	private Microsite microsite;
 	private String idioma;
@@ -31,7 +84,7 @@ public class LayoutView {
 	private String micrositeAnalytics;
 
 	private List<Pardato> listaIdiomas;
-	private String css;
+	private List<ArchivoCSS> css;
 
 	private String direccion;
 
@@ -43,7 +96,7 @@ public class LayoutView {
 
 	private List<MenuFront> menu;
 
-	private Collection<UnidadData> uos;
+	private Collection<UnidadListData> uos;
 
 	private String servicio;
 
@@ -169,7 +222,7 @@ public class LayoutView {
 		return listaIdiomas;
 	}
 
-	public void setCss(String css) {
+	public void setCss(List<ArchivoCSS> css) {
 		this.css = css;
 	}
 
@@ -178,7 +231,7 @@ public class LayoutView {
 	 * @return
 	 */
 	@Variable("MVS_css")
-	public String getCss() {
+	public List<ArchivoCSS> getCss() {
 		return css;
 	}
 
@@ -237,9 +290,9 @@ public class LayoutView {
 		return menu;
 	}
 
-	public void setUos(Collection<UnidadData> uos) {
+	public void setUos(Collection<UnidadListData> collection) {
 
-		this.uos = uos;
+		this.uos = collection;
 
 	}
 

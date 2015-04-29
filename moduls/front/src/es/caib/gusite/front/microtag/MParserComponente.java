@@ -61,7 +61,7 @@ public class MParserComponente extends MParserHTML {
 
 			// si es de clase noticia.
 			if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {
-				retorno.append(this.getHtmlComponenteTNoticia3(idmicrosite, componente, idioma));
+				retorno.append(this.getHtmlComponenteTNoticia(idmicrosite, componente, idioma));
 			}
 			// si es de clase enlace.
 			if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
@@ -151,7 +151,7 @@ public class MParserComponente extends MParserHTML {
 	 * @param idioma
 	 * @return StringBuffer Código Html
 	 */
-	private StringBuffer getHtmlComponenteTNoticia3(Long idmicrosite, Componente componente, String idioma) {
+	private StringBuffer getHtmlComponenteTNoticia(Long idmicrosite, Componente componente, String idioma) {
 		StringBuffer retorno = new StringBuffer();
 
 		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
@@ -242,20 +242,6 @@ public class MParserComponente extends MParserHTML {
 				}
 				retorno.append("</table> \n");
 
-				/*
-				 * <div id="element58u"> <h2>Not&iacute;cies</h2><!-- El class
-				 * per a un enllaç intern es 'enlaceInterno' --> <table
-				 * border="0" cellPadding="0" cellSpacing="0" id="element58u">
-				 * <tr> <td><img width="26" src="imgs/noticies/news.gif"
-				 * height="28" style="width: 26px; height: 28px" /> </td> <td
-				 * vAlign="top"><img width="64" src="imgs/noticies/news.gif"
-				 * height="67" style="width: 64px; height: 67px" class="imagen"
-				 * /> 07/02/2007 - <span class="font">Computing</span> <span
-				 * class="enllas">La Comunitat Aut&ograve;noma de les Illes
-				 * Balears compleix en administraci&oacute;
-				 * electr&ograve;nica</span><span class="enllas">asdf
-				 * asdfa</span> <span class="enllas"></span></td> </tr> </table>
-				 */
 			} else {
 				retorno.append("<p>" + rb.getString("microhtml.nonoticias") + "</p>");
 			}
@@ -519,45 +505,5 @@ public class MParserComponente extends MParserHTML {
 		return retorno;
 	}
 
-	/*
-	 * <style> div#prueba h2 { padding-right: 0px; border-top: #85bbe4 2px
-	 * solid; padding-left: 2em; background: url(../imgs/titol/ico_blau.gif)
-	 * #fff no-repeat left top; padding-bottom: 0px; color: #00276c;
-	 * padding-top: 0.5em } div#prueba ul { margin:0; padding:0; } div#prueba ul
-	 * li { clear: left; margin-bottom: 1em; margin-left: 1em; list-style-type:
-	 * none } div#prueba ul li img { float: left; margin-right: 0.8em }
-	 * div#prueba ul li span.font { font-weight: bold; font-style: italic }
-	 * div#prueba ul li span.enllas { margin-top: 0.3em; display: block;
-	 * padding-left: 6em } a.enlaceinterno { padding-left: 2.5em; background:
-	 * url(../imgs/noticies/enlace_interno.gif) no-repeat 0px 0.2em }
-	 * a.enlaceexterno { padding-left: 2.5em; background:
-	 * url(../imgs/noticies/enlace_externo.gif) no-repeat 0px 0.2em } a.docpdf {
-	 * padding-left: 2.5em; background: url(../imgs/noticies/doc_pdf.gif)
-	 * no-repeat 0px 0.2em } </style> <div id="noticies"> <h2>Notícies</h2> <!--
-	 * El class per a un enllaç intern es 'enlaceInterno' --> <ul> <li><img
-	 * src="imgs/noticies/news.gif" alt="" /> 07/02/2007 - <span
-	 * class="font">Computing</span> <span class="enllas">La Comunitat Autónoma
-	 * de les Illes Balears compleix en administració electrónica</span> <span
-	 * class="enllas"><a href="noticias/Noticia_20070207_CP.pdf"
-	 * class="docPDF">Descarregar notícia en format PDF de 352 kb</a></span>
-	 * </li> <li><img src="imgs/noticies/news.gif" alt="" /> 31/01/2007 - <span
-	 * class="font">Europa Press</span> <span class="enllas"><a
-	 * href="http://www.europapress.es/noticia.aspx?cod=20070131121003&ch=239"
-	 * class="enlaceExterno">El conseller d'Economia, Hisenda i Innovació, Lluís
-	 * Ramis de Ayreflor, presenta els últims avanços en la implantació i
-	 * desenvolupament del Pla d'Administració Digital de Balears</a></span>
-	 * <span class="enllas"><a href="noticias/Noticia_20070131_EP.pdf"
-	 * class="docPDF">Descarregar notícia en format PDF de 67 kb</a></span>
-	 * </li> <li><img src="imgs/noticies/news.gif" alt="" /> 18/01/2007 - <span
-	 * class="font">Diario de Mallorca</span> <span class="enllas"><a href=
-	 * "http://www.diariodemallorca.es/secciones/noticia.jsp?pNumEjemplar=1415&pIdSeccion=903&pIdNoticia=236821&rand=1169120257342"
-	 * class="enlaceExterno">El Govern telematitzará els 80 procedimients
-	 * administratius más demandats pels usuaris</a></span> <span
-	 * class="enllas"><a href="noticias/Noticia_20070118_DMall.pdf"
-	 * class="docPDF">Descarregar notícia en format PDF de 79 kb</a></span>
-	 * </li> </ul>
-	 * 
-	 * </div>
-	 */
 
 }

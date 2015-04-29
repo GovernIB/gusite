@@ -98,7 +98,7 @@
 				</div>
 			</div>
 			<div id="estUrl">
-				&nbsp;URL pública: <a href="<bean:message key="url.aplicacion" />index.do?lang=ca&mkey=<bean:write name="MVS_microsite" property="claveunica"/>" target="_blank"><bean:message key="url.aplicacion" />index.do?lang=ca&mkey=<bean:write name="MVS_microsite" property="claveunica"/></a>
+				&nbsp;URL pública: <a href="<bean:write name="MVS_urlpublica"/>" target="_blank"><bean:write name="MVS_urlpublica"/></a>
 			</div>
 			<div id="version"><bean:write name="MVS_einaversion" ignore="true"/></div>
 		</div>

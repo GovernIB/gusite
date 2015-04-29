@@ -52,10 +52,26 @@ public class IndexInicioAction extends Action  {
 		
 		
 		request.setAttribute("MVS_ultimsmodificats", obtenerListaUltimasModificaciones(request));
+		request.setAttribute("MVS_urlpublica", obtenerUrlPublica(request));
+		//aprobechamos para actualizar la variable de sesion MVS_microsite
+		
         return mapping.findForward("inicio");
     }
 	
 	
+	private String obtenerUrlPublica(HttpServletRequest request) {
+		Microsite microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
+		
+		if (microsite.getRestringido().equals("5")) {
+            String newContext = System.getProperty("es.caib.gusite.context.front");
+            return newContext + "/" + microsite.getUri() + "/";
+		} else {
+			return "/sacmicrofront/index.do?lang=ca&mkey=" + microsite.getClaveunica();
+			
+		}
+	}
+
+
 	private ArrayList<Pardato> obtenerListaUltimasModificaciones(HttpServletRequest request) {
 		ArrayList<Pardato> listaretorno=new ArrayList<Pardato>();
 		String idcontenido=null;

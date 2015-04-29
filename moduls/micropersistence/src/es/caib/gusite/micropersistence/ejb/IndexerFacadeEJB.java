@@ -711,8 +711,7 @@ public abstract class IndexerFacadeEJB extends HibernateEJB {
 			if (FILESYSTEM_INDEX_TYPE.equals(this.indexType)) {
 				// directory = FSDirectory.open(new
 				// File(System.getProperty(indexLocation) + "\\" + idi));
-				directory = FSDirectory.open(new File(this.indexLocation + "\\"
-						+ idi));
+				directory = FSDirectory.open(new File(this.indexLocation + "\\" + idi));
 
 			} else if (HIBERNATE_INDEX_TYPE.equals(this.indexType)) {
 				directory = new HibernateDirectory(this.getSessionFactory());

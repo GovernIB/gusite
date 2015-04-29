@@ -432,7 +432,7 @@ public class microEditaAction extends BaseAction  {
         microForm.set("idUA", new Integer(micrositeBean.getUnidadAdministrativa()));
        	
         // Obtenemos la lista de UAs.
-        microForm.set("listaUAs", General.obtenerListaUAs());
+        //microForm.set("listaUAs", General.obtenerListaUAs());
         
      	AccesibilidadDelegate acces = DelegateUtil.getAccesibilidadDelegate();
      	int nivelAcces = acces.existeAccesibilidadMicrosite(micrositeBean.getId());	            	

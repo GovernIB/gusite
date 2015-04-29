@@ -18,6 +18,8 @@ import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
+import es.caib.gusite.micromodel.Frqssi;
+import es.caib.gusite.micromodel.TraduccionFrqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
@@ -322,6 +324,29 @@ public class FrontUrlFactory {
 	}
 
 	/**
+	 * Url final a la que redirige un formulario Frqssi
+	 * @param microsite
+	 * @param lang
+	 * @param qssi
+	 * @return
+	 */
+	public String qssiFinalUrl(Microsite microsite, String lang, Frqssi qssi) {
+		String Urlqssi = System.getProperty("es.caib.gusite.frqssi.url");
+		String laurl = "";
+		if (qssi.getCentro() != null && qssi.getTipoescrito() != null) {
+			laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&tipus_escrit=" + qssi.getTipoescrito() + "&asunto="
+					+ ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang;
+		} else {
+			if (qssi.getCentro() != null) {
+				laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang;
+			} else {
+				laurl = Urlqssi + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang;
+			}
+		}
+		return laurl;
+	}
+
+	/**
 	 * @deprecated usar listarElementos
 	 */
 	public String listarNoticias(Microsite microsite, Idioma lang, Tipo tipo) {
@@ -513,4 +538,5 @@ public class FrontUrlFactory {
 		return !legacyUri.startsWith("/") && !legacyUri.contains("://") && (legacyUri.indexOf("idsite=") >= 0 || legacyUri.indexOf("mkey=") >= 0);
 
 	}
+
 }

@@ -962,6 +962,7 @@
 	<action path="/ajaxBarraEstado" type="es.caib.gusite.microback.ajax.AjaxValorBarraEstadoAction" unknown="false"/>
 	<action path="/ajaxCheckUri" type="es.caib.gusite.microback.ajax.AjaxCheckUriAction" unknown="false"/>
     <action path="/ajaxPlantillasPer" type="es.caib.gusite.microback.ajax.AjaxPlantillasPerAction" unknown="false"/>
+    <action path="/ajaxOrganigrama" type="es.caib.gusite.microback.ajax.AjaxOrganigramaAction" unknown="false"/>
 
 </action-mappings>
 

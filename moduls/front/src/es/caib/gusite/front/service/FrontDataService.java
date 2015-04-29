@@ -366,19 +366,22 @@ public class FrontDataService {
 	}
 
 	public Frqssi getFormularioQssi(Microsite microsite, Idioma lang, long idQssi) throws ExceptionFrontPagina {
+		return this.getFormularioQssi(microsite, lang.getLang(), idQssi);
+	}
+
+
+	public Frqssi getFormularioQssi(Microsite microsite, String lang, long idQssi) throws ExceptionFrontPagina {
 
 		try {
 			FrqssiDelegate qssidel = DelegateUtil.getFrqssiDelegate();
 			Frqssi qssi = qssidel.obtenerFrqssi(idQssi);
-			qssi.setIdi(lang.getLang());
+			qssi.setIdi(lang);
 			return qssi;
 
 		} catch (DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
-
-
 
 
 }

@@ -3,6 +3,7 @@ package es.caib.gusite.front.general;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -20,12 +21,13 @@ import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.Pardato;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.general.bean.Tridato;
-import es.caib.gusite.front.job.MenuCabecera;
 import es.caib.gusite.front.microtag.MParserHTML;
+import es.caib.gusite.front.microtag.MicroURI;
 import es.caib.gusite.front.service.FrontUrlFactory;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.view.ErrorGenericoView;
 import es.caib.gusite.front.view.LayoutView;
+import es.caib.gusite.front.view.LayoutView.ArchivoCSS;
 import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.front.view.Variable;
 import es.caib.gusite.micromodel.Idioma;
@@ -39,6 +41,7 @@ import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
  * @author at4.net
@@ -234,15 +237,35 @@ public abstract class BaseViewController extends FrontController {
 	 * @throws Exception
 	 */
 	private void cargarCss(LayoutView view) throws ExceptionFrontMicro {
-		// MCR v1.1
-		MParserHTML parserhtml = new MParserHTML();
-		if (view.getMicrosite().getEstiloCSS() != null) {
 
-			view.setCss(parserhtml.tagCSS(view.getMicrosite().getId(), view.getMicrosite().getEstiloCSS().getId(), view.getMicrosite()
-					.getEstiloCSSPatron()));
+		List<ArchivoCSS> archivosCss = new ArrayList<ArchivoCSS>();
+
+		if (view.getMicrosite().getEstiloCSS() != null) {
+			archivosCss.add( new ArchivoCSS( this.urlFactory.archivopub(view.getMicrosite(), view.getMicrosite().getEstiloCSS())) );
+			archivosCss.add( new ArchivoCSS( "/resources/css/estils_print.css", "print"));
 		} else {
-			view.setCss(parserhtml.tagCSS(null, null, view.getMicrosite().getEstiloCSSPatron()));
+			archivosCss.add( new ArchivoCSS( "/resources/css/estils.css", "screen") );
+			archivosCss.add( new ArchivoCSS( "/resources/css/estils_print.css", "print"));
+			
+			if (view.getMicrosite().getEstiloCSSPatron().equals("A")) {
+				archivosCss.add( new ArchivoCSS( "/resources/css/estils_blau.css", "screen") );
+			}
+			if (view.getMicrosite().getEstiloCSSPatron().equals("R")) {
+				archivosCss.add( new ArchivoCSS( "/resources/css/estils_roig.css", "screen") );
+			}
+			if (view.getMicrosite().getEstiloCSSPatron().equals("V")) {
+				archivosCss.add( new ArchivoCSS( "/resources/css/estils_verd.css", "screen") );
+			}
+			if (view.getMicrosite().getEstiloCSSPatron().equals("G")) {
+				archivosCss.add( new ArchivoCSS( "/resources/css/estils_groc.css", "screen") );
+			}
+			if (view.getMicrosite().getEstiloCSSPatron().equals("M")) {
+				archivosCss.add( new ArchivoCSS( "/resources/css/estils_morat.css", "screen") );
+			}
 		}
+
+		view.setCss(archivosCss);
+		
 	}
 
 	/**
@@ -486,8 +509,15 @@ public abstract class BaseViewController extends FrontController {
 	 */
 	protected void menucaib(LayoutView view) {
 		String idioma = view.getLang().getLang().toLowerCase();
-		view.setUos(MenuCabecera.getUos(idioma));
+		view.setUos(getUos(idioma));
 	}
+	
+	private Collection<UnidadListData> getUos(String lang) {
+		//TODO: implementar en el plugin
+		Collection<UnidadListData> lista = this.organigramaProvider.getUnidadesPrincipales(lang);
+		return lista;
+	}
+	
 
 	/**
 	 * Método que devuelve si el servicio que se solicita es ofrecido o no por

@@ -21,6 +21,7 @@ import es.caib.rolsac.api.v2.idioma.IdiomaCriteria;
 import es.caib.rolsac.api.v2.idioma.IdiomaQueryServiceAdapter;
 import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
+import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaOrdenacio;
 import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
 
 @Service("OrganigramaProvider")
@@ -41,6 +42,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			}
 
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
+			uaCriteria.setOrdenar(new UnitatAdministrativaOrdenacio[] {UnitatAdministrativaOrdenacio.orden_asc});
 			uaCriteria.setIdioma(lang);
 			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = rqs.llistarUnitatsAdministratives(uaCriteria);
 			Collection<UnidadListData> nuevasUAs = new ArrayList<UnidadListData>();
@@ -84,6 +86,8 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
 			UnitatAdministrativaCriteria uaCriteriaFilles = new UnitatAdministrativaCriteria();
 			uaCriteriaFilles.setIdioma(lang);
+			uaCriteriaFilles.setOrdenar(new UnitatAdministrativaOrdenacio[] {UnitatAdministrativaOrdenacio.orden_asc});
+			
 			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua.llistarFilles(uaCriteriaFilles);
 
 			Collection<UnidadListData> nuevasUAs = new ArrayList<UnidadListData>();
@@ -125,6 +129,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
 			UnitatAdministrativaCriteria uaCriteriaFilles = new UnitatAdministrativaCriteria();
 			uaCriteriaFilles.setIdioma(lang);
+			uaCriteriaFilles.setOrdenar(new UnitatAdministrativaOrdenacio[] {UnitatAdministrativaOrdenacio.orden_asc});
 			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua.llistarFilles(uaCriteriaFilles);
 
 			Collection<UnidadListData> nuevasUAs = new ArrayList<UnidadListData>();

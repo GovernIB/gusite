@@ -19,7 +19,8 @@ Variables:
 Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../resources/css/estils.css" th:href="@{../resources/css/estils.css}" th:remove="all"></link>
-<link th:remove="tag" th:utext="${MVS_css}" />
+<!--/* TAGS css pel microsite  */-->
+<link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 </head>
 <body>
 	<!-- MVS_noticia: devuelve la noticia en cuestión -->

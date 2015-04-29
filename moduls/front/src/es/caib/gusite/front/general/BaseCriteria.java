@@ -11,7 +11,10 @@ public class BaseCriteria {
 		this.pagina = pagina2;
 		this.ordenacion = ordenacion2;
 	}
-
+	public BaseCriteria() {
+	}
+	
+	
 	public void setFiltro(String filtro) {
 		this.filtro = filtro;
 	}

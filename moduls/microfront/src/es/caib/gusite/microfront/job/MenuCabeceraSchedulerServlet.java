@@ -83,6 +83,13 @@ public class MenuCabeceraSchedulerServlet implements Servlet {
 	}
 
 	public void destroy() {
+		try {
+			SchedulerFactory schedFact =new org.quartz.impl.StdSchedulerFactory();
+			Scheduler sched = schedFact.getScheduler();
+			sched.deleteJob("MenuCabecera", "RefrescarMcrstCaib");
+		} catch (Exception ex){
+			log.error("Error al eliminar Job refresco de menu de caib en Microsites: " + ex.getMessage(),ex);
+		}
 	}
 	
 }

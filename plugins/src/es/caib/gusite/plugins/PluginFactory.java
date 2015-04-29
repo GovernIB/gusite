@@ -15,12 +15,17 @@ public class PluginFactory  {
     private OrganigramaProvider organigramaProvider;
 
     private PluginFactory () {
+    	this.loadPlugins();
+    }
+
+    private void loadPlugins() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         this.setOrganigramaProvider((OrganigramaProvider) applicationContext.getBean("OrganigramaProvider"));
         applicationContext.close();
-    }
+		
+	}
 
-    public static PluginFactory getInstance() {
+	public static PluginFactory getInstance() {
     	if (INSTANCE == null) {
     		INSTANCE = new PluginFactory();
     	}
@@ -32,6 +37,9 @@ public class PluginFactory  {
 	}
 
 	public OrganigramaProvider getOrganigramaProvider() {
+		if (this.organigramaProvider == null) {
+			this.loadPlugins();
+		}
 		return organigramaProvider;
 	}
 }

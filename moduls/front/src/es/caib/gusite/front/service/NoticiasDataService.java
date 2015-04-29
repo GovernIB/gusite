@@ -71,7 +71,7 @@ public class NoticiasDataService {
 		return where;
 	}
 
-	private BuscarElementosParameter rellenarParametrosBuscador(Microsite microsite, Idioma lang, NoticiaCriteria criteria) throws Exception {
+	private BuscarElementosParameter rellenarParametrosBuscador(Microsite microsite, String idioma, NoticiaCriteria criteria) throws Exception {
 
 		String txtsearch = criteria.getFiltro().toUpperCase();
 
@@ -100,14 +100,18 @@ public class NoticiasDataService {
 		paramsBuscador.parametros = paramMap;
 		paramsBuscador.traduccion = traduccionMap;
 		paramsBuscador.idmicrosite = microsite.getId().toString();
-		paramsBuscador.idioma = lang.getLang();
+		paramsBuscador.idioma = idioma;
 		paramsBuscador.idtipo = "" + criteria.getTipo().getId();
 		paramsBuscador.where = whereAnyo;
 		return paramsBuscador;
 	}
 
-	@SuppressWarnings("unchecked")
 	public ResultadoNoticias<Noticia> listarNoticias(Microsite microsite, Idioma lang, NoticiaCriteria criteria) throws DelegateException {
+		return this.listarNoticias(microsite, lang.getLang(), criteria);
+	}
+
+	@SuppressWarnings("unchecked")
+	public ResultadoNoticias<Noticia> listarNoticias(Microsite microsite, String idioma, NoticiaCriteria criteria) throws DelegateException {
 
 		try {
 			// preparar el tipo de noticias.
@@ -128,18 +132,22 @@ public class NoticiasDataService {
 
 				noticiadel.setWhere(wherenoticias);
 				noticiadel.setOrderby2(this.getOrdenNoticias(criteria));
-				noticiadel.setTampagina(criteria.getTipo().getTampagina());
+				if (criteria.getTamPagina()> 0) {
+					noticiadel.setTampagina(criteria.getTamPagina());
+				} else {
+					noticiadel.setTampagina(criteria.getTipo().getTampagina());
+				}
 
 				if (criteria.getOrdenacion() != null && criteria.getOrdenacion().length() > 0) {
 					noticiadel.setOrderby(criteria.getOrdenacion());
 				}
 				noticiadel.setPagina(criteria.getPagina());
 
-				List<Noticia> listanoticias = noticiadel.listarNoticiasThin(lang.getCodigoEstandar());
+				List<Noticia> listanoticias = noticiadel.listarNoticiasThin(idioma);
 				for (Noticia n : listanoticias) {
-					n.setIdi(lang.getLang());
+					n.setIdi(idioma);
 					if (n.getTipo() != null) {
-						n.getTipo().setIdi(lang.getLang());
+						n.getTipo().setIdi(idioma);
 					}
 				}
 
@@ -150,7 +158,7 @@ public class NoticiasDataService {
 
 			} else {
 
-				ResultadoNoticias<Noticia> ret = this.buscarNoticiasPorCampos(microsite, lang, criteria);
+				ResultadoNoticias<Noticia> ret = this.buscarNoticiasPorCampos(microsite, idioma, criteria);
 				ret.setBusqueda(true);
 				return ret;
 
@@ -195,12 +203,12 @@ public class NoticiasDataService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private ResultadoNoticias<Noticia> buscarNoticiasPorCampos(Microsite microsite, Idioma lang, NoticiaCriteria criteria) throws Exception,
+	private ResultadoNoticias<Noticia> buscarNoticiasPorCampos(Microsite microsite, String idioma, NoticiaCriteria criteria) throws Exception,
 			DelegateException {
 
 		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
 
-		BuscarElementosParameter paramsBuscador = this.rellenarParametrosBuscador(microsite, lang, criteria);
+		BuscarElementosParameter paramsBuscador = this.rellenarParametrosBuscador(microsite, idioma, criteria);
 
 		List<Noticia> listanoticias = (List<Noticia>) noticiadel.buscarElementos(paramsBuscador);
 
@@ -326,5 +334,6 @@ public class NoticiasDataService {
 		return tipo;
 
 	}
+
 
 }

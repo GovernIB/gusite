@@ -60,19 +60,7 @@ public class QssiController extends BaseViewController {
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 			}
 
-			String Urlqssi = System.getProperty("es.caib.gusite.frqssi.url");
-			String laurl;
-			if (qssi.getCentro() != null && qssi.getTipoescrito() != null) {
-				laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&tipus_escrit=" + qssi.getTipoescrito() + "&asunto="
-						+ ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang.getLang();
-			} else {
-				if (qssi.getCentro() != null) {
-					laurl = Urlqssi + "&centre=" + qssi.getCentro() + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma="
-							+ lang.getLang();
-				} else {
-					laurl = Urlqssi + "&asunto=" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "?idioma=" + lang.getLang();
-				}
-			}
+			String laurl = this.urlFactory.qssiFinalUrl(microsite, lang.getLang(), qssi);
 
 			return new ModelAndView("redirect:" + laurl);
 

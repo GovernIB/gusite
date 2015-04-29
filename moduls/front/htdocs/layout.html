@@ -52,8 +52,8 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 <!-- Fin reset bootstrap -->
 <script type="text/javascript" src="resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
 
-<!--/* TAGS css específics pel microsite  */-->
-<link th:remove="tag" th:utext="${MVS_css}" />
+<!--/* TAGS css pel microsite  */-->
+<link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 
 <!--/* css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina */-->
 <link href="resources/css/estilsLogo.css" th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet" media="screen" />
@@ -67,10 +67,6 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 		- el soporte para thymol está roto. Es necesario implementar el dialecto gus para soportar gus:replace
 		- por otro lado, la extensión para thymol de layout dialect está en desarrollo: https://github.com/ultraq/thymeleaf-layout-dialect-js/ 
 	*/-->
-	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estils.css"></link>
-	<!--  
-	<script type="text/javascript" src="http://cdn.jsdelivr.net/thymol/latest/thymol.min.js"></script>
-	-->
 	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
 	<script type="text/javascript">
 		var thDebug = false;

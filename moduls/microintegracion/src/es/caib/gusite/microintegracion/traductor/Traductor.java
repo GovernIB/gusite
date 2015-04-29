@@ -24,7 +24,6 @@ public class Traductor extends AutomaticTranslationService {
 
 	private static final long serialVersionUID = 4007299757118205848L;
 	protected static Log log = LogFactory.getLog(Traductor.class);
-	private List<String> _listLang, _listLangTraductor;
 	private Hashtable<String,String> _hshIdiomes = new Hashtable<String,String>();
 	
 	private static final String MODE_TXT = "TXT",
@@ -32,16 +31,11 @@ public class Traductor extends AutomaticTranslationService {
 								TAG_INI_HTML =  "<HTML><BODY>",
 								TAG_FI_HTML = "</BODY></HTML>";
 	
-	
-	/**
-	 * Constructor por defecto de la clase. 
-	 * 
-	 * Carga los códigos de Idioma de la capa de negocio para la traducción
-	 * e inicia una Hashtable para saber el origen-destino de la traducción
-	 * @throws TraductorException 
-	 * 
-	 */
-	public Traductor() throws TraductorException {
+
+	private List<String> _listLang, _listLangTraductor;
+	private boolean initialized = false;
+	private void inicializaTraductor () throws TraductorException {
+		if (initialized) return;
 		
 		try {
 	    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
@@ -66,13 +60,30 @@ public class Traductor extends AutomaticTranslationService {
 			_listLang = idiomas;
 			_listLangTraductor = idiomasTraductor;
 			
-			iniHshIdiomes();
+	    	Iterator<String> itLang =  _listLang.iterator();
+	    	Iterator<String> itLangTraductor = _listLangTraductor.iterator();
+	    	while (itLang.hasNext()) {
+	    		_hshIdiomes.put(itLang.next(), itLangTraductor.next());
+	    	}
+			
+			initialized = true;
+			
 		} catch (DelegateException e) {
 			log.error(e);
 			throw new TraductorException(e.getMessage(), e);
 		}
 		
 	}
+	
+	/**
+	 * Constructor por defecto de la clase. 
+	 * 
+	 * Carga los códigos de Idioma de la capa de negocio para la traducción
+	 * e inicia una Hashtable para saber el origen-destino de la traducción
+	 * @throws TraductorException 
+	 * 
+	 */
+	public Traductor() throws TraductorException {}
 	
 	/**
 	 * Método que devuelve la url del servidor de traducción Lucy
@@ -106,25 +117,14 @@ public class Traductor extends AutomaticTranslationService {
      * Método que devuelve el listado de lenguajes de negocio
      * 
      * @return	_listLang	listado de lenguajes de negocio (ca, es, en, de, fr)
+     * @throws TraductorException 
      */
-	public List<String> getListLang() {
+	public List<String> getListLang() throws TraductorException {
+		inicializaTraductor();		
 		return _listLang;
 	}
     
-    /**
-     * Método que inicia la Hastable de relación entre lengujes de negocio
-     * e ids de traductor. Esta Hashtable se utiliza para guardar la propiedad
-     * _translationDirection
-     */
-    private void iniHshIdiomes() {
-    	Iterator<String> itLang =  _listLang.iterator();
-    	Iterator<String> itLangTraductor = _listLangTraductor.iterator();
-    	
-    	while (itLang.hasNext()) {
-    		_hshIdiomes.put(itLang.next(), itLangTraductor.next());
-    	}
-    }
-	
+
 	/**
 	 * Método que asigna las propiedades de objeto a null para su posterior eliminación.
 	 */
@@ -132,6 +132,7 @@ public class Traductor extends AutomaticTranslationService {
 		_listLang = null;
     	_listLangTraductor = null;
 		_hshIdiomes = null;
+		initialized = false;
 	}
 
 }

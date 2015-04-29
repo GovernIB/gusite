@@ -14,6 +14,9 @@ public class NoticiaCriteria extends BaseCriteria {
 		this.anyo = anyo;
 	}
 
+	public NoticiaCriteria() {
+	}
+
 	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
@@ -24,6 +27,7 @@ public class NoticiaCriteria extends BaseCriteria {
 
 	private Tipo tipo;
 	private int anyo = 0;
+	private int tamPagina;
 
 	public void setAnyo(int anyo) {
 		this.anyo = anyo;
@@ -31,6 +35,14 @@ public class NoticiaCriteria extends BaseCriteria {
 
 	public int getAnyo() {
 		return this.anyo;
+	}
+
+	public void setTamPagina(int value) {
+		this.tamPagina = value;
+	}
+	
+	public int getTamPagina() {
+		return tamPagina;
 	}
 
 }

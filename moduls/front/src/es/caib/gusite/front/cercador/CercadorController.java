@@ -65,14 +65,16 @@ public class CercadorController extends BaseViewController {
 			IndexResultados resultado = indexo.buscar("" + microsite.getId().longValue(), lang.getLang(), null, cerca, true);
 			// hasta aqui metodo buscar();
 			
-			for (IndexEncontrado res : resultado.getLista()) {
-				//Las urls están "hard-coded" en formato legacy
-				String url = res.getUrl();
-				if (url.startsWith("/sacmicrofront/")) {
-					//Quitamos el contextpath hardcoded
-					url = url.substring(15);
+			if (resultado.getLista() != null) {
+				for (IndexEncontrado res : resultado.getLista()) {
+					//Las urls están "hard-coded" en formato legacy
+					String url = res.getUrl();
+					if (url.startsWith("/sacmicrofront/")) {
+						//Quitamos el contextpath hardcoded
+						url = url.substring(15);
+					}
+					res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
 				}
-				res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
 			}
 			
 			view.setBusqueda(cerca);

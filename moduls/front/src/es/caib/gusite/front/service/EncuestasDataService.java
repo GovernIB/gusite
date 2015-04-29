@@ -18,14 +18,17 @@ public class EncuestasDataService {
 	protected static Log log = LogFactory.getLog(EncuestasDataService.class);
 
 	public Encuesta getEncuesta(Microsite microsite, Idioma lang, long idEncuesta) throws ExceptionFrontPagina {
-
+		return this.getEncuesta(microsite, lang.getLang(), idEncuesta);
+	}
+	
+	public Encuesta getEncuesta(Microsite microsite, String lang, long idEncuesta) throws ExceptionFrontPagina {
 		try {
 			EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
 			Encuesta encuesta = encuestadel.obtenerEncuesta(idEncuesta);
 			if (encuesta == null) {
 				throw new ExceptionFrontPagina("Encuesta no encontrada: " + idEncuesta, ExceptionFrontPagina.HTTP_NOT_FOUND);
 			}
-			encuesta.setIdi(lang.getLang());
+			encuesta.setIdi(lang);
 			return encuesta;
 		} catch (DelegateException e) {
 			log.error(e);

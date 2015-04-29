@@ -232,6 +232,7 @@ public class MParserHTML {
 	 * @param idcss
 	 * @param idcsspatron
 	 * @return String
+	 * @deprecated Comprobar que ya no se usa y eliminar
 	 */
 	public String tagCSS(Long idsite, Long idcss, String idcsspatron) {
 		// <link href="css/estilos.css" rel="stylesheet" type="text/css" />
