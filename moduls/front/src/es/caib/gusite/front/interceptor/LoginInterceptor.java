@@ -45,13 +45,20 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
 			Microsite microsite = micrositeDelegate.obtenerMicrositebyUri(siteKey);
 			if (microsite != null) {
+				
+				String urlErrorRol = this.frontUrlFactory.errorRol(microsite, lang);
+				if (request.getServletPath().startsWith(urlErrorRol)) {
+					//Para las urls de error no se comprueba el usuario
+					return true;
+				}
+				
 				if (this.redirigir(microsite, request)) {
 					String redirect = (String) request.getAttribute(path);
 					request.getSession().setAttribute("redirect", redirect.substring(1));
 					response.sendRedirect(this.frontUrlFactory.intranetLogin(request.getContextPath()));
 					return false;
 				} else if (this.denegarAcceso(microsite, request)) {
-					response.sendError(HttpServletResponse.SC_FORBIDDEN);
+					response.sendRedirect(request.getContextPath()+ urlErrorRol);
 					return false;
 				} else if (!this.siteIsVisible(microsite, request)) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN);

@@ -95,7 +95,7 @@ Plantilla para la cabecera general de microsite
 												th:remove="(${i.id}=='2') ? all : none"><span
 													class="guion">&nbsp;-&nbsp;</span><a
 													href="/govern/organigrama/area.do?lang=ca&amp;coduo=2"
-													th:href="@{~${i.url}}"
+													th:href="${i.url}"
 													th:text="${i.abreviatura}">Abreviatura de la conselleria</a></li>
 										</ul>
 									</li>

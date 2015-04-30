@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     versio = $("select[name=versio]");
     acceso = $("select[name=acceso]");
+    rolRowLabel = $("#rolRowLabel");
+    rolRowInput = $("#rolRowInput");
 
     versio.change(function() {
         canvi();
@@ -30,13 +32,17 @@ function canvi() {
             }
         });
     }
+    if (a == "M") {
+    	rolRowLabel.show();
+    	rolRowInput.show();
+    } else {
+    	rolRowLabel.hide();
+    	rolRowInput.hide();
+    }
 };
 
 function combinacioInvalida(v, a) {
     return (v == "IN" && a == "P")
         || (v == "v1" && a == "R")
-        || (v == "v4" && a == "R")
-        || (v == "IN" && a == "M")
-        || (v == "v1" && a == "M")
-        || (v == "v4" && a == "M");
+        || (v == "v4" && a == "R");
 }

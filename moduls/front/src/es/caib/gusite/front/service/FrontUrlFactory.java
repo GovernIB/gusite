@@ -178,6 +178,21 @@ public class FrontUrlFactory {
 		return this.microsite(microsite, lang) + "errorgenerico/";
 	}
 
+	public String errorRol(Microsite microsite, Idioma lang) {
+
+		return this.microsite(microsite, lang) + "errorrol/";
+	}
+
+	public String errorRol(Microsite microsite, String lang) {
+
+		if (lang != null) {
+			return this.errorRol(microsite, new Idioma(lang));
+		} else {
+			return this.errorRol(microsite, FrontController.DEFAULT_IDIOMA);
+		}
+		
+	}
+	
 	public String msgGenerico(Microsite microsite, Idioma lang) {
 
 		return this.microsite(microsite, lang) + "msggenerico/";
@@ -538,5 +553,6 @@ public class FrontUrlFactory {
 		return !legacyUri.startsWith("/") && !legacyUri.contains("://") && (legacyUri.indexOf("idsite=") >= 0 || legacyUri.indexOf("mkey=") >= 0);
 
 	}
+
 
 }

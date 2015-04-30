@@ -24,6 +24,14 @@
 	<!-- Core files -->
 	<script src="js/jquery/jquery.alerts.js" type="text/javascript"></script>
 	<link href="css/jquery.alerts.css" rel="stylesheet" type="text/css" media="screen" />
+	<style type="text/css">
+		.rolRowM {
+			display:table-cell;
+		}
+		.rolRowP, .rolRowR, .rolRow {
+			display:none;
+		}
+	</style>
 </head>
 <body>
 	<!-- molla pa -->
@@ -232,18 +240,25 @@
 									<tr>
 										<td class="etiqueta"><bean:message key="micro.acceso" /> &gt;</td>
 										<td>
-											<html:select property="acceso">
-												<html:option value="R"><bean:message key="micro.version5.acceso.restringit" /></html:option>
-												<html:option value="P"><bean:message key="micro.version5.acceso.public" /></html:option>
-                                                <html:option value="M"><bean:message key="micro.version5.acceso.rol" /></html:option>
-											</html:select>
+											<table cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<html:select property="acceso">
+														<html:option value="R"><bean:message key="micro.version5.acceso.restringit" /></html:option>
+														<html:option value="P"><bean:message key="micro.version5.acceso.public" /></html:option>
+		                                                <html:option value="M"><bean:message key="micro.version5.acceso.rol" /></html:option>
+													</html:select>
+												</td>
+												<td id="rolRowLabel" class="etiqueta rolRow<bean:write name="MVS_microsite" property="acceso"/>" style="width: 20em;">
+													<bean:message key="micro.indique.rol" /> &gt;
+												</td>
+												<td id="rolRowInput" class="etiqueta rolRow<bean:write name="MVS_microsite" property="acceso"/>">
+													<html:text property="rol" size="30" maxlength="150" />
+												</td>
+											</tr>
+											</table>
 										</td>
 									</tr>
-                                    <tr class="par">
-                                        <td class="etiqueta"><bean:message key="micro.indique.rol" /> &gt;</td>
-                                        <td><html:text property="rol" size="30" maxlength="150" /></td>
-                                    </tr>
-
 									<!-- TEST -->
 									<tr>
 										<td class="etiqueta"><bean:message key="micro.analytics" /> &gt;</td>

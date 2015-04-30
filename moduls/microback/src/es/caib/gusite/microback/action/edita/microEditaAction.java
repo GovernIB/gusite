@@ -75,6 +75,12 @@ public class microEditaAction extends BaseAction  {
 
             // Lista Check de tipos de servicio que aparecerán
            	micrositeBean.setTiposServicios(tipoServicioDelegate.listarTipos());
+
+           	//Valores por defecto
+           	micrositeBean.setTipomenu("1");
+           	micrositeBean.setVersio("v5");
+           	micrositeBean.setAcceso("P");
+           		
             request.getSession().setAttribute("MVS_microsite", micrositeBean);
            	request.getSession().removeAttribute("microForm");
             List<TemaFront> temasFront = temaFrontDelegate.listarTemaFront();
@@ -264,12 +270,8 @@ public class microEditaAction extends BaseAction  {
 		micrositeBean.setVersio((String) microForm.get("versio"));
 		micrositeBean.setAcceso((String) microForm.get("acceso"));
         micrositeBean.setRestringido(getFlagRestringido(micrositeBean.getVersio(), micrositeBean.getAcceso()));
+        micrositeBean.setRol(getRolFinal(micrositeBean.getAcceso(), (String) microForm.get("rol")));
 
-		if (((String) microForm.get("rol")).equals("")) {
-			micrositeBean.setRol(null);
-		} else {
-			micrositeBean.setRol((String) microForm.get("rol"));
-		}
     	
     	if (((String) microForm.get("domini")).equals("")) {
 			micrositeBean.setDomini(null);
@@ -404,13 +406,20 @@ public class microEditaAction extends BaseAction  {
         return micrositeBean;
     }
 
-    private String getFlagRestringido(String versio, String tipoAcceso) {
+    private String getRolFinal(String acceso, String rol) {
+		if (acceso.equals("M") && !rol.equals("")) {
+			return rol;
+		}
+		return null;
+	}
+
+	private String getFlagRestringido(String versio, String tipoAcceso) {
 
         if (versio.equals("v5")) {
             return "5";
         } else if (versio.equals("v4")) {
             return "2";
-        } else if (versio.equals("v1") && tipoAcceso.equals("P")) {
+        } else if (versio.equals("v1")) {
             return "N";
         } else {
             return "S";

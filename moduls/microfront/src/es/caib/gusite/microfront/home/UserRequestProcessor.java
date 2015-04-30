@@ -55,8 +55,6 @@ public class UserRequestProcessor extends RequestProcessor {
 	
 	protected Exception exception;  // campo creado sólo para ser utilitzado para los tests unitarios
 	
-	private String paramIdsite;
-	
 	/**
   	 *Obtengo el usuario en la sesion de EJBs.
 	 * Si es distinto de "nobody" quiere decir que está logado. Salimos y seguimos...
@@ -77,6 +75,8 @@ public class UserRequestProcessor extends RequestProcessor {
 		String pmkey = null;
 		
 		// TODO procesamiento de las encuentas - quitar de aqui algo tan especifico como encuentas!
+		String paramIdsite = null;
+
 		 if (peticionNoEsMultipart(req)) {
 			paramIdsite = obtenerIdMicrositeFromRequest(req);
 			pmkey = obtenerKeyMicrositeFromRequest(req);
@@ -105,7 +105,7 @@ public class UserRequestProcessor extends RequestProcessor {
 				}
 			}
 
-            Microsite microsite = obtenerMicrosite(req, pmkey);
+            Microsite microsite = obtenerMicrosite(req, paramIdsite, pmkey);
 
             if (redirectNewFront(microsite)) {
                 String[] oldUrl = req.getRequestURL().toString().split("/");
@@ -232,7 +232,7 @@ public class UserRequestProcessor extends RequestProcessor {
 		return invalidIds;
 	}
 	
-	protected Microsite obtenerMicrosite(HttpServletRequest req, String pmkey) throws Exception {
+	protected Microsite obtenerMicrosite(HttpServletRequest req, String paramIdsite, String pmkey) throws Exception {
 		
 		Microsite microsite = obtenerMicrositeDeSession(req);
 		
@@ -244,13 +244,15 @@ public class UserRequestProcessor extends RequestProcessor {
 			}
 
 		} else {
-			Long micrositeId = microsite.getId() == null ? null : microsite.getId().longValue();
-			if (null != pmkey) {
-				paramIdsite = "" + micrositeId;
-			}
-			if (siteSolicitadoEsDiferenteAlDeSession(paramIdsite, micrositeId)) {   
-				microsite = obtenerMicrositePorId(paramIdsite);					
-			}
+	            if (micrositeTieneKey(pmkey)) {
+					if (!pmkey.equals(microsite.getClaveunica())) {   
+		                microsite = obtenerMicrositePorKey(req, pmkey);
+					}
+	            } else if (micrositeTieneKey(paramIdsite)){
+	            	if (paramIdsite.equals(""+microsite.getId())) {
+						microsite = obtenerMicrositePorId(paramIdsite);					
+					}
+				}
 		}
 		return microsite;
 	}
@@ -273,11 +275,6 @@ public class UserRequestProcessor extends RequestProcessor {
 
 	protected boolean peticionNoEsMultipart(HttpServletRequest req) {
 		return !ServletFileUpload.isMultipartContent(req);
-	}
-
-	protected boolean siteSolicitadoEsDiferenteAlDeSession(String paramIdsite,
-			Long micrositeId) {
-		return !paramIdsite.equals("" + micrositeId);
 	}
 
 	protected Microsite obtenerMicrositePorId(String pidsite) throws DelegateException {

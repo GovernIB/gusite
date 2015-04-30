@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +22,6 @@ import es.caib.gusite.front.general.bean.Pardato;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.general.bean.Tridato;
 import es.caib.gusite.front.microtag.MParserHTML;
-import es.caib.gusite.front.microtag.MicroURI;
 import es.caib.gusite.front.service.FrontUrlFactory;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.view.ErrorGenericoView;

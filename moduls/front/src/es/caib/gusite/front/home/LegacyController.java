@@ -75,8 +75,6 @@ public class LegacyController extends FrontController {
 			microsite = this.dataService.getMicrosite(idSite, lang);
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
 
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + this.urlFactory.contenido(microsite, lang, contenido, pcampa);
 
 		} catch (ExceptionFrontMicro e) {
@@ -142,8 +140,6 @@ public class LegacyController extends FrontController {
 			microsite = this.dataService.getMicrosite(idSite, lang);
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + this.urlFactory.contacto(microsite, lang, contacto);
 
 		} catch (ExceptionFrontMicro e) {
