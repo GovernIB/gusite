@@ -40,9 +40,15 @@ public class MenuCabecera {
 	 */
 	public static void refrescarMenu() {
 
-		try {
-			
-	    	OrganigramaProvider organigramaProvider = PluginFactory.getInstance().getOrganigramaProvider();
+		OrganigramaProvider organigramaProvider = null;
+    	try {
+    		organigramaProvider = PluginFactory.getInstance().getOrganigramaProvider();
+		} catch (Exception e) {
+			log.debug("PluginFactory todavía no está disponible");
+			return;
+    	} 
+
+    	try {
 	    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
 			List<Idioma> idiomas = idiomaDelegate.listarIdiomas();
 	    	

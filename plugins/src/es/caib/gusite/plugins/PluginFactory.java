@@ -22,7 +22,6 @@ public class PluginFactory  {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         this.setOrganigramaProvider((OrganigramaProvider) applicationContext.getBean("OrganigramaProvider"));
         applicationContext.close();
-		
 	}
 
 	public static PluginFactory getInstance() {
