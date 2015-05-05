@@ -710,14 +710,14 @@ public abstract class IndexerFacadeEJB extends HibernateEJB {
 		try {
 			if (FILESYSTEM_INDEX_TYPE.equals(this.indexType)) {
 				// directory = FSDirectory.open(new
-				// File(System.getProperty(indexLocation) + "\\" + idi));
-				directory = FSDirectory.open(new File(this.indexLocation + "\\" + idi));
+				// File(System.getProperty(indexLocation) + File.separator + idi));
+				directory = FSDirectory.open(new File(this.indexLocation + File.separator + idi));
 
 			} else if (HIBERNATE_INDEX_TYPE.equals(this.indexType)) {
 				directory = new HibernateDirectory(this.getSessionFactory());
 
 			} else {
-				throw new EJBException("Tipo de Ãndice no valido: "
+				throw new EJBException("Tipo de índice no valido: "
 						+ this.indexType);
 			}
 
