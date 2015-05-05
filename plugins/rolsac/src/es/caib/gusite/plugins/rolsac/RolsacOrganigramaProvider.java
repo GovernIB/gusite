@@ -74,7 +74,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			}
 
 			String idUOGovern = System.getProperty("es.caib.gusite.codigoUO.govern");
-			if (idUOGovern == null) {
+			if (idUOGovern == null || idUOGovern.equals("")) {
 				throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 			}
 
@@ -84,6 +84,11 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			uaCriteria.setId(UO_GOVERN_IB.toString());
 
 			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
+			
+			if (ua == null) {
+				throw new RuntimeException("No se ha encontrado la uo govern, la propiedad de sistema es.caib.gusite.codigoUO.govern es:" + idUOGovern);
+			}
+			
 			UnitatAdministrativaCriteria uaCriteriaFilles = new UnitatAdministrativaCriteria();
 			uaCriteriaFilles.setIdioma(lang);
 			uaCriteriaFilles.setOrdenar(new UnitatAdministrativaOrdenacio[] {UnitatAdministrativaOrdenacio.orden_asc});
