@@ -21,7 +21,6 @@ import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
 import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micromodel.TraduccionComponente;
 import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
@@ -129,7 +128,7 @@ public class componentesEditaAction extends BaseAction
 	    //	Establezco la imagen bullet
 	    FormFile imagen = (FormFile) componenteForm.get("imagen");
 	    if (archivoValido(imagen))
-	    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
+	    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, componenteBean.getIdmicrosite(), null));
 	    else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) componenteBean.setImagenbul(null);
 	    
 	    if (componenteBean.getImagenbul() != null) 

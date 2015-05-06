@@ -3,6 +3,9 @@ package es.caib.gusite.micromodel;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,6 +29,11 @@ public class TraduccionComponente implements Traduccion {
 	@EmbeddedId
 	private TraduccionComponentePK id;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CPI_CMPCOD", insertable=false, updatable=false)
+	private Componente componente;
+	
+	
 	@XmlAttribute
 	@Column(name = "CPI_TITULO")
 	private String titulo;
@@ -44,6 +52,14 @@ public class TraduccionComponente implements Traduccion {
 
 	public void setId(TraduccionComponentePK id) {
 		this.id = id;
+	}
+
+	public void setComponente(Componente componente) {
+		this.componente = componente;
+	}
+
+	public Componente getComponente() {
+		return componente;
 	}
 
 }

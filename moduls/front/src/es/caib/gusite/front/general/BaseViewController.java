@@ -262,7 +262,17 @@ public abstract class BaseViewController extends FrontController {
 				archivosCss.add( new ArchivoCSS( "/resources/css/estils_morat.css", "screen") );
 			}
 		}
+		
+		if (view.getMicrosite().getTema() != null) {
 
+			view.setUriTema( this.urlFactory.uriTema(view.getMicrosite().getTema()));
+			
+			if (view.getMicrosite().getTema().getCss() != null) {
+				archivosCss.add( new ArchivoCSS ( this.urlFactory.cssTema(view.getMicrosite().getTema()) ) );
+			}
+			
+		}
+		
 		view.setCss(archivosCss);
 		
 	}

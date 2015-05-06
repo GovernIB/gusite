@@ -31,8 +31,7 @@ import es.caib.gusite.micropersistence.util.log.MicroLog;
 public class ArchivoUtil {
 
 	private static Log log = LogFactory.getLog(ArchivoUtil.class);
-	private static ResourceBundle rb = ResourceBundle
-			.getBundle("sac-micropersistence-messages");
+	private static ResourceBundle rb = ResourceBundle.getBundle("sac-micropersistence-messages");
 
 	/**
 	 * Comprueba que la propiedad de sistema
@@ -42,11 +41,8 @@ public class ArchivoUtil {
 	 */
 	public static boolean almacenarEnFilesystem() {
 
-		String almacenarEnFilesystemString = System
-				.getProperty("es.caib.gusite.archivos.almacenarEnFilesystem");
-		boolean almacenarEnFilesystem = ("S"
-				.equals(almacenarEnFilesystemString) || "s"
-				.equals(almacenarEnFilesystemString));
+		String almacenarEnFilesystemString = System.getProperty("es.caib.gusite.archivos.almacenarEnFilesystem");
+		boolean almacenarEnFilesystem = ("S".equals(almacenarEnFilesystemString) || "s".equals(almacenarEnFilesystemString));
 
 		return almacenarEnFilesystem;
 
@@ -59,16 +55,15 @@ public class ArchivoUtil {
 	 * @param archivo
 	 * @throws IOException
 	 */
-	public static void exportaArchivoAFilesystem(Archivo archivo)
-			throws IOException {
+	public static void exportaArchivoAFilesystem(Archivo archivo) throws IOException {
 
 		if (almacenarEnFilesystem()) {
 
+			ArchivoUtil.deleteDirArchivo(archivo); //Borramos el archivo anterior si existía
+			
 			Long idMicrosite = archivo.getIdmicrosite();
 
-			// Comprobar que existe el directorio de la aplicación donde se
-			// guardarán
-			// los archivos de cada microsite.
+			// Comprobar que existe el directorio de la aplicación donde se guardarán los archivos de cada microsite.
 			String rutaArchivosEnFileSystem = obtenerRutaArchivosEnFileSystem();
 			checkDirArchivos(rutaArchivosEnFileSystem);
 
@@ -76,13 +71,10 @@ public class ArchivoUtil {
 			String rutaArchivosEnFileSystemMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite);
 			checkDirArchivosMicrosite(rutaArchivosEnFileSystemMicrosite);
 
-			// Directorio con el nombre archivo.getId(), por si hay archivos con
-			// el mismo nombre
-			// asociados a un mismo Microsite.
+			// Directorio con el nombre archivo.getId(), por si hay archivos con el mismo nombre asociados a un mismo Microsite.
 			checkDirArchivo(archivo);
 
-			// Comprobar si el archivo ya existe en FS. Si no es así, lo
-			// exportamos.
+			// Comprobar si el archivo ya existe en FS. Si no es así, lo exportamos.
 			File f = new File(obtenerRutaArchivoExportadoEnFilesystem(archivo));
 			escribeArchivoAFilesystem(f, archivo.getDatos());
 
@@ -96,16 +88,13 @@ public class ArchivoUtil {
 	 * @throws DelegateException
 	 * @throws IOException
 	 */
-	public static void exportarArchivosDeTodosLosMicrosites(
-			HttpServletRequest request) throws DelegateException {
+	public static void exportarArchivosDeTodosLosMicrosites(HttpServletRequest request) throws DelegateException {
 
 		log.info("Comenzando proceso de exportación de archivos de los microsites");
-		addImportLogVisual(request,
-				"Comenzando proceso de exportación de archivos de los microsites");
+		addImportLogVisual(request, "Comenzando proceso de exportación de archivos de los microsites");
 
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		List<Object[]> listaArchivos = archivoDelegate
-				.obtenerTodosLosArchivosSinBlobs();
+		List<Object[]> listaArchivos = archivoDelegate.obtenerTodosLosArchivosSinBlobs();
 		Iterator<Object[]> it = listaArchivos.iterator();
 
 		// Primero detectamos qué archivos hay que exportar y cuáles ya han sido
@@ -122,15 +111,10 @@ public class ArchivoUtil {
 
 				// Si el archivo ya existe en el FS, lo eliminamos de la lista
 				// de archivos pendientes de exportar.
-				if (existeArchivoEnFilesystem(idArchivo, nombreArchivo,
-						obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite))) {
+				if (existeArchivoEnFilesystem(idArchivo, nombreArchivo, obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite))) {
 
-					String mensaje = "El archivo "
-							+ obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite)
-							+ File.separator
-							+ idArchivo.toString()
-							+ ""
-							+ " ya existe. Lo eliminamos de los pendientes de exportar.";
+					String mensaje = "El archivo " + obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite) + File.separator + idArchivo.toString()
+							+ "" + " ya existe. Lo eliminamos de los pendientes de exportar.";
 					log.info(mensaje);
 					addImportLogVisual(request, mensaje);
 
@@ -140,11 +124,9 @@ public class ArchivoUtil {
 
 			} catch (IOException e) {
 
-				String mensaje = "Error tratando el archivo con id = "
-						+ idArchivo;
+				String mensaje = "Error tratando el archivo con id = " + idArchivo;
 				log.error(mensaje, e);
-				addImportLogVisualStackTrace(request, mensaje,
-						e.getStackTrace());
+				addImportLogVisualStackTrace(request, mensaje, e.getStackTrace());
 
 				// Eliminamos de la lista el archivo que no se ha podido tratar.
 				it.remove();
@@ -153,11 +135,9 @@ public class ArchivoUtil {
 
 		}
 
-		log.info("Procesados los archivos pendientes de tratar. Quedan por escribir en disco: "
-				+ listaArchivos.size() + " archivos");
-		addImportLogVisual(request,
-				"Procesados los archivos pendientes de tratar. Quedan por escribir en disco: "
-						+ listaArchivos.size() + " archivos");
+		log.info("Procesados los archivos pendientes de tratar. Quedan por escribir en disco: " + listaArchivos.size() + " archivos");
+		addImportLogVisual(request, "Procesados los archivos pendientes de tratar. Quedan por escribir en disco: " + listaArchivos.size()
+				+ " archivos");
 
 		// Exportamos los que quedan en la lista.
 		List<String> exportados = new ArrayList<String>();
@@ -172,26 +152,20 @@ public class ArchivoUtil {
 			try {
 
 				exportaArchivoAFilesystem(archivo);
-				exportados
-						.add(obtenerRutaArchivoExportadoEnFilesystem(archivo));
+				exportados.add(obtenerRutaArchivoExportadoEnFilesystem(archivo));
 
 			} catch (IOException e) {
 
-				String mensaje = "Error exportando el archivo con id = "
-						+ idArchivo;
+				String mensaje = "Error exportando el archivo con id = " + idArchivo;
 				log.error(mensaje, e);
-				addImportLogVisualStackTrace(request, mensaje,
-						e.getStackTrace());
+				addImportLogVisualStackTrace(request, mensaje, e.getStackTrace());
 
 			}
 
 		}
 
-		log.info("Finalizado el proceso de exportación de archivos a disco. Se han exportado "
-				+ exportados.size() + " archivos");
-		addImportLogVisual(request,
-				"Finalizado el proceso de exportación de archivos a disco. Se han exportado "
-						+ exportados.size() + " archivos");
+		log.info("Finalizado el proceso de exportación de archivos a disco. Se han exportado " + exportados.size() + " archivos");
+		addImportLogVisual(request, "Finalizado el proceso de exportación de archivos a disco. Se han exportado " + exportados.size() + " archivos");
 
 	}
 
@@ -203,13 +177,11 @@ public class ArchivoUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static byte[] obtenerDatosArchivoEnFilesystem(Archivo archivo)
-			throws IOException {
+	public static byte[] obtenerDatosArchivoEnFilesystem(Archivo archivo) throws IOException {
 
 		byte[] datos = null;
 
-		InputStream in = new FileInputStream(
-				obtenerRutaArchivoExportadoEnFilesystem(archivo));
+		InputStream in = new FileInputStream(obtenerRutaArchivoExportadoEnFilesystem(archivo));
 		datos = IOUtils.toByteArray(in);
 		in.close();
 
@@ -226,22 +198,17 @@ public class ArchivoUtil {
 	 * @param rutaArchivosEnFileSystemMicrosite
 	 * @return
 	 */
-	public static boolean existeArchivoEnFilesystem(Long idArchivo,
-			String nombreArchivo, String rutaArchivosEnFileSystemMicrosite) {
+	public static boolean existeArchivoEnFilesystem(Long idArchivo, String nombreArchivo, String rutaArchivosEnFileSystemMicrosite) {
 
-		File f = new File(rutaArchivosEnFileSystemMicrosite + File.separator
-				+ idArchivo.toString() + File.separator + nombreArchivo);
+		File f = new File(rutaArchivosEnFileSystemMicrosite + File.separator + idArchivo.toString() + File.separator + nombreArchivo);
 		return f.exists();
 
 	}
 
-	public static boolean existeArchivoEnFilesystem(Archivo a)
-			throws IOException {
+	public static boolean existeArchivoEnFilesystem(Archivo a) throws IOException {
 
-		String rutaArchivosEnFileSystemMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(a
-				.getIdmicrosite());
-		File f = new File(rutaArchivosEnFileSystemMicrosite + File.separator
-				+ a.getId().toString() + File.separator + a.getNombre());
+		String rutaArchivosEnFileSystemMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(a.getIdmicrosite());
+		File f = new File(rutaArchivosEnFileSystemMicrosite + File.separator + a.getId().toString() + File.separator + a.getNombre());
 
 		return f.exists();
 
@@ -254,20 +221,20 @@ public class ArchivoUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String obtenerRutaArchivosEnFileSystemMicrosite(
-			Long idMicrosite) throws IOException {
+	public static String obtenerRutaArchivosEnFileSystemMicrosite(Long idMicrosite) throws IOException {
 
 		String rutaArchivosEnFileSystem = obtenerRutaArchivosEnFileSystem();
-
-		return rutaArchivosEnFileSystem + File.separator
-				+ idMicrosite.toString();
+		if (idMicrosite != null) {
+			return rutaArchivosEnFileSystem + File.separator + idMicrosite.toString();
+		} else {
+			return rutaArchivosEnFileSystem + File.separator + "nomic";
+		}
 
 	}
 
 	public static void borrarArchivo(Archivo a) throws IOException {
 
-		if (existeArchivoEnFilesystem(a.getId(), a.getNombre(),
-				obtenerRutaArchivosEnFileSystemMicrosite(a.getIdmicrosite()))) {
+		if (existeArchivoEnFilesystem(a.getId(), a.getNombre(), obtenerRutaArchivosEnFileSystemMicrosite(a.getIdmicrosite()))) {
 
 			// Directorio que contiene el propio archivo.
 			File fDir = new File(obtenerRutaDirArchivoExportadoEnFilesystem(a));
@@ -290,8 +257,7 @@ public class ArchivoUtil {
 
 	}
 
-	private static void escribeArchivoAFilesystem(File f, byte[] datos)
-			throws IOException {
+	private static void escribeArchivoAFilesystem(File f, byte[] datos) throws IOException {
 
 		if (datos != null) {
 
@@ -314,46 +280,34 @@ public class ArchivoUtil {
 
 	private static String obtenerRutaArchivosEnFileSystem() throws IOException {
 
-		String rutaArchivosEnFileSystem = System
-				.getProperty("es.caib.gusite.archivos.rutaArchivosEnFileSystem");
-		if (rutaArchivosEnFileSystem == null
-				|| rutaArchivosEnFileSystem.length() == 0) {
-			throw new IOException(
-					rb.getString("errors.propiedadRutaArchivosEnFileSystem")
-							+ " " + rutaArchivosEnFileSystem);
+		String rutaArchivosEnFileSystem = System.getProperty("es.caib.gusite.archivos.rutaArchivosEnFileSystem");
+		if (rutaArchivosEnFileSystem == null || rutaArchivosEnFileSystem.length() == 0) {
+			throw new IOException(rb.getString("errors.propiedadRutaArchivosEnFileSystem") + " " + rutaArchivosEnFileSystem);
 		}
 
 		return rutaArchivosEnFileSystem;
 
 	}
 
-	private static String obtenerRutaDirArchivoExportadoEnFilesystem(
-			Archivo archivo) throws IOException {
+	private static String obtenerRutaDirArchivoExportadoEnFilesystem(Archivo archivo) throws IOException {
 
-		String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo
-				.getIdmicrosite());
+		String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite());
 
 		// Ruta: [rutaArchivosMicrosites]/idMicrosite/idArchivo/nombreArchivo
-		return rutaArchivosMicrosite + File.separator
-				+ archivo.getId().toString();
+		return rutaArchivosMicrosite + File.separator + archivo.getId().toString();
 
 	}
 
-	private static String obtenerRutaArchivoExportadoEnFilesystem(
-			Archivo archivo) throws IOException {
+	private static String obtenerRutaArchivoExportadoEnFilesystem(Archivo archivo) throws IOException {
 
-		String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo
-				.getIdmicrosite());
+		String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite());
 
 		// Ruta: [rutaArchivosMicrosites]/idMicrosite/idArchivo/nombreArchivo
-		return rutaArchivosMicrosite + File.separator
-				+ archivo.getId().toString() + File.separator
-				+ archivo.getNombre();
+		return rutaArchivosMicrosite + File.separator + archivo.getId().toString() + File.separator + archivo.getNombre();
 
 	}
 
-	private static void checkDirArchivos(String rutaArchivosEnFileSystem)
-			throws IOException {
+	private static void checkDirArchivos(String rutaArchivosEnFileSystem) throws IOException {
 
 		File dirArchivos = new File(rutaArchivosEnFileSystem);
 
@@ -366,26 +320,21 @@ public class ArchivoUtil {
 			} catch (SecurityException e) {
 
 				e.printStackTrace();
-				throw new IOException(
-						rb.getString("error.creacionDirRutaArchivosEnFileSystem")
-								+ " " + rutaArchivosEnFileSystem);
+				throw new IOException(rb.getString("error.creacionDirRutaArchivosEnFileSystem") + " " + rutaArchivosEnFileSystem);
 
 			}
 
 		} else {
 
 			if (!dirArchivos.isDirectory()) {
-				throw new IOException(
-						rb.getString("error.noEsDirectorioRutaArchivosEnFileSystem")
-								+ " " + rutaArchivosEnFileSystem);
+				throw new IOException(rb.getString("error.noEsDirectorioRutaArchivosEnFileSystem") + " " + rutaArchivosEnFileSystem);
 			}
 
 		}
 
 	}
 
-	private static void checkDirArchivosMicrosite(
-			String rutaArchivosEnFileSystemMicrosite) throws IOException {
+	private static void checkDirArchivosMicrosite(String rutaArchivosEnFileSystemMicrosite) throws IOException {
 
 		File dirArchivosMicrosite = new File(rutaArchivosEnFileSystemMicrosite);
 
@@ -398,30 +347,38 @@ public class ArchivoUtil {
 			} catch (SecurityException e) {
 
 				e.printStackTrace();
-				throw new IOException(
-						rb.getString("error.creacionRutaArchivosEnFileSystemMicrosite")
-								+ " " + rutaArchivosEnFileSystemMicrosite);
+				throw new IOException(rb.getString("error.creacionRutaArchivosEnFileSystemMicrosite") + " " + rutaArchivosEnFileSystemMicrosite);
 
 			}
 
 		} else {
 
 			if (!dirArchivosMicrosite.isDirectory()) {
-				throw new IOException(
-						rb.getString("error.noEsDirectorioRutaArchivosEnFileSystemMicrosite")
-								+ " " + rutaArchivosEnFileSystemMicrosite);
+				throw new IOException(rb.getString("error.noEsDirectorioRutaArchivosEnFileSystemMicrosite") + " " + rutaArchivosEnFileSystemMicrosite);
 			}
 
 		}
 
 	}
 
+	private static void deleteDirArchivo(Archivo archivo) throws IOException {
+
+		String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
+		File dirArchivo = new File(rutaDirArchivo);
+
+		if (dirArchivo.exists()) {
+			for(String s: dirArchivo.list()){
+			    File currentFile = new File(dirArchivo.getPath(),s);
+			    currentFile.delete();
+			}			
+			dirArchivo.delete();
+		}
+
+	}
+
 	private static void checkDirArchivo(Archivo archivo) throws IOException {
 
-		String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo
-				.getIdmicrosite())
-				+ File.separator
-				+ archivo.getId().toString();
+		String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
 		File dirArchivo = new File(rutaDirArchivo);
 
 		if (!dirArchivo.exists()) {
@@ -430,14 +387,11 @@ public class ArchivoUtil {
 
 	}
 
-	private static void addImportLogVisual(HttpServletRequest request,
-			String mensaje) {
+	private static void addImportLogVisual(HttpServletRequest request, String mensaje) {
 		MicroLog.addLogVisual(request, mensaje);
 	}
 
-	private static void addImportLogVisualStackTrace(
-			HttpServletRequest request, String mensaje,
-			StackTraceElement[] mensajes) {
+	private static void addImportLogVisualStackTrace(HttpServletRequest request, String mensaje, StackTraceElement[] mensajes) {
 		MicroLog.addLogVisualStackTrace(request, mensaje, mensajes);
 	}
 

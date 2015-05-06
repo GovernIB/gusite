@@ -1,46 +1,93 @@
 <!DOCTYPE html>
 <!--/*
 
-	Plantillas de componentes para incrustar en contenidos
+    Plantillas de componentes para incrustar en contenidos
 
-*/-->
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<th:block th:remove="all">
+    */-->
+    <html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <th:block th:remove="all">
 <!--/*  
-	Este bloque se usa para visualización en prototipo estático.
-	Al ejecutarse dinámicamente, se eliminará automáticamente
-	*/-->
-	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
-	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
-	<script type="text/javascript">
-		var thDebug = false;
-	</script>
+    Este bloque se usa para visualización en prototipo estático.
+    Al ejecutarse dinámicamente, se eliminará automáticamente
+    */-->
+    <link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+    <script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+    <script type="text/javascript">
+    var thDebug = false;
+    </script>
 </th:block>
 </head>
 <body>
-	<div th:fragment="elementos">
-			<div id="noticies">
-				<h2 th:text="${MVS_tipo.traduce.nombre}">Nom del tipus</h2>
-				<ul th:if="${#lists.size(MVS_listado_elementos)} !=0">
-					<li th:each="noticia : ${MVS_listado_elementos}">
-						<div th:if="${noticia.tipo.tipoelemento}==${T(es.caib.gusite.front.general.Front).ELEM_NOTICIA}" th:remove="tag">
-							<img  th:if="${noticia.imagen}!=null"
-								th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
-								width="48" height="48" alt="" />
-							<div th:if="${noticia.fpublicacion}!=null" 
-								th:text="${#dates.format(noticia.fpublicacion, 'dd/MM/yyyy')} + ' ' + '-'" th:remove="tag"></div>
-							<em th:text="${noticia.tipo.traduce.nombre}"></em> <br />
-							<a
-								th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
-								th:text="${noticia.traduce.titulo}">Noticia titulo</a>
-						</div>
-					</li>
-				</ul>
-				<p th:if="${#lists.size(MVS_listado_elementos)} ==0" th:text="#{microhtml.nonoticias}">No hi ha cap notícia</p>
-			</div>
-	</div>
+    <div th:fragment="elementos">
+        <div id="noticies">
+            <h2 th:text="${MVS_tipo.traduce.nombre}">Nom del tipus</h2>
+            <ul th:if="${#lists.size(MVS_listado_elementos)} !=0">
+                <li th:each="noticia : ${MVS_listado_elementos}">
+                    <div th:if="${noticia.tipo.tipoelemento}==${T(es.caib.gusite.front.general.Front).ELEM_NOTICIA}" th:remove="tag">
+                        <img  th:if="${noticia.imagen}!=null"
+                        th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
+                        width="48" height="48" alt="" />
+                        <div th:if="${noticia.fpublicacion}!=null" 
+                        th:text="${#dates.format(noticia.fpublicacion, 'dd/MM/yyyy')} + ' ' + '-'" th:remove="tag"></div>
+                        <em th:text="${noticia.tipo.traduce.nombre}"></em> <br />
+                        <a
+                        th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
+                        th:text="${noticia.traduce.titulo}">Noticia titulo</a>
+                    </div>
+                </li>
+            </ul>
+            <p th:if="${#lists.size(MVS_listado_elementos)} ==0" th:text="#{microhtml.nonoticias}">No hi ha cap notícia</p>
+        </div>
+    </div>
+    
+    <div id="${MVS_idcomponente}" th:fragment="componenteexterno">
+
+        <h2 th:text="${MVS_nombreelemento}">Nombre elemento</h2>
+        <form th:if="${MVS_mchtml}!=null" action="noticias.html" th:name="${MVS_nombreformulario}" th:id="${MVS_nombreformulario}">
+            <input type="hidden" name="lang" th:value="${MVS_idioma}" /> 
+            <input type="hidden" name="nameform" th:value="${MVS_nombreformulario}" /> 
+            <input type="hidden" name="mkey" th:value="${MVS_microsite.claveunica}" />
+            <input type="hidden" name="pagina" value="1" />
+            <div th:utext="${MVS_mchtml}" th:remove="tag"></div>
+        </form>
+
+    </div>
+
+    <div th:fragment="listaNoticias">
+        <div th:id="'element'+${MVS_componente.id}" >
+            <h2 th:text="${nombre_elemento}">Nombre Elemento</h2>
+            <table width="100%" border="0" cellPadding="0" cellSpacing="0" th:id="'element'+${MVS_componente.id}">
+                <tbody>
+                    <div th:each="noticia,iterStat : ${lista_noticias}" th:remove="tag">
+                        <tr th:class="${iterStat.count%2 == 0}? 'inpar' : 'par' ">
+                            <td style="width:1%;">
+
+                                <div th:if="${noticia.imagen != null}" th:remove="tag">
+                                    <img th:src="@{${#gusuri.archivopubById(MVS_microsite,noticia.imagen.id)}}" alt="\"  class="imagen" />
+                                </div>
+                                <div th:if="${noticia.imagen == null}" th:remove="tag">
+                                    <div th:if="${MVS_componente.imagenbul != null}" th:remove="tag">
+                                        <img th:src="@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}" alt="\"  class="imagen" />
+                                    </div>
+                                    <div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
+                                        <img th:src="@{imgs\listados\bullet_gris.gif}" alt="\" class="imagen" />
+                                    </div>
+                                </div>
+                                <a href="asd">
+                                    <p th:text="${noticia.traduccion.titulo}">titulo de noticia</p>
+                                </a>
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 </body>
 </html>

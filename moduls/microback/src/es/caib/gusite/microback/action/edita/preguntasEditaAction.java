@@ -110,7 +110,7 @@ public class preguntasEditaAction extends BaseAction
 
            FormFile imagen = (FormFile) f.get("imagen");
            if (archivoValido(imagen)) 
-        	   pre.setImagen(populateArchivo(pre.getImagen(), imagen, null, null));
+        	   pre.setImagen(populateArchivo(pre.getImagen(), imagen, ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), null));
            else if (((Boolean) f.get("imagenbor")).booleanValue()) pre.setImagen(null);
            
            if (pre.getImagen() != null) 

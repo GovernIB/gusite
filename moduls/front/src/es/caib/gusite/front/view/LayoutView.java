@@ -103,6 +103,11 @@ public class LayoutView {
 	private String homeTmpCampanya;
 	
 	private Version version;
+	
+	/**
+	 * Uri para los archivos del tema actual
+	 */
+	private String uriTema;
 
 	/**
 	 *  
@@ -346,6 +351,18 @@ public class LayoutView {
 	@Variable("MVS_version")
 	public Version getVersion() {
 		return version;
+	}
+
+	public void setUriTema(String uriTema) {
+		this.uriTema = uriTema;
+	}
+
+	/**
+	 * Uri para los archivos del tema actual
+	 */
+	@Variable("MVS_uriTema")
+	public String getUriTema() {
+		return uriTema;
 	}
 
 }

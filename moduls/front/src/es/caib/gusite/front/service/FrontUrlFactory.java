@@ -19,6 +19,7 @@ import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Frqssi;
+import es.caib.gusite.micromodel.TemaFront;
 import es.caib.gusite.micromodel.TraduccionFrqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
@@ -32,6 +33,11 @@ import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Traducible2;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 
+/**
+ * Generador de Uris para front gusite
+ * @author at4.net
+ *
+ */
 @Service
 public class FrontUrlFactory {
 
@@ -554,5 +560,16 @@ public class FrontUrlFactory {
 
 	}
 
+	public String cssTema(TemaFront tema) {
+		
+		return this.uriTema(tema) + "css/estils-tema.css";
+
+	}
+
+	public String uriTema(TemaFront tema) {
+		
+		return "/ft/" + tema.getUri() + "/";
+
+	}
 
 }

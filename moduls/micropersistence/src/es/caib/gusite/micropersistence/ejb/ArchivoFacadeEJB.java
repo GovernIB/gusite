@@ -277,8 +277,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			Archivo a = (Archivo) session.get(Archivo.class, id);
 
 			if (ArchivoUtil.almacenarEnFilesystem()) {
-				// Si estamos guardando los archivos en el FS, comprobamos si
-				// existe.
+				// Si estamos guardando los archivos en el FS, comprobamos si existe.
 				// Si es así, lo borramos del FS.
 				if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
 					ArchivoUtil.borrarArchivo(a);
@@ -328,7 +327,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 				// Se escribirá el archivo en BD con el BLOB a null.
 				a.setDatos(null);
-			}
+			} 
 
 			session.saveOrUpdate(a);
 			session.flush();

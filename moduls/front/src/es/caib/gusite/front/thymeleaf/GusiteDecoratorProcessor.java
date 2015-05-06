@@ -34,7 +34,7 @@ public class GusiteDecoratorProcessor extends DecoratorProcessor {
 	protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
 
 		String templateName = GusiteDialectUtil.computeTemplateName(arguments, element.getAttributeValue(attributeName));
-
+		
 		// String finalAttributeName = "layout:" +
 		// DecoratorProcessor.PROCESSOR_NAME_DECORATOR;
 		// element.setAttribute(thAttributeName, templateName);

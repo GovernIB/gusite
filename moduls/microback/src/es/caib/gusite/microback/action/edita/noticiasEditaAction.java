@@ -196,7 +196,7 @@ public class noticiasEditaAction extends BaseAction
         // Tratamos la imagen de la noticia
        	FormFile imagen = (FormFile) noticiaForm.get("imagen");
         if (archivoValido(imagen)) {
-            noticiaBean.setImagen(populateArchivo(noticiaBean.getImagen(), imagen, null, null));
+            noticiaBean.setImagen(populateArchivo(noticiaBean.getImagen(), imagen, noticiaBean.getIdmicrosite(), null));
         } else if (((Boolean) noticiaForm.get("imagenbor")).booleanValue()) {
             noticiaBean.setImagen(null);
         }
@@ -395,9 +395,9 @@ public class noticiasEditaAction extends BaseAction
 	            		if (traductor.traducir(noticiaOrigen, noticiaDesti)) {
 
 	            		   //Tratamos documentos
-	            		   if (archivoValido(ficheros[i]))  noticiaDesti.setDocu(populateArchivo(noticiaDesti.getDocu(), ficheros[i], null, null));
+	            		   if (archivoValido(ficheros[i]))  noticiaDesti.setDocu(populateArchivo(noticiaDesti.getDocu(), ficheros[i], micrositeBean.getId(), null));
 	                	   else if (ficherosbor[i])         noticiaDesti.setDocu(null);
-	                	   else if (noticiaOrigen.getDocu() != null) noticiaDesti.setDocu(crearNuevoArchivo(noticiaOrigen.getDocu(), null, null));  
+	                	   else if (noticiaOrigen.getDocu() != null) noticiaDesti.setDocu(crearNuevoArchivo(noticiaOrigen.getDocu(), micrositeBean.getId(), null));  
 
 	                	   if (noticiaDesti.getDocu() != null) 
 	                		   if (ficherosnom[i].length()>0) 

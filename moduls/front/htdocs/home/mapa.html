@@ -40,7 +40,7 @@ Mapa del sitio web
 						</li>
 						<li th:if="${MVS_microsite.tipopie}=='1'" 
 							th:each="i:${MVS_listapie}">
-							<a href="" th:href="@{${i.value1}}" th:text="${i.key}">enlace pie</a>
+							<a href="" th:href="@{${i.value}}" th:text="${i.key}">enlace pie</a>
 						</li>
 					</ul>
 					

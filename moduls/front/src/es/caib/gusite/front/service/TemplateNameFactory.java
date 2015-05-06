@@ -152,9 +152,21 @@ public class TemplateNameFactory {
 	public String moduloNoticiasHome(Microsite microsite) {
 		return getPlantilla(microsite, "general/noticiasListado :: noticias");
 	}
+	
+	public String moduloListaNoticias(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: listaNoticias");
+	}
 
 	public String componenteElementos(Microsite microsite) {
 		return getPlantilla(microsite, "general/componentes :: elementos");
+	}
+
+	public String componenteEncuesta(Microsite microsite) {
+		return getPlantilla(microsite, TemplateView.ENCUESTA_ENCUESTA + " :: encuesta");
+	}
+
+	public String componenteExterno(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: componenteexterno");
 	}
 
 	public String cabecera(Microsite microsite) {

@@ -298,7 +298,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen1 = (FormFile) microForm.get("imagenPrincipal");
         
         if (archivoValido(imagen1)) {
-			micrositeBean.setImagenPrincipal(populateArchivo(micrositeBean.getImagenPrincipal(), imagen1, null, null));
+			micrositeBean.setImagenPrincipal(populateArchivo(micrositeBean.getImagenPrincipal(), imagen1, micrositeBean.getId(), null));
 		} else if (((Boolean) microForm.get("imagenPrincipalbor")).booleanValue()) {
 			micrositeBean.setImagenPrincipal(null);
 		}

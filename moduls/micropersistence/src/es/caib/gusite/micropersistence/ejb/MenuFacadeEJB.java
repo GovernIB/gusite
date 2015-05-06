@@ -681,6 +681,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 						arc.setMime(imagen.getContentType());
 						arc.setNombre(imagen.getFileName());
 						arc.setPeso(imagen.getFileSize());
+						arc.setIdmicrosite(m.getMicrosite().getId());
 						try {
 							arc.setDatos(imagen.getFileData());
 						} catch (FileNotFoundException e) {

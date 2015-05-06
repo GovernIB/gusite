@@ -28,7 +28,7 @@ Página de formulario de encuesta.
 </head>
 <body>
 	<section layout:fragment="content">
-		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">			
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="" th:fragment="encuesta">			
 			<div th:if="${MVS_manteniment} !=null" align="center" style="border: 2px solid; border-radius: 5px; padding: 10px;"
 				th:text="#{encuesta.mantenimiento}">Per motius de manteniment l'enquesta no estarà accesible durant unes hores.</div>
 			<div th:if="${MVS_manteniment}==null" th:replace="::contenido">Contenido de la encuesta</div> 	
@@ -117,7 +117,7 @@ Página de formulario de encuesta.
 		</div>
 		<div th:unless="(${MVS_encuesta.visible}=='S') and (${MVS_Fechas_vigente})" id="enquestaPreguntaCom">
 		<!-- encuesta no visible o caducada-->
-			<h3 th:text="${encuesta.traduce.titulo}">Título de la encuesta</h3>
+			<h3 th:text="${MVS_encuesta.traduce.titulo}">Título de la encuesta</h3>
 			<p style="text-align: center;" th:text="#{encuesta.caducada}">Encuesta caducada</p>
 			<p style="text-align: center;">
 				<a href="resultadosencuesta.html"

@@ -292,7 +292,7 @@ public class menuEditaAction extends BaseAction
 		// icono
         FormFile imagen = (FormFile) menuForm.get("imagenCM");
         if (archivoValido(imagen)) {
-            menu.setImagenmenu(populateArchivo(menu.getImagenmenu(), imagen, null, null));
+            menu.setImagenmenu(populateArchivo(menu.getImagenmenu(), imagen, menu.getIdmicrosite(), null));
         }
 
         List<?> lang = idiomaDelegate.listarIdiomas();

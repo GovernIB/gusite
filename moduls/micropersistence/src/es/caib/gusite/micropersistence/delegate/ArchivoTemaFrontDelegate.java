@@ -8,7 +8,6 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.ArchivoTemaFront;
-import es.caib.gusite.micromodel.PersonalizacionPlantilla;
 import es.caib.gusite.micropersistence.intf.ArchivoTemaFrontFacade;
 import es.caib.gusite.micropersistence.intf.ArchivoTemaFrontFacadeHome;
 import es.caib.gusite.micropersistence.util.ArchivoTemaFrontFacadeUtil;

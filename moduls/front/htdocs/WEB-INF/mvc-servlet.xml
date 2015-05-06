@@ -89,6 +89,7 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 		<property name="additionalDialects">
 			<set>
 				<bean class="nz.net.ultraq.thymeleaf.LayoutDialect" />
+				<bean class="org.thymeleaf.extras.conditionalcomments.dialect.ConditionalCommentsDialect" />
 				<ref bean="GusiteDialect" />
 			</set>
 		</property>

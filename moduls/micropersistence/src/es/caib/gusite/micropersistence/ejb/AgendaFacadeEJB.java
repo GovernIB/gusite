@@ -29,6 +29,7 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micromodel.TraduccionActividadagenda;
 import es.caib.gusite.micromodel.TraduccionAgenda;
+import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
@@ -75,14 +76,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select agenda";
 		super.from = " from Agenda agenda join agenda.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "' and agenda.idmicrosite="
-				+ site.toString();
+		super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and agenda.idmicrosite=" + site.toString();
 		super.whereini = " ";
 		super.orderby = "";
 
-		super.camposfiltro = new String[] { "agenda.organizador",
-				"agenda.finicio", "agenda.ffin", "trad.titulo" };
+		super.camposfiltro = new String[] { "agenda.organizador", "agenda.finicio", "agenda.ffin", "trad.titulo" };
 		super.cursor = 0;
 		super.nreg = 0;
 		super.npags = 0;
@@ -99,15 +97,12 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select agenda.id,trad.titulo ,agenda.finicio,agenda.idmicrosite";
 		super.from = " from Agenda agenda join agenda.traducciones trad ";
-		super.where = " where (trad.id.codigoIdioma='"
-				+ Idioma.getIdiomaPorDefecto() + "' or trad.id.codigoIdioma='"
-				+ idiomapasado + "')  and agenda.idmicrosite="
-				+ site.toString();
+		super.where = " where (trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "' or trad.id.codigoIdioma='" + idiomapasado
+				+ "')  and agenda.idmicrosite=" + site.toString();
 		super.whereini = " ";
 		super.orderby = "";
 
-		super.camposfiltro = new String[] { "agenda.organizador",
-				"agenda.finicio", "agenda.ffin", "trad.titulo" };
+		super.camposfiltro = new String[] { "agenda.organizador", "agenda.finicio", "agenda.ffin", "trad.titulo" };
 		super.cursor = 0;
 		super.nreg = 0;
 		super.npags = 0;
@@ -125,12 +120,10 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select agenda ";
 		super.from = " from Agenda agenda join agenda.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma='"
-				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
-		super.camposfiltro = new String[] { "agenda.organizador",
-				"agenda.finicio", "agenda.ffin", "trad.titulo" };
+		super.camposfiltro = new String[] { "agenda.organizador", "agenda.finicio", "agenda.ffin", "trad.titulo" };
 		super.cursor = 0;
 		super.nreg = 0;
 		super.npags = 0;
@@ -156,13 +149,22 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 			if (nuevo) {
 
-				Iterator<TraduccionAgenda> it = agenda.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionAgenda> it = agenda.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionAgenda trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				agenda.setTraducciones(null);
+			} else {
+				//Damos de alta los nuevos archivos
+				for (TraduccionAgenda trad : agenda.getTraducciones().values()) {
+	                if (trad.getDocumento() != null && trad.getDocumento().getId() == null) {
+	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocumento());
+	                }
+	                if (trad.getImagen() != null && trad.getImagen().getId() == null) {
+	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getImagen());
+	                }
+				}
 			}
 
 			session.saveOrUpdate(agenda);
@@ -171,6 +173,12 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			if (nuevo) {
 				for (TraduccionAgenda trad : listaTraducciones.values()) {
 					trad.getId().setCodigoAgenda(agenda.getId());
+	                if (trad.getDocumento() != null && trad.getDocumento().getId() == null) {
+	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocumento());
+	                }
+	                if (trad.getImagen() != null && trad.getImagen().getId() == null) {
+	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getImagen());
+	                }
 					session.saveOrUpdate(trad);
 				}
 				session.flush();
@@ -227,8 +235,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
 
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return query.list();
@@ -250,8 +257,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			ArrayList<Agenda> lista = new ArrayList<Agenda>();
 			ScrollableResults scr = query.scroll();
 			scr.first();
@@ -292,8 +298,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
 
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return this.crearlistadostateful(query.list(), idioma);
@@ -317,22 +322,17 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			java.sql.Date dt = new java.sql.Date(fecha.getTime());
 
 			if (this.where.toLowerCase().indexOf("where") != -1) {
-				this.where += " and to_char(agenda.finicio,'yyyy-MM-dd')<='"
-						+ dt + "'";
-				this.where += " and ( (agenda.ffin is null) OR (to_char(agenda.ffin , 'yyyy-MM-dd')>='"
-						+ dt + "') )";
+				this.where += " and to_char(agenda.finicio,'yyyy-MM-dd')<='" + dt + "'";
+				this.where += " and ( (agenda.ffin is null) OR (to_char(agenda.ffin , 'yyyy-MM-dd')>='" + dt + "') )";
 			} else {
-				this.where = " where to_char(agenda.finicio,'yyyy-MM-dd')<='"
-						+ dt + "'";
-				this.where += " and ( (agenda.ffin is null) OR (to_char(agenda.ffin , 'yyyy-MM-dd')>='"
-						+ dt + "') )";
+				this.where = " where to_char(agenda.finicio,'yyyy-MM-dd')<='" + dt + "'";
+				this.where += " and ( (agenda.ffin is null) OR (to_char(agenda.ffin , 'yyyy-MM-dd')>='" + dt + "') )";
 			}
 
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
 
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return this.crearlistadostateful(query.list(), idioma);
@@ -358,11 +358,8 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			Agenda agenda = (Agenda) session.get(Agenda.class, id);
 
 			// session.delete(agenda);
-			session.createQuery(
-					"delete from TraduccionAgenda tage where tage.id.codigoAgenda="
-							+ id).executeUpdate();
-			session.createQuery("delete from Agenda age where age.id=" + id)
-					.executeUpdate();
+			session.createQuery("delete from TraduccionAgenda tage where tage.id.codigoAgenda=" + id).executeUpdate();
+			session.createQuery("delete from Agenda age where age.id=" + id).executeUpdate();
 			// indexBorraAgenda(agenda.getId());
 			session.flush();
 			tx.commit();
@@ -386,8 +383,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	 * @return
 	 * @ejb.permission unchecked="true"
 	 */
-	private ArrayList<Agenda> crearlistadostateful(List<?> listado,
-			String idioma) {
+	private ArrayList<Agenda> crearlistadostateful(List<?> listado, String idioma) {
 		ArrayList<Agenda> lista = new ArrayList<Agenda>();
 		Iterator<?> iter = listado.iterator();
 		Agenda agenda;
@@ -410,9 +406,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	public boolean checkSite(Long site, Long id) {
 		Session session = this.getSession();
 		try {
-			Query query = session
-					.createQuery("from Agenda age where age.idmicrosite="
-							+ site.toString() + " and age.id=" + id.toString());
+			Query query = session.createQuery("from Agenda age where age.idmicrosite=" + site.toString() + " and age.id=" + id.toString());
 			return query.list().isEmpty();
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -432,8 +426,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		IndexObject io = new IndexObject();
 		try {
 			if (filter == null) {
-				filter = DelegateUtil.getMicrositeDelegate()
-						.obtenerFilterObject(age.getIdmicrosite());
+				filter = DelegateUtil.getMicrositeDelegate().obtenerFilterObject(age.getIdmicrosite());
 			}
 
 			if (filter != null && filter.getBuscador().equals("N")) {
@@ -446,11 +439,8 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 				io = new IndexObject();
 
 				// Configuración del writer
-				Directory directory = indexerDelegate
-						.getHibernateDirectory(idioma);
-				IndexWriter writer = new IndexWriter(directory,
-						Analizador.getAnalizador(idioma), false,
-						MaxFieldLength.UNLIMITED);
+				Directory directory = indexerDelegate.getHibernateDirectory(idioma);
+				IndexWriter writer = new IndexWriter(directory, Analizador.getAnalizador(idioma), false, MaxFieldLength.UNLIMITED);
 				writer.setMergeFactor(20);
 				writer.setMaxMergeDocs(Integer.MAX_VALUE);
 
@@ -469,33 +459,22 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					io.setCaducidad("");
 					io.setPublicacion("");
 					io.setDescripcion("");
-					io.setTituloserviciomain(filter.getTraduccion(idioma)
-							.getMaintitle());
+					io.setTituloserviciomain(filter.getTraduccion(idioma).getMaintitle());
 
 					if (age.getFinicio() != null) {
-						io.setUrl("/sacmicrofront/agenda.do?lang="
-								+ idioma
-								+ "&idsite="
-								+ age.getIdmicrosite().toString()
-								+ "&cont="
-								+ new java.text.SimpleDateFormat("yyyyMMdd")
-										.format(age.getFinicio()));
-						io.addTextLine(new java.text.SimpleDateFormat(
-								"dd/MM/yyyy").format(age.getFinicio()));
-						io.setCaducidad(new java.text.SimpleDateFormat(
-								"yyyyMMdd").format(age.getFinicio()));
+						io.setUrl("/sacmicrofront/agenda.do?lang=" + idioma + "&idsite=" + age.getIdmicrosite().toString() + "&cont="
+								+ new java.text.SimpleDateFormat("yyyyMMdd").format(age.getFinicio()));
+						io.addTextLine(new java.text.SimpleDateFormat("dd/MM/yyyy").format(age.getFinicio()));
+						io.setCaducidad(new java.text.SimpleDateFormat("yyyyMMdd").format(age.getFinicio()));
 					}
 
 					if (age.getFfin() != null) {
-						io.addTextLine(new java.text.SimpleDateFormat(
-								"dd/MM/yyyy").format(age.getFfin()));
-						io.setPublicacion(new java.text.SimpleDateFormat(
-								"yyyyMMdd").format(age.getFfin()));
+						io.addTextLine(new java.text.SimpleDateFormat("dd/MM/yyyy").format(age.getFfin()));
+						io.setPublicacion(new java.text.SimpleDateFormat("yyyyMMdd").format(age.getFfin()));
 					}
 					io.addTextLine(age.getOrganizador());
 
-					TraduccionAgenda trad = ((TraduccionAgenda) age
-							.getTraduccion(idioma));
+					TraduccionAgenda trad = ((TraduccionAgenda) age.getTraduccion(idioma));
 					if (trad != null) {
 						io.addTextLine(trad.getTitulo());
 
@@ -510,19 +489,15 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 							io.addArchivo(archi);
 
 							if (trad.getDescripcion().length() > 200) {
-								io.addDescripcionLine(trad.getDescripcion()
-										.substring(0, 199) + "...");
+								io.addDescripcionLine(trad.getDescripcion().substring(0, 199) + "...");
 							} else {
 								io.addDescripcionLine(trad.getDescripcion());
 							}
 						}
 
-						io.addTextopcionalLine(filter.getTraduccion(idioma)
-								.getMateria_text());
-						io.addTextopcionalLine(filter.getTraduccion(idioma)
-								.getSeccion_text());
-						io.addTextopcionalLine(filter.getTraduccion(idioma)
-								.getUo_text());
+						io.addTextopcionalLine(filter.getTraduccion(idioma).getMateria_text());
+						io.addTextopcionalLine(filter.getTraduccion(idioma).getSeccion_text());
+						io.addTextopcionalLine(filter.getTraduccion(idioma).getUo_text());
 
 						if (trad.getTitulo() != null) {
 							io.setTitulo(trad.getTitulo());
@@ -533,8 +508,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 						}
 					}
 
-					TraduccionActividadagenda trad1 = (TraduccionActividadagenda) age
-							.getActividad().getTraduccion(idioma);
+					TraduccionActividadagenda trad1 = (TraduccionActividadagenda) age.getActividad().getTraduccion(idioma);
 					if (trad1 != null) {
 						io.addTextLine(trad1.getNombre());
 					}
@@ -552,8 +526,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		} catch (DelegateException ex) {
 			throw new EJBException(ex);
 		} catch (Exception e) {
-			log.warn("[indexInsertaAgenda:" + age.getId()
-					+ "] No se ha podido indexar elemento. " + e.getMessage());
+			log.warn("[indexInsertaAgenda:" + age.getId() + "] No se ha podido indexar elemento. " + e.getMessage());
 		}
 	}
 
@@ -567,9 +540,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 		try {
 			for (int i = 0; i < this.langs.size(); i++) {
-				DelegateUtil.getIndexerDelegate().borrarObjeto(
-						Catalogo.SRVC_MICRO_EVENTOS + "." + id,
-						"" + this.langs.get(i));
+				DelegateUtil.getIndexerDelegate().borrarObjeto(Catalogo.SRVC_MICRO_EVENTOS + "." + id, "" + this.langs.get(i));
 			}
 
 		} catch (DelegateException ex) {

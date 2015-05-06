@@ -107,6 +107,10 @@
             <from>/(.*)/n/imgs/(.*)</from>
             <to>/resources/imgs/$2</to>
         </rule>
+        <rule>
+            <from>/(.*)/(.*)/imgs/(.*)</from>
+            <to>/resources/imgs/$3</to>
+        </rule>
 
 	<!--  
 	 Spring no soporta extensiones en sus rutas, así que estas las modificamos antes

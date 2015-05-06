@@ -41,7 +41,28 @@ public class NoticiasDataService {
 	 */
 	private String getOrdenNoticias(NoticiaCriteria criteria) {
 
-		return this.getOrdenNoticias(criteria.getTipo());
+		if (criteria.getOrdenacion() != null && criteria.getOrdenacion().length() > 0) {
+			return this.getOrdenNoticias(criteria.getOrdenacion());
+		} else {
+			return this.getOrdenNoticias(criteria.getTipo().getOrden());
+		}
+
+	}
+
+	private String getOrdenNoticias(String orden) {
+		if (orden.equals("0")) {
+			return " order by noti.orden ";
+		}
+		if (orden.equals("1")) {
+			return " order by noti.fpublicacion ";
+		}
+		if (orden.equals("2")) {
+			return " order by noti.fpublicacion desc";
+		}
+		if (orden.equals("3")) {
+			return " order by trad.titulo ";
+		}
+		return "";
 	}
 
 	/**
@@ -49,19 +70,7 @@ public class NoticiasDataService {
 	 */
 	private String getOrdenNoticias(Tipo tipo) {
 
-		if (tipo.getOrden().equals("0")) {
-			return " order by noti.orden ";
-		}
-		if (tipo.getOrden().equals("1")) {
-			return " order by noti.fpublicacion ";
-		}
-		if (tipo.getOrden().equals("2")) {
-			return " order by noti.fpublicacion desc";
-		}
-		if (tipo.getOrden().equals("3")) {
-			return " order by trad.titulo ";
-		}
-		return "";
+		return this.getOrdenNoticias(tipo.getOrden());
 	}
 
 	private String construirPartialWhereAnyo(int anyo) {
@@ -138,9 +147,6 @@ public class NoticiasDataService {
 					noticiadel.setTampagina(criteria.getTipo().getTampagina());
 				}
 
-				if (criteria.getOrdenacion() != null && criteria.getOrdenacion().length() > 0) {
-					noticiadel.setOrderby(criteria.getOrdenacion());
-				}
 				noticiadel.setPagina(criteria.getPagina());
 
 				List<Noticia> listanoticias = noticiadel.listarNoticiasThin(idioma);

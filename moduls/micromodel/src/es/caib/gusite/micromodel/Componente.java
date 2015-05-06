@@ -89,8 +89,7 @@ public class Componente extends AuditableModel implements Traducible2 {
 	@Transient
 	private String idi = Idioma.getIdiomaPorDefecto();
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "CPI_CMPCOD")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy="componente")
 	@MapKey(name = "id.codigoIdioma")
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@Fetch(FetchMode.SUBSELECT)

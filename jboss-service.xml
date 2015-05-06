@@ -26,9 +26,9 @@
 	   es.caib.gusite.email.debugMode=S
 	   es.caib.gusite.email.debugMail=agarcia@at4.net
 
-       es.caib.gusite.context.front=/sites
        es.caib.gusite.redirectToNewFront=S
-       
+       es.caib.gusite.context.front=/sites
+
        <!--  Fijar a S, para habilitar caché de templates thymeleaf en producción -->
        es.caib.gusite.front.templateCaching=N
 
