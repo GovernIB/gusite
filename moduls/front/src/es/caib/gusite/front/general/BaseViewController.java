@@ -268,7 +268,7 @@ public abstract class BaseViewController extends FrontController {
 			view.setUriTema( this.urlFactory.uriTema(view.getMicrosite().getTema()));
 			
 			if (view.getMicrosite().getTema().getCss() != null) {
-				archivosCss.add( new ArchivoCSS ( this.urlFactory.cssTema(view.getMicrosite().getTema()) ) );
+				archivosCss.add( new ArchivoCSS ( this.urlFactory.cssTema(view.getMicrosite().getTema()), "screen" ) );
 			}
 			
 		}

@@ -288,8 +288,8 @@ public class ArchivoController extends FrontController {
 
 		// TODO:filename?
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
+		//responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-		return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.OK);
 	}
 }
