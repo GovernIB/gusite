@@ -5,6 +5,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.Globals;
+import org.ibit.rol.sac.microback.utils.Cadenas;
 import org.ibit.rol.sac.micromodel.Archivo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Action Base con métodos de utilidad de la que heredan las demás Acciones 
+ * Action Base con mï¿½todos de utilidad de la que heredan las demï¿½s Acciones 
  */
 public abstract class BaseAction extends Action {
 	
@@ -25,7 +26,7 @@ public abstract class BaseAction extends Action {
     
 	/**
 	 * 
-	 * Método que genera un Archivo a partir de un Formfile
+	 * Mï¿½todo que genera un Archivo a partir de un Formfile
 	 * 
 	 * @param archivo
 	 * @param formFile
@@ -38,7 +39,9 @@ public abstract class BaseAction extends Action {
 
         if (archivo == null) archivo = new Archivo();
         archivo.setMime(formFile.getContentType());
-        archivo.setNombre(formFile.getFileName());
+        String file_name = Cadenas.toAsciiString(formFile.getFileName());
+        file_name = Cadenas.replaceSpecialCharacters(file_name);
+        archivo.setNombre(file_name);
         archivo.setPeso(formFile.getFileSize());
         archivo.setDatos(formFile.getFileData());
         if (pagina!=null) archivo.setPagina(pagina);
@@ -47,7 +50,7 @@ public abstract class BaseAction extends Action {
     }
     
     /**
-     * Método que genera un FormFile a partir de un Archivo
+     * Mï¿½todo que genera un FormFile a partir de un Archivo
      * 
      * @param archivo
      * @param formFile
@@ -62,7 +65,7 @@ public abstract class BaseAction extends Action {
     }
 
     /**
-     * Método que crear un nuevo archivo en una página de Microsite
+     * Mï¿½todo que crear un nuevo archivo en una pï¿½gina de Microsite
      * @param archivo
      * @param microsite
      * @param pagina

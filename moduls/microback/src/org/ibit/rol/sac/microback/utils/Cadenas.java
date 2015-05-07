@@ -13,9 +13,14 @@ import org.ibit.rol.sac.microback.Microback;
  * 
  */
 public class Cadenas {
+	
+	private static final String UNICODE =
+	        "ÀàÈèÌìÒòÙùÁáÉéÍíÓóÚúÝýÂâÊêÎîÔôÛûŶŷÃãÕõÑñÄäËëÏïÖöÜüŸÿÅåÇçŐőŰű";
+	private static final String PLAIN_ASCII =
+	        "AaEeIiOoUuAaEeIiOoUuYyAaEeIiOoUuYyAaOoNnAaEeIiOoUuYyAaCcOoUu";
 
 	/**
-	 * M�todo que divide el string en palabras y las pasa a un arraylist
+	 * M�todo que divide el string en palabras y las pasa a un arraylist
 	 * 
 	 * @param cadena
 	 * @return ArrayList
@@ -35,7 +40,7 @@ public class Cadenas {
 	}
 
 	/**
-	 * M�todo que divide el string en palabras y las pasa a un hashtable
+	 * M�todo que divide el string en palabras y las pasa a un hashtable
 	 * 
 	 * @param cadena
 	 * @return Hashtable
@@ -54,12 +59,12 @@ public class Cadenas {
 	}
 
 	/**
-	 * M�todo que dada una URI devuelve el valor de un parametro.
+	 * M�todo que dada una URI devuelve el valor de un parametro.
 	 * 
 	 * @param cadena
 	 *            en la que hay que buscar el parametro
 	 * @param parametro
-	 *            en cuesti�n
+	 *            en cuesti�n
 	 * @return String con el valor del parametro solicitado
 	 */
 	public static String getValueParameter(String cadena, String parametro) {
@@ -97,7 +102,7 @@ public class Cadenas {
 	}
 
 	/**
-	 * M�todo que parsea substituyendo los saltos de linea por tags BR
+	 * M�todo que parsea substituyendo los saltos de linea por tags BR
 	 * 
 	 * @param lineas
 	 * @return String
@@ -114,7 +119,7 @@ public class Cadenas {
 	}
 
 	/**
-	 * M�todo que cuenta el n�mero de veces que aparece un substring en un
+	 * M�todo que cuenta el n�mero de veces que aparece un substring en un
 	 * string
 	 * 
 	 * @param frase
@@ -132,5 +137,29 @@ public class Cadenas {
 			posicion = frase.indexOf(substr);
 		}
 		return cont;
+	}
+
+	public static String toAsciiString(String str) {
+	    if (str == null) {
+	        return null;
+	    }
+	    StringBuilder sb = new StringBuilder();
+	    for (int index = 0; index < str.length(); index++) {
+	        char c = str.charAt(index);
+	        int pos = UNICODE.indexOf(c);
+	        if (pos > -1)
+	            sb.append(PLAIN_ASCII.charAt(pos));
+	        else {
+	            sb.append(c);
+	        }
+	    }
+	    return sb.toString();
+	}
+	
+	public static String replaceSpecialCharacters(String str){
+	    if (str == null) {
+	        return null;
+	    }
+		return str.replaceAll("[^a-zA-Z0-9.-]", "_");
 	}
 }

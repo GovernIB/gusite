@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.ibit.rol.sac.microback.utils.Cadenas;
 import org.ibit.rol.sac.microfront.BaseAction;
 import org.ibit.rol.sac.microfront.Microfront;
 import org.ibit.rol.sac.microfront.archivo.util.Bdarchivopub;
@@ -52,12 +53,14 @@ public class ArchivoPubAction extends BaseAction {
 		        Archivo archivo = obtenerArchivo(mapping, form, request);
 		        if ((archivo != null) && (archivo.getDatos()!=null)) {
 		            response.reset();
+		            String file_name = Cadenas.toAsciiString(archivo.getNombre());
+		            file_name = Cadenas.replaceSpecialCharacters(file_name);
 		            if (!forzarDownload(mapping, form, request)) {
 		                response.setContentType(archivo.getMime());
-		                response.setHeader("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
+		                response.setHeader("Content-Disposition", "inline; filename=\"" + file_name + "\"");
 		            } else {
 		                response.setContentType("application/octet-stream");
-		                response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getNombre() + "\"");
+		                response.setHeader("Content-Disposition", "attachment; filename=\"" + file_name + "\"");
 		            }
 		            response.setContentLength(new Long(archivo.getPeso()).intValue());
 			        response.getOutputStream().write(archivo.getDatos());
