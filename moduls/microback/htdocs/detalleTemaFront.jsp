@@ -60,6 +60,7 @@
                     <img src="imgs/botons/tornar.gif" alt='<bean:message key="frontTemas.volvermantenimiento"/>' />
                 </button>
             </span>
+        <logic:notEmpty name="TemaFrontForm" property="id">
             <span class="grup">
 				<button type="button" name="fichero1" title="<bean:message key="frontTemas.exportar" />" onclick="submitExportar(<bean:write name="TemaFrontForm" property="id"/>);">
 					<img src="imgs/botons/importar.gif" alt="<bean:message key="frontTemas.exportar" />" /> &nbsp;<bean:message key="frontTemas.exportar" />
@@ -68,6 +69,7 @@
 					<img src="imgs/botons/importar.gif" alt="<bean:message key="frontTemas.importar" />" /> &nbsp;<bean:message key="frontTemas.importar" />
 				</button>
             </span>
+        </logic:notEmpty>
             <span class="grup">
                 <button class="btnGuardar" type="submit" title='<bean:message key="operacion.guardar"/>'>
                     <img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
