@@ -53,7 +53,7 @@ public class GusiteTemplateProcessor {
 			if (templateName.contains("::")) {
 				// Se trata de un fragment
 				int index = templateName.indexOf("::");
-				String templateFile = templateName.substring(0, index - 1).trim();
+				String templateFile = templateName.substring(0, index).trim();
 				String fragmentName = templateName.substring(index + 2).trim();
 				IFragmentSpec fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "th:fragment", fragmentName, true);
 

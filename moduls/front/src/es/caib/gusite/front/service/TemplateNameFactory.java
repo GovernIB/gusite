@@ -22,36 +22,38 @@ public class TemplateNameFactory {
 	 * Carga la plantilla para el microsite
 	 * 
 	 * @param microsite
-	 * @param plantilla
+	 * @param plantillaOfragmento
 	 * @return
 	 */
 	public String getPlantilla(Microsite microsite, String plantillaOfragmento) {
 		String plantilla = plantillaOfragmento;
-		/*if (plantillaOfragmento.contains("::")) {
+		String fragmento = "";
+		if (plantillaOfragmento.contains("::")) {
 			// Se trata de un fragment
 			int index = plantillaOfragmento.indexOf("::");
-			plantilla = plantillaOfragmento.substring(0, index - 1).trim();
-		}*/
+			plantilla = plantillaOfragmento.substring(0, index).trim();
+			fragmento = plantillaOfragmento.substring(index).trim();
+		}
 		try {
 			PersonalizacionPlantilla persPlant = this.templateDataService.getPlantilla(microsite, plantilla);
 			if (persPlant != null) {
 				if ("S".equals(microsite.getDesarrollo())) {
 					// En caso de que el microsite esté en modo de desarrollo,
 					// incluimos "template resolver" con caching deshabilitado
-					return "devdb:" + persPlant.getId();
+					return "devdb:" + persPlant.getId() + fragmento;
 				} else if (!"S".equals(System.getProperty("es.caib.gusite.front.templateCaching"))) {
 					// Lo mismo no está activado el caché de plantillas para la
 					// instalación
-					return "devdb:" + persPlant.getId();
+					return "devdb:" + persPlant.getId() + fragmento;
 				} else {
-					return "db:" + persPlant.getId();
+					return "db:" + persPlant.getId() + fragmento;
 				}
 			} else {
-				return plantilla;
+				return plantilla + fragmento;
 			}
 		} catch (ExceptionFront e) {
 			log.error("Problema obteniendo plantilla:" + plantilla + " para el microsite:" + microsite.getId());
-			return plantilla;
+			return plantilla + fragmento;
 		}
 	}
 
