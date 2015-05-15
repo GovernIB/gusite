@@ -45,8 +45,7 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
-	 *                 role-name="${role.system},\${role.admin},${role.super},${role.oper
-	 *                 } "
+	 *                 role-name="${role.system},${role.admin}"
 	 */
 	public ArchivoTemaFront crearArchivoTemaFront(ArchivoTemaFront instance) {
 
@@ -79,7 +78,7 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 *                 role-name="${role.system},${role.admin}"
 	 */
 	public void actualizarArchivoTemaFront(ArchivoTemaFront instance) {
 		log.debug("updating ArchivoTemaFront instance");

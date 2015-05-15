@@ -44,7 +44,7 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
     /**
      * Crea un PersonalizacionPlantilla
      * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},\${role.admin},${role.super},${role.oper}"
+     * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
      */
     public PersonalizacionPlantilla crearPersonalizacionPlantilla(PersonalizacionPlantilla instance) {
 

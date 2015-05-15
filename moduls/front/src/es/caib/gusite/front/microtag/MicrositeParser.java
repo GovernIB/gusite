@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -505,10 +507,10 @@ public class MicrositeParser {
 			return this.getHtmlComponenteTNoticia(site, componente, idioma, request, response);
 		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
 			// si es de clase enlace.
-			return this.getHtmlComponenteTEnlace(site, componente, idioma);
+			return this.getHtmlComponenteTEnlace(site, componente, idioma, request, response);
 		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_DOCUMENTO)) {
 			// si es de clase documento
-			return this.getHtmlComponenteTDocumento(site, componente, idioma);
+			return this.getHtmlComponenteTDocumento(site, componente, idioma, request, response);
 		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_CONEXIO_EXTERNA)) {
 			// si es de clase conexión externa
 			return this.getHtmlComponenteTExterno(site, componente, idioma, request, response);
@@ -573,112 +575,23 @@ public class MicrositeParser {
 	private String getHtmlComponenteTNoticia(Microsite site, Componente componente, String idioma,
 			HttpServletRequest request, HttpServletResponse response) throws DelegateException {
 		Map<String, Object> model = new HashMap<String, Object>();
-		// -TODO: Pasar a plantilla thymeleaf
-		Collection<Noticia> listanoticias = this.getListaNoticias(site, componente, idioma);
+		// -TODO: TEST plantilla thymeleaf
+		Collection<Noticia> colnoticias = this.getListaNoticias(site, componente, idioma);
 		String nombre_elemento = ((TraduccionComponente) componente.getTraduccion(idioma)) != null ? ((TraduccionComponente) componente
 				.getTraduccion(idioma)).getTitulo() : "[ empty ]";
+		List<Noticia> listanoticias;
+		if (colnoticias instanceof List) {
+			listanoticias = (List<Noticia>) colnoticias;
+		} else {
+			listanoticias = new ArrayList<Noticia>(colnoticias);
+		}
 		model.put("nombre_elemento", nombre_elemento);
 		model.put("lista_noticias", listanoticias);
 		model.put("MVS_componente", componente);
 		model.put("MVS_microsite", site);
 		model.put("MVS_idioma", new Idioma(idioma));
 		return this.templateProcessor.process(model, this.templateNameFactory.moduloListaNoticias(site), idioma,
-				request, response)  + viejoNoticia(site, componente, idioma);
-	}
-
-	private String viejoNoticia(Microsite site, Componente componente, String idioma) throws DelegateException {
-
-		Collection<Noticia> listanoticias = this.getListaNoticias(site, componente, idioma);
-		String nombre_elemento = ((TraduccionComponente) componente.getTraduccion(idioma)) != null ? ((TraduccionComponente) componente
-				.getTraduccion(idioma)).getTitulo() : "[ empty ]";
-
-		// ////////// -TODO: convertir en fragmento thymeleaf
-
-		StringBuffer retorno = new StringBuffer();
-		// al div le ponemos el id de la clase que acabamos de configurar
-		retorno.append(this.configStyle3(site, componente));
-		retorno.append("<div id=\"element" + componente.getId() + "\">");
-		retorno.append("<h2>" + nombre_elemento + "</h2>");
-
-		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(),
-				idioma.toUpperCase()));
-
-		if (listanoticias != null && listanoticias.size() != 0) {
-
-			retorno.append("<table width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" id=\"element"
-					+ componente.getId() + "\">");
-			Iterator<?> iter = listanoticias.iterator();
-			int cont = 0;
-			// Si SoloImagen, es mostra en forma de mosaic a dues columnes
-			String nCols = (componente.getSoloimagen().equals("S")) ? "" : "<tr>";
-			while (iter.hasNext()) {
-				java.text.SimpleDateFormat dia = new java.text.SimpleDateFormat("dd/MM/yyyy");
-				Noticia noti = (Noticia) iter.next();
-
-				retorno.append(((cont % 2) == 0) ? "<tr class=\"par\">" : nCols);
-				if (componente.getSoloimagen().equals("S")) {
-					// en el caso de que sólo imágenes
-					retorno.append("<td style=\"width:1%\" >");
-					retorno.append("<a href=\"" + MicroURI.uriNoticia(site.getId(), noti.getId(), idioma) + "\">");
-					if (noti.getImagen() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RNOTICIA, noti.getId().longValue(), noti.getImagen()
-										.getId().longValue()) + "\" alt=\"\" class=\"imagen\" />");
-					} else {
-						if (componente.getImagenbul() != null) {
-							retorno.append("<img src=\""
-									+ MicroURI.uriImg(Microfront.RMICROSITE, site.getId().longValue(), componente
-											.getImagenbul().getId().longValue()) + "\" alt=\""
-									+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo()
-									+ "\" class=\"imagen\" />&nbsp;");
-						} else {
-							retorno.append("<img src=\"imgs/listados/bullet_gris.gif\" alt=\"\" /> &nbsp;");
-						}
-						retorno.append(((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo());
-					}
-					retorno.append("</a>");
-					retorno.append("</td><td>&nbsp;</td> \n");
-
-				} else {
-					retorno.append("<td style=\"width:1%\" >");
-					if (noti.getImagen() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RNOTICIA, noti.getId().longValue(), noti.getImagen()
-										.getId().longValue())
-								+ "\" width=\"48\" height=\"48\" alt=\"\" class=\"imagen\" width=\"266\" height=\"127\" />&nbsp;");
-					} else {
-						if (componente.getImagenbul() != null) {
-							retorno.append("<img src=\""
-									+ MicroURI.uriImg(Microfront.RMICROSITE, site.getId().longValue(), componente
-											.getImagenbul().getId().longValue()) + "\" alt=\""
-									+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo()
-									+ "\" class=\"imagen\" />&nbsp;");
-						} else {
-							retorno.append("<img src=\"imgs/listados/bullet_gris.gif\" alt=\"\" /> &nbsp;");
-						}
-					}
-					retorno.append(noti.getFpublicacion() != null ? dia.format(noti.getFpublicacion()) : "");
-					retorno.append("&nbsp;<a href=\"" + MicroURI.uriNoticia(site.getId(), noti.getId(), idioma) + "\">");
-					retorno.append(((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
-					String subTitol = ((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo();
-					retorno.append("<br/>" + (subTitol == null ? "" : subTitol) + "<br/>");
-
-					retorno.append("</td> \n");
-				}
-				retorno.append(((cont % 2) == 0) ? nCols : "</tr> \n");
-				cont++;
-			}
-			retorno.append("</table> \n");
-
-		} else {
-			retorno.append("<p>" + rb.getString("microhtml.nonoticias") + "</p>");
-		}
-		retorno.append("</div>");
-		if (site.getId().longValue() == 0) {
-			retorno.append("");
-		}
-
-		return retorno.toString();
+				request, response);
 	}
 
 	private Collection<Noticia> getListaNoticias(Microsite site, Componente componente, String idioma)
@@ -703,84 +616,28 @@ public class MicrositeParser {
 	 * @return StringBuffer Código HTML
 	 * @throws DelegateException
 	 */
-	private String getHtmlComponenteTEnlace(Microsite site, Componente componente, String idioma)
-			throws DelegateException {
+	private String getHtmlComponenteTEnlace(Microsite site, Componente componente, String idioma,
+			HttpServletRequest request, HttpServletResponse response) throws DelegateException {
 
-		Collection<Noticia> listanoticias = this.getListaNoticias(site, componente, idioma);
+		Map<String, Object> model = new HashMap<String, Object>();
+		// -TODO: TEST plantilla thymeleaf
+		Collection<Noticia> colnoticias = this.getListaNoticias(site, componente, idioma);
 		String nombre_elemento = ((TraduccionComponente) componente.getTraduccion(idioma)) != null ? ((TraduccionComponente) componente
 				.getTraduccion(idioma)).getTitulo() : "[ empty ]";
-
-		// ////////// -TODO: convertir en fragmento thymeleaf
-
-		StringBuffer retorno = new StringBuffer();
-		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(),
-				idioma.toUpperCase()));
-		// al div le ponemos el id de la clase que acabamos de configurar
-		retorno.append(this.configStyle3(site, componente));
-		retorno.append("<div id=\"element" + componente.getId() + "\">");
-		retorno.append("<h2>" + nombre_elemento + "</h2>");
-		if (listanoticias != null && listanoticias.size() != 0) {
-
-			retorno.append("<table width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" id=\"element"
-					+ componente.getId() + "\">");
-			Iterator<?> iter = listanoticias.iterator();
-			int cont = 0;
-			// Si SoloImagen, es mostra en forma de mosaic a dues columnes
-			String nCols = (componente.getSoloimagen().equals("S")) ? "" : "<tr>";
-			while (iter.hasNext()) {
-				Noticia noti = (Noticia) iter.next();
-				retorno.append(((cont % 2) == 0) ? "<tr class=\"par\">" : nCols);
-				if (componente.getSoloimagen().equals("S") && (noti.getImagen() != null)) {
-					// en el caso de que sólo imágenes
-					retorno.append("<td style=\"width:1%\" >");
-					retorno.append("<a href=\"" + MicroURI.uriNoticia(site.getId(), noti.getId(), idioma) + "\">");
-					if (noti.getImagen() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RNOTICIA, noti.getId().longValue(), noti.getImagen()
-										.getId().longValue()) + "\" alt=\""
-								+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo()
-								+ "\" class=\"imagen\" />");
-					} else {
-						retorno.append(((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo());
-					}
-					retorno.append("</a>");
-					retorno.append("</td><td>&nbsp;</td> \n");
-
-				} else {
-					retorno.append("<td style=\"width:1%\" >");
-					if (componente.getImagenbul() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RMICROSITE, site.getId().longValue(), componente
-										.getImagenbul().getId().longValue()) + "\" alt=\"\" class=\"imagen\" />");
-					} else {
-						retorno.append("<img src=\"imgs/listados/bullet_gris.gif\" alt=\"\" />");
-					}
-
-					boolean urlExt = ((TraduccionNoticia) noti.getTraduccion(idioma)).getLaurl().startsWith("http:");
-					String target = (urlExt) ? "_blank" : "_self";
-					retorno.append("<a href=\"" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getLaurl()
-							+ "\" target=\"" + target + "\">&nbsp;"
-							+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
-
-					if (((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo() != null) {
-						retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo());
-					}
-					if (((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto() != null) {
-						retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
-					}
-					retorno.append("</td> \n");
-				}
-				retorno.append(((cont % 2) == 0) ? nCols : "</tr> \n");
-				cont++;
-			}
-			retorno.append("</table> \n");
-
+		List<Noticia> listanoticias;
+		if (colnoticias instanceof List) {
+			listanoticias = (List<Noticia>) colnoticias;
 		} else {
-			retorno.append("<p>" + rb.getString("microhtml.nonoticias") + "</p>");
+			listanoticias = new ArrayList<Noticia>(colnoticias);
 		}
-		retorno.append("</div>");
-
-		return retorno.toString();
+		model.put("nombre_elemento", nombre_elemento);
+		model.put("lista_noticias", listanoticias);
+		model.put("MVS_componente", componente);
+		model.put("MVS_microsite", site);
+		model.put("MVS_idioma", new Idioma(idioma));
+		String toReturn = this.templateProcessor.process(model, this.templateNameFactory.moduloListaEnlaces(site), idioma,
+				request, response);
+		return toReturn;
 	}
 
 	/**
@@ -793,80 +650,30 @@ public class MicrositeParser {
 	 * @return StringBuffer Código HTML
 	 * @throws DelegateException
 	 */
-	private String getHtmlComponenteTDocumento(Microsite site, Componente componente, String idioma)
-			throws DelegateException {
+	private String getHtmlComponenteTDocumento(Microsite site, Componente componente, String idioma,
+			HttpServletRequest request, HttpServletResponse response) throws DelegateException {
 		StringBuffer retorno = new StringBuffer();
-
-		Collection<Noticia> listanoticias = this.getListaNoticias(site, componente, idioma);
+		Map<String, Object> model = new HashMap<String, Object>();
+		Collection<Noticia> colnoticias = this.getListaNoticias(site, componente, idioma);
 		String nombre_elemento = ((TraduccionComponente) componente.getTraduccion(idioma)) != null ? ((TraduccionComponente) componente
 				.getTraduccion(idioma)).getTitulo() : "[ empty ]";
-
-		// ////////// -TODO: convertir en fragmento thymeleaf
-
+		// ////////// -TODO: TEST plantilla thymeleaf
 		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(),
 				idioma.toUpperCase()));
-
-		// al div le ponemos el id de la clase que acabamos de configurar
-		retorno.append(this.configStyle3(site, componente));
-		retorno.append("<div id=\"element" + componente.getId() + "\">");
-		retorno.append("<h2>" + nombre_elemento + "</h2>");
-
-		if (listanoticias != null && listanoticias.size() != 0) {
-
-			retorno.append("<table width=\"100%\" border=\"0\" cellPadding=\"0\" cellSpacing=\"0\" id=\"element"
-					+ componente.getId() + "\">");
-			Iterator<?> iter = listanoticias.iterator();
-			int cont = 0;
-			// Si SoloImagen, es mostra en forma de mosaic a dues columnes
-			String nCols = (componente.getSoloimagen().equals("S")) ? "" : "<tr>";
-			while (iter.hasNext()) {
-
-				Noticia noti = (Noticia) iter.next();
-				retorno.append(((cont % 2) == 0) ? "<tr class=\"par\">" : nCols);
-				if (componente.getSoloimagen().equals("S") && (noti.getImagen() != null)) {
-					// en el caso de que sólo imágenes
-					retorno.append("<td style=\"width:1%\" >");
-					retorno.append("<a href=\"" + MicroURI.uriNoticia(site.getId(), noti.getId(), idioma) + "\">");
-					if (noti.getImagen() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RNOTICIA, noti.getId().longValue(), noti.getImagen()
-										.getId().longValue()) + "\" alt=\""
-								+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo()
-								+ "\" class=\"imagen\" />");
-					} else {
-						retorno.append(((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo());
-					}
-					retorno.append("</a>");
-					retorno.append("</td><td>&nbsp;</td> \n");
-
-				} else {
-					retorno.append("<td style=\"width:1%\" >");
-					if (componente.getImagenbul() != null) {
-						retorno.append("<img src=\""
-								+ MicroURI.uriImg(Microfront.RMICROSITE, site.getId().longValue(), componente
-										.getImagenbul().getId().longValue()) + "\" alt=\"\" class=\"imagen\" />");
-					} else {
-						retorno.append("<img src=\"imgs/listados/bullet_gris.gif\" alt=\"\" />");
-					}
-					retorno.append("<a href=\"elementodocumento.do?idsite=" + site.getId() + "&cont=" + noti.getId()
-							+ "&lang=" + idioma + "\" target=\"_blank\">&nbsp;"
-							+ ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
-					if (((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto() != null) {
-						retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
-					}
-					retorno.append("</td> \n");
-				}
-				retorno.append(((cont % 2) == 0) ? nCols : "</tr> \n");
-				cont++;
-			}
-			retorno.append("</table> \n");
-
+		List<Noticia> listanoticias;
+		if (colnoticias instanceof List) {
+			listanoticias = (List<Noticia>) colnoticias;
 		} else {
-			retorno.append("<p>" + rb.getString("microhtml.nonoticias") + "</p>");
+			listanoticias = new ArrayList<Noticia>(colnoticias);
 		}
-		retorno.append("</div>");
-
-		return retorno.toString();
+		model.put("nombre_elemento", nombre_elemento);
+		model.put("lista_noticias", listanoticias);
+		model.put("MVS_componente", componente);
+		model.put("MVS_microsite", site);
+		model.put("MVS_idioma", new Idioma(idioma));
+		String toReturn = this.templateProcessor.process(model, this.templateNameFactory.moduloListaDocumentos(site), idioma,
+				request, response);
+		return toReturn;
 	}
 
 	private String getHtmlQssi(Microsite site, String ideqssi, String idioma) throws ExceptionFrontPagina {
@@ -877,54 +684,6 @@ public class MicrositeParser {
 		String laurl = this.urlFactory.qssiFinalUrl(site, idioma, qssi);
 		return "<a href=\"" + laurl + "\">" + ((TraduccionFrqssi) qssi.getTraduce()).getNombre() + "</a>";
 
-	}
-
-	/**
-	 * Método que crea un bloque completo del tag de html "<style>"
-	 * 
-	 * @param idmicrosite
-	 * @param componente
-	 * @return StringBuffer con todo el bloque '<style>'
-	 */
-	private StringBuffer configStyle3(Microsite site, Componente componente) {
-		StringBuffer retorno = new StringBuffer();
-
-		// se monta todo en un estilo, luego simplemente hay que aplicarlo
-		retorno.append("<style> " + "\n");
-		// retorno.append("div#element" + componente.getId() +
-		// " h2 { padding:.5em 0 0 2em; border-top: #85bbe4 2px solid; background: url(imgs/titol/ico_blau.gif) #fff no-repeat left top; color: #00276c;  } \n");
-		if (componente.getSoloimagen().equals("S")) {
-			retorno.append("table#element" + componente.getId() + " tr { margin:0; padding:.2em; } \n");
-			retorno.append("table#element" + componente.getId() + " tr td { vertical-align:top; }   \n");
-
-		} else {
-			if (componente.getImagenbul() != null) {
-				retorno.append("table#element" + componente.getId() + " tr { margin:0; padding:.2em; } \n");
-				retorno.append("table#element" + componente.getId() + " tr td { vertical-align:top; }  \n");
-			} else {
-				if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {
-					retorno.append("table#element" + componente.getId() + " tr { margin:0; padding:.2em; } \n");
-					retorno.append("div#element" + componente.getId() + " tr td { vertical-align:top; }  \n");
-				} else {
-					retorno.append("table#element" + componente.getId() + " tr { margin:0; padding:.2em; } \n");
-					retorno.append("table#element" + componente.getId() + " tr td { vertical-align:top; }  \n");
-				}
-			}
-		}
-		if (componente.getFilas().equals("S")) {
-			retorno.append("table#element" + componente.getId() + " tr.par { background-color:#EFEFEF; } \n");
-		}
-
-		retorno.append("table#element" + componente.getId()
-				+ " tr td span.font { font-weight: bold; font-style: italic } \n");
-		retorno.append("table#element" + componente.getId()
-				+ " tr td span.enllas { margin-top: 0.2em; display: block; padding-left: 0.2em } \n");
-		retorno.append("table#element" + componente.getId() + " tr td img { margin-right:0em; } \n");
-		retorno.append("table#element" + componente.getId()
-				+ " tr td img.imagen { float:left; margin-right:.3em; padding-right:.2em; padding-bottom:.8em;} \n");
-		retorno.append(" </style>" + "\n");
-
-		return retorno;
 	}
 
 	/* ******************** auxiliares ******************* */

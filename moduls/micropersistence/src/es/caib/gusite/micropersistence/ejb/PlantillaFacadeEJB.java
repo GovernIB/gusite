@@ -42,7 +42,7 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * Crea un Plantilla
 	 * 
 	 * @ejb.interface-method
-	 * @ejb.permission role-name="${role.system},\${role.admin},${role.super},${role.oper} "
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public Plantilla crearPlantilla(Plantilla instance) {
 

@@ -41,8 +41,7 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
-	 *                 role-name="${role.system},\${role.admin},${role.super},${role.oper
-	 *                 } "
+	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public Version crearVersion(Version instance) {
 

@@ -52,8 +52,7 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
-	 *                 role-name="${role.system},\${role.admin},${role.super},${role.oper
-	 *                 } "
+	 *                 role-name="${role.system},${role.admin}"
 	 */
 	public TemaFront crearTemaFront(TemaFront instance) {
 
@@ -79,7 +78,7 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 *                 role-name="${role.system},${role.admin}"
 	 */
 	public void actualizarTemaFront(TemaFront instance) {
 

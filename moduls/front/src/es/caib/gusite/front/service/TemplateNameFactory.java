@@ -25,7 +25,13 @@ public class TemplateNameFactory {
 	 * @param plantilla
 	 * @return
 	 */
-	public String getPlantilla(Microsite microsite, String plantilla) {
+	public String getPlantilla(Microsite microsite, String plantillaOfragmento) {
+		String plantilla = plantillaOfragmento;
+		/*if (plantillaOfragmento.contains("::")) {
+			// Se trata de un fragment
+			int index = plantillaOfragmento.indexOf("::");
+			plantilla = plantillaOfragmento.substring(0, index - 1).trim();
+		}*/
 		try {
 			PersonalizacionPlantilla persPlant = this.templateDataService.getPlantilla(microsite, plantilla);
 			if (persPlant != null) {
@@ -154,7 +160,13 @@ public class TemplateNameFactory {
 	}
 	
 	public String moduloListaNoticias(Microsite microsite) {
-		return getPlantilla(microsite, "general/componentes :: listaNoticias");
+		return getPlantilla(microsite, "general/componentes :: componenteListaNoticias");
+	}	
+	public String moduloListaEnlaces(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: componenteListaEnlaces");
+	}
+	public String moduloListaDocumentos(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: componenteListaDocumentos");
 	}
 
 	public String componenteElementos(Microsite microsite) {

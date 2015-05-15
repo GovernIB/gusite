@@ -276,7 +276,7 @@
 	<!-- ================================================================== -->
 	<!-- main                                                               -->
 	<!-- ================================================================== -->
-	<target name="main" depends="prepare" description="Realiza todo el proceso de construcción de GUSITE">
+	<target name="main" depends="prepare,generate.properties" description="Realiza todo el proceso de construcción de GUSITE">
 		<antcall target="propagate">
 			<param name="task" value="main"/>
 		</antcall>
