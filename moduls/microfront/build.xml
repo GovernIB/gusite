@@ -159,6 +159,7 @@
             debug="${javac.debug}"
             deprecation="${javac.deprecation}"
             optimize="${javac.optimize}"
+			encoding="${javac.encoding}"
             >
             <src path="${web.src}"/>
         </javac>
