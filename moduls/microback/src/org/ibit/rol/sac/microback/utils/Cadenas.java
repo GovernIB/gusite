@@ -147,7 +147,7 @@ public class Cadenas {
 	    for (int index = 0; index < str.length(); index++) {
 	        char c = str.charAt(index);
 	        int pos = UNICODE.indexOf(c);
-	        if (pos > -1)
+	        if (pos > -1 && pos<PLAIN_ASCII.length())
 	            sb.append(PLAIN_ASCII.charAt(pos));
 	        else {
 	            sb.append(c);
