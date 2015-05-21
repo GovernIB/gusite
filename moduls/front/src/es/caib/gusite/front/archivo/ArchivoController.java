@@ -1,7 +1,10 @@
 package es.caib.gusite.front.archivo;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -286,10 +289,34 @@ public class ArchivoController extends FrontController {
 
 		}
 
-		// TODO:filename?
+
 		HttpHeaders responseHeaders = new HttpHeaders();
-		//responseHeaders.setContentType(MediaType.parseMediaType(archivo.getMime()));
+		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
 		return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.OK);
 	}
+
+	private static final Map<String, String> MIME_EXTENSIONES;  
+	 static {
+	        Map<String, String> aMap = new HashMap<String, String>();
+	        aMap.put("css", "text/css");
+	        aMap.put("js", "application/javascript");
+			MIME_EXTENSIONES = Collections.unmodifiableMap(aMap);
+	    }
+	 
+	private String parseMime(Archivo archivo) {
+		if (archivo.getNombre() != null) {
+			int i = archivo.getNombre().lastIndexOf('.');
+			if (i > 0) {
+			    String extension = archivo.getNombre().substring(i+1);
+			    if (MIME_EXTENSIONES.containsKey(extension)) {
+			    	return MIME_EXTENSIONES.get(extension);
+			    }
+			} 
+		}
+		return archivo.getMime();
+	}
+	
+	
+	
 }
