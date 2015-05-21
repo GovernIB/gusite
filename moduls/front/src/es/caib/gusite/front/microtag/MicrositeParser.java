@@ -243,6 +243,9 @@ public class MicrositeParser {
 	public String doParser(Microsite site, String htmlOld, String idioma, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
+			if (htmlOld == null) {
+				return null;
+			}
 			MicrositeParserAnalysis analysis = this.doAnalyze(htmlOld, idioma);
 			this.doCalculaTags(site, idioma, analysis, request, response);
 

@@ -203,14 +203,15 @@
     </div>
     <div th:fragment="componenteStyle">
         <style>
-        table#${MVS_componente.id} tr { margin:0; padding:.2em; } 
-        table#${MVS_componente.id} tr td { vertical-align:top; }  
-        table#${MVS_componente.id} tr.par { background-color:#EFEFEF; } 
-        table#${MVS_componente.id} tr td span.font { font-weight: bold; font-style: italic; } 
-        table#${MVS_componente.id} tr td span.enllas { margin-top: 0.2em; display: block; padding-left: 0.2em; } 
-        table#${MVS_componente.id} tr td img { margin-right:0em; } 
-        table#${MVS_componente.id} tr td img.imagen { float:left; margin-right:.3em; padding-right:.2em; padding-bottom:.8em;}
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr { margin:0; padding:.2em; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td { vertical-align:top; }  
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr.par { background-color:#EFEFEF; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td span.font { font-weight: bold; font-style: italic; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td span.enllas { margin-top: 0.2em; display: block; padding-left: 0.2em; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td img { margin-right:0em; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td img.imagen { float:left; margin-right:.3em; padding-right:.2em; padding-bottom:.8em;}
         </style>
     </div>
+
 </body>
 </html>

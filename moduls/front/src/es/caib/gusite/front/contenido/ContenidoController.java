@@ -205,12 +205,14 @@ public class ContenidoController extends BaseViewController {
 			throws ExceptionFrontPagina {
 		try {
 			if (contenido.getTraduccion(idioma) != null) {
-				if (((TraduccionContenido) contenido.getTraduccion(idioma)).getTexto() != null) {
-					String txtBeta = this.microparser.doParser(microsite, ((TraduccionContenido) contenido.getTraduccion(idioma)).getTxbeta(),
-							idioma, request, response);
-					((TraduccionContenido) contenido.getTraduccion(idioma)).setTxbeta(txtBeta);
-					String txt = this.microparser.doParser(microsite, ((TraduccionContenido) contenido.getTraduccion(idioma)).getTexto(), idioma,
-							request, response);
+				TraduccionContenido trad =  ((TraduccionContenido) contenido.getTraduccion(idioma));
+				if (trad.getTexto() != null) {
+					
+					if (trad.getTxbeta() != null) {
+						String txtBeta = this.microparser.doParser(microsite, trad.getTxbeta(), idioma, request, response);
+						trad.setTxbeta(txtBeta);
+					}
+					String txt = this.microparser.doParser(microsite, trad.getTexto(), idioma, request, response);
 					((TraduccionContenido) contenido.getTraduccion(idioma)).setTexto(txt);
 
 				}
