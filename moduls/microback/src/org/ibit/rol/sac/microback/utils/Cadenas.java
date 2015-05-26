@@ -15,9 +15,9 @@ import org.ibit.rol.sac.microback.Microback;
 public class Cadenas {
 	
 	private static final String UNICODE =
-	        "Ã€Ã ÃˆÃ¨ÃŒÃ¬Ã’Ã²Ã™Ã¹ÃÃ¡Ã‰Ã©ÃÃ­Ã“Ã³ÃšÃºÃÃ½Ã‚Ã¢ÃŠÃªÃÃ®Ã”Ã´Ã›Ã»Å¶Å·ÃƒÃ£Ã•ÃµÃ‘Ã±Ã„Ã¤Ã‹Ã«ÃÃ¯Ã–Ã¶ÃœÃ¼Å¸Ã¿Ã…Ã¥Ã‡Ã§ÅÅ‘Å°Å±";
-	private static final String PLAIN_ASCII =
-	        "AaEeIiOoUuAaEeIiOoUuYyAaEeIiOoUuYyAaOoNnAaEeIiOoUuYyAaCcOoUu";
+		       "ÀàÈèÌìÒòÙùÁáÉéÍíÓóÚúİıÂâÊêÎîÔôÛûYyÃãÕõÑñÄäËëÏïÖöÜüÿÅåÇçOoUu";
+		private static final String PLAIN_ASCII =
+		       "AaEeIiOoUuAaEeIiOoUuYyAaEeIiOoUuYyAaOoNnAaEeIiOoUuyAaCcOoUu";
 
 	/**
 	 * Mï¿½todo que divide el string en palabras y las pasa a un arraylist
