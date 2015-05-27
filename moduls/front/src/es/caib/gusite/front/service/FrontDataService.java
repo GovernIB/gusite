@@ -20,6 +20,7 @@ import es.caib.gusite.front.faq.Faqtema;
 import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
+import es.caib.gusite.front.general.Front;
 import es.caib.gusite.front.general.bean.ResultadoBusqueda;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
@@ -237,6 +238,7 @@ public class FrontDataService {
 		String wherenoticias = "where noti.visible = 'S' and noti.idmicrosite = " + microsite.getId();
 		wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
 		wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
+		wherenoticias += " and (noti.tipo.tipoelemento = " + Front.ELEM_NOTICIA + " )";
 		noticiadel.setWhere(wherenoticias);
 		noticiadel.setOrderby2(" order by noti.fpublicacion desc");
 

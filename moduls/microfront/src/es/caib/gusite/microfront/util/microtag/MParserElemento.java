@@ -54,6 +54,8 @@ public class MParserElemento extends MParserHTML {
 	    	String wherenoticias = "where noti.visible = 'S' and noti.idmicrosite = " + idmicrosite;
 	    	wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
 	    	wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
+			wherenoticias += " and (noti.tipo.tipoelemento = " + Microfront.ELEM_NOTICIA + " )";
+	    	
 	    	noticiadel.setWhere(wherenoticias);
 	    	noticiadel.setOrderby2(" order by noti.fpublicacion desc");
         	List<?> listanoticias = noticiadel.listarNoticiasThin(idioma);
