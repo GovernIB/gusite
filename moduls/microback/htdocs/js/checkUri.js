@@ -20,26 +20,32 @@ $(document).ready(function () {
     tituloTema = $("#tituloTema");
     
     uri.blur(function() {
+    	currentUri = uri;
         url = this.value;
         check(this.value, type, null, id)
     });
     uri0.blur(function() {
+    	currentUri = uri0;
         url = this.value;
         check(this.value, type, "ca", id)
     });
     uri1.blur(function() {
+    	currentUri = uri1;
         url = this.value;
         check(this.value, type, "es", id)
     });
     uri2.blur(function() {
+    	currentUri = uri2;
         url = this.value;
         check(this.value, type, "en", id)
     });
     uri3.blur(function() {
+    	currentUri = uri3;
         url = this.value;
         check(this.value, type, "de", id)
     });
     uri4.blur(function() {
+    	currentUri = uri4;
         url = this.value;
         check(this.value, type, "fr", id)
     });
@@ -85,11 +91,12 @@ function check(uriCheck, typeCheck, idio, id) {
 function preparaRespuesta(data) {
     var respuesta = $(data).find("dato").text();
     if (respuesta == "error") {
-        alert("ERROR en la consulta!");
+        alert("ERROR a la consulta!");
     } else if (typeof current !== 'undefined') {
         current.valueOf().val(respuesta);
     } else if (respuesta != url) {
-        alert("Ya existe esta URI!!!");
+        currentUri.valueOf().val(respuesta);
+        alert("S'ha corregit la URI");
     }
     delete current ;
 }
