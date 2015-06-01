@@ -260,7 +260,7 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				_markAlternatives = INACTIVE;
 		}
 
-		return translate(textTraduccio);		    	
+		return translate(textTraduccio);
 		
 	}
 	

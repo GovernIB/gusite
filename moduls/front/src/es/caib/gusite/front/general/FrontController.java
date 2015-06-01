@@ -95,7 +95,7 @@ public class FrontController {
 	}
 
 	private static Log log = LogFactory.getLog(FrontController.class);
-	public static final Idioma DEFAULT_IDIOMA = new Idioma("ca");
+	public static final Idioma DEFAULT_IDIOMA = new Idioma(Front.DEFAULT_IDIOMA);
 	protected static final String LANG_EN = "en";
 	protected static final String LANG_CA = "ca";
 	protected static final String LANG_ES = "es";

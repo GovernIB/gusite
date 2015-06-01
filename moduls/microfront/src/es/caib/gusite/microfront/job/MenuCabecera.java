@@ -7,9 +7,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
+import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
@@ -48,20 +51,38 @@ public class MenuCabecera {
 			return;
     	} 
 
-    	try {
 	    	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-			List<Idioma> idiomas = idiomaDelegate.listarIdiomas();
-	    	
-			for (Idioma lang : idiomas) {
-				
-				Collection<UnidadListData> nuevasUAs = organigramaProvider.getUnidadesPrincipales(lang.getLang());
-				uos.put(lang.getLang(), nuevasUAs);
+			List<Idioma> idiomas;
+			try {
+				idiomas = idiomaDelegate.listarIdiomas();
+			} catch (DelegateException e1) {
+	    		log.error("No se han podido obtener los idiomas disponibles en GUSITE, no se puede calcular el menú de la cabecera de portalcaib", e1);
+	    		return;
 			}
 			
-		} catch (Exception e) {
-			log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB.", e);
-			e.printStackTrace();
-		}
+			Collection<UnidadListData> uasIdiomaDefecto;
+			try {
+				uasIdiomaDefecto = organigramaProvider.getUnidadesPrincipales(Microfront.DEFAULT_IDIOMA);
+				uos.put(Microfront.DEFAULT_IDIOMA, uasIdiomaDefecto);
+			} catch (PluginException e1) {
+	    		log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB para el idioma por defecto: " + Microfront.DEFAULT_IDIOMA, e1);
+				e1.printStackTrace();
+				return;
+			}
+			
+			for (Idioma lang : idiomas) {
+				if (lang.getLang().equals(Microfront.DEFAULT_IDIOMA)) {
+					continue; //Para el idioma por defecto ya lo hemos calculado
+				}
+		    	try {
+					Collection<UnidadListData> nuevasUAs = organigramaProvider.getUnidadesPrincipales(lang.getLang());
+					uos.put(lang.getLang(), nuevasUAs);
+		    	} catch (Exception e) {
+		    		log.error("NO SE HA PODIDO CALCULAR EL MENU DE LA CABECERA DEL PORTALCAIB para el idioma " + lang.getLang() + ". Usando idioma por defecto", e);
+					uos.put(lang.getLang(), uasIdiomaDefecto);
+		    	}
+			}
+			
 	}
 
 	/**

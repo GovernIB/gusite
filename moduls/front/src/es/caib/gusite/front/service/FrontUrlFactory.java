@@ -219,9 +219,14 @@ public class FrontUrlFactory {
 		return this.microsite(microsite, lang) + "tawitem/noticia/" + noticia.getId();
 	}
 
+	public String intranetLogin() {
+
+		return "/intranetLogin";
+	}
+
 	public String intranetLogin(String contextPath) {
 
-		return contextPath.concat("/intranetLogin");
+		return contextPath.concat(intranetLogin());
 	}
 
 	public String intranetHome(Microsite microsite, Idioma lang) {

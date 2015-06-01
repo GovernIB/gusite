@@ -230,7 +230,6 @@
 				<include name="axis2-transport-http-1.5.jar" />
 				<include name="axis2-transport-local-1.5.jar" />
 				<include name="commons-httpclient.jar" />
-				<include name="geronimo-stax-api_1.0_spec-1.0.1.jar" />
 				<include name="neethi-2.0.4.jar" />
 				<include name="wsdl4j-1.6.2.jar" />
 				<include name="XmlSchema-1.4.3.jar" />

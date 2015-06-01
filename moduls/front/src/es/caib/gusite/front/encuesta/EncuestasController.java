@@ -159,7 +159,12 @@ public class EncuestasController extends BaseViewController {
 					ClientPrincipal.getCurrent();
 				} catch (Exception e) {
 					log.error("Error en la identificación del usuario en la encuesta: " + encuesta.getId() + " ---> " + e);
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
+					 String url = req.getRequestURL().toString();
+					 String queryString = req.getQueryString();
+					 req.getSession().setAttribute("redirect", url + "?" + queryString );
+					 String fw = "redirect:/" + urlFactory.intranetLogin();
+					return modelForView(fw, view);
+					//return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
 				}
 			}
 
@@ -181,14 +186,23 @@ public class EncuestasController extends BaseViewController {
 			// contesta segun configuracion de la encuesta
 			if (encuesta.getIdentificacion().equals("S")) {
 				try {
-					ClientPrincipal principal = null;
-					principal = ClientPrincipal.getCurrent();
-					// principal = (CertsPrincipal) request.getUserPrincipal();
-					String identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", principal.getFullName());
+					ClientPrincipal principal = ClientPrincipal.getCurrent();
+					String identificacio;
+					//principal = (CertsPrincipal) request.getUserPrincipal();
+					if (principal != null) {
+						identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", principal.getFullName());
+					} else {
+						identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", req.getUserPrincipal().getName());
+					}
 					view.setIdentificacion(identificacio);
 				} catch (Exception e) {
 					log.error("Error en la identificación del usuario en la encuesta: " + uriEncuesta + " ---> " + e);
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
+					 String url = req.getRequestURL().toString();
+					 String queryString = req.getQueryString();
+					 req.getSession().setAttribute("redirect", url + "?" + queryString );
+					String fw = "redirect:/" + urlFactory.intranetLogin();
+					return modelForView(fw, view);
+					//return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
 					// throw new
 					// Exception("Error en la identificación del usuario");
 				}
@@ -288,10 +302,21 @@ public class EncuestasController extends BaseViewController {
 						ClientPrincipal principal = null;
 						try {
 							principal = ClientPrincipal.getCurrent();
-							usuario.setNombre(principal.getFullName());
-							usuario.setDni(principal.getNif());
+							if (principal != null) {
+								usuario.setNombre(principal.getFullName());
+								usuario.setDni(principal.getNif());
+							} else {
+								usuario.setNombre(req.getUserPrincipal().getName());
+								//usuario.setDni(principal.getNif());
+							}
 						} catch (Exception e) {
-							log.error("Error BdEnvioEncuesta (obteniendo identicacion): " + e);
+							log.error("Error EncuestasController (obteniendo identicacion): " + e);
+							 String url = req.getRequestURL().toString();
+							 String queryString = req.getQueryString();
+							 req.getSession().setAttribute("redirect", url + "?" + queryString );
+							String fw = "redirect:/" + urlFactory.intranetLogin();
+							return modelForView(fw, view);
+							//return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
 						}
 					}
 
@@ -557,10 +582,20 @@ public class EncuestasController extends BaseViewController {
 						ClientPrincipal principal = null;
 						try {
 							principal = ClientPrincipal.getCurrent();
-							usuario.setNombre(principal.getFullName());
-							usuario.setDni(principal.getNif());
+							if (principal != null) {
+								usuario.setNombre(principal.getFullName());
+								usuario.setDni(principal.getNif());
+							} else {
+								usuario.setNombre(req.getUserPrincipal().getName());
+								//usuario.setDni(principal.getNif());
+							}
 						} catch (Exception e) {
-							log.error("Error BdEnvioEncuesta (obteniendo identicacion): " + e);
+							log.error("Error EncuestasController (obteniendo identicacion): " + e);
+							 String url = req.getRequestURL().toString();
+							 String queryString = req.getQueryString();
+							 req.getSession().setAttribute("redirect", url + "?" + queryString );
+							String fw = "redirect:/" + urlFactory.intranetLogin();
+							return modelForView(fw, view);
 						}
 					}
 

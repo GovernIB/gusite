@@ -119,5 +119,6 @@ public class Front {
 
 	static public final String UO_PORTAVOZ = "270677"; // caib: 270677 nuestra:
 														// 51079
+	public static final String DEFAULT_IDIOMA = "ca";
 
 }

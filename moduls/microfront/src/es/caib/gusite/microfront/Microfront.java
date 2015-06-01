@@ -98,7 +98,11 @@ public class Microfront {
 	
 	//nombre de los keys en el mapa externo
 	static public final String MAP_EXT_MCHTML = "mcHTML";
-
+	
+	/**
+	 * Idioma por defecto
+	 */
+	public static final String DEFAULT_IDIOMA = "ca";
 
 
 }
