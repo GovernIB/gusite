@@ -189,8 +189,13 @@ public class BdEnvioencuesta  extends Bdbase {
 			    	CertsPrincipal principal = null;
 		    		try{
 		    			principal = CertsPrincipal.getCurrent();
-		    			usuario.setNombre(principal.getFullName());			    
-				    	usuario.setDni(principal.getNif());
+						if (principal != null) {
+							usuario.setNombre(principal.getFullName());
+							usuario.setDni(principal.getNif());
+						} else {
+							usuario.setNombre(req.getUserPrincipal().getName());
+							//usuario.setDni(principal.getNif());
+						}
 		    		}catch(Exception e){
 		    			log.error("Error BdEnvioEncuesta (obteniendo identicacion): " + e);
 		    			throw new Exception("Error BdEnvioEncuesta (obteniendo identicacion)");

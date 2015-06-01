@@ -45,7 +45,7 @@ public class UserRequestProcessor extends RequestProcessor {
 
 	protected static final String INVALID_ROLE_SITES = "INVALID_ROLE_SITES";
 	protected final static String _URLINTRANETLOGADO = "/intranet/home.do";
-	protected final static String _URLINTRANETLOGIN = "/intranet/login.do";
+	public final static String _URLINTRANETLOGIN = "/intranet/login.do";
 	protected final static String _URLARCHIVO = "/archivopub.do";
 	protected final static String _URLINVALIDROL = "/invalidrol.do";
 	protected final static String _URLERRORSESSION = "/invalidsession.do";

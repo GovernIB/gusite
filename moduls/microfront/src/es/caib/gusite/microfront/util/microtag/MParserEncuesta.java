@@ -72,7 +72,12 @@ public class MParserEncuesta extends MParserHTML {
 					CertsPrincipal principal = null;
 					principal = CertsPrincipal.getCurrent();
 					//principal = (CertsPrincipal) request.getUserPrincipal();
-					String identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}",principal.getFullName());
+					String identificacio;
+					if (principal != null) {
+						identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", principal.getFullName());
+					} else {
+						identificacio = rb.getString("encuesta.identificacion").replaceAll("\\{1\\}", request.getUserPrincipal().getName());
+					}
 					retorno.append(identificacio);
 				} catch (Exception e) {
 					log.error("Error en la identificación del usuario en la encuesta: " + idencuesta + " ---> " + e);

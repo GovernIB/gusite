@@ -15,6 +15,7 @@ public class IntranetLoginController extends BaseViewController {
 	public String login(HttpServletRequest request) {
 
 		String redirect = (String) request.getSession().getAttribute("redirect");
+		request.getSession().removeAttribute("redirect");
 		return "redirect:" + redirect;
 	}
 

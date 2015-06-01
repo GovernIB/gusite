@@ -17,6 +17,7 @@ import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.encuesta.util.BdEncuesta;
 import es.caib.gusite.microfront.exception.ExceptionFrontMicro;
 import es.caib.gusite.microfront.exception.ExceptionFrontPagina;
+import es.caib.gusite.microfront.home.UserRequestProcessor;
 import es.caib.gusite.microfront.util.microtag.MParserEncuesta;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
@@ -69,11 +70,14 @@ public class EncuestaAction extends BaseAction   {
 			    			    	
 			    	if (bdencuesta.getEncuesta().getIdentificacion().equals("S")){
 		    			try {
-							CertsPrincipal principal = null;
-							principal = CertsPrincipal.getCurrent();
+							CertsPrincipal.getCurrent();
 						} catch (Exception e) {
 							log.error("Error en la identificación del usuario en la encuesta: " + bdencuesta.getEncuesta().getId() + " ---> " + e);
-							return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_ACCES));
+							 String url = request.getRequestURL().toString();
+							 String queryString = request.getQueryString();
+							 request.getSession().setAttribute("redirect", url + "?" + queryString );
+							 response.sendRedirect(request.getContextPath() + UserRequestProcessor._URLINTRANETLOGIN + "?idsite=" + bdencuesta.getIdsite() + "&lang=" + bdencuesta.getIdioma());
+							 return super.execute(mapping, form, request, response);
 						}
 			    	}
 			    	

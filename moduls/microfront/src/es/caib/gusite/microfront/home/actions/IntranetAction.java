@@ -41,7 +41,14 @@ public class IntranetAction extends Action{
 	    
 	    //redirigir a la home buena
         ActionForward elforward = new RedirectingActionForward();
-        elforward.setPath("/home.do?idsite=" + bdhome.getMicrosite().getId() + "&lang=" + bdhome.getIdioma());
+        if (request.getSession().getAttribute("redirect") != null ) {
+        	String redirect = (String) request.getSession().getAttribute("redirect");
+        	request.getSession().removeAttribute("redirect");
+            elforward.setPath(redirect);
+        } else {
+            elforward.setPath("/home.do?idsite=" + bdhome.getMicrosite().getId() + "&lang=" + bdhome.getIdioma());
+        }
+
 
     	long time2=System.currentTimeMillis();
     	log.info("IntranetAction " + (time2-time1));
