@@ -88,6 +88,10 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
     private Set<ArchivoTemaFront> archivoTemaFronts = new HashSet<ArchivoTemaFront>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema")
+	private Set<Microsite> microsites = new HashSet<Microsite>(0);
+
+
 	public TemaFront() {
 	}
 
@@ -198,6 +202,14 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
     public void setArchivoTemaFronts(Set<ArchivoTemaFront> archivoTemaFronts) {
         this.archivoTemaFronts = archivoTemaFronts;
     }
+
+	public void setMicrosites(Set<Microsite> microsites) {
+		this.microsites = microsites;
+	}
+
+	public Set<Microsite> getMicrosites() {
+		return microsites;
+	}
 
     /**
 	 * toString

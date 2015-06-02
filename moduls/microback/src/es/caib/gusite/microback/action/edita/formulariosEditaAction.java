@@ -17,7 +17,6 @@ import es.caib.gusite.microback.actionform.formulario.formularioconForm;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Lineadatocontacto;
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 

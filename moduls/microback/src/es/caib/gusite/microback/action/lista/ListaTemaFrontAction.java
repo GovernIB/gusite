@@ -3,6 +3,7 @@ package es.caib.gusite.microback.action.lista;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.PerPlantillasForm;
 import es.caib.gusite.microback.actionform.listaActionForm;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TemaFront;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
@@ -49,12 +50,28 @@ public class ListaTemaFrontAction extends BaseAction {
             TemaFrontDelegate temaFrontDelegate = DelegateUtil.getTemaFrontDelegate();
             List<Long> ids = new ArrayList<Long>();
             for (String id : f.getSeleccionados()) {
-                ids.add(Long.parseLong(id));
+                Long temaId = Long.parseLong(id);
+                TemaFront tema = temaFrontDelegate.obtenerTemaFrontCompleto(temaId);
+                if (tema.getTemasHijos().size() > 0) {
+                    addMessage(request, "frontTemas.borrarTemaConHijos", tema.getNombre());
+                	for (TemaFront temaHijo : tema.getTemasHijos()) {
+                        addMessage(request, "frontTemas.hijo", "<a href='temaFrontEdita.do?id=" + temaHijo.getId() + "'>" + temaHijo.getNombre() + "</a>");
+                	}
+                } else if (tema.getMicrosites().size() > 0) {
+                    addMessage(request, "frontTemas.borrarTemaConSites", tema.getNombre());
+                	for (Microsite site : tema.getMicrosites()) {
+                        addMessage(request, "frontTemas.site", "<a href='index.do?idsite=" + site.getId() + "'>" + site.getUri() + "</a>" );
+                	}
+                } else {
+                    temaFrontDelegate.borrarTemaFront(tema);
+    				ids.add(temaId );
+                }
             }
-            temaFrontDelegate.borrarTemaFronts(ids);
 
             addMessage(request, "frontTemas.listaTemasFront");
-            addMessage(request, "frontTemas.listaTemasBorradas", ids.toString());
+            if (ids.size()>0) {
+                addMessage(request, "frontTemas.listaTemasBorradas", ids.toString());
+            }
             return mapping.findForward("info");
         }
 

@@ -51,7 +51,7 @@ public class TemaFrontDelegate implements StatelessDelegate {
 	 */
 	public void borrarTemaFront(TemaFront instance) throws DelegateException {
 		try {
-			this.getFacade().actualizarTemaFront(instance);
+			this.getFacade().borrarTemaFront(instance);
 		} catch (RemoteException re) {
 			throw new DelegateException(re);
 		}
@@ -102,18 +102,21 @@ public class TemaFrontDelegate implements StatelessDelegate {
 		}
 	}
 
-    /**
-     * Eliminar una lista de plantillas
-     */
-    public void borrarTemaFronts(List<Long> ids) throws DelegateException {
-        try {
-            getFacade().borrarTemaFronts(ids);
-        } catch (RemoteException re) {
-            throw new DelegateException(re);
-        }
-    }
+	/**
+	 * Obtiene un TemaFront inicializando completamente las colecciones
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public TemaFront obtenerTemaFrontCompleto(java.lang.Long id)
+			throws DelegateException {
+		try {
+			return this.getFacade().obtenerTemaFrontCompleto(id);
+		} catch (RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
 
-    
 	/**
 	 * Obtiene un Tema a partir de su URI.
 	 */

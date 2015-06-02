@@ -137,7 +137,8 @@ public class microEditaAction extends BaseAction  {
     	/** Guardar **/	
 		else if ( request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")) ) {
 
-      		micrositeBean = setFormtoBean(microForm);
+			boolean isRolAdmin = "yes".equals(request.getSession().getAttribute("MVS_rol_sys_adm"));
+      		micrositeBean = setFormtoBean(microForm, isRolAdmin);
 
     		//Guardamos cambios en BBDD
             micrositeDelegate.grabarMicrosite(micrositeBean);
@@ -197,7 +198,8 @@ public class microEditaAction extends BaseAction  {
 		String idiomaOrigen = "ca";
 
 		//La traducción no depende de que esté guardados los datos sino del formulario
-		Microsite micrositeBean = setFormtoBean(microForm);
+		boolean isRolAdmin = "yes".equals(request.getSession().getAttribute("MVS_rol_sys_adm"));
+		Microsite micrositeBean = setFormtoBean(microForm, isRolAdmin);
 
         TraduccionMicrosite microOrigen = (TraduccionMicrosite) microForm.get("traducciones", 0);
 
@@ -248,7 +250,7 @@ public class microEditaAction extends BaseAction  {
      * @return Microsite devuelve bean de Microsite con los datos del formulario
      * @throws Exception
      */
-    private Microsite setFormtoBean(microForm microForm) throws Exception  {
+    private Microsite setFormtoBean(microForm microForm, boolean isRolAdmin) throws Exception  {
     	
     	MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
     	Microsite micrositeBean = null;
@@ -260,24 +262,28 @@ public class microEditaAction extends BaseAction  {
 		}
 
     	//micrositeBean.setTitulo((String)microForm.get("titulo"));
-		micrositeBean.setUnidadAdministrativa(Integer.parseInt(microForm.get("idUA").toString()));
     	micrositeBean.setVisible((String) microForm.get("visible"));
     	micrositeBean.setTipomenu((String) microForm.get("tipomenu"));
     	micrositeBean.setUrlcampanya((String) microForm.get("urlcampanya"));
     	micrositeBean.setNumeronoticias(((Integer) microForm.get("numeronoticias")).intValue());
-        micrositeBean.setAnalytics((String) microForm.get("analytics"));
-		micrositeBean.setUri((String) microForm.get("uri"));
-		micrositeBean.setVersio((String) microForm.get("versio"));
-		micrositeBean.setAcceso((String) microForm.get("acceso"));
-        micrositeBean.setRestringido(getFlagRestringido(micrositeBean.getVersio(), micrositeBean.getAcceso()));
-        micrositeBean.setRol(getRolFinal(micrositeBean.getAcceso(), (String) microForm.get("rol")));
 
+        if (isRolAdmin) {
+    		micrositeBean.setUnidadAdministrativa(Integer.parseInt(microForm.get("idUA").toString()));
+            micrositeBean.setAnalytics((String) microForm.get("analytics"));
+    		micrositeBean.setUri((String) microForm.get("uri"));
+    		micrositeBean.setVersio((String) microForm.get("versio"));
+    		micrositeBean.setAcceso((String) microForm.get("acceso"));
+        	if (((String) microForm.get("domini")).equals("")) {
+    			micrositeBean.setDomini(null);
+    		} else {
+    			micrositeBean.setDomini((String) microForm.get("domini"));
+    		}
+            micrositeBean.setRestringido(getFlagRestringido(micrositeBean.getVersio(), micrositeBean.getAcceso()));
+            micrositeBean.setRol(getRolFinal(micrositeBean.getAcceso(), (String) microForm.get("rol")));
+            String desarrollo = ((String) microForm.get("desarrollo")).equals("") ? "N" : "S";
+            micrositeBean.setDesarrollo(desarrollo);
+        }
     	
-    	if (((String) microForm.get("domini")).equals("")) {
-			micrositeBean.setDomini(null);
-		} else {
-			micrositeBean.setDomini((String) microForm.get("domini"));
-		}
     	
     	micrositeBean.setBuscador((String) microForm.get("buscador"));
     	micrositeBean.setMenucorporativo((String) microForm.get("menucorporativo"));
@@ -292,9 +298,6 @@ public class microEditaAction extends BaseAction  {
             micrositeBean.setTema(DelegateUtil.getTemaFrontDelegate().obtenerTemaFront(idTema));
         }
 
-        String desarrollo = ((String) microForm.get("desarrollo")).equals("") ? "N" : "S";
-        micrositeBean.setDesarrollo(desarrollo);
-    	
         FormFile imagen1 = (FormFile) microForm.get("imagenPrincipal");
         
         if (archivoValido(imagen1)) {

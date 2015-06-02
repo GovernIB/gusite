@@ -1,10 +1,10 @@
 package es.caib.gusite.micromodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +34,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+//No hay equivalente en JPA para DELETE_ORPHAN (Sí en JPA2). Ver http://stackoverflow.com/questions/2011519/jpa-onetomany-not-deleting-child
+import org.hibernate.annotations.Cascade;
 
 /**
  * Clase Microsite. Bean que define un Microsite. Modela la tabla de BBDD
@@ -218,8 +220,8 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	private Map<String, TraduccionMicrosite> traducciones = new HashMap<String, TraduccionMicrosite>();
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy="microsite")
-	//@JoinColumn("microsite")
 	@Fetch(FetchMode.SUBSELECT)
+	@Cascade (org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	private Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "microsite")
@@ -471,8 +473,18 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	}
 
 	public void setIdiomas(String[] idiomas) {
+		Set<IdiomaMicrosite> borrarIdiomas = new HashSet<IdiomaMicrosite>();
+
 		//Eliminamos los inexistentes
-		Set<IdiomaMicrosite> nuevosIdiomas = new HashSet<IdiomaMicrosite>();
+		List<String> idiomasList = Arrays.asList(idiomas);
+		for (IdiomaMicrosite idiMicro : this.idiomas) {
+			if (!idiomasList.contains(idiMicro.getId().getCodigoIdioma())) {
+				borrarIdiomas.add(idiMicro);
+			}
+		}
+		for (IdiomaMicrosite idiMicro : borrarIdiomas ) {
+			this.idiomas.remove(idiMicro);			
+		}
 
 		//Añadimos los nuevos
 		for (String lang : idiomas) {
@@ -480,7 +492,6 @@ public class Microsite extends AuditableModel implements Traducible2 {
 			for (IdiomaMicrosite idiMicro : this.idiomas) {
 				if (idiMicro.getId().getCodigoIdioma().compareTo(lang) == 0) {
 					existe = true;
-					nuevosIdiomas.add(idiMicro);
 					break;
 				}
 			}
@@ -491,12 +502,11 @@ public class Microsite extends AuditableModel implements Traducible2 {
 				if (this.id != null) {
 					idioma.getId().setCodigoMicrosite(this.id);
 				}
-				nuevosIdiomas.add(idioma);
+				this.idiomas.add(idioma);
 			}
 		}
-		
-		this.setIdiomas(nuevosIdiomas);
-
+		//this.getIdiomas().clear();
+		//this.setIdiomas(nuevosIdiomas);
 		
 	}
 

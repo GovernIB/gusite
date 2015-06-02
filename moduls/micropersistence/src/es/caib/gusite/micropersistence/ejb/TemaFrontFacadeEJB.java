@@ -110,11 +110,32 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 		log.debug("deleting TemaFront instance");
         Session session = this.getSession();
 		try {
-			session.delete(instance);
+            log.debug("deleting PersonalizacionPlantilla list");
+            PersonalizacionPlantillaDelegate personalizacionPlantillaDelegate = DelegateUtil.getPersonalizacionPlantillaDelegate();
+            ArchivoTemaFrontDelegate archivoTemaFrontDelegate = DelegateUtil.getArchivoTemaFrontDelegate();
+            
+            List<Long> idsBorrar;
+            List<PersonalizacionPlantilla> personalizacionPlantillas = personalizacionPlantillaDelegate.searchByTema(instance.getId());
+            idsBorrar = extraerIdsObject(personalizacionPlantillas);
+            if (idsBorrar.size() > 0) {
+                personalizacionPlantillaDelegate.borrarPersonalizacionPlantillas(idsBorrar);
+            }
+
+            List<ArchivoTemaFront> archivoTemaFronts = archivoTemaFrontDelegate.searchByTema(instance.getId());
+            idsBorrar = extraerIdsObject(archivoTemaFronts);
+            if (idsBorrar.size() > 0) {
+                archivoTemaFrontDelegate.borrarArchivosTemaFront(idsBorrar);
+            }
+
+            session.delete(instance);
+            session.flush();
             session.close();
 			this.grabarAuditoria(instance, Auditoria.ELIMINAR);
 
 		} catch (HibernateException e) {
+			log.error("delete failed", e);
+			throw new EJBException(e);
+		} catch (DelegateException e) {
 			log.error("delete failed", e);
 			throw new EJBException(e);
 		} finally {
@@ -217,50 +238,39 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 		}
 	}
 
-    /**
-     * Borra un listado de PersonalizacionPlantilla por ids
-     * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin}"
-     */
-    public void borrarTemaFronts(List<Long> ids) {
+    
+	/**
+	 * Obtiene un TemaFront
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public TemaFront obtenerTemaFrontCompleto(Long id) {
 
-        log.debug("deleting PersonalizacionPlantilla list");
-        try {
-            PersonalizacionPlantillaDelegate personalizacionPlantillaDelegate = DelegateUtil.getPersonalizacionPlantillaDelegate();
-            ArchivoTemaFrontDelegate archivoTemaFrontDelegate = DelegateUtil.getArchivoTemaFrontDelegate();
-            List<Long> idsBorrar;
-            for (Long id : ids) {
-                List<PersonalizacionPlantilla> personalizacionPlantillas = personalizacionPlantillaDelegate.searchByTema(id);
-                idsBorrar = extraerIdsObject(personalizacionPlantillas);
-                if (idsBorrar.size() > 0) {
-                    personalizacionPlantillaDelegate.borrarPersonalizacionPlantillas(idsBorrar);
-                }
-
-                List<ArchivoTemaFront> archivoTemaFronts = archivoTemaFrontDelegate.searchByTema(id);
-                idsBorrar = extraerIdsObject(archivoTemaFronts);
-                if (idsBorrar.size() > 0) {
-                    archivoTemaFrontDelegate.borrarArchivosTemaFront(idsBorrar);
-                }
+		log.debug("getting TemaFront instance with id: " + id);
+        Session session = this.getSession();
+		try {
+			TemaFront instance = (TemaFront) session.get(TemaFront.class, id);
+            if (instance != null) {
+                Hibernate.initialize(instance.getPersonalizacionesPlantilla());
+                Hibernate.initialize(instance.getArchivoTemaFronts());
+                Hibernate.initialize(instance.getTemasHijos());
+                Hibernate.initialize(instance.getMicrosites());
             }
-
-            Session session = this.getSession();
-            String hql = "delete from TemaFront as tema";
-            hql += " where tema.id in (:list)";
-            Query query = session.createQuery(hql);
-            query.setParameterList("list", ids);
-            query.executeUpdate();
+			if (instance == null) {
+				log.debug("get successful, no instance found");
+			} else {
+				log.debug("get successful, instance found");
+			}
             session.close();
+			return instance;
 
-        } catch (HibernateException e) {
-            log.error("delete failed", e);
-            throw new EJBException(e);
-        } catch (DelegateException e) {
-            log.error("delete failed", e);
-            throw new EJBException(e);
-        } finally {
-            log.debug("finished deleting PersonalizacionPlantilla instance");
-        }
-    }
+		} catch (HibernateException re) {
+			log.error("get failed", re);
+			throw new EJBException(re);
+		}
+	}
+
     
 	/**
 	 * Obtiene un Tema a partir de su URI.

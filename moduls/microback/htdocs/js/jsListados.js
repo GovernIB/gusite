@@ -32,7 +32,7 @@
 							this.getElementsByTagName('input')[0].checked = false;
 						}
 					}
-					if (tbodys[i].id != 'listadoArchivos') {
+					if (tbodys[i].id != 'listadoArchivos' && tbodys[i].id != 'detalleTemaFront') {
 						trs[j].ondblclick = function() {
 							id = this.getElementsByTagName('input')[0].value;
 							document.location = uriEdicion + id;

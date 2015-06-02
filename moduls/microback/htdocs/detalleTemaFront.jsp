@@ -79,6 +79,7 @@
 
         <input type="hidden" name="id" value='<bean:write name="TemaFrontForm" property="id"/>' />
         <table cellpadding="0" cellspacing="0" class="edicio">
+        	<tbody  id="detalleTemaFront">
             <tr class="par">
                 <td class="etiqueta"><bean:message key="frontTemas.edicion.titulo" /></td>
                 <td>
@@ -116,6 +117,7 @@
 	                    </logic:empty>
 	                </td>
 	            </tr>
+	            </tbody>
         </table>
 
         <logic:notEmpty name="TemaFrontForm" property="id">
