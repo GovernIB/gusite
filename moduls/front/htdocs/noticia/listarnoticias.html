@@ -22,12 +22,13 @@
 	<script type="text/javascript">
 		var thDebug = false;
 	</script>
+	<!-- QUITADO 2015
+<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsListarNoticias.css" th:href="@{/resources/css/estilsListarNoticias.css}"></link>-->
 </th:block>
-<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsListarNoticias.css" th:href="@{/resources/css/estilsListarNoticias.css}"></link>
 </head>
 <body>
 	<section th:remove="tag" layout:fragment="content">
-		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="contenedorNoticiasListadas">	
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="contenedorNoticiasListadas NoticiasContainer">	
 			<div gus:replace="noticia/modulos :: capcelera_buscador">Listado cabecera buscador</div>
 			<div th:if="${MVS_parametros_pagina.nreg}!=0">
 				<div gus:replace="noticia/modulos :: infoCursor">Listado info cursor</div>

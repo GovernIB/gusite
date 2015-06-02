@@ -55,8 +55,7 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 <!--/* TAGS css pel microsite  */-->
 <link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 
-<!--/* css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina */-->
-<link href="resources/css/estilsLogo.css" th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet" media="screen" />
+
 
 <th:block th:remove="all">
 <!--/*  
@@ -71,6 +70,9 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 	<script type="text/javascript">
 		var thDebug = false;
 	</script>
+	<!--css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina 
+	BORRADO EN 2015
+<link href="resources/css/estilsLogo.css" th:href="@{/resources/css/estilsLogo.css}" rel="stylesheet" media="screen" />-->
 </th:block>
 </head>
 <body class="bodyFontSize">

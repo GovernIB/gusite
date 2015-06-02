@@ -3,17 +3,17 @@
 
 	Muestra la lista de formularios de contacto disponibles.
 
-*/-->
-<html xmlns="http://www.w3.org/1999/xhtml"
+	*/-->
+	<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
-<head>
-<title
-	th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">Título
-	Microsite - Formularis de contacte</title>
-<th:block th:remove="all">
+	<head>
+		<title
+		th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">Título
+		Microsite - Formularis de contacte</title>
+		<th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.
 	Al ejecutarse dinámicamente, se eliminará automáticamente
@@ -21,10 +21,12 @@
 	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
 	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
 	<script type="text/javascript">
-		var thDebug = false;
+	var thDebug = false;
 	</script>
+
+	<!-- QUITADO 2015
+	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsContactos.css"	th:href="@{/resources/css/estilsContactos.css}"></link>-->
 </th:block>
-<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsContactos.css"	th:href="@{/resources/css/estilsContactos.css}"></link>
 </head>
 <body>
 	<section th:remove="tag" layout:fragment="content">
@@ -39,39 +41,39 @@
 					<li th:each="i : ${MVS_listado}"><a th:href="@{${i.value}}" th:text="${i.key}">i key</a></li>
 				</ul>
 				<p class="navLlistat">
-				<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
-					&lt;&lt; <a
-					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}"
-					th:text="#{general.param.inicio}">Inici</a>&nbsp;
-				</span> <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+					<span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+						&lt;&lt; <a
+						th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}"
+						th:text="#{general.param.inicio}">Inici</a>&nbsp;
+					</span> <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
 					&lt; <a
 					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.anterior})}"
 					th:text="#{general.param.anterior}">Anterior</a>&nbsp;
 				</span> 
 				<span th:if="${MVS_listado}!=null">
-				- <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
+					- <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
 					cursor</span> a <span th:text="${MVS_parametros_pagina.cursor_final}"
 					th:remove="tag">cursor final</span> de <span
 					th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">pagina
 					nreg</span> -
 				</span>
-					 <span
-					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
-					th:remove="tag"> <a
-					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}"
-					th:text="#{general.param.siguiente}">Següent</a> &gt;&gt;
-				</span> 	
-				 <span
-					th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
-					th:remove="tag"> <a
-					th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}"
-					th:text="#{general.param.final}">Fi</a> &gt;
-				</span> 
-			</p>
-			</div>
-		</div>
-		<!-- fin informacio -->
-	</section>
+				<span
+				th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+				th:remove="tag"> <a
+				th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}"
+				th:text="#{general.param.siguiente}">Següent</a> &gt;&gt;
+			</span> 	
+			<span
+			th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+			th:remove="tag"> <a
+			th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}"
+			th:text="#{general.param.final}">Fi</a> &gt;
+		</span> 
+	</p>
+</div>
+</div>
+<!-- fin informacio -->
+</section>
 </body>
 </html>
 

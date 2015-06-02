@@ -11,7 +11,6 @@
 	gus:decorator="layout">
 <head>
 <title th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>
-	<link href="../resources/css/galeria_fotos.css" th:href="@{/resources/css/galeria_fotos.css}" type="text/css" rel="stylesheet" />
 	<script src="../resources/lightbox/js/lightbox.js" th:src="@{/resources/lightbox/js/lightbox.js}"></script>
 	<link href="../resources/lightbox/css/lightbox.css" th:href="@{/resources/lightbox/css/lightbox.css}"  rel="stylesheet" />
 
@@ -25,12 +24,14 @@
 	<script type="text/javascript">
 		var thDebug = false;
 	</script>
-</th:block>
+	<!-- QUITADO 2015
 <link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsListarNoticias.css" th:href="@{/resources/css/estilsListarNoticias.css}"></link>
+	<link href="../resources/css/galeria_fotos.css" th:href="@{/resources/css/galeria_fotos.css}" type="text/css" rel="stylesheet" />-->
+</th:block>
 </head>
 <body>
 	<section th:remove="tag" layout:fragment="content">
-		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="" class="contenedorNoticiasListadas">
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="" class="contenedorNoticiasListadas NoticiasContainer GaleriaContainer">
 			<div gus:replace="noticia/modulos :: capcelera_buscador">Listado cabecera buscador</div>
 			<div th:if="${MVS_parametros_pagina.nreg}!=0">
 				<div gus:replace="noticia/modulos :: infoCursor">Listado info cursor</div>

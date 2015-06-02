@@ -81,7 +81,6 @@
                                         </div>
                                     </a>
                                 </td>
-                                <td>&nbsp;</td>
                             </div>
                             <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S')}"  th:remove="tag">
                                 <td style="width:1%;">
@@ -103,7 +102,6 @@
                                     <span th:text="${noticia.traduccion.subtitulo}"></span>
                                 </td>
                             </div>
-                            <td>&nbsp;</td>
                         </tr>
                     </div>
                 </tbody>
@@ -130,7 +128,6 @@
                                             </div>
                                         </a>
                                     </td>
-                                    <td>&nbsp;</td>
                                 </div>
                                 <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S')}" th:remove="tag">
                                     <td style="width:1%;">
@@ -179,7 +176,6 @@
                                             </div>
                                         </a>
                                     </td>
-                                    <td>&nbsp;</td>
                                 </div>
                                 <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S') or noticia.imagen == null}" th:remove="tag">
                                     <td style="width: 1%;">
@@ -203,7 +199,7 @@
     </div>
     <div th:fragment="componenteStyle">
         <style>
-        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr { margin:0; padding:.2em; } 
+        table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr { margin:0; padding:.2em; display:block;} 
         table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td { vertical-align:top; }  
         table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr.par { background-color:#EFEFEF; } 
         table#<span th:remove="tag" th:text="${'element'+MVS_componente.id}"/> tr td span.font { font-weight: bold; font-style: italic; } 

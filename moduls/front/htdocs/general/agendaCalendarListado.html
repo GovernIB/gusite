@@ -194,7 +194,7 @@ Tabla con el calendario y listado de eventos
 																		<!-- MVS_datos_agenda_calendario[YYYY-MM] los dias en que hay eventos -->
 																	
 																	<tr th:each="numFila,iterStat : ${#numbers.sequence(1, numFilas)}"
-																		th:with="diaMes=${ (numFila-1) * 7 - diaSemanaPrimerDiaMes + 1}">
+																		th:with="diaMes=${ (numFila-1) * 7 - diaSemanaPrimerDiaMes + 1}" th:class="${iterStat.index%2 == 0}? '':'par'">
 																	
 																	<!--  dejamos celdas en blanco hasta el primer dia del mes -->
 																	<td th:if="${diaMes &lt; 0}"

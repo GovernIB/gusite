@@ -77,8 +77,10 @@ Muestra un formulario de contacto.
 	<script type="text/javascript">
 		var thDebug = false;
 	</script>
+
+	<!-- QUITADO 2015
+	<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsContactos.css"	th:href="@{/resources/css/estilsContactos.css}"></link>-->
 </th:block>
-<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsContactos.css"	th:href="@{/resources/css/estilsContactos.css}"></link>
 </head>
 <body>
 	<section th:remove="tag" th:if="${MVS_contacto} !=null" layout:fragment="content">
