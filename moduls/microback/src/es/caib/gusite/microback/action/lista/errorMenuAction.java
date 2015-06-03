@@ -36,7 +36,7 @@ public class errorMenuAction extends BaseAction {
      * @return 
      */
 
-	protected static Log log = LogFactory.getLog(errorMicroAction.class);
+	protected static Log log = LogFactory.getLog(errorMenuAction.class);
 	
     public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception  {
