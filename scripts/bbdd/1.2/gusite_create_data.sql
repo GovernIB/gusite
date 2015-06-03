@@ -1,7 +1,6 @@
 -- És necessari insertar l'usuari administrador amb el que s'accedirà al backoffice
 Insert into GUS_MUSUAR (MSU_CODI,MSU_USERNA,MSU_PASSWO,MSU_NOMBRE,MSU_OBSERV,MSU_PERFIL) values (10000000,'gusite','gusite','Usuario tests','agarcia@at4.net','gusadmin');
 
-
 -- Insertar els idiomes 
 Insert into GUS_IDIOMA (IDI_CODI,IDI_ORDEN,IDI_CODEST,IDI_NOMBRE,IDI_TRADUCTOR) values ('ca',1,'ca','Català','CATALAN');
 Insert into GUS_IDIOMA (IDI_CODI,IDI_ORDEN,IDI_CODEST,IDI_NOMBRE,IDI_TRADUCTOR) values ('es',2,'es','Castellano','SPANISH');
