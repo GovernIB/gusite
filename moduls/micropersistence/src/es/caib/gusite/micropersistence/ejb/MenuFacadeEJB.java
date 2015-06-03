@@ -31,6 +31,7 @@ import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionMenu;
 import es.caib.gusite.micromodel.TraduccionMenuPK;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
@@ -46,6 +47,7 @@ import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
  * 
  * @author Indra
  */
+@SuppressWarnings("unchecked")
 public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = -2985954631796346221L;
@@ -436,30 +438,50 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	public void borrarMenu(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
 			Menu menu = (Menu) session.get(Menu.class, id);
 
-			session.createQuery(
-					"delete TraduccionMenu tmenu where tmenu.id.codigoMenu = "
-							+ id.toString()).executeUpdate();
-			session.createQuery(
-					"delete Contenido conten where conten.menu.id = "
-							+ id.toString()).executeUpdate();
-			session.createQuery(
-					"delete Menu menu where menu.id = " + id.toString())
-					.executeUpdate();
+			session.createQuery("delete TraduccionMenu tmenu where tmenu.id.codigoMenu = " + id.toString()).executeUpdate();
+			
+			// Tratar archivos de entidad Contenido.
+			List<Contenido> contenidos = menu.getContenidos();
+			for (Contenido c : contenidos) {
+				// Archivos relacionados.
+				List<Archivo> listaArchivos = (List<Archivo>)session.createQuery("select arch from Archivo arch where arch.pagina = " + c.getId()).list();
+				archivoDelegate.borrarArchivos(listaArchivos);				
+			}
+			
+			session.createQuery("delete Contenido conten where conten.menu.id = " + id.toString()).executeUpdate();
+			session.createQuery("delete Menu menu where menu.id = " + id.toString()).executeUpdate();
 			session.flush();
+			
+			// Tratar archivos de entidad Menu.
+			Long idImagenMenu = null;
+			if (menu.getImagenmenu() != null) {
+				idImagenMenu = menu.getImagenmenu().getId();
+			}
+			archivoDelegate.borrarArchivo(idImagenMenu);
+			
 			tx.commit();
+			
 			this.close(session);
 
 			this.grabarAuditoria(menu, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -636,8 +658,13 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			String[] traducciones) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			Long idArchivoBorrar = null;
+			
 			List<?> lang = null;
 			try {
 				lang = idiomaDelegate.listarIdiomas();
@@ -666,6 +693,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 				}
 
 				if (indice_m != -1) {
+					
 					m.setOrden(ordenes[indice_m].intValue());
 					m.setPadre(idPadres[indice_m]);
 					m.setVisible(visibles[indice_m]);
@@ -674,14 +702,17 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 					// actualizamos los iconos
 					FormFile imagen = imagenes[indice_m];
 					if (imagen != null && imagen.getFileSize() > 0) {
+						
 						Archivo arc = m.getImagenmenu();
 						if (arc == null) {
 							arc = new Archivo();
 						}
+						
 						arc.setMime(imagen.getContentType());
 						arc.setNombre(imagen.getFileName());
 						arc.setPeso(imagen.getFileSize());
 						arc.setIdmicrosite(m.getMicrosite().getId());
+												
 						try {
 							arc.setDatos(imagen.getFileData());
 						} catch (FileNotFoundException e) {
@@ -689,10 +720,16 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 						} catch (IOException e) {
 							throw new EJBException(e);
 						}
+						
+						archivoDelegate.insertarArchivo(arc);
+						
 						m.setImagenmenu(arc);
 
 					} else if (imagenesbor[indice_m]) {
+						
+						idArchivoBorrar = m.getImagenmenu().getId();
 						m.setImagenmenu(null);
+												
 					}
 
 					if (m.getImagenmenu() != null) {
@@ -726,6 +763,10 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 					session.saveOrUpdate(m);
 					session.flush();
+					
+					// Toca borrar archivo con imagen de menú asociada.
+					if (idArchivoBorrar != null)
+						archivoDelegate.borrarArchivo(idArchivoBorrar);
 
 					// Actualizamos sus contenidos
 					Iterator<?> itcon = m.getContenidos().iterator();
@@ -762,6 +803,8 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
+		} catch (DelegateException e) {
+			throw new EJBException(e);
 		} finally {
 			this.close(session);
 		}

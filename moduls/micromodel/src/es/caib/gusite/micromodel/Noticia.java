@@ -42,6 +42,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_NOTICS")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class Noticia extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = -3615339661028201007L;
@@ -59,7 +60,7 @@ public class Noticia extends AuditableModel implements Traducible2 {
 
 	// bi-directional many-to-one association to GusDocus
 	@XmlElement
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name = "NOT_IMAGEN")
 	private Archivo imagen;
 

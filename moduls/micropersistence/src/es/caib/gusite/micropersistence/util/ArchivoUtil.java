@@ -206,6 +206,9 @@ public class ArchivoUtil {
 	}
 
 	public static boolean existeArchivoEnFilesystem(Archivo a) throws IOException {
+		
+		if (a == null)
+			return false;
 
 		String rutaArchivosEnFileSystemMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(a.getIdmicrosite());
 		File f = new File(rutaArchivosEnFileSystemMicrosite + File.separator + a.getId().toString() + File.separator + a.getNombre());
@@ -300,10 +303,18 @@ public class ArchivoUtil {
 
 	private static String obtenerRutaArchivoExportadoEnFilesystem(Archivo archivo) throws IOException {
 
-		String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite());
-
-		// Ruta: [rutaArchivosMicrosites]/idMicrosite/idArchivo/nombreArchivo
-		return rutaArchivosMicrosite + File.separator + archivo.getId().toString() + File.separator + archivo.getNombre();
+		if (archivo != null && archivo.getId() != null) {
+			
+			String rutaArchivosMicrosite = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite());
+	
+			// Ruta: [rutaArchivosMicrosites]/idMicrosite/idArchivo/nombreArchivo
+			return rutaArchivosMicrosite + File.separator + archivo.getId().toString() + File.separator + archivo.getNombre();
+			
+		} else {
+			
+			return "";
+			
+		}
 
 	}
 
@@ -363,26 +374,34 @@ public class ArchivoUtil {
 
 	private static void deleteDirArchivo(Archivo archivo) throws IOException {
 
-		String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
-		File dirArchivo = new File(rutaDirArchivo);
-
-		if (dirArchivo.exists()) {
-			for(String s: dirArchivo.list()){
-			    File currentFile = new File(dirArchivo.getPath(),s);
-			    currentFile.delete();
-			}			
-			dirArchivo.delete();
+		if (archivo != null && archivo.getId() != null) {
+			
+			String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
+			File dirArchivo = new File(rutaDirArchivo);
+	
+			if (dirArchivo.exists()) {
+				for (String s : dirArchivo.list()) {
+					File currentFile = new File(dirArchivo.getPath(), s);
+					currentFile.delete();
+				}
+				dirArchivo.delete();
+			}
+			
 		}
 
 	}
 
 	private static void checkDirArchivo(Archivo archivo) throws IOException {
 
-		String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
-		File dirArchivo = new File(rutaDirArchivo);
-
-		if (!dirArchivo.exists()) {
-			dirArchivo.mkdir();
+		if (archivo != null && archivo.getId() != null) {
+			
+			String rutaDirArchivo = obtenerRutaArchivosEnFileSystemMicrosite(archivo.getIdmicrosite()) + File.separator + archivo.getId().toString();
+			File dirArchivo = new File(rutaDirArchivo);
+	
+			if (!dirArchivo.exists()) {
+				dirArchivo.mkdir();
+			}
+		
 		}
 
 	}

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -24,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_DOCUS")
+@SuppressWarnings({"rawtypes", "unchecked"}) // Para los Map sin parametrizar.
 public class Archivo extends AuditableModel implements Indexable {
 
 	@SuppressWarnings("unused")

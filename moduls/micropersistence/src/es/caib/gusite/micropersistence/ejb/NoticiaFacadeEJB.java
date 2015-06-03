@@ -13,6 +13,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -43,6 +44,7 @@ import es.caib.gusite.micropersistence.intf.DominioInterface;
  * 
  * @ejb.transaction type="Required"
  */
+@SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
 public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		DominioInterface, NoticiaServiceItf {
 
@@ -123,38 +125,80 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		Session session = this.getSession();
 		boolean nuevo = (noticia.getId() == null) ? true : false;
         Transaction tx = session.beginTransaction();
+        
 		try {
+			
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			Archivo imagenNoticia = null;
+			
 			Map<String, TraduccionNoticia> listaTraducciones = new HashMap<String, TraduccionNoticia>();
 
 			if (nuevo) {
+				
+				// Preparamos traducciones para insert posterior.
 				Iterator<TraduccionNoticia> it = noticia.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionNoticia trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				noticia.setTraducciones(null);
+				
+				// Preparamos imagen para insert posterior.
+				if (noticia.getImagen() != null) {
+					imagenNoticia = noticia.getImagen();
+					noticia.setImagen(null);
+				}
+				
 			} else {
-				//Damos de alta los nuevos archivos
+				
+				if (noticia.getImagen() != null) {
+										
+					// Crear original
+					imagenNoticia = noticia.getImagen();
+					noticia.setImagen(null);
+					
+				}
+				
+				// Damos de alta los nuevos archivos
 				for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
-                    if (trad.getDocu() != null && trad.getDocu().getId() == null) {
-                        DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocu());
+                    if (trad.getDocu() != null) {
+                    	if (trad.getDocu().getId() != null)
+                    		archivoDelegate.grabarArchivo(trad.getDocu());
+                    	else
+                    		archivoDelegate.insertarArchivo(trad.getDocu());
                     }
 				}
+				
 			}
 
+			// Crear/actualizar noticia.
 			session.saveOrUpdate(noticia);
 			session.flush();
 
 			if (nuevo) {
+				
 				for (TraduccionNoticia trad : listaTraducciones.values()) {
 					trad.getId().setCodigoNoticia(noticia.getId());
                     if (trad.getDocu() != null) {
-                        DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocu());
+                        archivoDelegate.insertarArchivo(trad.getDocu());
                     }
 					session.saveOrUpdate(trad);
 				}
 				session.flush();
 				noticia.setTraducciones(listaTraducciones);
+				
+				if (imagenNoticia != null) {
+					archivoDelegate.insertarArchivo(imagenNoticia);
+					noticia.setImagen(imagenNoticia);
+				}
+				
+			} else {
+				
+				if (imagenNoticia != null) {
+					archivoDelegate.grabarArchivo(imagenNoticia);
+					noticia.setImagen(imagenNoticia);
+				}
+								
 			}
 
 			tx.commit();
@@ -166,14 +210,19 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			return noticia.getId();
 
 		} catch (HibernateException he) {
+			
             tx.rollback();
             session.close();
 			throw new EJBException(he);
+			
 		} catch (DelegateException e) {
+			
             tx.rollback();
             session.close();
             throw new EJBException(e);
+            
         }
+		
 	}
 
 	/**
@@ -543,26 +592,53 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 	public void borrarNoticia(Long id) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Noticia noticia = (Noticia) session.get(Noticia.class, id);
+			
+			// Obtenemos los IDs de los archivos para borrarlos después.
+			List<Archivo> listaArchivos = new ArrayList<Archivo>();
+			
+			// Primero traducciones.
+			Map<String, TraduccionNoticia> traducciones = noticia.getTraducciones();
+			for (TraduccionNoticia t : traducciones.values()) {
+				if (t.getDocu() != null)
+					listaArchivos.add(t.getDocu());
+			}
+			
+			// Luego imagen de la noticia.
+			if (noticia.getImagen() != null)
+				listaArchivos.add(noticia.getImagen());
 
-			session.createQuery(
-					"delete from TraduccionNoticia where id.codigoNoticia = "
-							+ id).executeUpdate();
-			session.createQuery("delete from Noticia where id = " + id)
-					.executeUpdate();
+			session.createQuery("delete from TraduccionNoticia where id.codigoNoticia = " + id).executeUpdate();
+			session.createQuery("delete from Noticia where id = " + id).executeUpdate();
 			session.flush();
+			
+			// Borramos archivos asociados tras borrar los registros, evitando así los problemas de integridad.
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			archivoDelegate.borrarArchivos(listaArchivos);
+			
 			tx.commit();
+			
 			this.close(session);
-
 			this.grabarAuditoria(noticia, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
+		} catch (DelegateException e) {
+			
+			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**

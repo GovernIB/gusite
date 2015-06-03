@@ -110,6 +110,21 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
+	/**
+	 * Borrar un archivo
+	 * 
+	 * @param lista
+	 *            Lista con los archivos a borrar.
+	 * @throws DelegateException
+	 */
+	public void borrarArchivos(List<Archivo> lista) throws DelegateException {
+		try {
+			this.getFacade().borrarArchivos(lista);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	/**
 	 * Crea o actualiza un archivo
@@ -133,6 +148,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 	 * @return Long Id del archivo
 	 * @throws DelegateException
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Object[]> obtenerTodosLosArchivosSinBlobs()
 			throws DelegateException {
 		try {

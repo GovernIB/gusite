@@ -42,6 +42,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_CONTEN")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class Contenido extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 4688044820582237768L;
@@ -73,9 +74,9 @@ public class Contenido extends AuditableModel implements Traducible2 {
 
 	// bi-directional many-to-one association to GusDocus
 	@XmlElement
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "CON_IMGMEN")
-	private Archivo imagenmenu;
+	private Archivo imagenmenu; // TODO amartin: candidato a ser borrado del modelo. Parece que no se usa. Lo que sí se usa es la imagen de menú de la entidad Menu.
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "CID_CONCOD")

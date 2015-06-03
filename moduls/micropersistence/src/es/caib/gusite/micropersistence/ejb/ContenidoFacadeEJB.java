@@ -32,6 +32,7 @@ import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionMenu;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
@@ -48,6 +49,7 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
  * 
  * @author Indra
  */
+@SuppressWarnings({"deprecation", "unchecked"})
 public abstract class ContenidoFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = 1665804059893814046L;
@@ -312,19 +314,25 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	public void borrarContenido(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Contenido contenido = (Contenido) session.get(Contenido.class, id);
+						
+			// Borrado de archivos.
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			
+			// Imagen de menú, si existe.
+			if (contenido.getImagenmenu() != null && contenido.getImagenmenu().getId() != null)
+				archivoDelegate.borrarArchivo(contenido.getImagenmenu().getId());
+			
+			// Archivos relacionados.		
+			List<Archivo> listaArchivos = (List<Archivo>)session.createQuery("select arch from Archivo arch where arch.pagina = " + id.toString()).list();
+			archivoDelegate.borrarArchivos(listaArchivos);
 
-			session.createQuery(
-					"delete TraduccionContenido conte where conte.id.codigoContenido = "
-							+ id.toString()).executeUpdate();
-			session.createQuery(
-					"delete Archivo arch where arch.pagina = " + id.toString())
-					.executeUpdate();
-			session.createQuery(
-					"delete Contenido conte where conte.id = " + id.toString())
-					.executeUpdate();
+			session.createQuery("delete TraduccionContenido conte where conte.id.codigoContenido = " + id.toString()).executeUpdate();
+			session.createQuery("delete Contenido conte where conte.id = " + id.toString()).executeUpdate();
 
 			session.flush();
 			tx.commit();
@@ -333,10 +341,15 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(contenido, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -371,23 +384,13 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	 */
 	public void eliminarDocumentos(String micro, String pagina)
 			throws DelegateException {
-
-		Session session = this.getSession();
-		try {
-			List<Archivo> lista = this.listarDocumentos(micro, pagina);
-			Iterator<Archivo> iter = lista.iterator();
-			Archivo archi;
-			while (iter.hasNext()) {
-				archi = iter.next();
-				session.delete(archi);
-			}
-			session.flush();
-
-		} catch (HibernateException he) {
-			throw new EJBException(he);
-		} finally {
-			this.close(session);
-		}
+			
+		List<Archivo> lista = this.listarDocumentos(micro, pagina);
+		
+		// Borrado de archivos.
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		archivoDelegate.borrarArchivos(lista);
+		
 	}
 
 	/**

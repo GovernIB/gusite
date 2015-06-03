@@ -43,6 +43,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlSeeAlso({ Contenido.class })
 @Entity
 @Table(name = "GUS_MENU")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class Menu extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 1505040618105464154L;
@@ -71,7 +72,7 @@ public class Menu extends AuditableModel implements Traducible2 {
 	private String modo;
 
 	@XmlElement
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MNU_IMGMEN")
 	private Archivo imagenmenu;
 

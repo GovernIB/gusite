@@ -59,16 +59,25 @@ public abstract class BaseAction extends Action {
 	 * @return
 	 * @throws IOException
 	 */
-	protected static Archivo populateArchivo(Archivo archivo, FormFile formFile, Long microsite, Long pagina ) throws IOException {
+	protected static Archivo populateArchivo(Archivo archivo, FormFile formFile, Long microsite, Long pagina ) 
+			throws IOException {
 
-        if (archivo == null) archivo = new Archivo();
-        archivo.setMime(formFile.getContentType());
-        archivo.setNombre(formFile.getFileName());
-        archivo.setPeso(formFile.getFileSize());
-        archivo.setDatos(formFile.getFileData());
-        if (pagina!=null) archivo.setPagina(pagina);
-        if (microsite!=null) archivo.setIdmicrosite(microsite.longValue());
-        return archivo;
+		if (archivo == null)
+			archivo = new Archivo();
+		
+		archivo.setMime(formFile.getContentType());
+		archivo.setNombre(formFile.getFileName());
+		archivo.setPeso(formFile.getFileSize());
+		archivo.setDatos(formFile.getFileData());
+		
+		if (pagina != null)
+			archivo.setPagina(pagina);
+		
+		if (microsite != null)
+			archivo.setIdmicrosite(microsite.longValue());
+		
+		return archivo;
+		
     }
     
     /**

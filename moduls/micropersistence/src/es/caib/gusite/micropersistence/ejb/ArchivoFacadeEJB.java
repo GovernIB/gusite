@@ -40,6 +40,7 @@ import es.caib.gusite.micropersistence.util.ArchivoUtil;
  * @author Indra
  */
 
+@SuppressWarnings({"deprecation", "unchecked"})
 public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = 81125150632029055L;
@@ -230,6 +231,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		boolean anularBlob = false;
 
 		try {
+			
 			Transaction tx = session.beginTransaction();
 
 			// Guardamos para obtener el ID del registro.
@@ -244,6 +246,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 				// Se escribirá el archivo en BD con el BLOB a null.
 				a.setDatos(null);
 				anularBlob = true;
+				
 			}
 
 			if (anularBlob) {
@@ -252,15 +255,23 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			}
 
 			tx.commit();
+			
 			return a.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (IOException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -273,7 +284,9 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	public void borrarArchivo(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Archivo a = (Archivo) session.get(Archivo.class, id);
 
 			if (ArchivoUtil.almacenarEnFilesystem()) {
@@ -283,20 +296,80 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 					ArchivoUtil.borrarArchivo(a);
 				}
 			}
+			
 			session.delete(a);
 			session.flush();
             session.close();
 
             a.setIdmicrosite(null);
+            
 			this.grabarAuditoria(a, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (IOException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
+	}
+	
+	/**
+	 * Borra una lista de documentos de la BD
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission 
+	 * 			role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @param id
+	 * 			Id del archivo
+	 * @throws DelegateException
+	 */
+	public void borrarArchivos(List<Archivo> lista) throws DelegateException {
+		
+		Session session = this.getSession();
+		
+		try {
+			
+			for (Archivo a : lista) {
+
+				if (ArchivoUtil.almacenarEnFilesystem()) {
+					// Si estamos guardando los archivos en el FS, comprobamos si existe.
+					// Si es así, lo borramos del FS.
+					if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
+						ArchivoUtil.borrarArchivo(a);
+					}
+				}
+				
+				session.delete(a);
+				session.flush();
+	
+	            a.setIdmicrosite(null);
+	            
+				this.grabarAuditoria(a, Auditoria.ELIMINAR);
+			
+			}
+			
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		} catch (IOException e) {
+			
+			throw new EJBException(e);
+			
+		} finally {
+			
+			this.close(session);
+			
+		}
+		
 	}
 
 	/**
@@ -310,13 +383,15 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		boolean nuevo = (a.getId() == null) ? true : false;
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 
 			if (ArchivoUtil.almacenarEnFilesystem()) {
+				
 				// Si es una actualización, toca borrar el anterior (por si es
-				// un archivo con diferente nombre)
-				// antes de escribir el nuevo en el FS.
+				// un archivo con diferente nombre) antes de escribir el nuevo en el FS.
 				if (!nuevo) {
 					Archivo aOld = this.obtenerArchivo(a.getId());
 					ArchivoUtil.borrarArchivo(aOld);
@@ -327,12 +402,12 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 				// Se escribirá el archivo en BD con el BLOB a null.
 				a.setDatos(null);
+				
 			} 
 
 			session.saveOrUpdate(a);
 			session.flush();
 			tx.commit();
-			this.close(session);
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(a, op);
@@ -340,18 +415,25 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			return a.getId();
 
 		} catch (HibernateException he) {
+			
 			if (!nuevo) {
 				this.indexBorraArchivo(a.getId());
 			}
 			throw new EJBException(he);
+			
 		} catch (IOException e) {
+			
 			if (!nuevo) {
 				this.indexBorraArchivo(a.getId());
 			}
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/***************************************************************************************/
