@@ -62,6 +62,7 @@
 		<delete dir="${output.dir}" quiet="yes"/>
 	</target>
 
+
 	<target name="generate.properties" description="Genera el archivo de propiedades del build">
 		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR -->
 		<sql
