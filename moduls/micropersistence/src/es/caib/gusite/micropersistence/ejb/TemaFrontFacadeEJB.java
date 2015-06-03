@@ -8,19 +8,24 @@ import java.util.List;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.ArchivoTemaFront;
-import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.PersonalizacionPlantilla;
+import es.caib.gusite.micromodel.TemaFront;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.ArchivoTemaFrontDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.PersonalizacionPlantillaDelegate;
-import org.hibernate.*;
-
-import es.caib.gusite.micromodel.Auditoria;
-import es.caib.gusite.micromodel.TemaFront;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 /**
  * SessionBean para consultar TemaFront.
@@ -108,11 +113,15 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 	public void borrarTemaFront(TemaFront instance) {
 
 		log.debug("deleting TemaFront instance");
+		
         Session session = this.getSession();
+        
 		try {
+			
             log.debug("deleting PersonalizacionPlantilla list");
             PersonalizacionPlantillaDelegate personalizacionPlantillaDelegate = DelegateUtil.getPersonalizacionPlantillaDelegate();
             ArchivoTemaFrontDelegate archivoTemaFrontDelegate = DelegateUtil.getArchivoTemaFrontDelegate();
+            ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
             
             List<Long> idsBorrar;
             List<PersonalizacionPlantilla> personalizacionPlantillas = personalizacionPlantillaDelegate.searchByTema(instance.getId());
@@ -122,25 +131,52 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
             }
 
             List<ArchivoTemaFront> archivoTemaFronts = archivoTemaFrontDelegate.searchByTema(instance.getId());
+            
             idsBorrar = extraerIdsObject(archivoTemaFronts);
             if (idsBorrar.size() > 0) {
-                archivoTemaFrontDelegate.borrarArchivosTemaFront(idsBorrar);
+            	
+            	// Obtenemos archivos que habrá que borrar.
+            	List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+                for (ArchivoTemaFront a : archivoTemaFronts)
+                	if (a.getArchivo() != null)
+                		archivosPorBorrar.add(a.getArchivo());
+                
+                // Primero borramos estas referencias.
+            	archivoTemaFrontDelegate.borrarArchivosTemaFront(idsBorrar);
+            	
+            	// Y después registros de GUS_DOCUS y archivos en FS si los hubiese.
+            	if (archivosPorBorrar.size() > 0)
+            		archivoDelegate.borrarArchivos(archivosPorBorrar);
+                
             }
+            
+            Archivo temaCSS = instance.getCss();
 
             session.delete(instance);
             session.flush();
             session.close();
+            
+            if (temaCSS != null)
+            	archivoDelegate.borrarArchivo(temaCSS.getId());
+            
 			this.grabarAuditoria(instance, Auditoria.ELIMINAR);
 
 		} catch (HibernateException e) {
+			
 			log.error("delete failed", e);
 			throw new EJBException(e);
+			
 		} catch (DelegateException e) {
+			
 			log.error("delete failed", e);
 			throw new EJBException(e);
+			
 		} finally {
+			
 			log.debug("finished deleting TemaFront instance");
+			
 		}
+		
 	}
 
 	/**
@@ -294,18 +330,8 @@ public abstract class TemaFrontFacadeEJB extends HibernateTrulyStatelessEJB {
 		}
 	}
 
-    
-
-    private List<Long> extraerIdsPerPlantilla(List<PersonalizacionPlantilla> perPlantillas) {
-
-        List<Long> ids = new ArrayList<Long>();
-        for (PersonalizacionPlantilla pp : perPlantillas) {
-            ids.add(pp.getId());
-        }
-        return ids;
-    }
-
-    private List<Long> extraerIdsObject(List objects) {
+    @SuppressWarnings("rawtypes")
+	private List<Long> extraerIdsObject(List objects) {
 
         List<Long> ids = new ArrayList<Long>();
         try {
