@@ -13,11 +13,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.TraduccionComponente;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 
 /**
  * SessionBean para consultar Componente.
@@ -98,8 +101,13 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 	public Long grabarComponente(Componente compo) throws DelegateException {
 
 		Session session = this.getSession();
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
 		Boolean nuevo = false;
+		Archivo imagenOriginal = null;
+		Archivo imagenNueva = null;
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			if (compo.getId() == null) {
 				nuevo = true;
@@ -107,17 +115,56 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 			Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
 			if (nuevo) {
-				Iterator<TraduccionComponente> it = compo.getTraducciones()
-						.values().iterator();
+				Iterator<TraduccionComponente> it = compo.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionComponente trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				compo.setTraducciones(null);
 			}
+			
+			if (nuevo) {
+				
+				if (compo.getImagenbul() != null) {
+					imagenNueva = compo.getImagenbul();
+				}
+				
+			} else {
+				
+				if (compo.getImagenbul() != null) {
+					Componente original = obtenerComponente(compo.getId());
+					imagenOriginal = original.getImagenbul();
+					imagenNueva = compo.getImagenbul();
+				}
+								
+			}
+			
+			compo.setImagenbul(null);
 
 			session.saveOrUpdate(compo);
 			session.flush();
+			
+			// Imágenes.
+			if (imagenNueva != null) {
+				
+				if (nuevo) {
+					
+					archivoDelegate.insertarArchivo(imagenNueva);
+					
+				} else {
+					
+					if (imagenOriginal != null)
+						archivoDelegate.grabarArchivo(imagenNueva);
+					else
+						archivoDelegate.insertarArchivo(imagenNueva);
+					
+				}
+				
+				compo.setImagenbul(imagenNueva);
+				session.saveOrUpdate(compo);
+				session.flush();
+				
+			}
 
 			if (nuevo) {
 				for (TraduccionComponente trad : listaTraducciones.values()) {
@@ -137,10 +184,15 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 			return compo.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -198,28 +250,38 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 	public void borrarComponente(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
-			Componente componente = (Componente) session.get(Componente.class,
-					id);
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			Componente componente = (Componente) session.get(Componente.class, id);
 
-			session.createQuery(
-					"delete from TraduccionComponente tc where tc.id.codigoComponente = "
-							+ id).executeUpdate();
-			session.createQuery(
-					"delete from Componente compo where compo.id = " + id)
-					.executeUpdate();
+			Long idImagen = (componente.getImagenbul() != null) ? componente.getImagenbul().getId() : null;
+			
+			session.createQuery("delete from TraduccionComponente tc where tc.id.codigoComponente = " + id).executeUpdate();
+			session.createQuery("delete from Componente compo where compo.id = " + id).executeUpdate();
+			
+			if (idImagen != null)
+				archivoDelegate.borrarArchivo(idImagen);
+			
 			session.flush();
 			tx.commit();
+			
 			this.close(session);
 
 			this.grabarAuditoria(componente, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**

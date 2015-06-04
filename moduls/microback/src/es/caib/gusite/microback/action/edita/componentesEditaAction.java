@@ -45,44 +45,59 @@ public class componentesEditaAction extends BaseAction
 	
 	protected static Log log = LogFactory.getLog(componentesEditaAction.class);
 	
-    public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
-    		HttpServletRequest request, HttpServletResponse response) throws Exception {
-  
-    	try {
-    	
-    	ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
-    	TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
-    	Componente componenteBean=null;
-    	componenteForm componenteForm = (componenteForm) form;
-    	Microsite micrositeBean = (Microsite)request.getSession().getAttribute("MVS_microsite");
-    	
-        if (request.getParameter("accion") != null) {
-            
-	    	if(request.getParameter("modifica")!=null || request.getParameter("anyade")!=null
-	    	|| (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")))){
+	public ActionForward doExecute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
 
-		    	componenteBean = setFormtoBean(request, componenteForm, micrositeBean);
-	           
-		    	componenteDelegate.grabarComponente(componenteBean);
-	
-		       	if (componenteForm.get("id") == null){
-		       		componenteForm.set("id",componenteBean.getId());
-		       		addMessageWithDate(request, "mensa.nuevocompo");
-		       	} else addMessageWithDate(request, "mensa.modifcompo"); 
-               
-	       } else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.traducir"))) 
-	    	   traducir(request, componenteForm);
+		try {
 
-        } else setBeantoForm(request,componenteForm, new Long(""+request.getParameter("id")), micrositeBean);      
+			ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
+			TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
+			Componente componenteBean = null;
+			componenteForm componenteForm = (componenteForm) form;
+			Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
 
-        request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId())); 
-        return mapping.findForward("detalle");
-        
+			if (request.getParameter("accion") != null) {
+
+				if (request.getParameter("modifica") != null
+						|| request.getParameter("anyade") != null
+						|| (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")))) {
+
+					componenteBean = setFormtoBean(request, componenteForm, micrositeBean);
+					componenteDelegate.grabarComponente(componenteBean);
+
+					if (componenteForm.get("id") == null) {
+						componenteForm.set("id", componenteBean.getId());
+						addMessageWithDate(request, "mensa.nuevocompo");
+					} else
+						addMessageWithDate(request, "mensa.modifcompo");
+					
+					setBeantoForm(request, componenteForm, componenteBean.getId(), micrositeBean);
+
+				} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.traducir"))) {
+					
+					traducir(request, componenteForm);
+					
+				}
+
+			} else {
+				
+				setBeantoForm(request, componenteForm, new Long("" + request.getParameter("id")), micrositeBean);
+				
+			}
+
+			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId()));
+			
+			return mapping.findForward("detalle");
+
 		} catch (Exception e) {
-	        addMessageError(request, "peticion.error");
-	        return mapping.findForward("info");    		
+			
+			addMessageError(request, "peticion.error");
+			return mapping.findForward("info");
+		
 		}
-    }
+	
+	}
     
     
     /**
