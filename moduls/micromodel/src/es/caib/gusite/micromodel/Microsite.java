@@ -44,8 +44,9 @@ import org.hibernate.annotations.Cascade;
  * @author Indra
  */
 @XmlAccessorType(XmlAccessType.NONE)
-@Entity()
+@Entity
 @Table(name = "GUS_MICROS")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Microsite extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = -608935483446670811L;
@@ -125,15 +126,15 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@Column(name = "MIC_OPT7")
 	private String opt7;
 
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name = "MIC_IMAGEN")
 	private Archivo imagenPrincipal;
 
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name = "MIC_IMGCAM")
 	private Archivo imagenCampanya;
 
-	@ManyToOne(cascade = { CascadeType.ALL })
+	@ManyToOne
 	@JoinColumn(name = "MIC_CSS")
 	private Archivo estiloCSS;
 
@@ -225,8 +226,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	private Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "microsite")
-	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(
-			0);
+	private Set<PersonalizacionPlantilla> personalizacionesPlantilla = new HashSet<PersonalizacionPlantilla>(0);
 
 	/**
 	 * Tema a aplicar
@@ -820,7 +820,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	public Map getTraduccionMap() {
 		return this.traducciones;
 	}
-
+	
 	@Override
 	public void setTraduccionMap(Map traduccionMap) {
 		this.traducciones = new HashMap(traduccionMap);

@@ -26,6 +26,7 @@ import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.lucene.model.TraModelFilterObject;
 import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Agenda;
+import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Contacto;
@@ -47,6 +48,7 @@ import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.delegate.ActividadDelegate;
 import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
 import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
@@ -74,6 +76,7 @@ import es.caib.gusite.plugins.organigrama.UnidadData;
  * 
  * @ejb.transaction type="Required"
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = -2076446869522196666L;
@@ -119,13 +122,28 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	public Long grabarMicrosite(Microsite site) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Map<String, TraduccionMicrosite> listaTraducciones = new HashMap<String, TraduccionMicrosite>();
 			Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
+			
+			Microsite siteOriginal = null;
+			
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+			Archivo estiloCSS = null;
+			Archivo imagenPrincipal = null;
+			Archivo imagenCampanya = null;
+			
 			boolean nuevo = (site.getId() == null) ? true : false;
+			
+			if (!nuevo)
+				siteOriginal = DelegateUtil.getMicrositeDelegate().obtenerMicrosite(site.getId());
 
 			if (nuevo) {
+				
 				Iterator<TraduccionMicrosite> it = site.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionMicrosite trd = it.next();
@@ -141,17 +159,74 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				site.setIdiomas((Set<IdiomaMicrosite>) null);
 
 				site.setClaveunica(this.obtenerClaveUnica(site));
-
+				
+				// Archivos nuevos: toca guardar referencia y poner a null antes de guardado ya que
+				// es una entidad aún sin guardar. Los crearemos tras el guardado del microsite.
+				if (site.getEstiloCSS() != null) {
+					estiloCSS = site.getEstiloCSS();
+					site.setEstiloCSS(null);
+				}
+				
+				if (site.getImagenPrincipal() != null) {
+					imagenPrincipal = site.getImagenPrincipal();
+					site.setImagenPrincipal(null);
+				}
+				
+				if (site.getImagenCampanya() != null) {
+					imagenCampanya = site.getImagenCampanya();
+					site.setImagenCampanya(null);
+				}
+				
+			} else {
+				
+				if (site.getEstiloCSS() != null) {
+					if (site.getEstiloCSS().getId() != null)
+						archivoDelegate.grabarArchivo(site.getEstiloCSS());
+					else
+						archivoDelegate.insertarArchivo(site.getEstiloCSS());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getEstiloCSS() != null) {
+						archivosPorBorrar.add(siteOriginal.getEstiloCSS());
+					}
+				}
+				
+				if (site.getImagenPrincipal() != null) {
+					if (site.getImagenPrincipal().getId() != null)
+						archivoDelegate.grabarArchivo(site.getImagenPrincipal());
+					else
+						archivoDelegate.insertarArchivo(site.getImagenPrincipal());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getImagenPrincipal() != null) {
+						archivosPorBorrar.add(siteOriginal.getImagenPrincipal());
+					}
+				}
+				
+				if (site.getImagenCampanya() != null) {
+					if (site.getImagenCampanya().getId() != null)
+						archivoDelegate.grabarArchivo(site.getImagenCampanya());
+					else
+						archivoDelegate.insertarArchivo(site.getImagenCampanya());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getImagenCampanya() != null) {
+						archivosPorBorrar.add(siteOriginal.getImagenCampanya());
+					}
+				}
+				
 			}
 
 			if (site.getUri() == null || site.getUri().equals("")) {
 				site.setUri(site.getClaveunica());
 			}
-
+			
 			session.saveOrUpdate(site);
 			session.flush();
 
 			if (nuevo) {
+				
+				// Traducciones e idiomas.
 				for (TraduccionMicrosite trad : listaTraducciones.values()) {
 					trad.getId().setCodigoMicrosite(site.getId());
 					session.saveOrUpdate(trad);
@@ -167,9 +242,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				}
 				session.flush();
 				site.setIdiomas(idiomas);
-			}
-
-			if (nuevo) {
+	
 				// Ahora se asocian todos los usuarios admin
 				UsuarioDelegate uDel = DelegateUtil.getUsuarioDelegate();
 				List<?> listau = uDel.listarUsuariosPerfil("gusadmin");
@@ -179,6 +252,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), user.getId());
 					session.save(upm);
 				}
+				
 				// Ahora se asocian todos los usuarios system
 				listau = uDel.listarUsuariosPerfil("gussystem");
 				iter = listau.iterator();
@@ -187,7 +261,28 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 					UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), user.getId());
 					session.save(upm);
 				}
+				
+				// Archivos
+				if (estiloCSS != null) {
+					estiloCSS.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(estiloCSS);
+				}
+				
+				if (imagenPrincipal != null) {
+					imagenPrincipal.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(imagenPrincipal);
+				}
+				
+				if (imagenCampanya != null) {
+					imagenCampanya.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(imagenCampanya);
+				}
+				
 			}
+			
+			// Borramos archivos FKs del Microsite que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			session.flush();
 			tx.commit();
@@ -382,13 +477,28 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	public Long grabarMicrositeCompleto(MicrositeCompleto site) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Map<String, TraduccionMicrosite> listaTraducciones = new HashMap<String, TraduccionMicrosite>();
 			Set<IdiomaMicrosite> idiomas = new HashSet<IdiomaMicrosite>();
+			
+			Microsite siteOriginal = null;
+			
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+			Archivo estiloCSS = null;
+			Archivo imagenPrincipal = null;
+			Archivo imagenCampanya = null;
+			
 			boolean nuevo = (site.getId() == null) ? true : false;
+			
+			if (!nuevo)
+				siteOriginal = DelegateUtil.getMicrositeDelegate().obtenerMicrosite(site.getId());
 
 			if (nuevo) {
+				
 				Iterator<TraduccionMicrosite> it = site.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionMicrosite trd = it.next();
@@ -407,12 +517,69 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				if (site.getUri() == null || site.getUri().equals("")) {
 					site.setUri(site.getClaveunica());
 				}
-
+				
+				// Archivos nuevos: toca guardar referencia y poner a null antes de guardado ya que
+				// es una entidad aún sin guardar. Los crearemos tras el guardado del microsite.
+				if (site.getEstiloCSS() != null) {
+					estiloCSS = site.getEstiloCSS();
+					site.setEstiloCSS(null);
+				}
+				
+				if (site.getImagenPrincipal() != null) {
+					imagenPrincipal = site.getImagenPrincipal();
+					site.setImagenPrincipal(null);
+				}
+				
+				if (site.getImagenCampanya() != null) {
+					imagenCampanya = site.getImagenCampanya();
+					site.setImagenCampanya(null);
+				}
+				
+			} else {
+				
+				if (site.getEstiloCSS() != null) {
+					if (site.getEstiloCSS().getId() != null)
+						archivoDelegate.grabarArchivo(site.getEstiloCSS());
+					else
+						archivoDelegate.insertarArchivo(site.getEstiloCSS());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getEstiloCSS() != null) {
+						archivosPorBorrar.add(siteOriginal.getEstiloCSS());
+					}
+				}
+				
+				if (site.getImagenPrincipal() != null) {
+					if (site.getImagenPrincipal().getId() != null)
+						archivoDelegate.grabarArchivo(site.getImagenPrincipal());
+					else
+						archivoDelegate.insertarArchivo(site.getImagenPrincipal());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getImagenPrincipal() != null) {
+						archivosPorBorrar.add(siteOriginal.getImagenPrincipal());
+					}
+				}
+				
+				if (site.getImagenCampanya() != null) {
+					if (site.getImagenCampanya().getId() != null)
+						archivoDelegate.grabarArchivo(site.getImagenCampanya());
+					else
+						archivoDelegate.insertarArchivo(site.getImagenCampanya());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (siteOriginal.getImagenCampanya() != null) {
+						archivosPorBorrar.add(siteOriginal.getImagenCampanya());
+					}
+				}
+				
 			}
+			
 			session.saveOrUpdate(site);
 			session.flush();
 
 			if (nuevo) {
+				
 				for (TraduccionMicrosite trad : listaTraducciones.values()) {
 					trad.getId().setCodigoMicrosite(site.getId());
 					session.saveOrUpdate(trad);
@@ -433,7 +600,29 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				Usuario usu = usudel.obtenerUsuariobyUsername(this.getUsuario(session).getUsername());
 				UsuarioPropietarioMicrosite upm = new UsuarioPropietarioMicrosite(site.getId(), usu.getId());
 				session.save(upm);
+				
+				// Archivos
+				if (estiloCSS != null) {
+					estiloCSS.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(estiloCSS);
+				}
+				
+				if (imagenPrincipal != null) {
+					imagenPrincipal.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(imagenPrincipal);
+				}
+				
+				if (imagenCampanya != null) {
+					imagenCampanya.setIdmicrosite(site.getId());
+					archivoDelegate.insertarArchivo(imagenCampanya);
+				}
+				
 			}
+			
+			// Borramos archivos FKs del Microsite que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
+			
 			session.flush();
 			tx.commit();
 			this.close(session);
@@ -463,7 +652,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	public void borrarMicrositeCompleto(Long id) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 
 			// Primero: borrar los usuarios asociados
@@ -491,9 +682,12 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 			// Tercero: borrar el microsite completo
 			MicrositeCompleto site = (MicrositeCompleto) session.get(MicrositeCompleto.class, id);
-
-			session.createQuery("delete Archivo arch where arch.idmicrosite = " + id.toString()).executeUpdate();
-
+			
+			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			List<Archivo> listaArchivos = new ArrayList<Archivo>(); 
+			listaArchivos.addAll(site.getDocus());
+			archivoDelegate.borrarArchivos(listaArchivos);
+			
 			FaqDelegate faqDelegate = DelegateUtil.getFaqDelegate();
 			for (Iterator it = site.getFaqs().iterator(); it.hasNext();) {
 				faqDelegate.borrarFaq(((Faq) it.next()).getId());
@@ -562,6 +756,17 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 			this.indexBorraMicrosite(id);
 			session.flush();
+			
+			// Borrado de archivos que son FKs (ha de ser posterior, debido al modelo de datos).
+			if (site.getEstiloCSS() != null)
+				archivoDelegate.borrarArchivo(site.getEstiloCSS().getId());
+			
+			if (site.getImagenPrincipal() != null)
+				archivoDelegate.borrarArchivo(site.getImagenPrincipal().getId());
+			
+			if (site.getImagenCampanya() != null)
+				archivoDelegate.borrarArchivo(site.getImagenCampanya().getId());
+			
 			tx.commit();
 			this.close(session);
 
@@ -918,7 +1123,6 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Usuario> listarUsernamesbyMicrosite(Long idmicrosite) {
 
 		Session session = this.getSession();

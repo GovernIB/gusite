@@ -42,6 +42,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_PREGUN")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Pregunta extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 8513598333939006319L;
@@ -126,7 +127,7 @@ public class Pregunta extends AuditableModel implements Traducible2 {
 	public Map<String, TraduccionPregunta> getTraducciones() {
 		return this.traducciones;
 	}
-
+	
 	@Override
 	public void setTraducciones(Map traducciones) {
 		this.traducciones = traducciones;

@@ -54,6 +54,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 		TraduccionMicrosite.class })
 @Entity
 @Table(name = "GUS_MICROS")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 
 	private static final long serialVersionUID = 5465456305944839473L;
@@ -87,7 +88,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	private String visible;
 
 	@XmlElement
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MIC_IMAGEN")
 	private Archivo imagenPrincipal;
 
@@ -144,12 +145,12 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	private String urlhome;
 
 	@XmlElement
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MIC_IMGCAM")
 	private Archivo imagenCampanya;
 
 	@XmlElement
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MIC_CSS")
 	private Archivo estiloCSS;
 

@@ -9,9 +9,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import es.caib.gusite.microback.utils.Cadenas;
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -22,9 +19,19 @@ import org.apache.struts.upload.FormFile;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.microForm;
 import es.caib.gusite.microback.base.Base;
-import es.caib.gusite.microback.utils.General;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
+import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.TemaFront;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micromodel.TraduccionMicrositePK;
+import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
+import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
+import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
@@ -315,7 +322,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen2 = (FormFile) microForm.get("imagenCampanya");
         
         if (archivoValido(imagen2)) {
-			micrositeBean.setImagenCampanya(populateArchivo(micrositeBean.getImagenCampanya(), imagen2, null, null));
+			micrositeBean.setImagenCampanya(populateArchivo(micrositeBean.getImagenCampanya(), imagen2, micrositeBean.getId(), null));
 		} else if (((Boolean) microForm.get("imagenCampanyabor")).booleanValue()) {
 			micrositeBean.setImagenCampanya(null);
 		}
@@ -329,7 +336,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen3 = (FormFile) microForm.get("estiloCSS");
         
         if (archivoValido(imagen3)) {
-			micrositeBean.setEstiloCSS(populateArchivo(micrositeBean.getEstiloCSS(), imagen3, null, null));
+			micrositeBean.setEstiloCSS(populateArchivo(micrositeBean.getEstiloCSS(), imagen3, micrositeBean.getId(), null));
 		} else if (((Boolean) microForm.get("estiloCSSbor")).booleanValue()) {
 			micrositeBean.setEstiloCSS(null);
 		}
@@ -344,7 +351,8 @@ public class microEditaAction extends BaseAction  {
     	if (microForm.get("id") == null) {
     		 VOUtils.populate(micrositeBean, microForm);
     	} else {
-    		List<TraduccionMicrosite> llista = (List<TraduccionMicrosite>) microForm.get("traducciones");
+    		@SuppressWarnings("unchecked")
+			List<TraduccionMicrosite> llista = (List<TraduccionMicrosite>) microForm.get("traducciones");
     		List<?> langs = DelegateUtil.getIdiomaDelegate().listarIdiomas();
     		
     		for (int i = 0; i < llista.size(); i++) {
