@@ -29,6 +29,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 
 	private static Log log = LogFactory.getLog(RolsacOrganigramaProvider.class);
 	static public final String UO_PORTAVOZ="270677";  // caib: 270677 nuestra: 51079
+	private static final String DEFAULT_IDIOMA = "ca";
 	
 	@Override 
 	public Collection<UnidadListData> getUnidades (String lang) throws PluginException {
@@ -36,9 +37,11 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
 			IdiomaCriteria idiomaCriteria =  new IdiomaCriteria();
 			idiomaCriteria.setIdioma(lang);
+			idiomaCriteria.setCodigoEstandar(lang);
 			List<IdiomaQueryServiceAdapter> idiomas = rqs.llistarIdiomes(idiomaCriteria);
 			if (idiomas.size() < 1) {
-				throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
+				lang = DEFAULT_IDIOMA;
+				//throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
 			}
 
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
@@ -68,9 +71,11 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
 			IdiomaCriteria idiomaCriteria =  new IdiomaCriteria();
 			idiomaCriteria.setIdioma(lang);
+			idiomaCriteria.setCodigoEstandar(lang);
 			List<IdiomaQueryServiceAdapter> idiomas = rqs.llistarIdiomes(idiomaCriteria);
 			if (idiomas.size() < 1) {
-				throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
+				lang = DEFAULT_IDIOMA;
+				//throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
 			}
 
 			String idUOGovern = System.getProperty("es.caib.gusite.codigoUO.govern");
@@ -122,9 +127,11 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
 			IdiomaCriteria idiomaCriteria =  new IdiomaCriteria();
 			idiomaCriteria.setIdioma(lang);
+			idiomaCriteria.setCodigoEstandar(lang);
 			List<IdiomaQueryServiceAdapter> idiomas = rqs.llistarIdiomes(idiomaCriteria);
 			if (idiomas.size() < 1) {
-				throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
+				lang = DEFAULT_IDIOMA;
+				//throw new PluginException("Idioma " + lang + " no soportado en ROLSAC");
 			}
 
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
