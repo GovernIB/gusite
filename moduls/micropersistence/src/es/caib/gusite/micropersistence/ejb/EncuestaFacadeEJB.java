@@ -25,6 +25,7 @@ import org.hibernate.Transaction;
 import es.caib.gusite.lucene.analysis.Analizador;
 import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.ModelFilterObject;
+import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Idioma;
@@ -36,6 +37,7 @@ import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionPregunta;
 import es.caib.gusite.micromodel.TraduccionRespuesta;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
@@ -51,6 +53,7 @@ import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
  * 
  * @author Indra
  */
+@SuppressWarnings({"unchecked", "deprecation"})
 public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = -8128896105109064587L;
@@ -421,10 +424,17 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public void grabarPregunta(Pregunta pre) throws DelegateException {
-
+		
 		Session session = this.getSession();
 		Boolean nuevo = false;
+		Pregunta preOriginal = null;
+		
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		Archivo imagen = null;
+		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+		
 		try {
+			
 			if (pre.getId() == null) {
 				nuevo = true;
 			}
@@ -433,31 +443,70 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			Map<String, TraduccionPregunta> listaTraducciones = new HashMap<String, TraduccionPregunta>();
 
 			if (nuevo) {
+				
 				Iterator<TraduccionPregunta> it = pre.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionPregunta trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				pre.setTraducciones(null);
+				
+				if (pre.getImagen() != null) {
+					
+					imagen = pre.getImagen();
+					pre.setImagen(null);
+										
+				}
+			
+			} else {
+				
+				preOriginal = this.obtenerPregunta(pre.getId());
+				
+				if (pre.getImagen() != null) {
+					if (pre.getImagen().getId() != null)
+						archivoDelegate.grabarArchivo(pre.getImagen());
+					else
+						archivoDelegate.insertarArchivo(pre.getImagen());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (preOriginal.getImagen() != null) {
+						archivosPorBorrar.add(preOriginal.getImagen());
+					}
+				}
+				
 			}
 
 			session.saveOrUpdate(pre);
 			session.flush();
 
 			if (nuevo) {
+				
 				for (TraduccionPregunta trad : listaTraducciones.values()) {
 					trad.getId().setCodigoPregunta(pre.getId());
 					session.saveOrUpdate(trad);
 				}
 				session.flush();
 				pre.setTraducciones(listaTraducciones);
+				
+				if (imagen != null) {
+					archivoDelegate.insertarArchivo(imagen);
+				}
+				
+				pre.setImagen(imagen);
+				
+				session.saveOrUpdate(pre);
+				session.flush();
+				
 			}
 
 			tx.commit();
+			
+			// Borramos archivo FK de la pregunta solicitado para borrar.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			// Actualizamos el indice
-			Encuesta enc = (Encuesta) session.get(Encuesta.class,
-					pre.getIdencuesta());
+			Encuesta enc = (Encuesta) session.get(Encuesta.class, pre.getIdencuesta());
 			this.indexBorraEncuesta(enc.getId());
 			this.indexInsertaEncuesta(enc, null);
 			this.close(session);
@@ -466,10 +515,15 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(enc.getIdmicrosite(), pre, op);
 
 		} catch (HibernateException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -555,46 +609,42 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 	 */
 	public void eliminarPreguntas(String[] idpreguntas, Long encuesta_id)
 			throws DelegateException {
-
+		
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			List<Pregunta> preguntas = new ArrayList<Pregunta>();
+			
 			for (String idpregunta : idpreguntas) {
-				List<?> respuestas = this
-						.listarRespuestas(new Long(idpregunta));
-				preguntas.add((Pregunta) session.get(Pregunta.class,
-						Long.parseLong(idpregunta)));
+				
+				List<?> respuestas = this.listarRespuestas(new Long(idpregunta));
+				preguntas.add((Pregunta) session.get(Pregunta.class, Long.parseLong(idpregunta)));
 
 				for (int i = 0; i < respuestas.size(); i++) {
-					session.createQuery(
-							"delete from UsuarioPropietarioRespuesta where id.idrespuesta = "
-									+ ((Respuesta) respuestas.get(i)).getId())
-							.executeUpdate();
+					session.createQuery("delete from UsuarioPropietarioRespuesta where id.idrespuesta = "
+							+ ((Respuesta) respuestas.get(i)).getId()).executeUpdate();
 				}
 
 				// Segundo: Borramos las respuestas de las preguntas.
 				for (int i = 0; i < respuestas.size(); i++) {
-					session.createQuery(
-							"delete from TraduccionRespuesta where id.codigoRespuesta = "
-									+ ((Respuesta) respuestas.get(i)).getId())
-							.executeUpdate();
-					session.createQuery(
-							"delete from Respuesta where id = "
-									+ ((Respuesta) respuestas.get(i)).getId())
-							.executeUpdate();
+					session.createQuery("delete from TraduccionRespuesta where id.codigoRespuesta = "
+							+ ((Respuesta) respuestas.get(i)).getId()).executeUpdate();
+					session.createQuery("delete from Respuesta where id = "
+							+ ((Respuesta) respuestas.get(i)).getId()).executeUpdate();
 				}
 
-				session.createQuery(
-						"delete from TraduccionPregunta where id.codigoPregunta = "
-								+ Long.parseLong(idpregunta)).executeUpdate();
-				session.createQuery(
-						"delete from Pregunta where id = "
-								+ Long.parseLong(idpregunta)).executeUpdate();
+				session.createQuery("delete from TraduccionPregunta where id.codigoPregunta = "
+						+ Long.parseLong(idpregunta)).executeUpdate();
+				session.createQuery("delete from Pregunta where id = "
+						+ Long.parseLong(idpregunta)).executeUpdate();
+				
 			}
 
 			session.flush();
-			tx.commit();
+			tx.commit();			
+			
 			// Actualizamos el indice
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, encuesta_id);
 			this.indexBorraEncuesta(enc.getId());
@@ -602,15 +652,26 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			this.close(session);
 
 			for (Pregunta p : preguntas) {
-				this.grabarAuditoria(enc.getIdmicrosite(), p,
-						Auditoria.ELIMINAR);
+				
+				// Borramos archivos asociados.
+				if (p.getImagen() != null)
+					DelegateUtil.getArchivoDelegate().borrarArchivo(p.getImagen().getId());
+				
+				// Grabamos operación de borrado.
+				this.grabarAuditoria(enc.getIdmicrosite(), p, Auditoria.ELIMINAR);
+				
 			}
 
 		} catch (HibernateException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -729,7 +790,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					+ idEncuesta.toString();
 
 			Query query = session.createQuery(hql);
-            List<RespuestaDato> list = query.list();
+			List<RespuestaDato> list = query.list();
             Hashtable<Long, RespuestaDato> hash = new Hashtable<Long, RespuestaDato>();
             for (RespuestaDato res : list) {
                 hash.put(res.getIdrespueta(), res);
