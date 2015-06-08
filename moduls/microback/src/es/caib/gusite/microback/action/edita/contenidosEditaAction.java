@@ -157,7 +157,7 @@ public class contenidosEditaAction extends BaseAction
 		} catch (Exception e) {
 			addMessageError(request, "peticion.error");
  			return mapping.findForward("info");
- 		}
+		}
     }
  
     /**

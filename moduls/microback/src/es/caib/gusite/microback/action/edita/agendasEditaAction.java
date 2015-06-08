@@ -21,6 +21,7 @@ import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.agendaForm;
 import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
+import es.caib.gusite.microintegracion.traductor.TraductorException;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
 import es.caib.gusite.micromodel.Accesibilidad;
 import es.caib.gusite.micromodel.Actividadagenda;
@@ -329,7 +330,7 @@ public class agendasEditaAction extends BaseAction {
      * @param agendaForm		formulario dinámico enviado por usuario
      * @throws Exception
      */
-    private agendaForm traducir (HttpServletRequest request, agendaForm agendaForm) throws Exception  {	
+    private agendaForm traducir (HttpServletRequest request, agendaForm agendaForm) throws TraductorException  {	
 
     		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
     		String idiomaOrigen = "ca";

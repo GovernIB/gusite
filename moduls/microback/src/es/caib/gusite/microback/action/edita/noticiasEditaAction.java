@@ -124,7 +124,9 @@ public class noticiasEditaAction extends BaseAction
 	        	noticiaBean = setFormtoBean(request, noticiaForm, micrositeBean);
 	        	traducir(request, noticiaForm);
 	        	request.getSession().setAttribute("MVS_noticia", noticiaBean);
-	        	setBeantoForm(request,noticiaForm, (Long)noticiaForm.get("id"), micrositeBean);
+	        	/* esto hacía que se recargue lo ya traducido!
+	        	//setBeantoForm(request,noticiaForm, (Long)noticiaForm.get("id"), micrositeBean);
+	        	 */
 		    }else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.crear"))) {
 		    	  noticiaForm.resetForm(mapping, request);
 		    	  noticiaForm.set("idTipo", new Long(""+request.getSession().getAttribute("MVS_idtipo")));

@@ -18,6 +18,7 @@ import org.apache.struts.action.DynaActionForm;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.TraDynaActionForm;
 import es.caib.gusite.microback.utils.VOUtils;
+import es.caib.gusite.microintegracion.traductor.TraductorException;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
 import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Idioma;
@@ -176,7 +177,7 @@ public class actividadesEditaAction extends BaseAction
      * @throws Exception
      * @author Indra
      */
-    private void traducir (HttpServletRequest request, TraDynaActionForm actividadForm) throws Exception  {	
+    private void traducir (HttpServletRequest request, TraDynaActionForm actividadForm) throws TraductorException  {	
 
 		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
 		String idiomaOrigen = "ca";

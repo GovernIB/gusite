@@ -104,7 +104,7 @@
          //To populate AxisService
          populateAxisService();
          populateFaults();
-
+         
         _serviceClient = new org.apache.axis2.client.ServiceClient(configurationContext,_service);
         
         _service.applyPolicy();
