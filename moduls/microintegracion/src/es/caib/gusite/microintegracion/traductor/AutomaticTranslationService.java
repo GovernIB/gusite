@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
@@ -307,7 +308,7 @@ public class AutomaticTranslationService {
             throw new TraductorException("Idioma no disponible en el traductor");
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.ISO_8859_1));
     	StringBuilder sb = new StringBuilder();
     	String line = null;
     	try {

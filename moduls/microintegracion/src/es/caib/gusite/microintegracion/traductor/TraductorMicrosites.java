@@ -51,8 +51,9 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param configuracion		String que indica al método que traduzca los campos de configuración general o los de Cabecera/Pie
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionMicrosite microOrigen, TraduccionMicrosite microDesti, String configuracion) throws TraductorException {
+	public boolean traducir(TraduccionMicrosite microOrigen, TraduccionMicrosite microDesti, String configuracion) {
 
+		try {
 	    	if (configuracion.equals(CONFIGURACION_GENERAL)) {
 				if(null!=microOrigen.getTitulo())		microDesti.setTitulo(traducir(microOrigen.getTitulo(),MODE_TXT));
 		    	if(null!=microOrigen.getTitulocampanya())		microDesti.setTitulocampanya(traducir(microOrigen.getTitulocampanya(),MODE_TXT));
@@ -85,6 +86,12 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	    		if(null!=microOrigen.getUrlop7())		microDesti.setUrlop7(microOrigen.getUrlop7());
 
 	    	}
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
 	    	
     	return true;
 	}
@@ -98,8 +105,15 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param menuDesti		bean de traducción de menú destino
 	 * @return	boolean		devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionMenu menuOrigen, TraduccionMenu menuDesti) throws TraductorException {
-    	if(null!=menuOrigen.getNombre())		menuDesti.setNombre(traducir(menuOrigen.getNombre(),MODE_TXT));
+	public boolean traducir(TraduccionMenu menuOrigen, TraduccionMenu menuDesti) {
+		try {
+			if(null!=menuOrigen.getNombre())		menuDesti.setNombre(traducir(menuOrigen.getNombre(),MODE_TXT));
+		} catch (TraductorException e) {
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
+			
     	return true;
 	}	
 	
@@ -116,18 +130,25 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param textoSelector				tabla de Strings con valores de selector
 	 * @return	boolean					devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionLineadatocontacto lineadatocontactoOrigen, TraduccionLineadatocontacto lineadatocontactoDesti, boolean boolSelector, int limiteSelector, int numLangs, int indexIdioma, String [] textoSelector) throws TraductorException {
+	public boolean traducir(TraduccionLineadatocontacto lineadatocontactoOrigen, TraduccionLineadatocontacto lineadatocontactoDesti, boolean boolSelector, int limiteSelector, int numLangs, int indexIdioma, String [] textoSelector) {
 			
-		if(null!=lineadatocontactoOrigen.getTexto())		lineadatocontactoDesti.setTexto(traducir(lineadatocontactoOrigen.getTexto(),MODE_TXT));
-		
-		if (boolSelector == true && (null!=textoSelector) ){
-    		int indexIdiomaDefault = 0;
-			while(indexIdiomaDefault < (limiteSelector *numLangs)){
-				if (!textoSelector[indexIdiomaDefault].equals("")){
-					textoSelector[indexIdiomaDefault+indexIdioma]=(traducir(textoSelector[indexIdiomaDefault],MODE_TXT));
-				}
-				indexIdiomaDefault = indexIdiomaDefault + numLangs;
-			} 
+		try {
+			if(null!=lineadatocontactoOrigen.getTexto())		lineadatocontactoDesti.setTexto(traducir(lineadatocontactoOrigen.getTexto(),MODE_TXT));
+			
+			if (boolSelector == true && (null!=textoSelector) ){
+	    		int indexIdiomaDefault = 0;
+				while(indexIdiomaDefault < (limiteSelector *numLangs)){
+					if (!textoSelector[indexIdiomaDefault].equals("")){
+						textoSelector[indexIdiomaDefault+indexIdioma]=(traducir(textoSelector[indexIdiomaDefault],MODE_TXT));
+					}
+					indexIdiomaDefault = indexIdiomaDefault + numLangs;
+				} 
+			}
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
 		}
     	return true;
 	}
@@ -140,9 +161,15 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param actividadAgendaDesti		bean de traducción de actividad destino
 	 * @return	boolean					devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionActividadagenda actividadAgendaOrigen, TraduccionActividadagenda actividadAgendaDesti) throws TraductorException {
-
-    	if(null!=actividadAgendaOrigen.getNombre())		actividadAgendaDesti.setNombre(traducir(actividadAgendaOrigen.getNombre(),MODE_TXT));
+	public boolean traducir(TraduccionActividadagenda actividadAgendaOrigen, TraduccionActividadagenda actividadAgendaDesti) {
+		try {
+			if(null!=actividadAgendaOrigen.getNombre())		actividadAgendaDesti.setNombre(traducir(actividadAgendaOrigen.getNombre(),MODE_TXT));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
     	return true;
 	}
 	
@@ -154,12 +181,18 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param agendaDesti		bean de traducción de agenda destino
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionAgenda agendaOrigen, TraduccionAgenda agendaDesti) throws TraductorException {
-
-	 	if(null != agendaOrigen.getTitulo())		agendaDesti.setTitulo(traducir(agendaOrigen.getTitulo(),MODE_TXT));
-	 	if(null != agendaOrigen.getDescripcion())	agendaDesti.setDescripcion(traducir(agendaOrigen.getDescripcion(),MODE_HTML));
-	 	if(null != agendaOrigen.getUrlnom())		agendaDesti.setUrlnom(traducir(agendaOrigen.getUrlnom(),MODE_TXT));
-	 	if(null!=agendaOrigen.getUrl())				agendaDesti.setUrl(traducir(agendaOrigen.getUrl(),MODE_TXT));
+	public boolean traducir(TraduccionAgenda agendaOrigen, TraduccionAgenda agendaDesti) {
+		try {
+		 	if(null != agendaOrigen.getTitulo())		agendaDesti.setTitulo(traducir(agendaOrigen.getTitulo(),MODE_TXT));
+		 	if(null != agendaOrigen.getDescripcion())	agendaDesti.setDescripcion(traducir(agendaOrigen.getDescripcion(),MODE_HTML));
+		 	if(null != agendaOrigen.getUrlnom())		agendaDesti.setUrlnom(traducir(agendaOrigen.getUrlnom(),MODE_TXT));
+		 	if(null!=agendaOrigen.getUrl())				agendaDesti.setUrl(traducir(agendaOrigen.getUrl(),MODE_TXT));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
 	
     	return true;
 	}
@@ -173,9 +206,16 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @param tipoDesti		bean de traducción de Tipo destino
 	 * @return	boolean		devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 */
-	public boolean traducir(TraduccionTipo tipoOrigen, TraduccionTipo tipoDesti) throws TraductorException {
-
-    	if(null!=tipoOrigen.getNombre())		tipoDesti.setNombre(traducir(tipoOrigen.getNombre(),MODE_TXT));
+	public boolean traducir(TraduccionTipo tipoOrigen, TraduccionTipo tipoDesti) {
+		try {
+			if(null!=tipoOrigen.getNombre())		tipoDesti.setNombre(traducir(tipoOrigen.getNombre(),MODE_TXT));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
+			
     	return true;
 	}	
 	
@@ -189,13 +229,20 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionNoticia noticiaOrigen, TraduccionNoticia noticiaDesti) throws TraductorException {
-    	if(null!=noticiaOrigen.getTitulo())		noticiaDesti.setTitulo(traducir(noticiaOrigen.getTitulo(),MODE_TXT));
-    	if(null!=noticiaOrigen.getSubtitulo())	noticiaDesti.setSubtitulo(traducir(noticiaOrigen.getSubtitulo(),MODE_TXT));
-    	if(null!=noticiaOrigen.getFuente())		noticiaDesti.setFuente(traducir(noticiaOrigen.getFuente(),MODE_TXT));
-    	if(null!=noticiaOrigen.getLaurl())		noticiaDesti.setLaurl(traducir(noticiaOrigen.getLaurl(),MODE_TXT));
-    	if(null!=noticiaOrigen.getUrlnom())		noticiaDesti.setUrlnom(traducir(noticiaOrigen.getUrlnom(),MODE_TXT));
-    	if(null!=noticiaOrigen.getTexto())		noticiaDesti.setTexto(traducir(noticiaOrigen.getTexto(),MODE_HTML));
+	public boolean traducir(TraduccionNoticia noticiaOrigen, TraduccionNoticia noticiaDesti) {
+		try {
+	    	if(null!=noticiaOrigen.getTitulo())		noticiaDesti.setTitulo(traducir(noticiaOrigen.getTitulo(),MODE_TXT));
+	    	if(null!=noticiaOrigen.getSubtitulo())	noticiaDesti.setSubtitulo(traducir(noticiaOrigen.getSubtitulo(),MODE_TXT));
+	    	if(null!=noticiaOrigen.getFuente())		noticiaDesti.setFuente(traducir(noticiaOrigen.getFuente(),MODE_TXT));
+	    	if(null!=noticiaOrigen.getLaurl())		noticiaDesti.setLaurl(traducir(noticiaOrigen.getLaurl(),MODE_TXT));
+	    	if(null!=noticiaOrigen.getUrlnom())		noticiaDesti.setUrlnom(traducir(noticiaOrigen.getUrlnom(),MODE_TXT));
+	    	if(null!=noticiaOrigen.getTexto())		noticiaDesti.setTexto(traducir(noticiaOrigen.getTexto(),MODE_HTML));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
     	return true;
 	}	
 	
@@ -209,8 +256,16 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @return	boolean			devuelve verdadero si la traducción finaliza correctamente. Si no devuelve falso.
 	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionComponente componenteOrigen, TraduccionComponente componenteDesti) throws TraductorException {
-    	if(null!=componenteOrigen.getTitulo())		componenteDesti.setTitulo(traducir(componenteOrigen.getTitulo(),MODE_TXT));
+	public boolean traducir(TraduccionComponente componenteOrigen, TraduccionComponente componenteDesti) {
+		try {
+			if(null!=componenteOrigen.getTitulo())		componenteDesti.setTitulo(traducir(componenteOrigen.getTitulo(),MODE_TXT));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
+			
     	return true;
 	}	
 	
@@ -225,12 +280,18 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @throws TraductorException 
 	 * @throws TraductorException
 	 */
-	public boolean traducir(TraduccionContenido contenidoOrigen, TraduccionContenido contenidoDesti) throws TraductorException {
-
-    	if(null!=contenidoOrigen.getTitulo())		contenidoDesti.setTitulo(traducir(contenidoOrigen.getTitulo(),MODE_TXT));
-    	if(null!=contenidoOrigen.getUrl())			contenidoDesti.setUrl(traducir(contenidoOrigen.getUrl(),MODE_TXT));
-		if(null!=contenidoOrigen.getTexto())		contenidoDesti.setTexto(traducir(contenidoOrigen.getTexto(),MODE_HTML));
-    	if(null!=contenidoOrigen.getTxbeta())		contenidoDesti.setTxbeta(traducir(contenidoOrigen.getTxbeta(),MODE_HTML));
+	public boolean traducir(TraduccionContenido contenidoOrigen, TraduccionContenido contenidoDesti) {
+		try {
+	    	if(null!=contenidoOrigen.getTitulo())		contenidoDesti.setTitulo(traducir(contenidoOrigen.getTitulo(),MODE_TXT));
+	    	if(null!=contenidoOrigen.getUrl())			contenidoDesti.setUrl(traducir(contenidoOrigen.getUrl(),MODE_TXT));
+			if(null!=contenidoOrigen.getTexto())		contenidoDesti.setTexto(traducir(contenidoOrigen.getTexto(),MODE_HTML));
+	    	if(null!=contenidoOrigen.getTxbeta())		contenidoDesti.setTxbeta(traducir(contenidoOrigen.getTxbeta(),MODE_HTML));
+		} catch (TraductorException e) {
+			
+			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			return false;
+		}
 			
     	return true;
 	}
