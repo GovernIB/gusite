@@ -29,7 +29,7 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micromodel.TraduccionActividadagenda;
 import es.caib.gusite.micromodel.TraduccionAgenda;
-import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
@@ -45,7 +45,7 @@ import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
  * 
  * @author Indra
  */
-
+@SuppressWarnings({"deprecation", "unchecked"})
 public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = 441274285622365185L;
@@ -137,10 +137,19 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public Long grabarAgenda(Agenda agenda) throws DelegateException {
+				
 		Session session = this.getSession();
 		boolean nuevo = false;
+		
+		Agenda agendaOriginal = null;
+		
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
+			
 			if (agenda.getId() == null) {
 				nuevo = true;
 			}
@@ -155,35 +164,71 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				agenda.setTraducciones(null);
+				
 			} else {
+				
+				agendaOriginal = this.obtenerAgenda(agenda.getId());
+				
 				//Damos de alta los nuevos archivos
 				for (TraduccionAgenda trad : agenda.getTraducciones().values()) {
-	                if (trad.getDocumento() != null && trad.getDocumento().getId() == null) {
-	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocumento());
+					
+					TraduccionAgenda tradOriginal = (TraduccionAgenda) agendaOriginal.getTraduccion(trad.getId().getCodigoIdioma());
+					
+	                if (trad.getDocumento() != null) {
+	                	if (trad.getDocumento().getId() == null) // Condición de nuevo documento.
+	                		archivoDelegate.insertarArchivo(trad.getDocumento());
+	                	else
+	                		if (trad.getDocumento().getDatos() != null) // Condición de actualizar documento.
+	                			archivoDelegate.grabarArchivo(trad.getDocumento());
+	                } else {
+	                	if (tradOriginal.getDocumento() != null) // Condición de borrado de documento.
+	                		archivosPorBorrar.add(tradOriginal.getDocumento());
 	                }
-	                if (trad.getImagen() != null && trad.getImagen().getId() == null) {
-	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getImagen());
+	                
+	                if (trad.getImagen() != null) {
+	                	if (trad.getImagen().getId() == null) // Condición de nuevo documento.
+	                		archivoDelegate.insertarArchivo(trad.getImagen());
+	                	else
+	                		if (trad.getImagen().getDatos() != null) // Condición de actualizar documento.
+	                			archivoDelegate.grabarArchivo(trad.getImagen());
+	                } else {
+	                	if (tradOriginal.getImagen() != null) // Condición de borrado de documento.
+	                		archivosPorBorrar.add(tradOriginal.getImagen());
 	                }
+	                
 				}
+				
 			}
 
 			session.saveOrUpdate(agenda);
 			session.flush();
 
 			if (nuevo) {
+				
 				for (TraduccionAgenda trad : listaTraducciones.values()) {
+					
 					trad.getId().setCodigoAgenda(agenda.getId());
+					
 	                if (trad.getDocumento() != null && trad.getDocumento().getId() == null) {
-	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getDocumento());
+	                    archivoDelegate.insertarArchivo(trad.getDocumento());
 	                }
+	                
 	                if (trad.getImagen() != null && trad.getImagen().getId() == null) {
-	                    DelegateUtil.getArchivoDelegate().insertarArchivo(trad.getImagen());
+	                    archivoDelegate.insertarArchivo(trad.getImagen());
 	                }
+	                
 					session.saveOrUpdate(trad);
+					
 				}
+				
 				session.flush();
 				agenda.setTraducciones(listaTraducciones);
+				
 			}
+			
+			// Borramos archivos FKs del Microsite que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			tx.commit();
 			// if (!nuevo) indexBorraAgenda(agenda.getId());
@@ -196,13 +241,18 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			return agenda.getId();
 
 		} catch (HibernateException he) {
+			
 			if (!nuevo) {
 				this.indexBorraAgenda(agenda.getId());
 			}
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -353,25 +403,53 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	public void borrarAgenda(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Agenda agenda = (Agenda) session.get(Agenda.class, id);
 
-			// session.delete(agenda);
+			List<TraduccionAgenda> traducciones = session.createQuery("select tage from TraduccionAgenda tage where tage.id.codigoAgenda=" + id).list();
+			
 			session.createQuery("delete from TraduccionAgenda tage where tage.id.codigoAgenda=" + id).executeUpdate();
 			session.createQuery("delete from Agenda age where age.id=" + id).executeUpdate();
+			
+			// TODO amartin: ¿por qué esto está comentado?
 			// indexBorraAgenda(agenda.getId());
+			
 			session.flush();
+			
+			if (traducciones != null) {
+				
+				ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+				
+				for (TraduccionAgenda tra : traducciones) {
+					
+					if (tra.getImagen() != null)
+						archivoDelegate.borrarArchivo(tra.getImagen().getId());
+					
+					if (tra.getDocumento() != null)
+						archivoDelegate.borrarArchivo(tra.getDocumento().getId());
+					
+				}
+				
+			}
+						
 			tx.commit();
 			this.close(session);
 
 			this.grabarAuditoria(agenda, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**

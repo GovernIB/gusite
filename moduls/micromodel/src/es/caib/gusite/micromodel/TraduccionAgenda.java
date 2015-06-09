@@ -38,12 +38,12 @@ public class TraduccionAgenda implements Traduccion {
 
 	@XmlElement
 	@ManyToOne
-	@JoinColumn(name = "AID_IMAGEN")
+	@JoinColumn(name = "AID_DOCU")
 	private Archivo documento;
 
 	@XmlElement
 	@ManyToOne
-	@JoinColumn(name = "AID_DOCU")
+	@JoinColumn(name = "AID_IMAGEN")
 	private Archivo imagen;
 
 	@XmlAttribute

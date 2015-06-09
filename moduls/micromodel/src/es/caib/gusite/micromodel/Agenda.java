@@ -39,6 +39,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "GUS_AGENDA")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class Agenda extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 7222009737907543946L;
