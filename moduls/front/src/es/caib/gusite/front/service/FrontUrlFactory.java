@@ -330,13 +330,15 @@ public class FrontUrlFactory {
 		}
 	}
 
+	
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido, String pcampa) {
 
 		String ret = this.contenido(microsite, lang, contenido);
+		Map<String, String> params = new Hashtable<String, String>();
 		if (!StringUtils.isEmpty(pcampa)) {
-			ret = ret + "?" + Microfront.PCAMPA + "=" + pcampa;
+			params.put(Microfront.PCAMPA, pcampa);
 		}
-		return ret;
+		return this.addParams(ret, params);
 	}
 
 	public String listarElementos(Microsite microsite, Idioma lang, Tipo tipo) {
