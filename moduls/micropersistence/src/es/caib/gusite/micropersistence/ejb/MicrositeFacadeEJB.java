@@ -777,12 +777,19 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(null, site, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (DelegateException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -1346,5 +1353,5 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 		return retorno;
 	}
-
+	
 }

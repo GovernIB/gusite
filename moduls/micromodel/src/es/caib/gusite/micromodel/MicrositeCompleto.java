@@ -231,7 +231,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@MapKey
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<Archivo> docus = new HashSet();
-
+	
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "MNU_MICCOD")
 	@MapKey
@@ -297,7 +297,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@MapKey
 	@Fetch(FetchMode.SUBSELECT)
 	private Set<Encuesta> encuestas = new HashSet();
-
+	
     @XmlElement
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "microsite")
 	@Fetch(FetchMode.SUBSELECT)
@@ -425,22 +425,6 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@XmlElementWrapper(name = "formularioscontacto")
 	public Set getFormularioscontacto() {
 		return this.formularioscontacto;
-	}
-
-	public String getAnalytics() {
-		return this.analytics;
-	}
-
-	public void setAnalytics(String analytics) {
-		this.analytics = analytics;
-	}
-
-	public String getUri() {
-		return this.uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
 	}
 
 	public void setFormularioscontacto(Set formularioscontacto) {
@@ -810,6 +794,22 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 
 	public void setMenucorporativo(String menucorporativo) {
 		this.menucorporativo = menucorporativo;
+	}
+	
+	public String getAnalytics() {
+		return this.analytics;
+	}
+
+	public void setAnalytics(String analytics) {
+		this.analytics = analytics;
+	}
+
+	public String getUri() {
+		return this.uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	/**

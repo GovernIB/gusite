@@ -3,6 +3,7 @@ package es.caib.gusite.microback.action.util;
 import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletOutputStream;
@@ -50,6 +51,7 @@ public class ExportarAction extends BaseAction {
      * @throws java.lang.Exception
      * @return org.apache.struts.action.ActionForward
      */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ActionForward doExecute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
@@ -98,6 +100,7 @@ public class ExportarAction extends BaseAction {
     		micro.setServiciosSeleccionados("");
     		    		
     		try {
+    			
 	    		// Generar archivo XML.
 	    		String tmpDir = System.getProperty("java.io.tmpdir") + File.separator;
 	    		String nombreXML = "microsite-" + ((TraduccionMicrosite) micro.getTraduccion()).getTitulo() + ".xml";
@@ -131,19 +134,25 @@ public class ExportarAction extends BaseAction {
 			    ofreceZIP(response, tmpDir, nombreZIP);
 			    
     		} catch (SecurityException e) {
+    			
     			// Capturamos para posible tratamiento posterior.
     			log.error(e);
     			throw e;
+    			
     		} catch (IOException e) {
+    			
     			// Capturamos para posible tratamiento posterior.
     			log.error(e);
     			throw e;
+    			
     		}
 		    
             MicroLog.addLog("Fi Exportació Microsite: [" + request.getParameter("idsite") + "] , Usuari: [" + request.getSession().getAttribute("username") + "]");
+            
     	}
 		
         return null;
+        
 	}
 	
 	private String obtenerFechaHora() {
@@ -158,14 +167,16 @@ public class ExportarAction extends BaseAction {
         String prefijoFechaHora = fecha + "_" + hora;
         
         return prefijoFechaHora;
+        
 	}
 	
 	private void agregaXmlAZIP(String rutaXML, String nombreXML, ZipOutputStream out) throws IOException {
 		
 	    File f = new File(rutaXML);
+	    
     	if (f.exists()) {
+    		
 	    	FileInputStream in = new FileInputStream(f);
-
 	        out.putNextEntry(new ZipEntry(nombreXML));
 
 	        byte[] buf = new byte[1024];
@@ -178,17 +189,22 @@ public class ExportarAction extends BaseAction {
 	        // Complete the entry
 	        out.closeEntry();
 	        in.close();
+	        
     	}
+    	
 	}
 
+	@SuppressWarnings("unchecked")
 	private void incluirArchivosMicrosite(MicrositeCompleto microsite, ZipOutputStream zipFile) throws IOException, DelegateException {
 
     	// Creamos la entrada en el ZIP para el directorio que contendrá los archivos.
     	// El API de archivos ZIP de Java detecta que es un directorio al acabar en "/".
 	    zipFile.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		for (Iterator iter = microsite.getDocus().iterator(); iter.hasNext();) {
-			Archivo archivo = (Archivo) iter.next();
+		
+		Iterator<Archivo> iter = (Iterator<Archivo>)microsite.getDocus().iterator();
+		while (iter.hasNext()) {
+			Archivo archivo = iter.next();
     		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(archivo, archivoDelegate), zipFile);
 		}
 
@@ -251,7 +267,6 @@ public class ExportarAction extends BaseAction {
 			}
 		}
 
-
 	}
 
 	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {
@@ -261,29 +276,49 @@ public class ExportarAction extends BaseAction {
 		} else {
 			return delegate.obtenerArchivo(archivo.getId());
 		}
+		
 	}
 
 	private void agregaArchivoAZIP(String nombreDirArchivos, Archivo docu, ZipOutputStream out) throws IOException {
 		
 		if (docu != null && docu.getDatos() != null) {
+			
 			byte[] datosDocumento = docu.getDatos();
 			ByteArrayInputStream in = new ByteArrayInputStream(datosDocumento);
 
 			// Ponemos como prefijo el ID del documento en la BD, por si hay algún documento
 			// relacionado con el microsite que coincida en nombre con otro.
-	        out.putNextEntry(new ZipEntry(nombreDirArchivos + docu.getId() + "_" + docu.getNombre()));
-
-	        byte[] buf = new byte[1024];
-	        int len;
+			try {
 	        
-	        while ((len = in.read(buf)) > 0) {
-	            out.write(buf, 0, len);
-	        }
+				out.putNextEntry(new ZipEntry(nombreDirArchivos + docu.getId() + "_" + docu.getNombre()));
+				
+				byte[] buf = new byte[1024];
+		        int len;
+		        
+		        while ((len = in.read(buf)) > 0) {
+		            out.write(buf, 0, len);
+		        }
 
-	        // Complete the entry
-	        out.closeEntry();
-	        in.close();
+		        // Complete the entry
+		        out.closeEntry();
+				
+			} catch (ZipException e) {
+				
+				// Si el error es por entrada duplicada, lo ignoramos ya que, por ejemplo, los documentos de noticias
+				// quedan como archivos comunes del Microsite y se leen dos veces: procesando los archivos comunes y las noticias.
+				// En cualquier otro caso, lanzamos la excepción.
+				if (!e.getMessage().contains("duplicate entry")) {
+					throw new IOException(e);
+				}
+				
+			} finally {
+
+				in.close();
+				
+			}
+	        
 		}
+		
 	}
 	
 	/**
@@ -309,13 +344,14 @@ public class ExportarAction extends BaseAction {
 	    byte[] buffer = new byte[4 * 1024]; // 4K buffer 
 	    int bytesRead; 	
 	    
-	    while ( (bytesRead = in.read(buffer)) != -1) 
+	    while ((bytesRead = in.read(buffer)) != -1) 
 	    	out.write(buffer, 0, bytesRead);
 	    
 	    in.close(); 
 	    in = null; 
   
 	    out.close();
+	    
 	}
 
 }

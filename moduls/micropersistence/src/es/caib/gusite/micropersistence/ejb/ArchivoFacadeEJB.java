@@ -520,16 +520,19 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	public void indexBorraArchivo(Long id) {
 
 		try {
+			
 			IndexerDelegate indexerDelegate = DelegateUtil.getIndexerDelegate();
 
 			for (int i = 0; i < this.langs.size(); i++) {
-				indexerDelegate.borrarObjeto(Catalogo.SRVC_MICRO_DOCUMENTOS
-						+ "." + id, "" + this.langs.get(i));
+				indexerDelegate.borrarObjeto(Catalogo.SRVC_MICRO_DOCUMENTOS + "." + id, "" + this.langs.get(i));
 			}
 
 		} catch (DelegateException ex) {
+			
 			throw new EJBException(ex);
+			
 		}
+		
 	}
 
 	private void obtenerDatosArchivoExportado(Archivo a) throws IOException {
@@ -538,12 +541,12 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
 			// Obtenemos bytes del archivo asociado en FS.
 			a.setDatos(ArchivoUtil.obtenerDatosArchivoEnFilesystem(a));
-
 		} else {
 			// TODO amartin: consultar si quieren que se exporte el archivo a
 			// disco en este caso y luego se
 			// haga el setDatos() del archivo con lo obtenido de la BD.
 		}
+		
 	}
 
 }
