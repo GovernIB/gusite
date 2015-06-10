@@ -142,7 +142,15 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		boolean nuevo = false;
+		
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+		Archivo imagenMenu = null;
+		
+		Menu menuOriginal = null;
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Map<String, TraduccionMenu> listaTraducciones = new HashMap<String, TraduccionMenu>();
 
@@ -151,26 +159,64 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			}
 
 			if (nuevo) {
-				Iterator<TraduccionMenu> it = menu.getTraducciones().values()
-						.iterator();
+				
+				Iterator<TraduccionMenu> it = menu.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionMenu trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				menu.setTraducciones(null);
+				
+				if (menu.getImagenmenu() != null) {
+					imagenMenu = menu.getImagenmenu();
+					menu.setImagenmenu(null);
+				}
+				
+			} else {
+				
+				menuOriginal = this.obtenerMenu(menu.getId());
+				
+				if (menu.getImagenmenu() != null) {
+					if (menu.getImagenmenu().getId() != null)
+						archivoDelegate.grabarArchivo(menu.getImagenmenu());
+					else
+						archivoDelegate.insertarArchivo(menu.getImagenmenu());
+				} else {
+					// Archivo a null pero anterior no lo era: solicitan borrado 
+					if (menuOriginal.getImagenmenu() != null) {
+						archivosPorBorrar.add(menuOriginal.getImagenmenu());
+					}
+				}
+				
 			}
 
 			session.saveOrUpdate(menu);
 			session.flush();
 
 			if (nuevo) {
+				
 				for (TraduccionMenu trad : listaTraducciones.values()) {
 					trad.getId().setCodigoMenu(menu.getId());
 					session.saveOrUpdate(trad);
 				}
-				session.flush();
+
 				menu.setTraducciones(listaTraducciones);
+				
+				if (imagenMenu != null) {
+					imagenMenu.setIdmicrosite(menu.getMicrosite().getId());
+					archivoDelegate.insertarArchivo(imagenMenu);
+				}
+				
+				menu.setImagenmenu(imagenMenu);
+				
+				session.saveOrUpdate(menu);
+				session.flush();
+				
 			}
+			
+			// Borramos archivos FKs del Microsite que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			tx.commit();
 			this.close(session);
@@ -181,10 +227,15 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			return menu.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -463,8 +514,9 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			Long idImagenMenu = null;
 			if (menu.getImagenmenu() != null) {
 				idImagenMenu = menu.getImagenmenu().getId();
+				if (idImagenMenu != null)
+					archivoDelegate.borrarArchivo(idImagenMenu);
 			}
-			archivoDelegate.borrarArchivo(idImagenMenu);
 			
 			tx.commit();
 			
