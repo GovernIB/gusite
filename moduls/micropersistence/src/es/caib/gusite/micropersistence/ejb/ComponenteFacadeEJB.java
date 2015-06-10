@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -101,10 +102,13 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 	public Long grabarComponente(Componente compo) throws DelegateException {
 
 		Session session = this.getSession();
-		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		
+		Componente original = null;
 		Boolean nuevo = false;
-		Archivo imagenOriginal = null;
-		Archivo imagenNueva = null;
+		
+		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+		Archivo imagen = null;
 		
 		try {
 			
@@ -115,26 +119,31 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 			Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
 			if (nuevo) {
+				
 				Iterator<TraduccionComponente> it = compo.getTraducciones().values().iterator();
 				while (it.hasNext()) {
 					TraduccionComponente trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				compo.setTraducciones(null);
-			}
-			
-			if (nuevo) {
 				
-				if (compo.getImagenbul() != null) {
-					imagenNueva = compo.getImagenbul();
-				}
+				if (compo.getImagenbul() != null)
+					imagen = compo.getImagenbul();
 				
 			} else {
 				
+				original = obtenerComponente(compo.getId());
+				
 				if (compo.getImagenbul() != null) {
-					Componente original = obtenerComponente(compo.getId());
-					imagenOriginal = original.getImagenbul();
-					imagenNueva = compo.getImagenbul();
+					
+					imagen = compo.getImagenbul();
+					
+				} else {
+					
+					// Antes había imagen pero ahora ya no la hay: solicitan borrado.
+					if (original.getImagenbul() != null)
+						archivosPorBorrar.add(original.getImagenbul());
+					
 				}
 								
 			}
@@ -145,26 +154,31 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 			session.flush();
 			
 			// Imágenes.
-			if (imagenNueva != null) {
+			if (imagen != null) {
 				
 				if (nuevo) {
 					
-					archivoDelegate.insertarArchivo(imagenNueva);
+					archivoDelegate.insertarArchivo(imagen);
 					
 				} else {
 					
-					if (imagenOriginal != null)
-						archivoDelegate.grabarArchivo(imagenNueva);
+					if (original.getImagenbul() != null)
+						archivoDelegate.grabarArchivo(imagen);
 					else
-						archivoDelegate.insertarArchivo(imagenNueva);
+						archivoDelegate.insertarArchivo(imagen);
 					
 				}
 				
-				compo.setImagenbul(imagenNueva);
+				compo.setImagenbul(imagen);
+				
 				session.saveOrUpdate(compo);
 				session.flush();
 				
 			}
+			
+			// Borramos archivos FKs del Componente que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			if (nuevo) {
 				for (TraduccionComponente trad : listaTraducciones.values()) {
