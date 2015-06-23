@@ -47,8 +47,8 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
  *  
  *  @author Indra
  */
-public class menuEditaAction extends BaseAction 
-{
+public class menuEditaAction extends BaseAction {
+	
     /**
      * This is the main action called from the Struts framework.
      * @param mapping The ActionMapping used to select this instance.
@@ -61,28 +61,31 @@ public class menuEditaAction extends BaseAction
      */
 	
 	protected static Log log = LogFactory.getLog(menuEditaAction.class);
-
 	
     public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	MenuDelegate menuDelegate = DelegateUtil.getMenuDelegate();
 
-    	String accion=""+request.getParameter("accion");
-    	menuForm menuForm = (menuForm) form;
-    	Microsite micrositeBean = (Microsite)request.getSession().getAttribute("MVS_microsite");
-    	ArrayList<?> listaObjetosMenu = menuDelegate.ObtenerObjetosMenu(micrositeBean.getId());
-
+		String accion = "" + request.getParameter("accion");
+		menuForm menuForm = (menuForm) form;
+		Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
+		ArrayList<?> listaObjetosMenu = menuDelegate.ObtenerObjetosMenu(micrositeBean.getId());
 
     	/** Crear Menú **/
-    	if(accion.equals(getResources(request).getMessage("menu.accion.crear"))) {
+    	if (accion.equals(getResources(request).getMessage("menu.accion.crear"))) {
     		
     		Menu menu = setFormtoBean(menuForm, micrositeBean.getId());
    		   	menuDelegate.grabarMenu(menu);
    		   	listaObjetosMenu = menuDelegate.ObtenerObjetosMenu(micrositeBean.getId());
+   		   	
    		   	addMessageWithDate(request, "menu.info.nuevo.menu");
-       		request.getSession().setAttribute("cuenta_" + micrositeBean.getId(),
-       				new Integer(Integer.parseInt("" + request.getSession().getAttribute("cuenta_" + micrositeBean.getId()))+1));
+   		   	
+       		request.getSession().setAttribute(
+       			"cuenta_" + micrositeBean.getId(),
+       			new Integer(Integer.parseInt("" + request.getSession().getAttribute("cuenta_" + micrositeBean.getId())) + 1)
+       		);
+       		
     	} 
     	
     	/** Borrar menú **/
@@ -104,18 +107,18 @@ public class menuEditaAction extends BaseAction
 
    			listaObjetosMenu = menuDelegate.ObtenerObjetosMenu(micrositeBean.getId());
    	   	  	addMessageWithDate(request, "menu.info.modifica.menu");
-   	   	   	request.getSession().setAttribute("cuenta_"+micrositeBean.getId(),new Integer(listaObjetosMenu.size()));
+   	   	   	request.getSession().setAttribute("cuenta_"+micrositeBean.getId(), new Integer(listaObjetosMenu.size()));
 	
     	}     	
     	
     	/** Guardar **/
-    	else if(accion.equals(getResources(request).getMessage("operacion.guardar"))) {
+    	else if (accion.equals(getResources(request).getMessage("operacion.guardar"))) {
 
     		//Recogemos los datos del formulario y actualizamos Menú en BBDD
     		//Retorna una lista con los objetos actualizados
     		listaObjetosMenu = setFormtoArrayAndSave(menuForm, micrositeBean);
    		   	addMessageWithDate(request, "menu.info.modifica.menu");
-   		   	request.getSession().setAttribute("cuenta_"+micrositeBean.getId(),new Integer(listaObjetosMenu.size()));
+   		   	request.getSession().setAttribute("cuenta_"+micrositeBean.getId(), new Integer(listaObjetosMenu.size()));
    		
     	}  
     	
@@ -127,14 +130,18 @@ public class menuEditaAction extends BaseAction
     	}
 
     	/** Mostrar árbol de menús **/
-     	else request.getSession().setAttribute("cuenta_"+ micrositeBean.getId(),new Integer(listaObjetosMenu.size()));
+     	else {
+     		
+     		request.getSession().setAttribute("cuenta_"+ micrositeBean.getId(), new Integer(listaObjetosMenu.size()));
+     		
+     	}
 
-        	setArraytoForm(listaObjetosMenu, menuForm);
-        	Base.menuRefresh(request);
+    	setArraytoForm(listaObjetosMenu, menuForm);
+    	Base.menuRefresh(request);
 
-    		return mapping.findForward("detalle");
+		return mapping.findForward("detalle");
+    		
     }
-    
     
     /**
      * Método que vuelca los datos de la Array de objetos de menú al formulario
@@ -156,7 +163,7 @@ public class menuEditaAction extends BaseAction
 		Long imagenMenuids[]=new Long[listaObjetosMenu.size()]; 
 		String imagenMenunoms[]=new String[listaObjetosMenu.size()];
 		FormFile imagenMenuArchivos[]=new FormFile[listaObjetosMenu.size()];
-		
+		boolean[] imagenesbor = new boolean[listaObjetosMenu.size()]; 
 		
 		List<?> langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
 		int nlangs=langs.size();
@@ -233,6 +240,7 @@ public class menuEditaAction extends BaseAction
 		menuForm.set("imagenesid",imagenMenuids);
 		menuForm.set("imagenesnom",imagenMenunoms);
 		menuForm.set("imagenes",imagenMenuArchivos);
+		menuForm.set("imagenesbor",	imagenesbor);
 		menuForm.set("numeroobjectes",numeroObjectes);
     	
     }

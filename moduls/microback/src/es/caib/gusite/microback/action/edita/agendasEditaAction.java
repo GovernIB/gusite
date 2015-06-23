@@ -29,8 +29,6 @@ import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.TraduccionActividadagenda;
-import es.caib.gusite.micromodel.TraduccionActividadagendaPK;
 import es.caib.gusite.micromodel.TraduccionAgenda;
 import es.caib.gusite.micromodel.TraduccionAgendaPK;
 import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
