@@ -360,46 +360,46 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 	public void borrarEncuesta(Long id) throws DelegateException {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
 			Encuesta encuesta = (Encuesta) session.get(Encuesta.class, id);
 
-			List<Pregunta> preguntas = session.createQuery(
-					"from Pregunta where idencuesta = " + id).list();
+			List<Pregunta> preguntas = session.createQuery("from Pregunta where idencuesta = " + id).list();
 			for (int p = 0; p < preguntas.size(); p++) {
-				List<?> respuestas = this.listarRespuestas(new Long(preguntas
-						.get(p).getId()));
+								
+				List<?> respuestas = this.listarRespuestas(new Long(preguntas.get(p).getId()));
 
 				for (int i = 0; i < respuestas.size(); i++) {
-					session.createQuery(
-							"delete from UsuarioPropietarioRespuesta where id.idrespuesta = "
-									+ ((Respuesta) respuestas.get(i)).getId())
+					session.createQuery("delete from UsuarioPropietarioRespuesta where id.idrespuesta = " 
+							+ ((Respuesta) respuestas.get(i)).getId())
 							.executeUpdate();
 				}
 
 				// Segundo: Borramos las respuestas de las preguntas.
 				for (int i = 0; i < respuestas.size(); i++) {
-					session.createQuery(
-							"delete from TraduccionRespuesta where id.codigoRespuesta = "
-									+ ((Respuesta) respuestas.get(i)).getId())
+					session.createQuery("delete from TraduccionRespuesta where id.codigoRespuesta = "
+							+ ((Respuesta) respuestas.get(i)).getId())
 							.executeUpdate();
-					session.createQuery(
-							"delete from Respuesta where id = "
-									+ ((Respuesta) respuestas.get(i)).getId())
+					session.createQuery("delete from Respuesta where id = "
+							+ ((Respuesta) respuestas.get(i)).getId())
 							.executeUpdate();
 				}
 
-				session.createQuery(
-						"delete from TraduccionPregunta where id.codigoPregunta = "
-								+ preguntas.get(p).getId()).executeUpdate();
-				session.createQuery(
-						"delete from Pregunta where id = "
-								+ preguntas.get(p).getId()).executeUpdate();
+				session.createQuery("delete from TraduccionPregunta where id.codigoPregunta = " + preguntas.get(p).getId())
+						.executeUpdate();
+				session.createQuery("delete from Pregunta where id = " + preguntas.get(p).getId())
+						.executeUpdate();
+				
+				// Borrar imagen asociada a pregunta, si existe.
+				if (preguntas.get(p).getImagen() != null)
+					DelegateUtil.getArchivoDelegate().borrarArchivo(preguntas.get(p).getImagen().getId());
+				
 			}
 
-			session.createQuery(
-					"delete from TraduccionEncuesta where id.codigoEncuesta = "
-							+ id).executeUpdate();
+			session.createQuery("delete from TraduccionEncuesta where id.codigoEncuesta = " + id)
+					.executeUpdate();
 			session.createQuery("delete from Encuesta where id = " + id)
 					.executeUpdate();
 
@@ -410,10 +410,15 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(encuesta, Auditoria.ELIMINAR);
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
