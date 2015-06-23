@@ -129,7 +129,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		try {
 			
 			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			Noticia noticiaOriginal = null;
 			Archivo imagenNoticia = null;
+			List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
 			
 			Map<String, TraduccionNoticia> listaTraducciones = new HashMap<String, TraduccionNoticia>();
 
@@ -151,6 +153,8 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 				
 			} else {
 				
+				noticiaOriginal = this.obtenerNoticia(noticia.getId());
+				
 				if (noticia.getImagen() != null) {
 										
 					// Crear original
@@ -161,14 +165,22 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 				
 				// Damos de alta los nuevos archivos
 				for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
+					
+					TraduccionNoticia tradOriginal = (TraduccionNoticia) noticiaOriginal.getTraduccion(trad.getId().getCodigoIdioma());
+					
                     if (trad.getDocu() != null) {
-                    	if (trad.getDocu().getId() != null)
-                    		archivoDelegate.grabarArchivo(trad.getDocu());
-                    	else
+                    	if (trad.getDocu().getId() == null) // Condición de nuevo documento.
                     		archivoDelegate.insertarArchivo(trad.getDocu());
+                    	else
+                    		if (trad.getDocu().getDatos() != null) // Condición de actualizar documento.
+                    			archivoDelegate.grabarArchivo(trad.getDocu());
+                    } else {
+                    	if (tradOriginal.getDocu() != null) // Condición de borrado de documento.
+	                		archivosPorBorrar.add(tradOriginal.getDocu());
                     }
+                    
 				}
-				
+
 			}
 
 			// Crear/actualizar noticia.
@@ -195,12 +207,33 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			} else {
 				
 				if (imagenNoticia != null) {
-					archivoDelegate.grabarArchivo(imagenNoticia);
+					
+					if (imagenNoticia.getId() != null) {
+						if (imagenNoticia.getDatos() != null) {
+							archivoDelegate.grabarArchivo(imagenNoticia);
+						}
+					} else {
+						archivoDelegate.insertarArchivo(imagenNoticia);
+					}
+					
 					noticia.setImagen(imagenNoticia);
+					
+				} else {
+					
+					// La original tenía imagen pero ahora ya no => toca borrar la imagen.
+					if (noticiaOriginal.getImagen() != null)
+						archivosPorBorrar.add(noticiaOriginal.getImagen());
+					
 				}
 								
 			}
+			
+			// Borramos archivos FKs de la Noticia que han solicitado que se borren.
+			if (archivosPorBorrar.size() > 0)
+				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
+			session.saveOrUpdate(noticia);
+			
 			tx.commit();
 			session.close();
 
