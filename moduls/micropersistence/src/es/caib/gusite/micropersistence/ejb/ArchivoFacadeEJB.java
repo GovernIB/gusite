@@ -84,8 +84,6 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 				this.obtenerDatosArchivoExportado(archi);
 			}
 			
-			session.flush();
-
 			return archi;
 
 		} catch (HibernateException he) {
