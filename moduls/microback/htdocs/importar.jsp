@@ -22,21 +22,26 @@
 	</style>
 	<script type="text/javascript">
 	
-            function onMouseDown() { 
-           			var accLog = document.getElementById('detalleLog');
+            function onMouseDown() {
+            	if (document.getElementById('detalleLog')) {
+					var accLog = document.getElementById('detalleLog');
 					accLog.src = "detallelogimport.do";
+            	}
             }
 
-            function onMouseUp() { 
-            	var accForm = document.getElementById('accFormulario');
-				accForm.submit();
+            function onMouseUp() {
+            	if (document.getElementById('accFormulario')) {
+            		var accForm = document.getElementById('accFormulario');
+					accForm.submit();
+            	}
             }
 
             window.onload = function() {
-	            document.getElementById('bntImport').onmousedown = onMouseDown;
-	            document.getElementById('bntImport').onmouseup = onMouseUp;
+            	if (document.getElementById('bntImport')) {
+	            	document.getElementById('bntImport').onmousedown = onMouseDown;
+            		document.getElementById('bntImport').onmouseup = onMouseUp;
+            	}
 	        }
-
  
 	</script>		
 </head>
