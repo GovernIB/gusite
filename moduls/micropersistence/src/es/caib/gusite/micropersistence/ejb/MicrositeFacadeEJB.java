@@ -661,14 +661,21 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				// Archivos
 				if (estiloCSS != null) {
 					archivoDelegate.insertarArchivo(estiloCSS);
+					site.setEstiloCSS(estiloCSS);
 				}
 				
 				if (imagenPrincipal != null) {
 					archivoDelegate.insertarArchivo(imagenPrincipal);
+					site.setImagenPrincipal(imagenPrincipal);
 				}
 				
 				if (imagenCampanya != null) {
 					archivoDelegate.insertarArchivo(imagenCampanya);
+					site.setImagenCampanya(imagenCampanya);
+				}
+				
+				if (estiloCSS != null || imagenPrincipal != null || imagenCampanya != null) {
+					session.saveOrUpdate(site);
 				}
 				
 			}

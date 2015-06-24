@@ -1,7 +1,15 @@
 package es.caib.gusite.microback.action.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
@@ -12,9 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -23,6 +28,25 @@ import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.action.BaseAction;
+import es.caib.gusite.micromodel.Agenda;
+import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoLite;
+import es.caib.gusite.micromodel.Componente;
+import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.Encuesta;
+import es.caib.gusite.micromodel.Menu;
+import es.caib.gusite.micromodel.MicrositeCompleto;
+import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.Pregunta;
+import es.caib.gusite.micromodel.TraduccionAgenda;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.Usuario;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
+import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 
 /**
@@ -202,9 +226,10 @@ public class ExportarAction extends BaseAction {
 	    zipFile.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
 		
-		Iterator<Archivo> iter = (Iterator<Archivo>)microsite.getDocus().iterator();
+		Iterator<ArchivoLite> iter = (Iterator<ArchivoLite>) microsite.getDocus().iterator();
 		while (iter.hasNext()) {
-			Archivo archivo = iter.next();
+			ArchivoLite archivoLite = iter.next();
+			Archivo archivo = archivoDelegate.obtenerArchivo(archivoLite.getId());
     		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(archivo, archivoDelegate), zipFile);
 		}
 
@@ -216,7 +241,7 @@ public class ExportarAction extends BaseAction {
     		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate), zipFile);
 		}
 
-		if (microsite.getEstiloCSS() != null && microsite.getEstiloCSS().getDatos() != null) {
+		if (microsite.getEstiloCSS() != null) {
     		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate), zipFile);
 		}
 
@@ -268,7 +293,7 @@ public class ExportarAction extends BaseAction {
 		}
 
 	}
-
+	
 	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {
 
 		if (archivo.getDatos() != null) {
@@ -301,7 +326,7 @@ public class ExportarAction extends BaseAction {
 
 		        // Complete the entry
 		        out.closeEntry();
-				
+		        				
 			} catch (ZipException e) {
 				
 				// Si el error es por entrada duplicada, lo ignoramos ya que, por ejemplo, los documentos de noticias

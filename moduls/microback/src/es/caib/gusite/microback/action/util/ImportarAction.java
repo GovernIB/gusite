@@ -1,15 +1,27 @@
 package es.caib.gusite.microback.action.util;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -17,9 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.*;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.betwixt.io.BeanReader;
@@ -33,6 +42,63 @@ import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.ImportarForm;
 import es.caib.gusite.microback.utils.betwixt.Configurator;
+import es.caib.gusite.micromodel.Actividadagenda;
+import es.caib.gusite.micromodel.Agenda;
+import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoLite;
+import es.caib.gusite.micromodel.Componente;
+import es.caib.gusite.micromodel.Contacto;
+import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.Encuesta;
+import es.caib.gusite.micromodel.Faq;
+import es.caib.gusite.micromodel.Frqssi;
+import es.caib.gusite.micromodel.Lineadatocontacto;
+import es.caib.gusite.micromodel.Menu;
+import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.MicrositeCompleto;
+import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.PersonalizacionPlantilla;
+import es.caib.gusite.micromodel.Plantilla;
+import es.caib.gusite.micromodel.Pregunta;
+import es.caib.gusite.micromodel.Respuesta;
+import es.caib.gusite.micromodel.TemaFront;
+import es.caib.gusite.micromodel.Temafaq;
+import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionAgenda;
+import es.caib.gusite.micromodel.TraduccionArchivo;
+import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionFaq;
+import es.caib.gusite.micromodel.TraduccionLineadatocontacto;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.TraduccionTipo;
+import es.caib.gusite.micromodel.Usuario;
+import es.caib.gusite.micromodel.Version;
+import es.caib.gusite.micropersistence.delegate.ActividadDelegate;
+import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
+import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
+import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
+import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
+import es.caib.gusite.micropersistence.delegate.EstadisticaDelegate;
+import es.caib.gusite.micropersistence.delegate.FaqDelegate;
+import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
+import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+import es.caib.gusite.micropersistence.delegate.MenuDelegate;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
+import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.micropersistence.delegate.PersonalizacionPlantillaDelegate;
+import es.caib.gusite.micropersistence.delegate.PlantillaDelegate;
+import es.caib.gusite.micropersistence.delegate.TemaDelegate;
+import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
+import es.caib.gusite.micropersistence.delegate.TipoDelegate;
+import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
+import es.caib.gusite.micropersistence.delegate.VersionDelegate;
+import es.caib.gusite.micropersistence.util.ArchivoUtil;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.UnidadData;
@@ -46,6 +112,7 @@ import es.caib.gusite.plugins.organigrama.UnidadData;
  * unknown="false" <BR>
  * forward name="detalle" path="/importar.jsp"
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ImportarAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ImportarAction.class);
@@ -80,6 +147,7 @@ public class ImportarAction extends BaseAction {
 		ResourceBundle rb = ResourceBundle.getBundle("sac-microback-messages");
 		
 		try {
+			
             if (f.getArchi() != null) {
 
                 addImportLog("Inici importació, USUARI: [" + request.getSession().getAttribute("username") + "]");
@@ -131,7 +199,7 @@ public class ImportarAction extends BaseAction {
                     throw new Exception("No se pudo obtener la unidad administrativa asociada al microsite");
                 }
 
-                crearMicro(micro, request, f.getTarea());
+                crearMicro(micro, listaArchivos, request, f.getTarea());
                 request.setAttribute("mensaje", mensaje);
 
                 if ((f.getIndexar() != null) && (f.getIndexar().equals("S"))) {
@@ -168,7 +236,7 @@ public class ImportarAction extends BaseAction {
         }
     }
 
-    private Hashtable<String, String> recogerRoles(HttpServletRequest request) {
+	private Hashtable<String, String> recogerRoles(HttpServletRequest request) {
 
         Hashtable<String, String> rolenames = new Hashtable<String, String>();
         if (request.getSession().getAttribute("rolenames") == null) {
@@ -305,14 +373,6 @@ public class ImportarAction extends BaseAction {
 
     private MicrositeCompleto importarArchivosMicrosite(MicrositeCompleto micro, Map<Long, String> archivos) throws IOException {
 
-        for (Archivo archivo : ((Set<Archivo>)micro.getDocus())) {
-            if (archivos.get(archivo.getId()) != null) {
-                archivo.setDatos( leerDatosPath(archivos.get(archivo.getId())) );
-            } else {
-                log.error("Archivo no encontrado, posiblemente se perdio en la exportación o se elemino del ZIP.");
-            }
-        }
-
         if (micro.getImagenPrincipal() != null && archivos.get(micro.getImagenPrincipal().getId()) != null) {
             micro.getImagenPrincipal().setDatos( leerDatosPath(archivos.get(micro.getImagenPrincipal().getId())));
         }
@@ -324,7 +384,7 @@ public class ImportarAction extends BaseAction {
         }
 
         for (Object menu : micro.getMenus()) {
-            if (((Menu) menu).getImagenmenu() != null && archivos.get(((Menu) menu).getImagenmenu()) != null) {
+            if (((Menu) menu).getImagenmenu() != null && archivos.get(((Menu) menu).getImagenmenu().getId()) != null) {
                 ((Menu) menu).getImagenmenu().setDatos(leerDatosPath(archivos.get(((Menu) menu).getImagenmenu().getId())));
             }
             for (Contenido contenido : ((Menu) menu).getContenidos()) {
@@ -414,7 +474,7 @@ public class ImportarAction extends BaseAction {
      * @param tarea
 	 * @throws DelegateException 
 	 */
-	private void crearMicro(MicrositeCompleto mic, HttpServletRequest request, String tarea) throws DelegateException {
+	private void crearMicro(MicrositeCompleto mic, Map<Long, String> listaArchivos, HttpServletRequest request, String tarea) throws DelegateException {
 
         MicrositeDelegate bdMicro = DelegateUtil.getMicrositeDelegate();
         IndexerDelegate indexdel = DelegateUtil.getIndexerDelegate();
@@ -434,7 +494,6 @@ public class ImportarAction extends BaseAction {
 		Set encuestas = mic.getEncuestas();
         Set perPlantillas = mic.getPersonalizacionesPlantilla();
         TemaFront temaFront = mic.getTema();
-
 
         // Elimino del bean los objetos que grabaré posteriormente
         mic.setActividades(null);
@@ -494,7 +553,6 @@ public class ImportarAction extends BaseAction {
             if (temaFront != null) {
                 relacionaTema(temaFront, mic, request);
             }
-            
 
 			Long idmicronuevo = null;
 			if (tarea.equals("R")) {
@@ -521,13 +579,13 @@ public class ImportarAction extends BaseAction {
 			}
 
             if (idImagenPrincipal != null) {
-                tablamapeos.put(new String("DCM_" + idImagenPrincipal), mic.getImagenPrincipal().getId());
+                tablamapeos.put(new String("DCM_" + idImagenPrincipal), idImagenPrincipal);
             }
             if (idImagenCampanya != null) {
-                tablamapeos.put(new String("DCM_" + idImagenCampanya), mic.getImagenCampanya().getId());
+                tablamapeos.put(new String("DCM_" + idImagenCampanya), idImagenCampanya);
             }
             if (idEstiloCSS != null) {
-                tablamapeos.put(new String("DCM_" + idEstiloCSS), mic.getEstiloCSS().getId());
+                tablamapeos.put(new String("DCM_" + idEstiloCSS), idEstiloCSS);
             }
 
 			insertaContactos(contactos, mic, request);
@@ -538,7 +596,7 @@ public class ImportarAction extends BaseAction {
 			insertaMenusContenidos(menus, mic, request);
 			insertaComponentes(compos, mic, request);
 			insertaEncuestas(encuestas, mic, request);
-			insertaDocus(docus, mic, request); // cambio orden
+			insertaDocus(docus, listaArchivos, idmicronuevo, mic, request); // cambio orden
             insertarPerPlantillas(perPlantillas, mic, request);
 
 			tablamapeos.put(new String("MIC_" + idmicroant), idmicronuevo.longValue());
@@ -624,41 +682,58 @@ public class ImportarAction extends BaseAction {
     /**
 	 * Esta función crea los documentos en el nuevo Microsite
 	 */
-	private void insertaDocus(Set docus, MicrositeCompleto mic, HttpServletRequest request) {
+	private void insertaDocus(Set docus, Map<Long, String> listaArchivos, Long idmicronuevo, MicrositeCompleto mic, HttpServletRequest request) {
 		
 		ResourceBundle rb = ResourceBundle.getBundle("sac-microback-messages");
 		StringBuffer stlog = new StringBuffer("");
-		Set<Archivo> lista = new HashSet<Archivo>();
+		Set<ArchivoLite> lista = new HashSet<ArchivoLite>();
 		ArchivoDelegate bdDocu = DelegateUtil.getArchivoDelegate();
 
 		try {
+						
 			Iterator<?> it = docus.iterator();
 			while (it.hasNext()) {
-				Archivo doc = (Archivo) it.next();
+				
+				ArchivoLite doc = (ArchivoLite) it.next();
 				// Replicamos el documento para no modificar el original
-				Archivo docnuevo = (Archivo) BeanUtils.cloneBean(doc);
-				docnuevo.setId(null);
-				docnuevo.setIdmicrosite(mic.getId().longValue());
+				ArchivoLite docnuevo = (ArchivoLite) BeanUtils.cloneBean(doc);
 
 				if (doc.getPagina() != null) {
 					Long newidpagina = (Long) tablamapeos.get("CON_" + doc.getPagina().longValue());
 					docnuevo.setPagina(newidpagina);
 				}
-				Long idDoc = bdDocu.insertarArchivo(docnuevo);
-				tablamapeos.put(new String("DCM_" + doc.getId()), docnuevo.getId());
+				
+				Archivo archivo = ArchivoUtil.archivoLite2Archivo(docnuevo);
+				
+				// Anulamos los IDs de los archivos asociados a la BD.
+				docnuevo.setId(null);
+				archivo.setId(null);
+				
+				// Obtenemos datos del archivo y asignamos ID del Microsite importado.
+				archivo.setDatos(leerDatosPath(listaArchivos.get(doc.getId())));
+				archivo.setIdmicrosite(idmicronuevo);
+				
+				Long idDoc = bdDocu.insertarArchivo(archivo);
+				docnuevo.setId(idDoc);
+				
+				tablamapeos.put(new String("DCM_" + doc.getId()), idDoc);
 
 				lista.add(docnuevo);
-				stlog.append(docnuevo.getId() + " ");
+				stlog.append(idDoc + " ");
+				
 			}
 			
 			mic.setDocus(lista);
 			addImportLogVisual(request, (String) rb.getObject("logimport.documentos") + ": " + stlog.toString());
 			
 		} catch (Exception ex) {
+			
 			addImportLogVisual(request, (String) rb.getObject("logimport.documentos") + ": " + stlog.toString());
 			mensaje += (String) rb.getObject("logimport.documentos.error") + ": " + ex.toString() + "<br/>";
 			addImportLogVisualStackTrace(request, mensaje, ex.getStackTrace());
+			
 		}
+		
 	}
 
 	/**
@@ -1205,7 +1280,7 @@ public class ImportarAction extends BaseAction {
                 plantilla.setVersion(version);
                 plantilla = plantillaDelegate.obtenerPlantillaPorNombre(plantilla.getNombre());
                 if (plantilla == null) {
-                    plantilla.setId(null);
+                    plantilla.setId(null); // FIXME amartin 24/06/2015: esto produce fijo una NPE, ya que aquí plantilla == null.
                     plantilla = plantillaDelegate.crearPlantilla(plantilla);
                 }
 
@@ -1327,12 +1402,17 @@ public class ImportarAction extends BaseAction {
 			if (objs != null) {
 
 				it = objs.iterator();
+				
 				while (it.hasNext()) {
-					Archivo obj = (Archivo) it.next();
-                    obj = archivoDelegate.obtenerArchivo(obj.getId());
-					obj = (Archivo) actualizaURL(obj, mic.getId(), request);
-					DelegateUtil.getArchivoDelegate().grabarArchivo(obj);
+					
+					ArchivoLite obj = (ArchivoLite) it.next();
+                    Archivo arc = archivoDelegate.obtenerArchivo(obj.getId());
+					arc = (Archivo) actualizaURL(arc, mic.getId(), request);
+					
+					archivoDelegate.grabarArchivo(arc);
+					
 				}
+				
 			}
 
 			// Actualizo el microsite solo
