@@ -73,8 +73,9 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		Archivo archi = null;
 
 		try {
-			Query query = session.createQuery("from Archivo a where a.id="
-					+ id.toString());
+			
+			Query query = session.createQuery("from Archivo a where a.id =" + id.toString());
+			
 			if (query.list().size() == 1) {
 				archi = (Archivo) query.list().get(0);
 			}
@@ -82,16 +83,25 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 				this.obtenerDatosArchivoExportado(archi);
 			}
+			
+			session.flush();
 
 			return archi;
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (IOException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -104,21 +114,28 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	public List<Object[]> obtenerTodosLosArchivosSinBlobs() {
 
 		Session session = this.getSession();
+		
 		try {
 
 			// amartin: order by a.idmicrosite desc, a.id asc para que el último
 			// microsite sea el 0 (¿archivos comunes?).
-			Query query = session
-					.createQuery("select a.id, a.nombre, a.idmicrosite from Archivo a order by a.idmicrosite desc, a.id asc");
+			Query query = session.createQuery("select a.id, a.nombre, a.idmicrosite from Archivo a order by a.idmicrosite desc, a.id asc");
 			List<Object[]> lista = query.list();
+			
+			session.flush();
 
 			return lista;
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -203,19 +220,22 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	public boolean checkSite(Long site, Long id) {
 
 		Session session = this.getSession();
+		
 		try {
-			Query query = session
-					.createQuery("from Archivo archi where (archi.idmicrosite=0 or archi.idmicrosite="
-							+ site.toString()
-							+ ") and archi.id="
-							+ id.toString());
+			
+			Query query = session.createQuery("from Archivo archi where (archi.idmicrosite is null or archi.idmicrosite = 0 or archi.idmicrosite=" + site.toString() + ") and archi.id=" + id.toString());
 			return query.list().isEmpty();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**

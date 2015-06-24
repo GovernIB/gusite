@@ -2,7 +2,6 @@ package es.caib.gusite.micropersistence.ejb;
 
 import java.security.Principal;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.ejb.CreateException;

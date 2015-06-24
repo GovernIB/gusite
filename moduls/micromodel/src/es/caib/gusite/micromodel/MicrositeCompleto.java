@@ -51,7 +51,7 @@ import es.caib.gusite.micromodel.adapter.TraduccionAdapter;
 @XmlSeeAlso({ IdiomaMicrosite.class, Menu.class, Temafaq.class, Faq.class,
 		Actividadagenda.class, Agenda.class, Tipo.class, Noticia.class,
 		Frqssi.class, Contacto.class, Componente.class, Encuesta.class,
-		TraduccionMicrosite.class })
+		TraduccionMicrosite.class, ArchivoLite.class })
 @Entity
 @Table(name = "GUS_MICROS")
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -230,7 +230,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	@JoinColumn(name = "DCM_MICCOD")
 	@MapKey
 	@Fetch(FetchMode.SUBSELECT)
-	private Set<Archivo> docus = new HashSet();
+	private Set<ArchivoLite> docus = new HashSet();
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "MNU_MICCOD")
@@ -331,7 +331,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 		this.idiomas = idiomas;
 	}
 
-	@XmlElement(name = "docus", type = Archivo.class)
+	@XmlElement(name = "docus", type = ArchivoLite.class)
 	@XmlElementWrapper(name = "documento")
 	public Set getDocus() {
 		return this.docus;
@@ -712,7 +712,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 		this.idiomas.add(idioma);
 	}
 
-	public void addDocus(Archivo fich) {
+	public void addDocus(ArchivoLite fich) {
 		this.docus.add(fich);
 	}
 

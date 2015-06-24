@@ -31,7 +31,6 @@ public abstract class BaseAction extends Action {
 	protected static String [] dateAndHour = {DateFormat.getDateInstance(DateFormat.LONG, new Locale("ca","ES")).format(new Date()).replaceAll("/", "de"),
 							   				  DateFormat.getTimeInstance(DateFormat.LONG, new Locale("ca","ES")).format(new Date()).replaceAll("/", "de")};
     public static final String LANGS_KEY = "es.caib.gusite.microback.LANGS_KEY";
-
     
 	public final ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (this.servlet.getServletContext().getAttribute(LANGS_KEY) == null) {
@@ -92,7 +91,9 @@ public abstract class BaseAction extends Action {
         
     	formFile.setContentType(archivo.getMime());
     	formFile.setFileName(archivo.getNombre());  	
-        return formFile;
+        
+    	return formFile;
+        
     }
 
     /**
@@ -105,24 +106,31 @@ public abstract class BaseAction extends Action {
      */
     protected static Archivo crearNuevoArchivo(Archivo archivo, Long microsite, Long pagina) throws IOException {
     	
-    	Archivo archivoResult = new Archivo();
-    	if (archivo != null){
-    		archivoResult.setMime(archivo.getMime());
-    		archivoResult.setNombre(archivo.getNombre());
-    		archivoResult.setPeso(archivo.getPeso());
-    		archivoResult.setDatos(archivo.getDatos());
-    	    if (pagina!=null) archivoResult.setPagina(pagina);
-    	    if (microsite!=null) archivoResult.setIdmicrosite(microsite.longValue());
-    		
-    		return archivoResult;
-    	}else{
-    		return null;
-    	}
-    	
+		Archivo archivoResult = new Archivo();
+		
+		if (archivo != null) {
+			
+			archivoResult.setMime(archivo.getMime());
+			archivoResult.setNombre(archivo.getNombre());
+			archivoResult.setPeso(archivo.getPeso());
+			archivoResult.setDatos(archivo.getDatos());
+
+			if (pagina != null)
+				archivoResult.setPagina(pagina);
+
+			if (microsite != null)
+				archivoResult.setIdmicrosite(microsite.longValue());
+
+			return archivoResult;
+			
+		} else {
+			
+			return null;
+			
+		}
     	
     }   
 
-    
     protected boolean archivoValido(FormFile formFile) {
         return (formFile != null && formFile.getFileSize() > 0);
     }

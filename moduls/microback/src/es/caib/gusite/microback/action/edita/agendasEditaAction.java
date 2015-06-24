@@ -176,7 +176,7 @@ public class agendasEditaAction extends BaseAction {
 	           		TraduccionAgenda  traduccion = (TraduccionAgenda) age.getTraduccion("" + lang.get(i));
 		            if (traduccion != null) {
                         if (archivoValido(aux[i])) {
-                            traduccion.setDocumento(populateArchivo(traduccion.getDocumento(), aux[i], age.getIdmicrosite(), null));
+                            traduccion.setDocumento(populateArchivo(traduccion.getDocumento(), aux[i], null, null));
                         } else if (auxbor[i]) {
                             traduccion.setDocumento(null);
                         }else if (ficherosTraducidos != null) {
@@ -187,7 +187,7 @@ public class agendasEditaAction extends BaseAction {
                         }
 
                         if (archivoValido(aux2[i])) {
-                            traduccion.setImagen(populateArchivo(traduccion.getImagen(), aux2[i], age.getIdmicrosite(), null));
+                            traduccion.setImagen(populateArchivo(traduccion.getImagen(), aux2[i], null, null));
                         } else if (auxbor2[i]) {
                             traduccion.setImagen(null);
                         } else if (imagenesTraducidas != null) {
@@ -209,9 +209,8 @@ public class agendasEditaAction extends BaseAction {
                             }
                         }
 		            }
-		            //TODO: pruebas JPA
-		            //age.setTraduccion(""+lang.get(i), traduccion);
 		        }
+	           	
 	            request.getSession().removeAttribute("imagenesTraducidas");
 	            request.getSession().removeAttribute("ficherosTraducidos");
 	            
@@ -453,7 +452,7 @@ public class agendasEditaAction extends BaseAction {
 			            if (!(""+ imagenesIds[0]).equals("null") ){
 			            	imagenDefault= bdArchivos.obtenerArchivo(imagenesIds[0]);	
 			            }else{
-			            	imagenDefault= populateArchivo(null, imagenes[0], micrositeBean.getId(), null);
+			            	imagenDefault= populateArchivo(null, imagenes[0], null, null);
 			            	archivoImagenResult[0] = imagenDefault;
 			            }
 			        	
@@ -472,7 +471,7 @@ public class agendasEditaAction extends BaseAction {
 						   		   			imagenesIds [i] =  imagenesIds[0];
 						   		   			imagenesBors [i] =  imagenesBors[0];
 						   		   			
-						   		   			archivoImagenResult [i] =  crearNuevoArchivo(imagenDefault,micrositeBean.getId(),null);
+									archivoImagenResult[i] = crearNuevoArchivo(imagenDefault, null, null);
 					        			}
 					        		}
 					        	}

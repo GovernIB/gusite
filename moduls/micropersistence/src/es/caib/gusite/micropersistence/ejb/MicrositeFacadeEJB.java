@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +19,13 @@ import java.util.StringTokenizer;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import es.caib.gusite.lucene.model.Catalogo;
@@ -27,6 +34,7 @@ import es.caib.gusite.lucene.model.TraModelFilterObject;
 import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoLite;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Contacto;
@@ -62,10 +70,12 @@ import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
+import es.caib.gusite.micropersistence.util.ArchivoUtil;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.rolsac.api.v2.exception.QueryServiceException;
 
 /**
  * SessionBean para consultar Microsite.
@@ -180,39 +190,57 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			} else {
 				
 				if (site.getEstiloCSS() != null) {
-					if (site.getEstiloCSS().getId() != null)
-						archivoDelegate.grabarArchivo(site.getEstiloCSS());
-					else
+					
+					if (site.getEstiloCSS().getId() != null) {
+						if (site.getEstiloCSS().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getEstiloCSS());
+					} else {
 						archivoDelegate.insertarArchivo(site.getEstiloCSS());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getEstiloCSS() != null) {
 						archivosPorBorrar.add(siteOriginal.getEstiloCSS());
 					}
+										
 				}
 				
 				if (site.getImagenPrincipal() != null) {
-					if (site.getImagenPrincipal().getId() != null)
-						archivoDelegate.grabarArchivo(site.getImagenPrincipal());
-					else
+					
+					if (site.getImagenPrincipal().getId() != null) {
+						if (site.getImagenPrincipal().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getImagenPrincipal());
+					} else {
 						archivoDelegate.insertarArchivo(site.getImagenPrincipal());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getImagenPrincipal() != null) {
 						archivosPorBorrar.add(siteOriginal.getImagenPrincipal());
 					}
+					
 				}
 				
 				if (site.getImagenCampanya() != null) {
-					if (site.getImagenCampanya().getId() != null)
-						archivoDelegate.grabarArchivo(site.getImagenCampanya());
-					else
+					
+					if (site.getImagenCampanya().getId() != null) {
+						if (site.getImagenCampanya().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getImagenCampanya());
+					} else {
 						archivoDelegate.insertarArchivo(site.getImagenCampanya());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getImagenCampanya() != null) {
 						archivosPorBorrar.add(siteOriginal.getImagenCampanya());
 					}
+										
 				}
 				
 			}
@@ -264,18 +292,22 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				
 				// Archivos
 				if (estiloCSS != null) {
-					estiloCSS.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(estiloCSS);
+					site.setEstiloCSS(estiloCSS);
 				}
 				
 				if (imagenPrincipal != null) {
-					imagenPrincipal.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(imagenPrincipal);
+					site.setImagenPrincipal(imagenPrincipal);
 				}
 				
 				if (imagenCampanya != null) {
-					imagenCampanya.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(imagenCampanya);
+					site.setImagenCampanya(imagenCampanya);
+				}
+				
+				if (estiloCSS != null || imagenPrincipal != null || imagenCampanya != null) {
+					session.saveOrUpdate(site);
 				}
 				
 			}
@@ -294,12 +326,19 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			return site.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (DelegateException e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -538,39 +577,57 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			} else {
 				
 				if (site.getEstiloCSS() != null) {
-					if (site.getEstiloCSS().getId() != null)
-						archivoDelegate.grabarArchivo(site.getEstiloCSS());
-					else
+					
+					if (site.getEstiloCSS().getId() != null) {
+						if (site.getEstiloCSS().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getEstiloCSS());
+					} else {
 						archivoDelegate.insertarArchivo(site.getEstiloCSS());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getEstiloCSS() != null) {
 						archivosPorBorrar.add(siteOriginal.getEstiloCSS());
 					}
+										
 				}
 				
 				if (site.getImagenPrincipal() != null) {
-					if (site.getImagenPrincipal().getId() != null)
-						archivoDelegate.grabarArchivo(site.getImagenPrincipal());
-					else
+					
+					if (site.getImagenPrincipal().getId() != null) {
+						if (site.getImagenPrincipal().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getImagenPrincipal());
+					} else {
 						archivoDelegate.insertarArchivo(site.getImagenPrincipal());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getImagenPrincipal() != null) {
 						archivosPorBorrar.add(siteOriginal.getImagenPrincipal());
 					}
+					
 				}
 				
 				if (site.getImagenCampanya() != null) {
-					if (site.getImagenCampanya().getId() != null)
-						archivoDelegate.grabarArchivo(site.getImagenCampanya());
-					else
+					
+					if (site.getImagenCampanya().getId() != null) {
+						if (site.getImagenCampanya().getDatos() != null)
+							archivoDelegate.grabarArchivo(site.getImagenCampanya());
+					} else {
 						archivoDelegate.insertarArchivo(site.getImagenCampanya());
+					}
+										
 				} else {
+					
 					// Archivo a null pero anterior no lo era: solicitan borrado 
 					if (siteOriginal.getImagenCampanya() != null) {
 						archivosPorBorrar.add(siteOriginal.getImagenCampanya());
 					}
+										
 				}
 				
 			}
@@ -603,17 +660,14 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				
 				// Archivos
 				if (estiloCSS != null) {
-					estiloCSS.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(estiloCSS);
 				}
 				
 				if (imagenPrincipal != null) {
-					imagenPrincipal.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(imagenPrincipal);
 				}
 				
 				if (imagenCampanya != null) {
-					imagenCampanya.setIdmicrosite(site.getId());
 					archivoDelegate.insertarArchivo(imagenCampanya);
 				}
 				
@@ -633,14 +687,23 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			return site.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} catch (DelegateException e) {
+			
 			throw new EJBException(e);
+			
 		} catch (Exception e) {
+			
 			throw new EJBException(e);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 	/**
@@ -683,9 +746,14 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			// Tercero: borrar el microsite completo
 			MicrositeCompleto site = (MicrositeCompleto) session.get(MicrositeCompleto.class, id);
 			
+			// Obtenemos archivos comunes del Microsite y los borramos.
 			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-			List<Archivo> listaArchivos = new ArrayList<Archivo>(); 
-			listaArchivos.addAll(site.getDocus());
+			Set<ArchivoLite> listaArchivosLite = site.getDocus();
+			
+			List<Archivo> listaArchivos = new ArrayList<Archivo>();
+			for (ArchivoLite al : listaArchivosLite)
+				listaArchivos.add(ArchivoUtil.archivoLite2Archivo(al));
+			
 			archivoDelegate.borrarArchivos(listaArchivos);
 			
 			FaqDelegate faqDelegate = DelegateUtil.getFaqDelegate();
@@ -767,6 +835,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			if (site.getImagenCampanya() != null)
 				archivoDelegate.borrarArchivo(site.getImagenCampanya().getId());
 			
+			ArchivoUtil.borrarDirMicrosite(site.getId());
+			
 			tx.commit();
 			this.close(session);
 
@@ -782,6 +852,10 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			
 		} catch (DelegateException e) {
 			
+			throw new EJBException(e);
+			
+		} catch (IOException e) {
+
 			throw new EJBException(e);
 			
 		} finally {
@@ -1123,6 +1197,45 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		} finally {
 			this.close(session);
 		}
+	}
+	
+	/**
+	 * Obtiene un Microsite para la exportación
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<Long> obtenerIdsArchivosMicrosite(Long id) {
+
+		Session session = this.getSession();
+		
+		List<Long> lista = new ArrayList<Long>();
+		
+		try {
+						
+			// Archivos comunes
+			Query query = session.createQuery("select a.id from Archivo a where a.idmicrosite = ?");
+			query.setLong(0, id);
+			List<Long> listaQuery = query.list();
+			
+			for (Long l : listaQuery) {
+				// Si no es nulo ni repetido, lo añadimos a la lista.
+				if (l != null && lista.indexOf(l) == -1)
+					lista.add(l);
+			}
+						
+			return lista;
+			
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		} finally {
+			
+			this.close(session);
+			
+		}
+		
 	}
 
 	/**

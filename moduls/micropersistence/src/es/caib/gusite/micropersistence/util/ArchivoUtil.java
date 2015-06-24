@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoLite;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -258,6 +259,47 @@ public class ArchivoUtil {
 
 		}
 
+	}
+	
+	public static Archivo archivoLite2Archivo(ArchivoLite a) {
+    	
+    	Archivo result = new Archivo();
+    	
+    	result.setDatos(null);
+    	result.setId(a.getId());
+    	result.setIdi(a.getIdi());
+    	result.setIdmicrosite(a.getIdmicrosite());
+    	result.setMime(a.getMime());
+    	result.setNombre(a.getNombre());
+    	result.setPagina(a.getPagina());
+    	result.setPeso(a.getPeso());
+    	result.setTraduccionMap(a.getTraduccionMap());
+    	
+    	return result;
+    	
+    }
+	
+	public static void borrarDirMicrosite(Long idMicrosite) throws IOException {
+		
+		if (idMicrosite != null && idMicrosite > 0) {
+		
+			// Directorio que contiene el propio archivo.
+			File fDir = new File(obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite));
+	
+			try {
+	
+				if (fDir.exists())
+					fDir.delete();
+	
+			} catch (SecurityException e) {
+	
+				log.error(e);
+				throw new IOException(e);
+	
+			}
+		
+		}
+		
 	}
 
 	private static void escribeArchivoAFilesystem(File f, byte[] datos) throws IOException {

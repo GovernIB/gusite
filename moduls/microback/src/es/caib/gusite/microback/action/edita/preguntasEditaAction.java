@@ -118,7 +118,7 @@ public class preguntasEditaAction extends BaseAction {
 
 			FormFile imagen = (FormFile) f.get("imagen");
 			if (archivoValido(imagen))
-				pre.setImagen(populateArchivo(pre.getImagen(), imagen, site.getId(), null));
+				pre.setImagen(populateArchivo(pre.getImagen(), imagen, null, null));
 			else if (((Boolean) f.get("imagenbor")).booleanValue())
 				pre.setImagen(null);
            

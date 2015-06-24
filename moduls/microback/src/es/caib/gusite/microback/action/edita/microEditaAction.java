@@ -308,7 +308,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen1 = (FormFile) microForm.get("imagenPrincipal");
         
         if (archivoValido(imagen1)) {
-			micrositeBean.setImagenPrincipal(populateArchivo(micrositeBean.getImagenPrincipal(), imagen1, micrositeBean.getId(), null));
+			micrositeBean.setImagenPrincipal(populateArchivo(micrositeBean.getImagenPrincipal(), imagen1, null, null));
 		} else if (((Boolean) microForm.get("imagenPrincipalbor")).booleanValue()) {
 			micrositeBean.setImagenPrincipal(null);
 		}
@@ -322,7 +322,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen2 = (FormFile) microForm.get("imagenCampanya");
         
         if (archivoValido(imagen2)) {
-			micrositeBean.setImagenCampanya(populateArchivo(micrositeBean.getImagenCampanya(), imagen2, micrositeBean.getId(), null));
+			micrositeBean.setImagenCampanya(populateArchivo(micrositeBean.getImagenCampanya(), imagen2, null, null));
 		} else if (((Boolean) microForm.get("imagenCampanyabor")).booleanValue()) {
 			micrositeBean.setImagenCampanya(null);
 		}
@@ -336,7 +336,7 @@ public class microEditaAction extends BaseAction  {
         FormFile imagen3 = (FormFile) microForm.get("estiloCSS");
         
         if (archivoValido(imagen3)) {
-			micrositeBean.setEstiloCSS(populateArchivo(micrositeBean.getEstiloCSS(), imagen3, micrositeBean.getId(), null));
+			micrositeBean.setEstiloCSS(populateArchivo(micrositeBean.getEstiloCSS(), imagen3, null, null));
 		} else if (((Boolean) microForm.get("estiloCSSbor")).booleanValue()) {
 			micrositeBean.setEstiloCSS(null);
 		}

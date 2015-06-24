@@ -179,7 +179,8 @@ public class TemaFrontEditaAction extends BaseAction {
         }
     }
 
-    private void setBeanToForm(TemaFront temaFront, TemaFrontForm temaFrontForm) {
+    @SuppressWarnings("rawtypes")
+	private void setBeanToForm(TemaFront temaFront, TemaFrontForm temaFrontForm) {
 
         temaFrontForm.set("id", temaFront.getId());
         temaFrontForm.set("nombre", temaFront.getNombre());

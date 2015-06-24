@@ -10,6 +10,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
 		<class>es.caib.gusite.micromodel.Actividadagenda</class>
 		<class>es.caib.gusite.micromodel.Agenda</class>
 		<class>es.caib.gusite.micromodel.Archivo</class>
+		<class>es.caib.gusite.micromodel.ArchivoLite</class>
 		<class>es.caib.gusite.micromodel.Componente</class>
 		<class>es.caib.gusite.micromodel.Contacto</class>
 		<class>es.caib.gusite.micromodel.Contenido</class>

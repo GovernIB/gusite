@@ -307,7 +307,11 @@
 	<!-- deploy                                                             -->
 	<!-- ================================================================== -->
 	<target name="deploy">
-		<copy file="${product.dir}/${projecte.name.gusite}.ear" todir="${deploy.dir}"/>
+		<!-- <copy file="${product.dir}/${projecte.name.gusite}.ear" todir="${deploy.dir}"/> -->
+		<unzip src="${product.dir}/${projecte.name.gusite}.ear" dest="${product.dir}/01${projecte.name.gusite}.ear"/>
+		<copy todir="${deploy.dir}/01${projecte.name.gusite}.ear">
+			<fileset dir="${product.dir}/01${projecte.name.gusite}.ear"/>
+		</copy>
 	</target>
 
 </project>

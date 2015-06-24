@@ -159,7 +159,8 @@ public class noticiasEditaAction extends BaseAction
 	 * @return Noticia
 	 * @throws Exception
 	 */
-	private Noticia setFormtoBean (HttpServletRequest request, noticiaForm noticiaForm, Microsite micrositeBean) throws Exception  {
+	@SuppressWarnings("unchecked")
+	private Noticia setFormtoBean(HttpServletRequest request, noticiaForm noticiaForm, Microsite micrositeBean) throws Exception  {
 
 		NoticiaDelegate noticiaDelegate = DelegateUtil.getNoticiasDelegate();
 		IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
@@ -198,7 +199,7 @@ public class noticiasEditaAction extends BaseAction
         // Tratamos la imagen de la noticia
        	FormFile imagen = (FormFile) noticiaForm.get("imagen");
         if (archivoValido(imagen)) {
-            noticiaBean.setImagen(populateArchivo(noticiaBean.getImagen(), imagen, noticiaBean.getIdmicrosite(), null));
+            noticiaBean.setImagen(populateArchivo(noticiaBean.getImagen(), imagen, null, null));
         } else if (((Boolean) noticiaForm.get("imagenbor")).booleanValue()) {
             noticiaBean.setImagen(null);
         }
@@ -219,7 +220,6 @@ public class noticiasEditaAction extends BaseAction
             TraduccionNoticia traduccionNoticiaForm = (TraduccionNoticia) traducciones.get(i);
             if (traduccionNoticiaBean != null) {
                 if (traduccionNoticiaBean.getDocu() != null) {
-                    traduccionNoticiaBean.getDocu().setIdmicrosite(noticiaBean.getIdmicrosite());
                     traduccionNoticiaForm.setDocu(traduccionNoticiaBean.getDocu());
                 }
                 traducciones.set(i, traduccionNoticiaForm);
@@ -267,7 +267,7 @@ public class noticiasEditaAction extends BaseAction
             TraduccionNoticia traduccion = (TraduccionNoticia) noticiaBean.getTraduccion("" + lenguajes.get(i));
             if (traduccion != null) {
                 if (archivoValido(ficheros[i])) {
-                    traduccion.setDocu(populateArchivo(traduccion.getDocu(), ficheros[i], noticiaBean.getIdmicrosite(), null));
+                    traduccion.setDocu(populateArchivo(traduccion.getDocu(), ficheros[i], null, null));
                 } else if (ficherosbor[i]) {
                     traduccion.setDocu(null);
                 }
@@ -397,9 +397,9 @@ public class noticiasEditaAction extends BaseAction
 	            		if (traductor.traducir(noticiaOrigen, noticiaDesti)) {
 
 	            		   //Tratamos documentos
-	            		   if (archivoValido(ficheros[i]))  noticiaDesti.setDocu(populateArchivo(noticiaDesti.getDocu(), ficheros[i], micrositeBean.getId(), null));
+	            		   if (archivoValido(ficheros[i]))  noticiaDesti.setDocu(populateArchivo(noticiaDesti.getDocu(), ficheros[i], null, null));
 	                	   else if (ficherosbor[i])         noticiaDesti.setDocu(null);
-	                	   else if (noticiaOrigen.getDocu() != null) noticiaDesti.setDocu(crearNuevoArchivo(noticiaOrigen.getDocu(), micrositeBean.getId(), null));  
+	                	   else if (noticiaOrigen.getDocu() != null) noticiaDesti.setDocu(crearNuevoArchivo(noticiaOrigen.getDocu(), null, null));  
 
 	                	   if (noticiaDesti.getDocu() != null) 
 	                		   if (ficherosnom[i].length()>0) 

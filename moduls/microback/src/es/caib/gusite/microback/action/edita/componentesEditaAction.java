@@ -143,7 +143,7 @@ public class componentesEditaAction extends BaseAction
 	    //	Establezco la imagen bullet
 	    FormFile imagen = (FormFile) componenteForm.get("imagen");
 	    if (archivoValido(imagen))
-	    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, componenteBean.getIdmicrosite(), null));
+	    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
 	    else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) componenteBean.setImagenbul(null);
 	    
 	    if (componenteBean.getImagenbul() != null) 

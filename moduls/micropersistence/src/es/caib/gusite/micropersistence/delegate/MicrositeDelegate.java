@@ -23,6 +23,7 @@ import es.caib.gusite.micropersistence.util.MicrositeFacadeUtil;
  * 
  * @author Indra
  */
+@SuppressWarnings("unchecked")
 public class MicrositeDelegate implements StatelessDelegate {
 
 	/* ========================================================= */
@@ -400,6 +401,14 @@ public class MicrositeDelegate implements StatelessDelegate {
 	public String getUsuarioEJB() throws DelegateException {
 		try {
 			return this.getFacade().getUsuarioEJB();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	public List<Long> obtenerIdsArchivosMicrosite(Long id) throws DelegateException {
+		try {
+			return this.getFacade().obtenerIdsArchivosMicrosite(id);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

@@ -39,7 +39,7 @@ import org.hibernate.annotations.Cascade;
 
 /**
  * Clase Microsite. Bean que define un Microsite. Modela la tabla de BBDD
- * GUS_MENU
+ * GUS_MICROS.
  * 
  * @author Indra
  */
