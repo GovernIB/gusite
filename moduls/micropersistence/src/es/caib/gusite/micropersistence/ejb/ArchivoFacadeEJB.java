@@ -412,7 +412,8 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 				// un archivo con diferente nombre) antes de escribir el nuevo en el FS.
 				if (!nuevo) {
 					Archivo aOld = this.obtenerArchivo(a.getId());
-					ArchivoUtil.borrarArchivo(aOld);
+					if (aOld != null)
+						ArchivoUtil.borrarArchivo(aOld);
 				}
 
 				// Guardamos archivo en FS.
@@ -425,6 +426,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 			session.saveOrUpdate(a);
 			session.flush();
+			
 			tx.commit();
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
