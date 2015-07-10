@@ -55,12 +55,12 @@ public class Contenido extends AuditableModel implements Traducible2 {
 	private Long id;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CON_CADUCA")
 	private Date fcaducidad;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CON_PUBLIC")
 	private Date fpublicacion;
 

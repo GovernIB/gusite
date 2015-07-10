@@ -46,7 +46,7 @@ public class Convocatoria extends AuditableModel implements Serializable {
 	private String descripcion;
 
 	/** nullable persistent field */
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATA_ENVIO")
 	private Date ultimoEnvio;
 

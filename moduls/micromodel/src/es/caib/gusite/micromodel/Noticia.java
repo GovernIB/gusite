@@ -65,12 +65,12 @@ public class Noticia extends AuditableModel implements Traducible2 {
 	private Archivo imagen;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "NOT_CADUCA")
 	private Date fcaducidad;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "NOT_PUBLIC")
 	private Date fpublicacion;
 

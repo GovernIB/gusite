@@ -83,7 +83,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@Transient
 	private int nivelAccesibilidad;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MIC_FECHA")
 	private Date fecha;
 

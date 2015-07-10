@@ -56,12 +56,12 @@ public class Agenda extends AuditableModel implements Traducible2 {
 	private String organizador;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "AGE_INICIO")
 	private Date finicio;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "AGE_FIN")
 	private Date ffin;
 

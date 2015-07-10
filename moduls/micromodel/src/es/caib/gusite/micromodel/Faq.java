@@ -52,7 +52,7 @@ public class Faq extends AuditableModel implements Traducible2 {
 	private Long idmicrosite;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "FAQ_FECHA")
 	private Date fecha;
 

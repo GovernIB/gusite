@@ -79,7 +79,7 @@ public class MicrositeCompleto implements Traducible2, Serializable, Auditable {
 	private String uri;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MIC_FECHA")
 	private Date fecha;
 

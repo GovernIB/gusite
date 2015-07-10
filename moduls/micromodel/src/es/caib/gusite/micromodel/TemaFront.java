@@ -70,7 +70,7 @@ public class TemaFront extends AuditableModel implements Auditable, java.io.Seri
 	 * Data d'actualització del tema
 	 */
     @XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "FTE_ACTUALIZACION", nullable = false, length = 7)
 	private Date actualizacion;
 

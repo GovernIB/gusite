@@ -60,12 +60,12 @@ public class Encuesta extends AuditableModel implements Traducible2 {
 	private Long idmicrosite;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ENC_CADUCA")
 	private Date fcaducidad;
 
 	@XmlAttribute
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "ENC_PUBLIC")
 	private Date fpublicacion;
 
