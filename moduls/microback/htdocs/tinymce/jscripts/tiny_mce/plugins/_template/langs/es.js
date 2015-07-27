@@ -1,4 +1,4 @@
-/ES lang variables
+//ES lang variables
 
 
 tinyMCE.addToLang('',{

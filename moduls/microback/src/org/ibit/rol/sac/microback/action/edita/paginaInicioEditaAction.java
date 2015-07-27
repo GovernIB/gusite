@@ -18,9 +18,9 @@ import org.ibit.rol.sac.micropersistence.delegate.DelegateUtil;
 import org.ibit.rol.sac.micropersistence.delegate.MicrositeDelegate;
 
 /**
- * Action que edita la página de inicio de un microsite <BR>
+ * Action que edita la pï¿½gina de inicio de un microsite <BR>
  * <P>
- * 	Definición Struts:<BR>
+ * 	Definiciï¿½n Struts:<BR>
  *  action path="/paginaInicioEdita" <BR> 
  *  name="microForm" <BR> 
  *  input="/microAcc.do"   <BR>
@@ -58,6 +58,10 @@ public class paginaInicioEditaAction extends BaseAction
 		if ((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.guardar"))) {
 
     		micrositeBean = setFormtoBean(microForm);
+    		// Evitam bug referÃ¨ncia circular pÃ gina d'inici
+    		if (micrositeBean.getUrlhome().equalsIgnoreCase("home.do?idsite="+micrositeBean.getId())){
+    			microForm.set("plantilla", "1"); //Es restableix valor a pÃ gina per defecte proporcionada per l'eina 
+    		}
             micrositeDelegate.grabarMicrosite(micrositeBean);
             addMessageWithDate(request, "micro.pinicio.info.modifica.microsite");
        		Base.micrositeRefresh(micrositeBean.getId(), request);
@@ -87,8 +91,8 @@ public class paginaInicioEditaAction extends BaseAction
     }
 
     /**
-     * Método que vuelca los datos del formulario en el Bean de Microsite
-     * @param microForm	 formulario dinámico enviado por usuario
+     * Mï¿½todo que vuelca los datos del formulario en el Bean de Microsite
+     * @param microForm	 formulario dinï¿½mico enviado por usuario
      * @return Microsite devuelve bean de Microsite con los datos del formulario
      * @throws Exception
      */
@@ -106,9 +110,9 @@ public class paginaInicioEditaAction extends BaseAction
     }
     
     /**
-     * Método que vuelca los datos del Bean de Microsite al formulario del usuario
+     * Mï¿½todo que vuelca los datos del Bean de Microsite al formulario del usuario
      * @param micrositeBean		Bean de tipo Microsite
-     * @param microForm			formulario dinámico enviado por usuario
+     * @param microForm			formulario dinï¿½mico enviado por usuario
      * @throws Exception
      */
     private void setBeantoForm (Microsite micrositeBean, microForm microForm) throws Exception  {
