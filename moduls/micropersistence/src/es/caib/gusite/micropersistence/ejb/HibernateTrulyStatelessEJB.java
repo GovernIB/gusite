@@ -233,20 +233,36 @@ public abstract class HibernateTrulyStatelessEJB implements SessionBean {
 	private Long grabarAuditoria(Auditoria auditoria) {
 
 		Session session = this.getSession();
+		
 		try {
+			
 			Transaction tx = session.beginTransaction();
+			
+			// El caso del "antiguo microsite 0" (no microsite asociado) hay que tratarlo como si fuera null ahora.
+			// Si no, cuando se va a grabar ua auditoria la PK 0 no se encuentra en la tabla de Microsites y se
+			// produce un error de integridad por la FK establecida en la tabla de auditoría.
+			if (auditoria.getIdmicrosite() != null && auditoria.getIdmicrosite() == 0L)
+				auditoria.setIdmicrosite(null);
+			
 			auditoria.setFecha(new Date());
 			auditoria.setUsuario(this.getUsuario(session).getUsername());
 			session.saveOrUpdate(auditoria);
 			session.flush();
+			
 			tx.commit();
+			
 			return auditoria.getId();
 
 		} catch (HibernateException he) {
+			
 			throw new EJBException(he);
+			
 		} finally {
+			
 			this.close(session);
+			
 		}
+		
 	}
 
 }
