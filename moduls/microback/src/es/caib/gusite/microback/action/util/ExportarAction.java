@@ -337,8 +337,17 @@ public class ExportarAction extends BaseAction {
 				}
 				
 			} finally {
-
-				in.close();
+				
+				if (in != null) {
+					in.close();
+					in = null;
+				}
+				
+				// XXX amartin: contra todos los pronósticos y recomendaciones, y tras muchas pruebas con el profiler Java VisualVM,
+				// si no hacemos la llamada a este método sugiriendo una ejecución del Garbage Collector de Java, no se libera la memoria
+				// reservada para los objetos usados en la escritura del ZIP (importante sobre todo el array de bytes con los datos del
+				// objeto Archivo que hemos escrito en el Zip).
+				System.gc();
 				
 			}
 	        
