@@ -7,6 +7,7 @@
 	   es.caib.gusite.intentosMailing=5
 	   es.caib.gusite.db.jndiname=es.caib.microsite.db
 	   es.caib.gusite.mantenimiento=si
+	   es.caib.gusite.urlPopup=https://proves.caib.es/sacbackold/organigrama/unidad/poparbol.do?idUA=0&amp;action=&amp;
     </attribute>
             
 </mbean>
