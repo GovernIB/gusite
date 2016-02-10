@@ -139,6 +139,27 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				contenido.setTraducciones(null);
+			} else {//TODO: Redmine:1628- buscar solución mediante JPA (traduccion contenido) 
+				//buscamos los idiomas que deben permanecer en el contenido
+				String listIdiomaBorrar = "";
+				Iterator<TraduccionContenido> it = contenido.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionContenido trd = it.next();
+					listIdiomaBorrar += "'" +trd.getId().getCodigoIdioma()+"'";
+					if(it.hasNext()){
+						listIdiomaBorrar += "," ;						
+					}
+				}
+				// Borramos los idiomas que no pertenecen a contenido y existen en la BBDD
+				if(!listIdiomaBorrar.isEmpty()){ 
+					Query query = session.createQuery("select tradCon from TraduccionContenido tradCon where tradCon.id.codigoContenido = " + contenido.getId() + " and tradCon.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+					List<TraduccionContenido> traduciones = query.list();
+					for(TraduccionContenido traducI : traduciones ) {
+						session.delete(traducI);	
+					}
+					session.flush();
+				}				
 			}
 
 			session.saveOrUpdate(contenido);
