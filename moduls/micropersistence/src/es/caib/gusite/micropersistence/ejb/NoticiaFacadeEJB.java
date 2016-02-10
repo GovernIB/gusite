@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
+
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
 
@@ -174,13 +175,37 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
                     	else
                     		if (trad.getDocu().getDatos() != null) // Condición de actualizar documento.
                     			archivoDelegate.grabarArchivo(trad.getDocu());
-                    } else {
-                    	if (tradOriginal.getDocu() != null) // Condición de borrado de documento.
-	                		archivosPorBorrar.add(tradOriginal.getDocu());
+                    } else { 
+                    	if(tradOriginal!=null){ //Error #1630 No se puede añadir elementos a los listados
+	                		if ( tradOriginal.getDocu() != null) // Condición de borrado de documento.
+		                		archivosPorBorrar.add(tradOriginal.getDocu());
+                    	}
                     }
                     
 				}
-
+				
+				//Error #1386 La traducción de los elementos de los listados provoca un bug en el servidor
+				//buscamos los idiomas que deben permanecer en la noticia
+				String listIdiomaBorrar = "";
+				Iterator<TraduccionNoticia> it = noticia.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionNoticia trn = it.next();
+					listIdiomaBorrar += "'" +trn.getId().getCodigoIdioma()+"'";
+					if(it.hasNext()){
+						listIdiomaBorrar += "," ;						
+					}
+				}
+				// Borramos los idiomas que no pertenecen a Noticia y existen en la BBDD
+				if(!listIdiomaBorrar.isEmpty()){ 
+					Query query = session.createQuery("select tradNot from TraduccionNoticia tradNot where tradNot.id.codigoNoticia = " + noticia.getId() + " and tradNot.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+					List<TraduccionNoticia> traduciones = query.list();
+					for(TraduccionNoticia traducI : traduciones ) {
+						session.delete(traducI);	
+					}
+					session.flush();
+				}		
+				
 			}
 
 			// Crear/actualizar noticia.
