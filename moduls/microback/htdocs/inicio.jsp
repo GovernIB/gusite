@@ -8,21 +8,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!--[if !IE]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
 	<title>Gestor Microsites</title>
 	<link href="css/index.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/index.js"></script>
+	
 </head>
 
 <body>
-			<bean:define id="puedoeditar" value="0" />
-
-		     <logic:present name="MVS_rol_sys_adm" >
-			     <logic:equal  name="MVS_rol_sys_adm" value="yes">
-		        	 <bean:define id="puedoeditar" value="1" />
-		    	 </logic:equal>
-		     </logic:present>
-	 
+	<bean:define id="puedoeditar" value="0" />	
+	<logic:present name="MVS_rol_sys_adm" >
+		<logic:equal  name="MVS_rol_sys_adm" value="yes">
+			<bean:define id="puedoeditar" value="1" />
+		</logic:equal>
+	</logic:present>
+	
 	<div id="cap">
 		<div id="titol"><a href="http://intranet.caib.es"><img src="imgs/logo_caib.gif" alt="Govern de les Illes Balears" /></a><img src="imgs/logo_mini.gif" alt="Microsites" /></div>
 		<div id="versio"></div>
@@ -49,6 +49,8 @@
 		</div>
 	</logic:present>
 	
+
+		
 	<table id="cMenu" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
@@ -75,6 +77,7 @@
 		</tr>
 	</tbody>
 	</table>
+	
 	<div id="mConfiguracio" class="submenu">
 		<p><bean:message key="menu.configuracion" /></p>
 		<logic:present name="MVS_microsite">
@@ -143,6 +146,8 @@
 			</logic:present>
 	</div>
 	
+	<bean:message key="errors.explorernou" />	
+			
 	<logic:present name="MVS_microsite">
 	<logic:present name="microGeneral">
 		<iframe id="escritori" name="escritori" src="microGeneral.jsp" frameborder="0" scrolling="auto"></iframe>

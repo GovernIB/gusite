@@ -37,3 +37,10 @@ img { border:0; }
 #usuari { float:right; font-size:.9em; font-weight:bold; color:#fff; padding:.2em 1em; margin-right:.5em; }
 
 #mTitol { float:left; width:50%; font-size:1.5em; font-weight:bold; }
+
+#textInfo, #textError { padding:1em 1em 0 4em; margin:2em 0; }
+#textInfo { background:#f3f7fc url(../imgs/icones/info.gif) no-repeat 1em .8em; border:2px solid #bdd3ea; }
+#textError { background:#fff1f1 url(../imgs/icones/error.gif) no-repeat 1em .8em; border:2px solid #f00; }
+#textInfo p, #textError p { padding-bottom:1em; margin:0; }
+#textInfo ul, #textInfo ol, #textError ul, #textError ol { padding-bottom:1em; margin-left:3em; }
+

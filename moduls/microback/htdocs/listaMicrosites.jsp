@@ -9,7 +9,7 @@
 <head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!--[if !IE]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
 	<title><bean:message key="micro.listado.microsites" /> - Gestor Microsites</title>
 	
 	<!-- estils -->
@@ -71,7 +71,9 @@
 		<jsp:include page="menuLateralIzq.jsp"/>
 		<!-- /marc lateral -->
 		
-		<!-- continguts -->
+		<bean:message key="errors.explorernou" />	
+				
+	<!-- continguts -->
 		<div id="continguts">
 		
 			<h1><img src="imgs/titulos/configuracion.gif" alt="Llistats" /><bean:message key="menu2.gestion.microsites"/></h1>

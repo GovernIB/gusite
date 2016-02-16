@@ -9,7 +9,7 @@
 <head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<!--[if !IE]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
 	<title><bean:message key="usuari.listado" /> - Microsites - Govern de les Illes Balears</title>
 	
 	<!-- estils -->
@@ -57,6 +57,8 @@
 		<jsp:include page="menuLateralIzq.jsp"/>
 		<!-- /marc lateral -->
 		
+		<bean:message key="errors.explorernou" />			
+
 		<!-- continguts -->
 		<div id="continguts">
 			

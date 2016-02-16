@@ -10,7 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--[if !IE]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
     <title>Gestor Microsites</title>
 
     <!-- CSS -->
@@ -32,6 +32,8 @@
     <!-- marc lateral -->
     <jsp:include page="menuLateralIzq.jsp"/>
     <!-- /marc lateral -->
+
+	<bean:message key="errors.explorernou" />
 
     <div id="formulario">
         <!-- titol pagina -->
