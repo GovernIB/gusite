@@ -87,16 +87,26 @@ public class contenidoForm extends TraDynaActionForm {
         
         try {
         	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-        	List lang = idiomaDelegate.listarLenguajes();
+        	List lang = idiomaDelegate.listarLenguajes();        	
         	
         	for (int i=0;i<lang.size();i++) {
-        		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
-        			TraduccionContenido  trad = (TraduccionContenido)((ArrayList)get("traducciones")).get(i);
-        			if (trad.getTitulo().length()==0)
-        				errors.add("titulo", new ActionError("error.conte.titulo"));
-        		}
+        		TraduccionContenido  trad = (TraduccionContenido)((ArrayList)get("traducciones")).get(i);
+        		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {        			
+        			if (trad.getTitulo().length()==0 || trad.getUri().length() == 0)
+        				errors.add("titulo", new ActionError("error.conte.titulo"));        		
+        		}else{ 
+        			
+        			// si se especifica titulo la uri es obligatoria y viceversa.
+        			if ((trad.getTitulo().length()==0 && trad.getUri().length() > 0) ||
+        				(trad.getTitulo().length() > 0 && trad.getUri().length() == 0)){
+        				errors.add("titulo", new ActionError("error.conte.titulo2", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
+        			}else if ((trad.getTexto().length() > 0 && (trad.getTitulo().length() == 0 || trad.getUri().length() == 0))) {
+        				//el título y  la uri son obligatorios si se especifica el campo contenido.
+	    				errors.add("titulo", new ActionError("error.conte.tituloContenido", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre()));
+        			}
+        		}        		
         	}
-			
+        	
         } catch (Throwable t) {
             log.error("Error comprobando titulo del contenido", t);
         }    
