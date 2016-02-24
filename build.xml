@@ -67,7 +67,7 @@
 		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR -->
 		<sql
 			driver="org.sqlite.JDBC"
-		    url="jdbc:sqlite:.svn/wc.db"
+		    url="jdbc:sqlite:./svn/wc.db"
 		    userid=""
 		    password=""
 			classpath="lib/sqlite-jdbc-3.7.15-M1.jar" 
