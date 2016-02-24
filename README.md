@@ -7,3 +7,16 @@ GUSITE és una eina de creació ràpida i simple de petites webs informatives. E
 També proporciona altres eines de suport bàsiques a la gestió dels microsites creats com són estadístiques d'accés, exportacions de webs, indexació i cerca de continguts, control d'accessibilitat, etc...
 
 L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'organització ja que permet definir un únic disseny que s'aplica automàticament a tots els microsites creats amb aquesta eina. Es facilita la creació de dissenys alternatius i la possibilitat de canvi massiu de disseny, que poden afectar a tots els microsites.
+
+**Característiques**
+
+* Registered: 2015-01-12
+* Topic: Internet :: WWW/HTTP :: Site Management 
+* License:  European Union Public License &  GNU General Public License version 3.0 (GPLv3) 
+* Database Environment: Database API :: JDBC 
+* Development Status: Mature 
+* Intended Audience:  Government 
+* Operating System:  OS Independent (Written in an interpreted language) 
+* Programming Language: Java  & JSP 
+* Translations: Catalan & Spanish 
+* User Interface: Web-based
