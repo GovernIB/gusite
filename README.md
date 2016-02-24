@@ -11,7 +11,7 @@ L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'
 **Característiques**
 
 * Registered: 2015-01-12
-* Topic: Internet :: WWW/HTTP :: Site Management 
+* Topic: WWW/HTTP-Site Management 
 * License:  European Union Public License &  GNU General Public License version 3.0 (GPLv3) 
 * Database Environment: Database API :: JDBC 
 * Development Status: Mature 
