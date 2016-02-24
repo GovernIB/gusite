@@ -20,3 +20,17 @@ L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'
 * Programming Language: Java  & JSP 
 * Translations: Catalan & Spanish 
 * User Interface: Web-based
+
+
+**Captures de pantalla**
+
+![Plana Principal](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_1.png)<br/>
+Plana Principal
+
+![Llistat de Microsites](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_2.png)<br/>
+Llistat de Microsites
+
+![Edició de Microsite](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_3.png)<br/>
+Edició de Microsite
+
+
