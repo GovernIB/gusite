@@ -92,10 +92,10 @@ public class ContenidoDelegate implements StatelessDelegate {
 	 * @return Contenido
 	 * @throws DelegateException
 	 */
-	public Contenido obtenerContenidoDesdeUri(String idioma, String uri)
+	public Contenido obtenerContenidoDesdeUri(String idioma, String uri, String site)
 			throws DelegateException {
 		try {
-			return this.getFacade().obtenerContenidoDesdeUri(idioma, uri);
+			return this.getFacade().obtenerContenidoDesdeUri(idioma, uri, site);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

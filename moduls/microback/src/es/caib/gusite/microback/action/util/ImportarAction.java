@@ -2128,10 +2128,10 @@ public class ImportarAction extends BaseAction {
             try {
                 int count = 0;
                 String newUri = trad.getUri();
-                Contenido contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                Contenido contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri, contenido.getMenu().getMicrosite().getId().toString());
                 while (contenidoUri != null) {
                     newUri = trad.getUri() + "_" + count;
-                    contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    contenidoUri = contenidoDelegate.obtenerContenidoDesdeUri(trad.getId().getCodigoIdioma(), newUri, contenido.getMenu().getMicrosite().getId().toString());
                     count++;
                 }
                 trad.setUri(newUri);

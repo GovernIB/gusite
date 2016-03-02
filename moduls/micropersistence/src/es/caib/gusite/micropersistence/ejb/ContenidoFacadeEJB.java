@@ -218,29 +218,23 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Contenido obtenerContenidoDesdeUri(String idioma, String uri) {
+	public Contenido obtenerContenidoDesdeUri(String idioma, String uri, String site) {
 
 		Session session = this.getSession();
 		try {
 			Query query;
 			if (idioma != null) {
 				query = session
-						.createQuery("from TraduccionContenido tc where tc.id.codigoIdioma = :idioma and tc.uri = :uri");
+						.createQuery("select con from Contenido con JOIN con.traducciones tc where tc.id.codigoIdioma = :idioma and tc.uri = :uri and con.menu.microsite.id = :site ");
 				query.setParameter("idioma", idioma);
 			} else {
 				query = session
-						.createQuery("from TraduccionContenido tc where tc.uri = :uri");
+						.createQuery("select con from Contenido con JOIN con.traducciones tc where tc.uri = :uri and con.menu.microsite.id = :site ");
 			}
 			query.setParameter("uri", uri);
+			query.setParameter("site", Long.valueOf(site));
 			query.setMaxResults(1);
-			TraduccionContenido trad = (TraduccionContenido) query
-					.uniqueResult();
-			if (trad != null) {
-				return this.obtenerContenido(trad.getId().getCodigoContenido());
-			} else {
-				return null;
-			}
-
+			return (Contenido) query.uniqueResult();
 		} catch (ObjectNotFoundException oNe) {
 			log.error(oNe.getMessage());
 			return new Contenido();

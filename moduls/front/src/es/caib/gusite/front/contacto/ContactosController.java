@@ -336,7 +336,7 @@ public class ContactosController extends BaseViewController {
 				continue; // el tipo n
 			}
 			String paramName = ((linea.getObligatorio() == 1) ? Microfront.VCAMPO_REQUERIDO : "") + linea.getId().toString();
-			String campovalor = ((TraduccionLineadatocontacto) linea.getTraduccion(lang.getLang())).getTexto() + " = ";
+			String campovalor = ((TraduccionLineadatocontacto) linea.getTraduccion(lang.getLang())).getTexto().split("#")[0] + " = ";
 			String[] paramValues = req.getParameterValues(paramName);
 			if (paramValues.length == 1) {
 				String paramValue = paramValues[0];

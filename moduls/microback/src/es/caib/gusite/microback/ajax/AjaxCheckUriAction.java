@@ -35,6 +35,7 @@ public class AjaxCheckUriAction extends Action {
         String uri = Cadenas.string2uri(request.getParameter("URI"));
         String type = request.getParameter("type");
         String idioma = request.getParameter("idioma");
+        String site = request.getParameter("site");
         Long id = (long)0;
         if (request.getParameter("id") != null && !request.getParameter("id").equals("")) {
         	id = Long.parseLong(request.getParameter("id"));
@@ -42,7 +43,7 @@ public class AjaxCheckUriAction extends Action {
         UriType currentType = UriType.valueOf(type.toUpperCase());
 
         txtrespuesta += OPEN;
-        txtrespuesta += check(uri, currentType, idioma, id, 0);
+        txtrespuesta += check(uri, currentType, site, idioma, id, 0);
         txtrespuesta += CLOSE;
 
         response.reset();
@@ -58,7 +59,7 @@ public class AjaxCheckUriAction extends Action {
         return null;
     }
 
-    private String check(String uri, UriType type, String idioma, Long id, Integer count) {
+    private String check(String uri, UriType type, String site, String idioma, Long id, Integer count) {
 
         String msg = uri;
         try {
@@ -73,7 +74,7 @@ public class AjaxCheckUriAction extends Action {
 
                 case CID_URI:
                     ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
-                    Contenido contenido = contenidoDelegate.obtenerContenidoDesdeUri(idioma, uri);
+                    Contenido contenido = contenidoDelegate.obtenerContenidoDesdeUri(idioma, uri, site);
                     if (contenido != null && !contenido.getId().equals(id)) {
                         msg = BUSCAR_NUEVA;
                     }
@@ -117,7 +118,7 @@ public class AjaxCheckUriAction extends Action {
                     break;
             }
             if (msg.equals(BUSCAR_NUEVA)) {
-                msg = check(uri + "_" + count.toString(), type, idioma, id, count++);
+                msg = check(uri + "_" + count.toString(), type, site, idioma, id, count++);
             }
 
         } catch (DelegateException e) {

@@ -247,6 +247,7 @@
 	    <set-property property="traduccionClassName" value="es.caib.gusite.micromodel.TraduccionContenido"/>
     	<form-property name="id" type="java.lang.Long"/>
    	    <form-property name="idMenu" type="java.lang.Long" initial=""/>
+	    <form-property name="idMicrosite" type="java.lang.Long" initial=""/>
 	    <form-property name="fcaducidad" type="java.lang.String"/>
 	    <form-property name="fpublicacion" type="java.lang.String"/>
 	    <form-property name="visible" type="java.lang.String" initial="S"/>

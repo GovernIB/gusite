@@ -14,6 +14,7 @@ import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.contenidoForm;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -80,6 +81,8 @@ public class listaContenidosAction extends BaseAction {
         	   	request.getSession().removeAttribute("contenidoForm");
         	   	request.setAttribute("menu", idmenu );
         	   	request.setAttribute("migapan", bdConte.migapan(idmenu,null) );
+        	   	final Menu menu = DelegateUtil.getMenuDelegate().obtenerMenu(Long.valueOf(request.getParameter("idmenu")));
+        	   	request.setAttribute("idMicrosite", menu.getMicrosite().getId().toString());
             	return mapping.findForward("detalleConte");
         	}
 

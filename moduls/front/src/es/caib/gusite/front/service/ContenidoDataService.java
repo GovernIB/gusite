@@ -39,11 +39,11 @@ public class ContenidoDataService {
 
 		try {
 			ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
-			Contenido contenido = contenidodel.obtenerContenidoDesdeUri(lang, uriContenido);
+			Contenido contenido = contenidodel.obtenerContenidoDesdeUri(lang, uriContenido, microsite.getId().toString());
 			if (contenido == null) {
 				// Si no lo encontramos por idioma, buscamos cualquiera. Esto
 				// sirve para el cambio de idioma sencillo
-				contenido = contenidodel.obtenerContenidoDesdeUri(null, uriContenido);
+				contenido = contenidodel.obtenerContenidoDesdeUri(null, uriContenido, microsite.getId().toString());
 			}
 			if (contenido == null) {
 				throw new ExceptionFrontPagina("Contenido no encontrado: " + uriContenido, ExceptionFrontPagina.HTTP_NOT_FOUND);

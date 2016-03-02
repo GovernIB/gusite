@@ -129,10 +129,20 @@ public class noticiaForm extends TraDynaActionForm {
         			if (ficheros[i].getFileSize()>1024*1024*10)	doc_size=true;
         		if (trad.getTexto().length()> 40000000)texto_size=true;
         		
-    			if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
-        			if (trad.getTitulo().length()==0)
+        		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
+        			if (trad.getTitulo().length()==0 || trad.getUri().length() == 0)
         				errors.add("titulo", new ActionError("error.noticias.titulo"));
-        		}
+        		} else { 
+        			
+        			// si se especifica titulo la uri es obligatoria y viceversa.
+        			if ((trad.getTitulo().length()==0 && trad.getUri().length() > 0) ||
+        				(trad.getTitulo().length() > 0 && trad.getUri().length() == 0)){
+        				errors.add("titulo", new ActionError("error.conte.titulo2", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
+        			}else if ((trad.getTexto().length() > 0 && (trad.getTitulo().length() == 0 || trad.getUri().length() == 0))) {
+        				//el título y  la uri son obligatorios si se especifica el campo contenido.
+	    				errors.add("titulo", new ActionError("error.conte.tituloContenido", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre()));
+        			}
+        		}  
         		
         	}
 			if (doc_size) errors.add("documento", new ActionError("error.noticias.documentoidioma"));

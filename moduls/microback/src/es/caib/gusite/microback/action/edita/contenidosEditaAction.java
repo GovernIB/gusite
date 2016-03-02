@@ -274,7 +274,8 @@ public class contenidosEditaAction extends BaseAction
             contenidoForm.set("visible",contenido.getVisible());
             contenidoForm.set("orden", new Integer(contenido.getOrden()));
            	contenidoForm.set("idMenu",contenido.getMenu().getId());
-
+           	contenidoForm.set("idMicrosite", micrositeBean.getId());
+            
             VOUtils.describe(contenidoForm, contenido);  // bean --> form    	
     	
     	} else throw new Exception();
