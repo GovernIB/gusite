@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import es.caib.gusite.microback.utils.Cadenas;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -20,6 +21,8 @@ import org.apache.struts.action.ActionMapping;
 import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.contenidoForm;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
@@ -95,7 +98,10 @@ public class contenidosEditaAction extends BaseAction
 							//TODO: ¿qué se intentaba hacer aquí? no funciona si se rellena sólo el texto 
 							eliminar.add(lang);
 						} else if (trad.getUri().equals("")) {
-							trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+							//trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+							final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+							final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.CID_URI,  micrositeBean.getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoContenido(), 0);
+							trad.setUri(Cadenas.string2uri(nuevaUri));
 						}
 						if (trad.getId() == null) {
 							TraduccionContenidoPK tradId = new TraduccionContenidoPK();

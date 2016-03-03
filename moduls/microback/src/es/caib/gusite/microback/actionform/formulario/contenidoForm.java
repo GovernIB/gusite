@@ -92,10 +92,16 @@ public class contenidoForm extends TraDynaActionForm {
         	for (int i=0;i<lang.size();i++) {
         		TraduccionContenido  trad = (TraduccionContenido)((ArrayList)get("traducciones")).get(i);
         		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {        			
-        			if (trad.getTitulo().length()==0 || trad.getUri().length() == 0)
+        			if (trad.getTitulo().length()==0) // || trad.getUri().length() == 0)
         				errors.add("titulo", new ActionError("error.conte.titulo"));        		
         		}else{ 
-        			
+        			if (trad.getTitulo().length()==0 && trad.getUri().length() > 0) {
+        				errors.add("titulo", new ActionError("error.conte.titulo2", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
+            		} else if ((trad.getTexto().length() > 0 && trad.getTitulo().length() == 0)) {
+        				//el título y  la uri son obligatorios si se especifica el campo contenido.
+	    				errors.add("titulo", new ActionError("error.conte.tituloContenido", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre()));
+        			}
+        			/**
         			// si se especifica titulo la uri es obligatoria y viceversa.
         			if ((trad.getTitulo().length()==0 && trad.getUri().length() > 0) ||
         				(trad.getTitulo().length() > 0 && trad.getUri().length() == 0)){
@@ -103,7 +109,7 @@ public class contenidoForm extends TraDynaActionForm {
         			}else if ((trad.getTexto().length() > 0 && (trad.getTitulo().length() == 0 || trad.getUri().length() == 0))) {
         				//el título y  la uri son obligatorios si se especifica el campo contenido.
 	    				errors.add("titulo", new ActionError("error.conte.tituloContenido", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre()));
-        			}
+        			}**/
         		}        		
         	}
         	

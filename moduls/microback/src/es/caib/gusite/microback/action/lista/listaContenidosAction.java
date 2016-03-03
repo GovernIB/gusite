@@ -68,6 +68,7 @@ public class listaContenidosAction extends BaseAction {
             request.setAttribute("menu", ""+fdet.get("idMenu") );
             request.setAttribute("migapan", bdConte.migapan("",null) );
             request.setAttribute("validacion", "si");
+            request.setAttribute("idMicrosite", ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId().toString());
             return mapping.findForward("detalleConte");
         }
         //********************************************************

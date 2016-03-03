@@ -59,7 +59,17 @@ public class AjaxCheckUriAction extends Action {
         return null;
     }
 
-    private String check(String uri, UriType type, String site, String idioma, Long id, Integer count) {
+    /**
+     * Método que valida la uri de un tipo. 
+     * @param uri
+     * @param type
+     * @param site
+     * @param idioma
+     * @param id
+     * @param count
+     * @return
+     */
+    public String check(String uri, UriType type, String site, String idioma, Long id, Integer count) {
 
         String msg = uri;
         try {
