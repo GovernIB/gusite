@@ -181,6 +181,17 @@
 	     	<input type="hidden" name="anyade" />
 			<input type="hidden" name="idMenu" value='<bean:write name="menu"/>' />
      	</logic:notPresent>
+     	
+     	<logic:present name="contenidoForm" property="id">
+	 		<input type="hidden" name="modifica" />
+        	<html:hidden property="id" />
+			<html:hidden property="idMicrosite" />
+     	</logic:present>
+     
+     	<logic:notPresent name="contenidoForm" property="id">
+	     	<input type="hidden" name="anyade" />
+			<input type="hidden" name="idMicrosite" value='<bean:write name="idMicrosite"/>' />
+     	</logic:notPresent>
 
 		<tr class="par">
 			<td class="etiqueta"><bean:message key="conte.fpublicacion" /></td>
