@@ -2,7 +2,14 @@
 
 <project name="gusite" default="main">
 
-	<property name="project.version" value="${ant.project.name}"/>
+	<!--<property name="project.version" value="${ant.project.name}"/>-->
+	<exec executable="git"  outputproperty="project.version" failifexecutionfails="true" errorproperty="">
+		<arg value="rev-parse"/> 
+		<arg value="--abbrev-ref"/>
+		<arg value="HEAD"/>
+	</exec>
+
+	
 	<property name="home" value="."/>
 
 	<property file="${home}/build.${user.name}.properties" />
@@ -64,7 +71,8 @@
 
 
 	<target name="generate.properties" description="Genera el archivo de propiedades del build">
-		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR -->
+		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR
+		IMPORTANTE, EXCLUSIVO DE SVN! 
 		<sql
 			driver="org.sqlite.JDBC"
 		    url="jdbc:sqlite:./svn/wc.db"
@@ -76,7 +84,23 @@
 			<![CDATA[
 				SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;
 			]]>
-		</sql>
+		</sql>-->
+		
+		<!-- IMPORTANTE. PARA QUE FUNCIONE LO SIGUIENTE:
+				- En run/External Tools/External tools configuration.
+				- Seleccionar el ant.build nuestro y environment y añadir (el valor puede cambiar según la ruta de cada uno del git).
+						Name: PATH
+						Value: C:\Program Files\Git\bin
+				- Si no se agrega, se obtendrá un error de tipo 'git no se reconoce como un comando interno'
+		 -->
+		<!-- Obtener revisión de GIT . -->
+		<exec executable="git"  outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+	        <arg value="describe"/> 
+	        <arg value="--tags"/>
+	        <arg value="--always"/>
+	        <arg value="HEAD"/>
+		</exec>
+
 	
 		<!-- Obtenemos la revisión SVN del proyecto desde el archivo de propiedades generado justo antes -->
 		<property file="svnversion.properties"/>
@@ -86,7 +110,8 @@
 			</tstamp>
 	
 		<propertyfile file="${moduls.dir}/version.properties">
-			<entry key="svn.revision" value="${svn.revision}" />
+			<!--<entry key="svn.revision" value="${svn.revision}" />-->
+			<entry key="svn.revision" value="${git.revision}" /> 
 			<entry key="microsites.name" value="${microsites.name}" />
 			<entry key="microsites.version" value="${microsites.version}" />
 			<entry key="microsites.build" value="${microsites.build}" />
@@ -189,6 +214,7 @@
 				<attribute name="Built-By" value="${project.author}"/>
 				<attribute name="Build-Jdk" value="${java.version}"/>
 				<attribute name="SVN-revision" value="${svn.revision}"/>
+				<attribute name="GIT-revision" value="${git.revision}" />
 			</manifest>
 
 			<metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
