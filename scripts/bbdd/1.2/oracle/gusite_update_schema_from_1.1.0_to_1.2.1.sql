@@ -403,7 +403,7 @@ ALTER table "GUS_TPNIDI" MODIFY (
 
 -- Create Indexes section
 
-Create UNIQUE Index "GUS_CIDURI_I" ON "GUS_CONIDI" ("CID_CODIDI","CID_URI") 
+Create Index "GUS_CIDURI_I" ON "GUS_CONIDI" ("CID_CODIDI","CID_URI") 
 /
 Create UNIQUE Index "GUS_EIDURI_I" ON "GUS_ENCIDI" ("EID_CODIDI","EID_URI") 
 /
