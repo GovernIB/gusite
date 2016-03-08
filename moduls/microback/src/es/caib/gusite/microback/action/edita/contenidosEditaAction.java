@@ -140,6 +140,8 @@ public class contenidosEditaAction extends BaseAction
 					String idmenu = "" + contenido.getMenu().getId();
 					request.setAttribute("menu", idmenu );
 					request.setAttribute("migapan", contenidoDelegate.migapan(idmenu, null));
+					request.setAttribute("idMicrosite", micrositeBean.getId().toString());
+            
 					setMensajesInfo(request, contenidoForm);
 
 					return mapping.findForward("detalle");
