@@ -114,6 +114,12 @@ public class contenidosEditaAction extends BaseAction
 						contenido.getTraducciones().remove(key);
 					}
 
+					boolean esNuevo;
+					if (contenido.getId() == null) {
+						esNuevo = true;
+					} else {
+						esNuevo = false;
+					}
 					contenidoDelegate.grabarContenido(contenido);
 					micrositeDelegate.grabarUltimoIdcontenido(micrositeBean,contenido.getId());
 
@@ -127,8 +133,10 @@ public class contenidosEditaAction extends BaseAction
 
 					contenidoForm.set("orden", contenido.getOrden());
 					contenidoForm.set("id", contenido.getId());
-					contenido = setBeantoForm(request, contenidoForm, micrositeBean);
 					
+					if (!esNuevo) { //Si es una modificación, hay que volver a prepararlo.
+						contenido = setBeantoForm(request, contenidoForm, micrositeBean);
+					}
 					} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
 
 					//Borramos y reordenamos el árbol de menús
