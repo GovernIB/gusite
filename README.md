@@ -33,4 +33,3 @@ Llistat de Microsites
 ![Edició de Microsite](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_3.png)<br/>
 Edició de Microsite
 
-
