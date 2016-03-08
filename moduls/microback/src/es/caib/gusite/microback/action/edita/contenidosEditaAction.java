@@ -127,7 +127,8 @@ public class contenidosEditaAction extends BaseAction
 
 					contenidoForm.set("orden", contenido.getOrden());
 					contenidoForm.set("id", contenido.getId());
-
+					contenido = setBeantoForm(request, contenidoForm, micrositeBean);
+					
 					} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
 
 					//Borramos y reordenamos el árbol de menús
@@ -159,7 +160,7 @@ public class contenidosEditaAction extends BaseAction
 			request.setAttribute("contenidoForm", contenidoForm);
 			//Refresco de parámetro MVS de menú
 			Base.menuRefresh(request);
-
+			
 			return mapping.findForward("detalle");
 
 		} catch (Exception e) {
