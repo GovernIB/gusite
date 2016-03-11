@@ -2,8 +2,9 @@
 -- Eliminar funcionalitats de banners 
 DELETE FROM GUS_TIPSER WHERE TPS_CODI = 3;
 
-DROP TABLE gus_banidi cascade constraints;
-DROP TABLE gus_banner cascade constraints;
+--DROP TABLE gus_banidi cascade constraints;
+--DROP TABLE gus_banner cascade constraints;
+alter table gus_banner DISABLE constraint GUS_BANMIC_FK;
 
 -- Quitamos el servicio 3 de los servicios ofrecidos de los microsites
 UPDATE gus_micros
@@ -14,7 +15,8 @@ WHERE
 -- Eliminar funcionalitat de procediments
 DELETE FROM GUS_TIPSER WHERE TPS_CODI = 6;
 
-DROP TABLE gus_micpro cascade constraints;
+--DROP TABLE gus_micpro cascade constraints;
+alter table gus_micpro DISABLE constraint GUS_MPRMIC_FK;
 
 -- Quitamos el servicio 6 de los servicios ofrecidos de los microsites
 UPDATE gus_micros
@@ -427,6 +429,14 @@ ALTER TABLE GUS_MICROS ADD MIC_VERSION VARCHAR2(2);
 ALTER TABLE GUS_MICROS ADD MIC_TIPO_ACCESO VARCHAR2(1);
 
 -- Actualizamos a versión 5 los microsites antiguos sin css personalizado
+   --- Se añade la tabla backup para volver atrás los microsite en el backup
+CREATE TABLE GUS_MICROS_BACKUP(
+ "MIC_CODI"   NUMBER,
+ "MIC_RESTRI"      VARCHAR2(1 CHAR)
+);
+/
+DELETE FROM GUS_MICROS_BACKUP;
+INSERT INTO GUS_MICROS_BACKUP (SELECT MIC_CODI, MIC_RESTRI FROM GUS_MICROS);
 UPDATE GUS_MICROS SET MIC_RESTRI = '5' WHERE MIC_RESTRI = '2' AND MIC_CSS is null;
 
 -- Fijar los valores iniciales de los sitios antiguos
