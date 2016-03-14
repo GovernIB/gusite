@@ -55,9 +55,12 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 
 		try {
 	    	if (configuracion.equals(CONFIGURACION_GENERAL)) {
+	    		//issue #19: se añaden las traducciones que faltaban, y solo se solicita traduccion si existe el origen.
 				if(null!=microOrigen.getTitulo())		microDesti.setTitulo(traducir(microOrigen.getTitulo(),MODE_TXT));
-		    	if(null!=microOrigen.getTitulocampanya())		microDesti.setTitulocampanya(traducir(microOrigen.getTitulocampanya(),MODE_TXT));
-		    	if(null!=microOrigen.getSubtitulocampanya())	microDesti.setSubtitulocampanya(traducir(microOrigen.getSubtitulocampanya(),MODE_TXT));	    	
+		    	if(null!=microOrigen.getTitulocampanya() && null!= microOrigen.getTitulocampanya() )		microDesti.setTitulocampanya(traducir(microOrigen.getTitulocampanya(),MODE_TXT));
+		    	if(null!=microOrigen.getSubtitulocampanya() && null!= microOrigen.getSubtitulocampanya())	microDesti.setSubtitulocampanya(traducir(microOrigen.getSubtitulocampanya(),MODE_TXT));
+		    	if(null!=microOrigen.getDescription() && null!= microOrigen.getDescription() )	microDesti.setDescription(traducir(microOrigen.getDescription(),MODE_TXT));
+		    	if(null!=microOrigen.getKeywords() && null!= microOrigen.getKeywords())	microDesti.setKeywords(traducir(microOrigen.getKeywords(),MODE_TXT));
 	    	
 	    	} else {
 	    	   	//Traducción de los campos opcionales de la cabecera
