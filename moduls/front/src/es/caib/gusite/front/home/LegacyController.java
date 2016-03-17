@@ -572,7 +572,7 @@ public class LegacyController extends FrontController {
 
 	/**
 	 * Urls de contenido antiguo. agendas.do?mkey=M09112511445915080171&lang=ca
-	 * z
+	 * 
 	 * 
 	 * @throws DelegateException
 	 */
@@ -594,6 +594,32 @@ public class LegacyController extends FrontController {
 	@Autowired
 	protected EncuestasDataService encuestasDataService;
 
+	
+	
+	/**
+	 * *****************************************
+	 * Urls de contenido antiguo. encuestas.do?idsite=5274
+	 * @throws DelegateException
+	 */
+	@RequestMapping(value = "encuestas.do", params = { Microfront.PIDSITE })
+	public String encuestas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+		Microsite microsite = null;
+		try {
+			//TODO: pendiente implementar listado encuestas, mientras se redirecciona a la HOME
+			microsite = this.dataService.getMicrosite(idSite, lang);
+			return "redirect:" + this.addGenericParams(this.urlFactory.home(microsite, lang), pcampa, mcont);
+
+		} catch (ExceptionFrontMicro e) {
+			log.error(e.getMessage());
+			// TODO: 404?
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+		}
+	}
+	
+	//********************************************************
+	
 	/**
 	 * Urls de contenido antiguo.
 	 * encuesta.do?mkey=M11010412302126072344&lang=ca&cont=769 z
