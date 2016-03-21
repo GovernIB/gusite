@@ -27,6 +27,7 @@ import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Auditoria;
+import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.IndexObject;
@@ -216,7 +217,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			this.close(session);
 		}
 	}
-
+	
 	/**
 	 * Obtiene una encuesta a partir de la URI
 	 * 
@@ -245,6 +246,40 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 				return null;
 			}
 
+		} catch (ObjectNotFoundException oNe) {
+			log.error(oNe.getMessage());
+			return new Encuesta();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+
+	/**
+	 * Obtiene una encuesta a partir de la URI
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri, String site) {
+
+		Session session = this.getSession();
+		try {
+			Query query;
+			if (idioma != null) {
+				query = session
+						.createQuery("select encuesta from Encuesta encuesta JOIN encuesta.traducciones te where te.id.codigoIdioma = :idioma and te.uri = :uri and encuesta.idmicrosite = :site");
+				query.setParameter("idioma", idioma);
+			} else {
+				query = session
+						.createQuery("select encuesta from Encuesta encuesta JOIN encuesta.traducciones te where te.uri = :uri and encuesta.idmicrosite = :site");				
+			}
+			query.setParameter("uri", uri);
+			query.setParameter("site",Long.valueOf(site));
+			
+			query.setMaxResults(1);
+			return (Encuesta) query.uniqueResult();
 		} catch (ObjectNotFoundException oNe) {
 			log.error(oNe.getMessage());
 			return new Encuesta();
@@ -860,7 +895,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			List<Respuesta> respuestas = new ArrayList<Respuesta>();
 			// Segundo: Borramos las respuestas de las preguntas.
 			for (String idrespuesta : idrespuestas) {
-				respuestas.add((Respuesta) session.get(Pregunta.class,
+				respuestas.add((Respuesta) session.get(Respuesta.class,
 						Long.parseLong(idrespuesta)));
 				session.createQuery(
 						"delete from TraduccionRespuesta where id.codigoRespuesta = "
