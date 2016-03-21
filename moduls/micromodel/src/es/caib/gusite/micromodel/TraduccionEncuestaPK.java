@@ -38,7 +38,7 @@ public class TraduccionEncuestaPK implements Serializable {
 		this.codigoIdioma = codigoIdioma;
 	}
 
-	public long getCodigoEncuesta() {
+	public Long getCodigoEncuesta() {
 		return this.codigoEncuesta;
 	}
 

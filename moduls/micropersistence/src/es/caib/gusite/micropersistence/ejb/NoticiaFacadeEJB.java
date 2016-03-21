@@ -191,6 +191,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 						.values().iterator();
 				while (it.hasNext()) {
 					TraduccionNoticia trn = it.next();
+					trn.getId().setCodigoNoticia(noticia.getId());
 					listIdiomaBorrar += "'" +trn.getId().getCodigoIdioma()+"'";
 					if(it.hasNext()){
 						listIdiomaBorrar += "," ;						
@@ -312,28 +313,23 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Noticia obtenerNoticiaDesdeUri(String idioma, String uri) {
+	public Noticia obtenerNoticiaDesdeUri(final String idioma, final String uri, final String site) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			Query query;
 			if (idioma != null) {
 				query = session
-						.createQuery("from TraduccionNoticia tn where tn.id.codigoIdioma = :idioma and tn.uri = :uri");
+						.createQuery("select noticia from Noticia noticia JOIN noticia.traducciones tn where tn.id.codigoIdioma = :idioma and tn.uri = :uri and noticia.idmicrosite = :site");
 				query.setParameter("idioma", idioma);
 			} else {
 				query = session
-						.createQuery("from TraduccionNoticia tn where tn.uri = :uri");
+						.createQuery("select noticia from Noticia noticia JOIN noticia.traducciones tn where tn.uri = :uri and noticia.idmicrosite = :site");
 			}
 			query.setParameter("uri", uri);
+			query.setParameter("site", Long.valueOf(site));
 			query.setMaxResults(1);
-			TraduccionNoticia trad = (TraduccionNoticia) query.uniqueResult();
-			if (trad != null) {
-				return this.obtenerNoticia(trad.getId().getCodigoNoticia());
-			} else {
-				return null;
-			}
-
+			return (Noticia) query.uniqueResult();
 		} catch (ObjectNotFoundException oNe) {
 			log.error(oNe.getMessage());
 			return new Noticia();
@@ -808,7 +804,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
             Map<String, TraduccionNoticia> traducciones = new HashMap();
             for (TraduccionNoticia trad : noticia.getTraducciones().values()) {
-                TraduccionNoticia traduccionNoticia = clonarTraduccion(trad);
+                TraduccionNoticia traduccionNoticia = clonarTraduccion(trad, noticia.getIdmicrosite().toString());
                 traduccionNoticia.getId().setCodigoIdioma(trad.getId().getCodigoIdioma());
                 traducciones.put(trad.getId().getCodigoIdioma(), traduccionNoticia);
             }
@@ -832,13 +828,14 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		return newnoticia;
 	}
 
-    private TraduccionNoticia clonarTraduccion(TraduccionNoticia traduccionNoticia) {
+    private TraduccionNoticia clonarTraduccion(TraduccionNoticia traduccionNoticia, final String site) {
 
         TraduccionNoticia tradNotiNew = new TraduccionNoticia();
         if (traduccionNoticia.getDocu() != null) {
             tradNotiNew.setDocu(clonarArchivo(traduccionNoticia.getDocu().getId()));
         }
-        tradNotiNew.setUri(generarNuevaUri(traduccionNoticia.getId().getCodigoIdioma(), traduccionNoticia.getUri(), 0));
+        
+        tradNotiNew.setUri(generarNuevaUri(traduccionNoticia.getId().getCodigoIdioma(), traduccionNoticia.getUri(), site, 0));
         tradNotiNew.setFuente(traduccionNoticia.getFuente());
         tradNotiNew.setLaurl(traduccionNoticia.getLaurl());
         tradNotiNew.setSubtitulo(traduccionNoticia.getSubtitulo());
@@ -850,14 +847,14 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
         return tradNotiNew;
     }
 
-    private String generarNuevaUri(String idioma, String uri, int count) {
+    private String generarNuevaUri(String idioma, String uri, String site, int count) {
 
         String newUri = uri.concat("_").concat(String.valueOf(count));
-        Noticia noticia = this.obtenerNoticiaDesdeUri(idioma, newUri);
+        Noticia noticia = this.obtenerNoticiaDesdeUri(idioma, newUri, site);
         while (noticia != null) {
             count++;
             newUri = uri.concat("_").concat(String.valueOf(count));
-            noticia = this.obtenerNoticiaDesdeUri(idioma, newUri);
+            noticia = this.obtenerNoticiaDesdeUri(idioma, newUri, site);
         }
 
         return newUri;

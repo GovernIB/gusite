@@ -22,6 +22,8 @@ import org.apache.struts.upload.FormFile;
 import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.noticiaForm;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
@@ -90,7 +92,9 @@ public class noticiasEditaAction extends BaseAction
                         */
                         eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
-                        trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+                        final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+						final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.NID_URI,  micrositeBean.getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoNoticia(), 0);
+						trad.setUri(Cadenas.string2uri(nuevaUri));
                     }
 					if (trad.getId() == null) {
 						TraduccionNoticiaPK tradId = new TraduccionNoticiaPK();
@@ -140,9 +144,12 @@ public class noticiasEditaAction extends BaseAction
 	            noticiaForm.resetForm(mapping, request);
 	            addMessageAlert(request, "noticia.borrar.sinid");
 	        }        
-       } else setBeantoForm(request,noticiaForm, new Long(""+request.getParameter("id")), micrositeBean);
+       } else {
+    	   setBeantoForm(request,noticiaForm, new Long(""+request.getParameter("id")), micrositeBean);
+       }
         
-       request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId())); 
+        request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId() );
+         request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId())); 
        return mapping.findForward("detalle");
 
     	} catch (Exception e) {

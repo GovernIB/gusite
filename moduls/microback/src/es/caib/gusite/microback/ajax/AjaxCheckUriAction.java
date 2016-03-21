@@ -92,7 +92,7 @@ public class AjaxCheckUriAction extends Action {
 
                 case EID_URI:
                     EncuestaDelegate encuestaDelegate = DelegateUtil.getEncuestaDelegate();
-                    Encuesta encuesta = encuestaDelegate.obtenerEncuestaDesdeUri(idioma, uri);
+                    Encuesta encuesta = encuestaDelegate.obtenerEncuestaDesdeUri(idioma, uri, site);
                     if (encuesta != null && !encuesta.getId().equals(id)) {
                         msg = BUSCAR_NUEVA;
                     }
@@ -100,7 +100,7 @@ public class AjaxCheckUriAction extends Action {
 
                 case NID_URI:
                     NoticiaDelegate noticiaDelegate = DelegateUtil.getNoticiasDelegate();
-                    Noticia noticia = noticiaDelegate.obtenerNoticiaDesdeUri(idioma, uri);
+                    Noticia noticia = noticiaDelegate.obtenerNoticiaDesdeUri(idioma, uri, site);
                     if (noticia != null && !noticia.getId().equals(id)) {
                         msg = BUSCAR_NUEVA;
                     }
@@ -108,7 +108,7 @@ public class AjaxCheckUriAction extends Action {
 
                 case TPI_URI:
                     TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
-                    Tipo tipo = tipoDelegate.obtenerTipoDesdeUri(idioma, uri);
+                    Tipo tipo = tipoDelegate.obtenerTipoDesdeUri(idioma, uri, site);
                     if (tipo != null && !tipo.getId().equals(id)) {
                         msg = BUSCAR_NUEVA;
                     }
@@ -121,7 +121,6 @@ public class AjaxCheckUriAction extends Action {
                         msg = BUSCAR_NUEVA;
                     }
                     break;
-
                     
                 default:
                     msg = ERROR;

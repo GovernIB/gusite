@@ -17,6 +17,7 @@ import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.TraduccionActividadagenda;
+import es.caib.gusite.micromodel.TraduccionActividadagendaPK;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 
 /**

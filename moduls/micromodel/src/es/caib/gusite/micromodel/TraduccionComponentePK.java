@@ -25,7 +25,7 @@ public class TraduccionComponentePK implements Serializable {
 
 	@XmlAttribute
 	@Column(name = "CPI_CMPCOD")
-	private long codigoComponente;
+	private Long codigoComponente;
 
 	public TraduccionComponentePK() {
 	}
@@ -38,11 +38,11 @@ public class TraduccionComponentePK implements Serializable {
 		this.codigoIdioma = codigoIdioma;
 	}
 
-	public long getCodigoComponente() {
+	public Long getCodigoComponente() {
 		return this.codigoComponente;
 	}
 
-	public void setCodigoComponente(long codigoComponente) {
+	public void setCodigoComponente(Long codigoComponente) {
 		this.codigoComponente = codigoComponente;
 	}
 

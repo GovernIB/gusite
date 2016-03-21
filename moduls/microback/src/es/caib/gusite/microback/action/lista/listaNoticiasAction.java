@@ -56,7 +56,8 @@ public class listaNoticiasAction extends BaseAction {
             // Relleno el combo de Tipos de Noticias
             request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
             request.setAttribute("validacion", "si");
-            return mapping.findForward("detalleNoti");
+            request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	return mapping.findForward("detalleNoti");
         }
         //********************************************************
         //********************** CREAMOS *************************
@@ -65,6 +66,7 @@ public class listaNoticiasAction extends BaseAction {
             // Relleno el combo de Tipos de Noticias
             request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
         	request.getSession().removeAttribute("noticiaForm");
+        	request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         	return mapping.findForward("detalleNoti");
         }
         //********************************************************
@@ -83,7 +85,8 @@ public class listaNoticiasAction extends BaseAction {
             lis=lis.substring(0,lis.length()-2);
             
             request.getSession().setAttribute("mensajeBorrarNoticia", new String(lis));
-            
+            request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	
             return mapping.findForward("listarNoticias");
         }
 
@@ -98,7 +101,8 @@ public class listaNoticiasAction extends BaseAction {
             String newid = "" + bdNoticia.clonarNoticia(id);
             
             request.getSession().setAttribute("mensajeClonarNoticia", newid);
-            
+            request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	
             return mapping.findForward("listarNoticias");
 
         }        

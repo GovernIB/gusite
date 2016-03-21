@@ -19,6 +19,8 @@ import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.TraDynaActionForm;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 import es.caib.gusite.microback.base.Base;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
@@ -115,13 +117,39 @@ public class tiposEditaAction extends BaseAction {
                     List<TraduccionTipo> llista = (List<TraduccionTipo>) f.get("traducciones");
                     List<?> langs = DelegateUtil.getIdiomaDelegate().listarIdiomas();
                     for (int i = 0; i<llista.size(); i++) {
+                    	
                         if (tipo.getTraducciones().containsKey(((Idioma) langs.get(i)).getLang())) {
                             tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setNombre(llista.get(i).getNombre());
-                            tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUri(llista.get(i).getUri());
+                            if (llista.get(i).getUri() == null || llista.get(i).getUri().isEmpty()) {
+                            	final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+        						final String nuevaUri = ajax.check(llista.get(i).getNombre(), 
+        															UriType.TPI_URI, 
+        															((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(), 
+        															((Idioma) langs.get(i)).getLang() , 
+        															tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).getId().getCodigoTipo(), 
+        															0);
+        						llista.get(i).setUri(nuevaUri);
+        						tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUri(llista.get(i).getUri());
+                            } else {
+                            	tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUri(llista.get(i).getUri());
+                            }
                         } else {
                             TraduccionTipo traduccio = new TraduccionTipo();
                             traduccio.setNombre(llista.get(i).getNombre());
-                            traduccio.setUri(llista.get(i).getUri());
+                            if (!llista.get(i).getNombre().isEmpty() && (llista.get(i).getUri() == null || llista.get(i).getUri().isEmpty())) {
+                            	final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+        						final String nuevaUri = ajax.check(llista.get(i).getNombre(), 
+        															UriType.TPI_URI, 
+        															((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(), 
+        															((Idioma) langs.get(i)).getLang() , 
+        															null, 
+        															0);
+        						llista.get(i).setUri(nuevaUri);
+        						traduccio.setUri(llista.get(i).getUri());
+                            } else {
+                            	traduccio.setUri(llista.get(i).getUri());
+                            }
+                           
 
         					if (traduccio.getId() == null) {
         						TraduccionTipoPK tradId = new TraduccionTipoPK();
@@ -132,6 +160,9 @@ public class tiposEditaAction extends BaseAction {
                             tipo.getTraducciones().put(((Idioma) langs.get(i)).getLang(), traduccio);
                         }
                     }
+                    
+                    ///TODO
+                    f.set("traducciones", llista);
                 }
 
                 List<String> eliminar = new ArrayList<String>();
@@ -140,14 +171,20 @@ public class tiposEditaAction extends BaseAction {
                     if (trad.getNombre().equals("") && trad.getUri().equals("")) {
                         eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
-                        trad.setUri(Cadenas.string2uri(trad.getNombre()));
+                        final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+						final String nuevaUri = ajax.check(trad.getNombre(),  UriType.CID_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoTipo(), 0);
+						trad.setUri(Cadenas.string2uri(nuevaUri));
                     }
                 }
                 for (String key : eliminar) {
                     tipo.getTraducciones().remove(key);
                 }
-
+                
+                
                 bdTipo.grabarTipo(tipo);
+                
+                
+
 
                 if (f.get("id") == null) {
                     addMessageWithDate(request, "mensa.nuevotipo");
@@ -160,11 +197,13 @@ public class tiposEditaAction extends BaseAction {
                 // Traducimos el Contenido
                 traducir(request, f);
             }
-
+           
             // combo para que clasifiquen los listados
             request.setAttribute("listaClasificacion", bdTipo.comboClasificacion(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId()));
+            request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId() );
             Base.micrositeRefresh(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId(), request);
             Base.menuRefresh(request);
+            //VOUtils.populate(tipo, f);
             return mapping.findForward("detalle");
         }
 
@@ -176,7 +215,8 @@ public class tiposEditaAction extends BaseAction {
 
             // Combo para que clasifiquen los listados
             request.setAttribute("listaClasificacion", bdTipo.comboClasificacion(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId()));
-
+            request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId() );
+            
             if (bdTipo.checkSite(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId(), id)) {
                 addMessageError(request, "info.seguridad");
                 return mapping.findForward("info");
@@ -216,7 +256,7 @@ public class tiposEditaAction extends BaseAction {
 
             Base.micrositeRefresh(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId(), request);
             Base.menuRefresh(request);
-
+            
             return mapping.findForward("detalle");
         }
 

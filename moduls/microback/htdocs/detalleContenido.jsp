@@ -185,12 +185,12 @@
      	<logic:present name="contenidoForm" property="id">
 	 		<input type="hidden" name="modifica" />
         	<html:hidden property="id" />
-			<html:hidden property="idMicrosite" />
+			<input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />
      	</logic:present>
      
      	<logic:notPresent name="contenidoForm" property="id">
 	     	<input type="hidden" name="anyade" />
-			<input type="hidden" name="idMicrosite" value='<bean:write name="idMicrosite"/>' />
+			<input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />
      	</logic:notPresent>
 
 		<tr class="par">

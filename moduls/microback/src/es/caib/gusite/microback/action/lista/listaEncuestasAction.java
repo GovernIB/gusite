@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionMapping;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.listaActionForm;
 import es.caib.gusite.microback.actionform.formulario.encuestaForm;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 
@@ -54,7 +55,7 @@ public class listaEncuestasAction extends BaseAction {
         if (request.getSession().getAttribute("encuestaForm")!=null && request.getAttribute(Globals.ERROR_KEY)!=null) {
         	encuestaForm fdet=(encuestaForm) request.getSession().getAttribute("encuestaForm");
         	request.setAttribute("encuestaForm", fdet);
-            return mapping.findForward("detalleEncuesta");
+        	return mapping.findForward("detalleEncuesta");
         }
         
         //********************************************************
@@ -62,6 +63,7 @@ public class listaEncuestasAction extends BaseAction {
         //********************************************************
         if ( f.getAccion().equals("crear")) {
         	request.getSession().removeAttribute("encuestaForm");
+        	request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         	return mapping.findForward("detalleEncuesta");
         }
         //********************************************************
@@ -79,7 +81,8 @@ public class listaEncuestasAction extends BaseAction {
             }
             lis=lis.substring(0,lis.length()-2);
             
-            addMessage(request, "mensa.listaencuestas");
+            request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	addMessage(request, "mensa.listaencuestas");
             addMessage(request, "mensa.listaencborradas", new String(lis));
             
             return mapping.findForward("info");

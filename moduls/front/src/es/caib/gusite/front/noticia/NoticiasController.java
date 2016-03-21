@@ -92,7 +92,7 @@ public class NoticiasController extends BaseViewController {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
 
-			Tipo tipo = this.getTipo(uriListaNoticia, lang.getLang());
+			Tipo tipo = this.getTipo(uriListaNoticia, lang.getLang(), microsite.getId().toString());
 			view.setClaseElementoId(tipo.getId());
 
 			criteria.setTipo(tipo);
@@ -251,14 +251,14 @@ public class NoticiasController extends BaseViewController {
 		return path;
 	}
 
-	private Tipo getTipo(String uriTipo, String lang) throws ExceptionFrontPagina {
+	private Tipo getTipo(String uriTipo, String lang, String site) throws ExceptionFrontPagina {
 		TipoDelegate tipodel = DelegateUtil.getTipoDelegate();
 		try {
-			Tipo tipo = tipodel.obtenerTipoDesdeUri(lang, uriTipo);
+			Tipo tipo = tipodel.obtenerTipoDesdeUri(lang, uriTipo, site);
 			if (tipo == null) {
 				// Si no lo encontramos por idioma, buscamos cualquiera. Esto
 				// sirve para el cambio de idioma sencillo
-				tipo = tipodel.obtenerTipoDesdeUri(null, uriTipo);
+				tipo = tipodel.obtenerTipoDesdeUri(null, uriTipo, site);
 			}
 			if (tipo == null) {
 				throw new ExceptionFrontPagina("Tipo no encontrado: " + uriTipo, ExceptionFrontPagina.HTTP_NOT_FOUND);
@@ -294,7 +294,7 @@ public class NoticiasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-			Noticia noticia = this.noticiasDataService.loadNoticia(uriNoticia, lang.getLang());
+			Noticia noticia = this.noticiasDataService.loadNoticia(uriNoticia, lang.getLang(), view.getMicrosite().getId().toString());
 
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {
@@ -361,7 +361,7 @@ public class NoticiasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-			Noticia noticia = this.noticiasDataService.loadNoticia(uriDocumentoNoticia, lang.getLang());
+			Noticia noticia = this.noticiasDataService.loadNoticia(uriDocumentoNoticia, lang.getLang(), view.getMicrosite().getId().toString());
 
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {

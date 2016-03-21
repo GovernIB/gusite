@@ -218,43 +218,6 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 		}
 	}
 	
-	/**
-	 * Obtiene una encuesta a partir de la URI
-	 * 
-	 * @ejb.interface-method
-	 * @ejb.permission unchecked="true"
-	 */
-	public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri) {
-
-		Session session = this.getSession();
-		try {
-			Query query;
-			if (idioma != null) {
-				query = session
-						.createQuery("from TraduccionEncuesta te where te.id.codigoIdioma = :idioma and te.uri = :uri");
-				query.setParameter("idioma", idioma);
-			} else {
-				query = session
-						.createQuery("from TraduccionEncuesta te where te.uri = :uri");
-			}
-			query.setParameter("uri", uri);
-			query.setMaxResults(1);
-			TraduccionEncuesta trad = (TraduccionEncuesta) query.uniqueResult();
-			if (trad != null) {
-				return this.obtenerEncuesta(trad.getId().getCodigoEncuesta());
-			} else {
-				return null;
-			}
-
-		} catch (ObjectNotFoundException oNe) {
-			log.error(oNe.getMessage());
-			return new Encuesta();
-		} catch (HibernateException he) {
-			throw new EJBException(he);
-		} finally {
-			this.close(session);
-		}
-	}
 
 	/**
 	 * Obtiene una encuesta a partir de la URI

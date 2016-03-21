@@ -24,7 +24,7 @@ public class TraduccionActividadagendaPK implements Serializable {
 
 	@XmlAttribute
 	@Column(name = "ATI_ACTCOD")
-	private long codigoActividadAgenda;
+	private Long codigoActividadAgenda;
 
 	public TraduccionActividadagendaPK() {
 	}
@@ -37,11 +37,11 @@ public class TraduccionActividadagendaPK implements Serializable {
 		this.codigoIdioma = codigoIdioma;
 	}
 
-	public long getCodigoActividadAgenda() {
+	public Long getCodigoActividadAgenda() {
 		return this.codigoActividadAgenda;
 	}
 
-	public void setCodigoActividadAgenda(long codigoActividadAgenda) {
+	public void setCodigoActividadAgenda(Long codigoActividadAgenda) {
 		this.codigoActividadAgenda = codigoActividadAgenda;
 	}
 

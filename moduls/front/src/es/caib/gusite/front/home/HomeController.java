@@ -50,10 +50,11 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}")
 	public ModelAndView home(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String uricontenido) {
 		HomeView view = new HomeView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, uricontenido);
 			Microsite microsite = view.getMicrosite();
 
 			// microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
@@ -98,10 +99,11 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}")
 	public ModelAndView home(@PathVariable("uri") SiteId URI,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, 
+			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String pcontenido) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.home(URI, DEFAULT_IDIOMA, pcampa);
+		return this.home(URI, DEFAULT_IDIOMA, pcampa, pcontenido);
 
 	}
 
@@ -117,7 +119,7 @@ public class HomeController extends BaseViewController {
 
 		MapaView view = new MapaView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			this.cargarMollapanMapa(view);
 			return modelForView(this.templateNameFactory.mapa(view.getMicrosite()), view);
 
@@ -153,7 +155,7 @@ public class HomeController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		AccesibilidadView view = new AccesibilidadView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 
 			this.cargarMollapanAccessibilitat(view);

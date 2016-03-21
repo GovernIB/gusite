@@ -70,14 +70,16 @@ public class tiponotForm extends TraDynaActionForm {
         
     		try {
 	        	IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-	        	List lang = idiomaDelegate.listarLenguajes();
+	        	List<?> lang = idiomaDelegate.listarLenguajes();
 	        	
 	        	for (int i=0;i<lang.size();i++) {
-	        		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
-	        			TraduccionTipo  trad = (TraduccionTipo)((ArrayList)get("traducciones")).get(i);
+	        		TraduccionTipo  trad = (TraduccionTipo)((ArrayList) get("traducciones")).get(i);
+        			if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
 	        			if (trad.getNombre().length()==0)
 	        				errors.add("titulo", new ActionError("error.tiponot.nombre"));
-	        		}
+	        		} else if (trad.getNombre().length()==0 && trad.getUri().length() > 0) {
+	        				errors.add("titulo", new ActionError("error.conte.titulo2", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
+	            	}
 	        	}
 				
 	        } catch (Throwable t) {

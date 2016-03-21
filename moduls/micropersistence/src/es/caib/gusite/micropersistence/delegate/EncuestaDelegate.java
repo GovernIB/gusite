@@ -93,10 +93,10 @@ public class EncuestaDelegate implements StatelessDelegate {
 	 * @return Encuesta
 	 * @throws DelegateException
 	 */
-	public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri)
+	public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri, String site)
 			throws DelegateException {
 		try {
-			return this.getFacade().obtenerEncuestaDesdeUri(idioma, uri);
+			return this.getFacade().obtenerEncuestaDesdeUri(idioma, uri, site);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

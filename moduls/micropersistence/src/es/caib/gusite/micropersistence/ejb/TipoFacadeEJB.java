@@ -199,27 +199,24 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Tipo obtenerTipoDesdeUri(String idioma, String uri) {
+	public Tipo obtenerTipoDesdeUri(String idioma, String uri, String site) {
 
 		Session session = this.getSession();
 		try {
 			Query query;
 			if (idioma != null) {
 				query = session
-						.createQuery("from TraduccionTipo tt where tt.id.codigoIdioma = :idioma and tt.uri = :uri");
+						.createQuery("select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.id.codigoIdioma = :idioma and tt.uri = :uri and tipo.idmicrosite = :site");
 				query.setParameter("idioma", idioma);
+				
 			} else {
 				query = session
-						.createQuery("from TraduccionTipo tt where tt.uri = :uri");
+						.createQuery("select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.uri = :uri and tipo.idmicrosite = :site");
 			}
 			query.setParameter("uri", uri);
+			query.setParameter("site", Long.valueOf(site));
 			query.setMaxResults(1);
-			TraduccionTipo trad = (TraduccionTipo) query.uniqueResult();
-			if (trad != null) {
-				return this.obtenerTipo(trad.getId().getCodigoTipo());
-			} else {
-				return null;
-			}
+			return (Tipo) query.uniqueResult();
 
 		} catch (ObjectNotFoundException oNe) {
 			log.error(oNe.getMessage());

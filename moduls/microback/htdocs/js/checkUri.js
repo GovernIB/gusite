@@ -12,7 +12,7 @@ $(document).ready(function () {
     uri3 = $("#uri3");
     uri4 = $("#uri4");
     type = $("input[name=type]").val();
-    idSite = $("input[name=idMicrosite]").val();
+    idSite = $("input[name=idmicrosite]").val();
     titulo0 = $("#titulo0");
     titulo1 = $("#titulo1");
     titulo2 = $("#titulo2");

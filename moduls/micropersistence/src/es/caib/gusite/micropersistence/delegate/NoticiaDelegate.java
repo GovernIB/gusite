@@ -96,10 +96,10 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * obtenerNoticiaDesdeUri(java.lang.Idioma, java.lang.String)
 	 */
-	public Noticia obtenerNoticiaDesdeUri(String lang, String uri)
+	public Noticia obtenerNoticiaDesdeUri(final String lang, final String uri, final String site)
 			throws DelegateException {
 		try {
-			return this.getFacade().obtenerNoticiaDesdeUri(lang, uri);
+			return this.getFacade().obtenerNoticiaDesdeUri(lang, uri, site);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

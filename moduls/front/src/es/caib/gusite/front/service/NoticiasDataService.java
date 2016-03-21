@@ -308,13 +308,13 @@ public class NoticiasDataService {
 		return noticia;
 	}
 
-	public Noticia loadNoticia(String uriNoticia, String lang) throws DelegateException, ExceptionFrontPagina {
+	public Noticia loadNoticia(String uriNoticia, String lang, String site) throws DelegateException, ExceptionFrontPagina {
 		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
-		Noticia noticia = noticiadel.obtenerNoticiaDesdeUri(lang, uriNoticia);
+		Noticia noticia = noticiadel.obtenerNoticiaDesdeUri(lang, uriNoticia, site);
 		if (noticia == null) {
 			// Si no lo encontramos por idioma, buscamos cualquiera. Esto sirve
 			// para el cambio de idioma sencillo
-			noticia = noticiadel.obtenerNoticiaDesdeUri(null, uriNoticia);
+			noticia = noticiadel.obtenerNoticiaDesdeUri(null, uriNoticia, site);
 		}
 		if (noticia == null) {
 			throw new ExceptionFrontPagina("Noticia no encontrada: " + uriNoticia, ExceptionFrontPagina.HTTP_NOT_FOUND);

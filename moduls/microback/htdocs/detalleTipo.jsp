@@ -70,14 +70,15 @@
 		   	</button>
 		</div>
 		
-		<input type="hidden" name="espera" value="si" id="espera" />
-
+		<input type="hidden" name="espera" value="si" id="espera" />				         
 		     <logic:present name="tiponotForm" property="id">
 			     <input type="hidden" name="modifica" value="Grabar" />
 		         <html:hidden property="id" />
+		         <input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />
 		     </logic:present>
 			 <logic:notPresent name="tiponotForm" property="id">
 			  	<input type="hidden" name="anyade" value="Crear" />
+			  	<input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />
 			 </logic:notPresent> 
 	
 	

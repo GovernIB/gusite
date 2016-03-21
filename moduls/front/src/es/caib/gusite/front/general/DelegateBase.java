@@ -103,8 +103,8 @@ public class DelegateBase {
 	 * @return ArrayList con objetos "Menufront"
 	 * @throws Exception
 	 */
-	public List<MenuFront> obtenerMainMenu(Long idmicrosite, String idioma) throws DelegateException {
-		List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma);
+	public List<MenuFront> obtenerMainMenu(Long idmicrosite, String idioma, String uriContenido) throws DelegateException {
+		List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma, uriContenido);
 		return listamenu;
 		// throw new Exception(" [obtenerMainMenu, " + idmicrosite + ", " +
 		// idioma + " ] Error: " + e.getMessage());
@@ -323,7 +323,7 @@ public class DelegateBase {
 	 * @param idi
 	 * @return ArrayList
 	 */
-	private List<MenuFront> montarmenu(Long idmicrosite, String idi) throws DelegateException {
+	private List<MenuFront> montarmenu(Long idmicrosite, String idi, String uriContenido) throws DelegateException {
 		ArrayList<MenuFront> listadomenu = new ArrayList<MenuFront>();
 
 		// los menus de primer nivel ya salen ordenados
@@ -332,7 +332,7 @@ public class DelegateBase {
 		Iterator<?> iter = menudel.listarMenuMicrosite(idmicrosite, new Long(0), "S", idi).iterator();
 		while (iter.hasNext()) {
 			Menu menu = (Menu) iter.next();
-			MenuFront menufront = new MenuFront(menu);
+			MenuFront menufront = new MenuFront(menu); 
 			menu.setIdi(idi);
 			menufront.setIdi(idi);
 
@@ -358,6 +358,10 @@ public class DelegateBase {
 						conte.setUrlExterna("false");
 					}
 					menufront.getListacosas().add(conte);
+				}
+				
+				if (uriContenido != null && tracon.getUri().equals(uriContenido)) {
+					menufront.setModo("F");					
 				}
 			}
 
@@ -392,7 +396,7 @@ public class DelegateBase {
 						} else {
 							contesub.setUrlExterna("false");
 						}
-						menufrontsub.getListacosas().add(contesub);
+						menufrontsub.getListacosas().add(contesub);						
 					}
 				}
 

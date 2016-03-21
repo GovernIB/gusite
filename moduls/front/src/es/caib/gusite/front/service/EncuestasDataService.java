@@ -37,15 +37,15 @@ public class EncuestasDataService {
 
 	}
 
-	public Encuesta getEncuesta(Microsite microsite, String uriEncuesta, String lang) throws ExceptionFrontPagina {
+	public Encuesta getEncuesta(Microsite microsite, String uriEncuesta, String lang, String site) throws ExceptionFrontPagina {
 
 		try {
 			EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();
-			Encuesta encuesta = encuestadel.obtenerEncuestaDesdeUri(lang, uriEncuesta);
+			Encuesta encuesta = encuestadel.obtenerEncuestaDesdeUri(lang, uriEncuesta, site);
 			if (encuesta == null) {
 				// Si no lo encontramos por idioma, buscamos cualquiera. Esto
 				// sirve para el cambio de idioma sencillo
-				encuesta = encuestadel.obtenerEncuestaDesdeUri(null, uriEncuesta);
+				encuesta = encuestadel.obtenerEncuestaDesdeUri(null, uriEncuesta, site);
 			}
 			if (encuesta == null) {
 				throw new ExceptionFrontPagina("Encuesta no encontrada: " + uriEncuesta, ExceptionFrontPagina.HTTP_NOT_FOUND);

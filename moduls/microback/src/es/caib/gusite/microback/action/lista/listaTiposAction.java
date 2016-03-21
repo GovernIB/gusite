@@ -56,7 +56,7 @@ public class listaTiposAction extends BaseAction {
         if (request.getSession().getAttribute("tiponotForm")!=null && request.getAttribute(Globals.ERROR_KEY)!=null) {
         	TraDynaActionForm fdet=(TraDynaActionForm) request.getSession().getAttribute("tiponotForm");
         	request.setAttribute("tiponotForm", fdet);
-            // combo para que clasifiquen los listados
+        	// combo para que clasifiquen los listados
         	request.setAttribute("validacion", "si");
             request.setAttribute("listaClasificacion", bdTipo.comboClasificacion(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
 
@@ -69,7 +69,7 @@ public class listaTiposAction extends BaseAction {
         	request.getSession().removeAttribute("tiponotForm");
             // combo para que clasifiquen los listados
             request.setAttribute("listaClasificacion", bdTipo.comboClasificacion(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
-
+            request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         	return mapping.findForward("detalleTipo");
         }
         //********************************************************
@@ -92,7 +92,8 @@ public class listaTiposAction extends BaseAction {
             lis=lis.substring(0,lis.length()-2);
             
             request.getSession().setAttribute("mensajeBorrarTipo", new String(lis));
-            
+            request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	
             return mapping.findForward("listarTipos");
             
         	} catch (Exception e) {

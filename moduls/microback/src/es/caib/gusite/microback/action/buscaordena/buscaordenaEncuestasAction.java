@@ -77,6 +77,9 @@ public class buscaordenaEncuestasAction extends Action {
         else  // Si no hay registros limpiamos el filtro
             f.setFiltro("");
 
+        final Long idMicrosite = ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId();
+        request.setAttribute("idmicrosite" , idMicrosite);
+        
         return mapping.findForward("listarEncuestas");
         
     }

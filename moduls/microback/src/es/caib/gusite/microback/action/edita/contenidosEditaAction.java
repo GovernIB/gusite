@@ -137,7 +137,7 @@ public class contenidosEditaAction extends BaseAction
 					if (!esNuevo) { //Si es una modificación, hay que volver a prepararlo.
 						contenido = setBeantoForm(request, contenidoForm, micrositeBean);
 					}
-					} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
+				} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.borrar"))) {
 
 					//Borramos y reordenamos el árbol de menús
 					contenidoDelegate.borrarContenido(contenido.getId());
@@ -149,7 +149,7 @@ public class contenidosEditaAction extends BaseAction
 					String idmenu = "" + contenido.getMenu().getId();
 					request.setAttribute("menu", idmenu );
 					request.setAttribute("migapan", contenidoDelegate.migapan(idmenu, null));
-					request.setAttribute("idMicrosite", micrositeBean.getId().toString());
+					request.setAttribute("idmicrosite", micrositeBean.getId().toString());
             
 					setMensajesInfo(request, contenidoForm);
 
@@ -164,7 +164,8 @@ public class contenidosEditaAction extends BaseAction
 			request.setAttribute("listaDocs", contenidoDelegate.listarDocumentos(micrositeBean.getId().toString(), "" + contenido.getId()));
 			request.getSession().setAttribute("migapan", contenidoDelegate.migapan("" + contenido.getMenu().getId(), contenido.getId()));
 			//vrs: anyadido para saber migapan de la url
-			request.setAttribute("MVS_HS_URL_migapan", hashMigaPan(contenido));
+			request.setAttribute("idmicrosite", micrositeBean.getId().toString());
+            request.setAttribute("MVS_HS_URL_migapan", hashMigaPan(contenido));
 			request.setAttribute("contenidoForm", contenidoForm);
 			//Refresco de parámetro MVS de menú
 			Base.menuRefresh(request);
@@ -291,7 +292,7 @@ public class contenidosEditaAction extends BaseAction
             contenidoForm.set("visible",contenido.getVisible());
             contenidoForm.set("orden", new Integer(contenido.getOrden()));
            	contenidoForm.set("idMenu",contenido.getMenu().getId());
-           	contenidoForm.set("idMicrosite", micrositeBean.getId());
+           	contenidoForm.set("idmicrosite", micrositeBean.getId());
             
             VOUtils.describe(contenidoForm, contenido);  // bean --> form    	
     	

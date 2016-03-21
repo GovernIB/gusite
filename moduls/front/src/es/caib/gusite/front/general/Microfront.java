@@ -88,7 +88,8 @@ public class Microfront {
 														// encuesta
 	static public final String MCONT = "mcont"; // usado en urls ¿menú de
 												// contenido?
-
+	static public final String URICONT = "uricont"; // usado en urls ¿menú de contenido?
+	
 	// clases de los elementos
 	// OJO! duplicacion con Tipo.java
 	static public final String ELEM_NOTICIA = "0"; // elemento predefinido

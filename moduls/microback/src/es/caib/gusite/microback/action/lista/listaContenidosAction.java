@@ -68,7 +68,7 @@ public class listaContenidosAction extends BaseAction {
             request.setAttribute("menu", ""+fdet.get("idMenu") );
             request.setAttribute("migapan", bdConte.migapan("",null) );
             request.setAttribute("validacion", "si");
-            request.setAttribute("idMicrosite", ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId().toString());
+            request.setAttribute("idmicrosite", ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId().toString());
             return mapping.findForward("detalleConte");
         }
         //********************************************************
@@ -83,7 +83,7 @@ public class listaContenidosAction extends BaseAction {
         	   	request.setAttribute("menu", idmenu );
         	   	request.setAttribute("migapan", bdConte.migapan(idmenu,null) );
         	   	final Menu menu = DelegateUtil.getMenuDelegate().obtenerMenu(Long.valueOf(request.getParameter("idmenu")));
-        	   	request.setAttribute("idMicrosite", menu.getMicrosite().getId().toString());
+        	   	request.setAttribute("idmicrosite", menu.getMicrosite().getId().toString());
             	return mapping.findForward("detalleConte");
         	}
 

@@ -67,10 +67,12 @@ public class encuestaForm extends TraDynaActionForm {
             	List lang = idiomaDelegate.listarLenguajes();
             	
             	for (int i=0;i<lang.size();i++) {
-            		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
-            			TraduccionEncuesta  trad = (TraduccionEncuesta)((ArrayList)get("traducciones")).get(i);
+            		TraduccionEncuesta  trad = (TraduccionEncuesta)((ArrayList)get("traducciones")).get(i);
+        			if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())) {
             			if (trad.getTitulo().length()==0)
             				errors.add("titulo", new ActionError("error.encuestas.titulo"));
+            		} else if (trad.getTitulo().length()==0 && trad.getUri().length() > 0) {
+            			errors.add("titulo", new ActionError("error.conte.titulo2", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
             		}
             	}
     			

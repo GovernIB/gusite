@@ -820,7 +820,7 @@ public class ImportarAction extends BaseAction {
 				tpnuevo.setId(null);
 				tpnuevo.setIdmicrosite(mic.getId().longValue());
 				// creamos los tipos de noticias
-                tpnuevo = generarNuevasUrisTipo(tpnuevo);
+                tpnuevo = generarNuevasUrisTipo(tpnuevo, tp.getIdmicrosite().toString());
 				idtpnotic_nueva = bdTipo.grabarTipo(tpnuevo);
 				tablamapeos.put(new String("TPN_" + tp.getId()), idtpnotic_nueva);
 				lista1.add(tpnuevo);
@@ -2077,17 +2077,17 @@ public class ImportarAction extends BaseAction {
 		MicroLog.addLogVisualStackTrace(request, "{i" + _hashcode + "} " + mensaje, mensajes);
 	}
 
-    private Tipo generarNuevasUrisTipo(Tipo tipo) {
+    private Tipo generarNuevasUrisTipo(Tipo tipo, String site) {
 
         TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
         for (TraduccionTipo trad : tipo.getTraducciones().values()) {
             try {
                 int count = 0;
                 String newUri = trad.getUri();
-                Tipo tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                Tipo tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri, site);
                 while (tipoUri != null) {
                     newUri = trad.getUri() + "_" + count;
-                    tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    tipoUri = tipoDelegate.obtenerTipoDesdeUri(trad.getId().getCodigoIdioma(), newUri, site);
                     count++;
                 }
                 trad.setUri(newUri);
@@ -2106,10 +2106,10 @@ public class ImportarAction extends BaseAction {
             try {
                 int count = 0;
                 String newUri = trad.getUri();
-                Noticia noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                Noticia noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri, noticia.getIdmicrosite().toString());
                 while (noticiaUri != null) {
                     newUri = trad.getUri() + "_" + count;
-                    noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    noticiaUri = noticiaDelegate.obtenerNoticiaDesdeUri(trad.getId().getCodigoIdioma(), newUri, noticia.getIdmicrosite().toString());
                     count++;
                 }
                 trad.setUri(newUri);
@@ -2150,10 +2150,10 @@ public class ImportarAction extends BaseAction {
             try {
                 int count = 0;
                 String newUri = trad.getUri();
-                Encuesta encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                Encuesta encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri, encuesta.getIdmicrosite().toString());
                 while (encuestaUri != null) {
                     newUri = trad.getUri() + "_" + count;
-                    encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri);
+                    encuestaUri = encuestaDelegate.obtenerEncuestaDesdeUri(trad.getId().getCodigoIdioma(), newUri, encuesta.getIdmicrosite().toString());
                     count++;
                 }
                 trad.setUri(newUri);

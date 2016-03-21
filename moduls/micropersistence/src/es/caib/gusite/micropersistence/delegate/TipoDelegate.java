@@ -108,10 +108,10 @@ public class TipoDelegate implements StatelessDelegate {
 	 * @return Tipo
 	 * @throws DelegateException
 	 */
-	public Tipo obtenerTipoDesdeUri(String idioma, String uri)
+	public Tipo obtenerTipoDesdeUri(String idioma, String uri, String site)
 			throws DelegateException {
 		try {
-			return this.getFacade().obtenerTipoDesdeUri(idioma, uri);
+			return this.getFacade().obtenerTipoDesdeUri(idioma, uri, site);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

@@ -19,6 +19,8 @@ import org.apache.struts.action.DynaActionForm;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.encuestaForm;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
@@ -55,6 +57,9 @@ public class encuestasEditaAction extends BaseAction
     	String pModifica="" + request.getParameter("modifica");
     	String pAnyade="" + request.getParameter("anyade");
     	
+    	final Long idMicrosite = ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId();
+        request.setAttribute("idmicrosite" , idMicrosite);
+        
     	if ( (!pModifica.equals("null")) || (!pAnyade.equals("null")) ) { 
 
         	if (f.get("id") == null) {  
@@ -116,7 +121,9 @@ public class encuestasEditaAction extends BaseAction
 				if (trad.getTitulo().equals("") && trad.getUri().equals("")) {
 					eliminar.add(lang);
 				} else if (trad.getUri().equals("")) {
-					trad.setUri(Cadenas.string2uri(trad.getTitulo()));
+					final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+					final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.EID_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoEncuesta(), 0);
+					trad.setUri(Cadenas.string2uri(nuevaUri));
 				}
 			}
 			for (String key : eliminar) {
@@ -145,6 +152,7 @@ public class encuestasEditaAction extends BaseAction
        		addMessage(request, "mensa.listapregborradas");
        		addMessage(request, "mensa.editarencuesta", "" + f.get("id"));
            	addMessage(request, "mensa.listaencuestas");
+           	
            	
            	return mapping.findForward("info");
     		
