@@ -17,6 +17,7 @@ public class EncuestaView extends PageView {
 	private Encuesta encuesta;
 	private Map<?,?> respostesFixades;
 	private String identificacion;
+	private String idContenido;
 
 	public void setManteniment(Boolean mant) {
 		this.manteniment = mant;
@@ -36,8 +37,12 @@ public class EncuestaView extends PageView {
 
 	public void setIdentificacion(String identificacio) {
 		this.identificacion = identificacio;
-
 	}
+	
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	
 
 	/**
 	 * Indica que la encuesta está en modo de mantenimiento
@@ -84,4 +89,12 @@ public class EncuestaView extends PageView {
 		return identificacion;
 	}
 
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
+	}
 }

@@ -39,6 +39,7 @@ public class FaqController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/faq")
 	public ModelAndView listarfaqs(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 
 		ListarFaqsView view = new ListarFaqsView();
@@ -48,7 +49,7 @@ public class FaqController extends BaseViewController {
 
 			this.cargarFaq(view);
 			this.cargarMollapan(view);
-
+			view.setIdContenido(mcont);
 			return this.modelForView(this.templateNameFactory.listarFaqs(microsite), view);
 
 		} catch (DelegateException e) {
@@ -68,10 +69,11 @@ public class FaqController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/faq")
 	public ModelAndView listarfaqs(@PathVariable("uri") SiteId URI,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.listarfaqs(URI, DEFAULT_IDIOMA, pcampa);
+		return this.listarfaqs(URI, DEFAULT_IDIOMA, pcampa, mcont);
 
 	}
 

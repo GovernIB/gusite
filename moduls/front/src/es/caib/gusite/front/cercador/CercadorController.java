@@ -106,7 +106,7 @@ public class CercadorController extends BaseViewController {
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.cercar(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req);
+		return this.cercar(URI, DEFAULT_IDIOMA, cerca, mcont, pcampa, req);
 	}
 
 	/**

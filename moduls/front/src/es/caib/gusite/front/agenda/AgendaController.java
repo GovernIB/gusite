@@ -73,7 +73,7 @@ public class AgendaController extends BaseViewController {
 			view.setAgendaDiaevento(agendaFechaEvento.format(fecha));
 			view.setSeuletSin(this.urlFactory.listarAgendaFechaSinPagina(microsite, lang, fecha, mcont, pcampa));
 			view.setParametrosPagina(eventos.getParametros());
-
+			view.setIdContenido(mcont);
 			this.cargarMollapan(view, fecha);
 
 			return this.modelForView(this.templateNameFactory.listarAgendaFecha(microsite), view);

@@ -12,7 +12,8 @@ import es.caib.gusite.front.general.bean.PathItem;
 public class PageView extends LayoutView {
 
 	private List<PathItem> pathData;
-
+	private String idContenido;
+	
 	public void setPathData(List<PathItem> path) {
 		this.pathData = path;
 
@@ -22,5 +23,17 @@ public class PageView extends LayoutView {
 	public List<PathItem> getPathData() {
 		return this.pathData;
 
+	}
+	
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
 	}
 }

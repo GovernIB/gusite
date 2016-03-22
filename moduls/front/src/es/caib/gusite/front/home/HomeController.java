@@ -200,7 +200,7 @@ public class HomeController extends BaseViewController {
 	@RequestMapping("{uri}/accesibilidad")
 	public ModelAndView accesibilidad(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_ES), pcampa);
+		return this.accessibility(URI, DEFAULT_IDIOMA, pcampa);
 
 	}
 

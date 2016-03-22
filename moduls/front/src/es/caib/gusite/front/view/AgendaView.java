@@ -16,6 +16,7 @@ public class AgendaView extends ListPageView {
 
 	private Collection<Agenda> agendaLista;
 	private Map<String, Set<Integer>> datosAgendaCalendario;
+	private String idContenido;
 
 	public void setAgendaLista(Collection<Agenda> resultados) {
 		this.agendaLista = resultados;
@@ -34,6 +35,19 @@ public class AgendaView extends ListPageView {
 		this.datosAgendaCalendario = datosCalendario;
 
 	}
+	
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
+	}
+	
 
 	/**
 	 * Datos del calendario de agenda. Cada entrada para cada clave el mes (en formato anyo + "-" + mes) el conjunto de días con eventos  

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
@@ -23,6 +24,7 @@ import es.caib.gusite.micromodel.Frqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionFrqssi;
+
 
 /**
  * 
@@ -45,6 +47,7 @@ public class QssiController extends BaseViewController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/qssi/{qssi}/")
 	public ModelAndView qssi(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("qssi") long idQssi, Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			HttpServletRequest req) {
 
 		PageView view = new PageView();
@@ -52,6 +55,7 @@ public class QssiController extends BaseViewController {
 			Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			view.setMicrosite(microsite);
 			view.setLang(lang);
+			view.setIdContenido(mcont);
 			Frqssi qssi = this.dataService.getFormularioQssi(microsite, lang, idQssi);
 
 			// comprobacion de microsite

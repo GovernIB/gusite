@@ -48,6 +48,7 @@ public class OperacioMailingController extends BaseViewController {
 		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", req.getLocale());
 
 		MailingView view = new MailingView();
+		view.setIdContenido(mcont);
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();

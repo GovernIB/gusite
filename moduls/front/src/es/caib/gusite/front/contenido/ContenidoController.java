@@ -109,7 +109,7 @@ public class ContenidoController extends BaseViewController {
 
 		ContenidoView view = new ContenidoView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, uriContenido);
 			Microsite microsite = view.getMicrosite();
 
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, uriContenido, lang.getLang());
@@ -123,10 +123,11 @@ public class ContenidoController extends BaseViewController {
 			if (!StringUtils.isEmpty(urlredireccionada)) {
 				String sMenuCont = contenido.getId().toString();
 				String url = this.urlFactory.legacyToFrontUri(urlredireccionada, lang);
+				
 				if (!StringUtils.isEmpty(sMenuCont) && this.urlFactory.isLocalLegacyUri(urlredireccionada)) {
-					return new ModelAndView("redirect:" + url + "&mcont=" + sMenuCont);
+					return new ModelAndView("redirect:" + url + "&mcont=" + sMenuCont + "&uricont="+uriContenido);
 				} else {
-					return new ModelAndView("redirect:" + url);
+					return new ModelAndView("redirect:" + url + "&uricont="+uriContenido);
 				}
 
 			}

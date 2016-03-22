@@ -13,7 +13,8 @@ import es.caib.gusite.front.faq.Faqtema;
 public class ListarFaqsView extends PageView {
 
 	private List<Faqtema> listado;
-
+	private String idContenido;
+	
 	public void setListado(List<Faqtema> lista) {
 		this.listado = lista;
 	}
@@ -25,6 +26,18 @@ public class ListarFaqsView extends PageView {
 	@Variable("MVS_listado")
 	public List<Faqtema> getListado() {
 		return this.listado;
+	}
+	
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
 	}
 
 }

@@ -14,6 +14,7 @@ public class AgendaFechaView extends ListPageView {
 
 	private Collection<Agenda> agendaLista;
 	private String agendaDiaevento;
+	private String idContenido;
 
 	public void setAgendaLista(Collection<Agenda> resultados) {
 		this.agendaLista = resultados;
@@ -37,6 +38,18 @@ public class AgendaFechaView extends ListPageView {
 	@Variable("MVS_agenda_diaevento")
 	public String getAgendaDiaevento() {
 		return this.agendaDiaevento;
+	}
+	
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
 	}
 
 }

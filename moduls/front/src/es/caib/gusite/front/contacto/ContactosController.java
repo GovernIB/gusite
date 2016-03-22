@@ -78,7 +78,7 @@ public class ContactosController extends BaseViewController {
 
 		ListarContactosView view = new ListarContactosView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 			BaseCriteria criteria = new BaseCriteria(filtro, pagina, ordenacion);
 			ResultadoBusqueda<Contacto> formularios = this.contactosDataService.getListadoFormularios(microsite, lang, criteria);
@@ -104,7 +104,7 @@ public class ContactosController extends BaseViewController {
 			view.setSeuletSin(this.urlFactory.listarContactosSinPagina(microsite, lang, criteria));
 			view.setParametrosPagina(formularios.getParametros());
 			view.setListado(listaNombreContactos);
-
+			view.setIdContenido(mcont);
 			this.cargarMollapan(view);
 
 			return this.modelForView(this.templateNameFactory.listarContactos(microsite), view);
@@ -138,7 +138,7 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
 			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
 
-		return this.listarcontactos(URI, new Idioma(LANG_ES), mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, DEFAULT_IDIOMA, mcont, pcampa, filtro, pagina, ordenacion, req);
 	}
 
 	/**
@@ -198,10 +198,10 @@ public class ContactosController extends BaseViewController {
 
 		ContactoView view = new ContactoView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
-
+			
 			if (contacto == null) {
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 			}
@@ -220,7 +220,8 @@ public class ContactosController extends BaseViewController {
 			view.setContacto(contacto);
 			view.setContactoTitulo(contacto.getTitulocontacto(lang.getLang()));
 			view.setContactoListaTags(this.montaListaTags(microsite, lang, contacto));
-
+			view.setIdContenido(mcont);
+			
 			this.cargarMollapan(view, contacto);
 
 			return this.modelForView(this.templateNameFactory.contacto(microsite), view);
@@ -249,7 +250,7 @@ public class ContactosController extends BaseViewController {
 
 		ContactoDatosView view = new ContactoDatosView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 			

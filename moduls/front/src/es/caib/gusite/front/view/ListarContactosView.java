@@ -13,7 +13,8 @@ import es.caib.gusite.front.general.bean.Pardato;
 public class ListarContactosView extends ListPageView {
 
 	private List<Pardato> listado;
-
+	private String idContenido;
+	
 	public void setListado(List<Pardato> lista) {
 		this.listado = lista;
 	}
@@ -26,4 +27,15 @@ public class ListarContactosView extends ListPageView {
 		return this.listado;
 	}
 
+	public void setIdContenido(String idContenido) {
+		this.idContenido = idContenido;
+	}
+	/**
+	 * Identificación del id del contenido.
+	 * @return
+	 */
+	@Variable("MVS_idContenido")
+	public String getIdContenido() {
+		return idContenido;
+	}
 }

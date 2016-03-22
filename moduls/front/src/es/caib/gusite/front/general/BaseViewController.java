@@ -51,7 +51,7 @@ public abstract class BaseViewController extends FrontController {
 	private static Log log = LogFactory.getLog(BaseViewController.class);
 
 	public void configureLayoutView(String uri, Idioma lang, LayoutView view) throws ExceptionFrontMicro {
-		this.configureLayoutView(uri, lang, view, null);
+		this.configureLayoutView(uri, lang, view, null, null);
 	}
 
 	@Autowired
@@ -66,11 +66,27 @@ public abstract class BaseViewController extends FrontController {
 	 * @param uri
 	 * @param lang
 	 * @param model
+	 * @param uriContenido
 	 * @return
 	 * @throws ExceptionFrontMicro
 	 * @see
 	 */
-	public void configureLayoutView(String uri, Idioma lang, LayoutView view, String pcampa) throws ExceptionFrontMicro {
+	public void configureLayoutView(final String uri, final Idioma lang, final LayoutView view, final String pcampa) throws ExceptionFrontMicro {
+		this.configureLayoutView(uri, lang, view, pcampa, null);
+	}
+	
+	/**
+	 * Realiza las tareas que antes realizaba el constructor de Bdbase
+	 * 
+	 * @param uri
+	 * @param lang
+	 * @param model
+	 * @param uriContenido
+	 * @return
+	 * @throws ExceptionFrontMicro
+	 * @see
+	 */
+	public void configureLayoutView(final String uri, final Idioma lang, final LayoutView view, final String pcampa, final String uriContenido) throws ExceptionFrontMicro {
 
 		/* El idioma ya viene fijado en la URI */
 		String idi = lang.getLang().toUpperCase();
@@ -88,7 +104,7 @@ public abstract class BaseViewController extends FrontController {
 		this.cargarCss(view);
 		this.cargarPie(view);
 		this.cargarCabecera(view);
-		this.cargarMenu(view);
+		this.cargarMenu(view, uriContenido);
 		this.menucaib(view);
 
 		this.cargarServicio(view);
@@ -469,11 +485,11 @@ public abstract class BaseViewController extends FrontController {
 	 * 
 	 * @param request
 	 */
-	private void cargarMenu(LayoutView view) throws ExceptionFrontMicro {
+	private void cargarMenu(final LayoutView view, final String uriContenido) throws ExceptionFrontMicro {
 		DelegateBase delegateBase;
 		try {
-			delegateBase = new DelegateBase();
-			view.setMenu(delegateBase.obtenerMainMenu(view.getMicrosite().getId(), view.getLang().getLang()));
+			delegateBase = new DelegateBase(); 
+			view.setMenu(delegateBase.obtenerMainMenu(view.getMicrosite().getId(), view.getLang().getLang(), uriContenido));
 		} catch (DelegateException e) {
 			throw new ExceptionFrontMicro(e);
 		}

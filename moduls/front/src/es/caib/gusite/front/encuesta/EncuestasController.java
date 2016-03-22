@@ -32,6 +32,7 @@ import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.front.view.EncuestaView;
 import es.caib.gusite.front.view.EnvioEncuestaView;
 import es.caib.gusite.front.view.PageView;
+import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
@@ -90,7 +91,7 @@ public class EncuestasController extends BaseViewController {
 			}
 			// hasta aqui funcion procesSesion(); de BdEncuesta
 
-			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
+			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 			// //Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
 			String visita = (String) req.getSession().getAttribute("MVS_visita" + encuesta.getId().toString());
@@ -149,7 +150,9 @@ public class EncuestasController extends BaseViewController {
 				}
 			}
 			view.setEncuesta(encuesta);
-
+			view.setIdContenido(mcont); 
+			
+			
 			if (ensesion == true) {
 				return this.enviarEncuesta(URI, lang, uriEncuesta, mcont, pcampa, req);
 			}
@@ -239,7 +242,7 @@ public class EncuestasController extends BaseViewController {
 		boolean ensesion = false;
 		EnvioEncuestaView view = new EnvioEncuestaView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 
 			// sustitucion procesaSesion(); de BdEnvioEncuesta.java
@@ -254,7 +257,7 @@ public class EncuestasController extends BaseViewController {
 				// hasta aqui
 			}
 
-			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
+			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 
 			// Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
@@ -519,7 +522,7 @@ public class EncuestasController extends BaseViewController {
 		boolean ensesion = true;
 		EnvioEncuestaView view = new EnvioEncuestaView();
 		try {
-			super.configureLayoutView(URI.uri, lang, view, pcampa);
+			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 
 			// sustitucion procesaSesion(); de BdEnvioEncuesta.java
@@ -534,7 +537,7 @@ public class EncuestasController extends BaseViewController {
 				// hasta aqui
 			}
 
-			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang());
+			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 
 			// Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
