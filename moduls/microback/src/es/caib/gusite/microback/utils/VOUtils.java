@@ -106,8 +106,11 @@ public class VOUtils {
             	((TraduccionComponente) llista.get(i)).getId().setCodigoIdioma(lang.getLang());
 //            	((TraduccionComponente) llista.get(i)).setIdioma(lang);
             	
-            	if (((Componente)vo).getId() != null)
-                	((TraduccionComponente) llista.get(i)).getId().setCodigoComponente(((Componente)vo).getId());
+            	if (((Componente)vo).getId() != null) {
+            		TraduccionComponentePK tradPk = ((TraduccionComponente) llista.get(i)).getId();
+            		tradPk.setCodigoComponente(((Componente)vo).getId());
+                	((TraduccionComponente) llista.get(i)).setId(tradPk);
+            	}
             }
             
             if (vo instanceof Contenido) {

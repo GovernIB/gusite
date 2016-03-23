@@ -19,6 +19,7 @@ import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.TraduccionComponente;
+import es.caib.gusite.micromodel.TraduccionComponentePK;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -182,7 +183,9 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 			if (nuevo) {
 				for (TraduccionComponente trad : listaTraducciones.values()) {
-					trad.getId().setCodigoComponente(compo.getId());
+					final TraduccionComponentePK tradPk = trad.getId();
+					tradPk.setCodigoComponente(compo.getId());
+					trad.setId(tradPk);
 					session.saveOrUpdate(trad);
 				}
 				session.flush();
