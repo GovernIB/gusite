@@ -100,7 +100,7 @@ public class contenidosEditaAction extends BaseAction
 						} else if (trad.getUri().equals("")) {
 							//trad.setUri(Cadenas.string2uri(trad.getTitulo()));
 							final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
-							final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.CID_URI,  micrositeBean.getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoContenido(), 0);
+							final String nuevaUri = ajax.check(Cadenas.string2uri(trad.getTitulo()),  UriType.CID_URI,  micrositeBean.getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoContenido(), 0);
 							trad.setUri(Cadenas.string2uri(nuevaUri));
 						}
 						if (trad.getId() == null) {
