@@ -1191,15 +1191,15 @@ Create table "GUS_FR_ARCHIVO" (
 
 -- Create Indexes section
 
-Create UNIQUE Index "GUS_CIDURI_I" ON "GUS_CONIDI" ("CID_CODIDI","CID_URI") 
+Create Index "GUS_CIDURI_I" ON "GUS_CONIDI" ("CID_CODIDI","CID_URI") 
 /
 Create Index "GUS_DCMMCD_FK_I" ON "GUS_DOCUS" ("DCM_MICCOD") 
 /
 Create Index "GUS_DCMNOM_I" ON "GUS_DOCUS" ("DCM_NOMBRE") 
 /
-Create UNIQUE Index "GUS_EIDURI_I" ON "GUS_ENCIDI" ("EID_CODIDI","EID_URI") 
+Create Index "GUS_EIDURI_I" ON "GUS_ENCIDI" ("EID_CODIDI","EID_URI") 
 /
-Create UNIQUE Index "GUS_NIDURI_I" ON "GUS_NOTIDI" ("NID_CODIDI","NID_URI") 
+Create Index "GUS_NIDURI_I" ON "GUS_NOTIDI" ("NID_CODIDI","NID_URI") 
 /
 Create Index "GUS_STAITM_I" ON "GUS_STATS" ("STA_ITEM") 
 /
@@ -1209,7 +1209,7 @@ Create Index "GUS_STAMES_I" ON "GUS_STATS" ("STA_MES")
 /
 Create Index "GUS_STAREF_I" ON "GUS_STATS" ("STA_REF") 
 /
-Create UNIQUE Index "GUS_TPNURI_I" ON "GUS_TPNIDI" ("TPI_CODIDI","TPI_URI") 
+Create Index "GUS_TPNURI_I" ON "GUS_TPNIDI" ("TPI_CODIDI","TPI_URI") 
 /
 Create Index "GUS_AUDMIC_I" ON "GUS_AUDITORIA" ("AUD_MICCOD") 
 /
@@ -1471,8 +1471,8 @@ Alter table "GUS_COMPOS" add Constraint "GUS_PPL_CMP_FK" foreign key ("CMP_PPLCO
 -- Create Functions section
 
 --Convierte una cadena a un formato utilizable en url.
---Por ejemplo, convertiría:
---    "Perfil del t(u)rista britànic 2002´''"
+--Por ejemplo, convertirï¿½a:
+--    "Perfil del t(u)rista britï¿½nic 2002ï¿½''"
 --     a:
 --     Perfil_del_turista_britanic_2002
 
@@ -1487,7 +1487,7 @@ IS
 
 BEGIN
 
-  origin     := 'ÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÂÊÎÔÛÃÕÑÝÇáéíóúàèìòùäëïöüâêîôûãõñýç ';
+  origin     := 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ';
   dest       := 'AEIOUAEIOUAEIOUAEIOUAONYCaeiouaeiouaeiouaeiouaonyc_';
   validAbc   := 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-';
 
@@ -1580,13 +1580,13 @@ Comment on table "GUS_COMPOS" is 'Tabla que contiene el registro de componentes 
 /
 Comment on table "GUS_CONIDI" is 'Tabla que contiene los atributos dependientes de idioma de los contenidos de un microsite.'
 /
-Comment on table "GUS_CONTEN" is 'Tabla que contiene los contenidos de un microsite. Son los contenidos estáticos o los enlaces externos asociados al menú.'
+Comment on table "GUS_CONTEN" is 'Tabla que contiene los contenidos de un microsite. Son los contenidos estï¿½ticos o los enlaces externos asociados al menï¿½.'
 /
-Comment on table "GUS_DOCUS" is 'Tabla que contiene los archivos (imágenes, pdf, doc, etc..) utilizados en los distintos elementos de un microsite.'
+Comment on table "GUS_DOCUS" is 'Tabla que contiene los archivos (imï¿½genes, pdf, doc, etc..) utilizados en los distintos elementos de un microsite.'
 /
 Comment on table "GUS_ENCIDI" is 'Tabla que contiene los atributos dependientes de idioma para las encuestas de un microsite.'
 /
-Comment on table "GUS_ENCUST" is 'Tabla que contiene el registro de encuestas definidas para un microsite. Se compone de una relación de preguntas y respuestas.'
+Comment on table "GUS_ENCUST" is 'Tabla que contiene el registro de encuestas definidas para un microsite. Se compone de una relaciï¿½n de preguntas y respuestas.'
 /
 Comment on table "GUS_ENCVOT" is 'Tabla que contiene los resultados de las contestaciones sobre las preguntas asociadas a una encuesta publicadas para un microsite.'
 /
@@ -1594,47 +1594,47 @@ Comment on table "GUS_FAQ" is 'Tabla que contiene el registro de preguntas frecu
 /
 Comment on table "GUS_FAQIDI" is 'Tabla que contiene los atributos dependientes de idioma para las preguntas frecuentes de un microsite.'
 /
-Comment on table "GUS_FRMCON" is 'Tabla que contiene el registro de los formularios de contacto definidos para un microsite. Se compone de un número de campos que incluirá el formulario.'
+Comment on table "GUS_FRMCON" is 'Tabla que contiene el registro de los formularios de contacto definidos para un microsite. Se compone de un nï¿½mero de campos que incluirï¿½ el formulario.'
 /
 Comment on table "GUS_FRMIDI" is 'Tabla que contiene los atributos dependientes de idioma del registro de campos de un formulario de un microsite.'
 /
-Comment on table "GUS_FRMLIN" is 'Tabla que contiene la relación de campos y su tipo asociados a un formularios de contacto definidos para un microsite.'
+Comment on table "GUS_FRMLIN" is 'Tabla que contiene la relaciï¿½n de campos y su tipo asociados a un formularios de contacto definidos para un microsite.'
 /
-Comment on table "GUS_IDIOMA" is 'Tabla que contiene la lista de idiomas gestionados por los microsites. La activación de un nuevo idioma no solo supone el registro de esta tabla.'
+Comment on table "GUS_IDIOMA" is 'Tabla que contiene la lista de idiomas gestionados por los microsites. La activaciï¿½n de un nuevo idioma no solo supone el registro de esta tabla.'
 /
-Comment on table "GUS_MENU" is 'Tabla que contiene la definición del arbol de menú asociado a un microsite. Define los nodos de menú, su tipo y funcionamiento y enlaza con los contenidos del microsite.'
+Comment on table "GUS_MENU" is 'Tabla que contiene la definiciï¿½n del arbol de menï¿½ asociado a un microsite. Define los nodos de menï¿½, su tipo y funcionamiento y enlaza con los contenidos del microsite.'
 /
-Comment on table "GUS_MICIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definición de un elementos de un tipo de listado de un microsite.'
+Comment on table "GUS_MICIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definiciï¿½n de un elementos de un tipo de listado de un microsite.'
 /
-Comment on table "GUS_MICROS" is 'Tabla que contiene la definición del microsite con todos los atributos de caracter general que determinan su funcionamiento.'
+Comment on table "GUS_MICROS" is 'Tabla que contiene la definiciï¿½n del microsite con todos los atributos de caracter general que determinan su funcionamiento.'
 /
-Comment on table "GUS_MICUSU" is 'Tabla que relaciona un usuario con todos los microsites en los que tiene permiso, y el perfil con el que actual sobre él.'
+Comment on table "GUS_MICUSU" is 'Tabla que relaciona un usuario con todos los microsites en los que tiene permiso, y el perfil con el que actual sobre ï¿½l.'
 /
-Comment on table "GUS_MNUIDI" is 'Tabla que contiene los atributos dependientes de idioma para el menú de un microsite.'
+Comment on table "GUS_MNUIDI" is 'Tabla que contiene los atributos dependientes de idioma para el menï¿½ de un microsite.'
 /
 Comment on table "GUS_MUSUAR" is 'Tabla que contiene la ficha de los usuarios del entorno de los microsite. El alta se realiza coincidir con un usuario de CAIB. Se utiliza para controlar que un usuario CAIB acceda un microsite con un perfil determinado.'
 /
 Comment on table "GUS_NOTICS" is 'Tabla que contiene el registro de elemetos a publicar en la lista para un tipo de listado definidos en un microsite.'
 /
-Comment on table "GUS_PREGUN" is 'Tabla que contiene la relación de preguntas asociadas a una encuesta definidas para un microsite.'
+Comment on table "GUS_PREGUN" is 'Tabla que contiene la relaciï¿½n de preguntas asociadas a una encuesta definidas para un microsite.'
 /
 Comment on table "GUS_PREIDI" is 'Tabla que contiene los atributos dependientes de idioma para las preguntas asociadas a una encuesta de un microsite.'
 /
 Comment on table "GUS_RESIDI" is 'Tabla que contiene los atributos dependientes de idioma para las respuestas tabuladas de las preguntas asociadas a una encuesta de un microsite.'
 /
-Comment on table "GUS_RESPUS" is 'Tabla que contiene la relación de respuestas tabuladas a una pregunta asociadas a una encuesta definidas para un microsite.'
+Comment on table "GUS_RESPUS" is 'Tabla que contiene la relaciï¿½n de respuestas tabuladas a una pregunta asociadas a una encuesta definidas para un microsite.'
 /
-Comment on table "GUS_STATS" is 'Tabla que contiene el registro de las estadísticas de acceso a los distintos elementos de un microsite.'
+Comment on table "GUS_STATS" is 'Tabla que contiene el registro de las estadï¿½sticas de acceso a los distintos elementos de un microsite.'
 /
 Comment on table "GUS_TEMAS" is 'Tabla que contiene el registro de agrupadores definidos para las preguntas frecuentes que se creen para un microsite.'
 /
-Comment on table "GUS_TEMIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definición de los agrupadores de preguntas frecuentes de un microsite.'
+Comment on table "GUS_TEMIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definiciï¿½n de los agrupadores de preguntas frecuentes de un microsite.'
 /
-Comment on table "GUS_TIPSER" is 'Tabla que contiene el registro de los servicios de un microsite. La creación de un nuevo servicio no solo supone el registro de esta tabla.'
+Comment on table "GUS_TIPSER" is 'Tabla que contiene el registro de los servicios de un microsite. La creaciï¿½n de un nuevo servicio no solo supone el registro de esta tabla.'
 /
-Comment on table "GUS_TPNIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definición de un tipo de listado de un microsite.'
+Comment on table "GUS_TPNIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definiciï¿½n de un tipo de listado de un microsite.'
 /
-Comment on table "GUS_TPNOTI" is 'Tabla que contiene el registro de los distintos tipos de listados definidos para un microsite y que se utilizarán para la publicación de listas de elementos de los distintos tipo posible.'
+Comment on table "GUS_TPNOTI" is 'Tabla que contiene el registro de los distintos tipos de listados definidos para un microsite y que se utilizarï¿½n para la publicaciï¿½n de listas de elementos de los distintos tipo posible.'
 /
 Comment on table "GUS_USUARIENC" is 'Tabla que contiene la ficha de los usuarios de los usuarios que rellenan una encuesta.'
 /
@@ -1642,13 +1642,13 @@ Comment on table "GUS_USURESP" is 'Tabla que relaciona un usuario que rellena un
 /
 Comment on table "GUS_FR_TEMA" is 'Tema del front'
 /
-Comment on table "GUS_FR_PLANTILLA" is 'Tabla que identifica las plantillas que se pueden implementar (sobreescribir) para una versión determinada de front'
+Comment on table "GUS_FR_PLANTILLA" is 'Tabla que identifica las plantillas que se pueden implementar (sobreescribir) para una versiï¿½n determinada de front'
 /
-Comment on table "GUS_FR_VERSION" is 'Versión de front / identifica las versiones para su implementación en temas'
+Comment on table "GUS_FR_VERSION" is 'Versiï¿½n de front / identifica las versiones para su implementaciï¿½n en temas'
 /
-Comment on table "GUS_FR_PERPLA" is 'Personalización de una plantilla'
+Comment on table "GUS_FR_PERPLA" is 'Personalizaciï¿½n de una plantilla'
 /
-Comment on table "GUS_FR_ARCHIVO" is 'Tabla que contiene los archivos (imágenes, js, etc.) utilizados en los distintos elementos de un tema'
+Comment on table "GUS_FR_ARCHIVO" is 'Tabla que contiene los archivos (imï¿½genes, js, etc.) utilizados en los distintos elementos de un tema'
 /
 
 -- Create Attribute comments section
@@ -1665,23 +1665,23 @@ Comment on column "GUS_ACTIVI"."ACT_MICCOD" is 'Identificador del microsite'
 /
 Comment on column "GUS_AGEIDI"."AID_CODIDI" is 'Identificador del idioma ca,es,de,en'
 /
-Comment on column "GUS_AGEIDI"."AID_AGECOD" is 'Código Agenda'
+Comment on column "GUS_AGEIDI"."AID_AGECOD" is 'Cï¿½digo Agenda'
 /
-Comment on column "GUS_AGEIDI"."AID_DESCRI" is 'Descripción evento de la Agenda'
+Comment on column "GUS_AGEIDI"."AID_DESCRI" is 'Descripciï¿½n evento de la Agenda'
 /
-Comment on column "GUS_AGEIDI"."AID_DOCU" is 'Código documento asociado'
+Comment on column "GUS_AGEIDI"."AID_DOCU" is 'Cï¿½digo documento asociado'
 /
-Comment on column "GUS_AGEIDI"."AID_TITULO" is 'Título del registro'
+Comment on column "GUS_AGEIDI"."AID_TITULO" is 'Tï¿½tulo del registro'
 /
-Comment on column "GUS_AGEIDI"."AID_URL" is 'URL de información asociada al registro'
+Comment on column "GUS_AGEIDI"."AID_URL" is 'URL de informaciï¿½n asociada al registro'
 /
-Comment on column "GUS_AGEIDI"."AID_IMAGEN" is 'Código imagen'
+Comment on column "GUS_AGEIDI"."AID_IMAGEN" is 'Cï¿½digo imagen'
 /
-Comment on column "GUS_AGEIDI"."AID_URLNOM" is 'Descripción donde se implementará el enlace de la URL'
+Comment on column "GUS_AGEIDI"."AID_URLNOM" is 'Descripciï¿½n donde se implementarï¿½ el enlace de la URL'
 /
 Comment on column "GUS_AGENDA"."AGE_CODI" is 'Identificador Registro de Agenda'
 /
-Comment on column "GUS_AGENDA"."AGE_MICCOD" is 'Código de Microsite'
+Comment on column "GUS_AGENDA"."AGE_MICCOD" is 'Cï¿½digo de Microsite'
 /
 Comment on column "GUS_AGENDA"."AGE_ACTIVI" is 'Identificador de la actividad'
 /
@@ -1709,23 +1709,23 @@ Comment on column "GUS_COMPOS"."CMP_NOMBRE" is 'titulo del componente'
 /
 Comment on column "GUS_COMPOS"."CMP_SOLOIM" is 'Indica si es de tipo imagen'
 /
-Comment on column "GUS_COMPOS"."CMP_NUMELE" is 'Número de elementos'
+Comment on column "GUS_COMPOS"."CMP_NUMELE" is 'Nï¿½mero de elementos'
 /
-Comment on column "GUS_COMPOS"."CMP_ORDEN" is 'Orden de aparición'
+Comment on column "GUS_COMPOS"."CMP_ORDEN" is 'Orden de apariciï¿½n'
 /
-Comment on column "GUS_COMPOS"."CMP_FILAS" is 'Número de filas'
+Comment on column "GUS_COMPOS"."CMP_FILAS" is 'Nï¿½mero de filas'
 /
 Comment on column "GUS_CONIDI"."CID_CODIDI" is 'Identificador del idioma ca,es,de,en'
 /
 Comment on column "GUS_CONIDI"."CID_CONCOD" is 'Identificador de contenido'
 /
-Comment on column "GUS_CONIDI"."CID_TITULO" is 'Título del contenido'
+Comment on column "GUS_CONIDI"."CID_TITULO" is 'Tï¿½tulo del contenido'
 /
-Comment on column "GUS_CONIDI"."CID_TEXTO" is 'Para contenido HTML. Código HTML asociado principal al contenido que se mostrará al acceder a él'
+Comment on column "GUS_CONIDI"."CID_TEXTO" is 'Para contenido HTML. Cï¿½digo HTML asociado principal al contenido que se mostrarï¿½ al acceder a ï¿½l'
 /
-Comment on column "GUS_CONIDI"."CID_URL" is 'Para contenido externo. URL asociado al contenido al que se redireccionará al acceder a él'
+Comment on column "GUS_CONIDI"."CID_URL" is 'Para contenido externo. URL asociado al contenido al que se redireccionarï¿½ al acceder a ï¿½l'
 /
-Comment on column "GUS_CONIDI"."CID_TXBETA" is 'Para contenido HTML. Código HTML asociado al contenido en versión Beta hasta su validación y paso a CID_TEXTO'
+Comment on column "GUS_CONIDI"."CID_TXBETA" is 'Para contenido HTML. Cï¿½digo HTML asociado al contenido en versiï¿½n Beta hasta su validaciï¿½n y paso a CID_TEXTO'
 /
 Comment on column "GUS_CONIDI"."CID_URI" is 'Uri para formar las urls'
 /
@@ -1733,13 +1733,13 @@ Comment on column "GUS_CONTEN"."CON_CODI" is 'Identificador de contenido'
 /
 Comment on column "GUS_CONTEN"."CON_CADUCA" is 'Fecha de caducidad'
 /
-Comment on column "GUS_CONTEN"."CON_PUBLIC" is 'Fecha de Publicación'
+Comment on column "GUS_CONTEN"."CON_PUBLIC" is 'Fecha de Publicaciï¿½n'
 /
 Comment on column "GUS_CONTEN"."CON_VISIB" is 'Indica si es visible'
 /
-Comment on column "GUS_CONTEN"."CON_ORDEN" is 'Orden Aparición'
+Comment on column "GUS_CONTEN"."CON_ORDEN" is 'Orden Apariciï¿½n'
 /
-Comment on column "GUS_CONTEN"."CON_MNUCOD" is 'Identificador menú'
+Comment on column "GUS_CONTEN"."CON_MNUCOD" is 'Identificador menï¿½'
 /
 Comment on column "GUS_CONTEN"."CON_IMGMEN" is 'Indentificador imagen'
 /
@@ -1749,19 +1749,19 @@ Comment on column "GUS_DOCUS"."DCM_MICCOD" is 'Identificador del microsite'
 /
 Comment on column "GUS_DOCUS"."DCM_DATOS" is 'Identificador archivo'
 /
-Comment on column "GUS_DOCUS"."DCM_NOMBRE" is 'Nombre del documento físico'
+Comment on column "GUS_DOCUS"."DCM_NOMBRE" is 'Nombre del documento fï¿½sico'
 /
 Comment on column "GUS_DOCUS"."DCM_TIPO" is 'Identificacor de ficha'
 /
 Comment on column "GUS_DOCUS"."DCM_TAMANO" is 'identificador de procedimiento'
 /
-Comment on column "GUS_DOCUS"."DCM_PAGINA" is 'Orden aparición'
+Comment on column "GUS_DOCUS"."DCM_PAGINA" is 'Orden apariciï¿½n'
 /
 Comment on column "GUS_ENCIDI"."EID_CODIDI" is 'Identificador del idioma ca,es,de,en'
 /
 Comment on column "GUS_ENCIDI"."EID_ENCCOD" is 'Identificador de contenido'
 /
-Comment on column "GUS_ENCIDI"."EID_TITULO" is 'Título de la Encuesta'
+Comment on column "GUS_ENCIDI"."EID_TITULO" is 'Tï¿½tulo de la Encuesta'
 /
 Comment on column "GUS_ENCIDI"."EID_URI" is 'Uri para formar las urls'
 /
@@ -1769,13 +1769,13 @@ Comment on column "GUS_ENCUST"."ENC_CODI" is 'Identidicador Encuesta'
 /
 Comment on column "GUS_ENCUST"."ENC_MICCOD" is 'Identificador de Microsite'
 /
-Comment on column "GUS_ENCUST"."ENC_PUBLIC" is 'Fecha de Publicación'
+Comment on column "GUS_ENCUST"."ENC_PUBLIC" is 'Fecha de Publicaciï¿½n'
 /
 Comment on column "GUS_ENCUST"."ENC_CADUCA" is 'Fecha de Caducidad'
 /
 Comment on column "GUS_ENCUST"."ENC_VISIB" is 'Indica si es visible'
 /
-Comment on column "GUS_ENCUST"."ENC_PAGINA" is 'Número de página'
+Comment on column "GUS_ENCUST"."ENC_PAGINA" is 'Nï¿½mero de pï¿½gina'
 /
 Comment on column "GUS_ENCUST"."ENC_MUESTR" is 'Indica si se muestran los resultados de las encuestas al publico'
 /
@@ -1807,9 +1807,9 @@ Comment on column "GUS_FAQIDI"."FID_PREGUN" is 'Texto de la Pregunta frecuente'
 /
 Comment on column "GUS_FAQIDI"."FID_RESPU" is 'Texto de la Respuesta frecuente'
 /
-Comment on column "GUS_FAQIDI"."FID_URL" is 'URL asociado a la pregunta con información de interés'
+Comment on column "GUS_FAQIDI"."FID_URL" is 'URL asociado a la pregunta con informaciï¿½n de interï¿½s'
 /
-Comment on column "GUS_FAQIDI"."FID_URLNOM" is 'Texto del link para la URL asociado a la pregunta con información de interés'
+Comment on column "GUS_FAQIDI"."FID_URLNOM" is 'Texto del link para la URL asociado a la pregunta con informaciï¿½n de interï¿½s'
 /
 Comment on column "GUS_FRMCON"."FRM_CODI" is 'Identidicador Formulario de Contacto'
 /
@@ -1829,29 +1829,29 @@ Comment on column "GUS_FRMLIN"."FLI_CODI" is 'Identificador de la linea'
 /
 Comment on column "GUS_FRMLIN"."FLI_VISIB" is 'Indica si es visible'
 /
-Comment on column "GUS_FRMLIN"."FLI_TAMANO" is 'Indica el tamaño'
+Comment on column "GUS_FRMLIN"."FLI_TAMANO" is 'Indica el tamaï¿½o'
 /
-Comment on column "GUS_FRMLIN"."FLI_LINEAS" is 'Número de líneas'
+Comment on column "GUS_FRMLIN"."FLI_LINEAS" is 'Nï¿½mero de lï¿½neas'
 /
-Comment on column "GUS_FRMLIN"."FLI_ORDEN" is 'Orden Aparición'
+Comment on column "GUS_FRMLIN"."FLI_ORDEN" is 'Orden Apariciï¿½n'
 /
 Comment on column "GUS_FRMLIN"."FLI_OBLIGA" is 'Indica Obligacion de rellenar este campo en el formulario'
 /
 Comment on column "GUS_IDIOMA"."IDI_CODI" is 'Identificador Idioma'
 /
-Comment on column "GUS_IDIOMA"."IDI_ORDEN" is 'Ordenación'
+Comment on column "GUS_IDIOMA"."IDI_ORDEN" is 'Ordenaciï¿½n'
 /
-Comment on column "GUS_IDIOMA"."IDI_CODEST" is 'Identificador para estadísticas'
+Comment on column "GUS_IDIOMA"."IDI_CODEST" is 'Identificador para estadï¿½sticas'
 /
 Comment on column "GUS_IDIOMA"."IDI_NOMBRE" is 'Nombre del Idioma'
 /
-Comment on column "GUS_MENU"."MNU_CODI" is 'Identificador del menú'
+Comment on column "GUS_MENU"."MNU_CODI" is 'Identificador del menï¿½'
 /
 Comment on column "GUS_MENU"."MNU_MICCOD" is 'Identificador de microsite'
 /
-Comment on column "GUS_MENU"."MNU_ORDEN" is 'Orden Aparición menú'
+Comment on column "GUS_MENU"."MNU_ORDEN" is 'Orden Apariciï¿½n menï¿½'
 /
-Comment on column "GUS_MENU"."MNU_IMGMEN" is 'Imagen menú'
+Comment on column "GUS_MENU"."MNU_IMGMEN" is 'Imagen menï¿½'
 /
 Comment on column "GUS_MENU"."MNU_PADRE" is 'Nodo padre.  0=raiz o sin padre'
 /
@@ -1865,13 +1865,13 @@ Comment on column "GUS_MICIDI"."MID_MICCOD" is 'Identificador del microsite'
 /
 Comment on column "GUS_MICIDI"."MID_TITULO" is 'Nomber del microsite'
 /
-Comment on column "GUS_MICIDI"."MID_KEYWORDS" is 'Información semántica: keywords'
+Comment on column "GUS_MICIDI"."MID_KEYWORDS" is 'Informaciï¿½n semï¿½ntica: keywords'
 /
-Comment on column "GUS_MICIDI"."MID_DESCRIPTION" is 'Información semántica: description'
+Comment on column "GUS_MICIDI"."MID_DESCRIPTION" is 'Informaciï¿½n semï¿½ntica: description'
 /
 Comment on column "GUS_MICROS"."MIC_CODI" is 'Identificador del microsite'
 /
-Comment on column "GUS_MICROS"."MIC_CODUNI" is 'Codigo Unidad orgánica'
+Comment on column "GUS_MICROS"."MIC_CODUNI" is 'Codigo Unidad orgï¿½nica'
 /
 Comment on column "GUS_MICROS"."MIC_FECHA" is 'Fecha mircrisite'
 /
@@ -1887,15 +1887,15 @@ Comment on column "GUS_MICROS"."MIC_CLAVE" is 'Identificador de clave unica'
 /
 Comment on column "GUS_MICROS"."MIC_MNUCRP" is 'Menu corporativo'
 /
-Comment on column "GUS_MICROS"."MIC_CSSPTR" is 'CSS genérico base utilizado por el microsite si no hay css personalizado. (A)zul, (R)ojo, (V)erde, (N)egro, (G)amarillo y (M)agenta'
+Comment on column "GUS_MICROS"."MIC_CSSPTR" is 'CSS genï¿½rico base utilizado por el microsite si no hay css personalizado. (A)zul, (R)ojo, (V)erde, (N)egro, (G)amarillo y (M)agenta'
 /
-Comment on column "GUS_MICROS"."MIC_URI" is 'URI única del microsite, usada para formar la url completa'
+Comment on column "GUS_MICROS"."MIC_URI" is 'URI ï¿½nica del microsite, usada para formar la url completa'
 /
 Comment on column "GUS_MICROS"."MIC_ANALYTICS" is 'Clave de google analytics'
 /
 Comment on column "GUS_MICROS"."MIC_FTECOD" is 'Tema a aplicar'
 /
-Comment on column "GUS_MICROS"."MIC_DESARROLLO" is 'Pone el sitio web en modo desarrollo, deshabilitando caché de plantillas.'
+Comment on column "GUS_MICROS"."MIC_DESARROLLO" is 'Pone el sitio web en modo desarrollo, deshabilitando cachï¿½ de plantillas.'
 /
 Comment on column "GUS_MICUSU"."MIU_CODUSU" is 'Usuario del Microsite'
 /
@@ -1905,13 +1905,13 @@ Comment on column "GUS_MNUIDI"."MDI_MNUCOD" is 'Identificador de contenido'
 /
 Comment on column "GUS_MNUIDI"."MDI_CODIDI" is 'Identificador del idioma ca,es,de,en'
 /
-Comment on column "GUS_MNUIDI"."MDI_NOMBRE" is 'Nomber del nodo del menú'
+Comment on column "GUS_MNUIDI"."MDI_NOMBRE" is 'Nomber del nodo del menï¿½'
 /
 Comment on column "GUS_MUSUAR"."MSU_CODI" is 'Identificador usuario de microsites'
 /
 Comment on column "GUS_MUSUAR"."MSU_USERNA" is 'Usuario de acceso al back de microsites. Debe coincidir con un usuario CAIB'
 /
-Comment on column "GUS_MUSUAR"."MSU_PASSWO" is 'No utilizado en la gestión actual: Para usuarios externos a CAIB: Password del usuario'
+Comment on column "GUS_MUSUAR"."MSU_PASSWO" is 'No utilizado en la gestiï¿½n actual: Para usuarios externos a CAIB: Password del usuario'
 /
 Comment on column "GUS_MUSUAR"."MSU_NOMBRE" is 'Nombre completo del usuario'
 /
@@ -1925,7 +1925,7 @@ Comment on column "GUS_NOTICS"."NOT_IMAGEN" is 'Imagen noticia'
 /
 Comment on column "GUS_NOTICS"."NOT_CADUCA" is 'Fecha caducidad'
 /
-Comment on column "GUS_NOTICS"."NOT_PUBLIC" is 'Fecha de publicación'
+Comment on column "GUS_NOTICS"."NOT_PUBLIC" is 'Fecha de publicaciï¿½n'
 /
 Comment on column "GUS_NOTICS"."NOT_VISIB" is 'Indica si es visible'
 /
@@ -1945,11 +1945,11 @@ Comment on column "GUS_NOTIDI"."NID_SUBTIT" is 'SubTitulo del documento'
 /
 Comment on column "GUS_NOTIDI"."NID_FUENTE" is 'Nombre de la fuente del origen del documento'
 /
-Comment on column "GUS_NOTIDI"."NID_URL" is 'URL del enlace a información externa'
+Comment on column "GUS_NOTIDI"."NID_URL" is 'URL del enlace a informaciï¿½n externa'
 /
-Comment on column "GUS_NOTIDI"."NID_TEXTO" is 'Texto descripción del documento'
+Comment on column "GUS_NOTIDI"."NID_TEXTO" is 'Texto descripciï¿½n del documento'
 /
-Comment on column "GUS_NOTIDI"."NID_URLNOM" is 'Nombre del enlace a información externa'
+Comment on column "GUS_NOTIDI"."NID_URLNOM" is 'Nombre del enlace a informaciï¿½n externa'
 /
 Comment on column "GUS_NOTIDI"."NID_URI" is 'Uri para formar las urls'
 /
@@ -1975,13 +1975,13 @@ Comment on column "GUS_PREIDI"."PID_CODIDI" is 'Identificador del idioma ca,es,d
 /
 Comment on column "GUS_PREIDI"."PID_PRECOD" is 'Identificador de la preguta en la ecuenta'
 /
-Comment on column "GUS_PREIDI"."PID_TITULO" is 'Título de la pregunta de la encuesta'
+Comment on column "GUS_PREIDI"."PID_TITULO" is 'Tï¿½tulo de la pregunta de la encuesta'
 /
 Comment on column "GUS_RESIDI"."REI_CODIDI" is 'Identificador del idioma ca,es,de,en'
 /
 Comment on column "GUS_RESIDI"."REI_RESCOD" is 'Codigo Respuesta'
 /
-Comment on column "GUS_RESIDI"."REI_TITULO" is 'Título de la respuesta'
+Comment on column "GUS_RESIDI"."REI_TITULO" is 'Tï¿½tulo de la respuesta'
 /
 Comment on column "GUS_RESPUS"."RES_CODI" is 'Codigo Respuesta'
 /
@@ -1989,7 +1989,7 @@ Comment on column "GUS_RESPUS"."RES_PRECOD" is 'Codigo de Pregunta'
 /
 Comment on column "GUS_RESPUS"."RES_ORDEN" is 'Orden aparicion'
 /
-Comment on column "GUS_RESPUS"."RES_NRESP" is 'Número Respuesta'
+Comment on column "GUS_RESPUS"."RES_NRESP" is 'Nï¿½mero Respuesta'
 /
 Comment on column "GUS_RESPUS"."RES_TIPO" is 'Tipo respuesta'
 /
@@ -2001,7 +2001,7 @@ Comment on column "GUS_STATS"."STA_MES" is 'Mes'
 /
 Comment on column "GUS_STATS"."STA_REF" is 'Referencia'
 /
-Comment on column "GUS_STATS"."STA_NACCES" is 'Número de Accesos'
+Comment on column "GUS_STATS"."STA_NACCES" is 'Nï¿½mero de Accesos'
 /
 Comment on column "GUS_STATS"."STA_MICCOD" is 'Identificador de Microsite'
 /
@@ -2041,11 +2041,11 @@ Comment on column "GUS_TPNOTI"."TPN_CODI" is 'Identificador tipo de listado'
 /
 Comment on column "GUS_TPNOTI"."TPN_MICCOD" is 'Identificador Microsite'
 /
-Comment on column "GUS_TPNOTI"."TPN_TAMPAG" is 'Numero de registros si se aplica paginación'
+Comment on column "GUS_TPNOTI"."TPN_TAMPAG" is 'Numero de registros si se aplica paginaciï¿½n'
 /
-Comment on column "GUS_TPNOTI"."TPN_TIPPAG" is 'Indica si se aplica paginación al listado 0.per nombre de registres/1.per any, segons data de publicació'
+Comment on column "GUS_TPNOTI"."TPN_TIPPAG" is 'Indica si se aplica paginaciï¿½n al listado 0.per nombre de registres/1.per any, segons data de publicaciï¿½'
 /
-Comment on column "GUS_TPNOTI"."TPN_TPELEM" is 'Tipo de elemento: 0.Fitxa, 1.Enllaç, 2.Llista de Documents, 3.Conexió externa'
+Comment on column "GUS_TPNOTI"."TPN_TPELEM" is 'Tipo de elemento: 0.Fitxa, 1.Enllaï¿½, 2.Llista de Documents, 3.Conexiï¿½ externa'
 /
 Comment on column "GUS_TPNOTI"."TPN_BUSCAR" is 'Indicador de si se aplica buscador al listado o no'
 /
@@ -2075,23 +2075,23 @@ Comment on column "GUS_FR_TEMA"."FTE_NOMBRE" is 'Nom del tema'
 /
 Comment on column "GUS_FR_TEMA"."FTE_CSS" is 'CSS General del tema'
 /
-Comment on column "GUS_FR_TEMA"."FTE_ACTUALIZACION" is 'Data d''actualització del tema'
+Comment on column "GUS_FR_TEMA"."FTE_ACTUALIZACION" is 'Data d''actualitzaciï¿½ del tema'
 /
-Comment on column "GUS_FR_TEMA"."FTE_URI" is 'URI única del tema, usada para formar urls de recursos'
+Comment on column "GUS_FR_TEMA"."FTE_URI" is 'URI ï¿½nica del tema, usada para formar urls de recursos'
 /
 Comment on column "GUS_FR_PLANTILLA"."PLA_NOMBRE" is 'Nombre (identificador) de la plantilla'
 /
-Comment on column "GUS_FR_PLANTILLA"."PLA_DESCRIPCION" is 'Descripción y documentación de la plantilla'
+Comment on column "GUS_FR_PLANTILLA"."PLA_DESCRIPCION" is 'Descripciï¿½n y documentaciï¿½n de la plantilla'
 /
-Comment on column "GUS_FR_PLANTILLA"."PLA_TITULO" is 'Título de la plantilla'
+Comment on column "GUS_FR_PLANTILLA"."PLA_TITULO" is 'Tï¿½tulo de la plantilla'
 /
-Comment on column "GUS_FR_VERSION"."FVE_VERSION" is 'Versión de GUSITE para la que se ha desarrollado el tema'
+Comment on column "GUS_FR_VERSION"."FVE_VERSION" is 'Versiï¿½n de GUSITE para la que se ha desarrollado el tema'
 /
 Comment on column "GUS_FR_VERSION"."FVE_NOMBRE" is 'Nom del tema'
 /
-Comment on column "GUS_FR_PERPLA"."PPL_TITULO" is 'Título de la plantilla'
+Comment on column "GUS_FR_PERPLA"."PPL_TITULO" is 'Tï¿½tulo de la plantilla'
 /
-Comment on column "GUS_FR_PERPLA"."PPL_ORDEN" is 'Número de orden de la personalización de plantilla'
+Comment on column "GUS_FR_PERPLA"."PPL_ORDEN" is 'Nï¿½mero de orden de la personalizaciï¿½n de plantilla'
 /
 Comment on column "GUS_FR_PERPLA"."PPL_CONTENIDO" is 'Contenido de la plantilla'
 /
@@ -2193,7 +2193,7 @@ ALTER TABLE GUS_TPNIDI ADD (
   ENABLE VALIDATE);
 
   
--- SEQÜÈNCIES
+-- SEQï¿½ï¿½NCIES
 
 CREATE SEQUENCE "GUS_SEQUSUENC"
 /
