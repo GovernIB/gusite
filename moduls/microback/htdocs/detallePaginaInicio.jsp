@@ -104,7 +104,7 @@
     function Rpopupurl(obj,divcontenedor) {
     	divContenedor=document.getElementById(divcontenedor);
     	Rcajatemp=document.microForm[obj];
-		window.open('recursos.do','recursos','scrollbars=yes,width=700,height=400');
+    	window.open('recursos.do?homedesactivado=true','recursos','scrollbars=yes,width=700,height=400');
     }
 	
 	function Rmeterurl(laurl) {

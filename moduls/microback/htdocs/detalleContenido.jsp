@@ -105,9 +105,12 @@
 	function fileBrowserCallBack(field_name, url, type, win) {
 		Rcajatemp_tiny=field_name;
 		Rwin_tiny=win;
-
-		window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
-
+		<logic:notEmpty name="contenidoForm">
+			window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+		</logic:notEmpty>
+		<logic:empty name="contenidoForm">
+			window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
+		</logic:empty>
 	}
 	
 	var valor="";
@@ -510,7 +513,12 @@ var mensa3='<bean:message key="conte.nuevoarchimensa"/>';
     function Rpopupurl(obj,divcontenedor) {
     	divContenedor=document.getElementById(divcontenedor);
     	Rcajatemp=document.contenidoForm[obj];
-		window.open('recursos.do','recursos','scrollbars=yes,width=700,height=400');
+    	<logic:notEmpty name="contenidoForm">
+			window.open("/sacmicroback/recursos.do?id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+		</logic:notEmpty>
+		<logic:empty name="contenidoForm">
+			window.open("/sacmicroback/recursos.do",'recursos','scrollbars=yes,width=700,height=400');
+		</logic:empty>
     }
 	
 	function Rmeterurl(laurl) {
