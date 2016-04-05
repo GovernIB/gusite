@@ -93,7 +93,11 @@ public class noticiasEditaAction extends BaseAction
                         eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
                         final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
-						final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.NID_URI,  micrositeBean.getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoNoticia(), 0);
+                        Long codigoNoticia = null;
+    					if (trad.getId() != null) {
+    						codigoNoticia = trad.getId().getCodigoNoticia();
+    					}
+    					final String nuevaUri = ajax.check(Cadenas.string2uri(trad.getTitulo()),  UriType.NID_URI,  micrositeBean.getId().toString(),  lang, codigoNoticia, 0);
 						trad.setUri(Cadenas.string2uri(nuevaUri));
                     }
 					if (trad.getId() == null) {

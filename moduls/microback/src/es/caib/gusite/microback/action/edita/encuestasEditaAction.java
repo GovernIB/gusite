@@ -122,7 +122,11 @@ public class encuestasEditaAction extends BaseAction
 					eliminar.add(lang);
 				} else if (trad.getUri().equals("")) {
 					final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
-					final String nuevaUri = ajax.check(trad.getTitulo(),  UriType.EID_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoEncuesta(), 0);
+					Long codigoEncuesta = null;
+					if (trad.getId() != null) {
+						codigoEncuesta = trad.getId().getCodigoEncuesta();
+					}
+					final String nuevaUri = ajax.check(Cadenas.string2uri(trad.getTitulo()),  UriType.EID_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  lang, codigoEncuesta, 0);
 					trad.setUri(Cadenas.string2uri(nuevaUri));
 				}
 			}

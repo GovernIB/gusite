@@ -122,11 +122,15 @@ public class tiposEditaAction extends BaseAction {
                             tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setNombre(llista.get(i).getNombre());
                             if (llista.get(i).getUri() == null || llista.get(i).getUri().isEmpty()) {
                             	final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
-        						final String nuevaUri = ajax.check(llista.get(i).getNombre(), 
+                            	Long codigoTipo = null;
+                            	if (tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).getId() != null) {
+                            		codigoTipo = tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).getId().getCodigoTipo();
+                            	}
+        						final String nuevaUri = ajax.check(Cadenas.string2uri(llista.get(i).getNombre()), 
         															UriType.TPI_URI, 
         															((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(), 
         															((Idioma) langs.get(i)).getLang() , 
-        															tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).getId().getCodigoTipo(), 
+        															codigoTipo, 
         															0);
         						llista.get(i).setUri(nuevaUri);
         						tipo.getTraducciones().get(((Idioma) langs.get(i)).getLang()).setUri(llista.get(i).getUri());
@@ -172,7 +176,11 @@ public class tiposEditaAction extends BaseAction {
                         eliminar.add(lang);
                     } else if (trad.getUri().equals("")) {
                         final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
-						final String nuevaUri = ajax.check(trad.getNombre(),  UriType.CID_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  trad.getId().getCodigoIdioma(), trad.getId().getCodigoTipo(), 0);
+                        Long codigoTipo = null;
+                        if (trad.getId() != null) {
+                        	codigoTipo = trad.getId().getCodigoTipo();
+                        }
+						final String nuevaUri = ajax.check(Cadenas.string2uri(trad.getNombre()),  UriType.TPI_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  lang, codigoTipo, 0);
 						trad.setUri(Cadenas.string2uri(nuevaUri));
                     }
                 }
