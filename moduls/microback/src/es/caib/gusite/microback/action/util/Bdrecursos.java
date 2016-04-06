@@ -65,6 +65,9 @@ public class Bdrecursos {
 	
 	private Microsite microsite;
 	private Long idcontenidolong=null;
+	private String homeDesactivado=null;
+	private String id=null;
+	private String idMenu=null;
 	
 	protected static Log log = LogFactory.getLog(Bdrecursos.class);
 
@@ -79,15 +82,16 @@ public class Bdrecursos {
 		    	idcontenido="null";
 		  }
 		  	
+		  this.homeDesactivado = "" + request.getParameter("homedesactivado");
+		  this.id = "" + request.getParameter("id");	
+		  this.idMenu = "" + request.getParameter("idMenu");		  
 	  } 
 	  
 	 /**
 	 * Método que obtiene las urls de un microsite
 	 * @param idiomapasado
 	 */
-	public void doObtainUrls(String idiomapasado) {
-		 
-		
+	public void doObtainUrls(String idiomapasado) {		 	
 		  montartodoURLs(idiomapasado);
 		  montartodoArchivos(idiomapasado);
 		  montartodoArchivosContenido(idiomapasado);
@@ -122,7 +126,12 @@ public class Bdrecursos {
 			
 			String micronombre = microtrad.getTitulo();
 
-			listaoriginal = listarhome();
+			//Se añade para que no añada el elemento home cuando se llama a recursos desde página de inicio
+			if (homeDesactivado != null && !homeDesactivado.isEmpty() && "true".equals(homeDesactivado)) {
+				listaoriginal = new ArrayList<Object>();
+			} else {
+				listaoriginal = listarhome();
+			}
 			listaoriginal.addAll(listarmapa());
 
 			ArrayList<?> listserofr = new ArrayList<Object>();
@@ -595,6 +604,11 @@ public class Bdrecursos {
 					Iterator<?> iterpaginas = menu.getContenidos().iterator();
 				    while (iterpaginas.hasNext()) {
 				    	Contenido conte = (Contenido)iterpaginas.next();
+				    	//Si se pasa la id (contenido) y el idMenu y coinciden con el de esta iteración, entonces hay que ignorarlo. 
+				    	if (id != null && idMenu != null && 
+				    	conte.getId().toString().equals(id) && menu.getId().toString().equals(idMenu) ) {
+				    		continue;
+				    	}
 				    	Recurso recurso = new Recurso();
 				    	
 				    	TraduccionContenido tracon= (TraduccionContenido)conte.getTraduccion(idiomapasado);
@@ -636,7 +650,11 @@ public class Bdrecursos {
 						Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
 					    while (iterpaginassub.hasNext()) {
 					    	Contenido contesub = (Contenido)iterpaginassub.next();
-					    	
+					    	//Si se pasa la id (contenido) y el idMenu y coinciden con el de esta iteración, entonces hay que ignorarlo. 
+					    	if (id != null && idMenu != null && 
+					    			contesub.getId().toString().equals(id) && submenu.getId().toString().equals(idMenu) ) {
+					    			continue;
+					    	}
 					    	TraduccionContenido traconsu= (TraduccionContenido)contesub.getTraduccion(idiomapasado);
 					    	if (traconsu==null ||(traconsu.getTitulo()==null)){
 					    		traconsu= (TraduccionContenido)contesub.getTraduccion(Idioma.getIdiomaPorDefecto());
@@ -799,5 +817,12 @@ public class Bdrecursos {
 			return listaarchivoscontenido;
 		}
 
+		public void setHomeDesactivado(final String pHomeDesactivado) {
+			this.homeDesactivado = pHomeDesactivado;
+		}
+		
+		public String getHomeDesactivado() {
+			return this.homeDesactivado;
+		}
 }
 
