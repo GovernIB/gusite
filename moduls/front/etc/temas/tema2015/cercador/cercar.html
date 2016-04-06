@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--/*
+
+Resultados de una busqueda.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout">
+<head>
+	<title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
+		titulo - Resultats recerca</title>
+
+
+		<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+	<link href="resources/files/estils-tema.css" th:href="@{/resources/files/estils-tema.css}" rel="stylesheet" media="screen" />
+
+	<link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+	var thDebug = false;
+	</script>
+</th:block>
+</head>
+<body>
+	<!-- /* Esta página no tiene menú laterial */-->
+	<section layout:fragment="menuLateral"></section>
+
+	<section layout:fragment="content">
+		<!-- informacio sin menu -->
+		<div id="infoNoMenu" class="body-buscador">
+
+			<!-- titol -->
+			<ul id="inline-block">
+				<li><h3><span class="glyphicon glyphicon-search" aria-hidden="true"/><span th:utext="#{cercar.resultados}">Resultats recerca</span></h3></li>
+			</ul>
+
+			<br/>	
+			
+			<!-- MVS_listado_buscador: devuelve el resultado de una busqueda realizada -->
+			<div th:if="${MVS_listado_buscador} !=null" th:remove="tag">
+
+				<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
+
+					<div>
+
+						<p th:if="${MVS_listado_buscador.saltos}==null">
+
+							<div id="resultat" class="barra-resultados">
+
+								<p id="lineaTexto">
+									<p th:utext="#{cercar.encontrados} + '  ' ">Trobat/s </p>
+
+
+									<strong th:utext="${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' '" class="actual">
+										0 resultat/s en
+									</strong>
+
+									<p th:utext= "  ${MVS_listado_buscador.duracionBusqueda} + ' ' + #{cercar.resultados.para} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}
+									+'\'\''  ">
+									3 mil·lisegons per al terme "busqued"
+								</p>
+							</p>
+						</div>
+					</p>
+
+					<p th:if="${MVS_listado_buscador.saltos}!=null">
+
+						<div id="noresultat" class="barra-resultados-sinResultado">
+
+							<span class="cruz" id="imagenCruz"/>
+
+							<strong th:text="#{cercar.no.resultados}" class="actual">
+								no va produir cap resultat
+							</strong>
+						</div>
+					</p>
+				</div>
+
+				
+
+				<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
+				th:remove="tag">
+
+			</div>
+					<!-- contenido antiguo
+					<p th:if="${MVS_listado_buscador.saltos}!=null">
+						<i th:utext="#{cercar.primer.intento}">S`ha combinat tot el
+							text per a obtenir algun resultat</i>
+					</p>
+				-->
+				<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
+					<!--CUANDO LA BUSQUEDA ES IDENTICO-->
+					
+					<a href="cercar.html"
+					th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+					th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+					buscador Consulta sugerida</a>
+
+					<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}">
+						<input type="hidden" name="cerca"
+						th:value="${MVS_listado_buscador.consultaSugerida}" />
+					</form>
+				</div>
+
+				<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
+					<ul class="resultatsRecercaInteligent">
+
+						<!--cada resultado-->
+						<li th:each="resultado : ${MVS_listado_buscador.lista}">
+							<p id="tituloResultado">
+								<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>
+							</p> 
+
+							<!--<span th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> -->
+							<!--<span th:text=" ${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site} ">Site:</span>-->
+							<span class="detall"
+							th:text="${resultado.descripcion}">Descripcion</span>
+							<br/>
+							<br/>
+						</li>
+					</ul>
+				</div>
+				<br/>
+			</div>
+
+			<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
+
+				<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
+				th:remove="tag">
+				
+						<!--<span style="font-size: 2; color: #ff0000"
+						th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;-->
+						<a href="cercar.html"	
+						th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+						th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+						buscador Consulta sugerida</a>
+
+						<ul class="resultatsRecercaInteligent">
+
+							<!--cada resultado-->
+
+							<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
+
+							
+
+							<li th:each="resultado : ${MVS_listado_buscador.lista}">
+
+								<p  class="probables"><span class="span-separador"/><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> 
+								</p>
+
+							</li>	
+						</ul>
+
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" >
+							<input type="hidden" name="cerca"
+							th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+</body>
+</html>
+
+

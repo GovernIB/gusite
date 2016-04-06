@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--/*
+
+Listado de preguntas frecuentes.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+gus:decorator="layout">
+<head>
+	<title th:if="${MVS_micrositetitulo} !=null"
+	th:text="${MVS_micrositetitulo} + ' - ' + #{listarfaqs.listado}">Microsite
+	Título - Llistat de faqs</title>
+	<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<!--<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>-->
+	<link href="resources/css/estils-tema.css" th:href="@{/resources/css/estils-tema.css}" rel="stylesheet" media="screen" />
+
+	<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+	var thDebug = false;
+	</script>
+	<!-- css específico para esta página -->
+	<link rel="stylesheet" type="text/css" media="all" href="../files/estilsFAQS.css" th:href="@{/resources/files/estilsFAQS.css}"></link>
+	<!--<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsFAQS.css" th:href="@{/resources/css/estilsFAQS.css}"></link>-->	
+</th:block>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="content" >
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">
+			<div class="contenedorFAQS">
+				<!-- titol -->
+				
+
+				<h2><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><span th:text="#{listarfaqs.preguntas}">Preguntes freqüents</span></h2>
+				<!-- informacio FAQ-->
+				<div id="infoFAQ">
+					<dl class="bloquePreguntas">	
+						<li th:each="tema : ${MVS_listado}" class="nivel1" tabindex="1">
+							<!-- Todos menos explorer--> 
+							<span name="noie" style="visibility: visible;" class="noie nivel1">
+								<h4 class="tituloPregunta" th:text="${tema.tema}">Tema de faq</h4><span class="flecha"></span> 			
+								<dl th:each="pregunta : ${tema.listadopreguntas}" th:fragment="contenidoIE" class="textoOculto" style="visibility: visible;display:none;">
+									<dt th:utext="${pregunta.traduce.pregunta}">Título de la preguntaPregunta</dt>
+									<dd><span th:utext="${pregunta.traduce.respuesta}" th:remove="tag">Respuesta a la pregunta</span>
+										<a th:if="${pregunta.traduce.url} !=null" th:href="${pregunta.traduce.url}"
+										th:text="${pregunta.traduce.urlnom} !=null?${pregunta.traduce.urlnom}:#{url.adicional}">
+										descripción url
+									</a>
+								</dd>
+							</dl>
+						</span>
+						<!-- explorer
+						<span class="ie" name="ie" style="visibility: hidden;"> 
+							<a href="#enlace" name="enlace" class="nivel1">
+								<h4 class="tituloPreguntaIE" th:text="${tema.tema}">i tema</h4>
+								<table class="falsa">
+									<tr>
+										<td><span gus:replace="faq/listarfaqs :: contenidoIE" th:remove="tag">Contenido IE</span></td>
+									</tr>
+								</table>
+							</a>
+						</span>  explorer-->
+					</li>
+				</dl>
+			</div>
+		</div>
+	</div>
+	<!-- fin informacio -->
+</section>
+<script layout:fragment="scriptExtraBody1">  
+jQuery('.tituloPregunta').click(function(e){
+	jQuery(this).parent().find('.flecha').toggleClass('flechaAbajo','flecha');
+
+	if(jQuery(this).parent().find('.flecha').hasClass('flechaAbajo')){
+		jQuery(this).parent().find('.textoOculto').css("display","block");
+	}else{
+		jQuery(this).parent().find('.textoOculto').css("display","none");
+	}	
+
+});
+jQuery('.flecha').click(function(){
+	jQuery(this).toggleClass('flechaAbajo','flecha');
+
+	if(jQuery(this).parent().find('.flecha').hasClass('flechaAbajo')){
+		jQuery(this).parent().find('.textoOculto').css("display","block");
+	}else{
+		jQuery(this).parent().find('.textoOculto').css("display","none");
+	}	
+});
+</script>
+</body>
+</html>
+
+

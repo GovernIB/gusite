@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--/*
+
+Página de contenido
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout">
+<head>
+    <title th:if="${MVS_contenido.traduce} !=null"
+    th:text="${MVS_micrositetitulo} + '-' + ${MVS_contenido.traduce.titulo}">-</title>  
+    <th:block th:remove="all">
+<!--/*  
+    Este bloque se usa para visualización en prototipo estático.
+    Al ejecutarse dinámicamente, se eliminará automáticamente
+    */-->
+    <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+    <script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+    <link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+    <link href="resources/files/estils-tema.css" th:href="@{/resources/files/estils-tema.css}" rel="stylesheet" media="screen" />
+
+
+    <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link>
+    <script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+    <script type="text/javascript">
+    var thDebug = false;
+    </script>
+    <!-- Estilos del tema específicos para contenido -->
+    <link href="../files/estilsContenido.css" th:href="@{/resources/files/estilsContenido.css}" rel="stylesheet" media="screen" />
+</th:block>
+
+<script th:inline="javascript" type="text/javascript" th:if="${MVS_microsite.tipomenu}!='2'">
+var nodo='p' + /*[[${MVS_contenido.id}]]*/;
+</script>
+</head>
+<body>
+    <section th:remove="tag" layout:fragment="content">
+        <div class="container-contenido" th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info">
+            <div th:if="${MVS_contenido.traduce} != null">
+                <div th:if="${MVS_tipobeta}=='beta'"
+                th:utext="${MVS_contenido.traduce.txbeta}">Contenido traducido beta</div>
+                <div th:unless="${MVS_tipobeta}=='beta'"
+                th:utext="${MVS_contenido.traduce.texto}">Contenido traducido NO beta</div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+Descripción: 
+Este código es un script introducido en la plantilla layout que ejecuta una serie de funciones.
+
+Variables:
+	MVS_microsite: devuelve un microsite a partir de su clave unica
+	MVS_contenido: devuelve un contenido listo para ser visualizado por el público
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
+	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
+		var nodo='p'+'${MVS_contenido.id}';
+		window.onload = function() { menuJS(nodo); };
+		</script>
+<script type="text/javascript" th:if="${MVS_contenido}==null and ${MVS_microsite}!=null"
+	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
+		var nodo='0';
+		</script>
+<script th:fragment="script" type="text/javascript">
+		function onClickAnyo(anyo) {
+			document.getElementById("filtro").value = ''; 
+			establecerAnyoEnBuscador(anyo);
+		}
+	
+		function establecerAnyoEnBuscador(anyo) {
+			document.getElementById("tanyo").value = anyo; 
+		}	
+		</script>
+</head>
+<body></body>
+</html>

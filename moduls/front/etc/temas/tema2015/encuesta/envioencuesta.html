@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--/*
+
+	Muestra información de haber realizado una encuesta así como sus resultados
+
+	*/-->
+	<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
+	<head>
+		<title th:if="${MVS_encuesta} !=null"
+		th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo} + ' - ' + #{encuesta.resultados} ">Microsite
+		Título - encuesta traduce título - Resultats</title>	
+		<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+	<link href="resources/files/estils-tema.css" th:href="@{/resources/files/estils-tema.css}" rel="stylesheet" media="screen" />
+	
+	<link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link>
+	
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+	var thDebug = false;
+	</script>
+	<link rel="stylesheet" type="text/css" media="all" href="../files/estilsEncuesta.css" th:href="@{/resources/files/estilsEncuesta.css}"></link>
+</th:block>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="content">
+
+
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="" class="body-encuesta">
+
+			<ul id="inline-block">
+				<li><h3 ><span class="glyphicon glyphicon-comment" aria-hidden="true"/><span th:text="${MVS_encuesta.traduce.titulo}">Encuesta</span></h3></li>
+
+			</ul>
+
+			<br/>
+			
+			<div class="panel panel-default" id="contenidoEnvio">
+
+				<div class="visto" id="imagenVisto"></div>
+				
+				<h2 th:text="${MVS_encuesta.traduce.titulo}">Título de la encuesta</h2>
+				<p th:if="${MVS_encuesta.votoDuplicado}=='NVOT'" th:text="#{encuesta.mensaje}">(Només es permet un vot per persona)<br /></p>
+				<br />
+				<div th:if="${MVS_encuesta.visible} =='S'" th:remove="tag">
+					
+					<div id="graciasText" th:if="${MVS_encuesta.mostrar} != 'S'" th:utext="#{encuesta.gracias}">Gràcies per la teva col.laboració</div>
+
+					<div th:if="${MVS_encuesta.mostrar} =='S'" th:remove="tag">
+						<div th:remove="tag">
+							<div 
+							th:each="pregunta : ${MVS_encuesta.preguntas}" 
+							th:if="${pregunta.visible} =='S'" id="enquestaResultats" class="enquestaResultats">
+							<!--/*  es visible */-->
+							<h3 th:text="${pregunta.traduce.titulo}">Título de la pregunta</h3>
+							<p th:if="${pregunta.imagen} !=null">
+								<img src="archivopub.html"
+								th:src="@{${#gusuri.archivopub(MVS_microsite,pregunta.imagen)}}"
+								alt="" />
+							</p>
+							<ul th:with="total=${pregunta.nrespuestas>0?pregunta.nrespuestas:1}">
+								<li th:each="respuesta : ${pregunta.respuestas}"
+								th:with="numrespuestas=${respuesta.nrespuestas}==null?0:${respuesta.nrespuestas},
+								resultado=(${numrespuestas}*100)/${total},
+								resulNoDecim = ${#strings.arraySplit(resultado, '.')}">
+								<span th:text="${respuesta.traduce.titulo}" th:remove="tag">Título de la respuesta</span>
+								<em 
+								th:text="'(' + ${resulNoDecim[0]} + ' % - ' + ${numrespuestas} + ' ' + #{encuesta.respuestas} + ')'">(XX% - Y respostes)</em> 
+								<span class="barra" th:style="'width:' +${resulNoDecim[0]} + '%'">&nbsp;</span>
+							</li>
+						</ul>
+						<p class="votsTotals">
+							<span th:text="#{encuesta.respuestas.totales} + ':'"
+							th:remove="tag">respostes totals:</span> <strong
+							th:text="${pregunta.nrespuestas}"></strong>
+						</p>
+
+
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div id="botoneraCom">
+			<a type="button" onClick = ""  href="http://www.caib.es" class="btn btn-primary"  id="btnAceptar" name="btnacept" th:value="#{general.aceptar}">
+				<p th:text="#{general.aceptar}">alaaa</p>
+
+			</a>
+			
+		</div>
+
+		
+	</div>
+</div>
+</section>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--/*
+ 
+  Carga un contenido externo
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout">
+<head>
+<title
+	th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+</th:block>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="content">
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info">
+		<h2 th:text="${MVS_tipolistado}">Tipo listado</h2>
+		<form th:if="${MVS_mchtml}!=null" action="noticias.html" name="formnoticiasexterno"
+			id="formnoticiasexterno">
+			<!--MVS_idioma: devuelve el idioma correspondiente  -->
+			<input type="hidden" name="lang" th:value="${MVS_idioma}" /> <input
+				type="hidden" name="nameform" value="formnoticiasexterno" /> 
+				<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+				<input
+				type="hidden" name="mkey" th:value="${MVS_microsite.claveunica}" />
+			<input type="hidden" name="tipo" th:value="${MVS_claseelemento_id}" />
+			<input type="hidden" name="pagina" value="1" />
+			<div th:utext="${MVS_mchtml}" th:remove="tag"></div>
+		</form>
+		</div>
+	</section>
+</body>
+</html>
+
+
+
