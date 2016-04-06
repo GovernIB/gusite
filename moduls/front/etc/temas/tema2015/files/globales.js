@@ -85,7 +85,7 @@ var menuJS = {
 						ultimoA.attr("href","#");
 						ultimoA.removeClass("pareADon pareAD");
 						ultimoA.addClass("carpetaSelec");
-						ultimoA.parent().find('ul').show();
+						//ultimoA.parent().find('ul').show();
 					}else{
 						primerA.parent().find('.primerosHijos').show();
 					}

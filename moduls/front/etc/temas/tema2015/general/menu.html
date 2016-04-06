@@ -31,11 +31,15 @@
             <div th:if="${MVS_menu_cont_notic}!=null" th:with="idcontenido=${MVS_menu_cont_notic}" th:type="java.lang.String" th:remove="tag">
                 <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
             </div>
+            <!--/* Caso para cuando hay un contenido a resaltar de encuestas */-->
+            <div th:if="${MVS_idContenido}!=null" th:with="idcontenido=${MVS_idContenido}" th:type="java.lang.String" th:remove="tag">
+                <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
+            </div>
             <!--/* Caso para cuando no hay contenido ni noticia definido */-->
-            <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null)" th:with="idcontenido='-1'" th:type="java.lang.Object" th:remove="tag">
+            <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null) and (${MVS_idContenido}==null)" th:with="idcontenido='-1'" th:type="java.lang.Object" th:remove="tag">
                 <div gus:replace="general/menu :: contenido" th:remove="tag">
                 </div>
-            </div>
+            </div> 
         </div>
         <!-- cercador -->
         <div th:if="${MVS_microsite.buscador}=='S'" th:remove="tag">
@@ -98,8 +102,8 @@
 
                                         <li th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}" th:with="tamano=${#lists.size(contenido.listacosas)}" th:remove="tag">
                                             <ul th:remove="tag">
-                                                <div th:if="${tamano}!=1" th:remove="tag">
-                                                    <li th:if="${tamano}>0" th:with="opcion=${contenido.listacosas[0]}" th:id="${opcion.id}==${idcontenido} ? 'p'+${opcion.id} : ''" th:class="${opcion.id}==${idcontenido} ? 'seleccionado' : ''">
+                                                <div th:if="${tamano}!=0" th:remove="tag">
+                                                    <li th:if="${tamano}>1" th:with="opcion=${contenido.listacosas[0]}" th:id="${opcion.id}==${idcontenido} ? 'p'+${opcion.id} : ''" th:class="${opcion.id}==${idcontenido} ? 'seleccionado' : ''">
                                                         <a href="#" class="pareADon carpeta" th:text="${contenido.traduce.nombre}">
                                                             <span class="helloou">
                                                                 Nombre del menú
@@ -174,7 +178,7 @@
                                     <li th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}" th:with="tamano=${#lists.size(contenido.listacosas)}" th:remove="tag">
                                         <ul  th:remove="tag">
                                             <div th:if="${tamano}!=0" th:remove="tag">
-                                                <li th:if="${tamano}>0">
+                                                <li th:if="${tamano}>1">
                                                     <a href="#" class="pareADon carpeta"> 
                                                         <img th:if="${contenido.imagenmenu}!=null" src="archivopub.html" th:src="@{${#gusuri.archivopub(MVS_microsite,contenido.imagenmenu)}}" alt="Título del menú" th:alt="${contenido.traduce.nombre}" />
                                                         <span th:text="${contenido.traduce.nombre}" th:remove="tag">
