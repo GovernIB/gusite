@@ -26,6 +26,7 @@ gus:decorator="layout">
 <!--/*<link rel="stylesheet" type="text/css" media="all" href="resources/css/estilsAgenda.css" th:href="@{/resources/css/estilsAgenda.css}"></link>*/-->
 </head>
 <body>
+    <h1>test</h1>
 	<section th:remove="tag" layout:fragment="content">
 		<!-- informacio con o sin menu -->
 		<div
@@ -75,19 +76,16 @@ gus:decorator="layout">
 						</div>
 					</div>					
 					<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}">Títol de l'esdeveniment</h3><br />
-					<div class="fechaElemento" th:if="${elementoAgenda.ffin} !=null">
-								<span th:with="finicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')}">
-								<span th:text="${finicio + ' - '}"></span>
-								</span>
-								<span th:with="ffin=${#calendars.format(elementoAgenda.ffin, 'dd/MM/yyyy')}">
-								<span th:text="${ffin}"></span>
-								</span>
-								</div>
-								<div class="fechaElemento" th:if="${elementoAgenda.ffin} ==null">
-								<span th:with="finicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')}">
-								<span th:text="${finicio}"></span>
-								</span>
-								</div>
+					<div class="fechaElemento">
+						<span th:with="finicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')},horai=${#calendars.format(elementoAgenda.finicio, 'HH:mm')}">
+							<span th:text="${finicio}"></span>
+							<span th:if="${horai}!='00:00'" th:text="#{agenda.cuando} +' '+ ${horai}" th:remove="tag">cuando HH:mm</span>
+						</span>
+						<span th:if="${elementoAgenda.ffin} !=null" th:with="ffin=${#calendars.format(elementoAgenda.ffin, 'dd/MM/yyyy')},horaf=${#calendars.format(elementoAgenda.ffin, 'HH:mm')}">
+							<span th:text="${' - ' + ffin}"></span>
+							<span th:if="${horaf}!='00:00'" th:text="#{agenda.cuando} +' '+ ${horaf}" th:remove="tag">cuando HH:mm</span>
+						</span>
+					</div>
 				</div>
 				<div th:utext="${elementoAgenda.traduce.descripcion}" th:remove="tag">traduce i descripcion</div>
 					<div class="documentNoticia" th:if="${elementoAgenda.traduce.documento}!=null" >
