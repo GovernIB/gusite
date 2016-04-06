@@ -18,7 +18,7 @@
 	<property name="doc" value="${home}/doc"/>
 	<property name="components" value="${home}/moduls"/>
 	<property name="etc" value="${home}/etc"/>
-	<property name="etc.jboss" location="${etc}/jboss-${jboss.version}"/>
+	<property name="etc.jboss" location="${etc}/jboss-${jboss.version}"/>	
 
 	<property name="lib" value="${home}/lib"/>
 	<property name="lib.caib" location="${lib}/caib"/>
@@ -27,6 +27,7 @@
 	<property name="product.dir" location="${output.dir}/product"/>
 	<property name="moduls.dir" location="${output.dir}/moduls"/>
 	<property name="doc.dir" location="${output.dir}/doc"/>
+	<property name="temas.dir" value="${home}/moduls/front/etc/temas"/>
 
 	<property name="projecte.name.librerias" value="librerias"/>
 	<property name="projecte.name.rolsac" value="rolsac"/>
@@ -334,6 +335,17 @@
 	<!-- ================================================================== -->
 	<target name="deploy">
 		<copy file="${product.dir}/${projecte.name.gusite}.ear" todir="${deploy.dir}"/>
+	</target>
+	
+	<!-- ================================================================== -->
+	<!-- temas: Genera el zip con los temas.                                                             -->
+	<!-- ================================================================== -->
+	<target name="temas" description="Genera el zip con los temas">		
+		<zip destfile="${temas.dir}/bin/tema2015.zip"
+		       basedir="${temas.dir}/tema2015"
+		       update="true"
+		  />
+		
 	</target>
 
 </project>
