@@ -39,13 +39,13 @@ STORAGE(
 	MAXEXTENTS 2147483645
 	BUFFER_POOL DEFAULT
 	)
-LOGGING
+LOGGING ;
 
-Alter table "GUS_AUDITORIA" add  foreign key ("AUD_MICCOD") references "GUS_MICROS" ("MIC_CODI")  on delete set null
+Alter table "GUS_AUDITORIA" add  foreign key ("AUD_MICCOD") references "GUS_MICROS" ("MIC_CODI")  on delete set null;
 
-Create Index "GUS_AUDMIC_I" ON "GUS_AUDITORIA" ("AUD_MICCOD") 
+Create Index "GUS_AUDMIC_I" ON "GUS_AUDITORIA" ("AUD_MICCOD"); 
 
-CREATE SEQUENCE "GUS_SEQAUD"
+CREATE SEQUENCE "GUS_SEQAUD";
 
 
 -------------------------------------------------
@@ -102,29 +102,29 @@ END;
 
 ALTER table "GUS_CONIDI" ADD (
     "CID_URI" Varchar2 (270 CHAR)
-)
+);
 
 ALTER table "GUS_ENCIDI" ADD (
 	"EID_URI" Varchar2 (270 CHAR)
-) 
+);
 	
 ALTER table "GUS_MICROS" ADD (
 	"MIC_URI" Varchar2 (32 CHAR),
 	"MIC_ANALYTICS" Varchar2 (60 CHAR)
-) 
+);
 
 ALTER table "GUS_MICIDI" ADD (
 	"MID_KEYWORDS" Varchar2 (1000 CHAR),
 	"MID_DESCRIPTION" Varchar2 (4000 CHAR)
-) 
+); 
     
 ALTER table "GUS_NOTIDI" ADD (
 	"NID_URI" Varchar2 (530 CHAR)
-)     
+);     
     
 ALTER table "GUS_TPNIDI" ADD (
 	"TPI_URI" Varchar2 (125 CHAR)
-)    
+);    
 
 -- FIN DEPENDENCIA 2 PARTE 1-2-3
 -------------------------------------
