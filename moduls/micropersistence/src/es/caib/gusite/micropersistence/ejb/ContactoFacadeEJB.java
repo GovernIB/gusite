@@ -305,7 +305,7 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 
 			for (String linea : lineas) {
 				ldatas.add((Lineadatocontacto) session.get(
-						Lineadatocontacto.class, Long.getLong(linea)));
+						Lineadatocontacto.class, Long.parseLong(linea)));
 				session.createQuery(
 						"delete from TraduccionLineadatocontacto tlin where tlin.id.codigoLineadatocontacto = "
 								+ linea).executeUpdate();
