@@ -72,9 +72,12 @@ public class noticiasEditaAction extends BaseAction
     	noticiaForm noticiaForm = (noticiaForm) form;
     	Microsite micrositeBean= (Microsite)request.getSession().getAttribute("MVS_microsite");
 
-        if(request.getSession().getAttribute("MVS_idtipo")!=null) 
+        if(request.getSession().getAttribute("MVS_idtipo")!=null)  {
         	request.setAttribute("MVS_tipolistado", tipoDelegate.obtenerTipo( new Long(""+request.getSession().getAttribute("MVS_idtipo")) ) );    	
-    	
+        }
+        
+        request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId() );
+        
         if (request.getParameter("accion") != null) {
         
 	    	if(request.getParameter("modifica")!=null || request.getParameter("anyade")!=null

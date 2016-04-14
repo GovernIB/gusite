@@ -43,10 +43,11 @@ public class listaNoticiasAction extends BaseAction {
 
 
         TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-        if(request.getSession().getAttribute("MVS_idtipo")!=null) 
+        if(request.getSession().getAttribute("MVS_idtipo")!=null)  {
         	request.setAttribute("MVS_tipolistado", bdTipo.obtenerTipo( new Long(""+request.getSession().getAttribute("MVS_idtipo")) ) );
-
-     
+        }
+        request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+    	
         //********************************************************
         //************* ERROR DE VALIDACION **********************
         //********************************************************

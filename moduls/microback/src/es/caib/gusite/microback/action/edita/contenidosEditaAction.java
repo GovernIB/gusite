@@ -76,7 +76,8 @@ public class contenidosEditaAction extends BaseAction
     	
     	//Metemos en el request el CSS que utilizará el tinymce
     	request.setAttribute("MVS_css_tiny",tagCSS(micrositeBean.getEstiloCSS(),micrositeBean.getEstiloCSSPatron()));
-    	
+    	request.setAttribute("idmicrosite", micrositeBean.getId().toString());
+        
  		try {
 			if 	((String) request.getParameter("accion") != null) {
 

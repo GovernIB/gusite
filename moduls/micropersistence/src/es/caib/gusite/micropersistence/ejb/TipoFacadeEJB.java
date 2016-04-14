@@ -24,6 +24,7 @@ import org.hibernate.Transaction;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.plugins.PluginDominio;
 
@@ -144,6 +145,26 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				tipo.setTraducciones(null);
+			} else {//#28 Incidencia borrando traducciones
+				String listIdiomaBorrar = "";
+				Iterator<TraduccionTipo> it = tipo.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionTipo trd = it.next();
+					listIdiomaBorrar += "'" +trd.getId().getCodigoIdioma()+"'";
+					if(it.hasNext()){
+						listIdiomaBorrar += "," ;						
+					}
+				}
+				// Borramos los idiomas que no pertenecen a contenido y existen en la BBDD
+				if(!listIdiomaBorrar.isEmpty()){ 
+					Query query = session.createQuery("select tradTip from TraduccionTipo tradTip where tradTip.id.codigoTipo = " + tipo.getId() + " and tradTip.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+					final List<TraduccionTipo> traduciones = query.list();
+					for(TraduccionTipo traducI : traduciones ) {
+						session.delete(traducI);	
+					}
+					session.flush();
+				}				
 			}
 
 			session.saveOrUpdate(tipo);

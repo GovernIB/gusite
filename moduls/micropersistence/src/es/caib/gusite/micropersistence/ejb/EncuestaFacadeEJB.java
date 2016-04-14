@@ -37,6 +37,7 @@ import es.caib.gusite.micromodel.RespuestaDato;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionPregunta;
 import es.caib.gusite.micromodel.TraduccionRespuesta;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -154,7 +155,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 	public Long grabarEncuesta(Encuesta enc) throws DelegateException {
 
 		Session session = this.getSession();
-		try {
+		try { 
 			boolean nuevo = (enc.getId() == null) ? true : false;
 			Transaction tx = session.beginTransaction();
 
@@ -168,6 +169,26 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				enc.setTraducciones(null);
+			}  else {// #28 Comentario sobre que da error borrando la URI de una traduccion
+				String listIdiomaBorrar = "";
+				Iterator<TraduccionEncuesta> it = enc.getTraducciones()
+						.values().iterator();
+				while (it.hasNext()) {
+					TraduccionEncuesta trd = it.next();
+					listIdiomaBorrar += "'" +trd.getId().getCodigoIdioma()+"'";
+					if(it.hasNext()){
+						listIdiomaBorrar += "," ;						
+					}
+				}
+				// Borramos los idiomas que no pertenecen a contenido y existen en la BBDD
+				if(!listIdiomaBorrar.isEmpty()){ 
+					Query query = session.createQuery("select tradEnc from TraduccionEncuesta tradEnc where tradEnc.id.codigoEncuesta = " + enc.getId() + " and tradEnc.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+					final List<TraduccionEncuesta> traduciones = query.list();
+					for(TraduccionEncuesta traducI : traduciones ) {
+						session.delete(traducI);	
+					}
+					session.flush();
+				}				
 			}
 
 			session.saveOrUpdate(enc);

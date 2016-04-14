@@ -61,7 +61,8 @@ public class tiposEditaAction extends BaseAction {
     	TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
         Tipo tipo = null;
         TraDynaActionForm f = (TraDynaActionForm) form;
-
+        request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId() );
+        
         if (request.getParameter("accion") != null) {
 
             if (request.getParameter("modifica") != null

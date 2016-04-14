@@ -56,7 +56,8 @@ public class listaContenidosAction extends BaseAction {
     	//Metemos en el request el CSS que utilizará el tinymce
     	Microsite micro = (Microsite)request.getSession().getAttribute("MVS_microsite");
     	request.setAttribute("MVS_css_tiny",tagCSS(micro.getEstiloCSS()));    	
-    	
+    	request.setAttribute("idmicrosite", ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId().toString());
+        
         //********************************************************
         //************* ERROR DE VALIDACION **********************
         //********************************************************

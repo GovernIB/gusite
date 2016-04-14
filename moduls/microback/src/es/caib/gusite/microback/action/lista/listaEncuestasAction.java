@@ -47,7 +47,8 @@ public class listaEncuestasAction extends BaseAction {
     		HttpServletRequest request, HttpServletResponse response) throws Exception  {
 
         listaActionForm f = (listaActionForm) form;
-        
+        request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+    	
      
         //********************************************************
         //************* ERROR DE VALIDACION ENCUESTA *************

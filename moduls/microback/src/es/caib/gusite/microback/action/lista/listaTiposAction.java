@@ -49,7 +49,7 @@ public class listaTiposAction extends BaseAction {
 
         listaActionForm f = (listaActionForm) form;
         TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-        
+        request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         //********************************************************
         //************* ERROR DE VALIDACION **********************
         //********************************************************
@@ -69,7 +69,7 @@ public class listaTiposAction extends BaseAction {
         	request.getSession().removeAttribute("tiponotForm");
             // combo para que clasifiquen los listados
             request.setAttribute("listaClasificacion", bdTipo.comboClasificacion(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
-            request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+            //request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         	return mapping.findForward("detalleTipo");
         }
         //********************************************************
@@ -92,7 +92,7 @@ public class listaTiposAction extends BaseAction {
             lis=lis.substring(0,lis.length()-2);
             
             request.getSession().setAttribute("mensajeBorrarTipo", new String(lis));
-            request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+            //request.setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
         	
             return mapping.findForward("listarTipos");
             
