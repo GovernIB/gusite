@@ -266,7 +266,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		} else {
 			unidadData.setUrl(absUrl + "/govern/organigrama/area.do?coduo=" + ua.getId() + "&lang=" + ua.getIdioma());
 		}
-		
+		unidadData.setDominio(ua.getDominio());
 		return unidadData;
 	} 
 	

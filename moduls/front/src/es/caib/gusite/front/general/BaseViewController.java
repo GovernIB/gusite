@@ -413,9 +413,9 @@ public abstract class BaseViewController extends FrontController {
 		if (view.getMicrosite().getDomini() != null && view.getMicrosite().getDomini().length() > 0) {
 			direccion.append("<br />").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
 					.append(view.getMicrosite().getDomini()).append(">").append(view.getMicrosite().getDomini()).append("</a>");
-		} else if (!isEmpty(unidadData.getUrl())) {
+		} else if (!isEmpty(unidadData.getDominio())) {
 				direccion.append("<br />").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
-						.append(unidadData.getUrl()).append(">").append(unidadData.getUrl()).append("</a>");
+						.append(unidadData.getDominio()).append(">").append(unidadData.getDominio()).append("</a>");
 		}
 
 		view.setDireccion(direccion.toString());

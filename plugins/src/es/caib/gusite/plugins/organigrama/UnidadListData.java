@@ -9,6 +9,7 @@ public class UnidadListData {
 	private String nombre;
 	private String abreviatura;
 	private String url;
+	private String dominio;
 
 	public String getNombre() {
 		return nombre;
@@ -45,5 +46,11 @@ public class UnidadListData {
 	}
 	public void setAbreviatura(String abreviatura) {
 		this.abreviatura = abreviatura;
+	}
+	public String getDominio() {
+		return dominio;
+	}
+	public void setDominio(String dominio) {
+		this.dominio = dominio;
 	}
 }
