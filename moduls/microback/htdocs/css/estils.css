@@ -108,6 +108,7 @@ div.atencion { padding:1em 1em 1em 3.5em; background:url(../imgs/icones/ico_aten
 #pagInici a { color:#003366; text-decoration:none; }
 #pagInici a:hover { text-decoration:underline; }
 #version { background-color:#ff982b; color:#fff; font-size:.9em; padding:5px 10px; text-align:right; font-weight:bold; }
+#version a { background-color:#ff982b; color:#fff; text-align:right; font-weight:bold;padding-left: 2px; }
 #estAju { clear:both; background-color:#fff; border-top:1px solid #ffe1c1; padding:1.5em 0; width:70em; overflow:hidden; }
 #estAju .columna2 { float:left; width:28%; padding-left:8em; margin-right:3%; }
 #estAju .estadistiques { background:url(../imgs/index/estadistiques.gif) no-repeat 1em 50% #fff; width:15%; }

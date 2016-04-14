@@ -26,11 +26,14 @@ public class Version {
 	@Value( "${java.version}" )
 	private String javaVersion;
 
-	@Value( "${svn.revision}" )
-	private String svnRevision;
+	@Value( "${git.revision}" )
+	private String gitRevision;
 	
 	@Value( "${microsites.name}" )
 	private String micrositesName;
+	
+	@Value( "${microsites.urlrevision}" )
+	private String micrositesUrlRevision;
 
 	public String getProjectAuthor() {
 		return projectAuthor;
@@ -79,15 +82,21 @@ public class Version {
 	public void setMicrositesName(String micrositesName) {
 		this.micrositesName = micrositesName;
 	}
-
-	public void setSvnRevision(String svnRevision) {
-		this.svnRevision = svnRevision;
+	public String getGitRevision() {
+		return gitRevision;
 	}
 
-	public String getSvnRevision() {
-		return svnRevision;
+	public void setGitRevision(String gitRevision) {
+		this.gitRevision = gitRevision;
 	}
-		
+
+	public String getMicrositesUrlRevision() {
+		return micrositesUrlRevision;
+	}
+
+	public void setMicrositesUrlRevision(String micrositesUrlRevision) {
+		this.micrositesUrlRevision = micrositesUrlRevision;
+	}
 	
 	
 }

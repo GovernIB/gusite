@@ -105,14 +105,18 @@ public class Microback {
 	static public String microsites_version = "unknown";
 	static public String microsites_name = "unknown";
 	static public String microsites_build = "unknown";
+	static public String microsites_revision = "unknown";
+	static public String microsites_urlrevision = "unknown";
 
 	static {
-		try {
+		try { 
 			Properties versionsProperties = new Properties();
 			versionsProperties.load(Microback.class.getClassLoader().getResourceAsStream("version.properties"));
 			microsites_version = versionsProperties.getProperty("microsites.version");
 			microsites_name = versionsProperties.getProperty("microsites.name");
-			microsites_build = versionsProperties.getProperty("microsites.build") + "(r"+ versionsProperties.getProperty("svn.revision") +")";
+			microsites_build = versionsProperties.getProperty("microsites.build");
+			microsites_revision =  "("+ versionsProperties.getProperty("git.revision") +")";
+			microsites_urlrevision = versionsProperties.getProperty("microsites.urlrevision").replace("{0}",versionsProperties.getProperty("git.revision")) ;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

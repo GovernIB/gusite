@@ -188,6 +188,8 @@ public class Base {
         
     	request.getSession().setAttribute("MVS_usuario", usu);	
     	request.getSession().setAttribute("MVS_einaversion", Microback.microsites_name + " v" + Microback.microsites_version + " build: " + Microback.microsites_build);
+    	request.getSession().setAttribute("MVS_einarevision", Microback.microsites_revision);
+    	request.getSession().setAttribute("MVS_urlrevision", Microback.microsites_urlrevision);
 	}
 	
 

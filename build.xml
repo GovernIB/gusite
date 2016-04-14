@@ -72,20 +72,7 @@
 
 
 	<target name="generate.properties" description="Genera el archivo de propiedades del build">
-		<!-- Obtener revisión desde la base de datos SQLite de Subversion para añadirlo al manifest de EAR
-		IMPORTANTE, EXCLUSIVO DE SVN! 
-		<sql
-			driver="org.sqlite.JDBC"
-		    url="jdbc:sqlite:./svn/wc.db"
-		    userid=""
-		    password=""
-			classpath="lib/sqlite-jdbc-3.7.15-M1.jar" 
-			escapeprocessing="false"
-			print="yes" expandProperties="true" showheaders="false" showtrailers="false" output="svnversion.properties">
-			<![CDATA[
-				SELECT 'svn.revision=' || changed_revision FROM NODES ORDER BY changed_revision DESC LIMIT 1;
-			]]>
-		</sql>-->
+	
 		
 		<!-- IMPORTANTE. PARA QUE FUNCIONE LO SIGUIENTE:
 				- En run/External Tools/External tools configuration.
@@ -103,22 +90,20 @@
 		</exec>
 
 	
-		<!-- Obtenemos la revisión SVN del proyecto desde el archivo de propiedades generado justo antes -->
-		<property file="svnversion.properties"/>
 
 			<tstamp>
 				<format property="microsites.build" pattern="dd-MM-yyyy HH:mm:ss" locale="es,ES"/>
 			</tstamp>
 	
 		<propertyfile file="${moduls.dir}/version.properties">
-			<!--<entry key="svn.revision" value="${svn.revision}" />-->
-			<entry key="svn.revision" value="${git.revision}" /> 
+			<entry key="git.revision" value="${git.revision}" /> 
 			<entry key="microsites.name" value="${microsites.name}" />
 			<entry key="microsites.version" value="${microsites.version}" />
 			<entry key="microsites.build" value="${microsites.build}" />
 			<entry key="project.version" value="${project.version}"/>
 			<entry key="project.author" value="${project.author}"/>
 			<entry key="java.version" value="${java.version}"/>
+			<entry key="microsites.urlrevision" value="${url.revision}"/>
 		</propertyfile>
 			
 	</target>
@@ -204,9 +189,6 @@
 	<!-- ================================================================== -->
 	<target name="assemble" depends="generate.properties" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
 				
-		<!-- Obtenemos la revisión SVN del proyecto desde el archivo de propiedades generado justo antes -->
-		<property file="svnversion.properties"/>
-
 		<delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
 		
 		<ear earfile="${product.dir}/${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application.xml" manifest="${etc.appgusite}/manifest.mf">
@@ -214,7 +196,6 @@
 				<attribute name="Version" value="${project.version}"/>
 				<attribute name="Built-By" value="${project.author}"/>
 				<attribute name="Build-Jdk" value="${java.version}"/>
-				<attribute name="SVN-revision" value="${svn.revision}"/>
 				<attribute name="GIT-revision" value="${git.revision}" />
 			</manifest>
 

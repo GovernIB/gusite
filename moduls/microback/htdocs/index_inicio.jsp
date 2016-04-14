@@ -100,7 +100,8 @@
 			<div id="estUrl">
 				&nbsp;URL pública: <a href="<bean:write name="MVS_urlpublica"/>" target="_blank"><bean:write name="MVS_urlpublica"/></a>
 			</div>
-			<div id="version"><bean:write name="MVS_einaversion" ignore="true"/></div>
+			<div id="version"><bean:write name="MVS_einaversion" ignore="true"/><a href="<bean:write name="MVS_urlrevision" ignore="true"/>" target="_blank"><bean:write name="MVS_einarevision" ignore="true"/></a>
+			</div>
 		</div>
 	</logic:present>
 	
