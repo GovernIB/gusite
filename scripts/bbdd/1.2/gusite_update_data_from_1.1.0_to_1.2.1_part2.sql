@@ -179,7 +179,8 @@ UPDATE GUS_MUSUAR SET msu_perfil = REPLACE(msu_perfil, 'sacsystem', 'gussystem')
 DELETE FROM GUS_MICROS_BACKUP;
 INSERT INTO GUS_MICROS_BACKUP (SELECT MIC_CODI, MIC_RESTRI FROM GUS_MICROS);
 
-UPDATE GUS_MICROS SET MIC_RESTRI = '5' WHERE MIC_RESTRI = '2' AND MIC_CSS is null;
+-- Se comenta porque se prevee un pase progresivo de los sites a la nueva versión del frontal
+--UPDATE GUS_MICROS SET MIC_RESTRI = '5' WHERE MIC_RESTRI = '2' AND MIC_CSS is null;
 
 -- Fijar los valores iniciales de los sitios antiguos
 UPDATE GUS_MICROS SET MIC_VERSION = 'v1', MIC_TIPO_ACCESO = 'P' WHERE MIC_RESTRI = 'N';
