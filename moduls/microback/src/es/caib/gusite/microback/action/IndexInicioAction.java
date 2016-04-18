@@ -18,8 +18,12 @@ import es.caib.gusite.microback.base.bean.Pardato;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
+import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
+import es.caib.gusite.micropersistence.exception.UsuarioInexistenteException;
 
 /**
  * Action que guarda las últimas modificaciones del microsite en un atributo de petición  MVS_ultimsmodificats <P>
@@ -59,8 +63,16 @@ public class IndexInicioAction extends Action  {
     }
 	
 	
-	private String obtenerUrlPublica(HttpServletRequest request) {
+	private String obtenerUrlPublica(HttpServletRequest request) throws Exception {
 		Microsite microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
+		
+		if (microsite == null){
+			UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
+	     	Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
+	 	
+	     	usudel.isUsuarioNulo(usu);
+		}
+		
 		
 		if (microsite.getRestringido().equals("5")) {
             String newContext = System.getProperty("es.caib.gusite.context.front");

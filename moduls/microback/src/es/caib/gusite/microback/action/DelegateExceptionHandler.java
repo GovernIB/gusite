@@ -1,16 +1,20 @@
 package es.caib.gusite.microback.action;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts.Globals;
-import org.apache.struts.action.*;
-import org.apache.struts.config.ExceptionConfig;
-
-import es.caib.gusite.micropersistence.delegate.DelegateException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ExceptionHandler;
+import org.apache.struts.config.ExceptionConfig;
+
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 
 /**
  * Handler para excepciones del Delegate
@@ -49,11 +53,14 @@ public class DelegateExceptionHandler extends ExceptionHandler {
         // Figure out the error
         if (de.isSecurityException()) {
             error = new ActionError("errors.security", de.getSecurityException().getMessage());
-        } else {
+        }else if(de.isUsuarioException()){
+			error = new ActionError(de.getKey());   
+		}
+        else {
         	if (de.getMessage().indexOf("Could not execute JDBC batch update")>0)
         		error = new ActionError("errors.fkconstraint");
         	else
-        		error = new ActionError(config.getKey(), de.getMessage());        		
+        		error = new ActionError(config.getKey(), de.getMessage());      	
         }
         property = error.getKey();
 

@@ -54,6 +54,7 @@ public class BuscaordenaMicrositesAction extends Action {
 		//obtener usuario
      	UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
      	Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
+     	usudel.isUsuarioNulo(usu);
  	
      	MicrositeDelegate micro = DelegateUtil.getMicrositeDelegate();
      	List<?> listamicros = micro.listarMicrositesbyUser(usu);

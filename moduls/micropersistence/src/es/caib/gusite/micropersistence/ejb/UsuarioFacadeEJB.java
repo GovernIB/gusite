@@ -7,6 +7,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -16,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Usuario;
+import es.caib.gusite.micropersistence.exception.UsuarioInexistenteException;
 
 /**
  * SessionBean para gestionar usuarios.
@@ -256,6 +258,20 @@ public abstract class UsuarioFacadeEJB extends HibernateEJB {
 					criteri.add(Restrictions.eq(key, value));
 				}
 			}
+		}
+	}
+	
+	
+	/**
+	 * Comprueba si el usuario es nulo.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */	
+	public void isUsuarioNulo(Usuario usu) {
+
+		if (usu == null){
+			throw new UsuarioInexistenteException("errors.autentificacion");
 		}
 	}
 

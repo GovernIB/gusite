@@ -211,6 +211,7 @@ public class Base {
 			//obtener usuario
 	    	UsuarioDelegate usudel=DelegateUtil.getUsuarioDelegate();
 	    	Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
+	    	usudel.isUsuarioNulo(usu);
 	        
 	    	//obtener listado microsites del usuario
 	    	List<?> micros = bdMicro.listarMicrositesbyUser(usu);

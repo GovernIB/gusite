@@ -143,6 +143,19 @@ public class UsuarioDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
+	/**
+	 * Comprueba si el usuario es nulo.
+	 * 
+	 * @throws DelegateException
+	 */
+	public void isUsuarioNulo(Usuario usu) throws DelegateException {
+		try {
+			this.getFacade().isUsuarioNulo(usu);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
