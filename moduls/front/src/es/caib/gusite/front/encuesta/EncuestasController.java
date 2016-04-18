@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.standard.expression.Each;
 
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
@@ -258,6 +259,7 @@ public class EncuestasController extends BaseViewController {
 			}
 
 			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
+			
 
 			// Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
@@ -378,17 +380,61 @@ public class EncuestasController extends BaseViewController {
 										cuerpomensaje += paramValue + "\n";
 										encuestadel.sumarPregunta(new Long(idpregunta));
 										encuestadel.sumarRespuesta(new Long(paramValue));
+										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
+//									    List<Pregunta> listapreg= encuesta.getPreguntas();
+//									    for (Pregunta pregunta : listapreg) {
+//											if (pregunta.getId().compareTo(new Long(idpregunta))==0) {
+//												List<Respuesta> listaresp = pregunta.getRespuestas();
+//												pregunta.setNrespuestas(pregunta.getNrespuestas() + 1);
+//											  
+//												for ( Respuesta respuesta : listaresp) {
+//													 if (respuesta.getId().compareTo(new Long(paramValue))==0){
+//														 respuesta.setNrespuestas(respuesta.getNrespuestas()+1);
+//														 
+//														 encuesta.setPreguntas(listapreg);
+//														 break;
+//													 }
+//												}
+//											}
+//										} 
+									    encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(paramValue));
 										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 									}
 								} else {
 									encuestadel.sumarPregunta(new Long(idpregunta));
+//									List<Pregunta> listapreg= encuesta.getPreguntas();
+//									for (Pregunta pregunta : listapreg) {
+//										if (pregunta.getId().compareTo(new Long(idpregunta))==0) {										
+//											pregunta.setNrespuestas(pregunta.getNrespuestas() + 1);
+//											encuesta.setPreguntas(listapreg);
+//											break;
+//									    }
+//									}
 									for (String paramValue : paramValues) {
 										cuerpomensaje += paramValue + ", ";
 										encuestadel.sumarRespuesta(new Long(paramValue));
+//										List<Pregunta> listapreg2= encuesta.getPreguntas();										
+//									    for (Pregunta pregunta2 : listapreg2) {
+//											if (pregunta2.getId().compareTo(new Long(idpregunta))==0) {
+//												List<Respuesta> listaresp = pregunta2.getRespuestas();												
+//												
+//												for ( Respuesta respuesta : listaresp) {
+//													 if (respuesta.getId().compareTo(new Long(paramValue))==0){
+//														 respuesta.setNrespuestas(respuesta.getNrespuestas()+1);
+//														 
+//														 encuesta.setPreguntas(listapreg2);
+//														 break;
+//													 }
+//												}
+//											}
+//										} 
+										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
+										encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(paramValue));
 										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 									}
+									
 									cuerpomensaje += "\n";
 								}
 

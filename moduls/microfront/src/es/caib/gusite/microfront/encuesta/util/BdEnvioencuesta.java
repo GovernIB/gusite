@@ -238,6 +238,8 @@ public class BdEnvioencuesta  extends Bdbase {
 								resdat.setIdusuari(upm.getId().getIdusuario());
 				    			if ((paramValue!=null) && (!paramValue.equals("null")))
 				    				resdatdel.grabarRespuestaDato(resdat);
+				    			
+				    			
 				    		  	
 				    	  } else {
 				    		  	cuerpomensaje+= paramName + " = ";
@@ -269,6 +271,8 @@ public class BdEnvioencuesta  extends Bdbase {
 				    	  }
 				      }
 			    }
+			    Encuesta encuestaAux = encuestadel.obtenerEncuesta(encuesta.getId());
+    			encuesta.setPreguntas(encuestaAux.getPreguntas());
 			    //metemos el valor del idencuesta para no volver a rellenarla
 			    req.getSession().setAttribute("MVS_encuestarellena" + encuesta.getId(), "yes");
 			    log.debug("[aviso] Encuesta: " + cuerpomensaje );    
