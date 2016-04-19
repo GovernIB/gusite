@@ -110,7 +110,7 @@
 																</li>
 															</logic:iterate>
 														</ul>
-														
+														  
 														<p class="votsTotals"><bean:message key="encuesta.respuestas.totales"/>: <strong><bean:write name="i" property="nrespuestas" ignore="true" /></strong></p>
 												</div>		
 											</logic:equal>	
