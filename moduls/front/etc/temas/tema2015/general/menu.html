@@ -103,7 +103,7 @@
                                         <li th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}" th:with="tamano=${#lists.size(contenido.listacosas)}" th:remove="tag">
                                             <ul th:remove="tag">
                                                 <div th:if="${tamano}!=0" th:remove="tag">
-                                                    <li th:if="${tamano}>1" th:with="opcion=${contenido.listacosas[0]}" th:id="${opcion.id}==${idcontenido} ? 'p'+${opcion.id} : ''" th:class="${opcion.id}==${idcontenido} ? 'seleccionado' : ''">
+                                                    <li th:if="${tamano}>1">
                                                         <a href="#" class="pareADon carpeta" th:text="${contenido.traduce.nombre}">
                                                             <span class="helloou">
                                                                 Nombre del menú
