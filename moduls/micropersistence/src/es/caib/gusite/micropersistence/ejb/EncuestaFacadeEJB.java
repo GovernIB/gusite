@@ -401,6 +401,11 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					session.createQuery("delete from TraduccionRespuesta where id.codigoRespuesta = "
 							+ ((Respuesta) respuestas.get(i)).getId())
 							.executeUpdate();
+					
+					session.createQuery(
+							"delete from RespuestaDato where idrespueta = " + ((Respuesta) respuestas.get(i)).getId())
+							.executeUpdate();
+					
 					session.createQuery("delete from Respuesta where id = "
 							+ ((Respuesta) respuestas.get(i)).getId())
 							.executeUpdate();
@@ -884,6 +889,11 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 				session.createQuery(
 						"delete from TraduccionRespuesta where id.codigoRespuesta = "
 								+ idrespuesta).executeUpdate();
+				
+				session.createQuery(
+						"delete from RespuestaDato where idrespueta = " + idrespuesta)
+						.executeUpdate();
+				
 				session.createQuery(
 						"delete from Respuesta where id = " + idrespuesta)
 						.executeUpdate();
