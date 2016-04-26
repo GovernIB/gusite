@@ -90,11 +90,16 @@ public class microForm extends TraDynaActionForm {
             	List<?> lang = idiomaDelegate.listarLenguajes();
             	for (int i=0;i<lang.size();i++) {
             		TraduccionMicrosite trad = (TraduccionMicrosite)((ArrayList<?>)get("traducciones")).get(i);
-            		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto()))
+            		if (lang.get(i).equals(Idioma.getIdiomaPorDefecto())){
             			if (trad.getTitulo().length()==0) 
             				errors.add("titulo", new ActionError("error.micro.titulo",Idioma.getIdiomaPorDefecto()));
+            	    }
+            		else{ 
+                			if (trad.getTitulo().length()==0 && (((String[])get("idiomas")).length >=i+1 && lang.get(i).equals(get("idiomas",i)))) {
+                				errors.add("titulo", new ActionError("error.micro.idioma.no.defecto", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
+                    		} 
+            	     }
             	}
-            	
             } catch (Exception e) {
             	log.error("Error comprobando titulo del Microsite", e);
        			e.printStackTrace();
