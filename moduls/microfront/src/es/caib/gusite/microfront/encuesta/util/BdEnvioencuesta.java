@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import es.caib.gusite.utilities.auth.CertsPrincipal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -206,7 +207,8 @@ public class BdEnvioencuesta  extends Bdbase {
 			    UsuarioEncuestaDelegate encu = DelegateUtil.getUsuarioEncuestaDelegate();
 			    
 			    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
-			    			      
+			    	
+			    String idPreguntaAux = "";
 			    while (paramNames.hasMoreElements())  {
 				      // Campos fijos que vienen del request: lang,idsite,cont,btnanar,enccomp. Evidentemente, no hay que tratarlos
 			    	  String paramName = (String)paramNames.nextElement();
@@ -229,15 +231,22 @@ public class BdEnvioencuesta  extends Bdbase {
 							    str[0]=st.nextToken();//aqui viene la respuesta, con la T delante
 							    str[1]=st.nextToken();//aqui viene la pregunta
 								String respuesta = str[0].substring(1);
-								String pregunta = str[1];
+								idpregunta = str[1];
 								RespuestaDato resdat = new RespuestaDato();
 								resdat.setDato(paramValue);
 								resdat.setIdencuesta(encuesta.getId());
-								resdat.setIdpregunta(new Long(pregunta));
+								resdat.setIdpregunta(new Long(idpregunta));
 								resdat.setIdrespueta(new Long(respuesta));
 								resdat.setIdusuari(upm.getId().getIdusuario());
-				    			if ((paramValue!=null) && (!paramValue.equals("null")))
+				    			if ((!paramValue.isEmpty()) && (paramValue!=null) && (!paramValue.equals("null"))){				    				
 				    				resdatdel.grabarRespuestaDato(resdat);
+				    				
+				    				if(idPreguntaAux.compareTo(idpregunta) != 0){										
+										encuestadel.sumarPregunta(new Long(idpregunta));
+										idPreguntaAux = str[1];
+									}
+									encuestadel.sumarRespuesta(new Long(respuesta));
+				    			}
 				    			
 				    			
 				    		  	
@@ -252,13 +261,21 @@ public class BdEnvioencuesta  extends Bdbase {
 							        	cuerpomensaje+="[sin valor]"+ "\n";
 							        } else {
 							        	cuerpomensaje+= paramValue + "\n";
-								        encuestadel.sumarPregunta(new Long(idpregunta));
+								       // encuestadel.sumarPregunta(new Long(idpregunta));
+								        if(idPreguntaAux.compareTo(idpregunta) != 0){										
+											encuestadel.sumarPregunta(new Long(idpregunta));
+											idPreguntaAux = idpregunta;
+										}
 								        encuestadel.sumarRespuesta(new Long(paramValue));
 									    upm.getId().setIdrespuesta(new Long(paramValue));
 									    encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 								    }
 						      } else  {
-						    	  	encuestadel.sumarPregunta(new Long(idpregunta));
+						    	  	//encuestadel.sumarPregunta(new Long(idpregunta));
+						    	  	if(idPreguntaAux.compareTo(idpregunta) != 0){										
+										encuestadel.sumarPregunta(new Long(idpregunta));
+										idPreguntaAux = idpregunta;
+									}
 							        for (int i=0; i < paramValues.length; i++) {
 							        	cuerpomensaje+= paramValues[i] + ", ";
 							        	encuestadel.sumarRespuesta(new Long(paramValues[i]));

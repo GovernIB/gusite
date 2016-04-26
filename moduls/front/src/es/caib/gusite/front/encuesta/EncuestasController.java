@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.standard.expression.Each;
 
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
@@ -33,7 +32,6 @@ import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.front.view.EncuestaView;
 import es.caib.gusite.front.view.EnvioEncuestaView;
 import es.caib.gusite.front.view.PageView;
-import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
@@ -328,16 +326,19 @@ public class EncuestasController extends BaseViewController {
 					UsuarioPropietarioRespuesta upm = new UsuarioPropietarioRespuesta();
 					UsuarioEncuestaDelegate encu = DelegateUtil.getUsuarioEncuestaDelegate();
 					upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
-
+					
+					String idPreguntaAux = "";
 					while (paramNames.hasMoreElements()) {
 						// Campos fijos que vienen del request:
 						// lang,idsite,cont,btnanar,enccomp. Evidentemente, no
 						// hay que tratarlos
 						String paramName = (String) paramNames.nextElement();
+						
 						if (!paramName.equals(Microfront.PLANG) && !paramName.equals(Microfront.PIDSITE) && !paramName.equals(Microfront.PCONT)
 								&& !paramName.equals(Microfront.PBTNANAR) && !paramName.equals(Microfront.PENCCOMP)) {
 
 							String idpregunta = paramName.substring(1);
+							
 							if (paramName.charAt(0) == 'T') {
 								// es de tipo texto libre
 								cuerpomensaje += paramName + " = ";
@@ -356,15 +357,26 @@ public class EncuestasController extends BaseViewController {
 								str[1] = st.nextToken();// aqui viene la
 														// pregunta
 								String respuesta = str[0].substring(1);
-								String pregunta = str[1];
+								idpregunta = str[1];
+								
 								RespuestaDato resdat = new RespuestaDato();
 								resdat.setDato(paramValue);
 								resdat.setIdencuesta(encuesta.getId());
-								resdat.setIdpregunta(new Long(pregunta));
+								resdat.setIdpregunta(new Long(idpregunta));
 								resdat.setIdrespueta(new Long(respuesta));
 								resdat.setIdusuari(upm.getId().getIdusuario());
-								if ((paramValue != null) && (!paramValue.equals("null"))) {
+								if ((paramValue != "") &&(paramValue != null) && (!paramValue.equals("null"))) {
 									resdatdel.grabarRespuestaDato(resdat);
+									
+									if(idPreguntaAux.compareTo(idpregunta) != 0){										
+										encuestadel.sumarPregunta(new Long(idpregunta));
+										idPreguntaAux = str[1];
+									}
+									encuestadel.sumarRespuesta(new Long(respuesta));
+									Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
+									encuesta.setPreguntas(encuestaAux.getPreguntas());
+									upm.getId().setIdrespuesta(new Long(respuesta));
+									encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 								}
 
 							} else {
@@ -378,57 +390,28 @@ public class EncuestasController extends BaseViewController {
 										cuerpomensaje += "[sin valor]" + "\n";
 									} else {
 										cuerpomensaje += paramValue + "\n";
-										encuestadel.sumarPregunta(new Long(idpregunta));
+										//encuestadel.sumarPregunta(new Long(idpregunta));
+										if(idPreguntaAux.compareTo(idpregunta) != 0){										
+											encuestadel.sumarPregunta(new Long(idpregunta));
+											idPreguntaAux = idpregunta;
+										}
 										encuestadel.sumarRespuesta(new Long(paramValue));
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
-//									    List<Pregunta> listapreg= encuesta.getPreguntas();
-//									    for (Pregunta pregunta : listapreg) {
-//											if (pregunta.getId().compareTo(new Long(idpregunta))==0) {
-//												List<Respuesta> listaresp = pregunta.getRespuestas();
-//												pregunta.setNrespuestas(pregunta.getNrespuestas() + 1);
-//											  
-//												for ( Respuesta respuesta : listaresp) {
-//													 if (respuesta.getId().compareTo(new Long(paramValue))==0){
-//														 respuesta.setNrespuestas(respuesta.getNrespuestas()+1);
-//														 
-//														 encuesta.setPreguntas(listapreg);
-//														 break;
-//													 }
-//												}
-//											}
-//										} 
 									    encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(paramValue));
 										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 									}
 								} else {
-									encuestadel.sumarPregunta(new Long(idpregunta));
-//									List<Pregunta> listapreg= encuesta.getPreguntas();
-//									for (Pregunta pregunta : listapreg) {
-//										if (pregunta.getId().compareTo(new Long(idpregunta))==0) {										
-//											pregunta.setNrespuestas(pregunta.getNrespuestas() + 1);
-//											encuesta.setPreguntas(listapreg);
-//											break;
-//									    }
-//									}
+									//encuestadel.sumarPregunta(new Long(idpregunta));
+									if(idPreguntaAux.compareTo(idpregunta) != 0){										
+										encuestadel.sumarPregunta(new Long(idpregunta));
+										idPreguntaAux = idpregunta;
+									}
+
 									for (String paramValue : paramValues) {
 										cuerpomensaje += paramValue + ", ";
 										encuestadel.sumarRespuesta(new Long(paramValue));
-//										List<Pregunta> listapreg2= encuesta.getPreguntas();										
-//									    for (Pregunta pregunta2 : listapreg2) {
-//											if (pregunta2.getId().compareTo(new Long(idpregunta))==0) {
-//												List<Respuesta> listaresp = pregunta2.getRespuestas();												
-//												
-//												for ( Respuesta respuesta : listaresp) {
-//													 if (respuesta.getId().compareTo(new Long(paramValue))==0){
-//														 respuesta.setNrespuestas(respuesta.getNrespuestas()+1);
-//														 
-//														 encuesta.setPreguntas(listapreg2);
-//														 break;
-//													 }
-//												}
-//											}
-//										} 
+
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 										encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(paramValue));
@@ -439,6 +422,7 @@ public class EncuestasController extends BaseViewController {
 								}
 
 							}
+							
 						}
 					}
 					// metemos el valor del idencuesta para no volver a
@@ -545,6 +529,7 @@ public class EncuestasController extends BaseViewController {
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 	}
+
 
 	protected boolean estaEnMantenimiento() {
 		String mantenimiento = System.getProperty("es.caib.gusite.mantenimiento");
