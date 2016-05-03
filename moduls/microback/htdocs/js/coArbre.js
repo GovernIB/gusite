@@ -467,19 +467,29 @@ function buscarUltimoHijo(overID, cloneID) {
 	if(overIDClassName == 'nivel1' && cloneIDClassName == 'nivel2') {
 		nuevoID = overID;
 	} else {
-		clonar = false;
+
 		divsSON = document.getElementById('menuArbol').getElementsByTagName('div');
 		for(n=0;n<divsSON.length;n++) {
+			clonar = false;
 			if(divsSON[n].id != 'nuevo') {
 				if(cloneIDClassName == 'nivel1') {
 					if(divsSON[n].className.indexOf('nivel1') != -1) clonar = false;
 				} else {
 					if(divsSON[n].className.indexOf('nivel') != -1) clonar = false;
 				}
-				if(divsSON[n].id == overID) clonar = true;
+				
+				if(divsSON[n].id == overID && 
+						(document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c1" 
+						|| document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "m")) 
+				{
+					clonar = true;
+				}
 				if(clonar == true) nuevoID = divsSON[n].id;
 			}
 		}
+	}
+	if(nuevoID == ""){
+		nuevoID = cloneID; // se queda como estaba, acción no permitida
 	}
 	return nuevoID;
 }
