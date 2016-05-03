@@ -714,7 +714,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			
 			IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
 			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-			Long idArchivoBorrar = null;
+			
 			
 			List<?> lang = null;
 			try {
@@ -734,7 +734,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			}
 			
 			for (Menu m : menus) {
-
+				Long idArchivoBorrar = null;
 				int indice_m = -1;
 				for (int j = 0; j < ids.length; j++) {
 					if ((tipos[j].equals("m"))
