@@ -366,9 +366,10 @@
 				<button type="button" title='<bean:message key="op.11" />' onclick="incluir();"><img src="imgs/icones/07incloure.gif" alt='<bean:message key="op.11" />' /></button> 
 			</span>
 			 -->
-			<button type="button" title='<bean:message key="boton.ver"/>' onclick="verArchivo();"><img src="imgs/botons/ver.gif" alt='<bean:message key="boton.ver"/>' /></button> 
-			<button name="esborrar" type="button" title='<bean:message key="op.2"/>' onclick=" borrar();" ><img src="imgs/botons/borrar.gif" alt='<bean:message key="op.2"/>' /></button>
-		
+			<logic:notEmpty name="listaDocs">
+			<button type="button" title='<bean:message key="boton.ver"/>' onclick="verArchivo();"><img src="imgs/menu/visible.gif" alt='<bean:message key="boton.ver"/>' /></button> 
+			<button name="esborrar" type="button" title='<bean:message key="op.2"/>' onclick=" borrar();" ><img src="imgs/menu/esborrar.gif" alt='<bean:message key="op.2"/>' /></button>
+		    </logic:notEmpty>
 			<div id="divGuardarArxiu">
 				<h2><bean:message key="conte.nuevoarchi"/></h2>
 				<p><bean:message key="conte.nuevoarchimensa"/></p>
