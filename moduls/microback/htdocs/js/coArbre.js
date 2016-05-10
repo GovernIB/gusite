@@ -480,7 +480,9 @@ function buscarUltimoHijo(overID, cloneID) {
 				
 				if(divsSON[n].id == overID && 
 						(document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c1" 
-						|| document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "m")) 
+						|| document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "m")
+						|| (document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c2" && 
+								document.getElementById(divsSON[n].id).getElementsByTagName('input')[3].value == document.getElementById(overID).getElementsByTagName('input')[0].value)   ) 
 				{
 					clonar = true;
 				}
