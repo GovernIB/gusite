@@ -11,7 +11,6 @@ import es.caib.gusite.microback.action.util.Bdarchivopub;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,25 +43,14 @@ public class ArchivoPubAction extends Action {
     	 * donde yyy es el id del documento
     	 * 
     	 */
-		Bdarchivopub bdarchivo = new Bdarchivopub(request);
+    	Bdarchivopub bdarchivo = new Bdarchivopub(request);
 		if (bdarchivo.checkcontrol()) {
 
 			Archivo archivo = obtenerArchivo(mapping, form, request);
 
-			// amartin: Si los datos del archivo son nulos en la BD, vamos a buscarlo a Filesystem.
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-
-				if ((archivo != null) && (archivo.getDatos() == null)) {
-
-					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-					archivo.setDatos(datos);
-
-				}
-
-			}
-
-			if ((archivo != null) && (archivo.getDatos() != null)) {
+			if (archivo != null) {
 				response.reset();
+				ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 				if (!forzarDownload(mapping, form, request)) {
 					response.setContentType(archivo.getMime());
 					response.setHeader("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
@@ -71,12 +59,15 @@ public class ArchivoPubAction extends Action {
 					response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getNombre() + "\"");
 				}
 				response.setContentLength(new Long(archivo.getPeso()).intValue());
-				response.getOutputStream().write(archivo.getDatos());
+				final byte[] datos = archi.obtenerContenidoFichero(archivo);
+				response.getOutputStream().write(datos);
 			}
 			
 		}
 		
 		return null;
+	
+		
 		
 	}
 

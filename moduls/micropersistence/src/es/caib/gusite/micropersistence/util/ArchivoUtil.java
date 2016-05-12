@@ -58,8 +58,6 @@ public class ArchivoUtil {
 	 */
 	public static void exportaArchivoAFilesystem(Archivo archivo) throws IOException {
 
-		if (almacenarEnFilesystem()) {
-
 			ArchivoUtil.deleteDirArchivo(archivo); //Borramos el archivo anterior si existía
 			
 			Long idMicrosite = archivo.getIdmicrosite();
@@ -78,9 +76,6 @@ public class ArchivoUtil {
 			// Comprobar si el archivo ya existe en FS. Si no es así, lo exportamos.
 			File f = new File(obtenerRutaArchivoExportadoEnFilesystem(archivo));
 			escribeArchivoAFilesystem(f, archivo.getDatos());
-
-		}
-
 	}
 
 	/**
@@ -149,20 +144,21 @@ public class ArchivoUtil {
 
 			// Obtenemos archivo con BLOB incluido.
 			Archivo archivo = archivoDelegate.obtenerArchivo(idArchivo);
-
+			
 			try {
-
+				//Importante, es el único método que se salta la comprobación de si extraer datos por
+				// filesystem o base datos, sólo porque estamos haciendo una exportación de ficheros!!
+				// La lógica es que tiene que coger los datos de bbdd (forzado) y pasarlos al filesystem,
+				//   pero si en la propiedad almacenarEnFilesystem está a True (es la única manera de llegar aquí)
+				//   cogería erróneamente el dato de filesystem.
+				archivo.setDatos(archivoDelegate.obtenerContenidoFichero(archivo, false));
 				exportaArchivoAFilesystem(archivo);
 				exportados.add(obtenerRutaArchivoExportadoEnFilesystem(archivo));
-
 			} catch (IOException e) {
-
 				String mensaje = "Error exportando el archivo con id = " + idArchivo;
 				log.error(mensaje, e);
 				addImportLogVisualStackTrace(request, mensaje, e.getStackTrace());
-
 			}
-
 		}
 
 		log.info("Finalizado el proceso de exportación de archivos a disco. Se han exportado " + exportados.size() + " archivos");

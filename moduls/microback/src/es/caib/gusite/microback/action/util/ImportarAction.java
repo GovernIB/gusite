@@ -1322,9 +1322,11 @@ public class ImportarAction extends BaseAction {
                     for (TraduccionAgenda trad : obj.getTraducciones().values()) {
                         if (trad.getDocumento() != null) {
                             trad.setDocumento(archivoDelegate.obtenerArchivo(trad.getDocumento().getId()));
+                            trad.getDocumento().setDatos(archivoDelegate.obtenerContenidoFichero(trad.getDocumento()));
                         }
                         if (trad.getImagen() != null) {
                             trad.setImagen(archivoDelegate.obtenerArchivo(trad.getImagen().getId()));
+                            trad.getImagen().setDatos(archivoDelegate.obtenerContenidoFichero(trad.getImagen()));
                         }
                     }
 					obj = (Agenda) actualizaURL(obj, mic.getId(), request);
@@ -1340,6 +1342,7 @@ public class ImportarAction extends BaseAction {
 					Menu menu = (Menu) itmenu.next();
                     if (menu.getImagenmenu() != null) {
                         menu.setImagenmenu(archivoDelegate.obtenerArchivo(menu.getImagenmenu().getId()));
+                        menu.getImagenmenu().setDatos(archivoDelegate.obtenerContenidoFichero(menu.getImagenmenu()));
                     }
 					List conts = menu.getContenidos();
 					if (conts != null) {
@@ -1348,6 +1351,7 @@ public class ImportarAction extends BaseAction {
 							Contenido obj = (Contenido) it.next();
                             if (obj.getImagenmenu() != null) {
                                 obj.setImagenmenu(archivoDelegate.obtenerArchivo(obj.getImagenmenu().getId()));
+                                obj.getImagenmenu().setDatos(archivoDelegate.obtenerContenidoFichero(obj.getImagenmenu()));
                             }
 							obj = (Contenido) actualizaURL(obj, mic.getId(), request);
 							DelegateUtil.getContenidoDelegate().grabarContenido(obj);
@@ -1375,10 +1379,12 @@ public class ImportarAction extends BaseAction {
 					Noticia obj = (Noticia) it.next();
                     if (obj.getImagen() != null) {
                         obj.setImagen(archivoDelegate.obtenerArchivo(obj.getImagen().getId()));
+                        obj.getImagen().setDatos(archivoDelegate.obtenerContenidoFichero(obj.getImagen()));
                     }
                     for (TraduccionNoticia trad : obj.getTraducciones().values()) {
                         if (trad.getDocu() != null) {
                             trad.setDocu(archivoDelegate.obtenerArchivo(trad.getDocu().getId()));
+                            trad.getDocu().setDatos(archivoDelegate.obtenerContenidoFichero(trad.getDocu()));
                         }
                     }
 					obj = (Noticia) actualizaURL(obj, mic.getId(), request);
@@ -1408,7 +1414,7 @@ public class ImportarAction extends BaseAction {
 					ArchivoLite obj = (ArchivoLite) it.next();
                     Archivo arc = archivoDelegate.obtenerArchivo(obj.getId());
 					arc = (Archivo) actualizaURL(arc, mic.getId(), request);
-					
+					arc.setDatos(archivoDelegate.obtenerContenidoFichero(arc));
 					archivoDelegate.grabarArchivo(arc);
 					
 				}
@@ -1420,12 +1426,15 @@ public class ImportarAction extends BaseAction {
 			Microsite mic2 = bdMicro.obtenerMicrosite(mic.getId());
             if (mic2.getImagenPrincipal() != null) {
                 mic2.setImagenPrincipal(archivoDelegate.obtenerArchivo(mic2.getImagenPrincipal().getId()));
+                mic2.getImagenPrincipal().setDatos(archivoDelegate.obtenerContenidoFichero(mic2.getImagenPrincipal()));
             }
             if (mic2.getImagenCampanya() != null) {
                 mic2.setImagenCampanya(archivoDelegate.obtenerArchivo(mic2.getImagenCampanya().getId()));
+                mic2.getImagenCampanya().setDatos(archivoDelegate.obtenerContenidoFichero(mic2.getImagenCampanya()));
             }
             if (mic2.getEstiloCSS() != null) {
                 mic2.setEstiloCSS(archivoDelegate.obtenerArchivo(mic2.getEstiloCSS().getId()));
+                mic2.getEstiloCSS().setDatos(archivoDelegate.obtenerContenidoFichero(mic2.getEstiloCSS()));
             }
 			mic2 = (Microsite) actualizaURL(mic2, mic.getId(), request);
 			bdMicro.grabarMicrosite(mic2);

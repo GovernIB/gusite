@@ -1,7 +1,14 @@
 package es.caib.gusite.microback.action.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -9,19 +16,21 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.action.BaseAction;
+import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoTemaFront;
+import es.caib.gusite.micromodel.PersonalizacionPlantilla;
+import es.caib.gusite.micromodel.TemaFront;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 
 /**
@@ -73,12 +82,14 @@ public class ExportarTemaAction extends BaseAction {
 		    	out.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
 		    	out.putNextEntry(new ZipEntry(NOMBRE_DIR_CSS));
 		    			    	
-			    // Agregamos, si los hubiese, los archivos del tema
+		    	
+		    	 // Agregamos, si los hubiese, los archivos del tema
 			    Map<String, Archivo> documentos = extraerArchivos(tema);
-		    	for (Entry<String, Archivo> docu : documentos.entrySet()) {
-		    		agregaArchivoAZIP(docu.getKey(), docu.getValue().getDatos(), out);
+			    ArchivoDelegate delegate = DelegateUtil.getArchivoDelegate();
+	    		for (Entry<String, Archivo> docu : documentos.entrySet()) {
+		    		agregaArchivoAZIP(docu.getKey(),delegate.obtenerContenidoFichero(docu.getValue()), out);
 		    	}
-	            
+		    	
 		    	for (PersonalizacionPlantilla plantilla : tema.getPersonalizacionesPlantilla()) {
 		    		agregaArchivoAZIP(plantilla.getPlantilla().getNombre() + ".html", plantilla.getContenido().getBytes(), out);
 		    	}
@@ -119,33 +130,20 @@ public class ExportarTemaAction extends BaseAction {
 	
 	private Map<String, Archivo> extraerArchivos(TemaFront tema) {
 
-		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
 		Map<String, Archivo> archivos = new HashMap<String, Archivo>();
-		try {
-			for (ArchivoTemaFront at : tema.getArchivoTemaFronts()) {
-				Archivo archivo = at.getArchivo();
-				archivos.put(NOMBRE_DIR_ARCHIVOS + archivo.getNombre(), obtenerArchivo(archivo, archivoDelegate));
-			}
+		for (ArchivoTemaFront at : tema.getArchivoTemaFronts()) {
+			Archivo archivo = at.getArchivo();
+			archivos.put(NOMBRE_DIR_ARCHIVOS + archivo.getNombre(), archivo);
+		}
 
-			if (tema.getCss() != null) {
-				archivos.put(NOMBRE_DIR_CSS + NOMBRE_CSS, obtenerArchivo(tema.getCss(), archivoDelegate));
-			}
-
-		} catch (DelegateException e) {
-			e.printStackTrace();
+		if (tema.getCss() != null) {
+			archivos.put(NOMBRE_DIR_CSS + NOMBRE_CSS, tema.getCss());
 		}
 
 		return archivos;
 	}
 
-	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {
 
-		if (archivo.getDatos() != null) {
-			return archivo;
-		} else {
-			return delegate.obtenerArchivo(archivo.getId());
-		}
-	}
 
 	private void agregaArchivoAZIP(String path, byte[] datosDocumento, ZipOutputStream out) throws IOException {
 		

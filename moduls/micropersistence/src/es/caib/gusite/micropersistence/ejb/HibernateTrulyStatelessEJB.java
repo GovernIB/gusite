@@ -119,9 +119,6 @@ public abstract class HibernateTrulyStatelessEJB implements SessionBean {
 
 		if (session != null && session.isOpen()) {
 			try {
-				if (session.isDirty()) {
-					log.warn("Closing dirty session!!");
-				}
 				session.close();
 			} catch (HibernateException e) {
 				log.error(e);

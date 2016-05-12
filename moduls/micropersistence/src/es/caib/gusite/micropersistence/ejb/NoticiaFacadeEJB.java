@@ -2,6 +2,7 @@ package es.caib.gusite.micropersistence.ejb;
 
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -828,7 +829,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		return newnoticia;
 	}
 
-    private TraduccionNoticia clonarTraduccion(TraduccionNoticia traduccionNoticia, final String site) {
+    private TraduccionNoticia clonarTraduccion(TraduccionNoticia traduccionNoticia, final String site) throws IOException {
 
         TraduccionNoticia tradNotiNew = new TraduccionNoticia();
         if (traduccionNoticia.getDocu() != null) {
@@ -860,7 +861,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
         return newUri;
     }
 
-    private Archivo clonarArchivo(Long id) {
+    private Archivo clonarArchivo(Long id) throws IOException {
 
         Archivo archivo;
         Archivo nuevoArchivo = new Archivo();
@@ -871,7 +872,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
             nuevoArchivo.setMime(archivo.getMime());
             nuevoArchivo.setNombre(archivo.getNombre());
             nuevoArchivo.setPeso(archivo.getPeso());
-            nuevoArchivo.setDatos(archivo.getDatos());
+            nuevoArchivo.setDatos(DelegateUtil.getArchivoDelegate().obtenerContenidoFichero(archivo));
             nuevoArchivo.setPagina(archivo.getPagina());
             nuevoArchivo.setIdmicrosite(archivo.getIdmicrosite());
             nuevoArchivo.setTraduccionMap(archivo.getTraduccionMap());
@@ -884,6 +885,8 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
         return nuevoArchivo;
     }
 
+    
+    
 	/***************************************************************************************/
 	/******************* INDEXACION ************************************/
 	/***************************************************************************************/
