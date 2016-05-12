@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.delegate;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -188,7 +189,40 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
-
+	
+	/**
+	 * Obtiene el contenido del fichero dependiente de si está en modo 
+	 *   filesystem o base de datos. 
+	 * 
+	 * @param archivo Archivo
+	 * @throws DelegateException
+	 */
+	public byte[] obtenerContenidoFichero(Archivo archivo) throws DelegateException, IOException  {
+		try {
+			return this.getFacade().obtenerContenidoFichero(archivo);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+	/**
+	 * Obtiene el contenido del fichero, obtiene el dato de filesystem o de ddbb dependiendo 
+	 *   del parámetro de netrada.
+	 * 
+	 * @param archivo Archivo
+	 * @param true = obtiene dato por filesystem , false = obtiene dato por bbdd
+	 * @throws DelegateException
+	 */
+	public byte[] obtenerContenidoFichero(Archivo archivo, boolean isFileSystemActivo) throws DelegateException, IOException  {
+		try {
+			return this.getFacade().obtenerContenidoFichero(archivo, isFileSystemActivo);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

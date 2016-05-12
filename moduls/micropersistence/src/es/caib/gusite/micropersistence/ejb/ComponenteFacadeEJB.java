@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,12 +96,13 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Crea o actualiza un Componente
+	 * @throws IOException 
 	 * 
 	 * @ejb.interface-method
 	 * @ejb.permission 
 	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarComponente(Componente compo) throws DelegateException {
+	public Long grabarComponente(Componente compo) throws DelegateException, IOException {
 
 		Session session = this.getSession();
 		
@@ -131,14 +133,18 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 				if (compo.getImagenbul() != null)
 					imagen = compo.getImagenbul();
 				
+				
 			} else {
 				
 				original = obtenerComponente(compo.getId());
 				
-				if (compo.getImagenbul() != null) {
-					
+				if (compo.getImagenbul() != null) {					
 					imagen = compo.getImagenbul();
-					
+					//Si la imagen que pasa ya existe, entonces hay que buscar su contenido.
+					//  Este método y este funcionamiento es de revisarlo y tirarlo, su funcionamiento deja bastante que desear.
+					if (imagen.getId() != null && imagen.getDatos() == null) { 
+						imagen.setDatos(archivoDelegate.obtenerContenidoFichero(imagen));
+					}
 				} else {
 					
 					// Antes había imagen pero ahora ya no la hay: solicitan borrado.

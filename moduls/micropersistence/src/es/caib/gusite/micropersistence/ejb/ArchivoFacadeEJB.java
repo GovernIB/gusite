@@ -21,11 +21,13 @@ import es.caib.gusite.lucene.analysis.Analizador;
 import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.ArchivoFull;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+import es.caib.gusite.micropersistence.exception.FicheroVacioException;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
 /**
@@ -75,14 +77,14 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		try {
 			
 			Query query = session.createQuery("from Archivo a where a.id =" + id.toString());
+			archi = (Archivo) query.uniqueResult();
 			
-			if (query.list().size() == 1) {
-				archi = (Archivo) query.list().get(0);
-			}
-
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-				this.obtenerDatosArchivoExportado(archi);
-			}
+			/*
+			if (!ArchivoUtil.almacenarEnFilesystem()) {
+				query = session.createQuery("from ArchivoFull a where a.id =" + id.toString());
+				ArchivoFull archivoFull = (ArchivoFull) query.uniqueResult();
+				archi.setDatos(archivoFull.getDatos());
+			}*/
 			
 			return archi;
 
@@ -90,11 +92,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			throw new EJBException(he);
 			
-		} catch (IOException e) {
-			
-			throw new EJBException(e);
-			
-		} finally {
+		}  finally {
 			
 			this.close(session);
 			
@@ -120,8 +118,6 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			Query query = session.createQuery("select a.id, a.nombre, a.idmicrosite from Archivo a order by a.idmicrosite desc, a.id asc");
 			List<Object[]> lista = query.list();
 			
-			session.flush();
-
 			return lista;
 
 		} catch (HibernateException he) {
@@ -161,9 +157,9 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			while (iterArchi.hasNext()) {
 				archi = (Archivo) iterArchi.next();
 
-				if (ArchivoUtil.almacenarEnFilesystem()) {
-					this.obtenerDatosArchivoExportado(archi);
-				}
+				//if (ArchivoUtil.almacenarEnFilesystem()) {
+				//	this.obtenerDatosArchivoExportado(archi);
+				//}
 
 				return archi;
 			}
@@ -189,9 +185,9 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 				if (listNot.size() == 1) {
 
-					if (ArchivoUtil.almacenarEnFilesystem()) {
-						this.obtenerDatosArchivoExportado(archi);
-					}
+					//if (ArchivoUtil.almacenarEnFilesystem()) {
+					//	this.obtenerDatosArchivoExportado(archi);
+					//}
 
 					return archi;
 				}
@@ -201,8 +197,6 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
-		} catch (IOException e) {
-			throw new EJBException(e);
 		} finally {
 			this.close(session);
 		}
@@ -222,7 +216,10 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		try {
 			
 			Query query = session.createQuery("from Archivo archi where (archi.idmicrosite is null or archi.idmicrosite = 0 or archi.idmicrosite=" + site.toString() + ") and archi.id=" + id.toString());
-			return query.list().isEmpty();
+			query.setMaxResults(1);
+			return query.uniqueResult() == null;
+			//Tendría que ser la comparación al revés?!?!
+			//return query.list().isEmpty();
 
 		} catch (HibernateException he) {
 			
@@ -245,33 +242,34 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	 */
 	public Long insertarArchivo(Archivo a) throws DelegateException {
 
-		Session session = this.getSession();
-		boolean anularBlob = false;
-
+		final Session session = this.getSession();
+		
 		try {
-			
-			Transaction tx = session.beginTransaction();
+			final Transaction tx = session.beginTransaction();
 
+			if (a.getDatos() == null) {
+				throw new FicheroVacioException("Fichero vacío.");
+			}
+			
 			// Guardamos para obtener el ID del registro.
 			session.saveOrUpdate(a);
+			
+			// Guardamos archivo en FS.
+			ArchivoUtil.exportaArchivoAFilesystem(a);
+						
+			// Guardamos el archivo full.
+			final ArchivoFull archivoFull = new ArchivoFull();
+			archivoFull.setId(a.getId());
+			archivoFull.setDatos(a.getDatos());			
+			
+			// Null datos para evitar cache 
+			a.setDatos(null);
+			
+			//Guardamos el contenido del fichero.
+			session.saveOrUpdate(archivoFull);
+			
 			session.flush();
-
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-
-				// Guardamos archivo en FS.
-				ArchivoUtil.exportaArchivoAFilesystem(a);
-
-				// Se escribirá el archivo en BD con el BLOB a null.
-				a.setDatos(null);
-				anularBlob = true;
-				
-			}
-
-			if (anularBlob) {
-				session.saveOrUpdate(a);
-				session.flush();
-			}
-
+			
 			tx.commit();
 			
 			return a.getId();
@@ -291,6 +289,44 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		}
 		
 	}
+	
+	/**
+	 * Obtiene el contenido del fichero dependiendo de si está en modo filesystem 
+	 *   o en modo base de datos.
+	 * @throws IOException 
+	 * 
+	 * @ejb.interface-method	 * 
+	 * @ejb.permission unchecked="true"
+	 */
+	public byte[] obtenerContenidoFichero(Archivo archivo) throws DelegateException, IOException {
+		return obtenerContenidoFichero(archivo, ArchivoUtil.almacenarEnFilesystem());
+	}
+	
+	/**
+	 * Obtiene el contenido del fichero dependiendo de si está en modo filesystem 
+	 *   o en modo base de datos (lo marca la variable de entrada). Importante, a 
+	 *   este método sólo se le puede llamar directamente desde volcar datos de microsites a filesystem!.
+	 * @throws IOException 
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public byte[] obtenerContenidoFichero(Archivo archivo, boolean isAlmacenarEnFilesystem) throws DelegateException, IOException {
+		
+	
+		byte[] datos;
+		if (isAlmacenarEnFilesystem) {
+			datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
+		} else {
+			final Session session = this.getSession();
+			final Criteria criteri = session.createCriteria(ArchivoFull.class);
+			criteri.add(Restrictions.eq("id", archivo.getId()));
+
+			ArchivoFull archivoFull = (ArchivoFull) criteri.uniqueResult();
+			datos = archivoFull.getDatos();
+		}
+		return datos;
+	}
 
 	/**
 	 * Borra un documento de la BD
@@ -307,12 +343,8 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			Archivo a = (Archivo) session.get(Archivo.class, id);
 
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-				// Si estamos guardando los archivos en el FS, comprobamos si existe.
-				// Si es así, lo borramos del FS.
-				if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
-					ArchivoUtil.borrarArchivo(a);
-				}
+			if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
+				ArchivoUtil.borrarArchivo(a);
 			}
 			
 			session.delete(a);
@@ -320,6 +352,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
             session.close();
 
             a.setIdmicrosite(null);
+            a.setDatos(null);
             
 			this.grabarAuditoria(a, Auditoria.ELIMINAR);
 
@@ -357,18 +390,15 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			for (Archivo a : lista) {
 
-				if (ArchivoUtil.almacenarEnFilesystem()) {
-					// Si estamos guardando los archivos en el FS, comprobamos si existe.
-					// Si es así, lo borramos del FS.
-					if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
-						ArchivoUtil.borrarArchivo(a);
-					}
+				if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
+					ArchivoUtil.borrarArchivo(a);
 				}
 				
 				session.delete(a);
 				session.flush();
 	
 	            a.setIdmicrosite(null);
+	            a.setDatos(null);
 	            
 				this.grabarAuditoria(a, Auditoria.ELIMINAR);
 			
@@ -406,25 +436,34 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			Transaction tx = session.beginTransaction();
 
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-				
-				// Si es una actualización, toca borrar el anterior (por si es
-				// un archivo con diferente nombre) antes de escribir el nuevo en el FS.
-				if (!nuevo) {
-					Archivo aOld = this.obtenerArchivo(a.getId());
-					if (aOld != null)
-						ArchivoUtil.borrarArchivo(aOld);
+			if (a.getDatos() == null) {
+				throw new FicheroVacioException("Fichero vacío.");
+			}
+			
+			if (!nuevo) {
+				Archivo aOld = this.obtenerArchivo(a.getId());
+				if (aOld != null) {
+					ArchivoUtil.borrarArchivo(aOld);
 				}
+			}
 
-				// Guardamos archivo en FS.
-				ArchivoUtil.exportaArchivoAFilesystem(a);
-
-				// Se escribirá el archivo en BD con el BLOB a null.
-				a.setDatos(null);
-				
-			} 
-
+			// Guardamos archivo en FS.
+			ArchivoUtil.exportaArchivoAFilesystem(a);
+			
+			//Guardamos el fichero
 			session.saveOrUpdate(a);
+			
+			//Guardamos el fichero full.
+			ArchivoFull archivoFull = new ArchivoFull();
+			archivoFull.setId(a.getId());
+			archivoFull.setDatos(a.getDatos());
+			
+			// Null datos para evitar cache 
+			a.setDatos(null);
+			
+			//Guardamos el contenido del fichero.
+			session.saveOrUpdate(archivoFull);
+			
 			session.flush();
 			
 			tx.commit();
@@ -551,20 +590,6 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			throw new EJBException(ex);
 			
-		}
-		
-	}
-
-	private void obtenerDatosArchivoExportado(Archivo a) throws IOException {
-
-		// Si el archivo existe en el FS, leemos los datos de ahí.
-		if (ArchivoUtil.existeArchivoEnFilesystem(a)) {
-			// Obtenemos bytes del archivo asociado en FS.
-			a.setDatos(ArchivoUtil.obtenerDatosArchivoEnFilesystem(a));
-		} else {
-			// TODO amartin: consultar si quieren que se exporte el archivo a
-			// disco en este caso y luego se
-			// haga el setDatos() del archivo con lo obtenido de la BD.
 		}
 		
 	}

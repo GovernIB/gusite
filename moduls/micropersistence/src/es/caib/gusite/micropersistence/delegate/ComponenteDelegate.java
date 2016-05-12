@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.delegate;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.List;
@@ -62,7 +63,7 @@ public class ComponenteDelegate implements StatelessDelegate {
 	 * @return Id del componente
 	 * @throws DelegateException
 	 */
-	public Long grabarComponente(Componente compo) throws DelegateException {
+	public Long grabarComponente(Componente compo) throws DelegateException, IOException {
 		try {
 			return this.getFacade().grabarComponente(compo);
 		} catch (RemoteException e) {

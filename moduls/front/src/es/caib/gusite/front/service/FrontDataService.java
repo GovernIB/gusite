@@ -1,5 +1,6 @@
 package es.caib.gusite.front.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -354,8 +355,17 @@ public class FrontDataService {
 		} catch (DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
-
 	}
+	
+	public byte[] obtenerContenidoArchivo(Archivo archivo) throws ExceptionFrontPagina, IOException {
+		try {
+			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			return archi.obtenerContenidoFichero(archivo);
+		} catch (DelegateException e) {
+			throw new ExceptionFrontPagina(e);
+		}
+	}
+	
 
 	public Archivo obtenerArchivo(Long idSite, String name) throws ExceptionFrontPagina {
 		try {

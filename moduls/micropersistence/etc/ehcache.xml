@@ -37,5 +37,14 @@
 	    timeToLiveSeconds="240"
 	    overflowToDisk="false"
 	/>
+	
+	  <!--  http://stackoverflow.com/questions/934133/how-i-can-disable-the-second-level-cache-of-some-certain-entities-in-hibernate-w -->
+	 <cache name="es.caib.gusite.micromodel.ArchivoFull"
+	    maxElementsInMemory="1"
+	    eternal="false"
+	    timeToIdleSeconds="1"
+	    timeToLiveSeconds="1"
+	    overflowToDisk="false"
+	/>
     
 </ehcache>

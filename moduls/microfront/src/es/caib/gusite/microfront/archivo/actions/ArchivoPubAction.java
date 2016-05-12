@@ -53,19 +53,7 @@ public class ArchivoPubAction extends BaseAction {
 
 				Archivo archivo = obtenerArchivo(mapping, form, request);
 
-				// amartin: Si los datos del archivo son nulos en la BD, vamos a buscarlo a Filesystem.
-				if (ArchivoUtil.almacenarEnFilesystem()) {
-
-					if ((archivo != null) && (archivo.getDatos() == null)) {
-
-						byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-						archivo.setDatos(datos);
-
-					}
-
-				}
-
-				if ((archivo != null) && (archivo.getDatos() != null)) {
+				if (archivo != null) {
 					response.reset();
 					if (!forzarDownload(mapping, form, request)) {
 						response.setContentType(archivo.getMime());
@@ -75,7 +63,9 @@ public class ArchivoPubAction extends BaseAction {
 						response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getNombre() + "\"");
 					}
 					response.setContentLength(new Long(archivo.getPeso()).intValue());
-					response.getOutputStream().write(archivo.getDatos());
+					ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+					byte[] datos = archivoDelegate.obtenerContenidoFichero(archivo);
+					response.getOutputStream().write(datos);
 				} else {
 					throw new Exception();
 				}
