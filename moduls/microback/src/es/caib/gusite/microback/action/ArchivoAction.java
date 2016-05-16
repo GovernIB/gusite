@@ -95,19 +95,7 @@ public class ArchivoAction extends BaseAction {
 			
 			Archivo archivo = archi.obtenerArchivo(id);
 			
-			// amartin: Si los datos del archivo son nulos en la BD, vamos a buscarlo a Filesystem.
-			if (ArchivoUtil.almacenarEnFilesystem()) {
-				
-				if ((archivo != null) && (archivo.getDatos() == null)) {
-					
-					byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-					archivo.setDatos(datos);
-					
-				}
-				
-			}
-	
-			if ((archivo != null) && (archivo.getDatos() != null)) {
+			if (archivo != null) {
 				
 				response.reset();
 				
@@ -120,7 +108,8 @@ public class ArchivoAction extends BaseAction {
 				}
 				
 				response.setContentLength(new Long(archivo.getPeso()).intValue());
-				response.getOutputStream().write(archivo.getDatos());
+				final byte[] datos = archi.obtenerContenidoFichero(archivo);
+				response.getOutputStream().write(datos); 
 				
 			}
 		

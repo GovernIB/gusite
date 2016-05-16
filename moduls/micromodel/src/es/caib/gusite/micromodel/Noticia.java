@@ -95,7 +95,7 @@ public class Noticia extends AuditableModel implements Traducible2 {
 	@JoinColumn(name = "NID_NOTCOD")
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	@MapKey(name = "id.codigoIdioma")
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.SELECT)
 	private Map<String, TraduccionNoticia> traducciones = new HashMap<String, TraduccionNoticia>();
 
 	@Transient

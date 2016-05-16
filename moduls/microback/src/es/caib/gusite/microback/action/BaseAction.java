@@ -10,6 +10,7 @@ import org.apache.struts.upload.FormFile;
 import org.apache.struts.Globals;
 
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
@@ -103,8 +104,9 @@ public abstract class BaseAction extends Action {
      * @param pagina
      * @return
      * @throws IOException
+     * @throws DelegateException 
      */
-    protected static Archivo crearNuevoArchivo(Archivo archivo, Long microsite, Long pagina) throws IOException {
+    protected static Archivo crearNuevoArchivo(Archivo archivo, Long microsite, Long pagina) throws IOException, DelegateException {
     	
 		Archivo archivoResult = new Archivo();
 		
@@ -113,7 +115,8 @@ public abstract class BaseAction extends Action {
 			archivoResult.setMime(archivo.getMime());
 			archivoResult.setNombre(archivo.getNombre());
 			archivoResult.setPeso(archivo.getPeso());
-			archivoResult.setDatos(archivo.getDatos());
+			ArchivoDelegate delegate = DelegateUtil.getArchivoDelegate();
+			archivoResult.setDatos(delegate.obtenerContenidoFichero(archivo));
 
 			if (pagina != null)
 				archivoResult.setPagina(pagina);

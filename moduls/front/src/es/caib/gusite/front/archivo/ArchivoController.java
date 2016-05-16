@@ -268,7 +268,8 @@ public class ArchivoController extends FrontController {
 
 	}
 
-	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo) throws IOException {
+	
+	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo) throws IOException, ExceptionFrontPagina {
 		if (archivo == null) {
 			log.error("Archivo no encontrado");
 			// TODO: 404?
@@ -276,26 +277,13 @@ public class ArchivoController extends FrontController {
 			// ErrorMicrosite.ERROR_AMBIT_MICRO);
 			return null;
 		}
-		// amartin: Si los datos del archivo son nulos en la BD, vamos a
-		// buscarlo a Filesystem.
-		if (ArchivoUtil.almacenarEnFilesystem()) {
-
-			if ((archivo != null) && (archivo.getDatos() == null)) {
-
-				byte[] datos = ArchivoUtil.obtenerDatosArchivoEnFilesystem(archivo);
-				archivo.setDatos(datos);
-
-			}
-
-		}
-
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-		return new ResponseEntity<byte[]>(archivo.getDatos(), responseHeaders, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
 	}
-
+	
 	private static final Map<String, String> MIME_EXTENSIONES;  
 	 static {
 	        Map<String, String> aMap = new HashMap<String, String>();

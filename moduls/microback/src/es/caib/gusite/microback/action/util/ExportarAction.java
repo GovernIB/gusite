@@ -230,28 +230,28 @@ public class ExportarAction extends BaseAction {
 		while (iter.hasNext()) {
 			ArchivoLite archivoLite = iter.next();
 			Archivo archivo = archivoDelegate.obtenerArchivo(archivoLite.getId());
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(archivo, archivoDelegate), zipFile);
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, archivo, zipFile);
 		}
 
 		if (microsite.getImagenPrincipal() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getImagenPrincipal(), archivoDelegate), zipFile);
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenPrincipal(), zipFile);
 		}
 
 		if (microsite.getImagenCampanya() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getImagenCampanya(), archivoDelegate), zipFile);
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenCampanya(), zipFile);
 		}
 
 		if (microsite.getEstiloCSS() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(microsite.getEstiloCSS(), archivoDelegate), zipFile);
+    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getEstiloCSS(), zipFile);
 		}
 
 		for (Object menu : microsite.getMenus()) {
 			if (((Menu) menu).getImagenmenu() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Menu) menu).getImagenmenu(), archivoDelegate), zipFile);
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Menu) menu).getImagenmenu(), zipFile);
 			}
 			for (Contenido contenido : ((Menu) menu).getContenidos()) {
 				if (contenido.getImagenmenu() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(contenido.getImagenmenu(), archivoDelegate), zipFile);
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, contenido.getImagenmenu(), zipFile);
 				}
 			}
 		}
@@ -259,56 +259,51 @@ public class ExportarAction extends BaseAction {
 		for (Object agenda : microsite.getAgendas()) {
 			for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
 				if (trad.getDocumento() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getDocumento(), archivoDelegate), zipFile);
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocumento(), zipFile);
 				}
 				if (trad.getImagen() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getImagen(), archivoDelegate), zipFile);
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getImagen(), zipFile);
 				}
 			}
 		}
 
 		for (Object noticia : microsite.getNoticias()) {
 			if (((Noticia) noticia).getImagen() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Noticia) noticia).getImagen(), archivoDelegate), zipFile);
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Noticia) noticia).getImagen(), zipFile);
 			}
 			for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
 				if (trad.getDocu() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(trad.getDocu(), archivoDelegate), zipFile);
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocu(), zipFile);
 				}
 			}
 		}
 
 		for (Object componente : microsite.getComponentes()) {
 			if (((Componente) componente).getImagenbul() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(((Componente) componente).getImagenbul(), archivoDelegate), zipFile);
+	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Componente) componente).getImagenbul(), zipFile);
 			}
 		}
 
 		for (Object encuesta : microsite.getEncuestas()) {
 			for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
 				if (pregunta.getImagen() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, obtenerArchivo(pregunta.getImagen(), archivoDelegate), zipFile);
+		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, pregunta.getImagen(), zipFile);
 				}
 			}
 		}
 
 	}
 	
-	private Archivo obtenerArchivo(Archivo archivo, ArchivoDelegate delegate) throws DelegateException {
+	
 
-		if (archivo.getDatos() != null) {
-			return archivo;
-		} else {
-			return delegate.obtenerArchivo(archivo.getId());
-		}
+	private void agregaArchivoAZIP(String nombreDirArchivos, Archivo docu, ZipOutputStream out) throws IOException, DelegateException {
 		
-	}
-
-	private void agregaArchivoAZIP(String nombreDirArchivos, Archivo docu, ZipOutputStream out) throws IOException {
 		
-		if (docu != null && docu.getDatos() != null) {
+		// TODO SLR cambiar esto para recuperar contenido archivo
+		if (docu != null) {
 			
-			byte[] datosDocumento = docu.getDatos();
+			ArchivoDelegate delegate = DelegateUtil.getArchivoDelegate();
+			byte[] datosDocumento = delegate.obtenerContenidoFichero(docu);
 			ByteArrayInputStream in = new ByteArrayInputStream(datosDocumento);
 
 			// Ponemos como prefijo el ID del documento en la BD, por si hay algún documento

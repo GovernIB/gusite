@@ -727,11 +727,12 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 					int ini = laurl.lastIndexOf("&id=");
 					if (ini != -1) {
 						String id = laurl.substring(ini + 4);
-						Archivo archi = DelegateUtil.getArchivoDelegate()
-								.obtenerArchivo(new Long(id));
-						if (archi.getPeso() > 0 && archi.getDatos() != null) {
+						
+						Archivo archi = DelegateUtil.getArchivoDelegate().obtenerArchivo(new Long(id));
+						if (archi.getPeso() > 0) {
+							archi.setDatos(DelegateUtil.getArchivoDelegate().obtenerContenidoFichero(archi));
 							io.addArchivo(archi);
-						}
+						}						
 					}
 				}
 			}

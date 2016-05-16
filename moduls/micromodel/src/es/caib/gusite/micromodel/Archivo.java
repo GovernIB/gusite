@@ -53,7 +53,8 @@ public class Archivo extends AuditableModel implements Indexable {
 	 * 		Parece ser que no afecta a oracle
 	@Lob
 	*/
-	@Column(name = "DCM_DATOS")
+	//@Column(name = "DCM_DATOS")
+	@Transient
 	private byte[] datos;
 
 	@XmlAttribute
