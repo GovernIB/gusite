@@ -205,9 +205,9 @@ public abstract class Bdbase {
 		if (microsite.getDomini() != null && microsite.getDomini().length() > 0) {
 			direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
 					.append(microsite.getDomini()).append(">").append(microsite.getDomini()).append("</a>");
-		} else if (!isEmpty(unidadData.getUrl())) {
+		} else if (!isEmpty(unidadData.getDominio())) {
 				direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
-						.append(unidadData.getUrl()).append(">").append(unidadData.getUrl()).append("</a>");
+						.append(unidadData.getDominio()).append(">").append(unidadData.getDominio()).append("</a>");
 		}
 
     	_request.setAttribute("direccion", direccion.toString());
