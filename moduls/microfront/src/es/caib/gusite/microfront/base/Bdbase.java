@@ -685,6 +685,16 @@ public abstract class Bdbase {
 		      if ((!paramName.equals(Microfront.PLANG)) && (!paramName.equals(Microfront.PSTAT)))
 		    	  url += paramName + "=" + paramValue + "&";
 		    }
+		    
+		    //#47 formar correctamente la url
+		    if(url != null && url.length()>0){
+		    	int tam = url.length();
+		    	char ultimo = url.charAt(tam-1);
+		    	if(ultimo =='&'){
+		    		url = url.substring(0, tam-1); //quitamos el último &
+		    	}
+		    	
+		    }
 		    request.setAttribute("MVS_seulet", url);
 	}
 
