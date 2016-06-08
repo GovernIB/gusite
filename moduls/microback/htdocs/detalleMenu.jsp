@@ -329,6 +329,7 @@
 var alert1='<bean:message key="menu.alert1"/>';
 var alert2='<bean:message key="menu.alert2"/>';
 var alert3='<bean:message key="menu.alert3"/>';
+var alert4='<bean:message key="error.menu.nombreCM"/>';
 
 	function nuevoContenido (idMenu) {
 		document.location.href="contenidosAcc.do?op=crear&idmenu="+idMenu;
@@ -365,7 +366,12 @@ var alert3='<bean:message key="menu.alert3"/>';
 	}
 	
 	function crearMenu() {
-		
+		debugger;
+		if ( document.getElementsByName("nombreCM[0]")[0].value == ''){
+			alert (alert4 );
+			return;
+		}
+
 		document.forms[0].accion.value="crear";
 		document.forms[0].submit();
 	}
