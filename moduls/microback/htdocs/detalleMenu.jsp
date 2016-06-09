@@ -366,7 +366,6 @@ var alert4='<bean:message key="error.menu.nombreCM"/>';
 	}
 	
 	function crearMenu() {
-		debugger;
 		if ( document.getElementsByName("nombreCM[0]")[0].value == ''){
 			alert (alert4 );
 			return;
