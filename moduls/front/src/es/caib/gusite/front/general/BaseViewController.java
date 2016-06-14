@@ -671,24 +671,28 @@ public abstract class BaseViewController extends FrontController {
 		if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
 
 			if (microsite != null) {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId());
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			} else {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			}
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"","",ErrorMicrosite.ESTADO_FORBIDDEN);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"","",ErrorMicrosite.ESTADO_SESSION);
 		} else {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		}
 
 		if (errorMicrosite != null) {
 			view.setErrParam(errorMicrosite);
+		}
+		
+		if (errorMicrosite != null) {
+			view.setErrEstado(errorMicrosite.getEstado());
 		}
 
 		if (microsite != null) {

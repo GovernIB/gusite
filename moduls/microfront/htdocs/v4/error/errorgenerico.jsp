@@ -4,6 +4,17 @@
 <%@ taglib prefix="logic" uri="http://jakarta.apache.org/struts/tags-logic" %>
 <%@ taglib prefix="html" uri="http://jakarta.apache.org/struts/tags-html" %>
 
+
+<logic:notEmpty  name="MVS_errparam" property="estado">
+
+<%
+
+response.setStatus(Integer.valueOf((String) request.getSession().getAttribute("MVS_errestado")));%>
+ 
+
+</logic:notEmpty>
+
+
 <logic:present name="org.apache.struts.action.EXCEPTION">
 <bean:define id="exception" name="org.apache.struts.action.EXCEPTION" type="java.lang.Throwable"/>
 </logic:present>
@@ -13,7 +24,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="Generator" content="<bean:message key="microsites.name"/>; version:<bean:message key="microsites.version"/>; build:<bean:message key="microsites.build"/>" />
 	<title>
-	<logic:notEmpty name="MVS_errparam" property="aviso"><bean:write name="MVS_errparam" property="aviso" filter="false"/></logic:notEmpty>
+	<logic:notEmpty name="MVS_errparam" property="aviso"><bean:write name="MVS_errparam" property="aviso" filter="false"/>8888888888888888888</logic:notEmpty>
+	
 	</title>
 	<link href="v4/css/estils.css" rel="stylesheet" type="text/css" />	
 	<script type="text/javascript" src="v4/js/globales.js"></script>

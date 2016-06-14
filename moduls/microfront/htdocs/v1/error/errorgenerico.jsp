@@ -7,6 +7,14 @@
 <logic:present name="org.apache.struts.action.EXCEPTION">
 <bean:define id="exception" name="org.apache.struts.action.EXCEPTION" type="java.lang.Throwable"/>
 </logic:present>
+
+<logic:notEmpty  name="MVS_errparam" property="estado">
+
+<%response.setStatus(Integer.valueOf((String) request.getSession().getAttribute("MVS_errestado")));%>
+ 
+
+</logic:notEmpty>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>

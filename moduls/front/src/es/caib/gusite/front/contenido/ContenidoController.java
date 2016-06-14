@@ -87,7 +87,7 @@ public class ContenidoController extends BaseViewController {
 			@RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
 			@RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
 			@RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
-
+            
 		return this.contenido(URI, DEFAULT_IDIOMA, uriContenido.nemotecnic, redir, mcont, pcampa, previsual, tipobeta, redi, request, response);
 
 	}
@@ -181,13 +181,15 @@ public class ContenidoController extends BaseViewController {
 			view.setContenido(contenido);
 			view.setTipoBeta(tipobeta);
 
+			
 			return this.modelForView(this.templateNameFactory.contenido(microsite), view);
-
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
+			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
+			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 
