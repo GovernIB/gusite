@@ -379,7 +379,6 @@ public class EncuestasController extends BaseViewController {
 									if(!preguntasTratadas.contains(cadenaSinLetra)){		//El anterior no es radio(mono) asociado a textarea de usuario								
 								
 										encuestadel.sumarRespuesta(new Long(respuesta));
-
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 										encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(respuesta));
@@ -408,10 +407,7 @@ public class EncuestasController extends BaseViewController {
 												encuestadel.sumarPregunta(new Long(idpregunta));
 												preguntasContadas.add(idpregunta);
 											}
-
-											encuestadel.sumarPregunta(new Long(idpregunta));
-											preguntasTratadas.add(idRespIdPreg);
-
+											
 										}
 										encuestadel.sumarRespuesta(new Long(paramValue));
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
