@@ -266,11 +266,8 @@ public class BdEnvioencuesta  extends Bdbase {
 							        } else {
 							        	cuerpomensaje+= paramValue + "\n";
 							        	if(!preguntasTratadas.contains(idRespIdPreg)){
-							        		preguntasTratadas.add(idRespIdPreg);
-							        		if (!preguntasContadas.contains(idpregunta)){								        			
-							        			encuestadel.sumarPregunta(new Long(idpregunta));
-							        			preguntasContadas.add(idpregunta);
-							        		}
+											encuestadel.sumarPregunta(new Long(idpregunta));
+											preguntasTratadas.add(idRespIdPreg);
 										}
 								        encuestadel.sumarRespuesta(new Long(paramValue));
 									    upm.getId().setIdrespuesta(new Long(paramValue));
@@ -284,11 +281,8 @@ public class BdEnvioencuesta  extends Bdbase {
 							        	final String idRespIdPreg = paramValues[i]+"_"+paramName.substring(1);
 							        	
 							        	if(!preguntasTratadas.contains(idRespIdPreg)){
-							        		preguntasTratadas.add(idRespIdPreg);
-							        		if (!preguntasContadas.contains(idpregunta)){								        			
-							        			encuestadel.sumarPregunta(new Long(idpregunta));
-							        			preguntasContadas.add(idpregunta);
-							        		}
+											encuestadel.sumarPregunta(new Long(idpregunta));
+											preguntasTratadas.add(idRespIdPreg);
 										} 
 							        	
 							        	cuerpomensaje+= paramValues[i] + ", ";
