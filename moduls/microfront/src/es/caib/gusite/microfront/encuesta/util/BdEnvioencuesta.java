@@ -210,6 +210,7 @@ public class BdEnvioencuesta  extends Bdbase {
 			    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 
 			    List<String> preguntasTratadas = new ArrayList<String>();
+			    List<String> preguntasContadas = new ArrayList<String>();
 			    while (paramNames.hasMoreElements())  {
 				      // Campos fijos que vienen del request: lang,idsite,cont,btnanar,enccomp. Evidentemente, no hay que tratarlos
 			    	  String paramName = (String)paramNames.nextElement();

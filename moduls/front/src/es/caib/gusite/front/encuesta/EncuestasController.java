@@ -333,6 +333,8 @@ public class EncuestasController extends BaseViewController {
 					upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 					
 					List<String> preguntasTratadas = new ArrayList<String>();
+					List<String> preguntasContadas = new ArrayList<String>();
+
 					while (paramNames.hasMoreElements()) {
 						// Campos fijos que vienen del request:
 						// lang,idsite,cont,btnanar,enccomp. Evidentemente, no
@@ -373,9 +375,11 @@ public class EncuestasController extends BaseViewController {
 								resdat.setIdusuari(upm.getId().getIdusuario());
 								if ((paramValue != "") &&(paramValue != null) && (!paramValue.equals("null"))) {
 									resdatdel.grabarRespuestaDato(resdat);
-									
+
 									if(!preguntasTratadas.contains(cadenaSinLetra)){		//El anterior no es radio(mono) asociado a textarea de usuario								
+								
 										encuestadel.sumarRespuesta(new Long(respuesta));
+
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
 										encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(respuesta));
@@ -398,8 +402,16 @@ public class EncuestasController extends BaseViewController {
 										 final String idRespIdPreg = paramValue+"_"+paramName.substring(1);
 										 
 										if(!preguntasTratadas.contains(idRespIdPreg)){									
+
+											preguntasTratadas.add(idRespIdPreg);
+											if (!preguntasContadas.contains(idpregunta)){													
+												encuestadel.sumarPregunta(new Long(idpregunta));
+												preguntasContadas.add(idpregunta);
+											}
+
 											encuestadel.sumarPregunta(new Long(idpregunta));
 											preguntasTratadas.add(idRespIdPreg);
+
 										}
 										encuestadel.sumarRespuesta(new Long(paramValue));
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
@@ -415,11 +427,15 @@ public class EncuestasController extends BaseViewController {
 										final String idRespIdPreg = paramValue+"_"+paramName.substring(1);
 										
 										if(!preguntasTratadas.contains(idRespIdPreg)){
-											encuestadel.sumarPregunta(new Long(idpregunta));
+
 											preguntasTratadas.add(idRespIdPreg);
+											if (!preguntasContadas.contains(idpregunta)){												
+												encuestadel.sumarPregunta(new Long(idpregunta));
+												preguntasContadas.add(idpregunta);
+											}
 										} 
 							        	
-										cuerpomensaje += paramValue + ", ";
+										cuerpomensaje += paramValue + ", ";								
 										encuestadel.sumarRespuesta(new Long(paramValue));
 
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
@@ -430,6 +446,7 @@ public class EncuestasController extends BaseViewController {
 									
 									cuerpomensaje += "\n";
 								}
+						
 
 							}
 							
