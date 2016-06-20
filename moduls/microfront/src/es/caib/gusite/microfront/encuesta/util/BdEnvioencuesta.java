@@ -209,7 +209,8 @@ public class BdEnvioencuesta  extends Bdbase {
 
 			    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 
-			    List preguntasTratadas = new ArrayList();
+			    List<String> preguntasTratadas = new ArrayList<String>();
+			    List<String> preguntasContadas = new ArrayList<String>();
 			    while (paramNames.hasMoreElements())  {
 				      // Campos fijos que vienen del request: lang,idsite,cont,btnanar,enccomp. Evidentemente, no hay que tratarlos
 			    	  String paramName = (String)paramNames.nextElement();
@@ -218,7 +219,8 @@ public class BdEnvioencuesta  extends Bdbase {
 				    		  && !paramName.equals(Microfront.PENCCOMP)) {
 
 				    	  String idpregunta = paramName.substring(1);
-				    	  preguntasTratadas.add(idpregunta);
+				    	  String cadenaSinLetra=paramName.substring(1);
+				    	  
 				    	  if (paramName.charAt(0)=='T') {
 						    		  //es de tipo texto libre
 							  	cuerpomensaje+= paramName + " = ";
@@ -242,8 +244,9 @@ public class BdEnvioencuesta  extends Bdbase {
 								resdat.setIdusuari(upm.getId().getIdusuario());
 				    			if ((!paramValue.isEmpty()) && (paramValue!=null) && (!paramValue.equals("null"))){
 				    				resdatdel.grabarRespuestaDato(resdat);
-				    				if(!preguntasTratadas.contains(idpregunta)){
+				    				if(!preguntasTratadas.contains(cadenaSinLetra)){
 				    					encuestadel.sumarRespuesta(new Long(respuesta));
+				    					preguntasTratadas.add(cadenaSinLetra);
 									}
 				    			}
 
@@ -252,26 +255,42 @@ public class BdEnvioencuesta  extends Bdbase {
 				    	  } else {
 				    		  	cuerpomensaje+= paramName + " = ";
 							    String[] paramValues = req.getParameterValues(paramName);
-
+							   
 							    if (paramValues.length == 1) {
 							        String paramValue = paramValues[0];
 
+							        final String idRespIdPreg = paramValue+"_"+paramName.substring(1);
+							        
 							        if (paramValue.length() == 0) {
 							        	cuerpomensaje+="[sin valor]"+ "\n";
 							        } else {
 							        	cuerpomensaje+= paramValue + "\n";
-							        	if(!preguntasTratadas.contains(idpregunta)){
-											encuestadel.sumarPregunta(new Long(idpregunta));
+							        	if(!preguntasTratadas.contains(idRespIdPreg)){
+							        		preguntasTratadas.add(idRespIdPreg);
+							        		if (!preguntasContadas.contains(idpregunta)){								        			
+							        			encuestadel.sumarPregunta(new Long(idpregunta));
+							        			preguntasContadas.add(idpregunta);
+							        		}
 										}
 								        encuestadel.sumarRespuesta(new Long(paramValue));
 									    upm.getId().setIdrespuesta(new Long(paramValue));
 									    encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 								    }
 						      } else  {
-						    	  	if(!preguntasTratadas.contains(idpregunta)){
-										encuestadel.sumarPregunta(new Long(idpregunta));
-									}
+						    	    
+						    	  	
 							        for (int i=0; i < paramValues.length; i++) {
+							        	
+							        	final String idRespIdPreg = paramValues[i]+"_"+paramName.substring(1);
+							        	
+							        	if(!preguntasTratadas.contains(idRespIdPreg)){
+							        		preguntasTratadas.add(idRespIdPreg);
+							        		if (!preguntasContadas.contains(idpregunta)){								        			
+							        			encuestadel.sumarPregunta(new Long(idpregunta));
+							        			preguntasContadas.add(idpregunta);
+							        		}
+										} 
+							        	
 							        	cuerpomensaje+= paramValues[i] + ", ";
 							        	encuestadel.sumarRespuesta(new Long(paramValues[i]));
 							        	upm.getId().setIdrespuesta(new Long(paramValues[i]));
