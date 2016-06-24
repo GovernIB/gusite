@@ -10,6 +10,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 gus:decorator="layout">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title
 	th:if="(${MVS_micrositetitulo} !=null) and (${MVS_agenda_diaevento} !=null)"
 	th:text="(${MVS_micrositetitulo} + '-' + #{agenda.eventos} + ' ' +${MVS_agenda_diaevento})"></title>

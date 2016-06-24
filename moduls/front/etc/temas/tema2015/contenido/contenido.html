@@ -10,7 +10,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 gus:decorator="layout">
 <head>
-    <title th:if="${MVS_contenido.traduce} !=null"
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:if="${MVS_contenido.traduce} !=null"
     th:text="${MVS_micrositetitulo} + '-' + ${MVS_contenido.traduce.titulo}">-</title>  
     <th:block th:remove="all">
 <!--/*  

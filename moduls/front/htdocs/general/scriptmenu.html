@@ -7,6 +7,7 @@ Scripts necesarios para el menú de microsite
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
 	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
 		var nodo='p'+'${MVS_contenido.id}';

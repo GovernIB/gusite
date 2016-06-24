@@ -5,6 +5,7 @@
 
 <html:html>
 <head>
+	<link rel="shortcut icon" href="<%=request.getContextPath()%>/favicon.png" type="image/x-ico"/>
 	<meta name="Generator" content="<bean:message key="microsites.name"/>; version:<bean:message key="microsites.version"/>; build:<bean:message key="microsites.build"/>">
   <META http-equiv="CACHE-CONTROL" content="NO-CACHE">  <!-- For HTTP 1.1 -->
   <META http-equiv="PRAGMA" content="NO-CACHE">         <!-- For HTTP 1.0 -->

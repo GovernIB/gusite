@@ -10,6 +10,7 @@ Contenido de la HOME proporcionada por GUSITE
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
 <head>
+<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_micrositetitulo}!=null"
 	th:text="(${MVS_micrositetitulo}) + ' - Home'">Home</title>
 
