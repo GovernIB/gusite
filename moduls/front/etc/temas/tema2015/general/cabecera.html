@@ -76,7 +76,7 @@ Plantilla para la cabecera general de microsite
                                     </span>
                                     <ul  class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
                                         <li th:each="idiomaLista,iterStat:${MVS_listaidiomas}" role="presentation" class="idioma idioma-adicional">
-                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador)}}" th:utext="${idiomaLista.value}">
+                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}" th:utext="${idiomaLista.value}">
                                                 Castellano
                                             </a>
                                         </li>
@@ -120,7 +120,7 @@ Plantilla para la cabecera general de microsite
                                     </span>
                                     <ul  class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
                                         <li th:each="idiomaLista,iterStat:${MVS_listaidiomas}" role="presentation" class="idioma idioma-adicional">
-                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador)}}" th:utext="${idiomaLista.value}">
+                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}" th:utext="${idiomaLista.value}">
                                                 Castellano
                                             </a>
                                         </li>

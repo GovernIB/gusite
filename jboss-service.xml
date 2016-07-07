@@ -37,6 +37,12 @@
 	   
        
         es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
+        
+        <!-- Buscador solr  -->
+        es.caib.gusite.user.solr=admin
+        es.caib.gusite.pass.solr=password
+        es.caib.gusite.url.solr=localhost:8983/solr
+        es.caib.gusite.index.solr=caib
 
     </attribute>
 

@@ -10,10 +10,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrDelegate;
 
 /**
- * Action que busca en el índice Lucene<P>
+ * Action que busca en el índice Solr<P>
  * 
  * 	Definición Struts:<BR>
  *  action path="/busca"<BR> 
@@ -29,13 +29,13 @@ public class BuscaAction extends BaseAction  {
 	public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+		SolrDelegate index = DelegateUtil.getSolrDelegate();
 		
 		String words = "" + request.getParameter("words");
 		String micro = "" + request.getParameter("micro");
 		String idi = "" + request.getParameter("idi");
 
-		request.setAttribute("listado", indexo.buscar(micro, idi, null, words, true));
+		request.setAttribute("listado", index.buscar(micro, idi, null, words, true));
 
 		// TODO amartin: ¿se puede borrar este código comentado? Comprobar uso de atributo.
 		// request.setAttribute("diccionario", indexo.diccionario(idi));

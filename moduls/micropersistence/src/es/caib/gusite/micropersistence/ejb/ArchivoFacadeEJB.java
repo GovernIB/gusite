@@ -7,9 +7,6 @@ import java.util.List;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
-import org.apache.lucene.store.Directory;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -17,16 +14,11 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import es.caib.gusite.lucene.analysis.Analizador;
-import es.caib.gusite.lucene.model.Catalogo;
-import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.ArchivoFull;
 import es.caib.gusite.micromodel.Auditoria;
-import es.caib.gusite.micromodel.IndexObject;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 import es.caib.gusite.micropersistence.exception.FicheroVacioException;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
@@ -99,6 +91,35 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		}
 		
 	}
+	
+	/**
+	 * Obtiene los archivos de un microsite
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<Archivo> obtenerArchivoByMicrositeId(Long idMicrosite) throws DelegateException {
+
+		Session session = this.getSession();		
+
+		try {
+			
+			Query query = session.createQuery("from Archivo a where a.idmicrosite =" + idMicrosite.toString());
+			List<Archivo> lista = query.list();
+									
+			return lista;
+
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		}  finally {
+			
+			this.close(session);
+			
+		}
+		
+	}
+
 
 	/**
 	 * Devuelve una lista con todos los Ids de los archivos en la tabla
@@ -476,14 +497,14 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		} catch (HibernateException he) {
 			
 			if (!nuevo) {
-				this.indexBorraArchivo(a.getId());
+				//this.indexBorraArchivo(a.getId());
 			}
 			throw new EJBException(he);
 			
 		} catch (IOException e) {
 			
 			if (!nuevo) {
-				this.indexBorraArchivo(a.getId());
+				//this.indexBorraArchivo(a.getId());
 			}
 			throw new EJBException(e);
 			
@@ -495,103 +516,5 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		
 	}
 
-	/***************************************************************************************/
-	/******************* INDEXACION ************************************/
-	/***************************************************************************************/
-
-	/**
-	 * Añade un archivo al indice en todos los idiomas
-	 * 
-	 * @ejb.interface-method
-	 * @ejb.permission unchecked="true"
-	 */
-	public void indexInsertaArchivo(Archivo archi, ModelFilterObject filter) {
-
-		if (archi.getDatos() != null) {
-			IndexObject io = new IndexObject();
-			io.addArchivo(archi);
-
-			try {
-				io.setId(Catalogo.SRVC_MICRO_DOCUMENTOS + "." + archi.getId());
-				io.setClasificacion(Catalogo.SRVC_MICRO_DOCUMENTOS);
-
-				io.setMicro(filter.getMicrosite_id());
-				io.setRestringido(filter.getRestringido());
-				io.setUo(filter.getUo_id());
-				io.setMateria(filter.getMateria_id());
-				io.setSeccion(filter.getSeccion_id());
-				io.setFamilia(filter.getFamilia_id());
-
-				io.setTitulo(archi.getNombre());
-				io.addTextLine(archi.getNombre());
-				io.setUrl("/sacmicrofront/archivopub.do?ctrl=MCRST"
-						+ io.getMicro().toString() + "ZI"
-						+ archi.getId().toString() + "&id="
-						+ archi.getId().toString());
-				io.setCaducidad("");
-				io.setPublicacion("");
-
-				if (io.getText().length() > 200) {
-					io.addDescripcionLine(io.getText().substring(0, 199)
-							+ "...");
-				} else {
-					io.addDescripcionLine(io.getText());
-				}
-
-				IndexerDelegate indexerDelegate = DelegateUtil
-						.getIndexerDelegate();
-				for (int i = 0; i < this.langs.size(); i++) {
-					String idioma = (String) this.langs.get(i);
-
-					// Configuración del writer
-					Directory directory = indexerDelegate
-							.getHibernateDirectory(idioma);
-					IndexWriter writer = new IndexWriter(directory,
-							Analizador.getAnalizador(idioma), false,
-							MaxFieldLength.UNLIMITED);
-					writer.setMergeFactor(20);
-					writer.setMaxMergeDocs(Integer.MAX_VALUE);
-
-					try {
-						indexerDelegate.insertaObjeto(io, idioma, writer);
-					} finally {
-						writer.close();
-						directory.close();
-					}
-				}
-
-			} catch (DelegateException ex) {
-				throw new EJBException(ex);
-			} catch (Exception e) {
-				log.warn("[indexInsertaArchivo:" + archi.getId()
-						+ "] No se ha podido indexar elemento. "
-						+ e.getMessage());
-			}
-		}
-	}
-
-	/**
-	 * Elimina el archivo del indice en todos los idiomas
-	 * 
-	 * @ejb.interface-method
-	 * @ejb.permission unchecked="true"
-	 */
-	public void indexBorraArchivo(Long id) {
-
-		try {
-			
-			IndexerDelegate indexerDelegate = DelegateUtil.getIndexerDelegate();
-
-			for (int i = 0; i < this.langs.size(); i++) {
-				indexerDelegate.borrarObjeto(Catalogo.SRVC_MICRO_DOCUMENTOS + "." + id, "" + this.langs.get(i));
-			}
-
-		} catch (DelegateException ex) {
-			
-			throw new EJBException(ex);
-			
-		}
-		
-	}
 
 }

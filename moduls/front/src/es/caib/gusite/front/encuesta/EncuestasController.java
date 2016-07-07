@@ -225,6 +225,10 @@ public class EncuestasController extends BaseViewController {
 	}
 
 	/**
+	 * Se reciben como parámetro los radios seleccionado con 'R' más id, los checks seleccionados
+	 * que no son de usuario con 'C', las respuestas de usuario comienzan por 'T' y sólo contarán si
+	 * viene informado el textarea que la acompaña.
+	 * 
 	 * @param lang
 	 * @param uri
 	 * @param model
@@ -328,6 +332,7 @@ public class EncuestasController extends BaseViewController {
 					upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 					
 					String idPreguntaAux = "";
+					String anterior = "";
 					while (paramNames.hasMoreElements()) {
 						// Campos fijos que vienen del request:
 						// lang,idsite,cont,btnanar,enccomp. Evidentemente, no
@@ -368,15 +373,15 @@ public class EncuestasController extends BaseViewController {
 								if ((paramValue != "") &&(paramValue != null) && (!paramValue.equals("null"))) {
 									resdatdel.grabarRespuestaDato(resdat);
 									
-									if(idPreguntaAux.compareTo(idpregunta) != 0){										
-										encuestadel.sumarPregunta(new Long(idpregunta));
+									if(anterior.charAt(0) != 'R'){		//El anterior no es radio(mono) asociado a textarea de usuario								
+									
 										idPreguntaAux = str[1];
+										encuestadel.sumarRespuesta(new Long(respuesta));
+										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
+										encuesta.setPreguntas(encuestaAux.getPreguntas());
+										upm.getId().setIdrespuesta(new Long(respuesta));
+										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 									}
-									encuestadel.sumarRespuesta(new Long(respuesta));
-									Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
-									encuesta.setPreguntas(encuestaAux.getPreguntas());
-									upm.getId().setIdrespuesta(new Long(respuesta));
-									encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 								}
 
 							} else {
@@ -413,7 +418,7 @@ public class EncuestasController extends BaseViewController {
 										encuestadel.sumarRespuesta(new Long(paramValue));
 
 										Encuesta encuestaAux = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
-										encuesta.setPreguntas(encuestaAux.getPreguntas());
+ 										encuesta.setPreguntas(encuestaAux.getPreguntas());
 										upm.getId().setIdrespuesta(new Long(paramValue));
 										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 									}
@@ -423,6 +428,7 @@ public class EncuestasController extends BaseViewController {
 
 							}
 							
+							anterior = paramName;
 						}
 					}
 					// metemos el valor del idencuesta para no volver a

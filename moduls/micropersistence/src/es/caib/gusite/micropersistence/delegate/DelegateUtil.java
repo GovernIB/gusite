@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.delegate;
 
+
 /**
  * Define métodos estáticos para obtener delegates.
  * 
@@ -105,11 +106,6 @@ public final class DelegateUtil {
 				.getDelegate(es.caib.gusite.micropersistence.delegate.RespuestaDatoDelegate.class);
 	}
 
-	public static IndexerDelegate getIndexerDelegate() {
-		return (IndexerDelegate) DelegateFactory
-				.getDelegate(es.caib.gusite.micropersistence.delegate.IndexerDelegate.class);
-	}
-
 	public static UsuarioDelegate getUsuarioDelegate() {
 		return (UsuarioDelegate) DelegateFactory
 				.getDelegate(es.caib.gusite.micropersistence.delegate.UsuarioDelegate.class);
@@ -163,6 +159,16 @@ public final class DelegateUtil {
 	public static PersonalizacionPlantillaDelegate getPersonalizacionPlantillaDelegate() {
 		return (PersonalizacionPlantillaDelegate) DelegateFactory
 				.getDelegate(es.caib.gusite.micropersistence.delegate.PersonalizacionPlantillaDelegate.class);
+	}
+	
+	public static SolrDelegate getSolrDelegate() {
+		return (SolrDelegate) DelegateFactory
+				.getDelegate(es.caib.gusite.micropersistence.delegate.SolrDelegate.class);
+	}
+	
+	public static SolrPendienteDelegate getSolrPendienteDelegate() {
+		return (SolrPendienteDelegate) DelegateFactory
+				.getDelegate(es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate.class);
 	}
 
 }

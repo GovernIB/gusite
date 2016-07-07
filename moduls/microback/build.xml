@@ -34,8 +34,8 @@
     <path id="web.class.path">
     	<fileset dir="${web.product}">
     		<include name="extractor.jar"/>
+    		<include name="solrutiles.jar"/>
 			<include name="plugins.jar" />
-            <include name="lucene.jar" />
     		<include name="microintegracion.jar"/>
             <include name="micromodel.jar"/>
             <include name="sac-micropersistence.jar"/>
@@ -47,7 +47,7 @@
           	<include name="commons-logging.jar"/>
         	
 			<!-- TODO amartin: ¿no está duplicado ya? Aparece en el fileset anterior. -->
-        	<include name="extractor.jar"/>
+        	<include name="solrutiles.jar"/>
         	<!--<include name="hibernate-jpa-2.0-api-1.0.1.Final.jar"/>-->
 	
 			
@@ -62,7 +62,9 @@
             <include name="servlet-api.jar"/>
             <include name="jtidy-r938.jar"/>
         </fileset>
-            	
+    	<fileset dir="${lib.dir}/solr">
+    		<include name="solrapi.jar"/>
+    	</fileset>   	
     	<fileset dir="${lib.dir}/jboss">
     		<include name="hibernate-core.jar"/>
     		<include name="hibernate-annotations.jar"/>

@@ -218,7 +218,6 @@ public class NoticiasDataService {
 
 		List<Noticia> listanoticias = (List<Noticia>) noticiadel.buscarElementos(paramsBuscador);
 
-		// busqueda por lucene. Pendiente de activar (ya estaba pendiente en
 		// microfront)
 		// listanoticias=noticiadel.buscarElementosLuc(microsite.getId().toString(),idioma,txttipo,
 		// txtsearch, true);

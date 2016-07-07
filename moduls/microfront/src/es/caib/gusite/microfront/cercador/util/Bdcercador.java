@@ -1,16 +1,27 @@
 package es.caib.gusite.microfront.cercador.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
-import es.caib.gusite.lucene.model.IndexResultados;
 import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.base.Bdbase;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.solrutiles.solr.model.IndexEncontrado;
+import es.caib.gusite.solrutiles.solr.model.IndexResultados;
+import es.caib.gusite.utilities.property.GusitePropertiesUtil;
+import es.caib.solr.api.SolrFactory;
+import es.caib.solr.api.SolrSearcher;
+import es.caib.solr.api.model.FilterSearch;
+import es.caib.solr.api.model.PaginationSearch;
+import es.caib.solr.api.model.ResultData;
+import es.caib.solr.api.model.StoredData;
+import es.caib.solr.api.model.types.EnumIdiomas;
 
 /**
  * Clase Bdcercador. Recoge los datos para mostrarlos en el front.
@@ -68,12 +79,22 @@ public class Bdcercador extends Bdbase {
 		
 		try {
 			
-			IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
-			String words = "" + req.getParameter("cerca");
-			String idi = "" + req.getSession().getAttribute("MVS_idioma");
+			final String username = GusitePropertiesUtil.getUserSOLR();
+			final String password = GusitePropertiesUtil.getPassSOLR();
+			final String index = GusitePropertiesUtil.getIndexSOLR();
+			final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 			
-			resultado = indexo.buscar("" + microsite.getId().longValue(), idi, null, words, true);
+			final SolrSearcher buscador = SolrFactory.getSearcher(urlSolr, index, username, password);
 			
+			//IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+			final String words = "" + req.getParameter("cerca");
+			final String idi = "" + req.getSession().getAttribute("MVS_idioma");
+			
+			final FilterSearch filterSearch = new FilterSearch();
+			filterSearch.setMicrositeId(microsite.getId().toString());
+			final PaginationSearch paginationSearch = new PaginationSearch();
+			final ResultData resultadoSolr = buscador.buscar(words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
+			convertirResultado(resultadoSolr, idi.toLowerCase(),words);
 		} catch (Exception e) {
 			
 			log.error(e.getMessage());
@@ -81,6 +102,38 @@ public class Bdcercador extends Bdbase {
 			error = true;
 			
 		}
+		
+	}
+
+	/**
+	 * Convierte resultadoSolr en IndexResultados.
+	 * @param resultadoSolr
+	 * @param idi 
+	 */
+	private void convertirResultado(ResultData resultadoSolr, String idi, String busqueda) {
+		// No se implementan consulta sugerida,salto ni score
+		resultado = new IndexResultados(prepararLista(resultadoSolr.getResultados(),idi), (int) resultadoSolr.getNumResultados(), 0L, busqueda, "", "");
+		resultado.setNumEncontrados((int) resultadoSolr.getNumResultados());
+	}
+
+	/**
+	 * Informa la lista resultado a partir de storedData
+	 * @param resultados
+	 * @param idi idioma
+	 * @return
+	 */
+	private List<IndexEncontrado> prepararLista(List<StoredData> resultados, String idi) {
+		List<IndexEncontrado> listIndex = new ArrayList<IndexEncontrado>();
+		final TraduccionMicrosite traduccion = (TraduccionMicrosite) microsite.getTraduccion(idi);
+		String desc = traduccion != null ? traduccion.getTitulo() : "";
+		for (StoredData res : resultados) { 
+			res.getTitulo().get(EnumIdiomas.fromString(idi));
+			IndexEncontrado index = new IndexEncontrado(res.getElementoId(), res.getTitulo().get(EnumIdiomas.fromString(idi)), 
+					res.getDescripcion().get(EnumIdiomas.fromString(idi)), desc, res.getUrl().get(EnumIdiomas.fromString(idi)), 0);
+			listIndex.add(index);
+		}
+		
+		return listIndex;
 		
 	}
 

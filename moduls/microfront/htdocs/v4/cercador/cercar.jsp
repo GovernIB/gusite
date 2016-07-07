@@ -39,27 +39,11 @@
 										<logic:present name="MVS_listado_buscador" property="lista">
 										
 											<p>
-												<strong><bean:message key="cercar.encontrados" /> <bean:write name="MVS_listado_buscador" property="numEncontrados"/> <bean:message key="cercar.resultados.en" /> <bean:write name="MVS_listado_buscador" property="duracionBusqueda"/> 
-												<bean:message key="cercar.resultados.para" /> "<bean:write name="MVS_listado_buscador" property="consultaOriginal"/>"</strong>
+												<strong><bean:message key="cercar.encontrados" /> <bean:write name="MVS_listado_buscador" property="numEncontrados"/> <bean:message key="cercar.resultados.en" />  
+												"<bean:write name="MVS_listado_buscador" property="consultaOriginal"/>"</strong>
 											</p>								
 										
-										
-											
-											<logic:notEqual name="MVS_listado_buscador" property="saltos" value="">
-												<p><i><bean:message key="cercar.primer.intento" /></i></p>
-											</logic:notEqual>
-											
-											<logic:notEqual name="MVS_listado_buscador" property="consultaSugerida" value="">
-												 
-												<span style="font-size:2; color:#ff0000"><bean:message key="cercar.quisodecir" />:</span>&nbsp;<a href="cercar.do?cerca=<bean:write name="MVS_listado_buscador" property="consultaSugerida"/>"><bean:write name="MVS_listado_buscador" property="consultaSugerida"/><a>										 
-												 
-												<form name="cercadorForm" action="cercar.do">
-													<input type=hidden name="cerca" value="<bean:write name="MVS_listado_buscador" property="consultaSugerida"/>" >
-												</form>
-												
-											</logic:notEqual>									
-											
-											
+
 											<bean:define id="docus" name="MVS_listado_buscador" property="lista"/>
 									
 									   		<logic:iterate id="i" name="docus">
@@ -67,9 +51,9 @@
 												<ul class="resultatsRecercaInteligent">
 													<li>
 														<a href="<bean:write name="i" property="url"/>"><bean:write name="i" property="titulo"/></a> 
-														<span>(<bean:write name="i" property="score"/>%)</span> 
+														
 														<br/>
-														<span><bean:write name="i" property="id" filter="yes"/> Site: <bean:write name="i" property="site"/></span> 
+														<span><bean:write name="i" property="id" filter="yes"/> </span> 
 														<span class="detall"><bean:write name="i" property="descripcion" filter="yes"/></span>
 													</li>
 												</ul>   		
@@ -79,23 +63,7 @@
 											<br/>
 									   	</logic:present>
 									    	
-									    <logic:notPresent name="MVS_listado_buscador" property="lista">
-									
-											<logic:notEqual name="MVS_listado_buscador" property="consultaSugerida" value="">
-												 
-												<br/><span style="font-size:2; color:#ff0000"><bean:message key="cercar.quisodecir" />:</span>&nbsp;<a href="cercar.do?cerca=<bean:write name="MVS_listado_buscador" property="consultaSugerida"/>"><bean:write name="MVS_listado_buscador" property="consultaSugerida"/><a>										 
-												 
-												<form name="cercadorForm" action="cercar.do">
-													<input type=hidden name="cerca" value="<bean:write name="MVS_listado_buscador" property="consultaSugerida"/>" >
-												</form>
-												
-											</logic:notEqual>
-									
-											<logic:equal name="MVS_listado_buscador" property="consultaSugerida" value="">
-												<bean:message key="cercar.subusqueda" /> - <strong><bean:write name="MVS_listado_buscador" property="consultaOriginal"/></strong> - <bean:message key="cercar.no.resultados" />
-											</logic:equal>
-									    	    	    	
-									    </logic:notPresent>	
+									    
 									    							
 							</logic:present>		
 					

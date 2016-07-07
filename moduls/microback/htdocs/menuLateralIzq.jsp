@@ -29,6 +29,7 @@
         <a href="importar.do?accion=importar"><bean:message key="boton.importar" /></a>
         <a href="archivo.do?accion=exportarArchivosMicrosites">Exportar archivos de todos los Microsites</a>
         <a href="auditorias.do?accion=listarAuditorias"><bean:message key="auditoria.consultar" /></a>
+        <a href="indexarPrincipal.do"><bean:message key="menu.indexar.principal" /></a>
     </div>
     <!-- /submenu -->
 
