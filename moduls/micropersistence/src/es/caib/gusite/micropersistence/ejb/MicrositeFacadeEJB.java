@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,9 +29,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import es.caib.gusite.lucene.model.Catalogo;
-import es.caib.gusite.lucene.model.ModelFilterObject;
-import es.caib.gusite.lucene.model.TraModelFilterObject;
 import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
@@ -50,7 +48,10 @@ import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Temafaq;
 import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionAgenda;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
@@ -66,16 +67,27 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
 import es.caib.gusite.micropersistence.delegate.MenuDelegate;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
+import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.rolsac.api.v2.exception.QueryServiceException;
+import es.caib.solr.api.SolrIndexer;
+import es.caib.solr.api.model.IndexData;
+import es.caib.solr.api.model.IndexFile;
+import es.caib.solr.api.model.MultilangLiteral;
+import es.caib.solr.api.model.PathUO;
+import es.caib.solr.api.model.types.EnumAplicacionId;
+import es.caib.solr.api.model.types.EnumCategoria;
+import es.caib.solr.api.model.types.EnumIdiomas;
 
 /**
  * SessionBean para consultar Microsite.
@@ -829,7 +841,6 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			session.createQuery("delete PersonalizacionPlantilla perPla where perPla.microsite.id = " + id.toString()).executeUpdate();
 			session.createQuery("delete Microsite mic where mic.id = " + id.toString()).executeUpdate();
 
-			this.indexBorraMicrosite(id);
 			session.flush();
 			
 			// Borrado de archivos que son FKs (ha de ser posterior, debido al modelo de datos).
@@ -1079,7 +1090,6 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			Transaction tx = session.beginTransaction();
 			Microsite site = (Microsite) session.get(Microsite.class, id);
 			session.delete(site);
-			this.indexBorraMicrosite(id);
 			session.flush();
 			tx.commit();
 			this.close(session);
@@ -1357,106 +1367,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		return servs;
 	}
 
-	/**
-	 * Metodo que obtiene un bean con el filtro para la indexacion
-	 * 
-	 * @throws QueryServiceException
-	 * 
-	 * @ejb.interface-method
-	 * @ejb.permission unchecked="true"
-	 */
-	public ModelFilterObject obtenerFilterObject(Long idsite) {
-
-		ModelFilterObject filter = new ModelFilterObject();
-		Session session = this.getSession();
-
-		try {
-			Microsite site = (Microsite) session.get(Microsite.class, idsite);
-
-			filter.setMicrosite_id(idsite);
-			filter.setBuscador(site.getBuscador());
-			filter.setRestringido(site.getRestringido());
-
-			List<?> langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
-			List<UnidadData> listaPadres = new ArrayList<UnidadData>();
-
-			OrganigramaProvider rqs = PluginFactory.getInstance().getOrganigramaProvider();
-			UnidadData ua = rqs.getUnidadData(site.getUnidadAdministrativa(), "ca");
-
-			Serializable idPadre = ua.getIdUnidadPadre();
-			while (idPadre != null) {
-				UnidadData padre = rqs.getUnidadData(idPadre, "ca");
-				listaPadres.add(padre);
-				idPadre = padre.getIdUnidadPadre();
-			}
-
-			for (int i = 0; i < langs.size(); i++) {
-				String idioma = (String) langs.get(i);
-				TraModelFilterObject trafilter = new TraModelFilterObject();
-
-				// Titulo Microsite
-				if (site.getTraduccion(idioma) != null) {
-					trafilter.setMaintitle(((TraduccionMicrosite) site.getTraduccion(idioma)).getTitulo());
-				} else if (site.getTraduccion(Idioma.getIdiomaPorDefecto()) != null) {
-					trafilter.setMaintitle(((TraduccionMicrosite) site.getTraduccion(Idioma.getIdiomaPorDefecto())).getTitulo());
-				} else {
-					trafilter.setMaintitle("");
-				}
-
-				// Unidades Administrativas
-				String txids = Catalogo.KEY_SEPARADOR;
-				String txtexto = " "; // espacio en blanco, que es para
-										// tokenizar
-				UnidadData uaSel = null;
-
-				for (int j = 0; j < listaPadres.size(); j++) {
-					uaSel = listaPadres.get(j);
-
-					txids += uaSel.getId() + Catalogo.KEY_SEPARADOR;
-					ua = rqs.getUnidadData(uaSel.getIdUnidad(), idioma);
-					if (ua != null) {
-						txtexto += ua.getNombre() + " "; // espacio en blanco,
-															// que es para
-															// tokenizar
-					}
-				}
-
-				filter.setUo_id((txids.length() == 1) ? null : txids);
-				trafilter.setUo_text((txtexto.length() == 1) ? null : txtexto);
-
-				// Materias. se identifican por las que hay en las fichas a
-				// traves de su url
-				txids = Catalogo.KEY_SEPARADOR;
-				txtexto = " "; // espacio en blanco, que es para tokenizar
-
-				filter.setMateria_id((txids.length() == 1) ? null : txids);
-				trafilter.setMateria_text((txtexto.length() == 1) ? null : txtexto);
-
-				filter.addTraduccion(idioma, trafilter);
-			}
-
-		} catch (HibernateException he) {
-			throw new EJBException(he);
-		} catch (PluginException e) {
-			throw new EJBException(e);
-		} catch (DelegateException e) {
-			throw new EJBException(e);
-		} finally {
-			this.close(session);
-		}
-
-		return filter;
-	}
-
-	private void indexBorraMicrosite(Long idsite) {
-
-		try {
-			DelegateUtil.getIndexerDelegate().desindexarMicrosite(idsite);
-		} catch (DelegateException ex) {
-			throw new EJBException(ex);
-		}
-	}
-
+	
 	/**
 	 * Metodo que genera una clave única.
 	 * 
@@ -1474,4 +1385,160 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		return retorno;
 	}
 	
+	/**
+	 * Método para indexar según la id y la categoria. 
+	 * @param solrIndexer
+	 * @param idElemento
+	 * @param categoria
+	 * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+	 */
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
+		log.debug("MicrositeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
+		
+		try {
+			OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
+			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			
+			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
+			final Microsite micro = obtenerMicrosite(idElemento);
+			final Archivo archivo = archi.obtenerArchivo(idArchivo);
+			boolean isIndexable = this.isIndexable(archivo);
+			if (!isIndexable) {
+				return new SolrPendienteResultado(true, "No se puede indexar");
+			}
+			
+			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
+			final IndexFile indexFile = new IndexFile();
+			indexFile.setCategoria(categoria);
+			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
+			indexFile.setElementoId(idElemento.toString());
+			
+			//Iteramos las traducciones
+			final MultilangLiteral titulo = new MultilangLiteral();
+			final MultilangLiteral descripcion = new MultilangLiteral();
+			final MultilangLiteral urls = new MultilangLiteral();
+			
+			final MultilangLiteral searchTextOptional = new MultilangLiteral();
+			final List<EnumIdiomas> idiomas = new ArrayList<EnumIdiomas>();
+
+
+			String[] nombreArc = archivo.getNombre().split("\\."); 
+			        
+			final MultilangLiteral extension = new MultilangLiteral();
+		
+		
+			//Recorremos las traducciones
+			for (String keyIdioma : micro.getTraducciones().keySet()) {
+				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
+				
+				final TraduccionMicrosite traduccion = (TraduccionMicrosite) micro.getTraduccion(keyIdioma);
+		    	
+				if (traduccion != null && enumIdioma != null) {
+					//Anyadimos idioma al enumerado.
+					idiomas.add(enumIdioma);
+					
+					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
+					titulo.addIdioma(enumIdioma, nombreArc[0]);
+			    	descripcion.addIdioma(enumIdioma, archivo.getNombre());
+			    	
+			    	extension.addIdioma(enumIdioma, nombreArc[1]);
+
+			    	//StringBuffer que tendrá el contenido a agregar en textOptional
+			    	final StringBuffer textoOptional = new StringBuffer();	
+			    	
+					
+					Collection<UnidadListData> unidades = op.getUnidadesHijas(String.valueOf(micro.getIdUA()),keyIdioma);
+					for(UnidadListData ua : unidades) {
+						textoOptional.append(" ");
+				    	textoOptional.append(ua.getNombre());	
+					}
+					
+					textoOptional.append(" ");
+					UnidadData unidadData = op.getUnidadData(String.valueOf(micro.getIdUA()), keyIdioma);
+			    	textoOptional.append(unidadData.getNombre());	
+									
+			    	searchTextOptional.addIdioma(enumIdioma, solrIndexer.htmlToText(textoOptional.toString()));
+			    	
+
+			    	//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
+			    	if (micro.getVersio().equals("v5")) {
+			    		urls.addIdioma(enumIdioma, "/"+ micro.getUri()  + "/f/" + idArchivo);	    		
+			    	} else {
+			    		urls.addIdioma(enumIdioma, "/sacmicrofront/archivopub.do?ctrl=MCRST"+micro.getId()+ "ZI" +idArchivo +"&id=" + idArchivo);
+			    	}
+			    	
+			    	
+				}
+			}
+			
+			//Seteamos datos multidioma.
+			indexFile.setTitulo(titulo);
+			indexFile.setDescripcion(descripcion);
+			indexFile.setUrl(urls);
+
+			indexFile.setSearchTextOptional(searchTextOptional);
+			indexFile.setIdioma(EnumIdiomas.fromString(micro.getIdi()));
+			
+			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
+
+			indexFile.setExtension(extension);
+			
+			
+			if (String.valueOf(micro.getIdUA()) != null){				
+				List<PathUO> uos = new ArrayList<PathUO>();
+				PathUO uo = new PathUO();
+				List<String> path = new ArrayList<String>();
+				path.add(String.valueOf(micro.getIdUA()));
+				uo.setPath(path);
+				uos.add(uo);
+				indexFile.setUos(uos);
+			}
+			
+			indexFile.setMicrositeId(micro.getId().toString());
+			indexFile.setInterno(!micro.getRestringido().equals("N") ? true : false);
+				
+			solrIndexer.indexarFichero(indexFile);
+			
+
+			return new SolrPendienteResultado(true);
+		} catch(Exception exception) {
+			log.error("Error en micrositefacade intentando indexar.", exception);
+			return new SolrPendienteResultado(false, exception.getMessage());
+		}
+	}
+
+	private boolean isIndexable(Archivo archivo) throws DelegateException, IOException {
+		boolean indexable = true;
+		ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+		byte[] contenido = archi.obtenerContenidoFichero(archivo);
+		
+		if (contenido == null || contenido.length == 0 ) {
+			indexable = false;
+		}
+
+		return indexable;
+	}
+	
+	/**
+	 * Obtiene lista de microsites para una Unidad Administrativa
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<?> obtenerMicrositesbyUA(String key) {
+
+		Session session = this.getSession();
+		try {
+			String hql = "select mic" + " from Microsite mic" + " where mic.unidadAdministrativa = '" + key + "'";
+			Query query = session.createQuery(hql);
+			 List list = query.list();
+			 return list;
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
 }

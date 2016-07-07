@@ -279,7 +279,7 @@ public class Bdlistanoticias extends Bdbase  {
 
 
 	public void buscarNoticiasPorCampos(String txttipo, String txtsearch, NoticiaServiceItf noticiasService) throws Exception, DelegateException {
-		//listado procedente de la busqueda de lucene
+		//listado procedente de la busqueda de solr
 		busqueda = true;
 		
 		recogetiponoticia();
@@ -289,7 +289,7 @@ public class Bdlistanoticias extends Bdbase  {
 		listanoticias = noticiasService.buscarElementos(paramsBuscador);
 		
 		
-		//busqueda por lucene. Pendiente de activar
+		//busqueda por solr. Pendiente de activar
 		//listanoticias=noticiadel.buscarElementosLuc(microsite.getId().toString(),idioma,txttipo, txtsearch, true);
 		parametros = noticiasService.getParametros();
 	}

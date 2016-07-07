@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.upload.FormFile;
 
 import es.caib.gusite.microback.action.BaseAction;
@@ -62,7 +62,10 @@ public class docsEditaAction extends BaseAction
 			if (f.get("archi") != null) {
 				FormFile ff1 = (FormFile)f.get("archi");
 				if (archivoValido(ff1))
-					bdArchi.grabarArchivo(populateArchivo(archi, ff1, ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag));
+					bdArchi.grabarArchivoIndexar(populateArchivo(archi, ff1, 
+							((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag),pag,
+							((Microsite)request.getSession().getAttribute("MVS_microsite")).getId());
+					//bdArchi.grabarArchivo(populateArchivo(archi, ff1, ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag));
 			}
 
 		}
@@ -70,9 +73,12 @@ public class docsEditaAction extends BaseAction
 		if (operacion.equals("crear")) {
 
 			if (f.get("archi") != null) {
-				FormFile ff1 = (FormFile)f.get("archi");
+				FormFile ff1 = (FormFile)f.get("archi");				
+
 				if (archivoValido(ff1))
-					bdArchi.insertarArchivo(populateArchivo(null, ff1, ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag));
+					bdArchi.insertarArchivoIndexar(populateArchivo(null, ff1, 
+							((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag),pag,((Microsite)request.getSession().getAttribute("MVS_microsite")).getId());
+					//bdArchi.insertarArchivo(populateArchivo(null, ff1, ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(), pag));
 			}
 		}
 
@@ -83,7 +89,8 @@ public class docsEditaAction extends BaseAction
 
 			for (int i = 0; i < selecs.length; i++) {
 				id = new Long(selecs[i]);
-				bdArchi.borrarArchivo(id);
+				bdArchi.borrarArchivoDesindexar(id,((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(),pag);
+//				bdArchi.borrarArchivo(id);
 			}
 
 		}

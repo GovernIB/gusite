@@ -54,7 +54,7 @@ gus:decorator="layout">
 
 					<div>
 
-						<p th:if="${MVS_listado_buscador.saltos}==null">
+						<p>
 
 							<div id="resultat" class="barra-resultados">
 
@@ -62,115 +62,26 @@ gus:decorator="layout">
 									<p th:utext="#{cercar.encontrados} + '  ' ">Trobat/s </p>
 
 
-									<strong th:utext="${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' '" class="actual">
+									<strong th:utext=" ' ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' '" class="actual">
 										0 resultat/s en
 									</strong>
 
-									<p th:utext= "  ${MVS_listado_buscador.duracionBusqueda} + ' ' + #{cercar.resultados.para} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}
+									<p th:utext= "  ${MVS_listado_buscador.consultaOriginal}
 									+'\'\''  ">
-									3 mil·lisegons per al terme "busqued"
+									
 								</p>
 							</p>
 						</div>
 					</p>
 
-					<p th:if="${MVS_listado_buscador.saltos}!=null">
-
-						<div id="noresultat" class="barra-resultados-sinResultado">
-
-							<span class="cruz" id="imagenCruz"/>
-
-							<strong th:text="#{cercar.no.resultados}" class="actual">
-								no va produir cap resultat
-							</strong>
-						</div>
-					</p>
-				</div>
-
 				
-
-				<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
-				th:remove="tag">
-
-			</div>
-					<!-- contenido antiguo
-					<p th:if="${MVS_listado_buscador.saltos}!=null">
-						<i th:utext="#{cercar.primer.intento}">S`ha combinat tot el
-							text per a obtenir algun resultat</i>
-					</p>
-				-->
-				<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
-					<!--CUANDO LA BUSQUEDA ES IDENTICO-->
-					
-					<a href="cercar.html"
-					th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
-					th:text="${MVS_listado_buscador.consultaSugerida}">Listado
-					buscador Consulta sugerida</a>
-
-					<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}">
-						<input type="hidden" name="cerca"
-						th:value="${MVS_listado_buscador.consultaSugerida}" />
-					</form>
 				</div>
 
-				<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
-					<ul class="resultatsRecercaInteligent">
-
-						<!--cada resultado-->
-						<li th:each="resultado : ${MVS_listado_buscador.lista}">
-							<p id="tituloResultado">
-								<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>
-							</p> 
-
-							<!--<span th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> -->
-							<!--<span th:text=" ${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site} ">Site:</span>-->
-							<span class="detall"
-							th:text="${resultado.descripcion}">Descripcion</span>
-							<br/>
-							<br/>
-						</li>
-					</ul>
-				</div>
+			
 				<br/>
 			</div>
 
-			<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
-
-				<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
-				th:remove="tag">
-				
-						<!--<span style="font-size: 2; color: #ff0000"
-						th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;-->
-						<a href="cercar.html"	
-						th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
-						th:text="${MVS_listado_buscador.consultaSugerida}">Listado
-						buscador Consulta sugerida</a>
-
-						<ul class="resultatsRecercaInteligent">
-
-							<!--cada resultado-->
-
-							<span style="font-size: 2; color: #ff0000"
-							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
-
-							
-
-							<li th:each="resultado : ${MVS_listado_buscador.lista}">
-
-								<p  class="probables"><span class="span-separador"/><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> 
-								</p>
-
-							</li>	
-						</ul>
-
-						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" >
-							<input type="hidden" name="cerca"
-							th:value="${MVS_listado_buscador.consultaSugerida}" />
-						</form>
-
-
-					</div>
-				</div>
+			
 			</div>
 		</div>
 		<!-- fin informacio -->

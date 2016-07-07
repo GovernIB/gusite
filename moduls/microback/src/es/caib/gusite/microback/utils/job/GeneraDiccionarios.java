@@ -9,7 +9,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+
 
 /**
  * Job que realiza el proceso diario de generar el diccionario para el "quiso decir"
@@ -32,12 +32,13 @@ public class GeneraDiccionarios implements Job {
 				// Regeneramos los diccionarios
 				log.info("Inicio CRON confeccion de diccionarios");
 				
-				IndexerDelegate ind = DelegateUtil.getIndexerDelegate();
-				List<?> langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
+				//TODO HABRÁ QUE REENFOCAR COMO COMPORTARNOS CON LOS JOBS.
+				//IndexerDelegate ind = DelegateUtil.getIndexerDelegate();
+				//List<?> langs = DelegateUtil.getIdiomaDelegate().listarLenguajes();
 
-				for (int i = 0; i < langs.size(); i++) {
-					ind.confeccionaDiccionario("" + langs.get(i));
-				}
+				//for (int i = 0; i < langs.size(); i++) {
+				//	ind.confeccionaDiccionario("" + langs.get(i));
+				//}
 				
 				log.info("Fin CRON confección de diccionarios");
 				

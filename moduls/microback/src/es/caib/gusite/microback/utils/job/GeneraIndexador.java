@@ -12,7 +12,6 @@ import org.quartz.JobExecutionException;
 
 import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 
 /**
@@ -48,14 +47,16 @@ public class GeneraIndexador implements Job {
 						microsites.put(tipo.getIdmicrosite(), tipo.getIdmicrosite());
 				}
 
+				//TODO
+				//ESTE SERIA EL JOB QUE ARRANCARÍA SOLR.
 				// una vez tenemos la lista de microsites a indexar... al ataqueerrrr
-				IndexerDelegate ind = DelegateUtil.getIndexerDelegate();
+				//IndexerDelegate ind = DelegateUtil.getIndexerDelegate();
 				
-				Enumeration<Long> enumkeys = microsites.keys();
-				while (enumkeys.hasMoreElements()) {
-					Long idsite = (Long) enumkeys.nextElement();
-					ind.reindexarMicrosite(idsite);
-				}
+				//Enumeration<Long> enumkeys = microsites.keys();
+				//while (enumkeys.hasMoreElements()) {
+			//		Long idsite = (Long) enumkeys.nextElement();
+			//		ind.reindexarMicrosite(idsite);
+			//	}
 
 				log.info("Fin CRON indexacion microsites");
 				

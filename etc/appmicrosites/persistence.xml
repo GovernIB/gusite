@@ -33,6 +33,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
 		<class>es.caib.gusite.micromodel.Pregunta</class>
 		<class>es.caib.gusite.micromodel.Respuesta</class>
 		<class>es.caib.gusite.micromodel.RespuestaDato</class>
+		<class>es.caib.gusite.micromodel.SolrPendiente</class>
 		<class>es.caib.gusite.micromodel.Temafaq</class>
 		<class>es.caib.gusite.micromodel.Tipo</class>
 		<class>es.caib.gusite.micromodel.Tiposervicio</class>

@@ -224,12 +224,14 @@
 					<li<%=(j.intValue()==0?" class='selec'":"")%>>
 						<a href="#" onclick="mostrarForm(this);">
 						<bean:message name="lang" />						
+						
 						<%
+						
 						Accesibilidad acceLang = (Accesibilidad)request.getAttribute("MVS_w3c_" + j);											
 						if (acceLang!=null) out.println("<b><i>(amb errors)</i></b>");
 						%>							
 						</a>			
-					</li>
+					</li> 
         		</logic:iterate>
 			</ul>    
 
@@ -262,7 +264,9 @@
 				<table id="tinymceEditor<%=i%>" cellpadding="0" cellspacing="0" class="tablaEdicio">
 					<tr>
 						<td class="etiqueta"><bean:message key="conte.textoalfa" />
-						<p><button type="button" title='<bean:message key="conte.visualizaalfa"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=ca&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=alfa&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizaalfa"/>' /></button></p>
+						<bean:define id="idis" name="es.caib.gusite.microback.LANGS_KEY"/>
+		                <% String codigoIdioma = ((java.util.List)idis).get(i).toString(); %>						                         
+						<p><button type="button" title='<bean:message key="conte.visualizaalfa"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=alfa&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizaalfa"/>' /></button></p>
 						<p>
 				<%
 					Accesibilidad acce = (Accesibilidad)request.getAttribute("MVS_w3c_" + i);				
@@ -313,7 +317,7 @@
 								<table id="mceTextoBeta<%=i%>">
 								<tr>
 									<td class="etiqueta"><bean:message key="conte.textobeta" />:
-									<p><button type="button" title='<bean:message key="conte.visualizabeta"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=ca&idsite=<bean:write name="MVS_microsite" property="id"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=beta&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizabeta"/>' /></button></p>
+									<p><button type="button" title='<bean:message key="conte.visualizabeta"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&idsite=<bean:write name="MVS_microsite" property="id"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=beta&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizabeta"/>' /></button></p>
 									</td>
 									<td>
 									<html:textarea property="txbeta" name="traducciones" rows="5" cols="50" indexed="true"   style="width:700px; height:300px;" />
@@ -487,7 +491,7 @@ var mensa3='<bean:message key="conte.nuevoarchimensa"/>';
 			tinyMCE.triggerSave(); 
 		}
 	}
-	
+
 	// Copia ALFA en BETA
 	function copia (idioma) {
 	var txtalfa;

@@ -1,6 +1,7 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,25 +10,34 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
-import org.apache.lucene.store.Directory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import es.caib.gusite.lucene.analysis.Analizador;
-import es.caib.gusite.lucene.model.Catalogo;
-import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.Idioma;
-import es.caib.gusite.micromodel.IndexObject;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionFaq;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micromodel.TraduccionTemafaq;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
+import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
+import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
+import es.caib.solr.api.SolrIndexer;
+import es.caib.solr.api.model.IndexData;
+import es.caib.solr.api.model.MultilangLiteral;
+import es.caib.solr.api.model.PathUO;
+import es.caib.solr.api.model.types.EnumAplicacionId;
+import es.caib.solr.api.model.types.EnumCategoria;
+import es.caib.solr.api.model.types.EnumIdiomas;
 
 /**
  * SessionBean para consultar Faq.
@@ -150,6 +160,9 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(faq, op);
 
+			//Indexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_FAQ.toString(), faq.getId(), null, 1L);
 			return faq.getId();
 
 		} catch (HibernateException he) {
@@ -253,6 +266,10 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			this.close(session);
 
 			this.grabarAuditoria(faq, Auditoria.ELIMINAR);
+			
+			//DesIndexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_FAQ.toString(), faq.getId(), null, 0L);
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
@@ -308,109 +325,204 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 	}
 
 	/**
-	 * Añade la faq al indice en todos los idiomas
-	 * 
+	 * Método para indexar según la id y la categoria. 
+	 * @param solrIndexer
+	 * @param idElemento
+	 * @param categoria
 	 * @ejb.interface-method
-	 * @ejb.permission unchecked="true"
+     * @ejb.permission unchecked="true"
 	 */
-	public void indexInsertaFaqs(Long idsite, ModelFilterObject filter) {
-
-		IndexObject io = new IndexObject();
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
+		log.debug("FaqfacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
+		
 		try {
-			if (filter == null) {
-				filter = DelegateUtil.getMicrositeDelegate()
-						.obtenerFilterObject(idsite);
+			OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
+			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
+			
+			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
+			final Faq faq = obtenerFaq(idElemento);
+			boolean isIndexable = this.isIndexable(faq);
+			if (!isIndexable) {
+				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
-
-			if (filter != null && filter.getBuscador().equals("N")) {
-				return;
-			}
-
-			IndexerDelegate indexerDelegate = DelegateUtil.getIndexerDelegate();
-			for (int i = 0; i < this.langs.size(); i++) {
-				String idioma = (String) this.langs.get(i);
-				io = new IndexObject();
-
-				// Configuración del writer
-				Directory directory = indexerDelegate
-						.getHibernateDirectory(idioma);
-				IndexWriter writer = new IndexWriter(directory,
-						Analizador.getAnalizador(idioma), false,
-						MaxFieldLength.UNLIMITED);
-				writer.setMergeFactor(20);
-				writer.setMaxMergeDocs(Integer.MAX_VALUE);
-
-				try {
-					io.setId(Catalogo.SRVC_MICRO_FAQS + "." + idsite);
-					io.setClasificacion(Catalogo.SRVC_MICRO_FAQS);
-
-					io.setMicro(filter.getMicrosite_id());
-					io.setRestringido(filter.getRestringido());
-					io.setUo(filter.getUo_id());
-					io.setMateria(filter.getMateria_id());
-					io.setSeccion(filter.getSeccion_id());
-					io.setFamilia(filter.getFamilia_id());
-
-					io.setTitulo("Faqs");
-					io.setUrl("/sacmicrofront/faqs.do?lang=" + idioma
-							+ "&idsite=" + idsite.toString());
-					io.setCaducidad("");
-					io.setPublicacion("");
-					io.setDescripcion("");
-					io.setTituloserviciomain(filter.getTraduccion(idioma)
-							.getMaintitle());
-
-					Iterator<?> iter = this.listarFaqs().iterator();
-					while (iter.hasNext()) {
-						Faq faq = (Faq) iter.next();
-						TraduccionFaq trad = ((TraduccionFaq) faq
-								.getTraduccion(idioma));
-						if (trad != null) {
-							io.addTextLine(trad.getPregunta());
-							io.addTextLine(trad.getRespuesta());
-						}
+			
+			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
+			final IndexData indexData = new IndexData();
+			indexData.setCategoria(categoria);
+			indexData.setAplicacionId(EnumAplicacionId.GUSITE);
+			indexData.setElementoId(idElemento.toString());
+			
+			indexData.setFechaPublicacion(faq.getFecha());
+			
+			//Iteramos las traducciones
+			final MultilangLiteral titulo = new MultilangLiteral();
+			final MultilangLiteral descripcion = new MultilangLiteral();
+			final MultilangLiteral urls = new MultilangLiteral();
+			final MultilangLiteral searchText = new MultilangLiteral();
+			final MultilangLiteral searchTextOptional = new MultilangLiteral();
+			final List<EnumIdiomas> idiomas = new ArrayList<EnumIdiomas>();
+			
+			Microsite micro = micrositedel.obtenerMicrosite(faq.getIdmicrosite());
+			
+			
+			//Recorremos las traducciones
+			for (String keyIdioma : faq.getTraducciones().keySet()) {
+				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
+				final TraduccionFaq traduccion = (TraduccionFaq) faq.getTraduccion(keyIdioma);
+		    	
+				if (traduccion != null && enumIdioma != null) {
+					
+					if (traduccion.getPregunta() == null || traduccion.getPregunta().isEmpty()) {
+						continue;
 					}
+					
+					//Anyadimos idioma al enumerado.
+					idiomas.add(enumIdioma);
+					
+					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
+					titulo.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
+					
+			    	//descripcion.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
+			    	//Tema traducción en el idioma que estamos
+			    	TraduccionTemafaq tradTema = (TraduccionTemafaq) faq.getTema().getTraduccion(keyIdioma);
+					String search=solrIndexer.htmlToText((traduccion.getPregunta()==null?"":traduccion.getPregunta())  
+			    			+ " " + (traduccion.getRespuesta()==null?"":traduccion.getRespuesta()) 
+			    			+ " " + (tradTema.getNombre()==null?"":tradTema.getNombre()));
+			    	searchText.addIdioma(enumIdioma, solrIndexer.htmlToText(search));
 
-					io.addTextopcionalLine(filter.getTraduccion(idioma)
-							.getMateria_text());
-					io.addTextopcionalLine(filter.getTraduccion(idioma)
-							.getSeccion_text());
-					io.addTextopcionalLine(filter.getTraduccion(idioma)
-							.getUo_text());
-
-					if (io.getText().length() > 0) {
-						indexerDelegate.insertaObjeto(io, idioma, writer);
+			    	//StringBuffer que tendrá el contenido a agregar en textOptional
+			    	final StringBuffer textoOptional = new StringBuffer();	
+			    	
+					
+					Collection<UnidadListData> unidades = op.getUnidadesHijas(String.valueOf(micro.getIdUA()),keyIdioma);
+					for(UnidadListData ua : unidades) {
+						textoOptional.append(" ");
+				    	textoOptional.append(ua.getNombre());	
 					}
-				} finally {
-					writer.close();
-					directory.close();
+					
+					textoOptional.append(" ");
+					UnidadData unidadData = op.getUnidadData(String.valueOf(micro.getIdUA()), keyIdioma);
+			    	textoOptional.append(unidadData.getNombre());
+				
+			    	searchTextOptional.addIdioma(enumIdioma, textoOptional.toString());
+			    	
+
+			    	//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
+			    	if (micro.getVersio().equals("v5")) {
+			    		urls.addIdioma(enumIdioma, "/"+ micro.getUri() + "/" + keyIdioma + "/faq/");	    		
+			    	} else {
+			    		urls.addIdioma(enumIdioma, "/sacmicrofront/faqs.do?lang="+keyIdioma +"&idsite="+micro.getId() 
+			    				+"&cont="+faq.getId());
+			    	}
+			    	
+			    	
 				}
 			}
+			
+			//Seteamos datos multidioma.
+			indexData.setTitulo(titulo);
+			indexData.setDescripcion(descripcion);
+			indexData.setUrl(urls);
+			indexData.setSearchText(searchText);
+			indexData.setSearchTextOptional(searchTextOptional);
+			indexData.setIdiomas(idiomas);
+			
+			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
+			
+			//Recorremos las traducciones del microsite padre
+			final MultilangLiteral tituloPadre = new MultilangLiteral();
+			final MultilangLiteral urlPadre = new MultilangLiteral();
+			
+			for (String keyIdioma : micro.getTraducciones().keySet()) {
+				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
+				final TraduccionMicrosite traduccion = (TraduccionMicrosite) micro.getTraduccion(keyIdioma);
+		    	
+				if (traduccion != null && enumIdioma != null) {
+					
+					//Seteamos los primeros campos multiidiomas: Titulo.
+					tituloPadre.addIdioma(enumIdioma, traduccion.getTitulo());
+					
+					//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
+			    	if (micro.getVersio().equals("v5")) {
+			    		urlPadre.addIdioma(enumIdioma, "/"+ micro.getUri() + "/" + keyIdioma );	    		
+			    	} else {
+			    		urlPadre.addIdioma(enumIdioma, "/sacmicrofront/index.do?lang="+keyIdioma +"&idsite="+ micro.getId() 
+			    				+"&cont="+faq.getId());
+			    	}
+				}
+					
+			}
+			indexData.setDescripcionPadre(tituloPadre);
+			indexData.setUrlPadre(urlPadre);
+			
+			if (String.valueOf(micro.getIdUA()) != null){				
+				List<PathUO> uos = new ArrayList<PathUO>();
+				PathUO uo = new PathUO();
+				List<String> path = new ArrayList<String>();
+				path.add(String.valueOf(micro.getIdUA()));
+				uo.setPath(path);
+				uos.add(uo);
+				indexData.setUos(uos); 
+			}
+			
+			indexData.setMicrositeId(micro.getId().toString());
+			indexData.setInterno(!micro.getRestringido().equals("N") ? true : false);
+				
+				
+			solrIndexer.indexarContenido(indexData);
+			
+			
+			
+			
+			
 
-		} catch (DelegateException ex) {
-			throw new EJBException(ex);
-		} catch (Exception e) {
-			log.warn("[indexInsertaFaqs: ] No se ha podido indexar elemento. ");
+			return new SolrPendienteResultado(true);
+		} catch(Exception exception) {
+			log.error("Error en contenidofacade intentando indexar.", exception);
+			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}
-
+	
 	/**
-	 * Elimina la faq en el indice en todos los idiomas
-	 * 
+	 * Comprueba si es indexable una faq.
+	 * @return
+	 */
+	private boolean isIndexable(final Faq faq) {
+		boolean indexable = true;
+		if (!faq.getVisible().equals("S") ) {
+			indexable = false;
+		}
+		
+		return indexable;
+	}
+	
+	/**
+	 * Obtiene los faqs de un microsite
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void indexBorraFaqs(Long idsite) {
+	public List<Faq> obtenerFaqsByMicrositeId(Long idMicrosite) {
+
+		Session session = this.getSession();		
 
 		try {
-			for (int i = 0; i < this.langs.size(); i++) {
-				DelegateUtil.getIndexerDelegate().borrarObjeto(
-						Catalogo.SRVC_MICRO_FAQS + "." + idsite,
-						"" + this.langs.get(i));
-			}
-		} catch (DelegateException ex) {
-			throw new EJBException(ex);
-		}
-	}
+			
+			Query query = session.createQuery("from Faq f where f.idmicrosite =" + idMicrosite.toString());
+			
+			List<Faq> lista = query.list();
+									
+			return lista;
 
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		}  finally {
+			
+			this.close(session);
+			
+		}
+	
+
+    }
 }

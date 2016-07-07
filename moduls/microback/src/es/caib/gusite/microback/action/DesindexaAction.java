@@ -12,8 +12,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 
 /**
@@ -41,7 +39,7 @@ public class DesindexaAction extends BaseAction  {
 			return mapping.findForward("info");
 		}	
 		
-		IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+		//IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
 		
 		Microsite microsite = (Microsite) request.getSession().getAttribute("MVS_microsite");
 		if (microsite.getId() != null) {
@@ -50,7 +48,7 @@ public class DesindexaAction extends BaseAction  {
 					+ request.getSession().getAttribute("username") + "]");
 			Long site = new Long("" + microsite.getId());
 			
-			indexo.desindexarMicrosite(site);
+			//indexo.desindexarMicrosite(site);
 			
 			MicroLog.addLog("Fi DesIndexació Microsite: [" + microsite.getId()
 					+ "] , Usuari: ["

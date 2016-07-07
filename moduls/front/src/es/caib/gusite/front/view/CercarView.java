@@ -1,6 +1,7 @@
 package es.caib.gusite.front.view;
 
-import es.caib.gusite.lucene.model.IndexResultados;
+import es.caib.gusite.solrutiles.solr.model.IndexResultados;
+
 
 /**
  * Resultado de una busqueda realizada

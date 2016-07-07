@@ -41,22 +41,11 @@
 	<logic:present name="listado" property="lista">
 		
 		<p>
-		<strong><bean:message key="buscar.encontrados" /> <bean:write name="listado" property="numEncontrados"/> <bean:message key="buscar.resultados.en" /> <bean:write name="listado" property="duracionBusqueda"/> 
-		<bean:message key="buscar.resultados.para" /> "<bean:write name="listado" property="consultaOriginal"/>"</strong>
+		<strong><bean:message key="buscar.encontrados" /> <bean:write name="listado" property="numEncontrados"/> <bean:message key="buscar.resultados.en" />  
+		"<bean:write name="listado" property="consultaOriginal"/>"</strong>
 		 </p>
 		
-		<logic:notEqual name="listado" property="saltos" value="">
-			<p><i><bean:message key="buscar.primer.intento" /></i></p>
-		</logic:notEqual>
-		
-		<logic:notEqual name="listado" property="consultaSugerida" value="">
-			<span style="font-size:2; color:#ff0000"><bean:message key="buscar.quisodecir" />:</span>&nbsp;<a href="javascript:document.buscador.submit();"><bean:write name="listado" property="consultaSugerida"/><a>
-			<form name="buscador" action="busca.do">
-				<input type=hidden name="words" value="<bean:write name="listado" property="consultaSugerida"/>" >
-				<input type=hidden name="micro" value="<bean:write name="micro"/>" >
-				<input type=hidden name="idi" value="<bean:write name="idi"/>" >
-			</form>
-		</logic:notEqual>	
+
 		
 		<bean:define id="docus" name="listado" property="lista"/>
 
@@ -65,7 +54,6 @@
 			<ul class="resultatsRecercaInteligent">
 				<li>
 					<a href="<bean:write name="i" property="url"/>"><bean:write name="i" property="titulo"/></a> 
-					<span>(<bean:write name="i" property="score"/>%)</span> 
 					<br/>
 					<span><bean:write name="i" property="id" filter="yes"/> Site: <bean:write name="i" property="site"/></span> 
 					<span class="detall"><bean:write name="i" property="descripcion" filter="yes"/></span>
@@ -78,23 +66,7 @@
 		<strong><a href="indexador.do"><bean:message key="buscar.volver" /></a></strong>
    	</logic:present>
     	
-    <logic:notPresent name="listado" property="lista">
-
-		<logic:notEqual name="listado" property="consultaSugerida" value="">
-			<span style="font-size:2; color:#ff0000"><bean:message key="buscar.quisodecir" />:</span>&nbsp;<a href="javascript:document.buscador.submit();"><bean:write name="listado" property="consultaSugerida"/><a>
-
-			<form name="buscador" action="busca.do">
-				<input type=hidden name="words" value="<bean:write name="listado" property="consultaSugerida"/>" >
-				<input type=hidden name="micro" value="<bean:write name="micro"/>" >
-				<input type=hidden name="idi" value="<bean:write name="idi"/>" >
-			</form>
-		</logic:notEqual>
-
-		<logic:equal name="listado" property="consultaSugerida" value="">
-			<bean:message key="buscar.subusqueda" /> - <strong><bean:write name="listado" property="consultaOriginal"/></strong> - <bean:message key="buscar.no.resultados" />
-		</logic:equal>
-    	    	    	
-    </logic:notPresent>
+   
 
 	<logic:present name="diccionario">
 		<bean:size id="tamano" name="diccionario"/>

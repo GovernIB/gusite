@@ -8,11 +8,13 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.intf.ArchivoFacade;
 import es.caib.gusite.micropersistence.intf.ArchivoFacadeHome;
 import es.caib.gusite.micropersistence.util.ArchivoFacadeUtil;
+import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Archivos.
@@ -159,36 +161,6 @@ public class ArchivoDelegate implements StatelessDelegate {
 		}
 	}
 
-	/**
-	 * Añade un archivo al indice en todos los idiomas
-	 * 
-	 * @param archi
-	 * @param filter
-	 * @throws DelegateException
-	 */
-	public void indexInsertaArchivo(Archivo archi, ModelFilterObject filter)
-			throws DelegateException {
-		try {
-			this.getFacade().indexInsertaArchivo(archi, filter);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-
-	/**
-	 * Elimina el archivo del indice en todos los idiomas
-	 * 
-	 * @param id
-	 *            Id del archivo
-	 * @throws DelegateException
-	 */
-	public void indexBorraArchivo(Long id) throws DelegateException {
-		try {
-			this.getFacade().indexBorraArchivo(id);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
 	
 	/**
 	 * Obtiene el contenido del fichero dependiente de si está en modo 
@@ -221,7 +193,116 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
 	
+	
+	/**
+	 * Obtiene los archivos de un microsite
+	 * @param idMicrosite
+	 * @throws DelegateException 
+	 */
+	public List<Archivo> obtenerArchivoByMicrositeId(Long idMicrosite) throws DelegateException
+	{
+		try {
+			return this.getFacade().obtenerArchivoByMicrositeId(idMicrosite);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+
+	
+
+	/**
+	 * Inserta un nuevo documento en la BD e indexa
+	 * 
+	 * @param archi
+	 * @param idContenido si está informado es archivo del documento
+	 * @param idMicrosite 
+	 * @return Id del documento
+	 * @throws DelegateException
+	 */
+	public Long insertarArchivoIndexar(Archivo archi, Long idContenido, Long idMicrosite) throws DelegateException {
+		try {
+			Long idArchivo = this.getFacade().insertarArchivo(archi);
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			Long idElemento = idMicrosite;
+			
+			String tipo = EnumCategoria.GUSITE_MICROSITE.toString();
+			
+			if (idContenido != null){
+				tipo = EnumCategoria.GUSITE_CONTENIDO.toString();
+				idElemento = idContenido;
+			}
+			
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, 1L);
+			
+			return idArchivo;
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+		
+	}
+	
+
+	/**
+	 * 
+	 * @param idArchivo
+	 * @param idMicrosite
+	 * @param idContenido
+	 * @throws DelegateException 
+	 */
+	public void borrarArchivoDesindexar(Long idArchivo, Long idMicrosite, Long idContenido) throws DelegateException {
+		try {
+			this.getFacade().borrarArchivo(idArchivo);
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			Long idElemento = idMicrosite;
+			
+			String tipo = EnumCategoria.GUSITE_MICROSITE.toString();
+			
+			if (idContenido != null){
+				tipo = EnumCategoria.GUSITE_CONTENIDO.toString();
+				idElemento = idContenido;
+			}
+			
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, 0L);
+			
+			
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+		
+	}
+	
+	/**
+	 * Crea o actualiza un archivo para indexar
+	 * 
+	 * @param archi
+	 * @return Long Id del archivo
+	 * @throws DelegateException
+	 */
+	public void grabarArchivoIndexar(Archivo archi, Long idContenido, Long idMicrosite) throws DelegateException {
+		try {
+			this.getFacade().grabarArchivo(archi);
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			Long idElemento = idMicrosite;
+			
+			String tipo = EnumCategoria.GUSITE_MICROSITE.toString();
+			
+			if (idContenido != null){
+				tipo = EnumCategoria.GUSITE_CONTENIDO.toString();
+				idElemento = idContenido;
+			}
+			
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, archi.getId(), 1L);
+			
+			
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+		
+	}
 	
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -246,4 +327,5 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
 }

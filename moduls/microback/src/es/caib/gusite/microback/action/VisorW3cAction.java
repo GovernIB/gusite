@@ -11,7 +11,6 @@ import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.extractor.taw.TawResultBean;
 import es.caib.gusite.extractor.tidy.TidyResultBean;
-import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.microback.utils.microtag.MicrositeParser;
 import es.caib.gusite.microback.utils.w3c.Testeador;
 import es.caib.gusite.micromodel.Accesibilidad;
@@ -26,6 +25,7 @@ import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.solrutiles.solr.model.Catalogo;
 
 /**
  * Action visor W3C de un microsite <P>
