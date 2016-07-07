@@ -53,7 +53,7 @@ Este código muestra el pie de página.
 								<!--/* #gusuri.traduccionEnlacePie(context,url, idiomaLista.key): la URL para la página en otro idioma) */-->
 								<a 	th:if="${idiomaLower}!=${idiomaLista.key}" 
 									href=""
-									th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+									th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador)}}"
 									th:utext="${idiomaLista.value}">- Castellano</a>
 						</span>
 					</span>

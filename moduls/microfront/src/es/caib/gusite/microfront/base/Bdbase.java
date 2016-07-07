@@ -205,9 +205,9 @@ public abstract class Bdbase {
 		if (microsite.getDomini() != null && microsite.getDomini().length() > 0) {
 			direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
 					.append(microsite.getDomini()).append(">").append(microsite.getDomini()).append("</a>");
-		} else if (!isEmpty(unidadData.getDominio())) {
+		} else if (!isEmpty(unidadData.getUrl())) {
 				direccion.append("<br />").append(rb.getString("WEB_ILL130")).append(" <a href=")
-						.append(unidadData.getDominio()).append(">").append(unidadData.getDominio()).append("</a>");
+						.append(unidadData.getUrl()).append(">").append(unidadData.getUrl()).append("</a>");
 		}
 
     	_request.setAttribute("direccion", direccion.toString());
@@ -684,16 +684,6 @@ public abstract class Bdbase {
 		      String paramValue = request.getParameter(paramName);
 		      if ((!paramName.equals(Microfront.PLANG)) && (!paramName.equals(Microfront.PSTAT)))
 		    	  url += paramName + "=" + paramValue + "&";
-		    }
-		    
-		    //#47 formar correctamente la url
-		    if(url != null && url.length()>0){
-		    	int tam = url.length();
-		    	char ultimo = url.charAt(tam-1);
-		    	if(ultimo =='&'){
-		    		url = url.substring(0, tam-1); //quitamos el último &
-		    	}
-		    	
 		    }
 		    request.setAttribute("MVS_seulet", url);
 	}

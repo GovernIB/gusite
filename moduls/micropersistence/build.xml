@@ -28,12 +28,11 @@
     <property name="doc" location="${output.dir}/doc"/>
     <property name="ejb.doc.api" location="${doc}/api/${modul}"/>
     <property name="ejb.product" location="${output.dir}/moduls"/>
-	
+
     <path id="ejb.class.path">
-    	
 	    <fileset dir="${ejb.product}">
-	    	<include name="solrutiles.jar"/>
-	    	<include name="plugins.jar" />
+	    	<include name="lucene.jar" />
+			<include name="plugins.jar" />
 	    	<include name="micromodel.jar"/>
 	    	<include name="utilities.jar"/>
 	    </fileset>
@@ -43,14 +42,12 @@
         	<include name="commons-io-1.3.2.jar"/>
         	<include name="commons-logging.jar"/>
             <include name="ejb-2_0.jar"/>
+        	<include name="lucene-core-3.6.2.jar"/>
+        	<include name="lucene-spellchecker-3.6.2.jar"/>
         	<include name="sac-api-client.jar"/>
-        	<include name="servlet-api.jar"/>        	
+        	<include name="servlet-api.jar"/>
         </fileset>
     	
-    	<fileset dir="${lib.dir}/solr">
-    	    <include name="solrapi.jar"/>
-    	</fileset>
-    		
     	<fileset dir="${lib.dir}/jboss">
     		<include name="hibernate-core.jar"/>
     		<include name="hibernate-annotations.jar"/>

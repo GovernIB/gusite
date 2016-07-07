@@ -4,10 +4,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Noticia;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 public interface NoticiaServiceItf {
 
@@ -94,7 +92,16 @@ public interface NoticiaServiceItf {
 	public List<?> buscarElementos(Map<?, ?> parametros, Map<?, ?> traduccion,
 			String idmicrosite, String idtipo, String idioma) throws Exception;
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
+	 * buscarElementosLuc(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, boolean)
+	 */
+	public List<?> buscarElementosLuc(String micro, String idi, String idlista,
+			String cadena, boolean sugerir) throws Exception;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -219,11 +226,25 @@ public interface NoticiaServiceItf {
 	 */
 	public boolean checkSite(Long site, Long id) throws Exception;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
+	 * indexInsertaNoticia(es.caib.gusite.micromodel.Noticia,
+	 * es.caib.gusite.lucene.model.ModelFilterObject)
+	 */
+	public void indexInsertaNoticia(Noticia noti, ModelFilterObject filter)
+			throws Exception;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#indexBorraNoticia
+	 * (java.lang.Long)
+	 */
+	public void indexBorraNoticia(Long id) throws Exception;
+
 	public List<String> listarAnyos() throws Exception;
-	
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) throws Exception;
-	
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
-			final EnumCategoria categoria, final Long idArchivo) throws Exception;
 
 }

@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 
+import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.noticiaForm;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
@@ -31,7 +32,6 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
-import es.caib.gusite.solrutiles.solr.model.Catalogo;
 
 /**
  * Action que edita las noticias (elementos de un listado) de un microsite <BR>

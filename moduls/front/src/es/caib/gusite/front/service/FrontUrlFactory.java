@@ -46,25 +46,17 @@ public class FrontUrlFactory {
 	protected static final String LANG_ES = "es";
 
 	protected static final String CONTEXT_KEY = "es.caib.gusite.context.front";
-	
-	public String traduccionEnlacePie(String context, String url, String idioma, String palabraBuscada, String tipo) {
+
+	public String traduccionEnlacePie(String context, String url, String idioma, String palabraBuscada) {
 
 		String urlTraducida = "";
 
 		String urlSeparada[] = url.substring(context.length()).split("/");
 
-		//#40 retornar url borrador si estamos en un borrador. añadir parámetro a traduccionEnlacePie.
-		boolean tipoInformado = StringUtils.isNotEmpty(tipo);
-		String paramBorrador = "";
-		String andParamBorrador = "";		
-		if(tipoInformado){
-			paramBorrador = tipo.equals("beta")?"?tipo=beta":(tipo.equals("alfa")?"?tipo=alfa":"");
-			andParamBorrador = tipo.equals("beta")?"&tipo=beta":(tipo.equals("alfa")?"&tipo=alfa":"");
-		}
 		//#657: urls de contenido sin /c 
 		if (urlSeparada.length == 3 && urlSeparada[2].length() > 2) {
 			//Es una url corta de contenido en el idioma por defecto
-			return "/" + urlSeparada[1] + "/" + idioma + "/" + urlSeparada[2] + "/" + paramBorrador;
+			return "/" + urlSeparada[1] + "/" + idioma + "/" + urlSeparada[2] + "/";
 		}
 
 		
@@ -139,10 +131,6 @@ public class FrontUrlFactory {
 			urlTraducida = urlTraducida + "/" + idioma + "/";
 		}
 
-		if(tipoInformado){
-			urlTraducida = urlTraducida + (urlTraducida.contains("?")?andParamBorrador: paramBorrador);
-		}
-		
 		return urlTraducida;
 	}
 

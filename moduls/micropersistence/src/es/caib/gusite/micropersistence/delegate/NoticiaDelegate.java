@@ -9,14 +9,11 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micromodel.Faq;
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micropersistence.intf.NoticiaFacade;
 import es.caib.gusite.micropersistence.intf.NoticiaFacadeHome;
 import es.caib.gusite.micropersistence.util.NoticiaFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Noticias.
@@ -203,7 +200,24 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 		}
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
+	 * buscarElementosLuc(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, boolean)
+	 */
+	@Override
+	public List<?> buscarElementosLuc(String micro, String idi, String idlista,
+			String cadena, boolean sugerir) throws DelegateException {
+		try {
+			return this.getFacade().buscarElementosLuc(micro, idi, idlista,
+					cadena, sugerir);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -426,6 +440,38 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
+	 * indexInsertaNoticia(es.caib.gusite.micromodel.Noticia,
+	 * es.caib.gusite.model.ModelFilterObject)
+	 */
+	@Override
+	public void indexInsertaNoticia(Noticia noti, ModelFilterObject filter)
+			throws DelegateException {
+		try {
+			this.getFacade().indexInsertaNoticia(noti, filter);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#indexBorraNoticia
+	 * (java.lang.Long)
+	 */
+	@Override
+	public void indexBorraNoticia(Long id) throws DelegateException {
+		try {
+			this.getFacade().indexBorraNoticia(id);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	@Override
 	public List<String> listarAnyos() throws DelegateException {
@@ -435,38 +481,6 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 			throw new DelegateException(e);
 		}
 	}
-	
-	@Override
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
-			throws DelegateException {
-		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-
-	@Override
-	public SolrPendienteResultado indexarSolrArchivo(SolrIndexer solrIndexer,
-			Long idElemento, EnumCategoria categoria, Long idArchivo)
-			throws Exception {
-		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria, idArchivo);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	public List<Noticia> obtenerNoticiasByMicrositeId(Long idMicrosite)
-			  throws DelegateException {
-		  try {
-			   return this.getFacade().obtenerNoticiasByMicrositeId(idMicrosite);
-		  } catch (RemoteException e) {
-			  throw new DelegateException(e);
-		  }
-			   
-	}
-
 
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -491,7 +505,4 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 			throw new DelegateException(e);
 		}
 	}
-
-
-	
 }

@@ -39,25 +39,55 @@ Resultados de una busqueda.
 				<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
 					<p>
 						<strong
-							th:utext="#{cercar.encontrados} + '  ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}+ '\'\''">
+							th:utext="#{cercar.encontrados} + ' ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' ' + ${MVS_listado_buscador.duracionBusqueda} + ' ' + #{cercar.resultados.para} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}+ '\'\''">
 							Trobat/s 0 resultat/s en 3 mil·lisegons per al terme "busqued"</strong>
 					</p>
-					
+					<p th:if="${MVS_listado_buscador.saltos}!=null">
+						<i th:utext="#{cercar.primer.intento}">S`ha combinat tot el
+							text per a obtenir algun resultat</i>
+					</p>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
+						<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ' : '">Potser va voler dir:</span>&nbsp; 
+							<a href="cercar.html"
+							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+							buscador Consulta sugerida</a>
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}">
+							<input type="hidden" name="cerca"
+								th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+					</div>
 					<ul class="resultatsRecercaInteligent">
-						<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>  <br /><span
-							th:text="${resultado.id} + ' ' ">Site:</span><span class="detall"
+						<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
+							th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <br /><span
+							th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
 							th:text="${resultado.descripcion}">Descripcion</span></li>
 					</ul>
 					<br/>
 				</div>
 				<div th:if="${MVS_listado_buscador.lista} ==null" th:remove="tag">
-					
-					<div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}!=''"
+						th:remove="tag">
+						<br />
+						<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
+						<a href="cercar.html"	
+							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+							buscador Consulta sugerida</a>
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" >
+							<input type="hidden" name="cerca"
+								th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+					</div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
+						th:remove="tag">
 						<div th:utext="#{cercar.subusqueda} + ' - '" th:remove="tag">La
 							seva recerca -</div>
 						<strong th:utext="${MVS_listado_buscador.consultaOriginal}">Consulta
 							original</strong>
-						<div th:utext="' - '+ #{cercar.no.resultados} " th:remove="tag">
+						<div th:utext="' - '+ #{cercar.no.resultados}" th:remove="tag">
 							- no va produir cap resultat</div>
 					</div>
 				</div>

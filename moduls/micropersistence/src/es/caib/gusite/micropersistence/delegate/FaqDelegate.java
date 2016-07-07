@@ -9,14 +9,11 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micromodel.Encuesta;
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micropersistence.intf.FaqFacade;
 import es.caib.gusite.micropersistence.intf.FaqFacadeHome;
 import es.caib.gusite.micropersistence.util.FaqFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular faq.
@@ -225,25 +222,22 @@ public class FaqDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
-	
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
+
+	public void indexInsertaFaqs(Long idsite, ModelFilterObject filter)
 			throws DelegateException {
 		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
+			this.getFacade().indexInsertaFaqs(idsite, filter);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	
-	public List<Faq> obtenerFaqsByMicrositeId(Long idMicrosite)
-		  throws DelegateException {
-	  try {
-		   return this.getFacade().obtenerFaqsByMicrositeId(idMicrosite);
-	  } catch (RemoteException e) {
-		  throw new DelegateException(e);
-	  }
-		   
+
+	public void indexBorraFaqs(Long idsite) throws DelegateException {
+		try {
+			this.getFacade().indexBorraFaqs(idsite);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
 	}
 
 	/* ========================================================= */

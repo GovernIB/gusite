@@ -95,13 +95,8 @@ public class microForm extends TraDynaActionForm {
             				errors.add("titulo", new ActionError("error.micro.titulo",Idioma.getIdiomaPorDefecto()));
             	    }
             		else{ 
-                			if (trad.getTitulo().length()==0 ){
-                				 String[] langChecked = (String[]) get("idiomas");
-                				for (int j=0;j<langChecked.length;j++){
-                					if ( lang.get(i).equals(langChecked[j])) {
-                					 errors.add("titulo", new ActionError("error.micro.idioma.no.defecto", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));		
-                					}
-                				}
+                			if (trad.getTitulo().length()==0 && (((String[])get("idiomas")).length >=i+1 && lang.get(i).equals(get("idiomas",i)))) {
+                				errors.add("titulo", new ActionError("error.micro.idioma.no.defecto", idiomaDelegate.obtenerIdioma("" + lang.get(i)).getNombre() ));
                     		} 
             	     }
             	}

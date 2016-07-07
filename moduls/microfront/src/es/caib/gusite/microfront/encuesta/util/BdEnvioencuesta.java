@@ -209,7 +209,6 @@ public class BdEnvioencuesta  extends Bdbase {
 			    upm.getId().setIdusuario(encu.grabarUsuarioEncuesta(usuario));
 			    	
 			    String idPreguntaAux = "";
-			    String anterior = "";
 			    while (paramNames.hasMoreElements())  {
 				      // Campos fijos que vienen del request: lang,idsite,cont,btnanar,enccomp. Evidentemente, no hay que tratarlos
 			    	  String paramName = (String)paramNames.nextElement();
@@ -242,10 +241,11 @@ public class BdEnvioencuesta  extends Bdbase {
 				    			if ((!paramValue.isEmpty()) && (paramValue!=null) && (!paramValue.equals("null"))){				    				
 				    				resdatdel.grabarRespuestaDato(resdat);
 				    				
-				    				if(anterior.charAt(0) != 'R'){		//El anterior no es radio(mono) asociado a textarea de usuario										
-				    					idPreguntaAux = str[1];
-				    					encuestadel.sumarRespuesta(new Long(respuesta));
+				    				if(idPreguntaAux.compareTo(idpregunta) != 0){										
+										encuestadel.sumarPregunta(new Long(idpregunta));
+										idPreguntaAux = str[1];
 									}
+									encuestadel.sumarRespuesta(new Long(respuesta));
 				    			}
 				    			
 				    			
@@ -286,7 +286,6 @@ public class BdEnvioencuesta  extends Bdbase {
 						      }
 	      
 				    	  }
-				    	  anterior = paramName;
 				      }
 			    }
 			    Encuesta encuestaAux = encuestadel.obtenerEncuesta(encuesta.getId());

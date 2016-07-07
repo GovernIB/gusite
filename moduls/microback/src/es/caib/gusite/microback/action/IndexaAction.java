@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 
 /**
@@ -39,7 +40,7 @@ public class IndexaAction extends BaseAction  {
 			return mapping.findForward("info");
 		}
 		
-		//IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+		IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
 		
 		if (request.getParameter("site") != null) {
 			MicroLog.addLog("Inici Indexació Microsite: ["
@@ -47,7 +48,7 @@ public class IndexaAction extends BaseAction  {
 					+ request.getSession().getAttribute("username") + "]");
 			Long site = new Long("" + request.getParameter("site"));
 			
-			//indexo.reindexarMicrosite(site);
+			indexo.reindexarMicrosite(site);
 			
 			MicroLog.addLog("Fi Indexació Microsite: ["
 					+ request.getParameter("site") + "] , Usuari: ["

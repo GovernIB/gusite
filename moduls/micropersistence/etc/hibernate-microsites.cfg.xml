@@ -69,7 +69,6 @@
   <mapping class="es.caib.gusite.micromodel.Pregunta"/>
   <mapping class="es.caib.gusite.micromodel.Respuesta"/>
   <mapping class="es.caib.gusite.micromodel.RespuestaDato"/>
-  <mapping class="es.caib.gusite.micromodel.SolrPendiente"/>
   <mapping class="es.caib.gusite.micromodel.Temafaq"/>
   <mapping class="es.caib.gusite.micromodel.TemaFront" />
   <mapping class="es.caib.gusite.micromodel.Tipo"/>

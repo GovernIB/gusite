@@ -9,6 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micromodel.Usuario;
@@ -16,9 +17,6 @@ import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micropersistence.intf.MicrositeFacade;
 import es.caib.gusite.micropersistence.intf.MicrositeFacadeHome;
 import es.caib.gusite.micropersistence.util.MicrositeFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Microsite.
@@ -390,6 +388,16 @@ public class MicrositeDelegate implements StatelessDelegate {
 		}
 	}
 
+	public ModelFilterObject obtenerFilterObject(Long idsite)
+			throws DelegateException {
+		try {
+			return this.getFacade().obtenerFilterObject(idsite);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+
+	}
+
 	public String getUsuarioEJB() throws DelegateException {
 		try {
 			return this.getFacade().getUsuarioEJB();
@@ -406,24 +414,6 @@ public class MicrositeDelegate implements StatelessDelegate {
 		}
 	}
 
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
-			final EnumCategoria categoria,final Long idArchivo) throws DelegateException{
-		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	  
-	public List<?> obtenerMicrositesbyUA(String key)
-			   throws java.rmi.RemoteException,DelegateException {		
-		try {
-			return this.getFacade().obtenerMicrositesbyUA(key);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

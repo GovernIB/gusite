@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.base.Bdbase;
 import es.caib.gusite.microfront.base.DelegateBase;
-import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.estadistica.util.StatManager;
 import es.caib.gusite.microfront.util.Fechas;
 import es.caib.gusite.microfront.util.microtag.MicrositeParser;
@@ -98,9 +98,7 @@ public class Bdcontenido extends Bdbase  {
 			//obtenemos el menu padre 
 			Menu menu = _delegateBase.obtenerMenuBranch(contenidolocal.getMenu().getId(), idioma);
 	    	
-			// #40 modificado para evitar que de error cuando no hay traducción para el menu.
-			titulomollapa = (menu.getVisible().equals("S") && menu!=null && menu.getTraduccion(idioma)!=null && ((TraduccionMenu) menu.getTraduccion(idioma)).getNombre()!=null)?((TraduccionMenu) menu.getTraduccion(idioma)).getNombre():"";
-				
+			titulomollapa = (menu.getVisible().equals("S"))?((TraduccionMenu)menu.getTraduccion(idioma)).getNombre():"";
 				
 			//comprobacion de menu en el microsite
 			if (!(menu.getMicrosite().getId().longValue() == idsite.longValue())) {

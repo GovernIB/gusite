@@ -12,7 +12,6 @@
 	<title>Gestor Microsites</title>
 	<link href="css/index.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/index.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
 	
 </head>
 
@@ -132,7 +131,8 @@
 					<p><bean:message key="menu.ferramentes" /></p>
 					<logic:present name="MVS_microsite">			
 							<a href="exportador.do" target="escritori"><bean:message key="menu.exportar" /></a>
-							<a href="indexarMicrosite.do" target="escritori"><bean:message key="menu.indexar" /></a>
+							<a href="indexador.do" target="escritori"><bean:message key="menu.indexar" /></a>
+							<a href="desindexa.do" target="escritori"><bean:message key="menu.desindexar" /></a>
 					</logic:present>
 			</logic:equal>	
 			<a href="procesow3c.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.accesibilitat" /> </a>			
@@ -147,8 +147,6 @@
 	</div>
 	
 	<bean:message key="errors.explorernou" />	
-	
-	<div id="errorIE11" style="display: none;"><bean:message key="errors.explorer.sup11" /> </div>
 			
 	<logic:present name="MVS_microsite">
 	<logic:present name="microGeneral">
@@ -187,9 +185,3 @@
 
 </body>
 </html>
-
-<script type="text/javascript">
-
-	getInternetExplorerVersion();
-
-</script>

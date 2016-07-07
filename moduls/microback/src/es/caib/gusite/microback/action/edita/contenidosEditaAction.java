@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.caib.gusite.lucene.model.Catalogo;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.contenidoForm;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
@@ -42,7 +43,6 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
-import es.caib.gusite.solrutiles.solr.model.Catalogo;
 
 /**
  * Action que edita los contenidos de un microsite <BR>

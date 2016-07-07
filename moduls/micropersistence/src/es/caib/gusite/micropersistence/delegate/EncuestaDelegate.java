@@ -9,6 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Pregunta;
 import es.caib.gusite.micromodel.Respuesta;
@@ -17,9 +18,6 @@ import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.intf.EncuestaFacade;
 import es.caib.gusite.micropersistence.intf.EncuestaFacadeHome;
 import es.caib.gusite.micropersistence.util.EncuestaFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Encuestas.
@@ -428,7 +426,22 @@ public class EncuestaDelegate implements StatelessDelegate {
 		}
 	}
 
-	
+	public void indexInsertaEncuesta(Encuesta enc, ModelFilterObject filter)
+			throws DelegateException {
+		try {
+			this.getFacade().indexInsertaEncuesta(enc, filter);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	public void indexBorraEncuesta(Long id) throws DelegateException {
+		try {
+			this.getFacade().indexBorraEncuesta(id);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	/**
 	 * Crea o actualiza grabarUsuarioPropietarioRespuesta
@@ -508,28 +521,6 @@ public class EncuestaDelegate implements StatelessDelegate {
 		}
 	}
 
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
-			throws DelegateException {
-		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	 /**
-	   * Obtiene las encuestas de un microsite	
-      */
-	public List<Encuesta> obtenerEncuestasByMicrositeId(Long idMicrosite)
-		  throws DelegateException {
-	  try {
-		   return this.getFacade().obtenerEncuestasByMicrositeId(idMicrosite);
-	  } catch (RemoteException e) {
-		  throw new DelegateException(e);
-	  }
-		   
-	}
-	
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

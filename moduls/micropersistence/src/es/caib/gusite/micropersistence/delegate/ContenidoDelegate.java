@@ -9,13 +9,11 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
+import es.caib.gusite.lucene.model.ModelFilterObject;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micropersistence.intf.ContenidoFacade;
 import es.caib.gusite.micropersistence.intf.ContenidoFacadeHome;
 import es.caib.gusite.micropersistence.util.ContenidoFacadeUtil;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular contenido.
@@ -338,23 +336,25 @@ public class ContenidoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
+
+	public void indexInsertaContenido(Contenido con, ModelFilterObject filter)
 			throws DelegateException {
 		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
+			this.getFacade().indexInsertaContenido(con, filter);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+
+	}
+
+	public void indexBorraContenido(Long id) throws DelegateException {
+		try {
+			this.getFacade().indexBorraContenido(id);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
-			final EnumCategoria categoria,final Long idArchivo) throws DelegateException{
-		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo);
-		} catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

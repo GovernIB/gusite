@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Environment;
 
+import es.caib.gusite.micropersistence.search.IndexerInterceptor;
 
 /**
  * Clase HibernateLocator
@@ -66,7 +67,7 @@ public class HibernateLocator {
 			ClassLoader cl = Thread.currentThread().getContextClassLoader();
 			URL url = cl.getResource("hibernate-microsites.cfg.xml");
 			Interceptor interceptor = new ChainedInterceptor(
-					new Interceptor[] { });// new IndexerInterceptor() });
+					new Interceptor[] { new IndexerInterceptor() });
 
 			// Configuration cfg = new
 			// Configuration().configure(url).setInterceptor(interceptor);

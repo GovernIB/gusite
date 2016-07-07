@@ -433,7 +433,7 @@
 		<form-property name="traceError" type="java.lang.String"/>
 		<form-property name="intentoEnvio" type="java.lang.Integer"/>
 	</form-bean>
-	 
+
 </form-beans>
 
 <global-exceptions>
@@ -467,25 +467,13 @@
 		<forward name="inicio" path="/index_inicio.jsp"/>
 	</action>
 
-<!-- 	<action path="/indexa" type="es.caib.gusite.microback.action.IndexaAction" unknown="false"/> -->
+	<action path="/indexa" type="es.caib.gusite.microback.action.IndexaAction" unknown="false"/>
 	
-<!-- 	<action path="/desindexa" type="es.caib.gusite.microback.action.DesindexaAction" unknown="false"/> -->
+	<action path="/desindexa" type="es.caib.gusite.microback.action.DesindexaAction" unknown="false"/>
 	
-<!-- 	<action path="/indexador" type="es.caib.gusite.microback.action.IndexadorAction" unknown="false"> -->
-<!-- 		<forward name="indexador" path="/indexador.jsp"/> -->
-<!-- 	</action>	 -->
-	
-	<action path="/indexarPrincipal" type="es.caib.gusite.microback.action.IndexarPrincipalAction" unknown="false">
-		<forward name="indexarPrincipal" path="/indexarPrincipal.jsp"/>
-	</action>
-
-	<action path="/indexarMicrosite" type="es.caib.gusite.microback.action.IndexarMicrositeAction" unknown="false">
-		<forward name="indexarMicrosite" path="/indexarMicrosite.jsp"/>
-	</action>
-	
-	<action path="/indexarTodo" type="es.caib.gusite.microback.action.IndexarTodoAction" unknown="false">
-		<forward name="indexarTodo" path="/indexarMicrosite.jsp"/>
-	</action>
+	<action path="/indexador" type="es.caib.gusite.microback.action.IndexadorAction" unknown="false">
+		<forward name="indexador" path="/indexador.jsp"/>
+	</action>	
 	
 	<action path="/busca" type="es.caib.gusite.microback.action.BuscaAction" unknown="false">
 		<forward name="resultados" path="/buscar.jsp"/>
@@ -649,8 +637,7 @@
 			type="es.caib.gusite.microback.action.buscaordena.BuscaOrdenaAuditoriasAction" >
 		<forward name="listarAuditorias" path="/listaAuditorias.jsp"/>
 	</action>
-	
-	
+
 	<!-- ***************************************************************** -->
     <!-- ******************* Acciones de Edición ************************* -->
 	<!-- ***************************************************************** -->

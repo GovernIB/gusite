@@ -87,6 +87,7 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.EstadisticaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
+import es.caib.gusite.micropersistence.delegate.IndexerDelegate;
 import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
@@ -207,8 +208,8 @@ public class ImportarAction extends BaseAction {
 
                     addImportLogVisual(request, "Comença indexació");
 
-                    //IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
-                    //indexo.reindexarMicrosite(micro.getId());
+                    IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
+                    indexo.reindexarMicrosite(micro.getId());
 
                     addImportLogVisual(request, "Fi indexació");
                 }
@@ -476,7 +477,7 @@ public class ImportarAction extends BaseAction {
 	private void crearMicro(MicrositeCompleto mic, Map<Long, String> listaArchivos, HttpServletRequest request, String tarea) throws DelegateException {
 
         MicrositeDelegate bdMicro = DelegateUtil.getMicrositeDelegate();
-        //IndexerDelegate indexdel = DelegateUtil.getIndexerDelegate();
+        IndexerDelegate indexdel = DelegateUtil.getIndexerDelegate();
         ResourceBundle rb = ResourceBundle.getBundle("sac-microback-messages");
 
         Set activi = mic.getActividades();
@@ -524,8 +525,8 @@ public class ImportarAction extends BaseAction {
 		 * Idiomas Microsite
 		 */
 		try {
-			// In/habilitamos que se indexen cosas en solr
-			//indexdel.setBloqueado(true);
+			// In/habilitamos que se indexen cosas en lucene
+			indexdel.setBloqueado(true);
 
 			// Inserto el microsite sin los objetos independientes
 			idmicroant = mic.getId(); // necesario para saber el id a sustituir en los enlaces
@@ -616,7 +617,7 @@ public class ImportarAction extends BaseAction {
 			mensaje += (String) rb.getObject("logimport.error") + ": " + ((TraduccionMicrosite) mic.getTraduccion()).getTitulo() + "</strong><br/><br/>" + ex.toString() + "<br/>";
 			addImportLogVisualStackTrace(request, mensaje, ex.getStackTrace());
 		} finally {
-			//indexdel.setBloqueado(false); // Habilitamos que se indexen cosas en solr
+			indexdel.setBloqueado(false); // Habilitamos que se indexen cosas en lucene
 		}
 		
 		return;

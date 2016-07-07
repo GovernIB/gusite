@@ -12,7 +12,6 @@
 	<link href="css/estils.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/jsListados.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
-	<script type="text/javascript" src="js/util.js"></script>
 </head>
 
 <body>
@@ -28,10 +27,7 @@
 	<h1><img src="imgs/titulos/faqs.gif" alt="<bean:message key="menu.temas" />" />
 	<bean:message key="menu.temas" />. <span><bean:message key="tema.lista" /></span></h1>
 
-	<bean:message key="errors.explorernou" />	
-	
-	<div id="errorIE11" style="display: none;"><bean:message key="errors.explorer.sup11" /> </div>
-			
+	<bean:message key="errors.explorernou" />			
 			
 	<logic:equal name="parametros_pagina" property="nreg" value="0">
 
@@ -157,9 +153,6 @@ var alert1="<bean:message key="tema.alert1"/>";
 var alert2="<bean:message key="tema.alert2"/>";
 
 -->
-
-getInternetExplorerVersion();
-
 </script>
 
 <jsp:include page="/moduls/pieControl.jsp"/>

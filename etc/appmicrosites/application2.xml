@@ -6,23 +6,11 @@
     <display-name>MICROSITES</display-name>
     <description/>
 
-    <module><java>solrutiles.jar</java></module>
     <module><java>plugins.jar</java></module>
-    <module><java>extractor.jar</java></module>
     <module><java>utilities.jar</java></module>
+    <module><java>lucene.jar</java></module>
     <module><java>micromodel.jar</java></module>
     <module><java>extractor.jar</java></module>
-    
-    <!-- SOLRJ -->
-    <module><java>lib/commons-io-2.4.jar</java></module>
-    <module><java>lib/noggit-0.6.jar</java></module>
-    <module><java>lib/stax2-api-3.1.4.jar</java></module>
-    <module><java>lib/zookeeper-3.4.6.jar</java></module>
-    <module><java>lib/httpcore-4.4.1.jar</java></module>
-    <module><java>lib/httpmime-4.4.1.jar</java></module>
-    <module><java>lib/httpclient-4.4.1.jar</java></module>
-    <module><java>lib/solr-solrj-5.5.1.jar</java></module>
-    <module><java>lib/solrapi.jar</java></module>
     
     <!-- BACK -->
     <module><ejb>sac-micropersistence.jar</ejb></module>

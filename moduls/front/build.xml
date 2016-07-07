@@ -34,15 +34,11 @@
 
 	<path id="web.class.path">
 		<fileset dir="${web.product}">
-			<include name="solrutiles.jar" />
+			<include name="lucene.jar" />
 			<include name="micromodel.jar" />
 			<include name="plugins.jar" />
 			<include name="utilities.jar" />
 			<include name="sac-micropersistence-client.jar" />
-		</fileset>
-		
-		<fileset dir="${lib.dir}/solr">
-			<include name="solrapi.jar"/>
 		</fileset>
 
 		<fileset dir="${lib.dir}">
