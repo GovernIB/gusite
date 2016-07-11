@@ -12,12 +12,15 @@ public class ErrorGenericoView extends PageView {
 
 	private PageView causeView;
 	private ErrorMicrosite errParam;
+	private String errEstado;
 
 	public ErrorGenericoView(PageView causeView) {
 		this.setMicrosite(causeView.getMicrosite());
 		this.setIdioma(causeView.getIdioma());
 		this.setLang(causeView.getLang());
 		this.setCauseView(causeView);
+		this.setErrEstado("");
+		
 	}
 
 	public ErrorGenericoView() {
@@ -45,6 +48,18 @@ public class ErrorGenericoView extends PageView {
 	@Variable("MVS_errparam")
 	public ErrorMicrosite getErrParam() {
 		return this.errParam;
+	}
+	
+	/**
+	 * Datos del error
+	 */
+	@Variable("MVS_errestado")
+	public String getErrEstado() {
+		return this.errEstado;
+	}
+
+	public void setErrEstado(String errEstado) {
+		this.errEstado = errEstado;
 	}
 
 }

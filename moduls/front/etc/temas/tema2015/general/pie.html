@@ -9,7 +9,8 @@ Este código muestra el pie de página.
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <th:block th:remove="all">
 	<!--  
 		Bloque de estilos y js general para visualización en estático.
@@ -76,7 +77,7 @@ Este código muestra el pie de página.
 									<!--/* #gusuri.traduccionEnlacePie(context,url, idiomaLista.key): la URL para la página en otro idioma) */-->
 							<!-- 		<a 	th:if="${idiomaLower}!=${idiomaLista.key}" 
 										href=""
-										th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador)}}"
+										th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
 										th:utext="${idiomaLista.value}">- Castellano</a>
 							</span>
 						</span> -->

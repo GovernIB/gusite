@@ -65,7 +65,7 @@
 			</span> 
 			</logic:equal>
 			</logic:greaterThan>
-			<button type="submit" title='<bean:message key="operacion.guardar"/>' onclick="submitForm('Guardar');">
+			<button type="button" title='<bean:message key="operacion.guardar"/>' onclick="submitForm('Guardar');">
 		   		<img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
 		   	</button>
 		
@@ -124,7 +124,7 @@
 
 		<bean:define id="idis" name="es.caib.gusite.microback.LANGS_KEY"/>
 		<% int nlangs=((java.util.List)idis).size();%>
-  
+		
  		<div id="menuArbol">
 
 		<logic:iterate id="listaids" name="menuForm" property="ids" indexId="i">
@@ -223,7 +223,10 @@
 							<li class="icona">
 							<logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
 								<li><label><span><bean:message name="lang" />:</span> 
-								<html:text property="<%="traducciones["+((i.intValue()* nlangs)+j.intValue())+"]"%>" size="50" maxlength="256"/>
+			
+								<html:text property="<%="traducciones["+((i.intValue()* nlangs)+j.intValue())+"]"%>" size="50" maxlength="256"
+								styleClass="<%="menuIdi"+lang+""%>" />
+
 								</label></li>
 							</logic:iterate>
 							</li>
@@ -329,6 +332,7 @@
 var alert1='<bean:message key="menu.alert1"/>';
 var alert2='<bean:message key="menu.alert2"/>';
 var alert3='<bean:message key="menu.alert3"/>';
+var alert4='<bean:message key="error.menu.nombreCM"/>';
 
 	function nuevoContenido (idMenu) {
 		document.location.href="contenidosAcc.do?op=crear&idmenu="+idMenu;
@@ -349,9 +353,22 @@ var alert3='<bean:message key="menu.alert3"/>';
 		 if (nom_accio== "Traduir") {
 			 accForm.accion.value="<bean:message key='operacion.traducir'/>";
 		 }else if (nom_accio== "Guardar"){
+			 //Se comprueba que el menu en catalan está informado al modificar
+			 var lista =document.getElementsByClassName('menuIdica');
+			 if(lista != null && lista.length > 0){
+				 for (var i = 0; i < lista.length; i++) {
+					if(lista[i].value =="" || lista[i].value == null){
+						alert (alert4 );
+						return;
+					}
+					
+				}
+			 }
+			 
+			 
 			 accForm.accion.value="<bean:message key='operacion.guardar'/>";
 		}
-		accForm.submit();
+	    accForm.submit();
 	}
 
     function Rpopupurl() {
@@ -365,10 +382,16 @@ var alert3='<bean:message key="menu.alert3"/>';
 	}
 	
 	function crearMenu() {
-		
+		if ( document.getElementsByName("nombreCM[0]")[0].value == ''){
+			alert (alert4 );
+			return;
+		}
+
 		document.forms[0].accion.value="crear";
 		document.forms[0].submit();
 	}
+	
+	
 
 -->
 </script>

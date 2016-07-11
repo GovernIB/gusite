@@ -286,16 +286,16 @@
 
 								<tr>
 									<td colspan="2">
-										<logic:iterate id="traducciones2" name="microForm" property="traducciones" indexId="z" >
-											<html:hidden property="txtop1" name="traducciones2" indexed="true" /><html:hidden property="urlop1" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop2" name="traducciones2" indexed="true" /><html:hidden property="urlop2" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop3" name="traducciones2" indexed="true" /><html:hidden property="urlop3" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop4" name="traducciones2" indexed="true" /><html:hidden property="urlop4" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop5" name="traducciones2" indexed="true" /><html:hidden property="urlop5" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop6" name="traducciones2" indexed="true" /><html:hidden property="urlop6" name="traducciones2" indexed="true" />
-											<html:hidden property="txtop7" name="traducciones2" indexed="true" /><html:hidden property="urlop7" name="traducciones2" indexed="true" />
-											<html:hidden property="cabecerapersonal" name="traducciones2" indexed="true" />
-											<html:hidden property="piepersonal" name="traducciones2" indexed="true" />
+										<logic:iterate id="traducciones" name="microForm" property="traducciones" indexId="z" >
+											<html:hidden property="txtop1" name="traducciones" indexed="true" /><html:hidden property="urlop1" name="traducciones" indexed="true" />
+											<html:hidden property="txtop2" name="traducciones" indexed="true" /><html:hidden property="urlop2" name="traducciones" indexed="true" />
+											<html:hidden property="txtop3" name="traducciones" indexed="true" /><html:hidden property="urlop3" name="traducciones" indexed="true" />
+											<html:hidden property="txtop4" name="traducciones" indexed="true" /><html:hidden property="urlop4" name="traducciones" indexed="true" />
+											<html:hidden property="txtop5" name="traducciones" indexed="true" /><html:hidden property="urlop5" name="traducciones" indexed="true" />
+											<html:hidden property="txtop6" name="traducciones" indexed="true" /><html:hidden property="urlop6" name="traducciones" indexed="true" />
+											<html:hidden property="txtop7" name="traducciones" indexed="true" /><html:hidden property="urlop7" name="traducciones" indexed="true" />
+											<html:hidden property="cabecerapersonal" name="traducciones" indexed="true" />
+											<html:hidden property="piepersonal" name="traducciones" indexed="true" />
 										</logic:iterate>
 									</td>
 								</tr>

@@ -4,7 +4,9 @@
 <%@ taglib prefix="html" uri="http://jakarta.apache.org/struts/tags-html" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head></head>
+<head>
+<link rel="shortcut icon" href="<%=request.getContextPath()%>/favicon.png" type="image/x-ico"/>
+</head>
 <body>
 	<%response.sendRedirect(""+request.getAttribute("laurl"));%>
 </body>	

@@ -134,10 +134,10 @@ public class UserRequestProcessor extends RequestProcessor {
             req.getRequestDispatcher(_URLINTRANETLOGIN + "?idsite=" + paramIdsite).forward(req, resp);
 
         } catch (DelegateException de) {
-            log.error("", de);
+            //log.error("", de);
             exception = de;
         } catch (Exception e) {
-            log.error("", e);
+            //log.error("", e);
             exception = e;
             return true;
         }
@@ -216,7 +216,7 @@ public class UserRequestProcessor extends RequestProcessor {
 			}
 
 		} catch (Exception e) {
-			log.error("error obtenint microsite del request ",e);
+			//log.error("error obtenint microsite del request ",e);
 			exception = e;
 		}
 		return microsite;
@@ -267,7 +267,7 @@ public class UserRequestProcessor extends RequestProcessor {
 			}
 
 		} catch (DelegateException de) {
-			log.error(de.getMessage());
+			//log.error(de.getMessage());
 			exception = de;
 		}
 		return true;

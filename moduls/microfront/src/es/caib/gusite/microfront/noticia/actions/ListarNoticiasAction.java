@@ -1,5 +1,6 @@
 package es.caib.gusite.microfront.noticia.actions;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -17,6 +18,7 @@ import es.caib.gusite.microfront.exception.ExceptionFrontMicro;
 import es.caib.gusite.microfront.exception.ExceptionFrontPagina;
 import es.caib.gusite.microfront.noticia.util.Bdlistanoticias;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
 
 /**
@@ -59,6 +61,10 @@ public class ListarNoticiasAction extends BaseAction  {
 		  		
 		    	request.setAttribute("MVS_seulet_sin",bdlistanoticias.getUrl_sinpagina());
 			    request.setAttribute("MVS_parametros_pagina",bdlistanoticias.getParametros());
+			    
+			    //#49 Traducir listado
+			    traduceNoticia(bdlistanoticias.getListanoticias(),bdlistanoticias.getIdioma());
+			    
 			    request.setAttribute("MVS_listado", bdlistanoticias.getListanoticias());
 			    request.setAttribute("MVS_tipolistado", bdlistanoticias.getDesctiponoticia());
 			    request.setAttribute("MVS_claseelemento", bdlistanoticias.getClaseelemento());
@@ -143,6 +149,19 @@ public class ListarNoticiasAction extends BaseAction  {
 		     return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA));
 		} 		    
 			    
+	}
+
+	/**
+	 * Traduce el idioma de la noticia
+	 * 
+	 * @param listanoticias
+	 * @param idioma
+	 */
+	private void traduceNoticia(List<?> listaNoticias, String idioma) {
+		for (Object noticia : listaNoticias) {
+			((Noticia) noticia).setIdi(idioma);
+		}
+		
 	}
 
 	private boolean isPaginacioAnual(Bdlistanoticias bdlistanoticias) {

@@ -13,6 +13,7 @@ import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.busca.BuscaOrdenaComponenteActionForm;
+import es.caib.gusite.micromodel.Componente;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -64,7 +65,7 @@ public class buscaordenaComponentesAction extends BaseAction {
         else
         	bdCompo.setPagina(1);
             
-        List<?> lista=bdCompo.listarComponentes();
+        List<Componente> lista=bdCompo.listarComponentes();
         request.setAttribute("parametros_pagina",bdCompo.getParametros());
         
         if (lista.size()!=0) // Si hay algún registro

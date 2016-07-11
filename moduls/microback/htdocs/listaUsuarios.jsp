@@ -21,6 +21,7 @@
 	<script type="text/javascript" src="js/comuns.js"></script>
 	<script type="text/javascript" src="js/llistat.js"></script>
     <script type="text/javascript" src="js/subMenus.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
 	<script type="text/javascript">
 	<!--
 		// enllaços
@@ -57,7 +58,10 @@
 		<jsp:include page="menuLateralIzq.jsp"/>
 		<!-- /marc lateral -->
 		
-		<bean:message key="errors.explorernou" />			
+		<bean:message key="errors.explorernou" />	
+		
+		<div id="errorIE11" style="display: none;"><bean:message key="errors.explorer.sup11" /> </div>
+			
 
 		<!-- continguts -->
 		<div id="continguts">
@@ -172,3 +176,7 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+	getInternetExplorerVersion();
+</script>

@@ -10,6 +10,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 gus:decorator="layout">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title th:if="${MVS_micrositetitulo} !=null"
 	th:text="(${MVS_micrositetitulo}) + ' - Mapa'">Mapa</title>
 	<th:block th:remove="all">

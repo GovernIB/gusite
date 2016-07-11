@@ -10,7 +10,8 @@
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	gus:decorator="layout">
 <head>
-<title
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title
 	th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>
 <th:block th:remove="all">
 <!--/*  

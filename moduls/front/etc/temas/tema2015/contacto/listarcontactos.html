@@ -4,7 +4,8 @@
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:gus="http://www.caib.es/thymeleaf/gusite" gus:decorator="layout">
 <head>
-    <title th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">
         Título Microsite - Formularis de contacte
     </title>
     <th:block th:remove="all">

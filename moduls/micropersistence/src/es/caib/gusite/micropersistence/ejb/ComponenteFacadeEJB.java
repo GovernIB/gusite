@@ -244,17 +244,29 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarComponentes() {
+	public List<Componente> listarComponentes() {
 
 		Session session = this.getSession();
+		List<Componente> componentes = new ArrayList<Componente>();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
 			Query query = session.createQuery(this.select + this.from
 					+ this.where + this.orderby);
+			
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
-			return query.list();
+			query.setFetchSize(this.tampagina); //Se fija la cantidad de resultados en cada acceso
+			
+			Iterator<Componente> res = query.iterate();
+			while (res.hasNext()) {
+				
+				Componente comp = res.next();
+				componentes.add(comp);
+			}
+			
+			
+			return componentes;
 
 		} catch (HibernateException he) {
 			throw new EJBException(he);

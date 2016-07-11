@@ -23,6 +23,7 @@
     <script type="text/javascript" src="js/jquery/jquery.alerts.js"></script>
     <script type="text/javascript" src="js/subMenus.js"></script>
     <script type="text/javascript" src="js/jsListados.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
 </head>
 <body>
     <!-- cap -->
@@ -34,6 +35,8 @@
     <!-- /marc lateral -->
 
 	<bean:message key="errors.explorernou" />
+	
+	<div id="errorIE11" style="display: none;"><bean:message key="errors.explorer.sup11" /> </div>
 
     <div id="formulario">
         <!-- titol pagina -->
@@ -162,5 +165,9 @@
     var alert1="<bean:message key="frontTemas.alert1"/>";
     var alert2="<bean:message key="frontTemas.alert2"/>";
     -->
+    
+    
+	getInternetExplorerVersion();
+
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>
