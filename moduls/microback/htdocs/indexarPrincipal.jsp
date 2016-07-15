@@ -1,4 +1,3 @@
-<%@ page language="java"%>
 <%@ page language="java" contentType="text/html; charset=utf8"  pageEncoding="utf8"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -19,7 +18,7 @@
 		<!-- molla pa -->
 		<ul id="mollapa">
 			<li><a href="microsites.do" target="_parent"><bean:message key="micro.listado.microsites" /></a></li>
-			<li><a href="index_inicio.do"><bean:message key="op.7" /></a></li>
+			<li><a href="index.do"><bean:message key="op.7" /></a></li>
 			<li><bean:message key="menu.ferramentes" /></li>
 			<li class="pagActual"><bean:message key="menu.indexar.principal" /></li>
 		</ul>
@@ -32,9 +31,59 @@
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.todo" />" onclick='indexarTodo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.todo" />" /> &nbsp;<bean:message key="menu.indexar.todo" /></button>
 		</div>
+		
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.pendientes" />" onclick='indexarPendientes()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.pendientes" />" /> &nbsp;<bean:message key="menu.indexar.pendientes" /></button>
+				<logic:empty name="listado">
+					<button type="button" name="fichero" title="<bean:message key="menu.indexar.verpendientes" />" onclick='indexarVerPendientes()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verpendientes" />" /> &nbsp;<bean:message key="menu.indexar.verpendientes" /></button>
+				</logic:empty>
+				<logic:notEmpty name="listado">
+					<p></p><p></p>
+					<table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+					 <thead>
+						<tr>
+							<th width="15%"><bean:message key="menu.indexar.cab.id" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.tipo" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.idElem" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.idArchivo" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.fechaCreacion" /></th>							
+						</tr>
+					</thead>
+					<tbody>
+						<logic:iterate id="i" name="listado" indexId="indice">
+						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+						       		 <td><bean:write name="i" property="id" 			ignore="true"/></td>
+								     <!-- <td><bean:write name="i" property="tipo" 			ignore="true"/></td> -->
+								     <td>
+								     	<logic:equal name="i" property="tipo" value="CON">
+								     		<bean:message key="menu.indexar.cab.tipo.CON" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="ENC">
+								     		<bean:message key="menu.indexar.cab.tipo.ENC" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="MIC">
+								     		<bean:message key="menu.indexar.cab.tipo.MIC" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="FAQ">
+								     		<bean:message key="menu.indexar.cab.tipo.FAQ" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="NOT">
+								     		<bean:message key="menu.indexar.cab.tipo.NOT" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="AGE">
+								     		<bean:message key="menu.indexar.cab.tipo.AGE" />
+								     	</logic:equal>
+								     </td>
+								     <td><bean:write name="i" property="idElem" 		ignore="true"/></td>
+								     <td><bean:write name="i" property="idArchivo" 		ignore="true"/></td>
+								     <td><bean:write name="i" property="fechaCreacion" formatKey="date.short.format"/></td>
+						       </tr>					
+					    </logic:iterate>
+				    </tbody>
+				    </table>
+			    </logic:notEmpty>
 		</div>		
+		
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.unidad.administrativa" />" onclick='indexarByUA()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.unidad.administrativa" />" /> &nbsp;<bean:message key="menu.indexar.unidad.administrativa" /></button>  								
                 <select id="unidadAdministrativa" >				       	
@@ -44,7 +93,7 @@
 			    </select>	
 								
 				
-		</div>			
+		</div>	
 		
 		<p>
 		<strong>
@@ -57,6 +106,15 @@
 		<div class="alerta" style="font-weight:bold; color:#FF1111;">
 			<html:messages id="message" message="true">
 			<%= message %><br/>
+			</html:messages>	
+			
+		</div>
+		</logic:notEmpty>
+		
+		<logic:notEmpty name="nok">			
+		<div class="alerta" style="font-weight:bold; color:#FF1111;">
+			<html:messages id="message" message="true">
+				<bean:message key="menu.indexar.error.ejecutandose" />
 			</html:messages>	
 			
 		</div>
@@ -88,6 +146,12 @@
     function indexarPendientes(){
 		
 		document.location.href="indexarPrincipal.do?indexar=pendientes";
+		
+	}
+    
+    function indexarVerPendientes(){
+		
+		document.location.href="indexarPrincipal.do?indexar=verpendientes";
 		
 	}
 </script>

@@ -39,11 +39,13 @@ public class IndexarMicrositeAction extends BaseAction {
 		if (request.getParameter("indexar") != null && request.getParameter("indexar").equals("si")) {
 			
 			String idSite = request.getParameter("site");
-			indexarMicrosite(idSite);
-			
-			
-			request.setAttribute("ok", true);
-			addMessage(request, "indexa.ok");
+			if (indexarMicrosite(idSite)) {
+				request.setAttribute("ok", true);
+				addMessage(request, "indexa.ok");
+			} else {
+				request.setAttribute("nok", true);
+				addMessage(request, "indexa.ok");
+			}
 		}
         return mapping.findForward(elforward);
 	
@@ -57,11 +59,13 @@ public class IndexarMicrositeAction extends BaseAction {
 				return false;
 			else {				
 				SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-				solrPendienteDel.indexarMicrosite(Long.parseLong(idMicrosite));
+				solrPendienteDel.crearJob("IDX_MIC", null, Long.valueOf(idMicrosite));
+                //solrPendienteDel.indexarMicrosite(Long.parseLong(idMicrosite));
 				
 			}	
 		}catch(Exception e){
 			log.error("Error indexando microsite: " + idMicrosite );
+			return false;
 		}
 	 		     	
 		return true;

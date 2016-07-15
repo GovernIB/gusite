@@ -1386,12 +1386,30 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	}
 	
 	/**
+	 * Obtiene un Microsite
+	 * 
+	 */
+	private Microsite obtenerMicrositeBySolr(Long id) {
+
+		final Session session = this.getSession();
+		try {
+			return (Microsite) session.get(Microsite.class, id);
+		} catch (Exception exception) {
+			log.error(exception.getMessage());
+			return null;
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	/**
 	 * Método para indexar según la id y la categoria. 
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
 	 * @ejb.interface-method
-     * @ejb.permission unchecked="true"
+     * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
 		log.debug("MicrositeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
@@ -1401,7 +1419,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Microsite micro = obtenerMicrosite(idElemento);
+			final Microsite micro = obtenerMicrositeBySolr(idElemento);
+			if (micro == null) {
+				return new SolrPendienteResultado(true, "Error obteniendo el microsite.");
+			}
+			
 			final Archivo archivo = archi.obtenerArchivo(idArchivo);
 			boolean isIndexable = this.isIndexable(archivo);
 			if (!isIndexable) {
@@ -1410,9 +1432,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			
 			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
 			final IndexFile indexFile = new IndexFile();
-			indexFile.setCategoria(categoria);
+			indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
 			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexFile.setElementoId(idElemento.toString());
+			indexFile.setElementoId(idArchivo.toString());
 			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();

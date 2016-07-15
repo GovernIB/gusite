@@ -348,16 +348,12 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 	 */
 	public Noticia obtenerNoticiaBySolr(Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Noticia noticia = (Noticia) session.get(Noticia.class, id);
-			return noticia;
-
-		} catch (ObjectNotFoundException oNe) {
-			log.error(oNe.getMessage());
-			return new Noticia();
-		} catch (HibernateException he) {
-			throw null;
+			return (Noticia) session.get(Noticia.class, id);
+		} catch (Exception exception) {
+			log.error("Error obteniendo noticia" , exception);
+			return null;
 		} finally {
 			this.close(session);
 		}
@@ -937,6 +933,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
 		log.debug("NoticiafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
@@ -947,7 +944,6 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			
 			//Paso 0. Obtenemos la noticia y comprobamos si se puede indexar.
 			final Noticia noticia = obtenerNoticiaBySolr(idElemento);
-			
 			if (noticia == null) {
 				return new SolrPendienteResultado(false, "Error obteniendo noticia.");
 			}
@@ -983,12 +979,13 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 				final TraduccionNoticia traduccion = (TraduccionNoticia) noticia.getTraduccion(keyIdioma);
 		    	
 				if (traduccion != null && enumIdioma != null) {
-					//Anyadimos idioma al enumerado.
-					idiomas.add(enumIdioma);
 					
 					if (traduccion.getTitulo() == null || traduccion.getTitulo().isEmpty()) {
 						continue;
 					}
+					
+					//Anyadimos idioma al enumerado.
+					idiomas.add(enumIdioma);
 										
 					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, traduccion.getTitulo());
@@ -1093,9 +1090,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexData.setUrlPadre(urlPadre);
 			
 			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(micro.getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);
@@ -1159,6 +1156,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria,final Long idArchivo) {
 		log.debug("NoticiafacadeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
@@ -1181,9 +1179,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			
 			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
 			final IndexFile indexFile = new IndexFile();
-			indexFile.setCategoria(categoria);
+			indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
 			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexFile.setElementoId(idElemento.toString());
+			indexFile.setElementoId(idArchivo.toString());
 			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
@@ -1196,7 +1194,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			Microsite micro = micrositedel.obtenerMicrosite(noticia.getIdmicrosite());
 			
 			String[] nombreArc = archivo.getNombre().split("\\.");
-			final MultilangLiteral tituloPadre = new MultilangLiteral();
+			final MultilangLiteral descripcionPadre = new MultilangLiteral();
 			final MultilangLiteral extension = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			
@@ -1212,7 +1210,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, nombreArc[0]);
 			    	descripcion.addIdioma(enumIdioma, solrIndexer.htmlToText(archivo.getNombre()));
-			    	tituloPadre.addIdioma(enumIdioma, traduccion.getTexto());
+			    	descripcionPadre.addIdioma(enumIdioma, traduccion.getTexto());
 			    	extension.addIdioma(enumIdioma, nombreArc[1]);
 
 			    	//StringBuffer que tendrá el contenido a agregar en textOptional
@@ -1252,7 +1250,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
 
 			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_NOTICIA);
-			indexFile.setDescripcionPadre(tituloPadre);
+			indexFile.setDescripcionPadre(descripcionPadre);
 			indexFile.setExtension(extension);
 			indexFile.setUrlPadre(urlPadre);
 			
@@ -1260,9 +1258,9 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexFile.setFechaPublicacion(noticia.getFpublicacion());
 			
 			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(micro.getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);

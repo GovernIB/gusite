@@ -93,7 +93,7 @@ public class Bdcercador extends Bdbase {
 			final FilterSearch filterSearch = new FilterSearch();
 			filterSearch.setMicrositeId(microsite.getId().toString());
 			final PaginationSearch paginationSearch = new PaginationSearch();
-			final ResultData resultadoSolr = buscador.buscar(words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
+			final ResultData resultadoSolr = buscador.buscar(req.getSession().getId(), words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
 			convertirResultado(resultadoSolr, idi.toLowerCase(),words);
 		} catch (Exception e) {
 			

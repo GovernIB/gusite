@@ -59,19 +59,26 @@ gus:decorator="layout">
 							<div id="resultat" class="barra-resultados">
 
 								<p id="lineaTexto">
-									<p th:utext="#{cercar.encontrados} + '  ' ">Trobat/s </p>
+									<p th:utext="#{cercar.encontrados} + '  ' ">Trobat/s  </p>
 
 
 									<strong th:utext=" ' ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' '" class="actual">
-										0 resultat/s en
+										0 resultat/s en 
 									</strong>
 
 									<p th:utext= "  ${MVS_listado_buscador.consultaOriginal}
 									+'\'\''  ">
 									
+									</p>
+									
 								</p>
-							</p>
-						</div>
+								<br /><br />
+								<ul class="resultatsRecercaInteligent">
+									<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>  <br /><span
+									th:text="${resultado.id} + ' ' ">Site:</span><span class="detall"
+									th:text="${resultado.descripcion}">Descripcion</span></li>
+								</ul>
+							</div>
 					</p>
 
 				

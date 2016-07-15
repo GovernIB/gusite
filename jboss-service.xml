@@ -43,7 +43,7 @@
         es.caib.gusite.pass.solr=password
         es.caib.gusite.url.solr=localhost:8983/solr
         es.caib.gusite.index.solr=caib
-
+		es.caib.gusite.solr.jobpendientes=0 0 2 * * ?
     </attribute>
 
 </mbean>

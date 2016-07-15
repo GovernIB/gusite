@@ -531,12 +531,29 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	
 
 	/**
+	 * Obtiene una Agenda para solr.
+	 * 
+	 */
+	private Agenda obtenerAgendaBySolr(Long id) {
+		final Session session = this.getSession();
+		try {
+			return (Agenda) session.get(Agenda.class, id);
+		} catch (Exception exception) {
+			log.error("Error obteniendo agenda" , exception);
+			return null;
+		} finally {
+			this.close(session);
+		}
+	}
+
+	/**
 	 * Método para indexar según la id y la categoria. 
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
 		log.debug("AgendafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
@@ -546,7 +563,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Agenda agenda = obtenerAgenda(idElemento);
+			final Agenda agenda = obtenerAgendaBySolr(idElemento);
+			if (agenda == null) {
+				return new SolrPendienteResultado(true, "");
+			}
+			
 			boolean isIndexable = this.isIndexable(agenda);
 			if (!isIndexable) {
 				return new SolrPendienteResultado(true, "No se puede indexar");
@@ -577,12 +598,14 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 				final TraduccionAgenda traduccion = (TraduccionAgenda) agenda.getTraduccion(keyIdioma);
 		    	
 				if (traduccion != null && enumIdioma != null) {
-					//Anyadimos idioma al enumerado.
-					idiomas.add(enumIdioma);
 					
 					if (traduccion.getTitulo() == null || traduccion.getTitulo().isEmpty()) {
 						continue;
 					}
+					
+					//Anyadimos idioma al enumerado.
+					idiomas.add(enumIdioma);
+					
 					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, traduccion.getTitulo());
 					
@@ -639,7 +662,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			
 			//Recorremos las traducciones del microsite padre
-			final MultilangLiteral tituloPadre = new MultilangLiteral();
+			final MultilangLiteral descripcionPadre = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			for (String keyIdioma : micro.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
@@ -648,7 +671,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 				if (traduccion != null && enumIdioma != null) {
 					
 					//Seteamos los primeros campos multiidiomas: Titulo.
-					tituloPadre.addIdioma(enumIdioma, traduccion.getTitulo() != null ? traduccion.getTitulo() :"");
+					descripcionPadre.addIdioma(enumIdioma, traduccion.getTitulo() != null ? traduccion.getTitulo() :"");
 					
 					//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
 			    	if (micro.getVersio().equals("v5")) {
@@ -657,16 +680,16 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			    		urlPadre.addIdioma(enumIdioma, "/sacmicrofront/index.do?lang="+keyIdioma +"&idsite="+ micro.getId() 
 			    				+"&cont="+agenda.getId());
 			    	}
-				}
-					
+				}	
 			}
-			indexData.setDescripcionPadre(tituloPadre);
+			
+			indexData.setDescripcionPadre(descripcionPadre);
 			indexData.setUrlPadre(urlPadre);
 			
 			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(micro.getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);
@@ -676,13 +699,8 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexData.setMicrositeId(micro.getId().toString());
 			indexData.setInterno(!micro.getRestringido().equals("N") ? true : false);
 				
-				
 			solrIndexer.indexarContenido(indexData);
 			
-			
-						
-			
-
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
 			log.error("Error en contenidofacade intentando indexar.", exception);
@@ -703,6 +721,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 		return indexable;
 	}
 	
+	
 	/**
 	 * Método para indexar según la id, idArchivo y la categoria. 
 	 * @param solrIndexer
@@ -710,6 +729,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
 		log.debug("AgendafacadeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
@@ -720,7 +740,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Agenda agenda = obtenerAgenda(idElemento);
+			final Agenda agenda = obtenerAgendaBySolr(idElemento);
+			if (agenda == null) {
+				return new SolrPendienteResultado(true, "Error obteniendo la agenda.");
+			}
+			
 			final Archivo archivo = archi.obtenerArchivo(idArchivo);
 			boolean isIndexable = this.isIndexablePadre(archivo);
 			if (!isIndexable) {
@@ -729,9 +753,9 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
 			final IndexFile indexFile = new IndexFile();
-			indexFile.setCategoria(categoria);
+			indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
 			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexFile.setElementoId(idElemento.toString());
+			indexFile.setElementoId(idArchivo.toString());
 			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
@@ -743,8 +767,9 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			Microsite micro = micrositedel.obtenerMicrosite(agenda.getIdmicrosite());
 			
-			String[] nombreArc = archivo.getNombre().split("\\.");
-			final MultilangLiteral tituloPadre = new MultilangLiteral();
+			final String[] nombreArc  = archivo.getNombre().split("\\.");
+			
+			final MultilangLiteral descripcionPadre = new MultilangLiteral();
 			final MultilangLiteral extension = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			
@@ -760,7 +785,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, nombreArc[0]);
 			    	descripcion.addIdioma(enumIdioma, archivo.getNombre());
-			    	tituloPadre.addIdioma(enumIdioma, traduccion.getDescripcion() !=null ? solrIndexer.htmlToText(traduccion.getDescripcion()):"");
+			    	descripcionPadre.addIdioma(enumIdioma, traduccion.getDescripcion() !=null ? solrIndexer.htmlToText(traduccion.getDescripcion()):"");
 			    	extension.addIdioma(enumIdioma, nombreArc[1]);
 
 			    	//StringBuffer que tendrá el contenido a agregar en textOptional
@@ -800,15 +825,15 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
 
 			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
-			indexFile.setDescripcionPadre(tituloPadre);
+			indexFile.setDescripcionPadre(descripcionPadre);
 			indexFile.setExtension(extension);
 			indexFile.setUrlPadre(urlPadre);
 			
 			
 			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(micro.getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);

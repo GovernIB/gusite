@@ -48,6 +48,14 @@
 			
 		</div>
 		</logic:notEmpty>
+		
+		<logic:notEmpty name="nok">			
+		<div class="alerta" style="font-weight:bold; color:#FF1111;">
+			<html:messages id="message" message="true">
+				<bean:message key="menu.indexar.error.ejecutandose" />
+			</html:messages>	
+		</div>
+		</logic:notEmpty>
 </body>
 </html>
 

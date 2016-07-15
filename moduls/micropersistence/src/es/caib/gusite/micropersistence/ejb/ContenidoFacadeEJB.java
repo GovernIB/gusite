@@ -232,16 +232,12 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	 */
 	public Contenido obtenerContenidoBySolr(Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Contenido contenido = (Contenido) session.get(Contenido.class, id);
-			return contenido;
-
-		} catch (ObjectNotFoundException oNe) {
-			log.error(oNe.getMessage());
-			return new Contenido();
-		} catch (HibernateException he) {
-			throw null;
+			return (Contenido) session.get(Contenido.class, id);
+		} catch (Exception exception) {
+			log.error("Error obteniendo el contenido para solr", exception);
+			return null;
 		} finally {
 			this.close(session);
 		}
@@ -634,6 +630,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 		return indexable;
 	}
 	
+	
 	/**
 	 * Método para indexar según la id y la categoria. 
 	 * @param solrIndexer
@@ -641,6 +638,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
 		log.debug("ContenidofacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
@@ -649,7 +647,11 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Contenido contenido = obtenerContenido(idElemento);
+			final Contenido contenido = obtenerContenidoBySolr(idElemento);
+			if (contenido == null) {
+				return new SolrPendienteResultado(true, "Error no se ha podido obtener el contenido.");
+			}
+			
 			boolean isIndexable = this.isIndexable(contenido);
 			if (!isIndexable) {
 				return new SolrPendienteResultado(true, "No se puede indexar");
@@ -764,9 +766,9 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			indexData.setUrlPadre(urlPadre);
 			
 			if (String.valueOf(contenido.getMicrosite().getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(contenido.getMicrosite().getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);
@@ -794,6 +796,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria,final Long idArchivo) {
 		log.debug("ContenidofacadeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
@@ -817,9 +820,9 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			
 			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
 			final IndexFile indexFile = new IndexFile();
-			indexFile.setCategoria(categoria);
+			indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
 			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexFile.setElementoId(idElemento.toString());
+			indexFile.setElementoId(idArchivo.toString());
 			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
@@ -878,7 +881,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			    	String dPadre = traduccion.getUrl();
 					
 					if(dPadre == null ||dPadre.isEmpty()){
-						dPadre = traduccion.getTexto();
+						dPadre = solrIndexer.htmlToText(traduccion.getTexto());
 					}
 			    	descPadre.addIdioma(enumIdioma, dPadre);
 				}

@@ -1,6 +1,7 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.rmi.RemoteException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,8 +14,15 @@ import javax.ejb.EJBException;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerUtils;
+import org.quartz.impl.StdSchedulerFactory;
 
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
@@ -24,6 +32,7 @@ import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendiente;
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micromodel.Traduccion;
 import es.caib.gusite.micromodel.TraduccionAgenda;
 import es.caib.gusite.micromodel.TraduccionNoticia;
@@ -36,6 +45,9 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
+import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
+import es.caib.gusite.micropersistente.job.IndexacionJob;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
@@ -56,13 +68,11 @@ import es.caib.solr.api.model.types.EnumCategoria;
  *           jndi-name="es.caib.gusite.micropersistence.SolrPendienteFacade"
  *           type="Stateless" view-type="remote" transaction-type="Container"
  * 
- * @ejb.transaction type="Required"
+ * @ejb.transaction type="RequiresNew"
  */
 public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = 6661917618076931960L;
-	private static final int SolrPendiente = 0;
-		
 	
 	/**
 	 * @ejb.create-method
@@ -78,20 +88,16 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
      *
      * @return Devuelve un listado de todos los SolrPendientes.
      */
     public List<SolrPendiente> getPendientes() {
-    	
-    	
-        Session session = getSession();
+    	final Session session = getSession();
         try {
-            Criteria criteri = session.createCriteria(SolrPendiente.class);
-            criteri.add(Restrictions.eq("resultado", 0));
-            
-            List<SolrPendiente> solrPendientes =  criteri.list();            
-            return solrPendientes;
-
+            final Criteria criteri = session.createCriteria(SolrPendiente.class);
+            criteri.add(Restrictions.eq("resultado", 0));            
+            return  ( List<SolrPendiente>) criteri.list();
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {
@@ -104,13 +110,14 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
+     * 
      * @return Booleano indicando si se indexan todos los procesos pendientes .
      * @throws Exception 
    	 */
 
     public Boolean indexarPendientes() throws DelegateException {
     	
-    	Session session = null;
     	SolrIndexer solrIndexer = null;
         try {
         	
@@ -121,112 +128,131 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 
             solrIndexer = (SolrIndexer) SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE,  username, password);
     	
-         	List<SolrPendiente> listPendientes = getPendientes();
-    	
+         	final List<SolrPendiente> listPendientes = getPendientes();
+         	final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate(); 	                	 
+         	final NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();                 	
+         	final ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();                 
+        	final MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
+    		final FaqDelegate faqdel = DelegateUtil.getFaqDelegate(); 
+        	final EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate(); 
+        	final SolrPendienteJobDelegate solrPendienteJob = DelegateUtil.getSolrPendienteJobDelegate();
     	    		
+         	int i = 0;
     		for (SolrPendiente solrPendiente : listPendientes) {
-    			if (solrPendiente.getAccion() == 1) {
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
-	                	 AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate(); 
-	                	 
-	                	 if (solrPendiente.getIdArchivo() != null ){
-	                		 try {
-	                			 agendadel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_AGENDA, solrPendiente.getIdArchivo());
-	                         }
-	                		 catch (Exception e) {
-	                			 log.error("Se ha producido un error en indexar archivo con id " + solrPendiente.getIdElem().toString());
-							}
-	                	 }
-	                	 else {
-	                		 
-	                		 agendadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(),EnumCategoria.GUSITE_AGENDA);
-	                	 }
-	                	 
-	                }                	 
-	                
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
-	                	NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();                 	
-	                	if (solrPendiente.getIdArchivo() != null ){
-	                		try {
-								noticiadel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_NOTICIA, solrPendiente.getIdArchivo());
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-	                    }
-	                	else {
-	                		noticiadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_NOTICIA);
-	                	}
-	                } 
-	                
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
-	                	ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();                 
-	                	if (solrPendiente.getIdArchivo() != null ){
-	                		contenidodel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_CONTENIDO, solrPendiente.getIdArchivo());
-	                    }
-	                	else {
-	                		  contenidodel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_CONTENIDO);
-	                	}
-	                } 
-	                
-	                //Microsite tiene que tener archivo para poder indexarlo
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){                	                 	
-	                	if (solrPendiente.getIdArchivo() != null ){
-	                		MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
-	                		micrositedel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_MICROSITE, solrPendiente.getIdArchivo());
-	                    }
-	                } 
-	                
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
-	                	FaqDelegate faqdel = DelegateUtil.getFaqDelegate(); 
-	                	faqdel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_FAQ);
-	                	
-	                }
-	                
-	                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
-	                	EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate(); 
-	                	encuestadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_ENCUESTA);
-	                	
-	                } 
-    			} else {
-    				if (solrPendiente.getIdArchivo() == null) {
-    					try {
-							solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.fromString(solrPendiente.getTipo()));
-						} catch (ExcepcionSolrApi e) {
-							log.error("Se ha producido un error en desindexar con id " + solrPendiente.getIdElem().toString());
-						}
+    			i++;
+    			SolrPendienteResultado solrPendienteResultado = null;
+    			
+    			try {
+	    			if (solrPendiente.getAccion() == 1) {
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
+		                	 if (solrPendiente.getIdArchivo() != null ){
+		                		 solrPendienteResultado = agendadel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_AGENDA, solrPendiente.getIdArchivo());
+		                	 }
+		                	 else {
+		                		 solrPendienteResultado = agendadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(),EnumCategoria.GUSITE_AGENDA);
+		                	 }
+		                }                	 
+		                
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
+		                	if (solrPendiente.getIdArchivo() != null ){
+		                		solrPendienteResultado = noticiadel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_NOTICIA, solrPendiente.getIdArchivo());
+		                    }
+		                	else {
+		                		solrPendienteResultado = noticiadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_NOTICIA);
+		                	}
+		                } 
+		                
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
+		                	if (solrPendiente.getIdArchivo() != null ){
+		                		solrPendienteResultado = contenidodel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_CONTENIDO, solrPendiente.getIdArchivo());
+		                    }
+		                	else {
+		                		solrPendienteResultado = contenidodel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_CONTENIDO);
+		                	}
+		                } 
+		                
+		                //Microsite tiene que tener archivo para poder indexarlo
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){                	                 	
+		                	if (solrPendiente.getIdArchivo() != null ){
+		                		solrPendienteResultado = micrositedel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_MICROSITE, solrPendiente.getIdArchivo());
+		                    }
+		                } 
+		                
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
+		                	solrPendienteResultado = faqdel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_FAQ);
+		                	
+		                }
+		                
+		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
+		                	solrPendienteResultado = encuestadel.indexarSolr(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_ENCUESTA);
+		                } 
+		                
+	    			} else {
+	    				if (solrPendiente.getIdArchivo() == null) {
+	    					try {
+	    						solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.fromString(solrPendiente.getTipo()));
+	    						solrPendienteResultado = new SolrPendienteResultado(true);
+	    					} catch (Exception exception) {
+	    						solrPendienteResultado = new SolrPendienteResultado(false, exception.getMessage());
+	    					}
+	    				} else {
+	    					try {
+	        					solrIndexer.desindexar(solrPendiente.getIdArchivo().toString(), EnumCategoria.GUSITE_ARCHIVO);
+	        					solrPendienteResultado = new SolrPendienteResultado(true);
+	    					} catch (Exception exception) {
+	    						solrPendienteResultado = new SolrPendienteResultado(false, exception.getMessage());
+	    					}
+	    				}
+	    			}
+    			
+    			} catch (Exception exception ) {
+    				log.error("Exception indexando " + solrPendiente, exception);
+    			}
+    			
+    			if (solrPendienteResultado != null) {
+    				if (solrPendienteResultado.isCorrecto()) {
+    					solrPendiente.setResultado(1);
+    					solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());
+    					solrPendienteJob.actualizarSolrPendiente(solrPendiente);
     				} else {
-    					try {
-							solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.GUSITE_ARCHIVO);
-						} catch (ExcepcionSolrApi e) {
-							log.error("Se ha producido un error en desindexar con id " + solrPendiente.getIdElem().toString());
-						}
+    					final Calendar fechaCalendar  = Calendar.getInstance();
+    					fechaCalendar.setTime(solrPendiente.getFechaCreacion());
+    					final Calendar hoyCalendar  = Calendar.getInstance();
+    					hoyCalendar.setTime(new Date());
+    					
+    					final int dias = hoyCalendar.get(Calendar.DATE) - fechaCalendar.get(Calendar.DATE);
+    					//Si hace 10 dias o + que se crea se marca como erronea porque no se ha podido endexar
+    					if ( dias >= 10){
+    						solrPendiente.setResultado(-1);
+    						solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());
+    						solrPendienteJob.actualizarSolrPendiente(solrPendiente);
+    					}else{
+    						log.error("No se ha podido realizar la operación (dias ejecutandose:"+dias+")con el registro : "+solrPendiente.getId());
+    					}
     				}
     			}
-                	
+                
+    			if (i % 20 == 0) {
+    	    		try {
+    	    			solrIndexer.commit();
+	        	   } catch (ExcepcionSolrApi e) {
+	    			log.error("No se ha podido comitear la indexación" + e.getMessage());
+	        	   }        
+    		}
            }
-<<<<<<< HEAD
+    		
     		try {
     			solrIndexer.commit();
-        	   } catch (ExcepcionSolrApi e) {
-    			log.error("No se ha podido comitear la indexación" + e.getMessage());
-        	   }        
-=======
-    	   session.flush(); 
-    	   
-    	   try {
-			solrIndexer.commit();
     	   } catch (ExcepcionSolrApi e) {
 			log.error("No se ha podido comitear la indexación" + e.getMessage());
     	   }
->>>>>>> branch 'gusite-1.2-SOLR' of https://git.indra.es/git/GDLI/GUSITE
+    		
+    	   
     	   return true;
     	}        
          catch (HibernateException he) {
             throw new EJBException(he);
-        } finally {
-            close(session);
-        }
+        } 
     }
     
     /**
@@ -234,6 +260,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
+     * 
      * @return Booleano indicando si se ha indexado el microsite .
      * @throws Exception 
    	 */
@@ -405,22 +433,13 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 				}
         	}
 				
-<<<<<<< HEAD
     	//Comiteamos los cambios.
     	try {
 			solrIndexer.commit();
-		} catch (ExcepcionSolrApi e) {
+			log.error("Se ha indexado correctamente el microsite " + idMicrosite);			
+	    } catch (ExcepcionSolrApi e) {
 			log.error("No se ha podido comitear la indexación" + e.getMessage());
 		}
-        log.error("Se ha indexado correctamente el microsite " + idMicrosite);			
-=======
-        	//Comiteamos los cambios.
-        	try {
-				solrIndexer.commit();
-			} catch (ExcepcionSolrApi e) {
-				log.error("No se ha podido comitear la indexación" + e.getMessage());
-			}		
->>>>>>> branch 'gusite-1.2-SOLR' of https://git.indra.es/git/GDLI/GUSITE
         return true;     
     	    	    		
     	}        
@@ -432,10 +451,12 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     }
     
     /**
-     * Indexa Todos los microsites 
+     * Indexa Todos los microsites.
      * 
      * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *  
      * @return Booleano indicando si se ha indexado todo .
      * @throws Exception 
    	 */
@@ -477,6 +498,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
+     * 
      * @return Booleano indicando si se ha indexado todo los de la condicion anterior .
      * @throws RemoteException 
      * @throws Exception 
@@ -521,6 +544,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
+     * 
      * @return Booleano indicando si se ha obtenido el registro .
      * @throws DelegateException 
    	 */
@@ -556,6 +581,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * 
      * @ejb.interface-method
      * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
+     * 
      * @return lista de Unidades Administrativas . 
    	 */
     public Collection<UnidadListData> getUnidadesAdministrativas(String lang){
@@ -572,6 +599,110 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	
     }
     
-  
+    /**
+     * Lista todos los SolrPendientesJob según cuantos.
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *
+     * @return Devuelve un listado de todos los SolrPendientes.
+     */
+    public List<SolrPendienteJob> getListJobs(final int cuantos, final String tipoIndexacion) {
+
+        Session session = getSession();
+        try {
+        	Query query = session.createQuery(" from SolrPendienteJob solrpendientejob where solrpendientejob.tipo = '"+tipoIndexacion+"' order by solrpendientejob.id desc");
+        	query.setMaxResults(cuantos);
+        	return query.list();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+
+    /**
+     *  Crea el job.
+     * @param tipoIndexacion
+     * @throws SchedulerException 
+     *  
+   	 * @ejb.interface-method
+   	 * @ejb.permission unchecked="true"
+   	 * @ejb.transaction type="RequiresNew"
+     */
+    public void crearJob(final String tipoIndexacion, final String idUAdministrativa, final Long idMicrosite) throws Exception  {
+    	
+    	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
+    	//  se da por hecho que se está ejecutando.
+    	List<SolrPendienteJob> jobs = getListJobs(5, tipoIndexacion);
+    	for(SolrPendienteJob job : jobs) {
+    		if (job.getFechaFin() == null) {
+    			throw new Exception("Se está ejecutando un job, intentelo más tarde");
+    		}
+    	}
+    	
+    	Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler(); 
+    	scheduler.start(); 
+    	JobDetail jobDetail = new JobDetail("IndexacionJob", Scheduler.DEFAULT_GROUP, IndexacionJob.class);
+    	Trigger trigger = TriggerUtils.makeImmediateTrigger(0, 0); 
+    	scheduler.getContext().put("tipoindexacion", tipoIndexacion);
+    	if (idUAdministrativa != null && !idUAdministrativa.isEmpty()) {
+    		scheduler.getContext().put("idUAdministrativa", idUAdministrativa);
+    	}
+    	if (idMicrosite != null) {
+    		scheduler.getContext().put("idMicrosite", idMicrosite);
+    	}
+    	
+        trigger.setName("FireOnceNowTrigger");  
+    	scheduler.scheduleJob(jobDetail, trigger);
+    }
+    
+    /**
+     * Crear una solr pendiente job. 
+     * 
+   	 * @ejb.interface-method
+   	 * @ejb.permission unchecked="true"
+   	 * @ejb.transaction type="RequiresNew"
+   	 * 
+   	 * @return Booleano indicando si se indexan todos los procesos pendientes .     *  
+   	 */
+	public SolrPendienteJob crearSorlPendienteJob(String tipo) {
+		try
+    	{
+			final Session session = getSession();
+			final SolrPendienteJob solrpendienteJob = new SolrPendienteJob();
+	    	solrpendienteJob.setFechaIni(new Date());
+	    	solrpendienteJob.setTipo(tipo);
+	    	
+	    	session.save(solrpendienteJob); 
+			session.flush();
+			session.close();
+			return solrpendienteJob;
+    	 } catch(Exception exception) {
+ 			throw new EJBException(exception);
+ 		}
+	}
+	
+	/**
+	 * Cerrando el pendiente job.
+	 * 
+   	 * @ejb.interface-method
+   	 * @ejb.permission unchecked="true"
+   	 * @ejb.transaction type="RequiresNew"
+   	 *   
+   	 */
+    public void cerrarSorlPendienteJob(SolrPendienteJob solrpendienteJob)  {
+    	try
+    	{
+    		Session session = getSession();
+	    	solrpendienteJob.setFechaFin(new Date());
+	    	session.update(solrpendienteJob); 
+			session.flush();
+			session.close();
+	    } catch(Exception exception) {
+			throw new EJBException(exception);
+		}
+    }
 
 }

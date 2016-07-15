@@ -30,6 +30,7 @@ public class SolrPendienteResultado implements ValueObject {
 	 */
 	public SolrPendienteResultado(final boolean iCorrecto, final String iMensaje) {
 		this.correcto = iCorrecto;
+		this.mensaje = iMensaje;
 	}
 	
 	/**

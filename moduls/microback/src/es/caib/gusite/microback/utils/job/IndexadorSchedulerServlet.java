@@ -34,9 +34,10 @@ public class IndexadorSchedulerServlet implements Servlet {
 			JobDetail jobDetail = new JobDetail("Indexador", "Generadores",
 					GeneraIndexador.class);
 			CronTrigger trigger = new CronTrigger("Indexador", "Generadores");
-			trigger.setCronExpression("0 0 5 ? * MON-FRI"); // de Lunes a
-															// Viernes a las 6
-															// a.m.
+			String value = System.getProperty("es.caib.gusite.solr.jobpendientes");
+			//trigger.setCronExpression("0 0 5 ? * MON-FRI"); 
+			trigger.setCronExpression(value);
+			
 			sched.scheduleJob(jobDetail, trigger);
 			log.info("Job Indexador programado...");
 		} catch (Exception ex) {

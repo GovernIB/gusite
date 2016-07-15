@@ -1156,6 +1156,27 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			this.close(session);
 		}
 	}
+	
+	/**
+	 * Obtiene una encuesta
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Encuesta obtenerEncuestaBySolr(Long id) {
+
+		final Session session = this.getSession();
+		try {
+			Encuesta enc = (Encuesta) session.get(Encuesta.class, id);
+			session.refresh(enc);
+			return enc;
+		} catch (Exception e) {
+			log.error("Error obtenido la encuesta", e);
+			return null;
+		} finally {
+			this.close(session);
+		}
+	}
 
 	/**
 	 * Método para indexar según la id y la categoria. 
@@ -1163,7 +1184,8 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 	 * @param idElemento
 	 * @param categoria
 	 * @ejb.interface-method
-     * @ejb.permission unchecked="true"
+     * @ejb.permission unchecked="true" 
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
 		log.debug("EncuestafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
@@ -1173,7 +1195,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Encuesta encuesta = obtenerEncuesta(idElemento);
+			final Encuesta encuesta = obtenerEncuestaBySolr(idElemento);
+			if (encuesta == null) {
+				return new SolrPendienteResultado(true, "Error obteniendo la encuesta.");
+			}
 			boolean isIndexable = this.isIndexable(encuesta);
 			if (!isIndexable) {
 				return new SolrPendienteResultado(true, "No se puede indexar");

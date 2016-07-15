@@ -27,7 +27,7 @@ public class DiccionarioSchedulerServlet implements Servlet
 	private Log log = LogFactory.getLog( DiccionarioSchedulerServlet.class  );
 	
 	public void init(ServletConfig conf)  throws ServletException {
-	
+	  
 		try {
 			SchedulerFactory schedFact =new org.quartz.impl.StdSchedulerFactory();
 			Scheduler sched = schedFact.getScheduler();

@@ -15,6 +15,7 @@ import es.caib.solr.api.model.FilterSearch;
 import es.caib.solr.api.model.PaginationSearch;
 import es.caib.solr.api.model.ResultData;
 import es.caib.solr.api.model.StoredData;
+import es.caib.solr.api.model.types.EnumAplicacionId;
 import es.caib.solr.api.model.types.EnumIdiomas;
 
 
@@ -31,7 +32,7 @@ public class SolrDelegate implements StatelessDelegate {
 
 	private static final long serialVersionUID = 3017269661850900982L;
 
-	public IndexResultados buscar(String idMicro, String idi, Object object, String words,
+	public IndexResultados buscar(String idSession, String idMicro, String idi, Object object, String words,
 			boolean b) throws DelegateException, ExcepcionSolrApi {
 		
 		
@@ -45,8 +46,11 @@ public class SolrDelegate implements StatelessDelegate {
 		
 		final FilterSearch filterSearch = new FilterSearch();
 		filterSearch.setMicrositeId(idMicro);
+		List<EnumAplicacionId> aplicaciones = new ArrayList<EnumAplicacionId>();
+		aplicaciones.add(EnumAplicacionId.GUSITE);
+		filterSearch.setAplicaciones(aplicaciones);
 		final PaginationSearch paginationSearch = new PaginationSearch();
-		final ResultData resultadoSolr = buscador.buscar(words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
+		final ResultData resultadoSolr = buscador.buscar(idSession, words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
 		
 		MicrositeDelegate microde = DelegateUtil.getMicrositeDelegate();
 		Microsite microsite = microde.obtenerMicrosite(Long.parseLong(idMicro));

@@ -91,18 +91,33 @@ public class IndexarPrincipalAction extends BaseAction {
 				addMessage(request, "indexa.ok");
 			}
 		}
-		
+        
+        
+        if (request.getParameter("indexar") != null && request.getParameter("indexar").equals("verpendientes")) {
+        	final List<?> pendientes = verListaPendientes();	
+        	request.setAttribute("listado",pendientes);			
+		}
 		
 		
         return mapping.findForward(elforward);
 	
 	}	
 	
-    private Boolean indexarTodo() throws Exception {
+    private List<?> verListaPendientes() {
+		try {
+			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
+			return solrPendienteDel.getPendientes();			
+		} catch(Exception exception) {
+			return null;
+		}
+	}
+
+	private Boolean indexarTodo() throws Exception {
 		 
 		try{									
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			solrPendienteDel.indexarTodo();
+			solrPendienteDel.crearJob("IDX_TODO", null, null);
+			//solrPendienteDel.indexarTodo();
 							
 		   }catch(Exception e){
 			log.error("Error indexando todo" );
@@ -115,8 +130,9 @@ public class IndexarPrincipalAction extends BaseAction {
     private Boolean indexarByUA(String idUAdministrativa) throws Exception {
 		 
 		try{									
-			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			solrPendienteDel.indexarMicrositeByUA(idUAdministrativa);
+			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();		
+			solrPendienteDel.crearJob("IDX_UA", idUAdministrativa, null);
+			//solrPendienteDel.indexarMicrositeByUA(idUAdministrativa);
 							
 		   }catch(Exception e){
 			log.error("Error indexando UA " + idUAdministrativa );
@@ -131,7 +147,8 @@ public class IndexarPrincipalAction extends BaseAction {
 		 
 		try{									
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			solrPendienteDel.indexarPendientes();
+			solrPendienteDel.crearJob("IDX_PDT", null, null);
+			//solrPendienteDel.indexarPendientes();
 							
 		   }catch(Exception e){
 			log.error("Error indexando pendientes ");

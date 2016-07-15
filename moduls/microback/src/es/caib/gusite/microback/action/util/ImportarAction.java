@@ -92,6 +92,7 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.PersonalizacionPlantillaDelegate;
 import es.caib.gusite.micropersistence.delegate.PlantillaDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
@@ -180,7 +181,7 @@ public class ImportarAction extends BaseAction {
                     addMessage(request, "micro.importar.version", micro.getVersion(), Microback.microsites_version);
                     return mapping.findForward("info");
                 }
-
+                
                 addImportLogVisual(request, (String) rb.getObject("logimport.version") + " [" + micro.getVersion() + "]");
 
                 // si hay un nuevo título, lo actualizo en el idioma por defecto
@@ -204,13 +205,14 @@ public class ImportarAction extends BaseAction {
                 if ((f.getIndexar() != null) && (f.getIndexar().equals("S"))) {
                     String aviso = (String) rb.getObject("micro.importar.aviso1") + (String) rb.getObject("micro.importar.aviso2") + (String) rb.getObject("micro.importar.aviso3");
                     request.getSession().setAttribute("MVS_avisoindexadorimportprocessor", aviso);
-
+                    
                     addImportLogVisual(request, "Comença indexació");
-
-                    //IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
-                    //indexo.reindexarMicrosite(micro.getId());
-
-                    addImportLogVisual(request, "Fi indexació");
+                    
+                    final SolrPendienteDelegate d = DelegateUtil.getSolrPendienteDelegate();
+                    d.crearJob("IDX_MIC", null, micro.getId());
+                    //d.indexarMicrosite(micro.getId());
+                    
+                    addImportLogVisual(request, "Indexació executant-se en background");
                 }
 
                 addImportLog("Fi importació, USUARI: [" + request.getSession().getAttribute("username") + "], nou MICROSITE: [" + micro.getId() + "]");

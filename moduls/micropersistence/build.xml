@@ -64,6 +64,7 @@
 		    <include name="dom4j-1.6.1.jar"/>
 			<include name="jericho-html-2.5.jar"/>
 			<include name="struts.jar"/>
+			<include name="quartz-1.8.5.jar" />
 		</fileset>
     </path>
 

@@ -70,7 +70,7 @@ public class CercadorController extends BaseViewController {
 			SolrDelegate indexo = DelegateUtil.getSolrDelegate();
 			IndexResultados resultado;
 			
-				resultado = indexo.buscar("" + microsite.getId().longValue(), lang.getLang(), null, cerca, true);
+			resultado = indexo.buscar(req.getSession().getId(), "" + microsite.getId().longValue(), lang.getLang(), null, cerca, true);
 				
 			// hasta aqui metodo buscar();
 			

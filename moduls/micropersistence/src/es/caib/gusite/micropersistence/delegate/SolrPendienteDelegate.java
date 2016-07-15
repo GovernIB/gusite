@@ -8,6 +8,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micromodel.SolrPendiente;
 import es.caib.gusite.micropersistence.intf.SolrPendienteFacade;
 import es.caib.gusite.micropersistence.intf.SolrPendienteFacadeHome;
@@ -119,8 +120,61 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		
 	}
 	
+	public void crearJob(final String tipoIndexacion, final String idUAdministrativa, final Long idMicrosite) throws DelegateException {
+		try {
+			this.getFacade().crearJob(tipoIndexacion, idUAdministrativa, idMicrosite);		
+		}catch (RemoteException e) {
+			throw new DelegateException(e);
+		}catch (Exception e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Genera un solr pendiente job. 
+	 * 
+	 * @param tipo
+	 * @return
+	 * @throws DelegateException
+	 */
+	 public SolrPendienteJob crearSorlPendienteJob(String tipo) throws DelegateException {
+		 try {
+				return this.getFacade().crearSorlPendienteJob(tipo);
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+	 }
+	    
+	 /**
+	  * Cierra un solr pendiente.  
+	  * 
+	  * @param solrpendienteJob
+	  * @throws DelegateException
+	  */
+     public void cerrarSorlPendienteJob(SolrPendienteJob solrpendienteJob) throws DelegateException {
+    	 try {
+    			this.getFacade().cerrarSorlPendienteJob(solrpendienteJob);
+    	 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+     }
 
 
+     /**
+	  * Obtiene la lista de jobs.  
+	  * 
+	  * @param cuantos La lista de elementos a devolver.
+	  * @throws DelegateException
+	  */
+     public List<SolrPendienteJob> getListJobs(int cuantos, String tipo) throws DelegateException {
+    	 try {
+    			 return this.getFacade().getListJobs(cuantos, tipo);
+    	 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+     }
+     
+     
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */

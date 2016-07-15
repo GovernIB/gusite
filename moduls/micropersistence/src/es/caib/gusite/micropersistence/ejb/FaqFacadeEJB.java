@@ -323,6 +323,25 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			this.close(session);
 		}
 	}
+	
+	/**
+	 * Obtiene una faq
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Faq obtenerFaqBySolr(Long id) {
+
+		final Session session = this.getSession();
+		try {
+			return (Faq) session.get(Faq.class, id);
+		} catch (Exception exception) {
+			log.error("Error obteniendo faq.", exception);
+			return null;
+		} finally {
+			this.close(session);
+		}
+	}
 
 	/**
 	 * Método para indexar según la id y la categoria. 
@@ -331,6 +350,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 	 * @param categoria
 	 * @ejb.interface-method
      * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
 		log.debug("FaqfacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
@@ -340,7 +360,11 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
-			final Faq faq = obtenerFaq(idElemento);
+			final Faq faq = obtenerFaqBySolr(idElemento);
+			if (faq == null) {
+				return new SolrPendienteResultado(true, "Error obteniendo el faq.");
+			}
+			
 			boolean isIndexable = this.isIndexable(faq);
 			if (!isIndexable) {
 				return new SolrPendienteResultado(true, "No se puede indexar");
@@ -381,6 +405,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 					
 					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
+					descripcion.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
 					
 			    	//descripcion.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
 			    	//Tema traducción en el idioma que estamos
@@ -456,9 +481,9 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			indexData.setUrlPadre(urlPadre);
 			
 			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
+				final List<PathUO> uos = new ArrayList<PathUO>();
+				final PathUO uo = new PathUO();
+				final List<String> path = new ArrayList<String>();
 				path.add(String.valueOf(micro.getIdUA()));
 				uo.setPath(path);
 				uos.add(uo);
