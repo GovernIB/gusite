@@ -84,7 +84,7 @@ public class MParserEncuesta extends MParserHTML {
 			} else {
 				// retorno.append(rb.getString("encuesta.anonima"));
 			}
-			retorno.append("<br><br>");
+			retorno.append("<p></p><p></p>");
 
 			if ((encuesta.getVisible().equals("S")) && (Fechas.vigente(encuesta.getFpublicacion(), encuesta.getFcaducidad()))) {
 
@@ -236,7 +236,7 @@ public class MParserEncuesta extends MParserHTML {
 								// + respuesta.getId() + "_" + pregunta.getId()
 								// + "\"" + readonly + ">");
 								String onKeyUp = "onKeyUp=\"marcaCheck('" + respuesta.getId() + "','" + pregunta.getId() + "');\"";
-								retorno.append("<br><TEXTAREA COLS=\"120\" ROWS=\"2\" " + onKeyUp + " name=\"T" + respuesta.getId() + "_"
+								retorno.append("<p></p><TEXTAREA COLS=\"120\" ROWS=\"2\" " + onKeyUp + " name=\"T" + respuesta.getId() + "_"
 										+ pregunta.getId() + "\"" + disabledTxt + "></TEXTAREA>");
 								if (param.get(respuesta.getId()) != null) {
 									retorno.append("<script>document.getElementById(\"encuesta\").T" + respuesta.getId() + "_" + pregunta.getId()

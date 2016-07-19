@@ -8,7 +8,8 @@ Contenido de la HOME proporcionada por GUSITE
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_micrositetitulo}!=null"
@@ -29,6 +30,7 @@ Contenido de la HOME proporcionada por GUSITE
 	</script>
 </th:block>
 
+
 </head>
 <body>
 	<section th:remove="tag" layout:fragment="content">
@@ -36,7 +38,7 @@ Contenido de la HOME proporcionada por GUSITE
 			th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="" class="tamanoIndex">
 			<div id="contenedorIndex" class="menuAccessibilitat">
 				<div class="menuLateral2">
-					<br/><br/>
+					<p></p><p></p>
 					<div th:if="${MVS_datos_agenda_calendario}!=null and ${MVS_datos_agenda_calendario}!='-1'"
 			 			id="agenda">
 						<h2 th:utext="#{agenda.agenda}">Agenda</h2>

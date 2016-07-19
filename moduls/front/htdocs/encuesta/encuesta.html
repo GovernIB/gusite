@@ -8,7 +8,8 @@ Página de formulario de encuesta.
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_encuesta} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo}">Microsite Título - encuesta traduce título</title>	
@@ -40,7 +41,7 @@ Página de formulario de encuesta.
 	<div th:fragment="contenido" th:remove="tag">
 		<!-- u91856 02/03/2012 Salvador Antich: Identificacion del usuario que contesta segun configuracion de la encuesta -->
 		<div th:if="${MVS_encuesta.identificacion}=='S'" th:remove="tag" th:text="${MVS_identificacion}"></div>
-		<br /> <br />
+		<p></p><p></p>
 		<div th:if="(${MVS_encuesta.visible}=='S') and (${MVS_Fechas_vigente})" th:remove="tag">
 			<form name="encuesta" 
 				th:action="@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}"
@@ -184,24 +185,25 @@ Página de formulario de encuesta.
 				th:checked="${checked}=='checked'" />
 			
 			<span th:text="${respuesta.traduce.titulo}" th:remove="tag">Título respuesta</span>
-		</label>				
-		<span th:if="${respuesta.tipo}=='I'" th:remove="tag"><br /> 
-			<textarea
-					COLS="120" ROWS="2"
-					th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
-					th:name="'T' + ${respuesta.id} + '_' + ${pregunta.id}"
-					th:readonly="${disabledTxt}=='readonly'"></textarea>
+		</label>
+			<span th:if="${respuesta.tipo}=='I'" th:remove="tag">
+			<p>				
+				<textarea
+						COLS="120" ROWS="2"
+						th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
+						th:name="'T' + ${respuesta.id} + '_' + ${pregunta.id}"
+						th:readonly="${disabledTxt}=='readonly'"></textarea>
+			</p>
+				<script th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}" th:inline="javascript">
+				/*<![CDATA[*/
+				    var idRespuesta=/*[[${respuesta.id}]]*/;
+					var idPregunta=/*[[${pregunta.id}]]*/;																																											
+				    document.getElementById('encuesta')['T' + idRespuesta + "_" + idPregunta + ].value=idRespuesta; 
+				/*]]>*/
+				</script>
+					
+			</span> 
 			
-			<script th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}" th:inline="javascript">
-			/*<![CDATA[*/
-			    var idRespuesta=/*[[${respuesta.id}]]*/;
-				var idPregunta=/*[[${pregunta.id}]]*/;																																											
-			    document.getElementById('encuesta')['T' + idRespuesta + "_" + idPregunta + ].value=idRespuesta; 
-			/*]]>*/
-			</script>
-				
-		</span> 
-		
 		<script th:if="''!=${disabledRadio}" th:inline="javascript">
 			/*<![CDATA[*/																													
 			    var preguntaMultiresp=/*[[${pregunta.multiresp}]]*/;

@@ -2,7 +2,8 @@
 <!--
 //Este código nos muestra el menú de microsite
 -->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
     <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

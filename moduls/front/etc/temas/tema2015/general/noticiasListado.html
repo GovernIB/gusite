@@ -5,7 +5,8 @@ Este código muestra el módulo de listado de las noticias
 
 */-->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -40,7 +41,7 @@ Este código muestra el módulo de listado de las noticias
 								th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}"
 								th:text="${noticia.tipo.traduce.nombre}"></a>
 							<img th:if="${noticia.imagen}!=null"
-							th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}"
+							th:src="@{${#gusuri.archivopub(MVS_microsite,noticia.imagen)}}" th:with="mimeVar=${#strings.arraySplit(noticia.imagen.nombre,'.')}" th:alt="${mimeVar[0]}"
 							 />
 							
 						</div>

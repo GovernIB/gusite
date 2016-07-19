@@ -8,7 +8,8 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <!--MVS_contacto_titulo: devuelve el título del contacto en cuestión  -->
@@ -38,8 +39,9 @@
 			<!-- titol -->
 			<h2 th:text="#{enviocontacto.resultado}">Resultat enviament</h2>
 			<!-- informacio -->
-			<br /> <br />
+			<p>
 			<div th:text="#{enviocontacto.ok} + '.'" th:remove="tag">S`ha enviat el formulari satisfactòriament</div>
+			</p>
 		</div>
 		<!-- fin informacio -->
 	</section>
