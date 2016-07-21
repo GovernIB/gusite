@@ -38,7 +38,7 @@
                 <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
             </div>
             <!--/* Caso para cuando no hay contenido ni noticia definido */-->
-            <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null) and (${MVS_idContenido}==null)" th:with="idcontenido='-1'" th:type="java.lang.Object" th:remove="tag">
+            <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null) and (${MVS_idContenido}==null or ${MVS_idContenido}=='')" th:with="idcontenido='-1'" th:type="java.lang.Object" th:remove="tag">
                 <div gus:replace="general/menu :: contenido" th:remove="tag">
                 </div>
             </div> 

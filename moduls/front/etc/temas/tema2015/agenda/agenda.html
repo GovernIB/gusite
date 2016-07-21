@@ -43,18 +43,20 @@ th:lang-xmllang="${lang}">
 			<div class="fechaEvento">
 					<div class="diaEvento">
 						<div 
-						th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'dd')}">
+						th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'dd')}">
 						<div th:text="${inicio}" th:remove="tag"></div>
 					</div>
 				</div>
 				<div class="mesAnoEvento">
 					<strong>
-						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'MMM')}" th:remove="tag">
+						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'MMM')}" th:remove="tag">
 							<div th:text="${#strings.substring(inicio,0,3)}" th:remove="tag"></div>
 						</div>
-						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'yyyy')}" th:remove="tag">
+a	
+						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'yyyy')}" th:remove="tag">
 							<div th:text="${inicio}" th:remove="tag"></div>
 						</div>
+
 					</strong>
 				</div>
 			</div>

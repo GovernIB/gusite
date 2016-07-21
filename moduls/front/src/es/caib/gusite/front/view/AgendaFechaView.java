@@ -1,6 +1,8 @@
 package es.caib.gusite.front.view;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 import es.caib.gusite.micromodel.Agenda;
 
@@ -38,6 +40,17 @@ public class AgendaFechaView extends ListPageView {
 	@Variable("MVS_agenda_diaevento")
 	public String getAgendaDiaevento() {
 		return this.agendaDiaevento;
+	}
+	
+	@Variable("MVS_agenda_diaevento_date")
+	public Date getAgendaDiaeventoDate() {
+		final Calendar calendar = Calendar.getInstance();
+		final String[] campos = this.agendaDiaevento.split("/");
+		calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(campos[0]));
+		calendar.set(Calendar.MONTH, Integer.valueOf(campos[1]) - 1 );
+		calendar.set(Calendar.YEAR, Integer.valueOf(campos[2]));
+		
+		return calendar.getTime();
 	}
 	
 	public void setIdContenido(String idContenido) {
