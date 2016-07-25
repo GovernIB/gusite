@@ -216,8 +216,8 @@ public class ContenidoController extends BaseViewController {
                   @RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
                   @RequestParam(value = Microfront.PCONT, required = false, defaultValue = "") String cont,
                   @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+                  @RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipo,
                   @RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
-                  @RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
                   @RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
        
            String urlFact = this.urlFactory.legacyToFrontUri(url, new Idioma(Idioma.getIdiomaPorDefecto()));
@@ -257,6 +257,13 @@ public class ContenidoController extends BaseViewController {
                   urlAppend.append(uriContenido);
            }
            
+           if (tipo != null && !tipo.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PTIPO);
+               urlAppend.append("=");
+               urlAppend.append(tipo);
+           }
+           
            return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());
      }
      
@@ -279,8 +286,8 @@ public class ContenidoController extends BaseViewController {
                   @RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
                   @RequestParam(value = Microfront.PCONT, required = false, defaultValue = "") String cont,
                   @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+                  @RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipo,
                   @RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
-                  @RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
                   @RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
        
            String urlFact = this.urlFactory.legacyToFrontUri(url, lang);
@@ -318,6 +325,12 @@ public class ContenidoController extends BaseViewController {
            if (uriContenido != null && !uriContenido.isEmpty()) {
                   urlAppend.append("&uricont=");
                   urlAppend.append(uriContenido);
+           }
+           if (tipo != null && !tipo.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PTIPO);
+               urlAppend.append("=");
+               urlAppend.append(tipo);
            }
            
            return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());          
