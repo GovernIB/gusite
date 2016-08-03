@@ -35,7 +35,7 @@ public class BuscaAction extends BaseAction  {
 		String micro = "" + request.getParameter("micro");
 		String idi = "" + request.getParameter("idi");
 
-		request.setAttribute("listado", index.buscar(micro, idi, null, words, true));
+		request.setAttribute("listado", index.buscar(request.getSession().getId(), micro, idi, null, words, true));
 
 		// TODO amartin: ¿se puede borrar este código comentado? Comprobar uso de atributo.
 		// request.setAttribute("diccionario", indexo.diccionario(idi));
