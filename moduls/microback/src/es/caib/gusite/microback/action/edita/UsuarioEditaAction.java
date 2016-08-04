@@ -59,6 +59,7 @@ public class UsuarioEditaAction extends BaseAction {
         	usuari.setPerfil(f.getPerfil());
         	usuari.setUsername(f.getUsername());
         	usuari.setPassword(f.getPassword());
+        	usuari.setPermisosTiny(f.getPermisosTiny());
      	 
 	        bdUsuari.grabarUsuario(usuari);
 	
@@ -94,7 +95,7 @@ public class UsuarioEditaAction extends BaseAction {
             	f.setUsername(usuari.getUsername());
             	f.setPassword(usuari.getPassword());
             	f.setRepitepwd(usuari.getPassword());
-               
+            	f.setPermisosTiny(usuari.getPermisosTiny());
                 
             return mapping.findForward("detalle");
 
