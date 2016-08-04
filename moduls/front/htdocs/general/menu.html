@@ -7,7 +7,8 @@ Muestra el menú de microsite
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	>
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -43,11 +44,14 @@ Muestra el menú de microsite
 						th:value="${MVS_idsite}" /> 
 						<!-- MVS_idioma: devuelve el idioma correspondiente -->
 						<input type="hidden" name="lang"
-						value="" th:value="${MVS_idioma}" /> <label for="cercadorTxt">
+						value="" th:value="${#strings.toLowerCase(MVS_idioma)}" /> <label for="cercadorTxt">
 						<span class="invisible">Text a cercar:</span> <input name="cerca"
-						id="cercadorTxt" type="text" value="" />
+						id="cercadorTxt" type="text" value="" class="texto"/>
 					</label>
-					<button type="submit" th:text="#{cercador.cercau}">Cerqueu</button>
+<!-- 					<button type="submit" th:text="#{cercador.cercau}">Cerqueu</button> -->
+					<span id="botonBuscar">
+						<input type="submit" th:with="valor=#{cercador.cercar}" th:value="${valor}"  th:title="${valor}" class="botonBuscador" />
+					</span>
 				</form>
 			</div>
 		</div>
@@ -110,6 +114,7 @@ Muestra el menú de microsite
 											th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}"
 											target=""
 											th:target="(${contenido.urlExterna}) ? '_blank' : '_self'"
+											th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 											th:text="${contenido.traduce.titulo}">Título del contenido</a>
 							</li>
 
@@ -126,6 +131,7 @@ Muestra el menú de microsite
 												<a href="contenido.html" target=""
 												th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,opcion)}}"
 												th:target="(${opcion.urlExterna})? '_blank' : '_self'"
+												th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 												th:text="${opcion.traduce.titulo}">Título opción menú</a>
 											</li>
 										</ul>						
@@ -137,6 +143,7 @@ Muestra el menú de microsite
 													<a href="contenido.html" target=""
 													th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido.listacosas[0])}}"
 													th:target="(${contenido.listacosas[0].urlExterna})? '_blank' : '_self'"
+													th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 													th:text="${contenido.traduce.nombre}">Nombre contenido</a>
 									 </li>
 								</ul>
@@ -183,6 +190,7 @@ Muestra el menú de microsite
 										<a href="contenido.html" target=""
 										th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}"
 										th:target="(${contenido.urlExterna})? '_blank' : '_self'"
+										th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 										th:text="${contenido.traduce.titulo}">Título del contendo</a>
 							</li>
 							<li
@@ -203,6 +211,7 @@ Muestra el menú de microsite
                                           		<a href="contenido.html" target=""
 													th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenidoLista)}}"
 													th:target="(${contenidoLista.urlExterna})? '_blank' : '_self'"
+													th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 													th:text="${contenidoLista.traduce.titulo}">Título contenido</a>
 											</li>
 											</ul>
@@ -218,6 +227,7 @@ Muestra el menú de microsite
                                                          		<a href="contenido.html" target=""
 												th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,opcion)}}"
 												th:target="(${urlExterna})? '_blank' : '_self'"
+												th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 												th:text="${contenido.traduce.nombre}">Traducción contenido</a>
 										</li>
 									</ul>

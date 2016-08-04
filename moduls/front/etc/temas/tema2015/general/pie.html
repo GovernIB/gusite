@@ -7,7 +7,8 @@ Este código muestra el pie de página.
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	>
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -51,7 +52,7 @@ Este código muestra el pie de página.
 							<a href="http://www.caib.es">Govern de les IllesBalears</a>
 							<div th:if="${direccion}!=null" th:utext="${direccion}" th:remove="tag">
 								<!-- Dirección -->
-								<!-- <a href="/govern/presidencia.do?lang=ca">Presidència</a> --><a href="/govern/organigrama/planol.do?coduo=2&amp;lang=ca">C/ de la Llotja, 3 - 07012 Palma de Mallorca</a><br /><span class="strong-white">T.</span> (+34) <span class="strong-pie">971 176 565</span> - <span class="strong-white">F.</span> (+34) <span class="strong-pie">971 176 587</span>
+								<!-- <a href="/govern/presidencia.do?lang=ca">Presidència</a> --><a href="/govern/organigrama/planol.do?coduo=2&amp;lang=ca">C/ de la Llotja, 3 - 07012 Palma de Mallorca</a><p></p><span class="strong-white">T.</span> (+34) <span class="strong-pie">971 176 565</span> - <span class="strong-white">F.</span> (+34) <span class="strong-pie">971 176 587</span>
 							</div>
 						</div>
 					<!-- /contacte -->

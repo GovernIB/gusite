@@ -353,8 +353,16 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 		Session session = this.getSession();
 		try {
+			Archivo archivo = null;
 			Noticia noticia = (Noticia) session.get(Noticia.class, id);
+			if(noticia.getImagen() !=null && noticia.getImagen().getId() !=null){            	
+				archivo = clonarArchivo(noticia.getImagen().getId());
+			}
             Noticia newnoticia = this.clonar4Hibernate(noticia);
+            //El metodo de clonar ha puesto el id del original a null por eso lo obtenemos antes
+            if(archivo !=null){
+            	newnoticia.setImagen(archivo);
+            }
             session.close();
             this.grabarNoticia(newnoticia);
 

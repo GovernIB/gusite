@@ -133,6 +133,7 @@ var thMessages = [
                   ["general.accessibilitat",                             "Accessibilitat"],
                   ["general.traduccion",                             "Automatic translation. Sorry for the inconvenience"],
                   ["cercador.cercau",                             "Cerqueu"],
+                  ["cercador.cercar",								"Cercar"],
                   ["cabecera.idioma",                             "Idioma"],
                   ["accessibilitat.compromis",                             "Compromís del Govern de les Illes Balears"],
                   ["accessibilitat.compromis.texte1",                             "Un dels principals objectius d'interés social del Govern de les Illes Balears és posar tota la informació de la  web a disposició del major nombre de ciutadans possible, evitant la info-exclussió; i promovent l'accessibilitat per aconseguir la universalització de la informació."],

@@ -378,7 +378,12 @@ public class NoticiasController extends BaseViewController {
 				log.error("El contenido solicitado está caducado");
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 			}
-
+			
+			if (((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu() == null){
+				log.error("No existe un documento asociado");
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			}
+			
 			Long iddocumento = ((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu().getId();
 			return new ModelAndView("forward:" + this.urlFactory.archivopubById(microsite, iddocumento));
 

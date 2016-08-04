@@ -8,7 +8,8 @@ Listado de eventos de la agenda para una fecha
 xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-gus:decorator="layout">
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title
@@ -42,18 +43,20 @@ gus:decorator="layout">
 			<div class="fechaEvento">
 					<div class="diaEvento">
 						<div 
-						th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'dd')}">
+						th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'dd')}">
 						<div th:text="${inicio}" th:remove="tag"></div>
 					</div>
 				</div>
 				<div class="mesAnoEvento">
 					<strong>
-						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'MMM')}" th:remove="tag">
+						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'MMM')}" th:remove="tag">
 							<div th:text="${#strings.substring(inicio,0,3)}" th:remove="tag"></div>
 						</div>
-						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento, 'yyyy')}" th:remove="tag">
+a	
+						<div th:with="inicio=${#calendars.format(MVS_agenda_diaevento_date, 'yyyy')}" th:remove="tag">
 							<div th:text="${inicio}" th:remove="tag"></div>
 						</div>
+
 					</strong>
 				</div>
 			</div>
@@ -71,12 +74,12 @@ gus:decorator="layout">
 					<div class="activitatTitol">
 					<div th:if="${elementoAgenda.actividad}!=null" th:with="actividad=${elementoAgenda.actividad.traduce.nombre}" th:remove="tag">
 						<div  id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></div>
-						<br />
+						<p></p>
 						<div th:if="${!iterStat.first}" th:with="actividadold=${MVS_agenda_lista[iterStat.index-1].actividad.traduce.nombre}" th:remove="tag">
 							<div th:if="${actividad}!=${actividadold}" id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></div>
 						</div>
 					</div>					
-					<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}">Títol de l'esdeveniment</h3><br />
+					<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}">Títol de l'esdeveniment</h3><p></p>
 					<div class="fechaElemento">
 						<span th:with="finicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')},horai=${#calendars.format(elementoAgenda.finicio, 'HH:mm')}">
 							<span th:text="${finicio}"></span>
@@ -101,7 +104,7 @@ gus:decorator="layout">
 						<div class="link">
 						<strong>
 						<div th:text="${#strings.toUpperCase(#strings.substringAfter(elementoAgenda.traduce.documento.nombre,'.'))}"></div><span th:if="${elementoAgenda.traduce.documento.peso} > 1024" th:text="'('+${#strings.substring(elementoAgenda.traduce.documento.peso,0,3)} + ' KB)'"></span></strong>
-						<br />
+						<p></p>
 						<a href="archivopub.html"
 							th:href="@{${#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.documento)}}"
 							target="blank" th:text="${#strings.substringBefore(elementoAgenda.traduce.documento.nombre,'.')}">Nombre del documento</a>		

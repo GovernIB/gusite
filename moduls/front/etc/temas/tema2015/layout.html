@@ -7,7 +7,8 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 <html xmlns="http://www.w3.org/1999/xhtml"
 xmlns:th="http://www.thymeleaf.org" 
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

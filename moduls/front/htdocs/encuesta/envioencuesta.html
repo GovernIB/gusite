@@ -8,7 +8,8 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_encuesta} !=null"
@@ -31,8 +32,8 @@
 	<section th:remove="tag" layout:fragment="content">
 		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">
 			<h2 th:text="${MVS_encuesta.traduce.titulo}">Título de la encuesta</h2>
-			<i th:if="${MVS_encuesta.votoDuplicado}=='NVOT'" th:text="#{encuesta.mensaje}">(Només es permet un vot per persona)<br /></i>
-			<br />
+			<i th:if="${MVS_encuesta.votoDuplicado}=='NVOT'" th:text="#{encuesta.mensaje}">(Només es permet un vot per persona)<p></p></i>
+			<p></p>
 			<div th:if="${MVS_encuesta.visible} =='S'" th:remove="tag">
 				
 				<div th:if="${MVS_encuesta.mostrar} != 'S'" th:utext="#{encuesta.gracias}">Gràcies per la teva col.laboració</div>

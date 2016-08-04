@@ -8,7 +8,8 @@ Resultados de una busqueda.
 xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-gus:decorator="layout">
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
@@ -46,7 +47,7 @@ gus:decorator="layout">
 				<li><h3><span class="glyphicon glyphicon-search" aria-hidden="true"/><span th:utext="#{cercar.resultados}">Resultats recerca</span></h3></li>
 			</ul>
 
-			<br/>	
+			<p></p>
 			
 			<!-- MVS_listado_buscador: devuelve el resultado de una busqueda realizada -->
 			<div th:if="${MVS_listado_buscador} !=null" th:remove="tag">
@@ -127,12 +128,11 @@ gus:decorator="layout">
 							<!--<span th:text=" ${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site} ">Site:</span>-->
 							<span class="detall"
 							th:text="${resultado.descripcion}">Descripcion</span>
-							<br/>
-							<br/>
+							<p></p><p></p>
 						</li>
 					</ul>
 				</div>
-				<br/>
+				<p></p>
 			</div>
 
 			<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">

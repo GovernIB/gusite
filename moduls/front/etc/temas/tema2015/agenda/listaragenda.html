@@ -8,7 +8,8 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 	<head>
 		<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title th:if="${MVS_micrositetitulo} !=null"
@@ -78,11 +79,11 @@
 						th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"				>
 						<strong th:text="${evento.actividad.traduce.nombre}"></strong>
 						</a>
-						<br />
+						<p></p>
 						<a href="agenda.html"
 						th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"				
 						th:text="${evento.traduce.titulo}">Título del evento</a>
-						<br />
+						<p></p>
 						<div th:if="${evento.ffin} !=null">
 							<span th:with="finicio=${#calendars.format(evento.finicio, 'dd/MM/yyyy')}">
 								<span th:text="${finicio + ' - '}"></span>
@@ -95,7 +96,7 @@
 							<span th:with="finicio=${#calendars.format(evento.finicio, 'dd/MM/yyyy')}">
 								<span th:text="${finicio}"></span>
 							</span>
-						</div>								<br />
+						</div>								<p></p>
 					</div>
 				</div>
 			</div>

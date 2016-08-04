@@ -8,11 +8,13 @@ Información en cuanto a la accesibilidad del web
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
-<title th:if="${MVS_contacto_titulo} !=null"
-	th:text="(${MVS_micrositetitulo})+ ' - ' +(${MVS_contacto_titulo})">Titulo Contacto</title>	
+
+<title th:text="#{accessibilitat.titulo}">Accesibilitat</title>	
+
 <th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.
@@ -139,6 +141,10 @@ Información en cuanto a la accesibilidad del web
 					<li><a href="http://www.kde.org/">Konqueror</a></li>
 					<li><a href="http://www.apple.com/es/macosx/features/safari/">Safari</a></li>
 				</ul>
+				
+				<p th:utext="#{accessibilitat.revision}">Data darrera revisió:</p>
+				<p th:utext="${MVS_fecha_revision_acc}"></p>
+	
 			</div>
 		</div>
 	</section>
