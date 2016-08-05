@@ -464,6 +464,14 @@ function buscarUltimoHijo(overID, cloneID) {
 	overIDClassName = document.getElementById(overID).className;
 	cloneIDClassName = document.getElementById(cloneID).className;
 	nuevoID = '';
+	
+	//Caso carpeta principal
+	var carpetaPrincipal= false;
+	if(document.getElementById(overID).getElementsByTagName('input')[2].value == "m" 
+		&& document.getElementById(cloneID).getElementsByTagName('input')[2].value == "m"
+	    && overIDClassName == 'nivel1' && cloneIDClassName == 'nivel1'){
+		carpetaPrincipal= true;
+	}
 	if(overIDClassName == 'nivel1' && cloneIDClassName == 'nivel2') {
 		nuevoID = overID;
 	} else {
@@ -478,14 +486,31 @@ function buscarUltimoHijo(overID, cloneID) {
 					if(divsSON[n].className.indexOf('nivel') != -1) clonar = false;
 				}
 				
-				if(divsSON[n].id == overID && 
-						(document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c1" 
-						|| document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "m")
-						|| (document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c2" && 
-								document.getElementById(divsSON[n].id).getElementsByTagName('input')[3].value == document.getElementById(overID).getElementsByTagName('input')[0].value)   ) 
-				{
-					clonar = true;
+				if(carpetaPrincipal){
+					//Cuando son dos carpetas principales se clonara la carpeta y sus hijos(los que tienen mismo padre input 3)
+					if(divsSON[n].id == overID || 
+						document.getElementById(divsSON[n].id).getElementsByTagName('input')[3].value == document.getElementById(overID).getElementsByTagName('input')[0].value){
+						clonar = true;		
+					}
+				}else{
+					
+					if(document.getElementById(overID).getElementsByTagName('input')[2].value == "m" 
+						|| document.getElementById(cloneID).getElementsByTagName('input')[2].value == "m"){
+						nuevoID = cloneID;
+						break;// acción no permitida
+					}
+					
+					if(divsSON[n].id == overID && 
+							(document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c1")
+								|| (document.getElementById(divsSON[n].id).getElementsByTagName('input')[2].value == "c2" && 
+										document.getElementById(divsSON[n].id).getElementsByTagName('input')[3].value == document.getElementById(overID).getElementsByTagName('input')[0].value)   ) 
+					{
+						clonar = true;
+					}
+					
 				}
+				
+				
 				if(clonar == true) nuevoID = divsSON[n].id;
 			}
 		}
