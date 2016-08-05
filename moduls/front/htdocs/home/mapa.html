@@ -8,8 +8,10 @@ Mapa del sitio web
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_micrositetitulo} !=null"
 	th:text="(${MVS_micrositetitulo}) + ' - Mapa'">Mapa</title>
 <th:block th:remove="all">
@@ -33,7 +35,8 @@ Mapa del sitio web
 				<h2 th:text="#{mapa.mapaweb}">Mapa web</h2>
 				<div id="pagMapaWeb">
 					<h3 th:text="#{mapa.apartados}">Apartats generals</h3>
-					<ul>
+					<!-- Se genera la ul si cumple alguna de las condiciones y no sea vacia -->
+					<ul th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipopie}=='1'">
 						<li th:if="${MVS_microsite.tipocabecera}=='1'" 
 							th:each="i:${MVS_listacabecera}">
 							<a href="" th:href="@{${i.value1}}" th:text="${i.key}">enlace cabecera</a>

@@ -8,11 +8,14 @@ Listado de eventos de la agenda para una fecha
 xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-gus:decorator="layout">
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title
 	th:if="(${MVS_micrositetitulo} !=null) and (${MVS_agenda_diaevento} !=null)"
 	th:text="(${MVS_micrositetitulo} + '-' + #{agenda.eventos} + ' ' +${MVS_agenda_diaevento})"></title>
+	
 	<th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.

@@ -233,7 +233,7 @@ public class MParserComponente extends MParserHTML {
 						retorno.append("&nbsp;<a href=\"" + MicroURI.uriNoticia(idmicrosite, noti.getId(), idioma) + "\">");
 						retorno.append(((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
 						String subTitol = ((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo();
-						retorno.append("<br/>" + (subTitol == null ? "" : subTitol) + "<br/>");
+						retorno.append("<p></p>" + (subTitol == null ? "" : subTitol) + "<br/>");
 
 						retorno.append("</td> \n");
 					}
@@ -333,10 +333,10 @@ public class MParserComponente extends MParserHTML {
 								+ "\">&nbsp;" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
 
 						if (((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo() != null) {
-							retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo());
+							retorno.append("<p></p>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getSubtitulo());
 						}
 						if (((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto() != null) {
-							retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
+							retorno.append("<p></p>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
 						}
 						retorno.append("</td> \n");
 					}
@@ -434,7 +434,7 @@ public class MParserComponente extends MParserHTML {
 						retorno.append("<a href=\"elementodocumento.do?idsite=" + idmicrosite + "&cont=" + noti.getId() + "&lang=" + idioma
 								+ "\" target=\"_blank\">&nbsp;" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTitulo() + "</a>");
 						if (((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto() != null) {
-							retorno.append("<br/>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
+							retorno.append("<p></p>" + ((TraduccionNoticia) noti.getTraduccion(idioma)).getTexto());
 						}
 						retorno.append("</td> \n");
 					}

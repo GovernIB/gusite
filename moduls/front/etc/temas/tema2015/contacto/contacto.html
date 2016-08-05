@@ -8,9 +8,11 @@ Muestra un formulario de contacto.
 xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-gus:decorator="layout">
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
-    <title th:if="${MVS_contacto_titulo} !=null"
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:if="${MVS_contacto_titulo} !=null"
     th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_contacto_titulo}">-</title>
 
     <script th:inline="javascript">
@@ -90,7 +92,7 @@ gus:decorator="layout">
         <section th:remove="tag" th:if="${MVS_contacto} !=null" layout:fragment="content">
             <!-- informacio con o sin menu -->
             <div class="container-contacte" th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info">
-                <h2><span class="glyphicon glyphicon-pencil"></span><span th:text="${MVS_contacto_titulo}">Titulo contacto</span></h2>
+                <h2 th:if="${MVS_contacto_titulo} !=''"><span class="glyphicon glyphicon-pencil"></span><span th:text="${MVS_contacto_titulo}">Titulo contacto</span></h2>
 
                 <form th:action="@{${#gusuri.contacto(MVS_microsite,MVS_idioma,MVS_contacto)}}"
                 onsubmit="return checkrequired(this)" enctype="multipart/form-data" method="post">

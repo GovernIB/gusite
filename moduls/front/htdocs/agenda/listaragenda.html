@@ -8,8 +8,10 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 	<head>
+		<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 		<title th:if="${MVS_micrositetitulo} !=null"
 		th:text="(${MVS_micrositetitulo}) + '-' + #{agenda.agenda}"></title>	
 		<th:block th:remove="all">
@@ -52,10 +54,11 @@
 						<div th:if="${horai} !='00:00'" th:remove="tag"
 						th:text="#{agenda.cuando}+ ' ' + ${horai}"></div>
 						&nbsp; <strong th:text="${evento.actividad.traduce.nombre}"></strong>
-						<br /> 
+						<p>
 						<a href="agenda.html"
 						th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"				
 						th:text="${evento.traduce.titulo}">Título del evento</a>
+						</p>
 					</div>
 				</div>
 			</li>

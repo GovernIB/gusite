@@ -53,33 +53,34 @@ public class BaseAction extends Action {
 		  String pmkey = "" + request.getParameter(Microfront.PMKEY);
 		  String pidsite = "" + request.getParameter(Microfront.PIDSITE);
 		   
-		   if (!pmkey.equals("null")) errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + pmkey);
-	  	   else if (!pidsite.equals("null")) errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + pidsite);
-	  	   else errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL);
+		   if (!pmkey.equals("null")) errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + pmkey,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
+	  	   else if (!pidsite.equals("null")) errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + pidsite,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
+	  	   else errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
 
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }	   
 	   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
-		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }
 	   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
-		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG);
+		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }
 	   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
-		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG);
+		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"",ErrorMicrosite.ESTADO_FORBIDDEN);
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }
 	   else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
-		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG);
+		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"",ErrorMicrosite.ESTADO_SESSION);
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }	   
 	   else {
-		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+		   errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		   request.getSession().setAttribute("MVS_errparam", errorMicrosite); 
 	   }
 	     	   
+	   request.getSession().setAttribute("MVS_errestado", errorMicrosite.getEstado());
 	   microsite.setRestringido("N");
   	   microsite.setTipocabecera("1");	
   	   request.getSession().setAttribute("MVS_microsite", microsite); 

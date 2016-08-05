@@ -8,9 +8,11 @@ Variables:
 	MVS_contenido: devuelve un contenido listo para ser visualizado por el público
 -->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
-<script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
 	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
 		var nodo='p'+'${MVS_contenido.id}';
 		window.onload = function() { menuJS(nodo); };

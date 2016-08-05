@@ -8,9 +8,11 @@ Contenido de la HOME proporcionada por GUSITE
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
-<title th:if="${MVS_micrositetitulo}!=null"
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:if="${MVS_micrositetitulo}!=null"
 	th:text="(${MVS_micrositetitulo}) + ' - Home'">Home</title>
 
 <th:block th:remove="all">

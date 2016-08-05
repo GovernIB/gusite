@@ -59,13 +59,13 @@ public class MParserHTML {
 			if (UrlCampanya != null) {
 				retorno.append("<a id=\"enllas\" href=\"" + UrlCampanya + "\" title=\"" + SubtituloCampanya + "\">");
 				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
-				retorno.append("<br />");
+				retorno.append("<p></p>");
 				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
 				retorno.append("</a></div>");
 			} else {
 				retorno.append("<div id=\"enllas\" >");
 				retorno.append("<span class=\"frase1\">" + TituloCampanya + "</span>");
-				retorno.append("<br />");
+				retorno.append("<p></p>");
 				retorno.append("<span class=\"frase2\">" + SubtituloCampanya + "</span>");
 				retorno.append("</div></div>");
 			}

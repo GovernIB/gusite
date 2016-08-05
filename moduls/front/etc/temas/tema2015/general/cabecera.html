@@ -4,9 +4,12 @@
 Plantilla para la cabecera general de microsite
 
 */-->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <th:block th:remove="all">
     <!-- Bloque de estilos y js general para visualización en estático. Al ejecutarse dinámicamente, se elimina completamente -->
     <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link> 
@@ -36,7 +39,7 @@ Plantilla para la cabecera general de microsite
                         <!-- Logo govern -->
                         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" id="logo-cont">
                             <a accesskey="0" href="http://www.caib.es/" class="destacat">
-                                <span class="logo" id="imagenCabecera2"></span>
+                                <span class="logo" id="imagenCabecera2">&nbsp;</span>
                             </a>
                         </div>
                         <!--/* Titulo del microsite */-->

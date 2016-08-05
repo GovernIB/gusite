@@ -68,6 +68,7 @@ public class listaNoticiasAction extends BaseAction {
             request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
         	request.getSession().removeAttribute("noticiaForm");
         	request.getSession().setAttribute("idmicrosite", (((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()).toString());
+        	request.getSession().removeAttribute("MVS_noticia");
         	return mapping.findForward("detalleNoti");
         }
         //********************************************************

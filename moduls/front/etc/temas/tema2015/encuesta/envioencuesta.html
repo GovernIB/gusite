@@ -8,8 +8,10 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 	<head>
+		<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 		<title th:if="${MVS_encuesta} !=null"
 		th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo} + ' - ' + #{encuesta.resultados} ">Microsite
 		Título - encuesta traduce título - Resultats</title>	
@@ -44,15 +46,15 @@
 
 			</ul>
 
-			<br/>
+			<p></p>
 			
 			<div class="panel panel-default" id="contenidoEnvio">
 
 				<div class="visto" id="imagenVisto"></div>
 				
 				<h2 th:text="${MVS_encuesta.traduce.titulo}">Título de la encuesta</h2>
-				<p th:if="${MVS_encuesta.votoDuplicado}=='NVOT'" th:text="#{encuesta.mensaje}">(Només es permet un vot per persona)<br /></p>
-				<br />
+				<p th:if="${MVS_encuesta.votoDuplicado}=='NVOT'" th:text="#{encuesta.mensaje}">(Només es permet un vot per persona)<p></p></p>
+				<p></p>
 				<div th:if="${MVS_encuesta.visible} =='S'" th:remove="tag">
 					
 					<div id="graciasText" th:if="${MVS_encuesta.mostrar} != 'S'" th:utext="#{encuesta.gracias}">Gràcies per la teva col.laboració</div>

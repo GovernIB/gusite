@@ -7,8 +7,10 @@ Tabla con el calendario y listado de eventos
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	>
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <th:block th:remove="all">
@@ -43,7 +45,7 @@ Tabla con el calendario y listado de eventos
 						<div th:text="${midia}" th:remove="tag"></div>
 						<div th:if="${mihora} !='00:00'"
 							th:text="#{agenda.cuando}+ ' ' + ${mihora}" th:remove="tag">
-						</div> <br />
+						</div> <p></p>
 						<a
 							th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"
 							th:text="${evento.traduce.titulo}"></a>
@@ -71,7 +73,7 @@ Tabla con el calendario y listado de eventos
 						<div th:with="DayOfMonthgi=1" th:remove="tag">
 							<p
 								th:with="gi=${#calendars.create(#calendars.year(gi),#calendars.month(gi),DayOfMonthgi,#calendars.hour(gi),#calendars.minute(gi))}">
-								<span th:text="#{calendario.mostrarmes} + ':'" th:remove="tag"></span><br />
+								<label for="agendaSelect" th:text="#{calendario.mostrarmes} + ':'" ></label><p></p>
 								<select onchange="mostrarCalendari();" name="agendaSelect"
 									id="agendaSelect"
 									th:with="nummeses=3 + ${nummesesaretroceder}">

@@ -193,6 +193,39 @@
 				
 				<!-- fila -->
 				<div class="fila">
+				
+					<div class="element t30">
+						
+							<div class="etiqueta"><label for="permisosTiny">Permiso Tiny</label></div>
+							<div class="control">
+								
+								<select name="permisosTiny" tabindex="5" id="permisosTiny">
+									<option value="">Escull un permis</option>
+									<logic:equal name="usuarioForm" property="permisosTiny" value="0">
+										<option value="0" selected="selected">No puede editar Tiny</option>
+									</logic:equal>
+									<logic:notEqual name="usuarioForm" property="permisosTiny" value="0">
+										<option value="0">No puede editar Tiny</option>
+									</logic:notEqual>
+									
+									<logic:equal name="usuarioForm" property="permisosTiny" value="1">
+										<option value="1" selected="selected">Puede editar Tiny</option>
+									</logic:equal>
+									<logic:notEqual name="usuarioForm" property="permisosTiny" value="1">
+										<option value="1">Puede editar Tiny</option>
+									</logic:notEqual>
+									
+	
+								</select>
+							</div>
+							
+						</div>
+					
+				</div>
+				<!-- /fila -->
+				
+				<!-- fila -->
+				<div class="fila">
 					
 					<!-- element -->
 					<div class="element t25">

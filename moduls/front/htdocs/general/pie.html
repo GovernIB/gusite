@@ -7,8 +7,10 @@ Este código muestra el pie de página.
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	>
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <th:block th:remove="all">
 	<!--  
@@ -41,6 +43,9 @@ Este código muestra el pie de página.
 					<a accesskey="1" href="accessibilitat.html"
 						th:href="@{${#gusuri.accessibilitat(MVS_microsite,MVS_idioma)}}"
 						th:text="#{general.accessibilitat}">Accessibilitat</a>
+<!-- 					- <a accesskey="2" href="mapa.html" -->
+<!-- 						th:href="@{${#gusuri.mapa(MVS_microsite,MVS_idioma)}}" -->
+<!-- 						th:text="#{general.mapa.web}">Mapa del web</a> -->
 				</div>				
 				<div class="centre">
 					<div class="tamanyLletra"></div>
@@ -54,6 +59,8 @@ Este código muestra el pie de página.
 								<a 	th:if="${idiomaLower}!=${idiomaLista.key}" 
 									href=""
 									th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+									th:lang="${idiomaLista.key}"
+									th:lang-xmllang="${idiomaLista.key}"
 									th:utext="${idiomaLista.value}">- Castellano</a>
 						</span>
 					</span>
@@ -87,7 +94,7 @@ Este código muestra el pie de página.
 				<div class="centre">
 						<div th:if="${direccion}!=null" th:utext="${direccion}" th:remove="tag">
 							<!-- Dirección -->
-							<a href="/govern/presidencia.do?lang=ca">Presidència</a><a href="/govern/organigrama/planol.do?coduo=2&amp;lang=ca">: C/ de la Llotja, 3 - 07012 Palma</a><br />Telèfon 971176565 - Fax 971176587
+							<p><a href="/govern/presidencia.do?lang=ca">Presidència</a><a href="/govern/organigrama/planol.do?coduo=2&amp;lang=ca">: C/ de la Llotja, 3 - 07012 Palma</a></p><p>Telèfon 971176565 - Fax 971176587</p>
 						</div>
 					</div>
 				<!-- /contacte -->

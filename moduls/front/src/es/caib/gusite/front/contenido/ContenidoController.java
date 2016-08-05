@@ -87,7 +87,7 @@ public class ContenidoController extends BaseViewController {
 			@RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
 			@RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
 			@RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
-
+            
 		return this.contenido(URI, DEFAULT_IDIOMA, uriContenido.nemotecnic, redir, mcont, pcampa, previsual, tipobeta, redi, request, response);
 
 	}
@@ -127,7 +127,11 @@ public class ContenidoController extends BaseViewController {
 				if (!StringUtils.isEmpty(sMenuCont) && this.urlFactory.isLocalLegacyUri(urlredireccionada)) {
 					return new ModelAndView("redirect:" + url + "&mcont=" + sMenuCont + "&uricont="+uriContenido);
 				} else {
-					return new ModelAndView("redirect:" + url + "&uricont="+uriContenido);
+					if(!this.urlFactory.isLocalLegacyUri(urlredireccionada)){ //es externa #53						
+						return new ModelAndView("redirect:" + url);
+					}else{
+						return new ModelAndView("redirect:" + url + "&uricont="+uriContenido);
+					}
 				}
 
 			}
@@ -181,17 +185,156 @@ public class ContenidoController extends BaseViewController {
 			view.setContenido(contenido);
 			view.setTipoBeta(tipobeta);
 
+			
 			return this.modelForView(this.templateNameFactory.contenido(microsite), view);
-
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
+			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
+			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 
 	}
+
+	/**
+     * Cuando un contenido de página, en su contenido tiene un a href a un enlace de página.
+     * @param lang
+     * @param uri
+     * @param model
+     * @return
+     */
+     @RequestMapping("{uri}/{uriContenido:.{3,}}/{url}")
+     public ModelAndView contenidoSmart(@PathVariable("uri") SiteId URI, 
+                  @PathVariable("url") String url, 
+                  //@PathVariable("uriContenido") UriContenido uriContenido,
+                  @PathVariable("uriContenido") String uriContenido,
+                  RedirectAttributes redir,
+                  @RequestParam(value = Microfront.PIDSITE, required = false, defaultValue = "") String idsite,
+                  @RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+                  @RequestParam(value = Microfront.PCONT, required = false, defaultValue = "") String cont,
+                  @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+                  @RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipo,
+                  @RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+                  @RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
+       
+           String urlFact = this.urlFactory.legacyToFrontUri(url, new Idioma(Idioma.getIdiomaPorDefecto()));
+           StringBuffer urlAppend = new StringBuffer();
+           urlAppend.append("?lang=ca");
+           
+           if (idsite != null && !idsite.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PIDSITE);
+                  urlAppend.append("=");
+                  urlAppend.append(idsite);
+           }
+           
+           if (mcont != null && !mcont.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.MCONT);
+                  urlAppend.append("=");
+                  urlAppend.append(mcont);
+           }
+           
+           if (cont != null && !cont.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PCONT);
+               urlAppend.append("=");
+               urlAppend.append(cont);
+           }
+           
+           if (pcampa != null && !pcampa.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PCAMPA);
+                  urlAppend.append("=");
+                  urlAppend.append(pcampa);
+           }
+           
+           if (uriContenido != null && !uriContenido.isEmpty()) {
+                  urlAppend.append("&uricont=");
+                  urlAppend.append(uriContenido);
+           }
+           
+           if (tipo != null && !tipo.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PTIPO);
+               urlAppend.append("=");
+               urlAppend.append(tipo);
+           }
+           
+           return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());
+     }
+     
+     
+     /**
+     * Cuando un contenido de página (con idioma), en su contenido tiene un a href a un enlace de página.
+     * @param lang
+     * @param uri
+     * @param model
+     * @return
+     */
+     @RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/{uriContenido:.{3,}}/{url}")
+     public ModelAndView contenidoSmart(@PathVariable("uri") SiteId URI, 
+                  @PathVariable("lang") Idioma lang,
+                  @PathVariable("url") String url, 
+                  //@PathVariable("uriContenido") UriContenido uriContenido,
+                  @PathVariable("uriContenido") String uriContenido,
+                  RedirectAttributes redir,
+                  @RequestParam(value = Microfront.PIDSITE, required = false, defaultValue = "") String idsite,
+                  @RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+                  @RequestParam(value = Microfront.PCONT, required = false, defaultValue = "") String cont,
+                  @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+                  @RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipo,
+                  @RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+                  @RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
+       
+           String urlFact = this.urlFactory.legacyToFrontUri(url, lang);
+           StringBuffer urlAppend = new StringBuffer();
+           urlAppend.append("?lang="+lang.getLang());
+           
+           if (idsite != null && !idsite.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PIDSITE);
+                  urlAppend.append("=");
+                  urlAppend.append(idsite);
+           }
+           
+           if (mcont != null && !mcont.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.MCONT);
+                  urlAppend.append("=");
+                  urlAppend.append(mcont);
+           }
+           
+           if (cont != null && !cont.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PCONT);
+               urlAppend.append("=");
+               urlAppend.append(cont);
+           }
+           
+           if (pcampa != null && !pcampa.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PCAMPA);
+                  urlAppend.append("=");
+                  urlAppend.append(pcampa);
+           }
+           
+           if (uriContenido != null && !uriContenido.isEmpty()) {
+                  urlAppend.append("&uricont=");
+                  urlAppend.append(uriContenido);
+           }
+           if (tipo != null && !tipo.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PTIPO);
+               urlAppend.append("=");
+               urlAppend.append(tipo);
+           }
+           
+           return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());          
+     }
 
 	/**
 	 * Método privado para remplazar tags.

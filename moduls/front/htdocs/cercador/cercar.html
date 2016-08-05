@@ -8,8 +8,10 @@ Resultados de una busqueda.
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
 	titulo - Resultats recerca</title>	
 <th:block th:remove="all">
@@ -44,15 +46,31 @@ Resultados de una busqueda.
 					</p>
 					
 					<ul class="resultatsRecercaInteligent">
-						<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>  <br /><span
-							th:text="${resultado.id} + ' ' ">Site:</span><span class="detall"
-							th:text="${resultado.descripcion}">Descripcion</span></li>
+						<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
+							th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <p><span
+							th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
+							th:text="${resultado.descripcion}">Descripcion</span></p></li>
 					</ul>
-					<br/>
+					<p />
 				</div>
 				<div th:if="${MVS_listado_buscador.lista} ==null" th:remove="tag">
-					
-					<div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}!=''"
+						th:remove="tag">
+						<p>
+						<span style="font-size: 2; color: #ff0000"
+							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
+						<a href="cercar.html"	
+							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
+							buscador Consulta sugerida</a>
+						<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" >
+							<input type="hidden" name="cerca"
+								th:value="${MVS_listado_buscador.consultaSugerida}" />
+						</form>
+						</p>
+					</div>
+					<div th:if="${MVS_listado_buscador.consultaSugerida}==''"
+						th:remove="tag">
 						<div th:utext="#{cercar.subusqueda} + ' - '" th:remove="tag">La
 							seva recerca -</div>
 						<strong th:utext="${MVS_listado_buscador.consultaOriginal}">Consulta

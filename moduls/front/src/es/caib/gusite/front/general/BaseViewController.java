@@ -389,11 +389,11 @@ public abstract class BaseViewController extends FrontController {
 				direccion.append("<a href=\"").append(unidadData.getUrlPlano()).append("\">");
 				//TODO: asumimos que si hay dirección, también hay cp y pob 
 				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
-				.append(unidadData.getPoblacion()).append("</a><br/>");
+				.append(unidadData.getPoblacion()).append("</a><p></p>");
 			} else {
 				//TODO: asumimos que si hay dirección, también hay cp y pob 
 				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
-				.append(unidadData.getPoblacion()).append("<br/>");
+				.append(unidadData.getPoblacion()).append("<p></p>");
 			}
 		}
 
@@ -411,10 +411,10 @@ public abstract class BaseViewController extends FrontController {
 		}
 
 		if (view.getMicrosite().getDomini() != null && view.getMicrosite().getDomini().length() > 0) {
-			direccion.append("<br />").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
+			direccion.append("<p></p>").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
 					.append(view.getMicrosite().getDomini()).append(">").append(view.getMicrosite().getDomini()).append("</a>");
 		} else if (!isEmpty(unidadData.getDominio())) {
-				direccion.append("<br />").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
+				direccion.append("<p></p>").append(this.getMessage("WEB_ILL130", view.getLang().getLang())).append(" <a href=")
 						.append(unidadData.getDominio()).append(">").append(unidadData.getDominio()).append("</a>");
 		}
 
@@ -671,24 +671,28 @@ public abstract class BaseViewController extends FrontController {
 		if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
 
 			if (microsite != null) {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId());
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			} else {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			}
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"","",ErrorMicrosite.ESTADO_FORBIDDEN);
 		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"","",ErrorMicrosite.ESTADO_SESSION);
 		} else {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 		}
 
 		if (errorMicrosite != null) {
 			view.setErrParam(errorMicrosite);
+		}
+		
+		if (errorMicrosite != null) {
+			view.setErrEstado(errorMicrosite.getEstado());
 		}
 
 		if (microsite != null) {

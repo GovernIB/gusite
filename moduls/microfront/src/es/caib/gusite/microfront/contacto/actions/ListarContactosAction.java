@@ -33,7 +33,6 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  */
 public class ListarContactosAction extends BaseAction   {
 
-
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 		
 		String forwardlocal="";

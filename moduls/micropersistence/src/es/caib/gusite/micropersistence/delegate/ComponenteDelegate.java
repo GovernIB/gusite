@@ -93,7 +93,7 @@ public class ComponenteDelegate implements StatelessDelegate {
 	 * @return una lista de componentes
 	 * @throws DelegateException
 	 */
-	public List<?> listarComponentes() throws DelegateException {
+	public List<Componente> listarComponentes() throws DelegateException {
 		try {
 			return this.getFacade().listarComponentes();
 		} catch (RemoteException e) {

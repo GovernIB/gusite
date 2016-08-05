@@ -8,8 +8,10 @@ Página de formulario de encuesta.
 xmlns:th="http://www.thymeleaf.org"
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-gus:decorator="layout">
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<title th:if="${MVS_encuesta} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo}">Microsite Título - encuesta traduce título</title>	
 	<th:block th:remove="all">
 <!--/*  
@@ -51,10 +53,9 @@ gus:decorator="layout">
 			<li><h3><span class="glyphicon glyphicon-comment" aria-hidden="true"/><span th:text="${MVS_encuesta.traduce.titulo}">Encuesta</span></h3></li>
 		</ul>
 		
-		<br/>
+		<p></p>
 		<!-- u91856 02/03/2012 Salvador Antich: Identificacion del usuario que contesta segun configuracion de la encuesta -->
 		<div th:if="${MVS_encuesta.identificacion}=='S'" th:remove="tag" th:text="${MVS_identificacion}"></div>
-		<!--<br /> <br />-->
 		<div th:if="(${MVS_encuesta.visible}=='S') and (${MVS_Fechas_vigente})" th:remove="tag" >
 			<form name="encuesta" 
 			th:action="@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}"
@@ -217,7 +218,7 @@ numPreguntas++;
 
 		<span th:text="${respuesta.traduce.titulo}" th:remove="tag">Título respuesta</span>
 	</label>				
-	<span th:if="${respuesta.tipo}=='I'" th:remove="tag"><br /> 
+	<span th:if="${respuesta.tipo}=='I'" th:remove="tag"><p></p>
 		<textarea
 		COLS="120" ROWS="2"
 		th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"

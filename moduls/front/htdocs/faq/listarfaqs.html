@@ -8,8 +8,10 @@ Listado de preguntas frecuentes.
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_micrositetitulo} !=null"
 	th:text="${MVS_micrositetitulo} + ' - ' + #{listarfaqs.listado}">Microsite
 	Título - Llistat de faqs</title>
@@ -35,11 +37,13 @@ Listado de preguntas frecuentes.
 				<h2 th:text="#{listarfaqs.preguntas}">Preguntes freqüents</h2>
 				<!-- informacio FAQ-->
 				<div id="infoFAQ">
-					<dl class="bloquePreguntas">	
+					<dl class="bloquePreguntas">
+					<dt></dt>
+					<dd><ul>
 						<li th:each="tema : ${MVS_listado}" class="nivel1" tabindex="1">
 							<!-- Todos menos explorer--> 
 							<span name="noie" style="visibility: visible;" class="noie nivel1">
-								<h4 class="tituloPregunta" th:text="${tema.tema}">Tema de faq</h4> 
+								<h3 class="tituloPregunta" th:text="${tema.tema}">Tema de faq</h3> 
 									<dl th:each="pregunta : ${tema.listadopreguntas}" th:fragment="contenidoIE" class="textoOculto" style="visibility: visible;">
 										<dt th:utext="${pregunta.traduce.pregunta}">Título de la preguntaPregunta</dt>
 										<dd><span th:utext="${pregunta.traduce.respuesta}" th:remove="tag">Respuesta a la pregunta</span>
@@ -47,14 +51,14 @@ Listado de preguntas frecuentes.
 												th:text="${pregunta.traduce.urlnom} !=null?${pregunta.traduce.urlnom}:#{url.adicional}">
 												descripción url
 											</a>
-											<br />
+											<p></p>
 										</dd>
 									</dl>
 						</span> 
 						<!-- explorer--> 
 						<span class="ie" name="ie" style="visibility: hidden;"> 
 							<a href="#enlace" name="enlace" class="nivel1">
-								<h4 class="tituloPreguntaIE" th:text="${tema.tema}">i tema</h4>
+								<h3 class="tituloPreguntaIE" th:text="${tema.tema}">i tema</h3>
 								<table class="falsa">
 									<tr>
 										<td><span gus:replace="faq/listarfaqs :: contenidoIE" th:remove="tag">Contenido IE</span></td>
@@ -62,9 +66,11 @@ Listado de preguntas frecuentes.
 								</table>
 							</a>
 						</span> <!-- explorer-->
-						<br />
-						</li>
+						<p></p>
+						</li></ul>
+					</dd>	
 					</dl>
+							
 				</div>
 			</div>
 		</div>

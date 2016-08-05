@@ -12,6 +12,7 @@ public class ErrorMicrosite {
 	private String mensaje = "";
 	private String descripcion = "";
 	private String accion = "";
+	private String estado = "";
 	
 	// Ambit de Error
 	
@@ -39,7 +40,12 @@ public class ErrorMicrosite {
 	
 	static public final String ERROR_SESSIO_TIT = "Error de Sessió";
 	static public final String ERROR_SESSIO_MSG = "Ha excedit el temps màxim de sessió.";
+	static public final String ESTADO_NOT_FOUNT = "404";
+	static public final String ESTADO_FORBIDDEN = "403";
+	static public final String ESTADO_SESSION = "440";
 	
+	
+
 	public ErrorMicrosite() {
 	}
 	
@@ -48,7 +54,7 @@ public class ErrorMicrosite {
 	 * @param aviso
 	 */
 	public ErrorMicrosite(String aviso) {
-		this(aviso, "","","");
+		this(aviso, "","","",null);
 	}
 	
 	/**
@@ -57,7 +63,7 @@ public class ErrorMicrosite {
 	 * @param mensaje un Mensaje de error
 	 */
 	public ErrorMicrosite(String aviso, String mensaje) {
-		this(aviso,mensaje,"","");
+		this(aviso,mensaje,"","",null);
 	}
 
 	/**
@@ -66,8 +72,19 @@ public class ErrorMicrosite {
 	 * @param mensaje un mensaje
 	 * @param descripcion una descripción
 	 */
-	public ErrorMicrosite(String aviso, String mensaje, String descripcion) {
-		this(aviso,mensaje,descripcion,"");
+	public ErrorMicrosite(String aviso, String mensaje, String descripcion ) {
+		this(aviso,mensaje,descripcion,"",null);
+	}
+	
+	/**
+	 * Constructor de la  clase.
+	 * @param aviso un aviso
+	 * @param mensaje un mensaje
+	 * @param descripcion una descripción
+	 * @param estado un estado
+	 */
+	public ErrorMicrosite(String aviso, String mensaje, String descripcion, String estado) {
+		this(aviso,mensaje,descripcion,"",estado);
 	}
 	
 	/**
@@ -76,12 +93,14 @@ public class ErrorMicrosite {
 	 * @param mensaje
 	 * @param descripcion
 	 * @param accion
+	 * @param estado
 	 */
-	public ErrorMicrosite(String aviso, String mensaje, String descripcion, String accion) {
+	public ErrorMicrosite(String aviso, String mensaje, String descripcion, String accion, String estado) {
 		this.aviso = aviso;
 		this.mensaje=mensaje;
 		this.descripcion=descripcion;
 		this.accion=accion;
+		this.estado=estado;
 	}
 
 	public String getAviso() {
@@ -116,6 +135,15 @@ public class ErrorMicrosite {
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
 
 	
 }

@@ -323,6 +323,11 @@ CREATE SEQUENCE "GUS_SEQPPL";
 
 CREATE SEQUENCE "GUS_SEQARC";
 
+ALTER table "GUS_MUSUAR" ADD (
+	"MSU_PERMIS" Number(19,0)
+); 
+Comment on column "GUS_MUSUAR"."MSU_PERMIS" is 'Permisos para Tiny';
+
 create or replace
 Function GUS_NEXTVAL ( secuencia IN varchar2 ) RETURN  varchar2
 IS

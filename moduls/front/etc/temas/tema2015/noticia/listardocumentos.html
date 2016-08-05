@@ -8,8 +8,10 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-	gus:decorator="layout">
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 	<head>
+		<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 		<title
 		th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>	
 		<th:block th:remove="all">
@@ -35,7 +37,7 @@
 					<ul style="text-align: justify">
 						<li th:each="elementoListado,iterStat : ${MVS_listado}" th:if="${elementoListado.traduce.titulo}!=null" style="list-style: none;">
 							<div class="imagen">
-								<div class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(elementoListado.traduce.docu.mime,'.','-')}__','/','-')}">
+								<div class="imgMime application-pdf" th:if="${elementoListado.traduce.docu}!=null and ${elementoListado.traduce.docu.mime}!=null" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(elementoListado.traduce.docu.mime,'.','-')}__','/','-')}">
 									
 								</div>
 							</div>

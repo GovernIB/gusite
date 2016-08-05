@@ -7,8 +7,10 @@ Tabla con el calendario y listado de eventos
 <html xmlns="http://www.w3.org/1999/xhtml"
 xmlns:th="http://www.thymeleaf.org"
 xmlns:gus="http://www.caib.es/thymeleaf/gusite"
->
+th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
 <head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<th:block th:remove="all">
 <!--/*  
@@ -62,7 +64,7 @@ var thDebug = false;
 					<div th:with="horai=${#calendars.format(evento.finicio, 'HH:mm')},horaf=${#calendars.format(evento.ffin, 'HH:mm')}" th:remove="tag">
 					<strong th:text="${evento.actividad.traduce.nombre}"></strong>
 						
-						<br />
+						<p></p>
 						<a href="agenda.html"
 						th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}"				
 						th:text="${evento.traduce.titulo}">Título del evento</a>
@@ -99,10 +101,10 @@ var thDebug = false;
 						<div th:with="DayOfMonthgi=1" th:remove="tag">
 							<p
 							th:with="gi=${#calendars.create(#calendars.year(gi),#calendars.month(gi),DayOfMonthgi,#calendars.hour(gi),#calendars.minute(gi))}">
-							<!--span th:text="#{calendario.mostrarmes} + ':'" th:remove="tag"></span><br />-->
 							<button id="mesAnterior" type="button" class="btn btn-default" aria-label="Left Align" onclick="cambiMes(this.id);">
 								<span class="icon icon-left" ></span>
-								<span class="button-month-text" th:text="#{general.anterior}">mes anterior</span>
+<!-- 								<span class="button-month-text" th:text="#{general.anterior}">mes anterior</span> -->
+								<label class="button-month-text" th:text="#{general.anterior}"  for="agendaSelect"></label>
 							</button>
 							<select  onchange="mostrarCalendari();" name="agendaSelect"
 							id="agendaSelect"

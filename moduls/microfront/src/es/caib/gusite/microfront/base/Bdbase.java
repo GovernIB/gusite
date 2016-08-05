@@ -345,7 +345,7 @@ public abstract class Bdbase {
 	 * @return String
 	 */
 	private String getIdsiteError(String attributeMVSidSite){
-		String errorIdSite = attributeMVSidSite.substring(0,3);
+		String errorIdSite = attributeMVSidSite;
 		return errorIdSite;
 	}
   
