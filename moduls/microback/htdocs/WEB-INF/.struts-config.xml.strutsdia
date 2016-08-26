@@ -211,7 +211,7 @@
  <PROCESS-ITEM ID="#listartinycomponentes" NAME="action35"
   PATH="/listartinycomponentes" SHAPE="32,5009,0,0" TYPE="action" model-entity="StrutsProcessItem">
   <PROCESS-ITEM-OUTPUT ID="listarcomponentes" NAME="forward0"
-   PATH="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"
+   PATH="/tinymce/plugins/componentesmicros/componentes.jsp"
    TARGET="page30" TITLE="listarcomponentes" TYPE="forward" model-entity="StrutsProcessItemOutput"/>
  </PROCESS-ITEM>
  <PROCESS-ITEM ID="#faqEdita" NAME="action36" PATH="/faqEdita"
@@ -345,7 +345,7 @@
  <PROCESS-ITEM ID="#recursos" NAME="action55" PATH="/recursos"
   SHAPE="32,7233,0,0" TITLE="BuscaOrdenaRecursoActionForm" TYPE="action" model-entity="StrutsProcessItem">
   <PROCESS-ITEM-OUTPUT ID="listarecursostiny" NAME="forward0"
-   PATH="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"
+   PATH="/tinymce/plugins/insertararchivos/archivos.jsp"
    TARGET="page46" TITLE="listarecursostiny" TYPE="forward" model-entity="StrutsProcessItemOutput"/>
   <PROCESS-ITEM-OUTPUT ID="listarrecursos" NAME="forward1"
    PATH="/listaRecursos.jsp" TARGET="page47" TITLE="listarrecursos"
@@ -530,7 +530,7 @@
   SHAPE="256,4802,0,0" SUBTYPE="jsp" TITLE="detalleComponente.jsp"
   TYPE="page" model-entity="StrutsProcessItem"/>
  <PROCESS-ITEM NAME="page30"
-  PATH="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"
+  PATH="/tinymce/plugins/componentesmicros/componentes.jsp"
   SHAPE="240,5026,0,0" SUBTYPE="jsp" TITLE="componentes.jsp" TYPE="page" model-entity="StrutsProcessItem"/>
  <PROCESS-ITEM NAME="page31" PATH="/importar.jsp" SHAPE="240,5138,0,0"
   SUBTYPE="jsp" TITLE="importar.jsp" TYPE="page" model-entity="StrutsProcessItem"/>
@@ -566,7 +566,7 @@
   SHAPE="256,7026,0,0" SUBTYPE="jsp" TITLE="detallePregunta.jsp"
   TYPE="page" model-entity="StrutsProcessItem"/>
  <PROCESS-ITEM NAME="page46"
-  PATH="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"
+  PATH="/tinymce/plugins/insertararchivos/archivos.jsp"
   SHAPE="256,7250,0,0" SUBTYPE="jsp" TITLE="archivos.jsp" TYPE="page" model-entity="StrutsProcessItem"/>
  <PROCESS-ITEM NAME="page47" PATH="/listaRecursos.jsp"
   SHAPE="256,7394,0,0" SUBTYPE="jsp" TITLE="listaRecursos.jsp"

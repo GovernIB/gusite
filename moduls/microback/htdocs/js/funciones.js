@@ -108,6 +108,23 @@ function ficarCapsal(obj) {
 			}
 		}
 	}
+	
+	/*if (tinymce == null) {
+		alert("nulo tinymce");
+		alert(tinymce);
+	} else {
+		alert(" no nulo tinymce");
+		tinymce.init({
+		    selector: 'textarea.editorTinyMCE',
+			language: 'ca',
+			plugins: "code, compat3x, link, textcolor, acheck "
+			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste'
+			,menubar: false
+			,external_plugins: {
+				"acheck": "plugins/acheck/editor_plugin.js"
+			}
+		  });
+	}*/
 }
 
 function esconderSpans() {

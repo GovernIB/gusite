@@ -49,7 +49,7 @@
 
 <body>
 	<!-- tinyMCE -->
-	<script language="javascript" type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script language="javascript" type="text/javascript" src="tinymce/tiny_mce.js"></script>
 	<script language="javascript" type="text/javascript">
 	
 		tinyMCE.init({

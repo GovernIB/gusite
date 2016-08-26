@@ -43,9 +43,76 @@
 	</h1>
 
 
-<!-- tinyMCE -->
-<script language="javascript" type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script language="javascript" type="text/javascript">
+		<!-- tinyMCE. Editar codigo segun el rol (siendo 1 el valor si puede editar codigo). -->
+		<script language="javascript" type="text/javascript">
+					var editarCodigo = "";
+		</script>
+		<logic:equal name="MVS_usuario" property="permisosTiny" value="1">
+			<script language="javascript" type="text/javascript">
+					editarCodigo = "code";
+			</script>
+		</logic:equal>
+		
+	<!-- tinyMCE -->
+		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
+		<script language="javascript" type="text/javascript" src="tinymce/plugins/compat3x/plugin.min.js"></script>
+		<script language="javascript" type="text/javascript">
+		
+		
+		//Paso 1. Inicializamos tinyMCE.
+		tinymce.init({
+		    selector: 'textarea.editorTinyMCE',
+			language: 'ca',
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullpage, media, charmap, template, importcss "
+			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
+			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
+			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullpage '
+			,menubar: false
+			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
+			,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"
+			,external_plugins: {
+				"acheck": "plugins/acheck/editor_plugin.js",
+				"insertararchivos": "plugins/insertararchivos/editor_plugin.js",
+				"tipoarchivos": "plugins/tipoarchivos/editor_plugin.js",
+				"componentesmicros": "plugins/componentesmicros/editor_plugin.js"
+			}
+			, theme_advanced_buttons1_add_before : "insertararchivos,separator"
+			, theme_advanced_buttons3 : ""
+			, theme_advanced_toolbar_location : "top"
+			, theme_advanced_toolbar_align : "left"
+			, theme_advanced_path_location : "bottom"
+			, verify_html : false
+			, setupcontent_callback : "Obtener_Idform"
+		    , file_browser_callback : "fileBrowserCallBack"	
+			, theme_advanced_resizing : false
+			, accessibility_warnings : true	
+			, plugin_insertdate_dateFormat : "%d/%m/%Y"
+			, plugin_insertdate_timeFormat : "%H:%M:%S"
+			, extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+			, templates: [
+			    {title: "Basica", 				description: "Pàgina Bàsica.", 								url:"tinymce/templates/basica.htm"},
+			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
+			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
+			  ]
+			, file_browser_callback : "fileBrowserCallBack"
+			, theme_advanced_resizing : false
+			, nonbreaking_force_tab : true
+			, apply_source_formatting : true		
+			, convert_urls: false	
+			, block_formats: 'Paràgraf=p;Adreça=address;Preformatat=pre;Títol=h1;Subtítol nivell 1=h2;Subtítol nivell 2=h3;Subtítol nivell 3=h4;Subtítol nivell 4=h5;Subtítol nivell 5=h6'
+			/*
+			, style_formats: [
+				{ title: 'Títol', block: 'h1'},
+				{ title: 'Subtítol nivell 1', block: 'h2'}, 
+				{ title: 'Subtítol nivell 2', block: 'h3'}, 
+				{ title: 'Subtítol nivell 3', block: 'h4'}, 
+				{ title: 'Subtítol nivell 4', block: 'h5'}, 
+				{ title: 'Subtítol nivell 5', block: 'h6'},
+			]*/
+		  });
+		
+		
+		/*
 	tinyMCE.init({
 		mode : "textareas",
 		theme : "advanced",
@@ -79,19 +146,7 @@
 		<logic:present name="contenidoForm" property="id">		
 			,idform:<bean:write name="contenidoForm" property="id"/>
 		</logic:present>
-	});
-	
-	function initCaib() {		
-		tinyMCE.addI18n('ca.advanced',{
-			h1:"Títol",
-			h2:"Subtítol nivell 1",
-			h3:"Subtítol nivell 2",
-			h4:"Subtítol nivell 3",
-			h5:"Subtítol nivell 4",
-			h6:"Subtítol nivell 5"
-		});	
-				
-	}
+	});*/
 	
    	var Rcajatemp_tiny;
    	var Rwin_tiny;
@@ -127,7 +182,7 @@
 	
 	
 </script>
-
+		
 <!-- /tinyMCE -->
 
 <div id="formulario">
@@ -267,15 +322,9 @@
 						<bean:define id="idis" name="es.caib.gusite.microback.LANGS_KEY"/>
 		                <% String codigoIdioma = ((java.util.List)idis).get(i).toString(); %>						                         
 						<p><button type="button" title='<bean:message key="conte.visualizaalfa"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=alfa&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizaalfa"/>' /></button></p>
-						<p>
-				<%
-					Accesibilidad acce = (Accesibilidad)request.getAttribute("MVS_w3c_" + i);				
-					if (acce!=null) out.println("<button type=\"button\" title='Errors dÂ´accessibilitat' onclick=\"document.location='visorw3c.do?id=" + acce.getId() + "';\"><img src=\"imgs/botons/taww3cButton.gif\" alt='Errors dÂ´accessibilitat' /></button>");
-				%>						
-						</p>
 						</td>
 						<td>
-						<html:textarea property="texto" name="traducciones" rows="5" cols="50" indexed="true"  style="width:700px; height:300px;" />
+						<html:textarea property="texto" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true"  style="width:700px; height:300px;" />
 						</td>
 					</tr>
 					<tr>
@@ -320,7 +369,7 @@
 									<p><button type="button" title='<bean:message key="conte.visualizabeta"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&idsite=<bean:write name="MVS_microsite" property="id"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=beta&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizabeta"/>' /></button></p>
 									</td>
 									<td>
-									<html:textarea property="txbeta" name="traducciones" rows="5" cols="50" indexed="true"   style="width:700px; height:300px;" />
+									<html:textarea property="txbeta" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true"   style="width:700px; height:300px;" />
 									</td>
 								</tr>
 								</table>

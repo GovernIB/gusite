@@ -509,13 +509,13 @@
     </action>
 
 	<action path="/listartinycomponentes" type="es.caib.gusite.microback.action.ComponentesTinyAction">
-        <forward name="listarcomponentes" path="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"/>
+        <forward name="listarcomponentes" path="/tinymce/plugins/componentesmicros/componentes.jsp"/>
     </action>    
     
 	<action path="/recursos" name="BuscaOrdenaRecursoActionForm"
 		type="es.caib.gusite.microback.action.RecursosAction" unknown="false">
         <forward name="listarrecursos" path="/listaRecursos.jsp"/>
-        <forward name="listarecursostiny" path="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"/>
+        <forward name="listarecursostiny" path="/tinymce/plugins/insertararchivos/archivos.jsp"/>
     </action>
 	<action path="/estadisticagen" name="BuscaOrdenaEstadisticaGenActionForm"
 		type="es.caib.gusite.microback.action.EstadisticasGenAction" unknown="false">

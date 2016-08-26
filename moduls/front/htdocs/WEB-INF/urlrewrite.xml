@@ -59,7 +59,7 @@
 	 Hay imágenes a tinymce y archivos_prev referenciadas relativas en contenidos y noticias
 	-->
         <rule>
-            <from>/(.*)/tinymce/jscripts/tiny_mce/(.*)</from>
+            <from>/(.*)/tinymce/(.*)</from>
             <to>/resources/tinymce/$2</to>
         </rule>
 

@@ -27,34 +27,49 @@
 	<h1><img src="imgs/titulos/configuracion.gif" alt="<bean:message key="menu.cabecerapie" />" />
 	<bean:message key="menu.cabecerapie" />. <span><bean:message key="micro.cabpie" /></span></h1>
 	
+		<!-- tinyMCE. Editar codigo segun el rol (siendo 1 el valor si puede editar codigo). -->
+		<script language="javascript" type="text/javascript">
+					var editarCodigo = "";
+		</script>
+		<logic:equal name="MVS_usuario" property="permisosTiny" value="1">
+			<script language="javascript" type="text/javascript">
+					editarCodigo = "code";
+			</script>
+		</logic:equal>
+		
 		<!-- tinyMCE -->
-	<script language="javascript" type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script language="javascript" type="text/javascript">
-	<!--
-	
-		tinyMCE.init({
-			mode : "textareas",
-			theme : "advanced",
-			plugins : "insertararchivos,advimage,advlink",		
-			theme_advanced_buttons1_add_before : "insertararchivos,separator",
-			theme_advanced_buttons3 : "",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_path_location : "bottom",
-			verify_html : false,
-			content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>",		
-			setupcontent_callback : "Obtener_Idform",
-			file_browser_callback : "fileBrowserCallBack",		
-			theme_advanced_resizing : false,
-			accessibility_warnings : true,			
-			language: "ca"	
-		});
-	
-	
+		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
+		<script language="javascript" type="text/javascript" src="tinymce/plugins/compat3x/plugin.min.js"></script>
+		<script language="javascript" type="text/javascript">
+		
+		
+		//Paso 1. Inicializamos tinyMCE.
+		tinymce.init({
+		    selector: 'textarea.editorTinyMCE',
+			language: 'ca',
+			plugins: "code, compat3x, link, textcolor, acheck "
+			,toolbar1: 'newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
+			,toolbar2: 'bullist numlist | outdent indent | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
+			,menubar: false
+			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
+			,external_plugins: {
+				"acheck": "plugins/acheck/editor_plugin.js"
+			}
+			, theme_advanced_buttons1_add_before : "insertararchivos,separator"
+			, theme_advanced_buttons3 : ""
+			, theme_advanced_toolbar_location : "top"
+			, theme_advanced_toolbar_align : "left"
+			, theme_advanced_path_location : "bottom"
+			, verify_html : false
+			, setupcontent_callback : "Obtener_Idform"
+			, file_browser_callback : "fileBrowserCallBack"	
+			, theme_advanced_resizing : false
+			, accessibility_warnings : true	
+		  });
+		
+
 		function Obtener_Idform(editor_id, body, doc) {
-	    
-			tinyMCE.settings['idform'] = document.microForm.id.value;
-			
+			tinymce.settings['idform'] = document.microForm.id.value;
 		}
 		
 	   	var Rcajatemp_tiny;
@@ -64,17 +79,21 @@
 			Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
 		}	
 	
-		// Método que recoge las variables de la ventana que la llama y abre un popup con el listado de recursos url.
-		// Ãste método es la implementación personalizada del tiny
+		// Metodo que recoge las variables de la ventana que la llama y abre un popup con el listado de recursos url.
+		// Este metodo es la implementacion personalizada del tiny
 		function fileBrowserCallBack(field_name, url, type, win) {
 			Rcajatemp_tiny=field_name;
 			Rwin_tiny=win;
 			window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
 		}	
-
-	<!-- /tinyMCE -->
-	// -->
-	</script>
+		
+		var valor = "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>";
+		alert(valor);
+		
+		</script>
+		<!-- /tinyMCE -->
+		
+		
 
 <%session.setAttribute("action_path_key",null);%>		
 	<html:form action="/cabeceraPieEdita.do" method="POST" enctype="multipart/form-data" styleId="accFormulario">
@@ -253,7 +272,7 @@
 					
 						<tr id="tinymceEditor<%=i%>">
 							<td>
-								<html:textarea property="cabecerapersonal" name="traducciones" rows="10" cols="70" indexed="true" style="width:800px; height:300px;" />
+								<html:textarea property="cabecerapersonal" name="traducciones" styleClass="editorTinyMCE" rows="10" cols="70" indexed="true" style="width:800px; height:300px;" />
 							</td>
 						</tr>
 					</table>
@@ -379,7 +398,7 @@
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					<tr>
 						<td>
-							<html:textarea property="piepersonal" name="traducciones" rows="10" cols="70" indexed="true" style="width:800px; height:300px;" />
+							<html:textarea property="piepersonal" name="traducciones" styleClass="editorTinyMCE" rows="10" cols="70" indexed="true" style="width:800px; height:300px;" />
 						</td>
 					</tr>
 					</table>

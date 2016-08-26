@@ -17,7 +17,7 @@ import es.caib.gusite.microback.action.util.Bdcomponentes;
  * 
  * 	Definición Struts:<BR>
  *  action path="/listartinycomponentes"<BR> 
- *  forward name="listarcomponentes" path="/tinymce/jscripts/tiny_mce/plugins/componentesmicros/componentes.jsp"
+ *  forward name="listarcomponentes" path="/tinymce/plugins/componentesmicros/componentes.jsp"
  *  
  *  @author - Indra
  */

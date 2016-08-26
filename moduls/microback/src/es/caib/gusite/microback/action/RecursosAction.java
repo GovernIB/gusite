@@ -21,7 +21,7 @@ import es.caib.gusite.microback.action.util.Bdrecursos;
  *  name="BuscaOrdenaRecursoActionForm" <BR>
  *  unknown="false" <BR>
  *  forward name="listarrecursos" path="/listaRecursos.jsp" <BR>
- *  forward name="listarecursostiny" path="/tinymce/jscripts/tiny_mce/plugins/insertararchivos/archivos.jsp"
+ *  forward name="listarecursostiny" path="/tinymce/jscripts/insertararchivos/archivos.jsp"
  *  
  *  @author - Indra
  */

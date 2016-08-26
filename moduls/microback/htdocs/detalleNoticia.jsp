@@ -53,47 +53,36 @@
 		</span>
 	</h1>
 
-	<!-- tinyMCE -->
-	<script language="javascript" type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script language="javascript" type="text/javascript">
-	
-		tinyMCE.init({
-			mode : "textareas",
-			theme : "advanced",
-			plugins : "advlink,paste",
-			theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,bullist,numlist,separator,outdent,indent,separator,link,unlink,forecolor,removeformat,cleanup,code,separator,cut,copy,paste,pastetext,pasteword",
-			theme_advanced_buttons2 : "",		
-			theme_advanced_buttons3 : "",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_path_location : "bottom",
-			file_browser_callback : "fileBrowserCallBack",		
-			verify_html : true,
-			theme_advanced_resizing : false,	
-			accessibility_warnings : true,		
-			language: "ca"	
-		});
-	
-	   	var Rcajatemp_tiny;
-	   	var Rwin_tiny;
+	<!-- tinyMCE. Editar codigo segun el rol (siendo 1 el valor si puede editar codigo). -->
+		<script language="javascript" type="text/javascript">
+					var editarCodigo = "";
+		</script>
+		<logic:equal name="MVS_usuario" property="permisosTiny" value="1">
+			<script language="javascript" type="text/javascript">
+					editarCodigo = "code";
+			</script>
+		</logic:equal>
 		
-		function Rmeterurl_tiny(laurl) {
-			Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
-		}	
-	
-		// Método que recoge las variables de la ventana que la llama y abre un popup con el listado de recursos url.
-		// Este método es la implementación personalizada del tiny
-		function fileBrowserCallBack(field_name, url, type, win) {
-			Rcajatemp_tiny=field_name;
-			Rwin_tiny=win;
-			
-			window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
-	
-		}
-	
-	</script>
-	<!-- /tinyMCE
-	<div style="font-weight:bold; color:#FF4400;"> <html:errors/></div> -->
+		<!-- tinyMCE -->
+		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
+		<script language="javascript" type="text/javascript">
+		
+		
+		//Paso 1. Inicializamos tinyMCE.
+		tinymce.init({
+		    selector: 'textarea.editorTinyMCE',
+			language: 'ca',
+			plugins: "code, compat3x, link, textcolor, acheck "
+			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste'
+			,menubar: false
+			,external_plugins: {
+				"acheck": "plugins/acheck/editor_plugin.js"
+			}
+		  });
+		
+		
+		</script>
+		<!-- /tinyMCE -->
 
 <%session.setAttribute("action_path_key",null);%>
 <html:form action="/noticiaEdita.do" method="POST" enctype="multipart/form-data"  styleId="accFormulario">
@@ -258,7 +247,7 @@
 				%>						
 				</p>				
 				</td>
-				<td><html:textarea  property="texto" name="traducciones" rows="5" cols="50" indexed="true" style="width:700px; height:300px;"/></td>
+				<td><html:textarea  property="texto" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true" style="width:700px; height:300px;"/></td>
 			</tr>
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.fuente" />:</td>
