@@ -49,60 +49,25 @@
 
 <body>
 	<!-- tinyMCE -->
-	<script language="javascript" type="text/javascript" src="tinymce/tiny_mce.js"></script>
-	<script language="javascript" type="text/javascript">
-	
-		tinyMCE.init({
-			mode : "textareas",
-			theme : "advanced",
-			plugins: "personalizaMailing",
-			theme_advanced_buttons1 : "bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,bullist,numlist,separator,outdent,indent,separator,link,unlink,forecolor,removeformat,cleanup,code,addname,addcognom,addurlencuesta,addbaixa",			
-			theme_advanced_buttons2 : "",		
-			theme_advanced_buttons3 : "",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_path_location : "bottom",
-			fill_content_callback : "mailingCallback",		
-			verify_html : true,
-			theme_advanced_resizing : false,	
-			accessibility_warnings : true,		
-			language: "ca"	
-		});	
-	
-		function mailingCallback(type){
-			txt = "";
-			switch (type) { 
-            	case "addurlencuesta":
-                	if($('#resCorreo').val()!=""){
-	            		txt = "<%=System.getProperty("es.caib.gusite.portal.url")%>/sacmicrofront/encuesta.do?";
-	        			txt = txt + "idsite=<bean:write name="MVS_microsite" property="id"/>&";
-	        			txt = txt + "cont=" + $('#encuesta').val() + "&resp" + $('#resCorreo').val() + "={correu}";
-                	}else{
-                    	alert('<bean:message key="mensa.rescorreoconvocatoria"/>')
-                    } 
-					break;
-            	case "addname":
-                	txt = " {nom}";
-                	break;
-            	case "addcognom":
-                	txt = " {cognom}";
-                	break;
-            	case "addbaixa":
-            		if($('#resCorreo').val()!=""){
-	            		txt = "<%=System.getProperty("es.caib.gusite.portal.url")%>/sacmicrofront/operacioMailing.do?";
-	        			txt = txt + "idsite=<bean:write name="MVS_microsite" property="id"/>&";
-	        			txt = txt + "accio=baixa&email={correu}";
-                	}else{
-                    	alert('<bean:message key="mensa.rescorreoconvocatoria"/>')
-                    } 
-                	break;
+		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
+		<script language="javascript" type="text/javascript">
+		
+		
+		//Paso 1. Inicializamos tinyMCE.
+		tinymce.init({
+		    selector: 'textarea.editorTinyMCE',
+			language: 'ca',
+			plugins: "code, compat3x, link, textcolor, acheck "
+			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck '
+			,menubar: false
+			,external_plugins: {
+				"acheck": "plugins/acheck/editor_plugin.js"
 			}
-			return txt;
-		}
-	
-	</script>
-	<!-- /tinyMCE
-	<div style="font-weight:bold; color:#FF4400;"> <html:errors/></div> -->
+		  });
+		
+		
+		</script>
+		<!-- /tinyMCE -->
 
 
 
@@ -292,7 +257,7 @@
 						<bean:message key="convocatoria.texte"/>
 					</td>
 					<td colspan="3">
-						<html:textarea  property="txtMensaje" rows="5" cols="50" style="width:700px; height:300px;"/>
+						<html:textarea  property="txtMensaje" styleClass="editorTinyMCE" rows="5" cols="50" style="width:700px; height:300px;"/>
 					</td>
 					<td/>
 				</tr>			

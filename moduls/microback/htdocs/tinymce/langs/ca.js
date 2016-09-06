@@ -215,5 +215,12 @@ tinymce.addI18n('ca',{
 "Tools": "Eines",
 "View": "Veure",
 "Table": "Taula",
-"Format": "Format"
+"Format": "Format",
+"ca.Insereix Component": "Inserir component",
+"ca.tipoarchivos.desc": "Inserir icones",
+"ca.insertararchivos.desc": "Inserir arxius",
+"ca.Insert template": "Inserir plantilla",
+"ca.acheck.desc": "Comprovar accesibilitat",
+"ca.Table" : "Taula",
+"ca.Document properties": "Propietats del document"
 });

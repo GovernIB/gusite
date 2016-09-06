@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<script language="javascript" type="text/javascript" src="../compat3x/tiny_mce_popup.js"></script>	
+<script language="javascript" type="text/javascript" src="tinymce/plugins/compat3x/tiny_mce_popup.js"></script>
 <script language="javascript" type="text/javascript" src="tinymce/plugins/componentesmicros/jscripts/functions.js"></script>
 <script type="text/javascript" src="js/coArbre2.js"></script>
 <head>

@@ -47,14 +47,15 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck "
+			plugins: "code, compat3x, link, textcolor, acheck, importcss  "
 			,toolbar1: 'newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
 			,toolbar2: 'bullist numlist | outdent indent | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
 			,menubar: false
 			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
+			,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
-			}
+			} 
 			, theme_advanced_buttons1_add_before : "insertararchivos,separator"
 			, theme_advanced_buttons3 : ""
 			, theme_advanced_toolbar_location : "top"
@@ -62,9 +63,23 @@
 			, theme_advanced_path_location : "bottom"
 			, verify_html : false
 			, setupcontent_callback : "Obtener_Idform"
-			, file_browser_callback : "fileBrowserCallBack"	
+		    , file_browser_callback : "fileBrowserCallBack"	
 			, theme_advanced_resizing : false
 			, accessibility_warnings : true	
+			, plugin_insertdate_dateFormat : "%d/%m/%Y"
+			, plugin_insertdate_timeFormat : "%H:%M:%S"
+			, extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+			, templates: [
+			    {title: "Basica", 				description: "Pàgina Bàsica.", 								url:"tinymce/templates/basica.htm"},
+			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
+			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
+			  ]
+			, file_browser_callback : "fileBrowserCallBack"
+			, theme_advanced_resizing : false
+			, nonbreaking_force_tab : true
+			, apply_source_formatting : true		
+			, convert_urls: false				
+			, block_formats: 'Paràgraf=p;Adreça=address;Preformatat=pre;Títol=h1;Subtítol nivell 1=h2;Subtítol nivell 2=h3;Subtítol nivell 3=h4;Subtítol nivell 4=h5;Subtítol nivell 5=h6'
 		  });
 		
 
@@ -86,9 +101,6 @@
 			Rwin_tiny=win;
 			window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
 		}	
-		
-		var valor = "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>";
-		alert(valor);
 		
 		</script>
 		<!-- /tinyMCE -->
@@ -186,14 +198,14 @@
 			    	
 			 <div id="capaCapsal<%=i%>">   	
 				<!-- las tablas están entre divs por un bug del FireFox -->
-				<div id="siNo_<%=i%>0">
+				<div id="siNoC_<%=i%>0">
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					<tr>
 						<td><strong><bean:message key="micro.sincabecera" /></strong>.</td>
 					</tr>
 					</table>
 				</div>    	        
-				<div id="siNo_<%=i%>1" style="display:none;">
+				<div id="siNoC_<%=i%>1" style="display:none;">
 								<table cellpadding="0" cellspacing="0" class="edicio">
 						<tr>
 							<th>
@@ -267,7 +279,7 @@
 						</table>
 				
 				</div>
-				<div id="siNo_<%=i%>2" style="display:none;">
+				<div id="siNoC_<%=i%>2">
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					
 						<tr id="tinymceEditor<%=i%>">
@@ -309,14 +321,14 @@
 		    	</p>
 		
 			<div id="capaPeu<%=i%>">
-				<div id="siNo_<%=i%>0">
+				<div id="siNoP_<%=i%>0">
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					<tr>
 						<td><strong><bean:message key="micro.sinpie" /></strong>.</td>
 					</tr>
 					</table>
 				</div>
-				<div id="siNo_<%=i%>1" style="display:none;">
+				<div id="siNoP_<%=i%>1" style="display:none;">
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					<tr>
 						<th>
@@ -394,7 +406,7 @@
 					<html:hidden property="subtitulocampanya" name="traducciones" indexed="true" />
 		
 				</div>
-				<div id="siNo_<%=i%>2" style="display:none;">
+				<div id="siNoP_<%=i%>2" style="display:none;">
 					<table cellpadding="0" cellspacing="0" class="edicio">
 					<tr>
 						<td>

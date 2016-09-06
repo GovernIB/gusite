@@ -63,10 +63,10 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullpage, media, charmap, template, importcss "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullpage, fullscreen, media, charmap, template, importcss "
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
 			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
-			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullpage '
+			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullscreen '
 			,menubar: false
 			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
 			,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"

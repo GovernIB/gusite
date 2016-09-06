@@ -79,14 +79,67 @@ function marcarCheck(obj) {
 		}
 	}
 }
+
+
 function ficarCapsal(obj) {
+	
 	seleccionat = document.getElementById(obj).options[document.getElementById(obj).selectedIndex].value;
 	selTxt = document.getElementById(obj).options[document.getElementById(obj).selectedIndex].text;
 	strongs = document.getElementById('formulario').getElementsByTagName('strong');
-	for(i=0;i<strongs.length;i++) {
+	for(var i=0;i<strongs.length;i++) {
 		if(obj.indexOf('capsalSiNo_') != -1) if(strongs[i].id.indexOf('capsalSiNo_') != -1) strongs[i].innerHTML = selTxt;
 		if(obj.indexOf('peuSiNo_') != -1) if(strongs[i].id.indexOf('peuSiNo_') != -1) strongs[i].innerHTML = selTxt;
 	}
+	
+	
+	debugger;
+	//Indica valor select
+	var valorSelect = document.getElementById(obj).value;
+	//Indica si es capcelera o no.
+	var isCapsal = (document.getElementById(obj).id.indexOf("capsal") == 0);
+	
+	for(var i = 0 ; i < 3 ; i ++) { //Son 3 valores: 0 , 1 y 2.
+		for( var j = 0 ; j < 5 ; j++) { // Son 5 valores : los 5 idiomas que van de 0 a 4.
+			if ( i == valorSelect ) { //Es el seleccionado
+				if ( isCapsal ) {
+					document.getElementById("siNoC_"+j+i).style.display="block";
+				} else {
+					document.getElementById("siNoP_"+j+i).style.display="block";
+				}
+			} else { //No es el sseleccionado, por tanto, hay que ocultarlo.
+				if ( isCapsal ) {
+					document.getElementById("siNoC_"+j+i).style.display="none";
+				} else {
+					document.getElementById("siNoP_"+j+i).style.display="none";
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	/*
+	var isCapsal = (document.getElementById(obj).id.indexOf("capsal") == 0);
+	
+	
+	var hijos = div.children;
+	var valor = document.getElementById(obj).value;
+	var hijosFormulario = document.getElementById("formulario").children;
+	for (var i = 0; i< hijosFormulario.length; i++) {
+		if (hijosFormulario[i].id != null && hijosFormulario[i].id.indexOf("capa_tabla") == 0) {
+			var hijosDiv = hijosFormulario[i].children;
+			for( var j = 0; j < hijosDiv.children; j++) {
+				if (isCapsal) {
+					
+				} else {
+					
+				}
+			}
+		}
+	}*/
+	
+	/**
 	divs = document.getElementById('formulario').getElementsByTagName('div');
 	for(i=0;i<divs.length;i++) {
 		if(divs[i].id.indexOf('capa_tabla') != -1) {
@@ -107,25 +160,11 @@ function ficarCapsal(obj) {
 				}
 			}
 		}
-	}
-	
-	/*if (tinymce == null) {
-		alert("nulo tinymce");
-		alert(tinymce);
-	} else {
-		alert(" no nulo tinymce");
-		tinymce.init({
-		    selector: 'textarea.editorTinyMCE',
-			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck "
-			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste'
-			,menubar: false
-			,external_plugins: {
-				"acheck": "plugins/acheck/editor_plugin.js"
-			}
-		  });
 	}*/
 }
+
+
+
 
 function esconderSpans() {
 	spans = document.getElementsByTagName('span');

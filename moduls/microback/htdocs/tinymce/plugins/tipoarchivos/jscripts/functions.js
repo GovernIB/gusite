@@ -5,8 +5,9 @@ function init() {
 function insertTipoarchivo(file_name, title) {
 
 	title = tinyMCEPopup.editor.getLang(title);
-	URL = 'tinymce/' + tinyMCEPopup.editor.baseURI.toRelative('plugins/');
-
+	//URL = 'tinymce/' + tinyMCEPopup.editor.baseURI.toRelative('plugins/');
+	URL =  tinyMCEPopup.editor.baseURI.toRelative('plugins/');
+	
 	if (title == null) title = "";
 
 	// XML encode
@@ -15,7 +16,7 @@ function insertTipoarchivo(file_name, title) {
 	title = title.replace(/</g, '&lt;');
 	title = title.replace(/>/g, '&gt;');*/
 
-	var html = '<img src="' + URL  + "/tipoarchivos/images/" + file_name + '" mce_src="' + URL + "/tipoarchivos/images/" + file_name + '" border="0" alt="' + title + '" title="' + title + '" />';
+	var html = '<img src="' + URL  + "tipoarchivos/images/" + file_name + '" mce_src="' + URL + "/tipoarchivos/images/" + file_name + '" border="0" alt="' + title + '" title="' + title + '" />';
 
 	tinyMCE.execCommand('mceInsertContent', false, html);
 	tinyMCEPopup.close();
