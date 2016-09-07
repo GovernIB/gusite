@@ -47,7 +47,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, importcss  "
+			plugins: "code, compat3x, link, textcolor, acheck, importcss, image  "
 			,toolbar1: 'newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
 			,toolbar2: 'bullist numlist | outdent indent | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
 			,menubar: false

@@ -1,0 +1,7 @@
+Se mantiene por compatibilidad, pero habría que sustituir:
+
+<img src="tinymce/jscripts/tiny_mce/plugins/tipoarchivos/images/pdf.gif" alt="PDF" title="PDF" border="0" data-mce-src="tinymce/jscripts/tiny_mce/plugins/tipoarchivos/images/pdf.gif">
+
+por
+
+<img src="tinymce/plugins/tipoarchivos/images/pdf.gif" alt="PDF" title="PDF" border="0" data-mce-src="tinymce/jscripts/tiny_mce/plugins/tipoarchivos/images/pdf.gif">

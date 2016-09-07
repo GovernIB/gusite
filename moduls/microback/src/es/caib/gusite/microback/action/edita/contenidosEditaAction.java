@@ -129,9 +129,9 @@ public class contenidosEditaAction extends BaseAction
 					micrositeDelegate.grabarUltimoIdcontenido(micrositeBean,contenido.getId());
 
 					//Pasamos el testeo W3C
-					if (!pasaTesteoW3C(request, contenido)) {
-						return mapping.findForward("info");
-					}
+					//if (!pasaTesteoW3C(request, contenido)) {
+					//	return mapping.findForward("info");
+					//}
 
 					//Añaadimos mensajes de Información
 					setMensajesInfo(request, contenidoForm);
@@ -458,7 +458,7 @@ public class contenidosEditaAction extends BaseAction
     }	
     
     /**
-     * Método que testea W3C el formulario de usuario
+     * Se ha quitado esta comprobacion. Método que testea W3C el formulario de usuario
      * @param request			petición de usuario
      * @param contenidoForm		formulario dinómico enviado por usuario
      * @throws Exception

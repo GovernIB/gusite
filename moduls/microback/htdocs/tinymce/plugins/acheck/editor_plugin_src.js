@@ -10,6 +10,7 @@
 	tinymce.PluginManager.requireLangPack('acheck');
 
 	tinymce.create('tinymce.plugins.AcheckPlugin', {
+		
 		/**
 		 * Initializes the plugin, this will be executed after the plugin has been created.
 		 * This call is done before the editor instance has finished it's initialization so use the onInit event
@@ -26,10 +27,10 @@
 					theCode += '<h1>Submitting Code for Accessibility Checking.....</h1>\n';
 					theCode += '<form action="http://achecker.ca/checker/index.php" name="accessform" method="post"> \n';
 					theCode += '<input type="hidden" name="gid[]" value="8" /> \n';
-					theCode += '<textarea name="validate_content">' + limpiarCabecera(tinyMCE.activeEditor.getContent({format : 'raw'})) + '</textarea>\n';
+					theCode += '<textarea name="validate_content">' + tinyMCE.activeEditor.getContent({format : 'raw'}) + '</textarea>\n';
 					theCode += '<input type="submit" /></form> \n';  
 					theCode += '</body></html> \n';
-					accessWin = window.open('', 'accessWin',  '_blank');
+					accessWin = window.open('', '_blank');
 					accessWin.document.writeln(theCode);
 					accessWin.document.close();
 			});
@@ -47,10 +48,7 @@
 			});
 		},
 
-		limpiarCabecera : function (texto) {
-			//Sustituir <html><head></head><body> por ....
-			return texto;
-		},
+		
 		/**
 		 * Creates control instances based in the incomming name. This method is normally not
 		 * needed since the addButton method of the tinymce.Editor class is a more easy way of adding buttons

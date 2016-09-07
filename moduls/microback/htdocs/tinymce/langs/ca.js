@@ -222,5 +222,13 @@ tinymce.addI18n('ca',{
 "ca.Insert template": "Inserir plantilla",
 "ca.acheck.desc": "Comprovar accesibilitat",
 "ca.Table" : "Taula",
+"ca.Table properties" : "Propietats taula",
+"ca.Delete table" : "Esborrar taula",
+"ca.Insert row before" : "Inserir fila abans",
+"ca.Insert row after" : "Inserir fila despres",
+"ca.Delete row" : "Esborrar fila",
+"ca.Insert column before" : "Inserir columna abans",
+"ca.Insert column after" : "Inserir columna despres",
+"ca.Delete column" : "Esborrar columna",
 "ca.Document properties": "Propietats del document"
 });

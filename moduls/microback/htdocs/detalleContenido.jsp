@@ -63,7 +63,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullpage, fullscreen, media, charmap, template, importcss "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullscreen, media, charmap, template, importcss "
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
 			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
 			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullscreen '
@@ -660,7 +660,7 @@ var mensa3='<bean:message key="conte.nuevoarchimensa"/>';
 		 if (nom_accio== "Traduir") {
 			 accForm.accion.value="<bean:message key='operacion.traducir'/>";
 		 }else if (nom_accio== "Guardar"){
-			 accForm.accion.value="<bean:message key='operacion.guardar'/>";
+			 accForm.accion.value="<bean:message key='operacion.guardar'/>";			 
 		} else if (nom_accio== "Borrar"){
 			if(confirm("<bean:message key='conte.alert6' />"))
 			 accForm.accion.value="<bean:message key='operacion.borrar' />";
