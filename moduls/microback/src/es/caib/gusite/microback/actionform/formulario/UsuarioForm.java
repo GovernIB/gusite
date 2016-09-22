@@ -57,7 +57,6 @@ public class UsuarioForm extends ActionForm {
 	String nombre;
 	String observaciones;
 	String perfil;
-	Long permisosTiny;
 
 
 	public Long getId() {
@@ -127,16 +126,6 @@ public class UsuarioForm extends ActionForm {
 
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
-	}
-
-
-	public Long getPermisosTiny() {
-		return permisosTiny;
-	}
-
-
-	public void setPermisosTiny(Long permisosTiny) {
-		this.permisosTiny = permisosTiny;
 	}
     
 }

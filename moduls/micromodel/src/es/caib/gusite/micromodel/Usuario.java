@@ -70,13 +70,6 @@ public class Usuario extends AuditableModel implements ValueObject {
 		this.perfil = perfil;
 	}
 
-	public Long getPermisosTiny() {
-		return this.permisosTiny;
-	}
-
-	public void setPermisosTiny(Long permisosTiny) {
-		this.permisosTiny = permisosTiny;
-	}
 	@Id
 	@SequenceGenerator(name = "GUS_USUARIO_ID_GENERATOR", sequenceName = "GUS_SQM_ALL", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GUS_USUARIO_ID_GENERATOR")
@@ -97,8 +90,5 @@ public class Usuario extends AuditableModel implements ValueObject {
 
 	@Column(name = "MSU_PERFIL")
 	private String perfil;
-	
-	@Column(name = "MSU_PERMIS")
-	private Long permisosTiny;
 
 }
