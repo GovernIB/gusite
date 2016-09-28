@@ -25,7 +25,7 @@
 	</logic:present>
 	
 	<div id="cap">
-		<div id="titol"><a href="http://intranet.caib.es"><img src="imgs/logo_caib.gif" alt="Govern de les Illes Balears" /></a><img src="imgs/logo_mini.gif" alt="Microsites" /></div>
+		<div id="titol"><a href="http://intranet.caib.es"><img src="imgs/logo_caib.gif" alt="Govern de les Illes Balears" style="height:52px; width: 52px;"/></a><img src="imgs/logo_mini.gif" alt="Microsites" /></div>
 		<div id="versio"></div>
 		<div id="mTitol">
 		<logic:present name="tituloMicro">

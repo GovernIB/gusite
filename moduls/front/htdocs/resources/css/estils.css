@@ -1207,6 +1207,8 @@ hr {
     background-size: 100%;
     margin: 0 auto;
     display: block;
+    background-size:32%;
+    background-repeat: no-repeat; 
 }
 
 /*OCULTAR CAPTION TABLA CALENDARIO EN TODAS Y COLOCAR EN EL CENTRO EL NOMBRE DEL MES*/
