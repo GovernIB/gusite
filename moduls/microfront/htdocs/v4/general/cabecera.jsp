@@ -16,12 +16,12 @@
 						<div id="capsal">
 							<logic:equal name="MVS_microsite" property="restringido" value="S">
 								<a accesskey="0" href="http://www.caib.es/" class="destacat" >
-									<img class="logo" src="v4/intranet/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" />
+									<img class="logo" src="v4/intranet/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" style="height: 100px;"/>
 								</a>
 							</logic:equal>
 							<logic:notEqual name="MVS_microsite" property="restringido" value="S">
 								<a accesskey="0" href="http://www.caib.es/" class="destacat" >
-									<img class="logo" src="v4/imgs/cap/logo.gif" alt="Logo del Govern de les Illes Balears" />
+									<img class="logo" src="v4/imgs/cap/logo.gif" alt="Logo del Govern de les Illes Balears" style="height: 100px;" />
 								</a>
 							</logic:notEqual>
 						</div>
