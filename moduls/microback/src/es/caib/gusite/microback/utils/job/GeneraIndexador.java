@@ -29,7 +29,7 @@ public class GeneraIndexador implements Job {
 					.getSolrPendienteDelegate();
 			solrDelegate.indexarPendientes();			
 		} catch (Exception ex) {
-			log.error("Error indexando pendientes", e);
+			log.error("Error indexando pendientes", ex);
 		}
 		log.debug("Job que se ejecuta para la Indexacion pendiente: fin");
 
