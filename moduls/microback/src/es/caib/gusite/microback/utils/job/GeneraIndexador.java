@@ -1,6 +1,5 @@
 package es.caib.gusite.microback.utils.job;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
@@ -14,30 +13,26 @@ import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 /**
  * Job que realiza el proceso diario de indexar el buscador
  * 
- *@author Indra
+ * @author Indra
  *
  */
 public class GeneraIndexador implements Job {
 
 	private Log log = LogFactory.getLog(GeneraIndexador.class);
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
+	public void execute(JobExecutionContext context)
+			throws JobExecutionException {
 
+		log.debug("Job que se ejecuta para la Indexacion pendiente: inicio");
 		try {
-			
-			log.error("Job noctura que se ejecuta para la Indexacion pendiente.");	
-			SolrPendienteDelegate solrDelegate = DelegateUtil.getSolrPendienteDelegate();
-	    	try { 
-	    		solrDelegate.indexarPendientes();
-	    	} catch (DelegateException e) { log.error("Error indexando pendientes", e); }
-	    	log.error("jobIndexacionNocturna..");
-			
+			SolrPendienteDelegate solrDelegate = DelegateUtil
+					.getSolrPendienteDelegate();
+			solrDelegate.indexarPendientes();			
 		} catch (Exception ex) {
-			
-			log.error("Error al realizar Job GeneraIndexador: " + ex.getMessage(), ex);
-			
+			log.error("Error indexando pendientes", e);
 		}
+		log.debug("Job que se ejecuta para la Indexacion pendiente: fin");
 
 	}
-	
+
 }
