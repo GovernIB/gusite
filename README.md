@@ -1,4 +1,4 @@
-# ![Logo](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/icon.jpg) Gusite (gusite)
+# ![Logo](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/icon.jpg) Gusite (gusite)
 
 **Descripció**
 
@@ -24,12 +24,12 @@ L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'
 
 **Captures de pantalla**
 
-![Plana Principal](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_1.png)<br/>
+![Plana Principal](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_1.png)<br/>
 Plana Principal
 
-![Llistat de Microsites](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_2.png)<br/>
+![Llistat de Microsites](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_2.png)<br/>
 Llistat de Microsites
 
-![Edició de Microsite](https://raw.githubusercontent.com/GovernIB/gusite/binaris/projectinfo_Attachments/screenshots/captura_3.png)<br/>
+![Edició de Microsite](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_3.png)<br/>
 Edició de Microsite
 
