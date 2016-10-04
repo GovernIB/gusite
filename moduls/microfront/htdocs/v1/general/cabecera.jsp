@@ -32,10 +32,10 @@
 		<logic:equal name="tipocabecera" value="1">
 				<div id="capsal">
 					<logic:equal name="MVS_microsite" property="restringido" value="S">
-						<a accesskey="0" href="http://www.caib.es" ><img class="logo" src="v1/intranet/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" /></a>
+						<a accesskey="0" href="http://www.caib.es" ><img class="logo" src="v1/intranet/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" style="height: 70px;" /></a>
 					</logic:equal>
 					<logic:notEqual name="MVS_microsite" property="restringido" value="S">
-						<a accesskey="0" href="http://www.caib.es" ><img class="logo" src="v1/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" /></a>
+						<a accesskey="0" href="http://www.caib.es" ><img class="logo" src="v1/imgs/capsal/logo.gif" alt="Logo del Govern de les Illes Balears" style="height: 70px;"/></a>
 					</logic:notEqual>
 					
 					<div id="organisme">

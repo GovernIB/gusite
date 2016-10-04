@@ -25,7 +25,7 @@
 	</logic:present>
 	
 	<div id="cap">
-		<div id="titol"><a href="http://intranet.caib.es"><img src="imgs/logo_caib.gif" alt="Govern de les Illes Balears" /></a><img src="imgs/logo_mini.gif" alt="Microsites" /></div>
+		<div id="titol"><a href="http://intranet.caib.es"><img src="imgs/logo_caib.gif" alt="Govern de les Illes Balears" style="height:52px; width: 52px;"/></a><img src="imgs/logo_mini.gif" alt="Microsites" /></div>
 		<div id="versio"></div>
 		<div id="mTitol">
 		<logic:present name="tituloMicro">
@@ -132,8 +132,7 @@
 					<p><bean:message key="menu.ferramentes" /></p>
 					<logic:present name="MVS_microsite">			
 							<a href="exportador.do" target="escritori"><bean:message key="menu.exportar" /></a>
-							<a href="indexador.do" target="escritori"><bean:message key="menu.indexar" /></a>
-							<a href="desindexa.do" target="escritori"><bean:message key="menu.desindexar" /></a>
+							<a href="indexarMicrosite.do" target="escritori"><bean:message key="menu.indexar" /></a>
 					</logic:present>
 			</logic:equal>	
 			<a href="procesow3c.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.accesibilitat" /> </a>			

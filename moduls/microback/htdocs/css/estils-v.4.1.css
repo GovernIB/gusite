@@ -22,7 +22,7 @@ a:hover { color:#006; }
 
 #contenidor { }
 
-#cap { overflow:hidden; height:2.1em; color:#fff; padding:.4em .4em; margin-bottom:0; background:#ff8400 url(../imgs/cap/fons.gif) repeat-x left top; border-bottom:1px solid #e07400; }
+#cap { overflow:hidden; height:3.9em; color:#fff; padding:.4em .4em; margin-bottom:0; background:#ff8400 url(../imgs/cap/fons.gif) repeat-x left top; border-bottom:1px solid #e07400; }
 
 #peu { clear:both; padding:1em; background:#fff url(../imgs/peu/peu.gif) repeat-x left top; border-top:3px solid #ff8400; }
 #peu p { margin:0; }

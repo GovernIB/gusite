@@ -61,7 +61,7 @@ div.tornarArrere a { background:url(../v1/imgs/enlaces/04tornar.gif) no-repeat l
 
 #capsal { padding:0.5em 1em 0.8em 1em; background:url(../v1/imgs/capsal/fondo.gif) repeat-x #003575; color:#fff; text-align:right; width:62em; overflow:hidden; }
 #capsal a { color:#fff; }
-#capsal img.logo { float:left; }
+#capsal img.logo { float:left; height: 70px;}
 #capsal #organisme { font-size:.9em; margin-bottom:.5em; }
 
 #capsalIdioma { margin:0; }

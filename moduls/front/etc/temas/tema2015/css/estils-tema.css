@@ -201,7 +201,7 @@ footer #logo-footer{
 }
 footer #logo-footer .logoFooter{
 	width: 235px;
-	height: 60px;
+	height: 80px;
 	display: inline-block;
 	background-image: url("../files/govern_illes_b.png") !important;
 	background-repeat: no-repeat;
@@ -448,7 +448,7 @@ div.cap-full *{
 	background-image: url("../files/govern_illes_balears.png") !important;
 	background-repeat: no-repeat;
 	width: 200px;
-	height: 45px;
+	height: 75px;
 	background-position: left;
 	margin: 0;
 	bottom: 7px;
