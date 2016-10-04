@@ -36,7 +36,7 @@
 	   es.caib.gusite.front.templateHotLoadingPath=/home/web/proyectos/ADCaib/gusite/plantillasDev/
 	   
        
-        es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
+        es.caib.rolsac.api.v2.urlPrefix = http://localhost:48080/sacws-api/services/
         
         <!-- Fecha revisión accesibilidad dd/MM/yyyy -->
 		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015 
