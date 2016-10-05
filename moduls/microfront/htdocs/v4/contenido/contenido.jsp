@@ -62,7 +62,6 @@
 
 				
 				<!-- informacio con o sin menu -->
-				&nbsp;
 				<logic:equal name="MVS_microsite" property="tipomenu" value="0">
 					<div id="infoNoMenu">
 				</logic:equal>
