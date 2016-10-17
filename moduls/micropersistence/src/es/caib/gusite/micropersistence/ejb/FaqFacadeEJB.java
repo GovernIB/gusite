@@ -452,6 +452,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			indexData.setSearchTextOptional(searchTextOptional);
 			indexData.setIdiomas(idiomas);
 			
+			indexData.setElementoIdPadre(micro.getId().toString());
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			
 			//Recorremos las traducciones del microsite padre

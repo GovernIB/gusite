@@ -1436,6 +1436,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
 			indexFile.setElementoId(idArchivo.toString());
 			
+			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
 			final MultilangLiteral descripcion = new MultilangLiteral();
@@ -1498,7 +1499,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			indexFile.setTitulo(titulo);
 			indexFile.setDescripcion(descripcion);
 			indexFile.setUrl(urls);
-
+			
+			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
+			indexFile.setElementoIdPadre(micro.getId().toString());
 			indexFile.setSearchTextOptional(searchTextOptional);
 			indexFile.setIdioma(EnumIdiomas.fromString(micro.getIdi()));
 			

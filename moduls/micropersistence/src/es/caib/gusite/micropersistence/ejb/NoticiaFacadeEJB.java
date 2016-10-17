@@ -1069,7 +1069,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexData.setSearchTextOptional(searchTextOptional);
 			indexData.setIdiomas(idiomas);
 			
-
+			indexData.setElementoIdPadre(micro.getId().toString());
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			
 			//Recorremos las traducciones del microsite padre
@@ -1258,6 +1258,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
 
 			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_NOTICIA);
+			indexFile.setElementoIdPadre(noticia.getId().toString());
 			indexFile.setDescripcionPadre(descripcionPadre);
 			indexFile.setExtension(extension);
 			indexFile.setUrlPadre(urlPadre);

@@ -659,6 +659,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexData.setSearchTextOptional(searchTextOptional);
 			indexData.setIdiomas(idiomas);
 			
+			indexData.setElementoIdPadre(micro.getId().toString());
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			
 			//Recorremos las traducciones del microsite padre
@@ -824,6 +825,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexFile.setIdioma(EnumIdiomas.fromString(agenda.getIdi()));
 			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
 
+			indexFile.setElementoIdPadre(agenda.getIdi());
 			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			indexFile.setDescripcionPadre(descripcionPadre);
 			indexFile.setExtension(extension);
