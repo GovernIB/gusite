@@ -1032,7 +1032,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
-			log.error("Error en noticiafacade intentando indexar.", exception);
+			log.error("Error intentando indexar idElemento:" + idElemento + " categoria:" + categoria, exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}	
@@ -1136,7 +1136,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
-			log.error("Error en noticiafacade intentando indexar.", exception);
+			log.error("Error intentando indexar idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo, exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}

@@ -44,7 +44,7 @@ public class IndexacionUtil {
 		List<UnidadData> pathAscendente = new ArrayList<UnidadData>();
 		OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 		UnidadData unidad = null;
-		unidad = op.getUnidadData(micro.getIdUA(), lang);
+		unidad = op.getUnidadData(micro.getUnidadAdministrativa(), lang);
 		while (unidad != null) {
 			pathAscendente.add(unidad);
 			unidad = ( unidad.getIdUnidadPadre() != null ? op.getUnidadData(unidad.getIdUnidadPadre(), lang) : null);				

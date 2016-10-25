@@ -46,58 +46,6 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	}
 	
 	/**
-	 * Indexa los pendientes de indexar
-	 *  
-	 * @throws DelegateException
-	 */
-	public Boolean indexarPendientes() throws DelegateException {
-		try {
-			return this.getFacade().indexarPendientes();
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	/**
-	 * Indexa un Microsite
-	 *  
-	 * @throws DelegateException
-	 */
-	public Boolean indexarMicrosite(Long idMicrosite) throws DelegateException {
-		try {
-			return this.getFacade().indexarMicrosite( idMicrosite);
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	/**
-	 * Indexa Todo
-	 *  
-	 * @throws DelegateException
-	 */
-	public Boolean indexarTodo() throws DelegateException {
-		try {
-			return this.getFacade().indexarTodo();
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	/**
-	 * Indexa Todo
-	 *  
-	 * @throws DelegateException
-	 */
-	public Boolean indexarMicrositeByUA(String idUAdministrativa) throws DelegateException, RemoteException {
-		try {
-			return this.getFacade().indexarMicrositeByUA(idUAdministrativa);
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-	
-	/**
 	 * Crear registro en solrPendiente
 	 *  
 	 * @throws DelegateException

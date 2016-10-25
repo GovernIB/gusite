@@ -648,7 +648,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
-			log.error("Error en contenidofacade intentando indexar.", exception);
+			log.error("Error intentando indexar idElemento:" + idElemento + " categoria:" + categoria, exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}
@@ -759,7 +759,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
-			log.error("Error en agendafacade intentando indexar.", exception);
+			log.error("Error intentando indexar idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo, exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}

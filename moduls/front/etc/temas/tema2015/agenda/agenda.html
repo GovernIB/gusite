@@ -73,11 +73,9 @@ a
 					alt="" />	
 					<div class="activitatTitol">
 					<div th:if="${elementoAgenda.actividad}!=null" th:with="actividad=${elementoAgenda.actividad.traduce.nombre}" th:remove="tag">
-<!-- 						<div  id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></div> -->
+						<div  id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></div>
 						<p></p>
-						<div th:if="${!iterStat.first}" th:with="actividadold=${MVS_agenda_lista[iterStat.index-1].actividad.traduce.nombre}" th:remove="tag">
-							<div th:if="${actividad}!=${actividadold}" id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></div>
-						</div>
+						
 					</div>					
 					<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}">Títol de l'esdeveniment</h3><p></p>
 					<div class="fechaElemento">

@@ -7,7 +7,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
 
 /**
  * Job que realiza el proceso diario de indexar el buscador
@@ -24,8 +24,8 @@ public class GeneraIndexador implements Job {
 
 		log.debug("Job que se ejecuta para la Indexacion pendiente: inicio");
 		try {
-			SolrPendienteDelegate solrDelegate = DelegateUtil
-					.getSolrPendienteDelegate();
+			SolrPendienteProcesoDelegate solrDelegate = DelegateUtil
+					.getSolrPendienteProcesoDelegate();
 			solrDelegate.indexarPendientes();			
 		} catch (Exception ex) {
 			log.error("Error indexando pendientes", ex);

@@ -12,6 +12,7 @@ import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
 
 
 /***
@@ -40,18 +41,16 @@ public class IndexacionJob implements Job  {
 		}
     	final String tipoIndexacion = (String) schedulerContext.get("tipoindexacion");
         
-    	SolrPendienteDelegate solrDelegate = DelegateUtil.getSolrPendienteDelegate();
+    	SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
+    	SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
     	
     	///PASO 1. GUARDAR EL JOB.
-    	try {
-			 solrPendienteJob = solrDelegate.crearSorlPendienteJob(tipoIndexacion);
+    	try {    		 
+			 solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(tipoIndexacion);
 		} catch (DelegateException e) {
 			log.debug("Error creando el job en bbdd.", e);
 			return;
 		}
-    	
-		
-    			
     	
     	
     	//PASO 2. EJECUTAR LA INDEXACIÓN.
@@ -81,7 +80,7 @@ public class IndexacionJob implements Job  {
     	//Entrar solo si es no pendientes
     	//PASO 3. CERRAR JOB.
         try {
-			solrDelegate.cerrarSorlPendienteJob(solrPendienteJob);
+        	solrPendienteDelegate.cerrarSorlPendienteJob(solrPendienteJob);
 		} catch (DelegateException e) {
 			log.error("Error cerrando el job", e);
 		}

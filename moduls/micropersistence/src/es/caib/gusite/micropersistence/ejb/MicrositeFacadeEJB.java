@@ -1502,7 +1502,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			return new SolrPendienteResultado(true);
 			
 		} catch(Exception exception) {
-			log.error("Error en micrositefacade intentando indexar.", exception);
+			log.error("Error intentando indexar idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo, exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
 	}

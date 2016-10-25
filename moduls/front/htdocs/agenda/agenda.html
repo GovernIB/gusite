@@ -43,10 +43,7 @@ th:lang-xmllang="${lang}">
 				<div th:each="elementoAgenda,iterStat : ${MVS_agenda_lista}" th:remove="tag">
 					<div th:if="${elementoAgenda.actividad.traduce} !=null" class="activitat">							
 						<div th:if="${elementoAgenda.actividad}!=null" th:with="actividad=${elementoAgenda.actividad.traduce.nombre}" th:remove="tag">
-							<p th:if="${iterStat.first}" id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></p>
-							<div th:if="${!iterStat.first}" th:with="actividadold=${MVS_agenda_lista[iterStat.index-1].actividad.traduce.nombre}" th:remove="tag">
-								<p th:if="${actividad}!=${actividadold}" id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></p>
-							</div>
+							<p id="fontNoticia" th:text="${elementoAgenda.actividad.traduce.nombre}"></p>
 						</div>						
 						<h3 id="titolNoticia" th:text="${elementoAgenda.traduce.titulo}">Títol de l'esdeveniment</h3>								
 						<p id="subtitol" th:with="inicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')},horai=${#calendars.format(elementoAgenda.finicio, 'HH:mm')}">
