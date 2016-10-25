@@ -94,6 +94,10 @@ public class IndexacionUtil {
 			return false;
 		}
 		
+		if (micro.getUnidadAdministrativa() <= 0) {
+			return false;
+		}
+		
 		return true;
 	}
 	
