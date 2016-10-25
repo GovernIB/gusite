@@ -17,12 +17,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerUtils;
-import org.quartz.impl.StdSchedulerFactory;
 
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
@@ -47,7 +41,6 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
 import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.gusite.micropersistente.job.IndexacionJob;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
@@ -621,42 +614,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
             close(session);
         }
     }
-
-    /**
-     *  Crea el job.
-     * @param tipoIndexacion
-     * @throws SchedulerException 
-     *  
-   	 * @ejb.interface-method
-   	 * @ejb.permission unchecked="true"
-   	 * @ejb.transaction type="RequiresNew"
-     */
-    public void crearJob(final String tipoIndexacion, final String idUAdministrativa, final Long idMicrosite) throws Exception  {
-    	
-    	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
-    	//  se da por hecho que se está ejecutando.
-    	List<SolrPendienteJob> jobs = getListJobs(5, tipoIndexacion);
-    	for(SolrPendienteJob job : jobs) {
-    		if (job.getFechaFin() == null) {
-    			throw new Exception("Se está ejecutando un job, intentelo más tarde");
-    		}
-    	}
-    	
-    	Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler(); 
-    	scheduler.start(); 
-    	JobDetail jobDetail = new JobDetail("IndexacionJob", Scheduler.DEFAULT_GROUP, IndexacionJob.class);
-    	Trigger trigger = TriggerUtils.makeImmediateTrigger(0, 0); 
-    	scheduler.getContext().put("tipoindexacion", tipoIndexacion);
-    	if (idUAdministrativa != null && !idUAdministrativa.isEmpty()) {
-    		scheduler.getContext().put("idUAdministrativa", idUAdministrativa);
-    	}
-    	if (idMicrosite != null) {
-    		scheduler.getContext().put("idMicrosite", idMicrosite);
-    	}
-    	
-        trigger.setName("FireOnceNowTrigger");  
-    	scheduler.scheduleJob(jobDetail, trigger);
-    }
+    
     
     /**
      * Crear una solr pendiente job. 
