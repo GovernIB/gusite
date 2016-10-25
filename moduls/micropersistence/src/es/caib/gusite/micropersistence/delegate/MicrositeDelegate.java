@@ -11,12 +11,12 @@ import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.MicrositeCompleto;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micropersistence.intf.MicrositeFacade;
 import es.caib.gusite.micropersistence.intf.MicrositeFacadeHome;
 import es.caib.gusite.micropersistence.util.MicrositeFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 

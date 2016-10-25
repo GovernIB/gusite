@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.caib.gusite.micromodel.Noticia;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 

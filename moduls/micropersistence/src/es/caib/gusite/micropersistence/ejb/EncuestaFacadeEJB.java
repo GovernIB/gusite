@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
@@ -27,6 +28,7 @@ import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Pregunta;
 import es.caib.gusite.micromodel.Respuesta;
 import es.caib.gusite.micromodel.RespuestaDato;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micromodel.TraduccionPregunta;
@@ -37,7 +39,8 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
@@ -1191,7 +1194,6 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 		log.debug("EncuestafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
 		
 		try {
-			OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
@@ -1199,19 +1201,17 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			if (encuesta == null) {
 				return new SolrPendienteResultado(true, "Error obteniendo la encuesta.");
 			}
-			boolean isIndexable = this.isIndexable(encuesta);
-			if (!isIndexable) {
+			
+			if (!IndexacionUtil.isIndexable(encuesta)) {
 				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
 			
-			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
-			final IndexData indexData = new IndexData();
-			indexData.setCategoria(categoria);
-			indexData.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexData.setElementoId(idElemento.toString());
+			Microsite micro = micrositedel.obtenerMicrosite(encuesta.getIdmicrosite());
 			
-			indexData.setFechaPublicacion(encuesta.getFpublicacion());
-			indexData.setFechaCaducidad(encuesta.getFcaducidad());
+			if (!IndexacionUtil.isIndexable(micro)) {
+				return new SolrPendienteResultado(true, "No se puede indexar");
+			}
+			
 			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
@@ -1220,24 +1220,29 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			final MultilangLiteral searchText = new MultilangLiteral();
 			final MultilangLiteral searchTextOptional = new MultilangLiteral();
 			final List<EnumIdiomas> idiomas = new ArrayList<EnumIdiomas>();
+			final MultilangLiteral tituloPadre = new MultilangLiteral();
+			final MultilangLiteral urlPadre = new MultilangLiteral();
+			List<PathUO> uosPath = null;
 			
-			Microsite micro = micrositedel.obtenerMicrosite(encuesta.getIdmicrosite());
-			
-			
-			//Recorremos las traducciones
 			for (String keyIdioma : encuesta.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
 				final TraduccionEncuesta traduccion = (TraduccionEncuesta) encuesta.getTraduccion(keyIdioma);
 		    	
 				if (traduccion != null && enumIdioma != null) {
-					//Anyadimos idioma al enumerado.
+					
+					if (StringUtils.isBlank(traduccion.getTitulo())) {
+						continue;
+					}
+					
+					// Path UO
+					PathUOResult pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					
 					idiomas.add(enumIdioma);
-					
-					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
 					titulo.addIdioma(enumIdioma, traduccion.getTitulo());
-					
-			    	descripcion.addIdioma(enumIdioma, traduccion.getTitulo());
-			    	//Pregunta traducción en el idioma que estamos
+					descripcion.addIdioma(enumIdioma, traduccion.getTitulo());
+					urls.addIdioma(enumIdioma, IndexacionUtil.getUrlEncuesta(micro, encuesta, keyIdioma));
+			    	
+					//Pregunta traducción en el idioma que estamos
 			    	String preguntas = "";
 			    	String respuestas = "";
 			    	for (Pregunta preg : encuesta.getPreguntas()) {
@@ -1251,86 +1256,35 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					}
 			    	searchText.addIdioma(enumIdioma,solrIndexer.htmlToText((traduccion.getTitulo()==null?"":traduccion.getTitulo()) + preguntas));
 			    	
+			    	searchTextOptional.addIdioma(enumIdioma, pathUO.getUosText() + respuestas);
 			    	
-			    	
-			    	//StringBuffer que tendrá el contenido a agregar en textOptional
-			    	final StringBuffer textoOptional = new StringBuffer();	
-			    	
-					
-					Collection<UnidadListData> unidades = op.getUnidadesHijas(String.valueOf(micro.getIdUA()),keyIdioma);
-					for(UnidadListData ua : unidades) {
-						textoOptional.append(" ");
-				    	textoOptional.append(ua.getNombre());	
-					}
-					
-					textoOptional.append(" ");
-					UnidadData unidadData = op.getUnidadData(String.valueOf(micro.getIdUA()), keyIdioma);
-			    	textoOptional.append(unidadData.getNombre());
-			    	
-			    	textoOptional.append(" ");
-			    	textoOptional.append(respuestas);
-									
-			    	searchTextOptional.addIdioma(enumIdioma, textoOptional.toString());
-			    	
+			    	// Padre
+			    	urlPadre.addIdioma(enumIdioma, IndexacionUtil.getUrlMicrosite(micro, keyIdioma));	    		
+			    	tituloPadre.addIdioma(enumIdioma, IndexacionUtil.getTituloMicrosite(micro, keyIdioma));
 
-			    	//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-			    	if (micro.getVersio().equals("v5")) {
-			    		urls.addIdioma(enumIdioma, "/"+ micro.getUri() + "/" + keyIdioma + "/encuesta/" + traduccion.getUri());	    		
-			    	} else {
-			    		urls.addIdioma(enumIdioma, "/sacmicrofront/encuesta.do?lang="+keyIdioma +"&idsite="+micro.getId() 
-			    				+"&cont="+encuesta.getId());
-			    	}
-			    	
+			    	uosPath = pathUO.getUosPath();
 			    	
 				}
 			}
 			
-			//Seteamos datos multidioma.
+			
+			final IndexData indexData = new IndexData();
+			indexData.setCategoria(categoria);
+			indexData.setAplicacionId(EnumAplicacionId.GUSITE);
+			indexData.setElementoId(idElemento.toString());
+			indexData.setFechaPublicacion(encuesta.getFpublicacion());
+			indexData.setFechaCaducidad(encuesta.getFcaducidad());
 			indexData.setTitulo(titulo);
 			indexData.setDescripcion(descripcion);
 			indexData.setUrl(urls);
 			indexData.setSearchText(searchText);
 			indexData.setSearchTextOptional(searchTextOptional);
 			indexData.setIdiomas(idiomas);
-	
 			indexData.setElementoIdPadre(micro.getId().toString());
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
-			
-			//Recorremos las traducciones del microsite padre
-			final MultilangLiteral tituloPadre = new MultilangLiteral();
-			final MultilangLiteral urlPadre = new MultilangLiteral();
-			for (String keyIdioma : micro.getTraducciones().keySet()) {
-				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
-				final TraduccionMicrosite traduccion = (TraduccionMicrosite) micro.getTraduccion(keyIdioma);
-		    	
-				if (traduccion != null && enumIdioma != null) {
-					
-					//Seteamos los primeros campos multiidiomas: Titulo.
-					tituloPadre.addIdioma(enumIdioma, traduccion.getTitulo());
-					
-					//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-			    	if (micro.getVersio().equals("v5")) {
-			    		urlPadre.addIdioma(enumIdioma, "/"+ micro.getUri() + "/" + keyIdioma );	    		
-			    	} else {
-			    		urlPadre.addIdioma(enumIdioma, "/sacmicrofront/index.do?lang="+keyIdioma +"&idsite="+ micro.getId() 
-			    				+"&cont="+encuesta.getId());
-			    	}
-				}
-					
-			}
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
-			
-			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
-				path.add(String.valueOf(micro.getIdUA()));
-				uo.setPath(path);
-				uos.add(uo);
-				indexData.setUos(uos);
-			}
-			
+			indexData.setUos(uosPath);
 			indexData.setMicrositeId(micro.getId().toString());
 			indexData.setInterno(!micro.getRestringido().equals("N") ? true : false);
 								
@@ -1343,18 +1297,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 		}
 	}
 	
-	/**
-	 * Comprueba si es indexable una agenda.
-	 * @return
-	 */
-	private boolean isIndexable(final Encuesta encuesta) {
-		boolean indexable = true;
-		if (!encuesta.getVisible().equals("S") ) {
-			indexable = false;
-		}
-		
-		return indexable;
-	}
+	
 	
 
 	/**

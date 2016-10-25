@@ -11,10 +11,10 @@ import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Faq;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.FaqFacade;
 import es.caib.gusite.micropersistence.intf.FaqFacadeHome;
 import es.caib.gusite.micropersistence.util.FaqFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 

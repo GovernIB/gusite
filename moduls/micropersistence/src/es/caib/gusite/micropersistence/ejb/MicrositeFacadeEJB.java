@@ -1,10 +1,8 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -20,6 +18,7 @@ import java.util.StringTokenizer;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -46,12 +45,10 @@ import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.MicrositeCompleto;
 import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.Temafaq;
 import es.caib.gusite.micromodel.Tipo;
-import es.caib.gusite.micromodel.TraduccionAgenda;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
-import es.caib.gusite.micromodel.TraduccionNoticia;
-import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
@@ -67,21 +64,16 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
 import es.caib.gusite.micropersistence.delegate.MenuDelegate;
-import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
-import es.caib.gusite.plugins.PluginException;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
-import es.caib.gusite.plugins.organigrama.UnidadData;
-import es.caib.gusite.plugins.organigrama.UnidadListData;
-import es.caib.rolsac.api.v2.exception.QueryServiceException;
 import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.model.IndexData;
 import es.caib.solr.api.model.IndexFile;
 import es.caib.solr.api.model.MultilangLiteral;
 import es.caib.solr.api.model.PathUO;
@@ -1412,10 +1404,10 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
      * @ejb.transaction type="RequiresNew"
 	 */
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
+		
 		log.debug("MicrositeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
 		
 		try {
-			OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 			
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
@@ -1424,125 +1416,95 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				return new SolrPendienteResultado(true, "Error obteniendo el microsite.");
 			}
 			
-			final Archivo archivo = archi.obtenerArchivo(idArchivo);
-			boolean isIndexable = this.isIndexable(archivo);
-			if (!isIndexable) {
+			if (!IndexacionUtil.isIndexable(micro)) {
 				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
 			
-			//Preparamos la información básica: id elemento, aplicacionID = GUSITE y la categoria de tipo ficha.
-			final IndexFile indexFile = new IndexFile();
-			indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
-			indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-			indexFile.setElementoId(idArchivo.toString());
+			final Archivo archivo = archi.obtenerArchivo(idArchivo);
+			if (!IndexacionUtil.isIndexable(archivo)) {
+				return new SolrPendienteResultado(true, "No se puede indexar");
+			}
 			
+			byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
 			
-			//Iteramos las traducciones
-			final MultilangLiteral titulo = new MultilangLiteral();
-			final MultilangLiteral descripcion = new MultilangLiteral();
-			final MultilangLiteral urls = new MultilangLiteral();
+			// Los archivos solo se indexa en un idioma, por lo que si se quiere que se encuentren en todos los idiomas,
+			// habrá que indexarse en todos los idiomas.
 			
-			final MultilangLiteral searchTextOptional = new MultilangLiteral();
-			final List<EnumIdiomas> idiomas = new ArrayList<EnumIdiomas>();
-
-
-			String[] nombreArc = archivo.getNombre().split("\\."); 
-			        
-			final MultilangLiteral extension = new MultilangLiteral();
-		
-		
-			//Recorremos las traducciones
 			for (String keyIdioma : micro.getTraducciones().keySet()) {
+			
+				final MultilangLiteral extension = new MultilangLiteral();
+				final MultilangLiteral titulo = new MultilangLiteral();
+				final MultilangLiteral descripcion = new MultilangLiteral();
+				final MultilangLiteral urls = new MultilangLiteral();
+				final MultilangLiteral urlPadre = new MultilangLiteral();
+				final MultilangLiteral tituloPadre = new MultilangLiteral();
+				final MultilangLiteral searchTextOptional = new MultilangLiteral();
+				final List<EnumIdiomas> idiomas = new ArrayList<EnumIdiomas>();
+				
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
 				
 				final TraduccionMicrosite traduccion = (TraduccionMicrosite) micro.getTraduccion(keyIdioma);
 		    	
 				if (traduccion != null && enumIdioma != null) {
+					
+					// Si no tiene titulo microsite no indexamos
+					if (traduccion.getTitulo() == null || traduccion.getTitulo().isEmpty()) {
+						continue;
+					}
+					
+					PathUOResult pathUo = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					
 					//Anyadimos idioma al enumerado.
 					idiomas.add(enumIdioma);
 					
-					//Seteamos los primeros campos multiidiomas: Titulo, Descripción y el search text.
-					titulo.addIdioma(enumIdioma, nombreArc[0]);
-			    	descripcion.addIdioma(enumIdioma, archivo.getNombre());
+					//Seteamos los primeros campos multiidiomas: Titulo, Descripción
+					titulo.addIdioma(enumIdioma, IndexacionUtil.getTituloArchivo(archivo));
+			    	descripcion.addIdioma(enumIdioma, IndexacionUtil.getDescripcionArchivo(archivo));
 			    	
-			    	extension.addIdioma(enumIdioma, nombreArc[1]);
+			    	// Extension
+			    	extension.addIdioma(enumIdioma, FilenameUtils.getExtension(archivo.getNombre()));
 
-			    	//StringBuffer que tendrá el contenido a agregar en textOptional
-			    	final StringBuffer textoOptional = new StringBuffer();	
+			    	// Text optional
+			    	searchTextOptional.addIdioma(enumIdioma, pathUo.getUosText());
 			    	
-					
-					Collection<UnidadListData> unidades = op.getUnidadesHijas(String.valueOf(micro.getIdUA()),keyIdioma);
-					for(UnidadListData ua : unidades) {
-						textoOptional.append(" ");
-				    	textoOptional.append(ua.getNombre());	
-					}
-					
-					textoOptional.append(" ");
-					UnidadData unidadData = op.getUnidadData(String.valueOf(micro.getIdUA()), keyIdioma);
-			    	textoOptional.append(unidadData.getNombre());	
-									
-			    	searchTextOptional.addIdioma(enumIdioma, solrIndexer.htmlToText(textoOptional.toString()));
+			    	//URL
+			    	urls.addIdioma(enumIdioma, IndexacionUtil.getUrlArchivo(micro, archivo, keyIdioma));
 			    	
-
-			    	//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-			    	if (micro.getVersio().equals("v5")) {
-			    		urls.addIdioma(enumIdioma, "/"+ micro.getUri()  + "/f/" + idArchivo);	    		
-			    	} else {
-			    		urls.addIdioma(enumIdioma, "/sacmicrofront/archivopub.do?ctrl=MCRST"+micro.getId()+ "ZI" +idArchivo +"&id=" + idArchivo);
-			    	}
+			    	// Padre
+			    	urlPadre.addIdioma(enumIdioma, IndexacionUtil.getUrlMicrosite(micro, keyIdioma));	    		
+			    	tituloPadre.addIdioma(enumIdioma, IndexacionUtil.getTituloMicrosite(micro, keyIdioma));
 			    	
+			    	final IndexFile indexFile = new IndexFile();
+					indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
+					indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
+					indexFile.setElementoId(idArchivo.toString() + "_" + enumIdioma.toString());
+					indexFile.setTitulo(titulo);
+					indexFile.setDescripcion(descripcion);
+					indexFile.setUrl(urls);
+					indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setElementoIdPadre(micro.getId().toString());
+					indexFile.setUrlPadre(urlPadre);
+					indexFile.setUos(pathUo.getUosPath());
+					indexFile.setSearchTextOptional(searchTextOptional);
+					indexFile.setIdioma(enumIdioma);
+					indexFile.setFileContent(contenidoFichero);
+					indexFile.setExtension(extension);
+					indexFile.setMicrositeId(micro.getId().toString());
+					indexFile.setInterno(!micro.getRestringido().equals("N") ? true : false);
+						
+					solrIndexer.indexarFichero(indexFile);
 			    	
 				}
 			}
 			
-			//Seteamos datos multidioma.
-			indexFile.setTitulo(titulo);
-			indexFile.setDescripcion(descripcion);
-			indexFile.setUrl(urls);
-			
-			indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
-			indexFile.setElementoIdPadre(micro.getId().toString());
-			indexFile.setSearchTextOptional(searchTextOptional);
-			indexFile.setIdioma(EnumIdiomas.fromString(micro.getIdi()));
-			
-			indexFile.setFileContent(archi.obtenerContenidoFichero(archivo));
-
-			indexFile.setExtension(extension);
 			
 			
-			if (String.valueOf(micro.getIdUA()) != null){				
-				List<PathUO> uos = new ArrayList<PathUO>();
-				PathUO uo = new PathUO();
-				List<String> path = new ArrayList<String>();
-				path.add(String.valueOf(micro.getIdUA()));
-				uo.setPath(path);
-				uos.add(uo);
-				indexFile.setUos(uos);
-			}
-			
-			indexFile.setMicrositeId(micro.getId().toString());
-			indexFile.setInterno(!micro.getRestringido().equals("N") ? true : false);
-				
-			solrIndexer.indexarFichero(indexFile);
-			
-
 			return new SolrPendienteResultado(true);
+			
 		} catch(Exception exception) {
 			log.error("Error en micrositefacade intentando indexar.", exception);
 			return new SolrPendienteResultado(false, exception.getMessage());
 		}
-	}
-
-	private boolean isIndexable(Archivo archivo) throws DelegateException, IOException {
-		boolean indexable = true;
-		ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
-		byte[] contenido = archi.obtenerContenidoFichero(archivo);
-		
-		if (contenido == null || contenido.length == 0 ) {
-			indexable = false;
-		}
-
-		return indexable;
 	}
 	
 	/**

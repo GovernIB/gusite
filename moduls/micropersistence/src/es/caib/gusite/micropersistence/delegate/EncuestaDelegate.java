@@ -13,11 +13,11 @@ import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Pregunta;
 import es.caib.gusite.micromodel.Respuesta;
 import es.caib.gusite.micromodel.RespuestaDato;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.intf.EncuestaFacade;
 import es.caib.gusite.micropersistence.intf.EncuestaFacadeHome;
 import es.caib.gusite.micropersistence.util.EncuestaFacadeUtil;
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 

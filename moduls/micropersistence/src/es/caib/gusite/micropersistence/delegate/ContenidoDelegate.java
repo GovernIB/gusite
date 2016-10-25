@@ -9,8 +9,8 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micropersistence.util.SolrPendienteResultado;
 import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.ContenidoFacade;
 import es.caib.gusite.micropersistence.intf.ContenidoFacadeHome;
 import es.caib.gusite.micropersistence.util.ContenidoFacadeUtil;

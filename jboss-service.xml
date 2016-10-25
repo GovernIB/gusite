@@ -46,6 +46,9 @@
 		es.caib.gusite.solr.jobpendientes=0 0 2 * * ?
         <!-- Fecha revisión accesibilidad dd/MM/yyyy -->
 		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015 
+		
+		es.caib.gusite.solr.tamanyomaximo=20
+	   	es.caib.gusite.solr.ficheros=doc,docx,xls,xlsx,pdf,pdfx,odt,ods,odp,odf,txt,rtf
 
     </attribute>
 
