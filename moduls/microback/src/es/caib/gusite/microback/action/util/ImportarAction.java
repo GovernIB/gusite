@@ -42,6 +42,7 @@ import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.ImportarForm;
 import es.caib.gusite.microback.utils.betwixt.Configurator;
+import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
 import es.caib.gusite.micromodel.Actividadagenda;
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
@@ -92,7 +93,6 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.PersonalizacionPlantillaDelegate;
 import es.caib.gusite.micropersistence.delegate.PlantillaDelegate;
-import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaFrontDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
@@ -208,9 +208,7 @@ public class ImportarAction extends BaseAction {
                     
                     addImportLogVisual(request, "Comença indexació");
                     
-                    final SolrPendienteDelegate d = DelegateUtil.getSolrPendienteDelegate();
-                    d.crearJob("IDX_MIC", null, micro.getId());
-                    //d.indexarMicrosite(micro.getId());
+                    IndexacionJobUtil.crearJob("IDX_MIC", null, micro.getId());                    
                     
                     addImportLogVisual(request, "Indexació executant-se en background");
                 }

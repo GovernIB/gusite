@@ -14,10 +14,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import es.caib.gusite.micromodel.TemaFront;
+import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
-import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
@@ -115,10 +114,7 @@ public class IndexarPrincipalAction extends BaseAction {
 	private Boolean indexarTodo() throws Exception {
 		 
 		try{									
-			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			solrPendienteDel.crearJob("IDX_TODO", null, null);
-			//solrPendienteDel.indexarTodo();
-							
+			IndexacionJobUtil.crearJob("IDX_TODO", null, null);						
 		   }catch(Exception e){
 			log.error("Error indexando todo" );
 			return false;
@@ -130,10 +126,7 @@ public class IndexarPrincipalAction extends BaseAction {
     private Boolean indexarByUA(String idUAdministrativa) throws Exception {
 		 
 		try{									
-			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();		
-			solrPendienteDel.crearJob("IDX_UA", idUAdministrativa, null);
-			//solrPendienteDel.indexarMicrositeByUA(idUAdministrativa);
-							
+			IndexacionJobUtil.crearJob("IDX_UA", idUAdministrativa, null);						
 		   }catch(Exception e){
 			log.error("Error indexando UA " + idUAdministrativa );
 			return false;
@@ -146,10 +139,7 @@ public class IndexarPrincipalAction extends BaseAction {
     private Boolean indexarPendiente() throws Exception {
 		 
 		try{									
-			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			solrPendienteDel.crearJob("IDX_PDT", null, null);
-			//solrPendienteDel.indexarPendientes();
-							
+			IndexacionJobUtil.crearJob("IDX_PDT", null, null);							
 		   }catch(Exception e){
 			log.error("Error indexando pendientes ");
 			return false;

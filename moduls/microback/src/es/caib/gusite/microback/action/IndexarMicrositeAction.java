@@ -9,6 +9,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -58,10 +59,7 @@ public class IndexarMicrositeAction extends BaseAction {
 			if (idMicrosite == null)
 				return false;
 			else {				
-				SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-				solrPendienteDel.crearJob("IDX_MIC", null, Long.valueOf(idMicrosite));
-                //solrPendienteDel.indexarMicrosite(Long.parseLong(idMicrosite));
-				
+				IndexacionJobUtil.crearJob("IDX_MIC", null, Long.valueOf(idMicrosite));                
 			}	
 		}catch(Exception e){
 			log.error("Error indexando microsite: " + idMicrosite );

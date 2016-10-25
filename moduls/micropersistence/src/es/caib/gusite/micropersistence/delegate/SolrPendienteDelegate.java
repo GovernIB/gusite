@@ -118,17 +118,7 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	public Collection<UnidadListData> getUnidadesAdministrativas(String lang) throws java.rmi.RemoteException  {		
 			return this.getFacade().getUnidadesAdministrativas(lang);
 		
-	}
-	
-	public void crearJob(final String tipoIndexacion, final String idUAdministrativa, final Long idMicrosite) throws DelegateException {
-		try {
-			this.getFacade().crearJob(tipoIndexacion, idUAdministrativa, idMicrosite);		
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}catch (Exception e) {
-			throw new DelegateException(e);
-		}
-	}
+	}		
 
 	/**
 	 * Genera un solr pendiente job. 
