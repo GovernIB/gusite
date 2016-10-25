@@ -152,9 +152,9 @@ font-weight: normal;
 .botonLateralResponsive{
 	margin-left:-35px !important;
 }
-img{
-	max-width: 100%;
-}
+/* img{ */
+/* 	max-width: 100%; */
+/* } */
 .navbar{
 	border: 0px solid transparent;
 }
