@@ -696,9 +696,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
 			
-			// Los archivos solo se indexa en un idioma, por lo que si se quiere que se encuentren en todos los idiomas,
-			// habrá que indexarse en todos los idiomas.
-			
+			// Hay que buscar el archivo en la traduccion correspondiente
 			// Recorremos las traducciones			
 			for (String keyIdioma : agenda.getTraducciones().keySet()) {
 				
@@ -721,6 +719,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 						continue;
 					}
 					
+					// Debe ser el documento asociado a la traduccion
+					if (traduccion.getDocumento() == null || traduccion.getDocumento().getId().longValue() != idArchivo.longValue()) {
+						continue;
+					}
+					
 					PathUOResult pathUo = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
 					
 					idiomas.add(enumIdioma); 
@@ -736,7 +739,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					final IndexFile indexFile = new IndexFile();
 					indexFile.setCategoria(EnumCategoria.GUSITE_ARCHIVO);
 					indexFile.setAplicacionId(EnumAplicacionId.GUSITE);
-					indexFile.setElementoId(idArchivo.toString() + "_" + enumIdioma.toString());
+					indexFile.setElementoId(idArchivo.toString());
 					indexFile.setTitulo(titulo);
 					indexFile.setDescripcion(descripcion);
 					indexFile.setUrl(urls);
