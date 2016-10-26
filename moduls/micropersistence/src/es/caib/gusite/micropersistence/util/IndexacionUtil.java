@@ -90,7 +90,7 @@ public class IndexacionUtil {
 	
 	public static boolean isIndexable(Microsite micro) {
 		
-		if (!StringUtils.equalsIgnoreCase(micro.getAcceso(), "P")) {
+		if (!StringUtils.equalsIgnoreCase(micro.getVisible(), "S")) {
 			return false;
 		}
 		
@@ -138,6 +138,10 @@ public class IndexacionUtil {
     	}
     	
     	return url;
+	}
+	
+	public static boolean isRestringidoMicrosite(Microsite micro) {
+		return !micro.getAcceso().equals("P");
 	}
 	
 	

@@ -699,7 +699,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
 			indexData.setMicrositeId(contenido.getMicrosite().getId().toString());
-			indexData.setInterno(!contenido.getMicrosite().getRestringido().equals("N") ? true : false);
+			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(contenido.getMicrosite()));
 								
 			solrIndexer.indexarContenido(indexData);			
 

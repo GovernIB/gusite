@@ -442,7 +442,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			indexData.setUrlPadre(urlPadre);
 			indexData.setUos(uosPath);
 			indexData.setMicrositeId(micro.getId().toString());
-			indexData.setInterno(!micro.getRestringido().equals("N") ? true : false);
+			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));
 				
 			solrIndexer.indexarContenido(indexData);
 			
