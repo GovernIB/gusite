@@ -245,7 +245,14 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		if (idUOGovern == null) {
 			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 		}
+		
+		// INDRA: Se modifica para que llegue a Govern
+		/*
 		if (ua.getPadre() != null && !ua.getPadre().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
+			unidadData.setIdUnidadPadre(ua.getPadre()); 
+		}
+		*/
+		if (ua.getPadre() != null && !ua.getId().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
 			unidadData.setIdUnidadPadre(ua.getPadre()); 
 		}
 		
