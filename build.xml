@@ -238,7 +238,7 @@
 				<include name="httpmime-4.4.1.jar" />
 				<include name="httpclient-4.4.1.jar" />
 				<include name="solr-solrj-5.5.1.jar" />				
-				<include name="solrapi.jar" />
+				<include name="solrapi*.jar" />
 			</zipfileset>
 									
 			<zipfileset dir="${lib}/axis2-1.5" prefix="lib">

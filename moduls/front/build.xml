@@ -42,7 +42,7 @@
 		</fileset>
 		
 		<fileset dir="${lib.dir}/solr">
-			<include name="solrapi.jar"/>
+			<include name="solrapi*.jar"/>
 		</fileset>
 
 		<fileset dir="${lib.dir}">

@@ -63,7 +63,7 @@
             <include name="jtidy-r938.jar"/>
         </fileset>
     	<fileset dir="${lib.dir}/solr">
-    		<include name="solrapi.jar"/>
+    		<include name="solrapi*.jar"/>
     	</fileset>   	
     	<fileset dir="${lib.dir}/jboss">
     		<include name="hibernate-core.jar"/>
