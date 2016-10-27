@@ -302,161 +302,355 @@ function cambiarPosicionGo(event) {
   } else event.preventDefault();
 }
 
-function cambiarPosicionStop(event) {
-	document.getElementById('nuevo').style.display = 'none';
-	//
-	cloneClassName = document.getElementById(divID).className;
-	if(cloneClassName != 'nivel1' && idCapaOver == '') {
-		document.getElementById(divID).style.visibility = 'visible';
-	} else if(cloneClassName == 'nivel1' && idCapaOver == '') {
-		capaOverClassName = '';
-		capaOverID = '';
-	} else {
-		capaOverClassName = document.getElementById(idCapaOver).className;
-		capaOverID = document.getElementById(idCapaOver).id;
-	}
-		
-	// capas a clonar
-	capesPerClonar = new Array();
-	clonar = false;
-	divsDIV = document.getElementById('menuArbol').getElementsByTagName('div');
-	for(k=0;k<divsDIV.length;k++) {
-		if(divsDIV[k].id != 'nuevo') {
-			if(cloneClassName == 'pagC') clonar = false;
-			if(cloneClassName == 'nivel2') {
-				if(divsDIV[k].className.indexOf(cloneClassName) != -1 || divsDIV[k].className.indexOf('nivel1') != -1) clonar = false;
-				if(document.getElementById(divsDIV[k].id).getElementsByTagName('img')[2].name == 'nivel2') clonar = false;
-			}
-			if(cloneClassName == 'nivel1') {
-				if(divsDIV[k].className.indexOf(cloneClassName) != -1) clonar = false;
-			}
-			if(divsDIV[k].id == divID) clonar = true;
-			if(clonar == true) capesPerClonar.push(divsDIV[k].id);
-		}
-	}
-	
-	if(cloneClassName.indexOf('nivel') != -1 && capaOverClassName != '') {
-		buscarUltimoHijo(capaOverID,divID);
-		capaOverID = nuevoID;
-	}
-	
-	//clonando capas
-	for(m=0;m<capesPerClonar.length;m++) {
-		divClone = document.getElementById(capesPerClonar[m]).cloneNode(true);
-		divClone.id = 'X';
-		divClone.style.visibility = 'visible';
-		
-		//alert(capaOverID + ' - ' + m);
-		if(document.getElementById(capaOverID) != null) {
-			carpetaModeImg = document.getElementById(capaOverID).getElementsByTagName('img')[1].src;
-			carpetaMode = (carpetaModeImg.indexOf('padreAbierto') != -1) ? 'obert' : 'tancat';
-			
-			//alert(cloneClassName);
-			
-			if(carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) {
-				nuevoID = buscarUltimoHijo(capaOverID,divID);
-				//alert(nuevoID);
-				capaOverID = nuevoID;
-			}
-		}
-		
-		// pegamos capa clonada
-		if(m == 0) {
-			if(capaOverClassName == '' && cloneClassName == 'nivel1') document.getElementById('menuArbol').insertBefore(divClone,document.getElementById('menuArbol').getElementsByTagName('div')[0]);
-			else document.getElementById('menuArbol').insertBefore(divClone, document.getElementById(capaOverID).nextSibling);
-		} else {
-			document.getElementById('menuArbol').insertBefore(divClone, document.getElementById(capesPerClonar[m-1]).nextSibling);
-		}
-		
-		// borramos antigua
-		document.getElementById('menuArbol').removeChild(document.getElementById(capesPerClonar[m]));
-		
-		if(document.getElementById(capaOverID) != null) {
-			imgALT = document.getElementById(capaOverID).getElementsByTagName('img')[1].alt;
-			if(imgALT.indexOf('Obrir') != -1) {
-				clase = document.getElementById('X').className;
-				if(clase == 'nivel2') {
-					document.getElementById('X').className = 'nivel2noVisible';
-					imatge = document.getElementById('X').getElementsByTagName('img')[1];
-					imatge.src = 'imgs/menu/padreCerrado.gif';
-					imatge.alt = 'Obrir carpeta';
-					imatge.parentNode.title = 'Obrir carpeta';
-				} else {
-					if(capaOverClassName == 'nivel1') document.getElementById('X').className = 'pagCnoVisibleNivel1';
-					else 
-					document.getElementById('X').className = (carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) ? 'pagC' : 'pagCnoVisibleNivel2';
-				}
-			}
-		}
-		document.getElementById('X').id = capesPerClonar[m];
-		
-		if(cloneClassName.indexOf('nivel') == -1) {
-			if(capaOverClassName == 'nivel1') {
-				imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
-				imgNivel.src = 'imgs/menu/nivel2.gif';
-				imgNivel.name = 'nivel2';
-			} else if(capaOverClassName == 'nivel2') {
-				imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
-				
-				if(carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) {
-					imgNivel.src = 'imgs/menu/nivel2.gif';
-					imgNivel.name = 'nivel2';
-				} else {
-					imgNivel.src = 'imgs/menu/nivel3.gif';
-					imgNivel.name = 'nivel3';
-				}
-				
-			} else if(capaOverClassName.indexOf('pag') != -1) {
-				capaOverImgNivel = document.getElementById(capaOverID).getElementsByTagName('img')[2].name;
-				if(capaOverImgNivel == 'nivel2') {
-					imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
-					imgNivel.src = 'imgs/menu/nivel2.gif';
-					imgNivel.name = 'nivel2';
-				} else {
-					imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
-					imgNivel.src = 'imgs/menu/nivel3.gif';
-					imgNivel.name = 'nivel3';
-				}
-			}
-		}
-		
-		// cambiamos el idPadre
-		if(m == 0) {
-			capaActual = document.getElementById(capesPerClonar[m]);
-			imgNivel_Name = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2].name;
-			encontrado = false;
-			while(capaActual.previousSibling) {
-				if(capaActual.previousSibling.id != null && capaActual.previousSibling.nodeName == 'DIV' && encontrado == false) {
-					if(imgNivel_Name == 'nivel2') {
-						if(capaActual.previousSibling.getElementsByTagName('img')[2].name == 'nivel1') {
-							capaPadre = capaActual.previousSibling.id;
-							document.getElementById(capesPerClonar[m]).getElementsByTagName('input')[3].value = document.getElementById(capaPadre).getElementsByTagName("input")[0].value;
-							encontrado = true;
-						}
-					}
-					if(imgNivel_Name == 'nivel3') {
-						if(capaActual.previousSibling.getElementsByTagName('img')[2].name == 'nivel2') {
-							capaPadre = capaActual.previousSibling.id;
-							document.getElementById(capesPerClonar[m]).getElementsByTagName('input')[3].value = document.getElementById(capaPadre).getElementsByTagName("input")[0].value;
-							encontrado = true;
-						}
-					}			
-				}
-				capaActual = capaActual.previousSibling;
-			}
-		}
-	}
 
+/**
+ * Resetea y prepara de nuevo el arbol.
+ * @param event
+ */
+function resetearArbol(event) {
 	removeEvent(document,'mousemove',cambiarPosicionGo,true);
 	removeEvent(document,'mouseup',cambiarPosicionStop,true);
 	if(document.all) {
 		window.event.cancelBubble = true;
 		window.event.returnValue = false;
-  } else event.preventDefault();
+	} else {
+		event.preventDefault();
+	}
+	
 	// reordenamos
 	ordenarNodes();
 	// y reiniciamos buttons
-	iniciarMenu();
+	iniciarMenu(); 
+}
+
+/** 
+ * Comprueba si un elemento es de tipo pagC y tipo C2 (contenido nivel 2)
+ */
+function isElementoTipoPagC2(elemento) {
+	if (elemento == null) {
+		return false;
+	}
+	
+	if (elemento.className !== 'pagC' ) {
+		return false;
+	}
+	
+	var inputs = elemento.getElementsByTagName("input");
+	for (var i = 0 ; i< inputs.length ; i ++) {
+		if (inputs[i].name.startsWith("tipos")) {
+			if (inputs[i].value == "c2") {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	return false;
+}
+
+/**
+ * Extrae la inforamción de nivel 2 según el divId. 
+ * Es decir, extrae la carpeta y su contenido hasta que no haya más elementos, encuentra un nivel1 o un nivel2.
+ * @returns {Array}
+ */
+function extraerRamaNivel2() {
+	var elementosRama = new Array();
+	
+	//Avanzamos extrayendo siguientes elementos mientras sean contenido (pagC) de tipo c2
+	var elementoSiguiente = document.getElementById(divID).nextElementSibling;
+	elementosRama.push(document.getElementById(divID));
+	document.getElementById(divID).parentNode.removeChild(document.getElementById(divID));
+	
+	//Mientras encuentre pagC de tipo c2 estará en el bucle
+	while(isElementoTipoPagC2(elementoSiguiente)) {
+		
+		elementosRama.push(elementoSiguiente);
+		var elemento = elementoSiguiente.nextElementSibling
+		elementoSiguiente.parentNode.removeChild(elementoSiguiente);
+		elementoSiguiente = elemento;
+	}
+	
+	return elementosRama; //Devuelve el elemento y todos los contenidos hijos.
+}
+
+
+/**
+ * Método que extrae y devuelve el idPadre.
+ */
+function obtenerIdPadre(id) {
+	if (document.getElementById(id) == null) {
+		return '';
+	}
+	
+	var inputs = document.getElementById(id).getElementsByTagName("input");
+	for (var i = 0 ; i< inputs.length ; i ++) {
+		if (inputs[i].name.startsWith("idPadres")) {
+			return inputs[i].value;
+		}
+	}
+	return '';
+}
+
+/**
+ * Resetea el orden.
+ * Recorre uno a uno los divs hijos de menuArbol y le va poniendo un contador desde 0.
+ */
+function resetearOrden() {
+	 var elementosDiv = document.getElementById("menuArbol").getElementsByTagName("div"); //Todos los divs cuelgan de menuArbol
+	 var contador = 0;
+	 for( var i = 0 ; i < elementosDiv.length; i++) {
+		 if (elementosDiv[i].id.startsWith("m")) { //Para evitar problema, siempre empiezan por mX 
+			 var inputs = elementosDiv[i].getElementsByTagName("input");
+			 for (var j=0 ; j< inputs.length; j++) {
+				 if (inputs[j].name.startsWith("ordenes")) { //En el name ordenes se encuentra el orden en la tabla
+					 inputs[j].setAttribute("value", contador);
+					 contador++;
+					 break;
+				 }
+			 }
+		 }
+	 }
+}
+
+
+
+/**
+ * Evento para cambiar un nivel 2 (carpetas amarillas).
+ * @param event
+ */
+function cambiarPosicionStopNivel2(event) {
+	
+	capaOverClassName = document.getElementById(idCapaOver).className;
+	capaOverID = document.getElementById(idCapaOver).id;
+	
+	var elementos = extraerRamaNivel2(); //Extraemos el elemento y todo el contenido colgando de la carpeta
+	var padreId;
+	var elementoPuntero;
+	/*****
+	 * Comportamiento es el siguiente:
+	 * 		- Si el hover es un nivel1 (hoverElement)
+	 * 			* Lo pondremos como primer elemento 
+	 * 			* El padreId será el id del nivel1 (hoverElement)
+	 * 			* El elementoPuntero será el propio elemento nivel1 (hoverElement)
+	 * 		- Si el hover es un nivel2 (hoverElement)
+	 * 			* Lo pondremos delante
+	 * 			* El padreId será el padreId del nivel2 (hoverElement)
+	 * 			* El elementoPuntero será el anterior al nivel2 (hoverElement)
+	 * 		- Si el hover es un pagC(hoverElement) - siendo pagC un páginaContenido
+	 *			* Si es de tipo c2, entonces se vuelve sin hacer nada.
+	 * 			* Lo pondremos delante.
+	 * 			* El padreId será el padreId del pagC(hoverElement)
+	 * 			* El elementoPuntero será el anterior al pagC(hoverElement)
+	 */
+
+	//Extramos el idPadre y elementoPuntero
+	if (capaOverClassName == 'nivel1') {
+		idPadre = capaOverID;
+		elementoPuntero = document.getElementById(idPadre);
+	} else if (capaOverClassName == 'nivel2') {
+		idPadre = obtenerIdPadre(capaOverID);
+		if (idPadre == '') { return ;}
+		elementoPuntero = document.getElementById(capaOverID).previousElementSibling;
+	} else if (capaOverClassName == 'pagC') {
+		//Si es tipo C2, entonces no podemos moverlo.
+		if (isElementoTipoPagC2(document.getElementById(capaOverID))) { return;}
+		
+		idPadre = obtenerIdPadre(capaOverID);
+		if (idPadre == '') { return ;}		
+		elementoPuntero = document.getElementById(capaOverID).previousElementSibling;
+	}
+	
+	//Cambio el idPadre del primer elemento.
+	var inputs = elementos[0].getElementsByTagName("input");
+	for (var i = 0 ; i < inputs.length ; i++) {
+		if (inputs[i].name.startsWith("idPadres")) {
+			inputs[i].setAttribute("value",idPadre);
+			break; 
+		}
+	}
+	
+	//Recorremos todos los elementos a insertar, aprovechando el indice del primer elemento.
+	for(var i = 0 ; i < elementos.length ; i++) {
+		elementoPuntero.parentNode.insertBefore(elementos[i], elementoPuntero.nextSibling);   
+		//elementoPuntero.after(elementos.get[i]);
+		elementoPuntero = elementos[i];
+	}
+	
+	//Cambio la visibilidad del elemento 0 que ya tendría que ser visible.
+	elementos[0].style.visibility="";
+	
+	//Reseteamos el orden que es un caos.
+	resetearOrden();
+	
+}
+
+function cambiarPosicionStop(event) {
+	document.getElementById('nuevo').style.display = 'none';
+	cloneClassName = document.getElementById(divID).className;
+	
+	//Si es nivel 2, son las carpetas amarillas.
+	if (cloneClassName == 'nivel2') {
+		cambiarPosicionStopNivel2(event);
+		resetearArbol(event);
+		return;
+	}
+	
+		if(cloneClassName != 'nivel1' && idCapaOver == '') {
+			document.getElementById(divID).style.visibility = 'visible';
+		} else if(cloneClassName == 'nivel1' && idCapaOver == '') {
+			capaOverClassName = '';
+			capaOverID = '';
+		} else {
+			capaOverClassName = document.getElementById(idCapaOver).className;
+			capaOverID = document.getElementById(idCapaOver).id;
+		}
+			
+		// capas a clonar
+		capesPerClonar = new Array();
+		clonar = false;
+		divsDIV = document.getElementById('menuArbol').getElementsByTagName('div');
+		for(k=0;k<divsDIV.length;k++) {
+			if(divsDIV[k].id != 'nuevo') {
+				if(cloneClassName == 'pagC') clonar = false;
+				if(cloneClassName == 'nivel2') {
+					if(divsDIV[k].className.indexOf(cloneClassName) != -1 || divsDIV[k].className.indexOf('nivel1') != -1) clonar = false;
+					if(document.getElementById(divsDIV[k].id).getElementsByTagName('img')[2].name == 'nivel2') clonar = false;
+				}
+				if(cloneClassName == 'nivel1') {
+					if(divsDIV[k].className.indexOf(cloneClassName) != -1) clonar = false;
+				}
+				if(divsDIV[k].id == divID) clonar = true;
+				if(clonar == true) capesPerClonar.push(divsDIV[k].id);
+			}
+		}
+		
+		if(cloneClassName.indexOf('nivel') != -1 && capaOverClassName != '') {
+			buscarUltimoHijo(capaOverID,divID);
+			capaOverID = nuevoID;
+		}
+		
+		//clonando capas
+		for(m=0;m<capesPerClonar.length;m++) {
+			divClone = document.getElementById(capesPerClonar[m]).cloneNode(true);
+			divClone.id = 'X';
+			divClone.style.visibility = 'visible';
+			
+			//alert(capaOverID + ' - ' + m);
+			if(document.getElementById(capaOverID) != null) {
+				carpetaModeImg = document.getElementById(capaOverID).getElementsByTagName('img')[1].src;
+				carpetaMode = (carpetaModeImg.indexOf('padreAbierto') != -1) ? 'obert' : 'tancat';
+				
+				//alert(cloneClassName);
+				
+				if(carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) {
+					nuevoID = buscarUltimoHijo(capaOverID,divID);
+					//alert(nuevoID);
+					capaOverID = nuevoID;
+				}
+			}
+			
+			// pegamos capa clonada
+			if(m == 0) {
+				if(capaOverClassName == '' && cloneClassName == 'nivel1') document.getElementById('menuArbol').insertBefore(divClone,document.getElementById('menuArbol').getElementsByTagName('div')[0]);
+				else document.getElementById('menuArbol').insertBefore(divClone, document.getElementById(capaOverID).nextSibling);
+			} else {
+				document.getElementById('menuArbol').insertBefore(divClone, document.getElementById(capesPerClonar[m-1]).nextSibling);
+			}
+			
+			// borramos antigua
+			document.getElementById('menuArbol').removeChild(document.getElementById(capesPerClonar[m]));
+			
+			if(document.getElementById(capaOverID) != null) {
+				imgALT = document.getElementById(capaOverID).getElementsByTagName('img')[1].alt;
+				if(imgALT.indexOf('Obrir') != -1) {
+					clase = document.getElementById('X').className;
+					if(clase == 'nivel2') {
+						document.getElementById('X').className = 'nivel2noVisible';
+						imatge = document.getElementById('X').getElementsByTagName('img')[1];
+						imatge.src = 'imgs/menu/padreCerrado.gif';
+						imatge.alt = 'Obrir carpeta';
+						imatge.parentNode.title = 'Obrir carpeta';
+					} else {
+						if(capaOverClassName == 'nivel1') document.getElementById('X').className = 'pagCnoVisibleNivel1';
+						else 
+						document.getElementById('X').className = (carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) ? 'pagC' : 'pagCnoVisibleNivel2';
+					}
+				}
+			}
+			document.getElementById('X').id = capesPerClonar[m];
+			
+			if(cloneClassName.indexOf('nivel') == -1) {
+				if(capaOverClassName == 'nivel1') {
+					imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
+					imgNivel.src = 'imgs/menu/nivel2.gif';
+					imgNivel.name = 'nivel2';
+				} else if(capaOverClassName == 'nivel2') {
+					imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
+					
+					if(carpetaMode == 'tancat' && cloneClassName.indexOf('pag') != -1) {
+						imgNivel.src = 'imgs/menu/nivel2.gif';
+						imgNivel.name = 'nivel2';
+					} else {
+						imgNivel.src = 'imgs/menu/nivel3.gif';
+						imgNivel.name = 'nivel3';
+					}
+					
+				} else if(capaOverClassName.indexOf('pag') != -1) {
+					capaOverImgNivel = document.getElementById(capaOverID).getElementsByTagName('img')[2].name;
+					if(capaOverImgNivel == 'nivel2') {
+						imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
+						imgNivel.src = 'imgs/menu/nivel2.gif';
+						imgNivel.name = 'nivel2';
+					} else {
+						imgNivel = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2];
+						imgNivel.src = 'imgs/menu/nivel3.gif';
+						imgNivel.name = 'nivel3';
+					}
+				}
+			}
+			
+			// cambiamos el idPadre
+			if(m == 0) {
+				capaActual = document.getElementById(capesPerClonar[m]);
+				imgNivel_Name = document.getElementById(capesPerClonar[m]).getElementsByTagName('img')[2].name;
+				encontrado = false;
+				while(capaActual.previousSibling) {
+					if(capaActual.previousSibling.id != null && capaActual.previousSibling.nodeName == 'DIV' && encontrado == false) {
+						if(imgNivel_Name == 'nivel2') {
+							if(capaActual.previousSibling.getElementsByTagName('img')[2].name == 'nivel1') {
+								capaPadre = capaActual.previousSibling.id;
+								document.getElementById(capesPerClonar[m]).getElementsByTagName('input')[3].value = document.getElementById(capaPadre).getElementsByTagName("input")[0].value;
+								encontrado = true;
+							}
+						}
+						if(imgNivel_Name == 'nivel3') {
+							if(capaActual.previousSibling.getElementsByTagName('img')[2].name == 'nivel2') {
+								capaPadre = capaActual.previousSibling.id;
+								document.getElementById(capesPerClonar[m]).getElementsByTagName('input')[3].value = document.getElementById(capaPadre).getElementsByTagName("input")[0].value;
+								encontrado = true;
+							}
+						}			
+					}
+					capaActual = capaActual.previousSibling;
+				}
+			}
+		}
+	
+		removeEvent(document,'mousemove',cambiarPosicionGo,true);
+		removeEvent(document,'mouseup',cambiarPosicionStop,true);
+		if(document.all) {
+			window.event.cancelBubble = true;
+			window.event.returnValue = false;
+		} else {
+			event.preventDefault();
+		}
+		
+		// reordenamos
+		ordenarNodes();
+		// y reiniciamos buttons
+		iniciarMenu();
+	
 }
 
 // buscar capa padre al clonar
