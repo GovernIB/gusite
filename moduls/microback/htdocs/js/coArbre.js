@@ -331,7 +331,8 @@ function isElementoTipoPagC2(elemento) {
 		return false;
 	}
 	
-	if (elemento.className !== 'pagC' ) {
+
+	if (!elemento.className.startsWith('pagC')) {
 		return false;
 	}
 	
@@ -424,7 +425,6 @@ function cambiarPosicionStopNivel2(event) {
 	capaOverClassName = document.getElementById(idCapaOver).className;
 	capaOverID = document.getElementById(idCapaOver).id;
 	
-	var elementos = extraerRamaNivel2(); //Extraemos el elemento y todo el contenido colgando de la carpeta
 	var padreId;
 	var elementoPuntero;
 	/*****
@@ -450,16 +450,29 @@ function cambiarPosicionStopNivel2(event) {
 		elementoPuntero = document.getElementById(idPadre);
 	} else if (capaOverClassName == 'nivel2') {
 		idPadre = obtenerIdPadre(capaOverID);
-		if (idPadre == '') { return ;}
-		elementoPuntero = document.getElementById(capaOverID).previousElementSibling;
+		if (idPadre == '') { document.getElementById(divID).style.visibility=""; return ;}
+		elementoPuntero = document.getElementById(capaOverID);
+		//Buscamos si tiene hojas hijas para posicionarlo despues de la ultima
+		var elementoSiguiente = document.getElementById(capaOverID).nextElementSibling;
+		
+		while(elementoSiguiente !='' && isElementoTipoPagC2(elementoSiguiente)) {
+			
+			elementoPuntero = elementoSiguiente;
+			elementoSiguiente = elementoSiguiente.nextElementSibling;
+		}
 	} else if (capaOverClassName == 'pagC') {
 		//Si es tipo C2, entonces no podemos moverlo.
-		if (isElementoTipoPagC2(document.getElementById(capaOverID))) { return;}
+		if (isElementoTipoPagC2(document.getElementById(capaOverID))) { 
+			document.getElementById(divID).style.visibility=""; 
+			return;
+		}
 		
 		idPadre = obtenerIdPadre(capaOverID);
-		if (idPadre == '') { return ;}		
-		elementoPuntero = document.getElementById(capaOverID).previousElementSibling;
+		if (idPadre == '') { elementos[0].style.visibility=""; return ;}		
+		elementoPuntero = document.getElementById(capaOverID);
 	}
+	
+	var elementos = extraerRamaNivel2(); //Extraemos el elemento y todo el contenido colgando de la carpeta
 	
 	//Cambio el idPadre del primer elemento.
 	var inputs = elementos[0].getElementsByTagName("input");
@@ -485,16 +498,47 @@ function cambiarPosicionStopNivel2(event) {
 	
 }
 
+function comprobarMovimientoValido(capaOverID) {
+	var valido = true;
+	
+	if(capaOverID == undefined || capaOverID =='' || capaOverID == divID){
+		valido= false;
+	}
+	
+	var elementoHover = document.getElementById(capaOverID);
+	
+	if (elementoHover == null) {
+		valido = false;
+	} else {
+		var elementoPadreHover = elementoHover.parentNode;
+		if (elementoPadreHover == null || elementoPadreHover.id !== 'menuArbol') {
+			valido = false;
+		}
+	}
+	
+	return valido;
+}
 function cambiarPosicionStop(event) {
 	document.getElementById('nuevo').style.display = 'none';
 	cloneClassName = document.getElementById(divID).className;
+	var capaOverID;
+	
+	if(idCapaOver !=''){		
+		capaOverID = document.getElementById(idCapaOver).id;
+	}
+	
+	if (!comprobarMovimientoValido(capaOverID)) {
+		document.getElementById(divID).style.visibility=""; 
+		resetearArbol(event);
+		return;
+	}
 	
 	//Si es nivel 2, son las carpetas amarillas.
 	if (cloneClassName == 'nivel2') {
 		cambiarPosicionStopNivel2(event);
 		resetearArbol(event);
 		return;
-	}
+	} 
 	
 		if(cloneClassName != 'nivel1' && idCapaOver == '') {
 			document.getElementById(divID).style.visibility = 'visible';
