@@ -65,6 +65,7 @@ import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.FrqssiDelegate;
 import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.TemaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
@@ -327,6 +328,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(site, op);
 
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			
 			return site.getId();
 
 		} catch (HibernateException he) {
@@ -850,6 +854,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			tx.commit();
 			this.close(session);
 
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			
 			/**
 			 * Ojo, el site está eliminado así que hay que asegurarse de que no
 			 * se intenta enlazar
@@ -1092,6 +1099,9 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			 */
 			this.grabarAuditoria(null, site, Auditoria.ELIMINAR);
 
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			
 		} catch (HibernateException he) {
 			throw new EJBException(he);
 		} finally {

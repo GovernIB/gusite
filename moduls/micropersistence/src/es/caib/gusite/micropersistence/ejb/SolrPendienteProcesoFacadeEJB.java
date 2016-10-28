@@ -137,6 +137,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		                if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){                	                 	
 		                	if (solrPendiente.getIdArchivo() != null ){
 		                		solrPendienteResultado = micrositedel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_MICROSITE, solrPendiente.getIdArchivo());
+		                    } else {
+		                    	boolean resultado = indexarMicrosite(solrPendiente.getIdElem());
+		                    	solrPendienteResultado.setCorrecto(resultado);
 		                    }
 		                } 
 		                
@@ -169,6 +172,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     			
     			} catch (Exception exception ) {
     				log.error("Exception indexando " + solrPendiente, exception);
+    				solrPendienteResultado = new SolrPendienteResultado(false,exception.getMessage());
     			}
     			
     			if (solrPendienteResultado != null) {
@@ -184,13 +188,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     					
     					final int dias = hoyCalendar.get(Calendar.DATE) - fechaCalendar.get(Calendar.DATE);
     					//Si hace 10 dias o + que se crea se marca como erronea porque no se ha podido endexar
-    					if ( dias >= 10){
+    					if ( dias >= 10) {
     						solrPendiente.setResultado(-1);
-    						solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());
-    						solrPendienteJob.actualizarSolrPendiente(solrPendiente);
-    					}else{
+    						solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());    						
+    					} else {
     						log.error("No se ha podido realizar la operación (dias ejecutandose:"+dias+")con el registro : "+solrPendiente.getId());
     					}
+    					solrPendienteJob.actualizarSolrPendiente(solrPendiente);
     				}
     			}
                 
@@ -198,7 +202,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	    		try {
     	    			solrIndexer.commit();
 	        	   } catch (ExcepcionSolrApi e) {
-	    			log.error("No se ha podido comitear la indexación" + e.getMessage());
+	        		   log.error("No se ha podido comitear la indexación" + e.getMessage());
 	        	   }        
     		}
            }
