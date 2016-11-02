@@ -245,7 +245,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         	solrIndexer = (SolrIndexer) SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE,  username, password);
         	//Desindexamos el microsite
         	try {
-				solrIndexer.desindexarMicrosite(idMicrosite);
+        		solrIndexer.desindexarRaiz(idMicrosite.toString(), EnumCategoria.GUSITE_MICROSITE);
 			} catch (ExcepcionSolrApi e) {
 				log.error("Se ha producido un error en desindexar el MICROSITE con id " + idMicrosite);
 			}

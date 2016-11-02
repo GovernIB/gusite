@@ -1,9 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +24,6 @@ import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionMenu;
-import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -35,15 +31,10 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.micropersistence.util.PathUOResult;
-import es.caib.gusite.plugins.PluginFactory;
-import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
-import es.caib.gusite.plugins.organigrama.UnidadData;
-import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.IndexData;
 import es.caib.solr.api.model.IndexFile;
 import es.caib.solr.api.model.MultilangLiteral;
-import es.caib.solr.api.model.PathUO;
 import es.caib.solr.api.model.types.EnumAplicacionId;
 import es.caib.solr.api.model.types.EnumCategoria;
 import es.caib.solr.api.model.types.EnumIdiomas;
@@ -698,7 +689,8 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			indexData.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
-			indexData.setMicrositeId(contenido.getMicrosite().getId().toString());
+			indexData.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+			indexData.setElementoIdRaiz(contenido.getMicrosite().getId().toString());
 			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(contenido.getMicrosite()));
 								
 			solrIndexer.indexarContenido(indexData);			
@@ -799,8 +791,9 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 					indexFile.setUrlPadre(urlPadre);
 					indexFile.setExtension(extension);				
 					indexFile.setDescripcionPadre(descPadre);
-					indexFile.setUos(pathUo.getUosPath());
-					indexFile.setMicrositeId(contenido.getMicrosite().getId().toString());
+					indexFile.setUos(pathUo.getUosPath());					
+					indexFile.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setElementoIdRaiz(contenido.getMicrosite().getId().toString());
 					indexFile.setInterno(!contenido.getMicrosite().getRestringido().equals("N") ? true : false);
 					
 					solrIndexer.indexarFichero(indexFile);

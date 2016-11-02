@@ -641,7 +641,8 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			indexData.setUos(uosPath);
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
-			indexData.setMicrositeId(micro.getId().toString());
+			indexData.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+			indexData.setElementoIdRaiz(micro.getId().toString());
 			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));
 				
 			solrIndexer.indexarContenido(indexData);
@@ -752,7 +753,8 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					indexFile.setExtension(extension);
 					indexFile.setUrlPadre(urlPadre);
 					indexFile.setUos(pathUo.getUosPath());
-					indexFile.setMicrositeId(micro.getId().toString());
+					indexFile.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setElementoIdRaiz(micro.getId().toString());
 					indexFile.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));
 						
 					solrIndexer.indexarFichero(indexFile);

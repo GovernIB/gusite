@@ -1285,7 +1285,8 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
 			indexData.setUos(uosPath);
-			indexData.setMicrositeId(micro.getId().toString());
+			indexData.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+			indexData.setElementoIdRaiz(micro.getId().toString());
 			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));
 								
 			solrIndexer.indexarContenido(indexData);

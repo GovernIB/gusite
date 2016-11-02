@@ -21,6 +21,7 @@ import es.caib.solr.api.model.FilterSearch;
 import es.caib.solr.api.model.PaginationSearch;
 import es.caib.solr.api.model.ResultData;
 import es.caib.solr.api.model.StoredData;
+import es.caib.solr.api.model.types.EnumCategoria;
 import es.caib.solr.api.model.types.EnumIdiomas;
 
 /**
@@ -91,7 +92,12 @@ public class Bdcercador extends Bdbase {
 			final String idi = "" + req.getSession().getAttribute("MVS_idioma");
 			
 			final FilterSearch filterSearch = new FilterSearch();
-			filterSearch.setMicrositeId(microsite.getId().toString());
+			
+			// Fijamos busqueda dentro del microsite
+			filterSearch.setElementoRaizCategoria(EnumCategoria.GUSITE_MICROSITE);
+			filterSearch.setElementoRaizId(microsite.getId().toString());
+			
+			
 			final PaginationSearch paginationSearch = new PaginationSearch();
 			final ResultData resultadoSolr = buscador.buscar(req.getSession().getId(), words, EnumIdiomas.fromString(idi.toLowerCase()), filterSearch, paginationSearch);
 			convertirResultado(resultadoSolr, idi.toLowerCase(),words);

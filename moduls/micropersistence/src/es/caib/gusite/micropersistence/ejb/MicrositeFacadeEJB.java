@@ -1102,7 +1102,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
 			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
 			
-		} catch (HibernateException he) {
+		} catch (Exception he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -1499,7 +1499,8 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 					indexFile.setIdioma(enumIdioma);
 					indexFile.setFileContent(contenidoFichero);
 					indexFile.setExtension(extension);
-					indexFile.setMicrositeId(micro.getId().toString());
+					indexFile.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setElementoIdRaiz(micro.getId().toString());					
 					indexFile.setInterno(!micro.getRestringido().equals("N") ? true : false);
 						
 					solrIndexer.indexarFichero(indexFile);

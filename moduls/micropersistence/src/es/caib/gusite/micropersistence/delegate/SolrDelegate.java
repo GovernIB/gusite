@@ -16,6 +16,7 @@ import es.caib.solr.api.model.PaginationSearch;
 import es.caib.solr.api.model.ResultData;
 import es.caib.solr.api.model.StoredData;
 import es.caib.solr.api.model.types.EnumAplicacionId;
+import es.caib.solr.api.model.types.EnumCategoria;
 import es.caib.solr.api.model.types.EnumIdiomas;
 
 
@@ -44,8 +45,10 @@ public class SolrDelegate implements StatelessDelegate {
 		
 		final SolrSearcher buscador = SolrFactory.getSearcher(urlSolr, index, username, password);
 		
-		final FilterSearch filterSearch = new FilterSearch();
-		filterSearch.setMicrositeId(idMicro);
+		final FilterSearch filterSearch = new FilterSearch();		
+		filterSearch.setElementoRaizCategoria(EnumCategoria.GUSITE_MICROSITE);
+		filterSearch.setElementoRaizId(idMicro);
+		
 		List<EnumAplicacionId> aplicaciones = new ArrayList<EnumAplicacionId>();
 		aplicaciones.add(EnumAplicacionId.GUSITE);
 		filterSearch.setAplicaciones(aplicaciones);

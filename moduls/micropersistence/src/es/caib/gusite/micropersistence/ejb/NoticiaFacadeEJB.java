@@ -1025,7 +1025,8 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexData.setDescripcionPadre(tituloPadre);
 			indexData.setUrlPadre(urlPadre);
 			indexData.setUos(uosPath);
-			indexData.setMicrositeId(micro.getId().toString());
+			indexData.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+			indexData.setElementoIdRaiz(micro.getId().toString());
 			indexData.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));
 				
 			solrIndexer.indexarContenido(indexData);
@@ -1130,7 +1131,8 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 					indexFile.setFechaCaducidad(noticia.getFcaducidad());
 					indexFile.setFechaPublicacion(noticia.getFpublicacion());
 					indexFile.setUos(pathUo.getUosPath());
-					indexFile.setMicrositeId(micro.getId().toString());
+					indexFile.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setElementoIdRaiz(micro.getId().toString());
 					indexFile.setInterno(!micro.getRestringido().equals("N") ? true : false);
 						
 					solrIndexer.indexarFichero(indexFile);
