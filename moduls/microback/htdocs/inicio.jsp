@@ -135,7 +135,7 @@
 							<a href="indexarMicrosite.do" target="escritori"><bean:message key="menu.indexar" /></a>
 					</logic:present>
 			</logic:equal>	
-			<a href="procesow3c.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.accesibilitat" /> </a>			
+			<!-- <a href="procesow3c.do?idsite=<bean:write name="MVS_microsite" property="id"/>" target="escritori"><bean:message key="menu.accesibilitat" /> </a>-->			
 		</logic:present>	
 	</div>	
 	<div id="mAjuda" class="submenu">

@@ -67,11 +67,14 @@
 								     	<logic:equal name="i" property="tipo" value="FAQ">
 								     		<bean:message key="menu.indexar.cab.tipo.FAQ" />
 								     	</logic:equal>
-								     	<logic:equal name="i" property="tipo" value="NOT">
-								     		<bean:message key="menu.indexar.cab.tipo.NOT" />
+								     	<logic:equal name="i" property="tipo" value="NTC">
+								     		<bean:message key="menu.indexar.cab.tipo.NTC" />
 								     	</logic:equal>
 								     	<logic:equal name="i" property="tipo" value="AGE">
 								     		<bean:message key="menu.indexar.cab.tipo.AGE" />
+								     	</logic:equal>
+								     	<logic:equal name="i" property="tipo" value="ARC">
+								     		<bean:message key="menu.indexar.cab.tipo.ARC" />
 								     	</logic:equal>
 								     </td>
 								     <td><bean:write name="i" property="idElem" 		ignore="true"/></td>

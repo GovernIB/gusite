@@ -18,7 +18,6 @@ import org.apache.struts.upload.FormFile;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.agendaForm;
-import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorException;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
@@ -219,7 +218,6 @@ public class agendasEditaAction extends BaseAction {
 		       	agendaForm.set("id",  age.getId());
 		       	agendaForm = setImagDocumentToForm (age, agendaForm);
                 
-		        String resultadoW3C = new ProcesoW3C(request).testeoW3C(age);
 		        
 		        // Relleno el combo de Actividades
 	            request.setAttribute("actividadesCombo", bdActivi.listarCombo(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId()));
@@ -230,10 +228,6 @@ public class agendasEditaAction extends BaseAction {
                     addMessageWithDate(request, "mensa.modifesdeveniment");
                 }
 
-                if (resultadoW3C != null) {
-                    request.setAttribute("SVS_otrainfo", "S'han detectat problemes de accesibilitat: " + resultadoW3C);
-                }
-	       	
 		       	return mapping.findForward("detalle");
 
             /********************** TRADUCIR ************************/

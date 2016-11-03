@@ -23,7 +23,6 @@ import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.noticiaForm;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
-import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
 import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
@@ -115,11 +114,6 @@ public class noticiasEditaAction extends BaseAction
                 }
 
 		       	noticiaDelegate.grabarNoticia(noticiaBean);
-		
-		       	String resultadoW3C = new ProcesoW3C(request).testeoW3C(noticiaBean);
-		       	if (resultadoW3C!=null) { request.setAttribute("SVS_otrainfo", "S'han detectat problemes de accesibilitat: " + resultadoW3C);
-		       							  return mapping.findForward("info");
-		       	}
 		       	
 		       	if (noticiaForm.get("id") == null){
 		       		noticiaForm.set("id",noticiaBean.getId());

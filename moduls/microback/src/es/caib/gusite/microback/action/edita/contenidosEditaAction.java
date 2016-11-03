@@ -23,7 +23,6 @@ import es.caib.gusite.microback.actionform.formulario.contenidoForm;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
 import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 import es.caib.gusite.microback.base.Base;
-import es.caib.gusite.microback.process.ProcesoW3C;
 import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.microintegracion.traductor.TraductorException;
 import es.caib.gusite.microintegracion.traductor.TraductorMicrosites;
@@ -33,7 +32,6 @@ import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.TraduccionAgendaPK;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionContenidoPK;
 import es.caib.gusite.micropersistence.delegate.AccesibilidadDelegate;
@@ -456,24 +454,7 @@ public class contenidosEditaAction extends BaseAction
 		 else 	addMessageAlert(request, "mensa.listacontborradas");
     	
     }	
-    
-    /**
-     * Se ha quitado esta comprobacion. Método que testea W3C el formulario de usuario
-     * @param request			petición de usuario
-     * @param contenidoForm		formulario dinómico enviado por usuario
-     * @throws Exception
-     * @author Indra
-     */
-    private boolean pasaTesteoW3C (HttpServletRequest request, Contenido contenido) throws Exception  {	
-    	
-        String resultadoW3C = new ProcesoW3C(request).testeoW3C(contenido);
-    	if (resultadoW3C != null) { request.setAttribute("SVS_otrainfo", "S'han detectat problemes de accesibilitat que ha de solucionar. Editi el contingut i accedeixi a la llista detallada d'errors: " + resultadoW3C);   
-									request.setAttribute("W3C", "si");
-    								return false;
-    							  
-    	} else return true;
-					  
-    }	    
+        
     
 
 }

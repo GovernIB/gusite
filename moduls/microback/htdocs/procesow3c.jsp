@@ -39,7 +39,7 @@
 
 			<div id="botonera">
 				<span class="grup">
-					<button type="button" name="fichero" title="començament  de test" onclick="submitURL(<bean:write name="MVS_microsite" property="id"/>);"><img src="imgs/botons/taww3cButton.gif" alt="Comienzo testeo" /> &nbsp;començament  de test</button> 
+					 
 				</span>
 			</div>		
 

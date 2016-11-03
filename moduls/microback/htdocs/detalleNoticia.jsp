@@ -241,10 +241,6 @@
 			<tr id="tinymceEditor<%=i%>" style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.texto" />:
 				<p>
-				<%
-					Accesibilidad acce = (Accesibilidad)request.getAttribute("MVS_w3c_" + i);				
-					if (acce!=null) out.println("<button type=\"button\" title='Errors d'accessibilitat' onclick=\"document.location='visorw3c.do?id=" + acce.getId() + "';\"><img src=\"imgs/botons/taww3cButton.gif\" alt='Errors d'accessibilitat' /></button>");
-				%>						
 				</p>				
 				</td>
 				<td><html:textarea  property="texto" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true" style="width:700px; height:300px;"/></td>
