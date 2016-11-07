@@ -191,7 +191,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
                     		archivoDelegate.insertarArchivo(trad.getDocu());
                     		//Indexamos
                 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-                			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), trad.getDocu().getId(), 1L);
+                			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), trad.getDocu().getId(), IndexacionUtil.INDEXAR);
                     	}
                     	else
                     		if (trad.getDocu().getDatos() != null) // Condición de actualizar documento.
@@ -202,7 +202,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		                		archivosPorBorrar.add(tradOriginal.getDocu());
 		                		//Indexamos
 		            			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-		            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), tradOriginal.getDocu().getId(), 0L);
+		            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), tradOriginal.getDocu().getId(), IndexacionUtil.INDEXAR);
 		                	}
                     	}
                     }
@@ -293,7 +293,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, 1L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, IndexacionUtil.INDEXAR);
 			
 			return noticia.getId();
 
@@ -677,7 +677,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 					listaArchivos.add(t.getDocu());
 					//DesIndexamos
 					SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-					pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), t.getDocu().getId(), 0L);
+					pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), t.getDocu().getId(), IndexacionUtil.DESINDEXAR);
 				}
 			}
 			
@@ -700,7 +700,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			
 			//DesIndexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, IndexacionUtil.DESINDEXAR);
 
 		} catch (HibernateException he) {
 			
@@ -971,6 +971,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			final MultilangLiteral tituloPadre = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			List<PathUO> uosPath = null;
+			boolean noEntra = true;
 			for (String keyIdioma : noticia.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
 				final TraduccionNoticia traduccion = (TraduccionNoticia) noticia.getTraduccion(keyIdioma);
@@ -981,6 +982,12 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 						continue;
 					}
 					
+					String laUrl = IndexacionUtil.getUrlNoticia(micro, noticia, keyIdioma);
+					if (laUrl == null || laUrl.isEmpty()) {
+						continue;
+					}
+					noEntra = false;
+					
 					// Path UO
 					PathUOResult pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
 					
@@ -990,15 +997,17 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			    	
 					// Search text
 			    	TraduccionTipo tradTipo = (TraduccionTipo) noticia.getTipo().getTraduccion(keyIdioma);
+			    	String tradTipoNombre = "";
+			    	if (tradTipo != null && tradTipo.getNombre() != null) { tradTipoNombre = tradTipo.getNombre();}
 					String search = (traduccion.getTitulo()==null?"":traduccion.getTitulo()) + " " + (traduccion.getSubtitulo()==null?"":traduccion.getSubtitulo()) 
-			    			+ " " + (traduccion.getTexto()==null?"":traduccion.getTexto()) + " " + (tradTipo.getNombre()==null?"":tradTipo.getNombre());
+			    			+ " " + (traduccion.getTexto()==null?"":traduccion.getTexto()) + " " + tradTipoNombre;
 			    	searchText.addIdioma(enumIdioma, solrIndexer.htmlToText(search));
 
 			    	// Search text opcional
 			    	searchTextOptional.addIdioma(enumIdioma, pathUO.getUosText());
 			    	
 			    	// Url
-			    	urls.addIdioma(enumIdioma, IndexacionUtil.getUrlNoticia(micro, noticia, keyIdioma));
+			    	urls.addIdioma(enumIdioma, laUrl);
 			    	
 			    	// Padre
 			    	urlPadre.addIdioma(enumIdioma, IndexacionUtil.getUrlMicrosite(micro, keyIdioma));	    		
@@ -1007,6 +1016,10 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			    	uosPath = pathUO.getUosPath();
 			    	
 				}
+			}
+			
+			if (idiomas.size() == 0) {
+				return new SolrPendienteResultado(false, "No se puede indexar, debe tener algún idioma a indexar.");
 			}
 			
 			final IndexData indexData = new IndexData();

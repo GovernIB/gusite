@@ -329,7 +329,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(site, op);
 
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, IndexacionUtil.INDEXAR);
 			
 			return site.getId();
 
@@ -855,7 +855,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			this.close(session);
 
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, IndexacionUtil.DESINDEXAR);
 			
 			/**
 			 * Ojo, el site está eliminado así que hay que asegurarse de que no
@@ -1100,7 +1100,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(null, site, Auditoria.ELIMINAR);
 
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, IndexacionUtil.DESINDEXAR);
 			
 		} catch (Exception he) {
 			throw new EJBException(he);

@@ -189,21 +189,21 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	                		archivoDelegate.insertarArchivo(trad.getDocumento());
 	                		//Indexamos documento
 	                		SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-	                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), 1L);
+	                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.INDEXAR);
 	                		}
 	                	else
 	                		if (trad.getDocumento().getDatos() != null){ // Condición de actualizar documento.
 	                			archivoDelegate.grabarArchivo(trad.getDocumento());
 	                			//Indexamos documento
 		                		SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-		                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), 1L);
+		                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.INDEXAR);
 	                		}
 	                } else {
 	                	if (tradOriginal.getDocumento() != null){ // Condición de borrado de documento.
 	                		archivosPorBorrar.add(tradOriginal.getDocumento());
 	                		//DesIndexamos documento
 	            			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-	            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(),tradOriginal.getDocumento().getId(), 0L);
+	            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(),tradOriginal.getDocumento().getId(), IndexacionUtil.DESINDEXAR);
 	                	}
 	                }
 	                
@@ -262,8 +262,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, 1L);
-
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, IndexacionUtil.INDEXAR);
 			return agenda.getId();
 
 		} catch (HibernateException he) {
@@ -458,7 +457,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 						archivoDelegate.borrarArchivo(tra.getDocumento().getId());
 						//DesIndexamos documento
 						SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-						pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), tra.getDocumento().getId(), 0L);
+						pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), tra.getDocumento().getId(), IndexacionUtil.DESINDEXAR);
 					}
 					
 				}
@@ -472,7 +471,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			//DesIndexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, IndexacionUtil.DESINDEXAR);
 
 		} catch (HibernateException he) {
 			
@@ -623,6 +622,9 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 				}
 			}
 			
+			if (idiomas.size() == 0) {
+				return new SolrPendienteResultado(false, "No se puede indexar, debe tener algún idioma a indexar.");
+			}
 			
 			final IndexData indexData = new IndexData();
 			indexData.setCategoria(categoria);

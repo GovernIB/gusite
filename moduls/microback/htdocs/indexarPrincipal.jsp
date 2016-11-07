@@ -46,6 +46,8 @@
 							<th width="15%"><bean:message key="menu.indexar.cab.tipo" /></th>
 							<th width="15%"><bean:message key="menu.indexar.cab.idElem" /></th>
 							<th width="15%"><bean:message key="menu.indexar.cab.idArchivo" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.accion" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.mensajeError" /></th>
 							<th width="15%"><bean:message key="menu.indexar.cab.fechaCreacion" /></th>							
 						</tr>
 					</thead>
@@ -79,6 +81,13 @@
 								     </td>
 								     <td><bean:write name="i" property="idElem" 		ignore="true"/></td>
 								     <td><bean:write name="i" property="idArchivo" 		ignore="true"/></td>
+								     <logic:equal name="i" property="accion" value="0">
+								     	<td><bean:message key="menu.indexar.cab.desindexar" /></td>
+								     </logic:equal>
+								     <logic:equal name="i" property="accion" value="1">
+								     	<td><bean:message key="menu.indexar.cab.indexar" /></td>
+								     </logic:equal>
+								     <td><bean:write name="i" property="mensajeError" 	ignore="true"/></td>
 								     <td><bean:write name="i" property="fechaCreacion" formatKey="date.short.format"/></td>
 						       </tr>					
 					    </logic:iterate>

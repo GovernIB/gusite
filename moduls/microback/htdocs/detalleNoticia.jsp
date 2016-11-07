@@ -202,10 +202,6 @@
 				<li<%=(j.intValue()==0?" class='selec'":"")%>>
 					<a href="#" onclick="mostrarForm(this);">
 					<bean:message name="lang" />
-					<%
-					Accesibilidad acceLang = (Accesibilidad)request.getAttribute("MVS_w3c_" + j);											
-					if (acceLang!=null) out.println("<b><i>(amb errors)</i></b>");
-					%>				
 					</a>
 				</li>
 	        </logic:iterate>

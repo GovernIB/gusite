@@ -32,6 +32,9 @@ import es.caib.solr.api.model.PathUO;
 
 public class IndexacionUtil {
 	
+	public static Long INDEXAR = 1l;
+	public static Long DESINDEXAR = 0l;
+	
 	/** Extensiones. **/
 	private static Map<String, String> extensiones = null;
 	private static Long tamanyoMaximo = null;

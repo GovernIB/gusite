@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -139,7 +140,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		                		solrPendienteResultado = micrositedel.indexarSolrArchivo(solrIndexer, solrPendiente.getIdElem(), EnumCategoria.GUSITE_MICROSITE, solrPendiente.getIdArchivo());
 		                    } else {
 		                    	boolean resultado = indexarMicrosite(solrPendiente.getIdElem());
-		                    	solrPendienteResultado.setCorrecto(resultado);
+		                    	solrPendienteResultado = new SolrPendienteResultado(resultado);
 		                    }
 		                } 
 		                
@@ -155,8 +156,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	    			} else {
 	    				if (solrPendiente.getIdArchivo() == null) {
 	    					try {
-	    						solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.fromString(solrPendiente.getTipo()));
-	    						solrPendienteResultado = new SolrPendienteResultado(true);
+	    						if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())) {
+	    							solrIndexer.desindexarRaiz(solrPendiente.getIdElem().toString(), EnumCategoria.GUSITE_MICROSITE);
+	    							solrPendienteResultado = new SolrPendienteResultado(true, "Desindexació completa");
+	    						}  else {
+		    						solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.fromString(solrPendiente.getTipo()));
+		    						solrPendienteResultado = new SolrPendienteResultado(true);
+	    						}
 	    					} catch (Exception exception) {
 	    						solrPendienteResultado = new SolrPendienteResultado(false, exception.getMessage());
 	    					}
@@ -181,19 +187,16 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     					solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());
     					solrPendienteJob.actualizarSolrPendiente(solrPendiente);
     				} else {
-    					final Calendar fechaCalendar  = Calendar.getInstance();
-    					fechaCalendar.setTime(solrPendiente.getFechaCreacion());
-    					final Calendar hoyCalendar  = Calendar.getInstance();
-    					hoyCalendar.setTime(new Date());
     					
-    					final int dias = hoyCalendar.get(Calendar.DATE) - fechaCalendar.get(Calendar.DATE);
+    					long diff = new Date().getTime() - solrPendiente.getFechaCreacion().getTime();
+    					final int dias = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     					//Si hace 10 dias o + que se crea se marca como erronea porque no se ha podido endexar
     					if ( dias >= 10) {
-    						solrPendiente.setResultado(-1);
-    						solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());    						
+    						solrPendiente.setResultado(-1);    						 						
     					} else {
     						log.error("No se ha podido realizar la operación (dias ejecutandose:"+dias+")con el registro : "+solrPendiente.getId());
     					}
+    					solrPendiente.setMensajeError(solrPendienteResultado.getMensaje());   
     					solrPendienteJob.actualizarSolrPendiente(solrPendiente);
     				}
     			}

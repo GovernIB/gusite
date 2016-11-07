@@ -14,6 +14,7 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.intf.ArchivoFacade;
 import es.caib.gusite.micropersistence.intf.ArchivoFacadeHome;
 import es.caib.gusite.micropersistence.util.ArchivoFacadeUtil;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
@@ -236,7 +237,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 				idElemento = idContenido;
 			}
 			
-			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, 1L);
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, IndexacionUtil.INDEXAR);
 			
 			return idArchivo;
 		} catch (RemoteException e) {
@@ -266,7 +267,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 				idElemento = idContenido;
 			}
 			
-			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, 0L);
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, IndexacionUtil.DESINDEXAR);
 			
 			
 		} catch (RemoteException e) {
@@ -295,7 +296,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 				idElemento = idContenido;
 			}
 			
-			pendienteDel.grabarSolrPendiente(tipo, idElemento, archi.getId(), 1L);
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, archi.getId(), IndexacionUtil.INDEXAR);
 			
 			
 		} catch (RemoteException e) {

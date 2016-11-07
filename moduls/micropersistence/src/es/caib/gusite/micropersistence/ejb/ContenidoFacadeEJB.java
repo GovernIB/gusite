@@ -183,7 +183,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, 1L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, IndexacionUtil.INDEXAR);
 			
 			return contenido.getId();
 
@@ -382,7 +382,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			
 			//Desindexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, IndexacionUtil.DESINDEXAR);
 
 		} catch (HibernateException he) {
 			
@@ -675,6 +675,10 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			    	indexData.setUos(pathUO.getUosPath());
 			    	
 				}
+			}
+			
+			if (idiomas.size() == 0) {
+				return new SolrPendienteResultado(false, "No se puede indexar, debe tener algún idioma a indexar.");
 			}
 			
 			//Seteamos datos multidioma.

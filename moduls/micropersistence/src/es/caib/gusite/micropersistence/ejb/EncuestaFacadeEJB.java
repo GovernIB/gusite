@@ -220,7 +220,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, 1L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.INDEXAR);
 			
 			return enc.getId();
 
@@ -448,7 +448,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			
 			//DesIndexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), encuesta.getId(), null, 0L);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), encuesta.getId(), null, IndexacionUtil.DESINDEXAR);
 
 		} catch (HibernateException he) {
 			
