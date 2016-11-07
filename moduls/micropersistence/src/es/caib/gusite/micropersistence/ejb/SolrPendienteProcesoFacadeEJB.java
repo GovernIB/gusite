@@ -407,7 +407,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	//Comiteamos los cambios.
     	try {
 			solrIndexer.commit();
-			log.error("Se ha indexado correctamente el microsite " + idMicrosite);			
+			log.debug("Se ha indexado correctamente el microsite " + idMicrosite);			
 	    } catch (ExcepcionSolrApi e) {
 			log.error("No se ha podido comitear la indexación" + e.getMessage());
 		}
