@@ -335,11 +335,7 @@ public class FrontUrlFactory {
 	}
 
 	public String contenido(Microsite microsite, Idioma lang, Contenido contenido) {
-		if (lang.equals(FrontController.DEFAULT_IDIOMA)) {
-			return this.microsite(microsite) + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
-		} else {
-			return this.microsite(microsite, lang) + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
-		}
+		return this.microsite(microsite, lang) + ((TraduccionContenido) this.getTraducion(contenido, lang)).getUri() + "/";
 	}
 
 	

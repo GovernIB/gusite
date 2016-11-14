@@ -13,7 +13,8 @@ public class Microfront {
 
 	// Nuevas front ------------------------------------------------------------
 	public static final String HOME_CONTENIDO = "4";
-
+	/** Idioma catalán por defecto. **/
+	public static final String DEFAULT_IDIOMA = "ca";
 	// Antiguas microfront
 	// ------------------------------------------------------------
 
