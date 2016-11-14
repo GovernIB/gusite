@@ -55,7 +55,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/contenido.do", params = Microfront.PIDSITE)
-	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
+	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable(value=Microfront.PLANG) Idioma lang, @PathVariable("tipo") char tipo,
 			@PathVariable("tipoId") String tipoId, @RequestParam(Microfront.PIDSITE) Long idSite,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
@@ -69,7 +69,7 @@ public class LegacyController extends FrontController {
 	 * contenido.do?idsite=449&cont=15812&lang=ca&campa=yes z
 	 */
 	@RequestMapping(value = "contenido.do", params = { Microfront.PIDSITE })
-	public String contenido(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contenido(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -126,7 +126,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/contenido.do", params = "mkey")
-	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
+	public String contenidoRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable(value=Microfront.PLANG) Idioma lang, @PathVariable("tipo") char tipo,
 			@PathVariable("tipoId") String tipoId, @RequestParam("mkey") String mkey,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
@@ -140,7 +140,7 @@ public class LegacyController extends FrontController {
 	 * contenido.do?idsite=449&cont=15812&lang=ca&campa=yes z
 	 */
 	@RequestMapping(value = "contenido.do", params = "mkey")
-	public String contenido(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contenido(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
@@ -165,7 +165,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "contacto.do", params = { Microfront.PIDSITE })
-	public String contacto(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contacto(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContacto, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -190,7 +190,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "contacto.do", params = "mkey")
-	public String contacto(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contacto(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContacto, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -211,7 +211,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "contactos.do", params = { Microfront.PIDSITE })
-	public String contactos(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contactos(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 
@@ -233,7 +233,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "contactos.do", params = "mkey")
-	public String contactos(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String contactos(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -258,7 +258,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticia.do", params = { Microfront.PIDSITE })
-	public String noticia(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticia(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idNoticia, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -290,7 +290,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticia.do", params = "mkey")
-	public String noticia(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticia(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idNoticia, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -312,7 +312,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticias.do", params = { Microfront.PIDSITE })
-	public String noticias(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticias(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -345,7 +345,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticias.do", params = "mkey")
-	public String noticias(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticias(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -367,7 +367,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticias.do", params = { "tanyo", Microfront.PIDSITE })
-	public String noticiasAnyo(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticiasAnyo(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, @RequestParam("tanyo") String anyo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -400,7 +400,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "noticias.do", params = { "tanyo", "mkey" })
-	public String noticiasAnyo(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String noticiasAnyo(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, @RequestParam("tanyo") String anyo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -422,7 +422,7 @@ public class LegacyController extends FrontController {
 	 * @throws ExceptionFrontPagina
 	 */
 	@RequestMapping(value = "qssi.do", params = { Microfront.PIDSITE })
-	public String qssi(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String qssi(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) long idQssi, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException,
@@ -450,7 +450,7 @@ public class LegacyController extends FrontController {
 	 * @throws ExceptionFrontPagina
 	 */
 	@RequestMapping(value = "qssi.do", params = "mkey")
-	public String qssi(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, @RequestParam(Microfront.PCONT) long idQssi,
+	public String qssi(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, @RequestParam(Microfront.PCONT) long idQssi,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException,
 			ExceptionFrontPagina {
@@ -473,7 +473,7 @@ public class LegacyController extends FrontController {
 	 * @throws ExceptionFrontPagina
 	 */
 	@RequestMapping(value = "elementodocumento.do", params = { Microfront.PIDSITE })
-	public String elementodocumento(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String elementodocumento(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idDocumento, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException,
 			ExceptionFrontPagina {
@@ -501,7 +501,7 @@ public class LegacyController extends FrontController {
 	 * @throws ExceptionFrontPagina
 	 */
 	@RequestMapping(value = "elementodocumento.do", params = "mkey")
-	public String elementodocumento(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String elementodocumento(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idDocumento, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException,
 			ExceptionFrontPagina {
@@ -522,7 +522,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "agenda.do", params = { Microfront.PIDSITE })
-	public String agenda(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String agenda(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idAgenda, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -548,7 +548,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "agenda.do", params = "mkey")
-	public String agenda(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String agenda(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idAgenda, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -570,7 +570,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "agendas.do", params = { Microfront.PIDSITE })
-	public String agendas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String agendas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 
@@ -596,7 +596,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "agendas.do", params = "mkey")
-	public String agendas(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String agendas(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -621,7 +621,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "encuestas.do", params = { Microfront.PIDSITE })
-	public String encuestas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String encuestas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -646,7 +646,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "encuesta.do", params = { Microfront.PIDSITE })
-	public String encuesta(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String encuesta(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idEncuesta, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -677,7 +677,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "encuesta.do", params = "mkey")
-	public String encuesta(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang,
+	public String encuesta(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idEncuesta, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
@@ -698,7 +698,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "index.do", params = { Microfront.PIDSITE })
-	public String index(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String index(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -724,7 +724,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "index.do", params = "mkey")
-	public String index(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String index(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -744,7 +744,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "home.do", params = { Microfront.PIDSITE })
-	public String home(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String home(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -770,7 +770,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "home.do", params = "mkey")
-	public String home(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String home(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -790,7 +790,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "mapa.do", params = { Microfront.PIDSITE })
-	public String mapa(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String mapa(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -816,7 +816,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "mapa.do", params = "mkey")
-	public String mapa(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String mapa(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -856,7 +856,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "accessibilitat.do", params = { Microfront.PIDSITE })
-	public String accessibilitat(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String accessibilitat(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -882,7 +882,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "accessibilitat.do", params = "mkey")
-	public String accessibilitat(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String accessibilitat(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -903,7 +903,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "faqs.do", params = { Microfront.PIDSITE })
-	public String faqs(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String faqs(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
 			throws DelegateException {
@@ -929,7 +929,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "faqs.do", params = "mkey")
-	public String faqs(@RequestParam("mkey") String mkey, @RequestParam(Microfront.PLANG) Idioma lang, Model model,
+	public String faqs(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
 		Microsite microsite = null;
@@ -951,7 +951,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/archivopub.do", params = { Microfront.PCTRL, "id" })
-	public String archivopubRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable("lang") Idioma lang, @PathVariable("tipo") char tipo,
+	public String archivopubRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable(value=Microfront.PLANG) Idioma lang, @PathVariable("tipo") char tipo,
 			@PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PCTRL) String ctrl, @RequestParam(value = "id") Long id,
 			Model model) {
 
@@ -1058,7 +1058,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/archivopub.do", params = Microfront.PNAME)
-	public String archivopubRelativoPorNombre(@PathVariable("mkey") SiteId siteId, @PathVariable("lang") Idioma lang,
+	public String archivopubRelativoPorNombre(@PathVariable("mkey") SiteId siteId, @PathVariable(value=Microfront.PLANG) Idioma lang,
 			@PathVariable("tipo") char tipo, @PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PNAME) String name, Model model) {
 		return this.archivopubRelativoPorNombre(siteId, name, model);
 
@@ -1100,7 +1100,7 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping("taw.do")
-	public String taw(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam("idioma") Idioma lang,
+	public String taw(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam("id") Long idCont,
 			@RequestParam("ttr") String ttr,
 			Model model) throws DelegateException {

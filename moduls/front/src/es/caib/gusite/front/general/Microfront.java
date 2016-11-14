@@ -10,7 +10,8 @@ import es.caib.gusite.micromodel.Tipo;
  * 
  */
 public class Microfront {
-
+	public static final String DEFAULT_IDIOMA = "ca";
+	
 	// Nuevas front ------------------------------------------------------------
 	public static final String HOME_CONTENIDO = "4";
 
