@@ -88,7 +88,7 @@
                             </div>
                             <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S')}"  th:remove="tag">
                                 <td>
-                                    <span th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
+                                    <span th:if="${noticia.fpublicacion}!=null" th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
                                     <div th:if="${noticia.imagen != null}" th:remove="tag">
                                         <img th:src="@{${#gusuri.archivopubById(MVS_microsite,noticia.imagen.id)}}" th:alt="${noticia.traduccion.titulo}"  class="imagen" style="width: 48px; height: 48px;"/>
                                     </div>

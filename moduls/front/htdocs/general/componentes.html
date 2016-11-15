@@ -97,7 +97,7 @@
                                             <img th:src="@{imgs\listados\bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduccion.titulo}"  />
                                         </div>
                                     </div>
-                                    <span th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
+                                    <span th:if="${noticia.fpublicacion}!=null" th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
                                     <a th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}" th:text="${noticia.traduce.titulo}">
                                         titulo de noticia
                                     </a>
