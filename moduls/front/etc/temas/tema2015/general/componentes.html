@@ -182,7 +182,7 @@
                                     <td>
                                         <a href="asd" th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}">
                                             <div class="imagen">
-                                                <div alt="${noticia.traduccion.titulo}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
+                                                <div th:if="${noticia.traduce.docu != null}"  alt="${noticia.traduccion.titulo}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
 
                                                 </div>
                                             </div>
@@ -194,7 +194,7 @@
                                 <tr th:class="${iterStat.count%2 == 0}? 'par' : 'inpar' ">
                                     <td>
                                         <div class="imagen">
-                                            <div class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
+                                            <div th:if="${noticia.traduce.docu != null}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
 
                                             </div>
                                         </div>
