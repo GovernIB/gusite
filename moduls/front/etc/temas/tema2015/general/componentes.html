@@ -80,7 +80,7 @@
                                                 <img th:src="@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}" alt="\"   th:alt="${noticia.traduce.titulo}"   class="imagen" />
                                             </div>
                                             <div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
-                                                <img th:src="@{imgs\listados\bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}"  />
+                                                <img th:src="@{imgs/listados/bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}"  />
                                             </div>
                                         </div>
                                     </a>
@@ -88,7 +88,7 @@
                             </div>
                             <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S')}"  th:remove="tag">
                                 <td>
-                                    <span th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
+                                    <span th:if="${noticia.fpublicacion}!=null" th:text="${#dates.format(noticia.fpublicacion,'dd/MM/yyyy')}"></span>
                                     <div th:if="${noticia.imagen != null}" th:remove="tag">
                                         <img th:src="@{${#gusuri.archivopubById(MVS_microsite,noticia.imagen.id)}}" th:alt="${noticia.traduce.titulo}"  class="imagen" style="width: 48px; height: 48px;"/>
                                     </div>
@@ -97,7 +97,7 @@
                                             <img th:src="@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}" alt="\"   th:alt="${noticia.traduce.titulo}" style="width: 48px; height: 48px;"  class="imagen" />
                                         </div>
                                         <div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
-                                            <img th:src="@{imgs\listados\bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}" style="width: 48px; height: 48px;"/>
+                                            <img th:src="@{imgs/listados/bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}" style="width: 48px; height: 48px;"/>
                                         </div>
                                     </div>
                                     <div>
@@ -141,7 +141,7 @@
                                         <div class="tituloContainer">
                                             <h3>
                                                <span class="imagenEnlaces" />
-                                                <a href="#" th:href="@{${noticia.traduce.laurl}}" target="_blank" th:text="${noticia.traduce.titulo}">
+                                                <a href="#" th:if="${noticia.traduccion.laurl != null}" th:href="@{${noticia.traduce.laurl}}" target="_blank" th:text="${noticia.traduce.titulo}">
                                                     traduce titulo
                                                 </a>
                                             </h3>
