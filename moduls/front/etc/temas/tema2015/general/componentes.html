@@ -97,7 +97,7 @@
                                             <img th:src="@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}" alt="\"   th:alt="${noticia.traduce.titulo}" style="width: 48px; height: 48px;"  class="imagen" />
                                         </div>
                                         <div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
-                                            <img th:src="@{imgs/listados/bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}" style="width: 48px; height: 48px;"/>
+                                            <img th:src="@{imgs/listados/bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduce.titulo}" />
                                         </div>
                                     </div>
                                     <div>
