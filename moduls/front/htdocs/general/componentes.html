@@ -139,7 +139,7 @@
                                         <div th:if="${noticia.imagen == null}" th:remove="tag">
                                             <img th:src="@{imgs/listados/bullet_gris.gif}" alt="\" class="imagen"  th:alt="${noticia.traduccion.titulo}"  />
                                         </div>
-                                        <a href="asd" th:if="${noticia.traduccion.laurl != null}" th:href="@{noticia.traduccion.laurl}" th:target="${#strings.contains(noticia.traduccion.laurl,'http') ? '_blank' : '_self'}" th:text="${noticia.traduccion.titulo}">
+                                        <a href="asd" th:if="${noticia.traduccion.laurl != null}" th:href="@{${noticia.traduce.laurl}}" th:target="${#strings.contains(noticia.traduccion.laurl,'http') ? '_blank' : '_self'}" th:text="${noticia.traduccion.titulo}">
                                             titulo
                                         </a>
                                         <p></p>
