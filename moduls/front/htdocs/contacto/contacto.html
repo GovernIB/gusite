@@ -87,7 +87,7 @@ Muestra un formulario de contacto.
 <body>
 	<section th:remove="tag" th:if="${MVS_contacto} !=null" layout:fragment="content">
 		<!-- informacio con o sin menu -->
-		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">inma
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="">
 			<h2 th:if="${MVS_contacto_titulo} !=''" th:text="${MVS_contacto_titulo}"></h2>
 			<form  th:action="@{${#gusuri.contacto(MVS_microsite,MVS_idioma,MVS_contacto)}}"
 				onsubmit="return checkrequired(this)" enctype="multipart/form-data" method="post">
