@@ -13,6 +13,7 @@ Página de formulario de encuesta.
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:if="${MVS_encuesta} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo}">Microsite Título - encuesta traduce título</title>	
+
 <th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.
@@ -24,9 +25,8 @@ Página de formulario de encuesta.
 		var thDebug = false;
 	</script>
 </th:block>
-<!--/* css y js específico para esta página */-->
-<script type="text/javascript" src="../resources/js/encuestas.js" th:src="@{/resources/js/encuestas.js}"></script>
 <link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsEncuesta.css" th:href="@{/resources/css/estilsEncuesta.css}"></link>
+	
 </head>
 <body>
 	<section layout:fragment="content">
@@ -50,6 +50,10 @@ Página de formulario de encuesta.
 				<input type="hidden" name="lang" th:value="${#strings.toLowerCase(MVS_idioma)}"/>
 				<input type="hidden" name="cont" th:value="${MVS_encuesta.id}"/>
 				<input type="hidden" name="enccomp" value="yes"/>
+
+				<!--/* css y js específico para esta página */-->
+				<script type="text/javascript" src="../resources/js/encuestas.js" th:src="@{/resources/js/encuestas.js}"></script>
+				
 				<script th:inline="javascript">
 				/*<![CDATA[*/        
 				    var checksValidar = [];
