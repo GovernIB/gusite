@@ -150,7 +150,8 @@ var thDebug = false;
 	</div>
 </select>
 <script type="text/javascript">
-$("agendaSelect").style.fontWeight = "bold";
+//$("agendaSelect").style.fontWeight = "bold";
+$("agendaSelect").css('font-weight', 'bold')
 jQuery("option").each(function() {
 	var mes = this.text.substring(0,3);
 	var any = this.text.substring(this.text.indexOf(" "))
