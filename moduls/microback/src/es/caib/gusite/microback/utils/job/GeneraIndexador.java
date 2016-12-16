@@ -6,7 +6,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
 
 /**
@@ -24,9 +26,15 @@ public class GeneraIndexador implements Job {
 
 		log.debug("Job que se ejecuta para la Indexacion pendiente: inicio");
 		try {
-			SolrPendienteProcesoDelegate solrDelegate = DelegateUtil
-					.getSolrPendienteProcesoDelegate();
-			solrDelegate.indexarPendientes();			
+			SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
+			SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
+			
+			SolrPendienteJob solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob("IDX_PDT");
+			
+			solrDelegate.indexarPendientes(solrPendienteJob);	
+			
+			solrPendienteDelegate.cerrarSorlPendienteJob(solrPendienteJob);
+			
 		} catch (Exception ex) {
 			log.error("Error indexando pendientes", ex);
 		}

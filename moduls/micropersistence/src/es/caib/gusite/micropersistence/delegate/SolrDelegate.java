@@ -1,5 +1,7 @@
 package es.caib.gusite.micropersistence.delegate;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +62,18 @@ public class SolrDelegate implements StatelessDelegate {
 		List<IndexEncontrado> listIndex = new ArrayList<IndexEncontrado>();
 		final TraduccionMicrosite traduccion = (TraduccionMicrosite) microsite.getTraduccion(idi);
 		String desc = traduccion != null ? traduccion.getTitulo() : "";
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		// trunca a dos digitos
+		numberFormat.setMaximumFractionDigits(2);
+		// le decimos al NumberFormat que el redondeado sea mediante truncamiento.
+		 numberFormat.setRoundingMode(RoundingMode.DOWN);
+		  
 		for (StoredData res : resultadoSolr.getResultados()) { 
 			res.getTitulo().get(EnumIdiomas.fromString(idi));
+			String numTrun = numberFormat.format(res.getScore());
+			numTrun=numTrun.replace(",", ".");
 			IndexEncontrado ind = new IndexEncontrado(res.getElementoId(), res.getTitulo().get(EnumIdiomas.fromString(idi)), 
-					res.getDescripcion().get(EnumIdiomas.fromString(idi)), desc, res.getUrl().get(EnumIdiomas.fromString(idi)), 15);
+					res.getDescripcion().get(EnumIdiomas.fromString(idi)), desc, res.getUrl().get(EnumIdiomas.fromString(idi)), Float.parseFloat(numTrun));
 			listIndex.add(ind);
 		}
 		

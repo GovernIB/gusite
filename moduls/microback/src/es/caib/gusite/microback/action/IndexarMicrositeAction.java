@@ -1,5 +1,7 @@
 package es.caib.gusite.microback.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,11 +12,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.Usuario;
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
-import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 
 /**
  * Action que redirige al indexarMicrosite<P>
@@ -47,19 +48,36 @@ public class IndexarMicrositeAction extends BaseAction {
 				request.setAttribute("nok", true);
 				addMessage(request, "indexa.ok");
 			}
+			request.setAttribute("mostrarBoton", true);
+		}
+		
+		if(request.getParameter("indexar") != null && request.getParameter("indexar").equals("verinfo")){
+			request.setAttribute("mostrarinfo", true);
+			request.setAttribute("mostrarBoton", true);
+			final List<?> listInfo = verListaJobs();	
+        	request.setAttribute("listado",listInfo);	
 		}
         return mapping.findForward(elforward);
 	
 	}	
 		
 
+	private List<?> verListaJobs() {
+		try {
+			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
+			return solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE);			
+		} catch(Exception exception) {
+			return null;
+		}
+	}
+	
 	private Boolean indexarMicrosite(String idMicrosite ) throws Exception {
 		
 		try{					
 			if (idMicrosite == null)
 				return false;
 			else {				
-				IndexacionJobUtil.crearJob("IDX_MIC", null, Long.valueOf(idMicrosite));                
+				IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_MICROSITE, null, Long.valueOf(idMicrosite));                
 			}	
 		}catch(Exception e){
 			log.error("Error indexando microsite: " + idMicrosite );

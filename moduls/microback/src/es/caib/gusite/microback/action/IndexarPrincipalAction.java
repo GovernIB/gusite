@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionMapping;
 import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 /**
@@ -114,7 +115,7 @@ public class IndexarPrincipalAction extends BaseAction {
 	private Boolean indexarTodo() throws Exception {
 		 
 		try{									
-			IndexacionJobUtil.crearJob("IDX_TODO", null, null);						
+			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_TODO, null, null);						
 		   }catch(Exception e){
 			log.error("Error indexando todo" );
 			return false;
@@ -126,7 +127,7 @@ public class IndexarPrincipalAction extends BaseAction {
     private Boolean indexarByUA(String idUAdministrativa) throws Exception {
 		 
 		try{									
-			IndexacionJobUtil.crearJob("IDX_UA", idUAdministrativa, null);						
+			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_UA, idUAdministrativa, null);						
 		   }catch(Exception e){
 			log.error("Error indexando UA " + idUAdministrativa );
 			return false;
@@ -139,7 +140,7 @@ public class IndexarPrincipalAction extends BaseAction {
     private Boolean indexarPendiente() throws Exception {
 		 
 		try{									
-			IndexacionJobUtil.crearJob("IDX_PDT", null, null);							
+			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_PENDIENTE, null, null);							
 		   }catch(Exception e){
 			log.error("Error indexando pendientes ");
 			return false;

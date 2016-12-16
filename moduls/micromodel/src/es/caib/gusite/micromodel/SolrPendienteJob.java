@@ -1,5 +1,6 @@
 package es.caib.gusite.micromodel;
 
+import java.sql.Clob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -46,6 +47,11 @@ public class SolrPendienteJob implements ValueObject {
 	@Column(name = "JOB_TIPO")
 	private String tipo;
 	
+	@Column(name = "JOB_DESCRI")
+	private Clob descripcion;
+	
+	@Column(name = "JOB_DESCRI",updatable=false, insertable=false)
+	private String info;
 	
 	/**
 	 * @return the id
@@ -114,5 +120,25 @@ public class SolrPendienteJob implements ValueObject {
 		texto.append(" tipo:");
 		return texto.toString();
 	}
+	/**
+	 * @return the descripcion
+	 */
+	public Clob getDescripcion() {
+		return descripcion;
+	}
+	/**
+	 * @param clob the descripcion to set
+	 */
+	public void setDescripcion(Clob clob) {
+		this.descripcion = clob;
+	}
+	/**
+	 * @return the info
+	 */
+	public String getInfo() {
+		return info != null ? info.toString():null;
+	}
+	
+	
 	
 }

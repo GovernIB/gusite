@@ -1,6 +1,5 @@
 package es.caib.gusite.front.cercador;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;

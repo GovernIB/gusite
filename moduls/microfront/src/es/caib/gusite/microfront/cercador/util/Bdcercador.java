@@ -135,7 +135,7 @@ public class Bdcercador extends Bdbase {
 		for (StoredData res : resultados) { 
 			res.getTitulo().get(EnumIdiomas.fromString(idi));
 			IndexEncontrado index = new IndexEncontrado(res.getElementoId(), res.getTitulo().get(EnumIdiomas.fromString(idi)), 
-					res.getDescripcion().get(EnumIdiomas.fromString(idi)), desc, res.getUrl().get(EnumIdiomas.fromString(idi)), 0);
+					res.getDescripcion().get(EnumIdiomas.fromString(idi)), desc, res.getUrl().get(EnumIdiomas.fromString(idi)), res.getScore());
 			listIndex.add(index);
 		}
 		

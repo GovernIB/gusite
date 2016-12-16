@@ -99,6 +99,7 @@ import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 import es.caib.gusite.micropersistence.delegate.VersionDelegate;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.UnidadData;
@@ -208,7 +209,7 @@ public class ImportarAction extends BaseAction {
                     
                     addImportLogVisual(request, "Comença indexació");
                     
-                    IndexacionJobUtil.crearJob("IDX_MIC", null, micro.getId());                    
+                    IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_MICROSITE, null, micro.getId());                    
                     
                     addImportLogVisual(request, "Indexació executant-se en background");
                 }

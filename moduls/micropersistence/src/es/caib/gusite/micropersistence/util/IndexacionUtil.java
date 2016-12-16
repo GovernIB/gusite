@@ -35,6 +35,11 @@ public class IndexacionUtil {
 	public static Long INDEXAR = 1l;
 	public static Long DESINDEXAR = 0l;
 	
+	public static String TIPO_TODO = "IDX_TODO";
+	public static String TIPO_UA ="IDX_UA";
+	public static String TIPO_PENDIENTE="IDX_PDT";
+	public static String TIPO_MICROSITE = "IDX_MIC";
+	
 	/** Extensiones. **/
 	private static Map<String, String> extensiones = null;
 	private static Long tamanyoMaximo = null;

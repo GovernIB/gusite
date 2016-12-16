@@ -57,18 +57,18 @@ public class IndexacionJob implements Job  {
         try { 
 	    	switch(tipoIndexacion) {
 	    		case "IDX_TODO":
-	    			solrDelegate.indexarTodo();
+	    			solrDelegate.indexarTodo(solrPendienteJob);
 	    			break;
 	    		case "IDX_UA":
 	    			final String idUAdministrativa = (String) schedulerContext.get("idUAdministrativa");
-	    			solrDelegate.indexarMicrositeByUA(idUAdministrativa);
+	    			solrDelegate.indexarMicrositeByUA(idUAdministrativa,solrPendienteJob);
 	    			break;
 	    		case "IDX_PDT":
-	    			solrDelegate.indexarPendientes();
+	    			solrDelegate.indexarPendientes(solrPendienteJob);
 	    			break;
 	    		case "IDX_MIC":
 	    			final Long idMicrosite = (Long) schedulerContext.get("idMicrosite");
-	    			solrDelegate.indexarMicrosite(idMicrosite);
+	    			solrDelegate.indexarMicrosite(idMicrosite,solrPendienteJob);
 	    			break;    			
 	    		default:
 	    			break;

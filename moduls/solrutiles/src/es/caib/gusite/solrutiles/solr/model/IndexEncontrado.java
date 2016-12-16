@@ -6,7 +6,7 @@ public class IndexEncontrado {
 	    private String descripcion;
 	    private String site;
 	    private String url;
-	    private int score;
+	    private float score;
 	    private String tiposervicio;
 	    private String familia;
 	    private String seccion;
@@ -17,7 +17,7 @@ public class IndexEncontrado {
 
 
 	    public IndexEncontrado(String id, String tiposervicio, String site, String familia, String seccion, String materia, String uo, String conforo, String titulo, String descripcion,
-	        String tituloserviciomain, String url, int score) {
+	        String tituloserviciomain, String url, float score) {
 	        this.id = id;
 	        this.titulo = titulo;
 	        this.descripcion = descripcion;
@@ -33,7 +33,7 @@ public class IndexEncontrado {
 	        this.tituloserviciomain = tituloserviciomain;
 	    }
 
-	    public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, int score) {
+	    public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, float score) {
 	        this(id, null, site, null, null, null, null, null, titulo, descripcion, null, url, score);
 	    }
 
@@ -45,11 +45,11 @@ public class IndexEncontrado {
 	        this.id = id;
 	    }
 
-	    public int getScore() {
+	    public float getScore() {
 	        return score;
 	    }
 
-	    public void setScore(int score) {
+	    public void setScore(float score) {
 	        this.score = score;
 	    }
 

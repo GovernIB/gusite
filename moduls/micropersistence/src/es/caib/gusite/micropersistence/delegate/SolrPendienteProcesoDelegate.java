@@ -1,17 +1,15 @@
 package es.caib.gusite.micropersistence.delegate;
 
 import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.List;
 
 import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.intf.SolrPendienteProcesoFacade;
 import es.caib.gusite.micropersistence.intf.SolrPendienteProcesoFacadeHome;
 import es.caib.gusite.micropersistence.util.SolrPendienteProcesoFacadeUtil;
-import es.caib.gusite.plugins.organigrama.UnidadListData;
 
 
 
@@ -30,12 +28,13 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 
 	/**
 	 * Indexa los pendientes de indexar
+	 * @param solrPendienteJob 
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarPendientes() throws DelegateException {
+	public Boolean indexarPendientes(SolrPendienteJob solrPendienteJob) throws DelegateException {
 		try {
-			return this.getFacade().indexarPendientes();
+			return this.getFacade().indexarPendientes(solrPendienteJob);
 		}catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
@@ -43,12 +42,13 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	
 	/**
 	 * Indexa un Microsite
+	 * @param solrPendienteJob 
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarMicrosite(Long idMicrosite) throws DelegateException {
+	public Boolean indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob) throws DelegateException {
 		try {
-			return this.getFacade().indexarMicrosite( idMicrosite);
+			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob);
 		}catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
@@ -56,12 +56,13 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	
 	/**
 	 * Indexa Todo
+	 * @param solrPendienteJob 
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarTodo() throws DelegateException {
+	public Boolean indexarTodo(SolrPendienteJob solrPendienteJob) throws DelegateException {
 		try {
-			return this.getFacade().indexarTodo();
+			return this.getFacade().indexarTodo(solrPendienteJob);
 		}catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
@@ -69,12 +70,13 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	
 	/**
 	 * Indexa Todo
+	 * @param solrPendienteJob 
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarMicrositeByUA(String idUAdministrativa) throws DelegateException, RemoteException {
+	public Boolean indexarMicrositeByUA(String idUAdministrativa, SolrPendienteJob solrPendienteJob) throws DelegateException, RemoteException {
 		try {
-			return this.getFacade().indexarMicrositeByUA(idUAdministrativa);
+			return this.getFacade().indexarMicrositeByUA(idUAdministrativa,solrPendienteJob);
 		}catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

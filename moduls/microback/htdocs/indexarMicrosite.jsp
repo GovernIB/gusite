@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="js/jsListados.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
 </head>
 
 <body>	
@@ -31,6 +32,9 @@
 		
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar" />" onclick='submitURL(<bean:write name="MVS_microsite" property="id"/>);'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar" />" /> &nbsp;<bean:message key="menu.indexar" /></button>
+				<logic:notEmpty name="mostrarBoton">
+					<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='indexarVerInfo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+				</logic:notEmpty>
 		</div>		
 		
 		<p>
@@ -56,12 +60,74 @@
 			</html:messages>	
 		</div>
 		</logic:notEmpty>
+		
+		<!-- Se muestra la tabla con mas info de los registros job -->
+		<logic:notEmpty name="mostrarinfo">		
+		<div style="font-weight:bold;">
+			<logic:notEmpty name="listado">
+					<p></p><p></p>
+					<table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+					 <thead>
+						<tr>
+							<th width="15%"><bean:message key="menu.indexar.cab.fechaIni" /></th>
+							<th width="15%"><bean:message key="menu.indexar.cab.fechaFin" /></th>	
+							<th width="15%"></th>					
+						</tr>
+					</thead>
+					<tbody>
+						<logic:iterate id="i" name="listado" indexId="indice">
+						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
+								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
+								     <td>
+									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp("<bean:write name="i" property="info" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+								     </td>
+								   
+						       </tr>					
+					    </logic:iterate>
+				    </tbody>
+				    </table>
+			    </logic:notEmpty>	
+			
+		</div>
+		</logic:notEmpty>
+		
+		
+		<div id="popup" class="popup" style="display: none;">
+    		<div class="content-popup">
+        		<div class="close"><a href="#" onclick="cerrarPopUp();" id="close"><img src="imgs/botons/cerrar.gif"/></a></div>
+        		<div>
+            		<textarea id="item_texto" name="item_observacions" cols="70" rows="15" class="nou"></textarea>     
+        		</div>
+    		</div>
+		</div>
 </body>
 </html>
 
 <script>
 	function submitURL(idsite){
 		document.location="indexarMicrosite.do?indexar=si&site="+idsite;
+	}
+	
+	function indexarVerInfo(){
+		document.location.href="indexarMicrosite.do?indexar=verinfo";
+	}
+	
+	function pintarPopUp(descripcion){
+		 $('.popup').fadeIn('slow');
+	     $('.popup-overlay').fadeIn('slow');
+	     $('.popup-overlay').height($(window).height());
+	     $("#item_texto").html(descripcion);
+	     //var mensaje = window.open("", "Info", ",width=600,height=500");
+	    // mensaje.document.write(descripcion);
+	     return false;
+	}
+	
+	function cerrarPopUp(){
+		 $('.popup').fadeOut('slow');
+	     $('.popup-overlay').fadeOut('slow');
+	     $("#item_texto").html("");
+	     return false;
 	}
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>
