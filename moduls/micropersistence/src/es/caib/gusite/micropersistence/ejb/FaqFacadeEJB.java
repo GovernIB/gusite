@@ -165,7 +165,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_FAQ.toString(), faq.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_FAQ.toString(), faq.getId(), null, IndexacionUtil.REINDEXAR);
 			return faq.getId();
 
 		} catch (HibernateException he) {

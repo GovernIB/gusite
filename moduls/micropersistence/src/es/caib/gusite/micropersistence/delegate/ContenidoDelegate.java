@@ -9,6 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.ContenidoFacade;
@@ -157,7 +158,7 @@ public class ContenidoDelegate implements StatelessDelegate {
 	 * @return List de beans <em>Contenido</em>
 	 * @throws DelegateException
 	 */
-	public List<?> listarAllContenidos(String micro) throws DelegateException {
+	public List<Contenido> listarAllContenidos(String micro) throws DelegateException {
 		try {
 			return this.getFacade().listarAllContenidos(micro);
 		} catch (RemoteException e) {
@@ -330,7 +331,7 @@ public class ContenidoDelegate implements StatelessDelegate {
 		}
 	}
 
-	public List<?> listarDocumentos(String mic, String pagina)
+	public List<Archivo> listarDocumentos(String mic, String pagina)
 			throws DelegateException {
 		try {
 			return this.getFacade().listarDocumentos(mic, pagina);

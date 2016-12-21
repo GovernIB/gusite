@@ -237,7 +237,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 				idElemento = idContenido;
 			}
 			
-			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, idArchivo, IndexacionUtil.REINDEXAR);
 			
 			return idArchivo;
 		} catch (RemoteException e) {
@@ -296,7 +296,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 				idElemento = idContenido;
 			}
 			
-			pendienteDel.grabarSolrPendiente(tipo, idElemento, archi.getId(), IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(tipo, idElemento, archi.getId(), IndexacionUtil.REINDEXAR);
 			
 			
 		} catch (RemoteException e) {

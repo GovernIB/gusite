@@ -189,14 +189,14 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 	                		archivoDelegate.insertarArchivo(trad.getDocumento());
 	                		//Indexamos documento
 	                		SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-	                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.INDEXAR);
+	                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.REINDEXAR);
 	                		}
 	                	else
 	                		if (trad.getDocumento().getDatos() != null){ // Condición de actualizar documento.
 	                			archivoDelegate.grabarArchivo(trad.getDocumento());
 	                			//Indexamos documento
 		                		SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-		                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.INDEXAR);
+		                		pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), trad.getDocumento().getId(), IndexacionUtil.REINDEXAR);
 	                		}
 	                } else {
 	                	if (tradOriginal.getDocumento() != null){ // Condición de borrado de documento.
@@ -262,7 +262,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_AGENDA.toString(), agenda.getId(), null, IndexacionUtil.REINDEXAR);
 			return agenda.getId();
 
 		} catch (HibernateException he) {
@@ -750,7 +750,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					indexFile.setIdioma(enumIdioma);
 					indexFile.setFileContent(contenidoFichero);
 					indexFile.setElementoIdPadre(agenda.getIdi());
-					indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
+					indexFile.setCategoriaPadre(EnumCategoria.GUSITE_AGENDA);
 					indexFile.setDescripcionPadre(descripcionPadre);
 					indexFile.setExtension(extension);
 					indexFile.setUrlPadre(urlPadre);

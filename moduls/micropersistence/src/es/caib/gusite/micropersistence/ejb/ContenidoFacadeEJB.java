@@ -183,7 +183,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_CONTENIDO.toString(), contenido.getId(), null, IndexacionUtil.REINDEXAR);
 			
 			return contenido.getId();
 

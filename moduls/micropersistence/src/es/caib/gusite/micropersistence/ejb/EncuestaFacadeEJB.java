@@ -220,7 +220,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.REINDEXAR);
 			
 			return enc.getId();
 

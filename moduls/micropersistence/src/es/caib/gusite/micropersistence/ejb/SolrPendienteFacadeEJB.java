@@ -41,6 +41,7 @@ import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
@@ -99,6 +100,47 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     }
     
     
+    /**
+     * Lista todos los SolrPendientes
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *
+     * @return Devuelve un listado de todos los SolrPendientes.
+     */
+    public List<SolrPendiente> getPendientes(Long idElemento, Long idArchivo, String tipo, Long accion, Integer resultado) {
+    	final Session session = getSession();
+        try {
+            final Criteria criteri = session.createCriteria(SolrPendiente.class);
+            if (idElemento != null) { 
+            	criteri.add(Restrictions.eq("idElem", idElemento));
+            }
+                        
+            if (tipo != null) {
+            	criteri.add(Restrictions.eq("tipo", tipo));
+            }
+            
+            /** Solo se añade el id Archivo para los de tipo microsite. **/
+            if (idArchivo != null && tipo.equals(EnumCategoria.GUSITE_MICROSITE.toString())) {
+            	criteri.add(Restrictions.eq("idArchivo", idArchivo));
+            }
+            
+            if (accion != null) {
+            	criteri.add(Restrictions.eq("accion", accion.intValue()));
+            }
+            
+            if (resultado != null) {
+            	criteri.add(Restrictions.eq("resultado", resultado));
+            }
+            return  ( List<SolrPendiente>) criteri.list();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    
     
     /**
      * Crear un solrpendiente
@@ -116,18 +158,33 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	 Session session = getSession();
          try
         	{
-    			
-    			final SolrPendiente solrpendiente = new SolrPendiente();
-    	    	
-    			solrpendiente.setTipo(tipo);
+        	 	//Paso 1. Si ya hay pendiente una acción igual, no se guarda
+        	    List<SolrPendiente> pendientes = getPendientes(idElemento, idArchivo, tipo, accion, 0);
+        	    if (pendientes.size() > 0) {
+        	    	return null;
+        	    }
+        	 
+        	 	SolrPendiente solrpendiente = new SolrPendiente();
+        	 	solrpendiente.setTipo(tipo);
     			solrpendiente.setIdElem(idElemento);
     			solrpendiente.setIdArchivo(idArchivo);
     			solrpendiente.setAccion((int)(long)accion);
     			solrpendiente.setFechaCreacion(new Date());
     			solrpendiente.setResultado(0);
-    			session.save(solrpendiente);
-    			session.flush();
     			
+    			// Paso 2. Si es un desindexar, se borra todas las reindexaciones pendientes.
+    			 if (accion == IndexacionUtil.DESINDEXAR) {
+	    			
+    				pendientes = getPendientes(idElemento, idArchivo, tipo, IndexacionUtil.REINDEXAR, 0);
+    				for (SolrPendiente pendiente : pendientes) {
+    					session.delete(pendiente);
+    				}
+    			}
+    			
+    			 //Paso 3. Guardamos.
+    			session.save(solrpendiente);
+				session.flush();
+				
     			return solrpendiente;
     		           		     
             } catch (HibernateException he) {

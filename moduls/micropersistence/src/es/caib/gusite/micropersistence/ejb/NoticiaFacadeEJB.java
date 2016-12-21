@@ -191,7 +191,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
                     		archivoDelegate.insertarArchivo(trad.getDocu());
                     		//Indexamos
                 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-                			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), trad.getDocu().getId(), IndexacionUtil.INDEXAR);
+                			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), trad.getDocu().getId(), IndexacionUtil.REINDEXAR);
                     	}
                     	else
                     		if (trad.getDocu().getDatos() != null) // Condición de actualizar documento.
@@ -202,7 +202,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		                		archivosPorBorrar.add(tradOriginal.getDocu());
 		                		//Indexamos
 		            			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-		            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), tradOriginal.getDocu().getId(), IndexacionUtil.INDEXAR);
+		            			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), tradOriginal.getDocu().getId(), IndexacionUtil.REINDEXAR);
 		                	}
                     	}
                     }
@@ -293,7 +293,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 
 			//Indexamos
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_NOTICIA.toString(), noticia.getId(), null, IndexacionUtil.REINDEXAR);
 			
 			return noticia.getId();
 

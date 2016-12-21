@@ -68,7 +68,7 @@ public class IndexacionJob implements Job  {
 	    			break;
 	    		case "IDX_MIC":
 	    			final Long idMicrosite = (Long) schedulerContext.get("idMicrosite");
-	    			solrDelegate.indexarMicrosite(idMicrosite,solrPendienteJob);
+	    			solrDelegate.indexarMicrosite(idMicrosite,solrPendienteJob, null);
 	    			break;    			
 	    		default:
 	    			break;

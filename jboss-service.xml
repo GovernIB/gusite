@@ -49,7 +49,7 @@
 		
 		es.caib.gusite.solr.tamanyomaximo=20
 	   	es.caib.gusite.solr.ficheros=doc,docx,xls,xlsx,pdf,pdfx,odt,ods,odp,odf,txt,rtf
-
+		es.caib.gusite.dias.solr = 10
     </attribute>
 
 </mbean>

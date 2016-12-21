@@ -8,6 +8,7 @@ public class GusitePropertiesUtil
 	  private static final String USER_SOLR = "es.caib.gusite.user.solr";
 	  private static final String PASS_SOLR = "es.caib.gusite.pass.solr";
 	  private static final String URL_SOLR = "es.caib.gusite.url.solr";
+	  private static final String DIAS_SOLR = "es.caib.gusite.dias.solr";
 	  private static final String INDEX_SOLR = "es.caib.gusite.index.solr";
 	  
 	  private static final String ERROR_MESSAGE = "Error obteniendo la propiedad ";
@@ -41,6 +42,18 @@ public class GusitePropertiesUtil
 	
 	      return getProperty(URL_SOLR);
 	  }
+
+	public static int getDiasMaxSOLR() {
+		int dias;
+		String sDias = getProperty(DIAS_SOLR);
+		if (sDias == null) {
+			dias = 10;
+		} else {
+			dias = Integer.valueOf(sDias);
+		}
+		
+		return dias;
+	}
 
  
  

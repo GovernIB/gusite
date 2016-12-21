@@ -7,6 +7,7 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.SolrPendienteJob;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.SolrPendienteProcesoFacade;
 import es.caib.gusite.micropersistence.intf.SolrPendienteProcesoFacadeHome;
 import es.caib.gusite.micropersistence.util.SolrPendienteProcesoFacadeUtil;
@@ -46,9 +47,9 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob) throws DelegateException {
+	public SolrPendienteResultado indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob, StringBuffer info) throws DelegateException {
 		try {
-			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob);
+			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob, info);
 		}catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

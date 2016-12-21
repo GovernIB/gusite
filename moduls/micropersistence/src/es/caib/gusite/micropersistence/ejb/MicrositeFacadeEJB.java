@@ -329,7 +329,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			this.grabarAuditoria(site, op);
 
 			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
-			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, IndexacionUtil.INDEXAR);
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_MICROSITE.toString(), site.getId(), null, IndexacionUtil.REINDEXAR);
 			
 			return site.getId();
 

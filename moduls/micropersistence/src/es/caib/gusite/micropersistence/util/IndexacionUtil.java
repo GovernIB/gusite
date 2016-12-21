@@ -32,7 +32,7 @@ import es.caib.solr.api.model.PathUO;
 
 public class IndexacionUtil {
 	
-	public static Long INDEXAR = 1l;
+	public static Long REINDEXAR = 1l;
 	public static Long DESINDEXAR = 0l;
 	
 	public static String TIPO_TODO = "IDX_TODO";
