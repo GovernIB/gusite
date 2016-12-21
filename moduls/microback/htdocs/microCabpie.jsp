@@ -62,8 +62,16 @@
 			, theme_advanced_toolbar_align : "left"
 			, theme_advanced_path_location : "bottom"
 			, verify_html : false
-			, setupcontent_callback : "Obtener_Idform"
-		    , file_browser_callback : "fileBrowserCallBack"	
+			, setupcontent_callback : function (editor_id, body, doc) {
+				tinymce.settings['idform'] = document.microForm.id.value;
+			}
+		    , file_browser_callback : function(field_name, url, type, win){
+		        Rcajatemp_tiny=field_name;
+				Rwin_tiny=win;
+				window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
+
+	        	return false;	
+		    }
 			, theme_advanced_resizing : false
 			, accessibility_warnings : true	
 			, plugin_insertdate_dateFormat : "%d/%m/%Y"
@@ -74,33 +82,35 @@
 			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
 			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
 			  ]
-			, file_browser_callback : "fileBrowserCallBack"
+			, file_browser_callback : function(field_name, url, type, win){
+		        Rcajatemp_tiny=field_name;
+				Rwin_tiny=win;
+				window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
+
+	        	return false;	
+		    }
 			, theme_advanced_resizing : false
 			, nonbreaking_force_tab : true
 			, apply_source_formatting : true		
 			, convert_urls: false				
 			, block_formats: 'Paràgraf=p;Adreça=address;Preformatat=pre;Títol=h1;Subtítol nivell 1=h2;Subtítol nivell 2=h3;Subtítol nivell 3=h4;Subtítol nivell 4=h5;Subtítol nivell 5=h6'
-		  });
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+				,paste_as_text: false
+ 				,invalid_elements: 'br'
+			</logic:notEqual>
+		});
 		
 
-		function Obtener_Idform(editor_id, body, doc) {
-			tinymce.settings['idform'] = document.microForm.id.value;
-		}
+		
 		
 	   	var Rcajatemp_tiny;
 	   	var Rwin_tiny;
 		
 		function Rmeterurl_tiny(laurl) {
-			Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
+			//Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
+			document.getElementById(Rcajatemp_tiny).value = laurl;
 		}	
 	
-		// Metodo que recoge las variables de la ventana que la llama y abre un popup con el listado de recursos url.
-		// Este metodo es la implementacion personalizada del tiny
-		function fileBrowserCallBack(field_name, url, type, win) {
-			Rcajatemp_tiny=field_name;
-			Rwin_tiny=win;
-			window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
-		}	
 		
 		</script>
 		<!-- /tinyMCE -->

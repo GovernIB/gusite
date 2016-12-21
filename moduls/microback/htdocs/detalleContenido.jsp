@@ -63,9 +63,10 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table, hr, fullscreen, media, charmap, template, importcss "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu  "
+			,contextmenu: "link image inserttable | cell row column deletetable textcolor colorpicker forecolor backcolor"
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
-			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
+			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' acheck '
 			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullscreen '
 			,menubar: false
 			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
@@ -83,7 +84,19 @@
 			, theme_advanced_path_location : "bottom"
 			, verify_html : false
 			, setupcontent_callback : "Obtener_Idform"
-		    , file_browser_callback : "fileBrowserCallBack"	
+		    , file_browser_callback : function(field_name, url, type, win){
+                
+                Rcajatemp_tiny=field_name;
+                Rwin_tiny=win;
+                <logic:notEmpty name="contenidoForm">
+                               window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+                </logic:notEmpty>
+                <logic:empty name="contenidoForm">
+                               window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
+                </logic:empty>
+                return false;
+			}
+	
 			, theme_advanced_resizing : false
 			, accessibility_warnings : true	
 			, plugin_insertdate_dateFormat : "%d/%m/%Y"
@@ -94,7 +107,18 @@
 			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
 			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
 			  ]
-			, file_browser_callback : "fileBrowserCallBack"
+			, file_browser_callback : function(field_name, url, type, win){
+                Rcajatemp_tiny=field_name;
+                Rwin_tiny=win;
+                <logic:notEmpty name="contenidoForm">
+                               window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+                </logic:notEmpty>
+                <logic:empty name="contenidoForm">
+                               window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
+                </logic:empty>
+                return false;
+			}
+
 			, theme_advanced_resizing : false
 			, nonbreaking_force_tab : true
 			, apply_source_formatting : true		
@@ -109,6 +133,18 @@
 				{ title: 'Subtítol nivell 4', block: 'h5'}, 
 				{ title: 'Subtítol nivell 5', block: 'h6'},
 			]*/
+            , table_default_styles: {
+                title: 'Tabla',
+                width: '70%'
+			}
+
+			<logic:present name="contenidoForm" property="id">		
+				,idform:<bean:write name="contenidoForm" property="id"/>
+			</logic:present>
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+				,paste_as_text: false
+     			,invalid_elements: 'br'
+			</logic:notEqual>
 		  });
 		
 		
@@ -152,22 +188,11 @@
    	var Rwin_tiny;
 	
 	function Rmeterurl_tiny(laurl) {
-		Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
+		//Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
+		//No tiene name el campo de texto x eso se sustituye
+		document.getElementById(Rcajatemp_tiny).value = laurl;
 	}	
 
-	// Método que recoge las variables de la ventana que la llama y abre un popup con el listado de recursos url.
-	// Ãste método es la implementación personalizada del tiny
-	function fileBrowserCallBack(field_name, url, type, win) {
-		Rcajatemp_tiny=field_name;
-		Rwin_tiny=win;
-		<logic:notEmpty name="contenidoForm">
-			window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
-		</logic:notEmpty>
-		<logic:empty name="contenidoForm">
-			window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
-		</logic:empty>
-	}
-	
 	var valor="";
 
 
@@ -187,7 +212,7 @@
 
 <div id="formulario">
 
-		<!-- las tablas están entre divs por un bug del FireFox -->
+	<!-- las tablas están entre divs por un bug del FireFox -->
 
 		<table cellpadding="0" cellspacing="0" class="edicio">
 		

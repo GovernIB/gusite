@@ -38,6 +38,10 @@
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			}
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+				,paste_as_text: false
+				,invalid_elements: 'br'
+			</logic:notEqual>
 		  });
 		
 		

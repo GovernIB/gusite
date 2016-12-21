@@ -230,7 +230,7 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
     /**
      * Borra un listado de PersonalizacionPlantilla por ids
      * @ejb.interface-method
-     * @ejb.permission role-name="${role.system},${role.admin}"
+     * @ejb.permission role-name="${role.system},${role.admin},${role.super}"
      */
     public void borrarPersonalizacionPlantillas(List<Long> ids) {
 
