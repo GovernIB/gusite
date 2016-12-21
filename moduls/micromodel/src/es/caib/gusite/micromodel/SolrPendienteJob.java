@@ -1,6 +1,10 @@
 package es.caib.gusite.micromodel;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 
 
@@ -50,7 +55,8 @@ public class SolrPendienteJob implements ValueObject {
 	@Column(name = "JOB_DESCRI")
 	private Clob descripcion;
 	
-	@Column(name = "JOB_DESCRI",updatable=false, insertable=false)
+	//@Column(name = "JOB_DESCRI",updatable=false, insertable=false)
+	@Transient
 	private String info;
 	
 	/**
@@ -132,11 +138,30 @@ public class SolrPendienteJob implements ValueObject {
 	public void setDescripcion(Clob clob) {
 		this.descripcion = clob;
 	}
+	
 	/**
 	 * @return the info
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	public String getInfo() {
-		return info != null ? info.toString():null;
+	public String getInfo() throws SQLException, IOException {
+	
+		String read;
+		StringBuffer buffer = new StringBuffer();
+		if (descripcion != null){
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(descripcion.getAsciiStream()));
+			read = null;
+			
+			while((read = reader.readLine()) != null ){
+				buffer.append(read);
+			}
+			
+		}
+		
+		
+		
+		return buffer.toString();
 	}
 	
 	
