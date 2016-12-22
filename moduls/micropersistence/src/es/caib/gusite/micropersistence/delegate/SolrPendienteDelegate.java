@@ -112,6 +112,19 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
      }
      
+     /**
+	  * Obtiene la lista de jobs.  
+	  * 
+	  * @param cuantos La lista de elementos a devolver.
+	  * @throws DelegateException
+	  */
+     public List<SolrPendienteJob> getListJobs(int cuantos) throws DelegateException{
+    	 try {
+			 return this.getFacade().getListJobs(cuantos);
+	 }  catch (RemoteException e) {
+			throw new DelegateException(e);
+	 }
+     }
      
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -136,5 +149,6 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
 
 }

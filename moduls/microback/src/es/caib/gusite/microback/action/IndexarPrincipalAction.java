@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
+import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
@@ -98,10 +99,23 @@ public class IndexarPrincipalAction extends BaseAction {
         	request.setAttribute("listado",pendientes);			
 		}
 		
+        if(request.getParameter("indexar") != null && request.getParameter("indexar").equals("verinfo")){
+			final List<SolrPendienteJob> listInfo = (List<SolrPendienteJob>) verListaJobs();	
+        	request.setAttribute("listInfo",listInfo);	
+		}
 		
         return mapping.findForward(elforward);
 	
 	}	
+	
+	private List<?> verListaJobs() {
+		try {
+			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
+			return solrPendienteDel.getListJobs(10);			
+		} catch(Exception exception) {
+			return null;
+		}
+	}
 	
     private List<?> verListaPendientes() {
 		try {
