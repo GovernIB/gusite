@@ -32,7 +32,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck "
+			plugins: "code, compat3x, link, textcolor, acheck ,paste"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck '
 			,menubar: false
 			,external_plugins: {
@@ -44,7 +44,12 @@
 			</logic:notEqual>
 		  });
 		
+		var Rcajatemp_tiny;
+	   	var Rwin_tiny;
 		
+		function Rmeterurl_tiny(laurl) {
+			document.getElementById(Rcajatemp_tiny).value = laurl;
+		}	
 		</script>
 		<!-- /tinyMCE -->
 </head>
