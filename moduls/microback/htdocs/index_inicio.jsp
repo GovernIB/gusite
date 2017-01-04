@@ -80,8 +80,22 @@
 				<div class="columna2 estadistiques">
 					<h2><bean:message key="menu.estadisticas" /></h2>
 					<ul>
-						<li><a href="estadisticagen.do"><bean:message key="index.inicio.statgen" /></a></li>
-						<li><a href="estadisticaind.do"><bean:message key="index.inicio.statind" /></a></li>
+						<logic:notEqual name="MVS_microsite" property="versio" value="v5">
+							<li><a href="estadisticagen.do"><bean:message key="index.inicio.statgen" /></a></li>
+							<li><a href="estadisticaind.do"><bean:message key="index.inicio.statind" /></a></li>
+						</logic:notEqual>
+						
+						<!-- Si tiene analytics realiza lo mismo que el botón del menú -->
+						<logic:equal name="MVS_microsite" property="versio" value="v5">
+							<logic:notEmpty name="MVS_microsite" property="analytics">
+	                    		<li><a href="#" onmouseup="window.open('https://www.google.com/analytics/', '_blank')"><bean:message key="menu.veure.analytics" /></a></li>
+	                		</logic:notEmpty>
+	                		<logic:empty name="MVS_microsite" property="analytics">
+								<li><a href="estadisticagen.do"><bean:message key="index.inicio.statgen" /></a></li>
+								<li><a href="estadisticaind.do"><bean:message key="index.inicio.statind" /></a></li>
+							</logic:empty>
+                		</logic:equal>
+						
 						<logic:iterate id="i" name="MVS_menugenerico" indexId="indice">
 							<logic:equal name="i" property="value" value="Encuestas">
 								<li><a href="estadisticaenc.do"><bean:message key="index.inicio.statenc" /></a></li>
