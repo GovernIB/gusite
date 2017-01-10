@@ -161,9 +161,4 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		}
 	}
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'gusite-1.3' of https://github.com/GovernIB/gusite.git
 }
