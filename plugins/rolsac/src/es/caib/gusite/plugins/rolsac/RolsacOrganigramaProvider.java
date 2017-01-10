@@ -269,7 +269,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		String absUrl = System.getProperty("es.caib.gusite.portal.url");
 
 		if (UO_PRESIDENCIA.compareTo(ua.getId()) == 0) {
-			unidadData.setUrl(absUrl + "/govern/presidencia.do?lang=" + ua.getIdioma());
+			unidadData.setUrl(absUrl + "/govern/presidencia.do?lang=" + ua.getIdioma()  + "&coduo=" + UO_PRESIDENCIA);
 		} else {
 			unidadData.setUrl(absUrl + "/govern/organigrama/area.do?coduo=" + ua.getId() + "&lang=" + ua.getIdioma());
 		}
