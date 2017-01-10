@@ -267,6 +267,29 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		}
 	}
 	
+	
+	
+	/**
+	 * Actualizar el pendiente job.
+	 * 
+   	 * @ejb.interface-method
+   	 * @ejb.permission unchecked="true"
+   	 * @ejb.transaction type="RequiresNew"
+   	 *   
+   	 */
+    public void actualizarSorlPendienteJob(SolrPendienteJob solrpendienteJob)  {
+    	try
+    	{
+    		Session session = getSession();
+	    	session.update(solrpendienteJob); 
+			session.flush();
+			session.close();
+	    } catch(Exception exception) {
+			throw new EJBException(exception);
+		}
+    }
+	
+	
 	/**
 	 * Cerrando el pendiente job.
 	 * 
@@ -288,4 +311,26 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 		}
     }
 
+    /**
+     * Lista todos los SolrPendientesJob según cuantos.
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *
+     * @return Devuelve un listado de todos los SolrPendientes.
+     */
+    public List<SolrPendienteJob> getListJobs(final int cuantos) {
+
+        Session session = getSession();
+        try {
+        	Query query = session.createQuery(" from SolrPendienteJob solrpendientejob  order by solrpendientejob.id desc");
+        	query.setMaxResults(cuantos);
+        	return query.list();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
 }

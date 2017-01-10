@@ -78,7 +78,7 @@
 						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
 								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
 								     <td>
-									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp("<bean:write name="i" property="info" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp(limpiarTexto("<bean:write name="i" property="info" />  "))'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
 								     </td>
 								   
 						       </tr>					
@@ -111,13 +111,24 @@
 		document.location.href="indexarMicrosite.do?indexar=verinfo";
 	}
 	
+	function limpiarTexto(descripcion) {
+		while (descripcion.indexOf("'") != -1) {
+			 descripcion = descripcion.replace("'","");
+		}
+		while (descripcion.indexOf("<br/>") != -1) {
+			 descripcion = descripcion.replace("<br/>","\n");
+		}
+		while (descripcion.indexOf("<br />") != -1) {
+			 descripcion = descripcion.replace("<br />","\n");
+		}
+		return descripcion;			
+	}
 	function pintarPopUp(descripcion){
 		 $('.popup').fadeIn('slow');
 	     $('.popup-overlay').fadeIn('slow');
 	     $('.popup-overlay').height($(window).height());
+		 
 	     $("#item_texto").html(descripcion);
-	     //var mensaje = window.open("", "Info", ",width=600,height=500");
-	    // mensaje.document.write(descripcion);
 	     return false;
 	}
 	

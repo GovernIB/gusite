@@ -97,6 +97,17 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
      }
 
+ 	 /**
+ 	  * Método para actualizar el código solrpendiente job.
+ 	  * @param solrPendienteJob
+ 	  */
+ 	 public void actualizarSorlPendienteJob(SolrPendienteJob solrpendienteJob) throws DelegateException {
+ 		try {
+			this.getFacade().actualizarSorlPendienteJob(solrpendienteJob);
+	 }  catch (RemoteException e) {
+			throw new DelegateException(e);
+	 }
+ 	 }
 
      /**
 	  * Obtiene la lista de jobs.  
@@ -136,5 +147,7 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
+
 
 }

@@ -38,6 +38,7 @@ import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
@@ -123,40 +124,40 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 					if (solrPendienteResultado.isCorrecto()) {
 						if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
 							
-							info.append(" Vamos a enviar una indexación de una agenda (id:"+solrPendiente.getIdElem() +")  <br /> ");
+							info.append(" Vamos a enviar una indexacion de una agenda (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteAgenda(solrIndexer, solrPendiente.getIdElem(), info);
     						
     					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
     						
-    						info.append(" Vamos a enviar una indexación de una noticia (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    						info.append(" Vamos a enviar una indexacion de una noticia (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteNoticia(solrIndexer, solrPendiente.getIdElem(), info);
     						
     					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
     						
-    						info.append(" Vamos a enviar una indexación de un contenido (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    						info.append(" Vamos a enviar una indexacion de un contenido (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteContenido(solrIndexer, solrPendiente.getIdElem(), info);
     						
     					}else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){
     						if (solrPendiente.getIdArchivo() == null) {
-    							info.append(" Vamos a enviar una indexación de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    							info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
     							solrPendienteResultado = indexarMicrosite(solrPendiente.getIdElem(), null, info);
     						} else {
-    							info.append(" Vamos a enviar una indexación de un archivo microsite (id:"+solrPendiente.getIdElem() +", idArchivo:"+solrPendiente.getIdArchivo()+")  <br /> ");
+    							info.append(" Vamos a enviar una indexacion de un archivo microsite (id:"+solrPendiente.getIdElem() +", idArchivo:"+solrPendiente.getIdArchivo()+")  <br /> ");
         						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
     						}
     					} else  if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
     		                
-    						info.append(" Vamos a enviar una indexación de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info);
     						
     					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
     					
-    						info.append(" Vamos a enviar una indexación de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info);
     						
     					}  /*else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ARCHIVO.toString())){
     					
-    						info.append(" Vamos a enviar una indexación de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
     						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
     						
     					}*/ else {
@@ -241,13 +242,15 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	//Paso 1. Indexamos la encuesta.
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (idElement:"+idArchivo +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (idElement:"+idArchivo +")  <br /> ");
 			}
 			resultado = micrositeDelegate.indexarSolrArchivo(solrIndexer, Long.valueOf(idMicrosite), tipo, Long.valueOf(idArchivo));
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idArchivo+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idArchivo+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 			
 			return resultado;
@@ -279,13 +282,15 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	//Paso 1. Indexamos la encuesta.
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (idElement:"+idEncuesta +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (idElement:"+idEncuesta +")  <br /> ");
 			}
 			resultado = encuestaDelegate.indexarSolr(solrIndexer, idEncuesta, tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idEncuesta+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idEncuesta+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 			
 			return resultado;
@@ -313,13 +318,15 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	//Paso 1. Indexamos la encuesta.
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
 			}
 			resultado = faqDelegate.indexarSolr(solrIndexer, idElemento, tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 			
 			return resultado;
@@ -355,19 +362,22 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (id:"+agenda.getId() +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (id:"+agenda.getId() +")  <br /> ");
 			}
 			resultado = agendaDelegate.indexarSolr(solrIndexer, idElemento,tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    		return resultado;
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 	    }catch (DelegateException e) {
 			log.error("Se ha producido un error en "+tipo+" con id " +  agenda.getId());
 			if (info != null) {
 				info.append(" Se ha producido un error en "+tipo+" con id " +  agenda.getId() +"  <br /> ");
+				info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 			}
 			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
 		}
@@ -385,22 +395,24 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         		if (arc != null){
         			try
         			{
-        				info.append(" Vamos a enviar una indexación de un archivo de agenda del microsite (idAgenda:"+agenda.getId()+",idArchivo:"+tradAgen.getDocumento().getId() +")  <br /> ");
+        				info.append(" Vamos a enviar una indexacion de un archivo de agenda del microsite (idAgenda:"+agenda.getId()+",idArchivo:"+tradAgen.getDocumento().getId() +")  <br /> ");
 		                
         				//Indexamos las AGENDAS con archivo 
         				resultado = agendaDelegate.indexarSolrArchivo(solrIndexer,  agenda.getId(), EnumCategoria.GUSITE_AGENDA,tradAgen.getDocumento().getId());
         				
         				if (resultado.isCorrecto()) {
         					log.debug("Resultado indexando documento (DOC:"+arc.getId()+"):"+ resultado.toString());
+        					info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
         				} else {
 							 log.debug("Error indexando documento (DOC:"+arc.getId()+"):"+ resultado.toString());
-							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) \n";
+							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
+							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 						}
         				
         			} catch (Exception e) {
     					log.error("Se ha producido un error en documento con id " + arc.getId());
-    					info.append(" Vamos a enviar una indexación de un archivo de "+tipo+" (idPadre:"+agenda.getId()+",idArchivo:"+tradAgen.getDocumento().getId() +")  <br /> ");
-    					msgRetorno += "Error indexando documento de "+tipo+" con id:"+arc.getId() + " (revise el log.) \n";
+    					info.append(" Vamos a enviar una indexacion de un archivo de "+tipo+" (idPadre:"+agenda.getId()+",idArchivo:"+tradAgen.getDocumento().getId() +")  <br /> ");
+    					msgRetorno += "Error indexando documento de "+tipo+" con id:"+arc.getId() + " (revise el log.) <br />";
     				}
         		}
         		
@@ -434,14 +446,16 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
 			}
 			resultado = noticiaDelegate.indexarSolr(solrIndexer, idElemento, tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    		return resultado;
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 	    }catch (DelegateException e) {
 			log.error("Se ha producido un error en "+tipo+" con id " +  idElemento);
@@ -464,22 +478,24 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         		if (arc != null){
         			try
         			{
-        				info.append(" Vamos a enviar una indexación de un archivo de "+tipo+" del microsite (idAgenda:"+noticia.getId()+",idArchivo:"+tradNoticia.getDocu().getId() +")  <br /> ");
+        				info.append(" Vamos a enviar una indexacion de un archivo de "+tipo+" del microsite (idAgenda:"+noticia.getId()+",idArchivo:"+tradNoticia.getDocu().getId() +")  <br /> ");
 		                
         				//Indexamos las AGENDAS con archivo 
         				resultado = noticiaDelegate.indexarSolrArchivo(solrIndexer,  noticia.getId(), EnumCategoria.GUSITE_NOTICIA,tradNoticia.getDocu().getId());
         				
         				if (resultado.isCorrecto()) {
         					log.debug("Resultado indexando documento(DOC:"+arc.getId()+"):"+ resultado.toString());
+        					info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
         				} else {
 							 log.debug("Error indexando documento(DOC:"+arc.getId()+"):"+ resultado.toString());
-							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) \n";
+							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
+							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 						}
         				
         			} catch (Exception e) {
     					log.error("Se ha producido un error en documento agenda con id " + arc.getId());
-    					info.append(" Vamos a enviar una indexación de un archivo de "+tipo+" del microsite (idPadre:"+noticia.getId()+",idArchivo:"+tradNoticia.getDocu().getId() +")  <br /> ");
-    					msgRetorno += "Error indexando un documento de "+tipo+" con id "+arc.getId() + " (revise el log.) \n";
+    					info.append(" Vamos a enviar una indexacion de un archivo de "+tipo+" del microsite (idPadre:"+noticia.getId()+",idArchivo:"+tradNoticia.getDocu().getId() +")  <br /> ");
+    					msgRetorno += "Error indexando un documento de "+tipo+" con id "+arc.getId() + " (revise el log.) <br />";
     				}
         		}
         		
@@ -513,14 +529,16 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	
     	try{
     		if (info != null) {
-				info.append(" Vamos a enviar una indexación de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
+				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (idElement:"+idElemento +")  <br /> ");
 			}
 			resultado = contenidoDelegate.indexarSolr(solrIndexer, idElemento, tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 	    		return resultado;
 	    	 } else {
 	    	 	log.debug("Resultado indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
+	    	 	info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	    	 }
 	    } catch (Exception e) {
 			log.error("Se ha producido un error en "+tipo+" con id " +  +idElemento);
@@ -541,22 +559,24 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 				for ( Archivo docu : listaDocu ){
 					if ( docu != null &&  docu.getId()!=null){
 						try{
-							info.append(" Vamos a enviar una indexación de un archivo de contenido del microsite (id:"+ contenido.getMicrosite().getId() +",idContenido:"+((Contenido) contenido).getId()+",idArchivo:"+ ((Archivo) docu).getId() +")  <br /> ");
+							info.append(" Vamos a enviar una indexacion de un archivo de contenido del microsite (id:"+ contenido.getMicrosite().getId() +",idContenido:"+((Contenido) contenido).getId()+",idArchivo:"+ ((Archivo) docu).getId() +")  <br /> ");
 							
 	        				//Indexamos las CONTENIDOS con archivo 
 							resultado = contenidoDelegate.indexarSolrArchivo(solrIndexer,  contenido.getId(), EnumCategoria.GUSITE_CONTENIDO, docu.getId());
 	        				
 							if (resultado.isCorrecto()) {
 	        					log.debug("Resultado indexando documento(DOC:"+docu.getId()+"):"+ resultado.toString());
+	        					info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/"));
 	        				} else {
 								 log.debug("Error indexando documento(DOC:"+docu.getId()+"):"+ resultado.toString());
-								 msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) \n";
+								 msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
+								 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/"));
 							}
 							
 	        			} catch (DelegateException e) {
 	    					log.error("Se ha producido un error en documento contenido con id " + docu.getId());
 	    					info.append(" Se ha producido un error en documento contenido con id " +  docu.getId()+"  <br /> ");
-	    					msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) \n";
+	    					msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
 	    				}
 						
 					}						
@@ -566,7 +586,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	} catch(Exception exception) {
     		log.error("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId());
 			info.append("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId()+"  <br /> ");
-			msgRetorno += "Error indexando documentos "+contenido.getId() + " (revise el log) \n";
+			msgRetorno += "Error indexando documentos "+contenido.getId() + " (revise el log) <br />";
     	}
     	
 		//Paso 3. Devolvemos resultado correcto con mensaje dependiendo si falla algun documento
@@ -588,6 +608,10 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	SolrIndexer solrIndexer = null;
         try {
         	
+        	if (info == null) {
+        		info = new StringBuffer();
+        	}
+        	
         	final String username = GusitePropertiesUtil.getUserSOLR();
             final String password = GusitePropertiesUtil.getPassSOLR();
             final String index = GusitePropertiesUtil.getIndexSOLR();
@@ -596,22 +620,28 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         	solrIndexer = (SolrIndexer) SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE,  username, password);
         	//Desindexamos el microsite
         	try {
+        		info.append("Vamos a desindexar el microsite raiz  <br />");
         		solrIndexer.desindexarRaiz(idMicrosite.toString(), EnumCategoria.GUSITE_MICROSITE);
 			} catch (ExcepcionSolrApi e) {
-				log.error("Se ha producido un error en desindexar el MICROSITE con id " + idMicrosite);
+				log.error("Se ha producido un error en desindexar el MICROSITE con id " + idMicrosite, e);
+				info.append("Se ha producido un error en desindexar el MICROSITE con id " + idMicrosite);
 				return new SolrPendienteResultado(false, "Se ha producido un error en desindexar el MICROSITE con id " + idMicrosite);
 			} 
         	
          	// Verificamos si es indexable
         	MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
         	Microsite micro = micrositedel.obtenerMicrosite(idMicrosite);
+        	SolrPendienteDelegate solrpendientedel = DelegateUtil.getSolrPendienteDelegate();
         	
-        	if (info == null) {
-        		info = new StringBuffer();
-        	}
+        	
+        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
         	
         	if (IndexacionUtil.isIndexable(micro)) {
-        		  	
+        		  
+        		info.append("Vamos a indexar los compontentes del microsite <br />");
+        		info.append("** ARCHIVOS DEL MICROSITE ** <br />");
+        		
 	        	//Obtenemos los ARCHIVOS del microsite
 	        	ArchivoDelegate archivodel = DelegateUtil.getArchivoDelegate();
 	        	List<Archivo> listArchivos = archivodel.obtenerArchivoByMicrositeId(idMicrosite);
@@ -621,6 +651,12 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        		}
 	        	}
 	
+	        	info.append("** Finalizado archivos ** <br />");
+	        	info.append("  <br />");
+	        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+	        	info.append("** ENCUESTAS DEL MICROSITE ** <br />");
+	        	
 	        	//Obtenemos las ENCUESTAS del microsite
 	        	EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();        	
 	        	List<Encuesta> listEncuestas = encuestadel.obtenerEncuestasByMicrositeId(idMicrosite);
@@ -630,6 +666,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        			this.indexarPendienteEncuesta(solrIndexer, encuesta.getId(), info);
 	        		}
 	        	}    
+	        	
+	        	info.append("** Finalizado encuestas ** <br />");
+	        	info.append("  <br />");
+	        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+	        	info.append("** FAQ DEL MICROSITE ** <br />");
+	        	
 	
 	        	//Obtenemos los FAQ's del microsite
 	        	FaqDelegate faqdel = DelegateUtil.getFaqDelegate();        	        	
@@ -640,7 +683,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        			this.indexarPendienteFAQ(solrIndexer, faq.getId(), info);
 	        		}
 	        	} 
-	        	        	        
+	        	
+	        	info.append("** Finalizado faq ** <br />");
+	        	info.append("  <br />");
+	        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+	        	info.append("** NOTICIAS DEL MICROSITE ** <br />");
+	        	
 	        	
 	        	//Obtenemos las NOTICIAS del microsite        	
 	            NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();        	        	      
@@ -651,6 +700,12 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        			this.indexarPendienteNoticia(solrIndexer, noticia.getId(), info);	        		
 	        		}
 	        	}  
+	        	
+	        	info.append("** Finalizado noticias ** <br />");
+	        	info.append("  <br />");
+	        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+	        	info.append("** AGENDA DEL MICROSITE ** <br />");
 	        	
 	        	//Obtenemos las AGENDAS del microsite
 	            AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();        	        	
@@ -663,6 +718,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        		}	        		
 	        	}  
 	        	
+	        	info.append("** Finalizado agenda ** <br />");
+	        	info.append("  <br />");
+	        	solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+	        	info.append("** CONTENIDOS DEL MICROSITE ** <br />");
+	        	
+	        	
 	        	//Obtenemos los CONTENIDOS del microsite
 	            ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();                	        
 	        	List<Contenido> listContenidos = contenidodel.listarAllContenidos(idMicrosite.toString());
@@ -672,6 +734,10 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	        			this.indexarPendienteContenido(solrIndexer, contenido.getId(), info);	        		
 	        		}	        		
 	        	}
+	        	
+	        	info.append("** Finalizado contenido ** <br />");
+	        	info.append("  <br />");
+	        	
 	        
 	        } else {
 	        	info.append("El microsite no es indexable con id " + idMicrosite);
@@ -686,12 +752,12 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 				log.error("No se ha podido comitear la indexación" + e.getMessage(), e);
 			}
 	    	return new SolrPendienteResultado(true, "Parece que ha funcionado correcto la indexación del MICROSITE con id " + idMicrosite+ ", ver la info para más información.");
-    	}        
+    	}
          catch (Exception he) {
             throw new EJBException(he);
         } finally {
         	if (solrPendienteJob != null) {
-	    		solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
+        		solrPendienteJob.setDescripcion(Hibernate.createClob(info.toString()));
 	    	}
             close(session);
         }

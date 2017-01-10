@@ -62,10 +62,10 @@ public class IndexarMicrositeAction extends BaseAction {
 	}	
 		
 
-	private List<?> verListaJobs() {
+	private List<SolrPendienteJob> verListaJobs() {
 		try {
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
-			return solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE);			
+			return solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE);
 		} catch(Exception exception) {
 			return null;
 		}
