@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="js/jsListados.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
 </head>
 
 <body>	
@@ -30,6 +31,37 @@
 		
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.todo" />" onclick='indexarTodo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.todo" />" /> &nbsp;<bean:message key="menu.indexar.todo" /></button>
+				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='jobVerInfo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+				
+					
+					<div style="font-weight:bold;">
+						<logic:notEmpty name="listInfo">
+							<p></p><p></p>
+							<table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+							<thead>
+								<tr>
+									<th width="15%"><bean:message key="menu.indexar.cab.fechaIni" /></th>
+									<th width="15%"><bean:message key="menu.indexar.cab.fechaFin" /></th>	
+									<th width="15%"></th>					
+								</tr>
+							</thead>
+							<tbody>
+							<logic:iterate id="i" name="listInfo" indexId="indice">
+						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
+								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
+								     <td>
+									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp("<bean:write name="i" property="info" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+								     </td>
+								   
+						       </tr>					
+					   		 </logic:iterate>
+				    		</tbody>
+				    		</table>
+			    		</logic:notEmpty>	
+			
+					</div>
+		
 		</div>
 		
 		<div id="botonera">
@@ -131,6 +163,15 @@
 			
 		</div>
 		</logic:notEmpty>
+		
+		<div id="popup" class="popup" style="display: none;">
+    		<div class="content-popup">
+        		<div class="close"><a href="#" onclick="cerrarPopUp();" id="close"><img src="imgs/botons/cerrar.gif"/></a></div>
+        		<div>
+            		<textarea id="item_texto" name="item_texto" cols="70" rows="15" class="nou"></textarea>     
+        		</div>
+    		</div>
+		</div>
 </body>
 </html>
 
@@ -165,6 +206,26 @@
 		
 		document.location.href="indexarPrincipal.do?indexar=verpendientes";
 		
+	}
+    
+    function jobVerInfo(){
+		document.location.href="indexarPrincipal.do?indexar=verinfo";
+	}
+    
+    function pintarPopUp(descripcion){
+		 $('.popup').fadeIn('slow');
+	     $('.popup-overlay').fadeIn('slow');
+	     $('.popup-overlay').height($(window).height());
+	     $("#item_texto").html(descripcion);
+	    
+	     return false;
+	}
+	
+	function cerrarPopUp(){
+		 $('.popup').fadeOut('slow');
+	     $('.popup-overlay').fadeOut('slow');
+	     $("#item_texto").html("");
+	     return false;
 	}
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>

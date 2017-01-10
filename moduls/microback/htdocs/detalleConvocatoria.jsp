@@ -57,7 +57,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck "
+			plugins: "code, compat3x, link, textcolor, acheck ,paste"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck '
 			,menubar: false
 			,external_plugins: {
@@ -67,9 +67,27 @@
 				,paste_as_text: false
 				,invalid_elements: 'br'
 			</logic:notEqual>
+			, file_browser_callback : function(field_name, url, type, win){
+               
+               Rcajatemp_tiny=field_name;
+               Rwin_tiny=win;
+               <logic:notEmpty name="contenidoForm">
+                              window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+               </logic:notEmpty>
+               <logic:empty name="contenidoForm">
+                              window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
+               </logic:empty>
+               return false;
+			}
 		  });
 		
 		
+			var Rcajatemp_tiny;
+		   	var Rwin_tiny;
+			
+			function Rmeterurl_tiny(laurl) {
+				document.getElementById(Rcajatemp_tiny).value = laurl;
+			}	
 		</script>
 		<!-- /tinyMCE -->
 

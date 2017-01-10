@@ -111,7 +111,7 @@
 						<th class="id">Identificador</th>
 						<th><bean:message key="micro.titulo" /></th>
 						<th><bean:message key="micro.uo" /></th>
-						<th><bean:message key="micro.accesibilidad" /></th>						
+<%-- 						<th><bean:message key="micro.accesibilidad" /></th>						 --%>
 					</tr>
 				</thead>
 				<tbody>
@@ -132,26 +132,26 @@
 						      <td class="organisme">
 			      			      <bean:write name="i" property="nombreUA" />
 						      </td>    
-								<td>
-									<logic:equal name="i" property="nivelAccesibilidad" value="1">
-										<img src="imgs/accessibilitat/correcte.gif" alt="Correcte" title="Correcte" class="resultat" />TAW
-									</logic:equal>
-									<logic:equal name="i" property="nivelAccesibilidad" value="2">
-										<img src="imgs/accessibilitat/warning.gif" alt="AdvertÃ¨ncia" title="AdvertÃ¨ncia" class="resultat" />TAW
-									</logic:equal>
-									<logic:equal name="i" property="nivelAccesibilidad" value="3">
-										<img src="imgs/accessibilitat/error.gif" alt="Error" title="Error" class="resultat" />TAW
-									</logic:equal>
-									<logic:equal name="i" property="nivelAccesibilidad" value="4">
-										<img src="imgs/accessibilitat/correcte.gif" alt="Correcte" title="Correcte" class="resultat" />XHTML
-									</logic:equal>
-									<logic:equal name="i" property="nivelAccesibilidad" value="5">
-										<img src="imgs/accessibilitat/warning.gif" alt="AdvertÃ¨ncia" title="AdvertÃ¨ncia" class="resultat" />XHTML
-									</logic:equal>
-									<logic:equal name="i" property="nivelAccesibilidad" value="6">
-										<img src="imgs/accessibilitat/error.gif" alt="Error" title="Error" class="resultat" />XHTML
-									</logic:equal>
-								</td>									        
+<!-- 								<td> -->
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="1"> --%>
+<!-- 										<img src="imgs/accessibilitat/correcte.gif" alt="Correcte" title="Correcte" class="resultat" />TAW -->
+<%-- 									</logic:equal> --%>
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="2"> --%>
+<!-- 										<img src="imgs/accessibilitat/warning.gif" alt="AdvertÃ¨ncia" title="AdvertÃ¨ncia" class="resultat" />TAW -->
+<%-- 									</logic:equal> --%>
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="3"> --%>
+<!-- 										<img src="imgs/accessibilitat/error.gif" alt="Error" title="Error" class="resultat" />TAW -->
+<%-- 									</logic:equal> --%>
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="4"> --%>
+<!-- 										<img src="imgs/accessibilitat/correcte.gif" alt="Correcte" title="Correcte" class="resultat" />XHTML -->
+<%-- 									</logic:equal> --%>
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="5"> --%>
+<!-- 										<img src="imgs/accessibilitat/warning.gif" alt="AdvertÃ¨ncia" title="AdvertÃ¨ncia" class="resultat" />XHTML -->
+<%-- 									</logic:equal> --%>
+<%-- 									<logic:equal name="i" property="nivelAccesibilidad" value="6"> --%>
+<!-- 										<img src="imgs/accessibilitat/error.gif" alt="Error" title="Error" class="resultat" />XHTML -->
+<%-- 									</logic:equal> --%>
+<!-- 								</td>									         -->
 					      </tr>
 				    </logic:iterate>
 
