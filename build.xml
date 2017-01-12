@@ -226,6 +226,7 @@
 				<include name="javassist-3.16.1-GA.jar" />
 			    <include name="jtidy-r938.jar" />
 				<include name="sac-api-client.jar"/>
+				<include name="simplecaptcha-1.2.1.jar"/>
 			</zipfileset>
 					
 					

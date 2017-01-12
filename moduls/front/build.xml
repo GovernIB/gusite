@@ -54,6 +54,7 @@
 			<include name="sac-api-client.jar" />
 			<include name="servlet-api.jar" />
 			<include name="smtp.jar" />
+			<include name="simplecaptcha-1.2.1.jar"/>
 		</fileset>
 
 		<fileset dir="${lib.dir}/jboss">
@@ -71,6 +72,7 @@
 			<include name="commons-fileupload-1.2.2.jar" />
 			<include name="commons-lang-2.1.jar" />
 			<include name="quartz-1.8.5.jar" />
+			<include name="commons-codec-1.5.jar" />
 		</fileset>
 		<fileset dir="${lib.dir}/spring">
 			<include name="spring-*.jar" />

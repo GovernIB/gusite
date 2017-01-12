@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import nl.captcha.Captcha;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.util.StringUtils;
 
+import es.caib.gusite.front.captcha.CaptchaUtil;
+import es.caib.gusite.front.captcha.ImagenCaptcha;
 import es.caib.gusite.front.general.BaseCriteria;
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
@@ -90,7 +94,7 @@ public class ContactosController extends BaseViewController {
 				 * + this.urlFactory.contacto(microsite, lang,
 				 * formularios.getResultados().iterator().next());
 				 */
-				return this.contacto(URI, lang, idContacto, mcont, pcampa, req);
+				return this.contacto(URI, lang, idContacto, mcont, pcampa, req,null);
 			}
 
 			List<Pardato> listaNombreContactos = new ArrayList<Pardato>();
@@ -194,10 +198,13 @@ public class ContactosController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/contact/{contacto}/")
 	public ModelAndView contacto(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req,
+			@RequestParam(value = Microfront.ERRORCAPTCHA, required = false, defaultValue = "") String errorCaptcha) {
 
 		ContactoView view = new ContactoView();
 		try {
+			
+			
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
@@ -221,6 +228,15 @@ public class ContactosController extends BaseViewController {
 			view.setContactoTitulo(contacto.getTitulocontacto(lang.getLang()));
 			view.setContactoListaTags(this.montaListaTags(microsite, lang, contacto));
 			view.setIdContenido(mcont);
+			
+			//captcha
+			String key = CaptchaUtil.generarKeyCaptcha();
+			req.getSession().setAttribute("captchaKey", key);
+		    ImagenCaptcha imgCap = CaptchaUtil.generaCaptcha(key);
+		    if (errorCaptcha != null && !errorCaptcha.isEmpty()){
+		    	imgCap.setError(errorCaptcha);
+		    }
+		    view.setCaptcha(imgCap);
 			
 			this.cargarMollapan(view, contacto);
 
@@ -246,10 +262,27 @@ public class ContactosController extends BaseViewController {
 	public ModelAndView enviarContacto(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = "docAnex", required = false) CommonsMultipartFile docAnexFileData, MultipartHttpServletRequest req) {
+			@RequestParam(value = "docAnex", required = false) CommonsMultipartFile docAnexFileData, MultipartHttpServletRequest req,
+			@RequestParam(value = Microfront.RCAPTCHA, required = false, defaultValue = "") String respCaptcha) {
 
 		ContactoDatosView view = new ContactoDatosView();
 		try {
+			
+			String captchaKey=(String) req.getSession().getAttribute("captchaKey");
+			
+			//No se ha rellenado le captcha
+			if (respCaptcha == null || respCaptcha.isEmpty()){
+				
+				return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.no.relleno", lang));
+			}
+			//Comprobamos
+			if (captchaKey!=null){
+				Captcha captcha = CaptchaUtil.creaCaptcha(captchaKey);
+				if (!captcha.isCorrect(respCaptcha)){
+					return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.incorrecto", lang));
+				}
+			}
+			
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
@@ -453,7 +486,7 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.contacto(URI, new Idioma(LANG_ES), idContacto, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_ES), idContacto, mcont, pcampa, req,null);
 	}
 
 	/**
@@ -467,7 +500,7 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.contacto(URI, new Idioma(LANG_CA), idContacto, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_CA), idContacto, mcont, pcampa, req,null);
 	}
 
 	/**
@@ -481,7 +514,7 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
 
-		return this.contacto(URI, new Idioma(LANG_EN), idContacto, mcont, pcampa, req);
+		return this.contacto(URI, new Idioma(LANG_EN), idContacto, mcont, pcampa, req,null);
 	}
 
 	/**

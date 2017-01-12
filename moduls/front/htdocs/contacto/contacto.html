@@ -109,6 +109,16 @@ Muestra un formulario de contacto.
 								annexar</label> <input type="file" name="docAnex" id="docAnex" size="30" />
 						</div>
 					</div>
+				
+				<label th:text="${MVS_captcha.error}" th:if="${MVS_captcha.error} != null" style="color: red;">Error</label> 
+				
+				 <div class="etiqueta">
+             		<label>Rellene el captcha:</label>
+        		 </div>
+				<p>
+					<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" />
+					<input type="text" name="captchaResp"  />
+				</p>
 				<p class="botonera">
 					<input name="btnanar" type="submit" th:value="#{contacto.enviar}" tabindex="500" />
 				</p>

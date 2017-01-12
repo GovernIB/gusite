@@ -111,8 +111,8 @@ th:lang-xmllang="${lang}">
                         <div class="input">
                             <input th:utext="${i.value}" th:remove="tag"></input>
                         </div>
-            </div>
-        </div>
+            	</div>
+        	</div>
         <div class="separacio"></div>
         <div th:if="${MVS_contacto.anexarch} =='S'" th:remove="tag">
             <div class="etiqueta">
@@ -120,8 +120,24 @@ th:lang-xmllang="${lang}">
                     annexar</label> <input type="file" name="docAnex" id="docAnex" size="30"/>
                 </div>
             </div>
-            <div class="separacio"></div>
+       
+        <label th:text="${MVS_captcha.error}" th:if="${MVS_captcha.error} != null" style="color: red;">Error</label> 
+       
+        <div class="etiqueta">
+             <label>Rellene el captcha:</label>
         </div>
+        <div class="input" style="display: flex;">
+			<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" style="width: 100px;margin-right: 50px" />    
+
+			<input type="text" name="captchaResp" style="margin: auto;" />
+		</div>
+        
+        <div class="separacio"></div>
+       
+        </div>
+        
+                       
+        
         <p class="botonera">
             <input name="btnanar" type="submit" th:value="#{contacto.enviar}" tabindex="500"/>
         </p>

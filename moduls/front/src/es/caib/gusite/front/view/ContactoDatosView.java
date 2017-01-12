@@ -1,5 +1,6 @@
 package es.caib.gusite.front.view;
 
+import es.caib.gusite.front.captcha.ImagenCaptcha;
 import es.caib.gusite.micromodel.Contacto;
 
 /**
@@ -12,6 +13,8 @@ public class ContactoDatosView extends PageView {
 
 	private Contacto contacto;
 	private String contactoTitulo;
+	private ImagenCaptcha captcha;
+	
 	public void setContacto(Contacto contacto) {
 		this.contacto = contacto;
 	}
@@ -36,5 +39,18 @@ public class ContactoDatosView extends PageView {
 		return contactoTitulo;
 	}
 
-	
+	/**
+	 * @param captcha the captcha to set
+	 */
+	public void setCaptcha(ImagenCaptcha captcha) {
+		this.captcha = captcha;
+	}
+
+	/**
+	 * @return the captcha
+	 */
+	@Variable("MVS_captcha")
+	public ImagenCaptcha getCaptcha() {
+		return captcha;
+	}
 }
