@@ -26,7 +26,6 @@ import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.ArchivoTemaFront;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TemaFront;
-import es.caib.gusite.micropersistence.util.ArchivoUtil;
 
 /**
  * Controlador para servir archivos subidos al microsite, contenidos, etcétera.
@@ -281,6 +280,7 @@ public class ArchivoController extends FrontController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+		responseHeaders.setContentDispositionFormData("file",  archivo.getNombre());//Header("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
 	}
 	

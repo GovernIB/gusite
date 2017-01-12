@@ -111,16 +111,6 @@
 
 					</table>
 					</br>
-					<bean:message key="micro.importar.indexar" /> </br>
-					</br>
-					<table cellpadding="0" cellspacing="0" class="edicio">
-						<tr class="par">
-							<td><label><html:radio property="indexar" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio
-								property="indexar" value="N" />&nbsp;No</label>
-							&nbsp;&nbsp;&nbsp;&nbsp;<i><bean:message
-								key="micro.importar.lento" /></i></td>
-						</tr>
-					</table>
 					</td>
 				</tr>
 			</tbody>
