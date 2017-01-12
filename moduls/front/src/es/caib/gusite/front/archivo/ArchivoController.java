@@ -281,6 +281,7 @@ public class ArchivoController extends FrontController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
+		responseHeaders.setContentDispositionFormData("file",  archivo.getNombre());
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
 	}
 	
