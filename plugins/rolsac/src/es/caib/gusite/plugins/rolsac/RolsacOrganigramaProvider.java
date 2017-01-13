@@ -246,33 +246,15 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 		}
 		
-		// INDRA: Se modifica para que llegue a Govern
-		/*
-		if (ua.getPadre() != null && !ua.getPadre().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
-			unidadData.setIdUnidadPadre(ua.getPadre()); 
-		}
-		*/
 		if (ua.getPadre() != null && !ua.getId().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
 			unidadData.setIdUnidadPadre(ua.getPadre()); 
 		}
 		
 		
 		//TODO: mover la propiedad al espacio del plugin
-		String idUOPresidencia = System.getProperty("es.caib.gusite.codigoUO.presidencia");
-		if (idUOPresidencia == null) {
-			throw new PluginException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.presidencia");
-		}
-
-		Long UO_PRESIDENCIA = new Long(idUOPresidencia);
-
-		//TODO: mover la propiedad al espacio del plugin
 		String absUrl = System.getProperty("es.caib.gusite.portal.url");
 
-		if (UO_PRESIDENCIA.compareTo(ua.getId()) == 0) {
-			unidadData.setUrl(absUrl + "/govern/presidencia.do?lang=" + ua.getIdioma()  + "&coduo=" + UO_PRESIDENCIA);
-		} else {
-			unidadData.setUrl(absUrl + "/govern/organigrama/area.do?coduo=" + ua.getId() + "&lang=" + ua.getIdioma());
-		}
+		unidadData.setUrl(absUrl + "/govern/organigrama/area.do?coduo=" + ua.getId() + "&lang=" + ua.getIdioma());
 		unidadData.setDominio(ua.getDominio());
 		return unidadData;
 	} 
