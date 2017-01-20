@@ -177,7 +177,6 @@
         			lib/commons-lang-2.1.jar
         			lib/slf4j-jboss-logging.jar
         			lib/antlr-2.7.6.jar 
-        			lib/javassist-3.16.1-GA.jar
         			lib/jcommon-1.0.0.jar
         			lib/jfreechart-1.0.14.jar
 					lib/spring-aop-3.2.0.RELEASE.jar
