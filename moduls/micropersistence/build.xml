@@ -40,7 +40,6 @@
 
         <fileset dir="${lib.dir}">
 		    <include name="cglib2.jar"/>
-        	<include name="commons-io-1.3.2.jar"/>
         	<include name="commons-logging.jar"/>
             <include name="ejb-2_0.jar"/>
         	<include name="sac-api-client.jar"/>
@@ -49,6 +48,7 @@
     	
     	<fileset dir="${lib.dir}/solr">
     	    <include name="solrapi*.jar"/>
+        	<include name="commons-io-2.4.jar" />
     	</fileset>
     		
     	<fileset dir="${lib.dir}/jboss">

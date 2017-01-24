@@ -39,8 +39,6 @@
 			<include name="htmlparser.jar"/>
 			<include name="jericho-html-2.5.jar"/>
 			<include name="pdfbox-app-1.8.4.jar"/>
-			<include name="poi.jar"/>
-			<include name="taw.jar"/>
 		</fileset>
     </path>
 
@@ -74,7 +72,6 @@
         		<attribute name="Created-By" value="Fundació IBIT"/>
         		<attribute name="Class-Path" value="
         		    lib/jtidy-r938.jar
-        		    lib/taw.jar
         		    lib/img.jar
         		    lib/wai.jar
         		    lib/aclibico.jar

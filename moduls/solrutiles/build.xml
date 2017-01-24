@@ -25,11 +25,7 @@
 	    <property name="jar.gen.etc" location="${modul.output.dir}/gen-etc"/>
 
 		<path id="jar.class.path">
-			<fileset dir="${lib.dir}">
-				<include name="lucene-core-3.6.2.jar"/>
-				<include name="lucene-spellchecker-3.6.2.jar"/>
-			</fileset>
-	    	
+			
 			<fileset dir="${lib.dir}/jboss">
 	    		<include name="hibernate-core.jar"/>
 				<include name="hibernate-annotations.jar"/>
@@ -41,9 +37,7 @@
 				<include name="htmlparser.jar"/>
 				<include name="img.jar"/>
 				<include name="jericho-html-2.5.jar"/>
-				<include name="lax.jar"/>
 				<include name="pdfbox-app-1.8.4.jar"/>
-				<include name="poi.jar"/>
 			</fileset>
 		</path>
 

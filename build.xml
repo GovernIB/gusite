@@ -264,9 +264,7 @@
 				<include name="jcommon-1.0.0.jar" />
 				<include name="jericho-html-2.5.jar" />
 				<include name="jfreechart-1.0.14.jar"/>
-			    <include name="poi.jar" />
     			<include name="struts.jar" />
-			    <include name="taw.jar" />
 			    <include name="wai.jar" />
 				<include name="wsdl4j.jar" />
 			</zipfileset>

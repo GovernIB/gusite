@@ -15,7 +15,8 @@
 	<property name="lib.dir" location="${home.dir}/lib" />
 	<property name="axis.dir" location="${lib.dir}/axis-1.4" />
 	<property name="xdoclet.dir" location="${lib.dir}/xdoclet123" />
-	<property name="jasper.dir" location="${lib.dir}/jasper" />
+	
+	<!--property name="jasper.dir" location="${lib.dir}/jasper" /-->
 
 	<property name="web.src" location="${basedir}/src" />
 	<property name="web.etc" location="${basedir}/etc" />
@@ -55,21 +56,24 @@
 			<include name="servlet-api.jar" />
 			<include name="smtp.jar" />
 			<include name="simplecaptcha-1.2.1.jar"/>
+			<include name="commons-fileupload-1.2.2.jar" />
 		</fileset>
-
+		
+		<fileset dir="${lib.dir}/axis2-1.5">
+		    <include name="activation-1.1.jar" />
+		</fileset>
+		
 		<fileset dir="${lib.dir}/jboss">
 			<include name="hibernate-core.jar" />
 			<include name="hibernate-annotations.jar" />
 			<include name="ejb3-persistence.jar" />
 			<include name="mail.jar" />
-			<include name="activation.jar" />
 		</fileset>
 
 		<fileset dir="${lib.dir}/webcaib">
 			<include name="chartbuilder.jar" />
 			<include name="commons-beanutils-1.8.3.jar" />
 			<include name="commons-collections-3.2.1.jar" />
-			<include name="commons-fileupload-1.2.2.jar" />
 			<include name="commons-lang-2.1.jar" />
 			<include name="quartz-1.8.5.jar" />
 			<include name="commons-codec-1.5.jar" />

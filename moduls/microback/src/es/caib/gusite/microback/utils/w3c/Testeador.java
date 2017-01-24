@@ -3,8 +3,6 @@ package es.caib.gusite.microback.utils.w3c;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.caib.gusite.extractor.taw.TawHtmlParser;
-import es.caib.gusite.extractor.taw.TawResultBean;
 import es.caib.gusite.extractor.tidy.TidyHtmlParser;
 import es.caib.gusite.extractor.tidy.TidyResultBean;
 
@@ -63,15 +61,15 @@ public class Testeador {
 	 * @param url String con la url a analizar.
 	 * @return TawResultBean
 	 */
-	public static TawResultBean testeoTaw(String url) {
-		try {
-			TawHtmlParser tawhtmlparser = new TawHtmlParser();
-			return tawhtmlparser.parse(url);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-		return null;
-	}
+//	public static TawResultBean testeoTaw(String url) {
+//		try {
+//			TawHtmlParser tawhtmlparser = new TawHtmlParser();
+//			return tawhtmlparser.parse(url);
+//		} catch (Exception e) {
+//			log.error(e.getMessage(), e);
+//		}
+//		return null;
+//	}
 	
 	
 }

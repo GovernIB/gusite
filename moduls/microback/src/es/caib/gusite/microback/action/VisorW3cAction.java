@@ -9,7 +9,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import es.caib.gusite.extractor.taw.TawResultBean;
 import es.caib.gusite.extractor.tidy.TidyResultBean;
 import es.caib.gusite.microback.utils.microtag.MicrositeParser;
 import es.caib.gusite.microback.utils.w3c.Testeador;
@@ -114,10 +113,10 @@ public class VisorW3cAction extends BaseAction {
 			String _puerto = "" + request.getServerPort();
 			
 			
-			TawResultBean resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=" + ttr + "&idioma=" + acce.getIdioma() + "&id=" + acce.getIditem() + "&idsite=" + acce.getCodmicro());
+//			TawResultBean resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=" + ttr + "&idioma=" + acce.getIdioma() + "&id=" + acce.getIditem() + "&idsite=" + acce.getCodmicro());
 			
 			request.setAttribute("MVS_tidyresultado", resultado);
-			request.setAttribute("MVS_tawresultado", resultadotaw);
+//			request.setAttribute("MVS_tawresultado", resultadotaw);
 			request.setAttribute("MVS_accesibilidad", acce);
 			
 			

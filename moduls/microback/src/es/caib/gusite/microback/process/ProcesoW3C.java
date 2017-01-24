@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.caib.gusite.extractor.taw.TawResultBean;
 import es.caib.gusite.extractor.tidy.TidyResultBean;
 import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.utils.microtag.MicrositeParser;
@@ -191,7 +190,7 @@ public class ProcesoW3C {
 		Accesibilidad accse = new Accesibilidad();
 		try {
 			TidyResultBean resultado;
-			TawResultBean resultadotaw;
+//			TawResultBean resultadotaw;
 			
 			for (int i = 0; i < lista.size(); i++) {
 				String idi = (String)lista.get(i);
@@ -212,25 +211,29 @@ public class ProcesoW3C {
 					//Analizamos con el Taw. Se monta una url preparada para sera analizada por el taw.
 					//ejemplo: sacmicrofront/taw.do?ttr=CNTSP&idioma=ca&id=1658&idsite=109
 					String urlTest = _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=CNTSP&idioma=" + idi + "&id=" + conte.getId() + "&idsite=" + idmicrosite;
-					resultadotaw = Testeador.testeoTaw(urlTest);
+//					resultadotaw = Testeador.testeoTaw(urlTest);
 					
 					
-					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) || (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
+					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) 
+							//|| (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0) 
+							) {
 						accse.setIdioma(idi);
 						accse.setServicio(Catalogo.SRVC_MICRO_CONTENIDOS);
 						accse.setIditem(conte.getId());
 						accse.setCodmicro(idmicrosite);
 						accse.setMedida(Accesibilidad.MES_SINMEDIA);
 						
-						if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
+						
+						/*if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
 						else if (resultadotaw.getWarnings()>0) accse.setTawresultado(Accesibilidad.RES_WARN);
 						else accse.setTawresultado(Accesibilidad.RES_OK);
 						if ((resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
 							accse.setTawmensaje(resultadotaw.getMensaje());
 							retorno +="\n\n[T.A.W (Idioma:" + idi + ")]\n" + resultadotaw.getMensaje().toString();
 							
-						}
-
+						}*/
+						accse.setTawresultado(Accesibilidad.RES_OK);
+						
 						if (resultado.getErrores()>0)  accse.setResultado(Accesibilidad.RES_ERROR);
 						else if (resultado.getWarnings()>0)  accse.setResultado(Accesibilidad.RES_WARN);
 						else accse.setResultado(Accesibilidad.RES_OK);
@@ -273,7 +276,7 @@ public class ProcesoW3C {
 		Accesibilidad accse = new Accesibilidad();
 		try {
 			TidyResultBean resultado;
-			TawResultBean resultadotaw;
+//			TawResultBean resultadotaw;
 			
 			for (int i = 0; i < lista.size(); i++) {
 				String idi = (String)lista.get(i);
@@ -287,23 +290,26 @@ public class ProcesoW3C {
 					
 					//Analizamos con el Taw. Se monta una url preparada para sera analizada por el taw.
 					//ejemplo: sacmicrofront/taw.do?ttr=CNTSP&idioma=ca&id=1658&idsite=109
-					resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=GND00&idioma=" + idi + "&id=" + agenda.getId() + "&idsite=" + idmicrosite);
+//					resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=GND00&idioma=" + idi + "&id=" + agenda.getId() + "&idsite=" + idmicrosite);
 
 
-					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) || (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
+					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) 
+//							|| (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)
+							) {
 						accse.setIdioma(idi);
 						accse.setServicio(Catalogo.SRVC_MICRO_EVENTOS);
 						accse.setIditem(agenda.getId());
 						accse.setCodmicro(idmicrosite);
 						accse.setMedida(Accesibilidad.MES_SINMEDIA);
 						
-						if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
-						else if (resultadotaw.getWarnings()>0) accse.setTawresultado(Accesibilidad.RES_WARN);
-						else accse.setTawresultado(Accesibilidad.RES_OK);
-						if ((resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
-							accse.setTawmensaje(resultadotaw.getMensaje());
-							retorno +="\n\n[T.A.W (Idioma:" + idi + ")]\n" + resultadotaw.getMensaje().toString();
-						}
+//						if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
+//						else if (resultadotaw.getWarnings()>0) accse.setTawresultado(Accesibilidad.RES_WARN);
+//						else accse.setTawresultado(Accesibilidad.RES_OK);
+//						if ((resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
+//							accse.setTawmensaje(resultadotaw.getMensaje());
+//							retorno +="\n\n[T.A.W (Idioma:" + idi + ")]\n" + resultadotaw.getMensaje().toString();
+//						}
+						accse.setTawresultado(Accesibilidad.RES_OK);
 						
 						if (resultado.getErrores()>0)  accse.setResultado(Accesibilidad.RES_ERROR);
 						else if (resultado.getWarnings()>0)  accse.setResultado(Accesibilidad.RES_WARN);
@@ -347,7 +353,7 @@ public class ProcesoW3C {
 		Accesibilidad accse = new Accesibilidad();
 		try {
 			TidyResultBean resultado;
-			TawResultBean resultadotaw;
+//			TawResultBean resultadotaw;
 			
 			for (int i = 0; i < lista.size(); i++) {
 				String idi = (String)lista.get(i);
@@ -362,23 +368,26 @@ public class ProcesoW3C {
 					
 					//Analizamos con el Taw. Se monta una url preparada para sera analizada por el taw.
 					//ejemplo: sacmicrofront/taw.do?ttr=CNTSP&idioma=ca&id=1658&idsite=109
-					resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=NTCS0&idioma=" + idi + "&id=" + noticia.getId() + "&idsite=" + idmicrosite);
+//					resultadotaw = Testeador.testeoTaw( _protocolo + _servidor + ":" + _puerto + "/sacmicrofront/taw.do?ttr=NTCS0&idioma=" + idi + "&id=" + noticia.getId() + "&idsite=" + idmicrosite);
 
 
-					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) || (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
+					if ((resultado.getErrores()>0) || (resultado.getWarnings()>0) 
+//							|| (resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)
+							) {
 						accse.setIdioma(idi);
 						accse.setServicio(Catalogo.SRVC_MICRO_ELEMENTOS);
 						accse.setIditem(noticia.getId());
 						accse.setCodmicro(idmicrosite);
 						accse.setMedida(Accesibilidad.MES_SINMEDIA);
 						
-						if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
-						else if (resultadotaw.getWarnings()>0) accse.setTawresultado(Accesibilidad.RES_WARN);
-						else accse.setTawresultado(Accesibilidad.RES_OK);
-						if ((resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
-							accse.setTawmensaje(resultadotaw.getMensaje());
-							retorno +="\n\n[T.A.W (Idioma:" + idi + ")]\n" + resultadotaw.getMensaje().toString();
-						}
+//						if (resultadotaw.getErrores()>0) accse.setTawresultado(Accesibilidad.RES_ERROR);
+//						else if (resultadotaw.getWarnings()>0) accse.setTawresultado(Accesibilidad.RES_WARN);
+//						else accse.setTawresultado(Accesibilidad.RES_OK);
+//						if ((resultadotaw.getErrores()>0) || (resultadotaw.getWarnings()>0)) {
+//							accse.setTawmensaje(resultadotaw.getMensaje());
+//							retorno +="\n\n[T.A.W (Idioma:" + idi + ")]\n" + resultadotaw.getMensaje().toString();
+//						}
+						accse.setTawresultado(Accesibilidad.RES_OK);
 						
 						if (resultado.getErrores()>0)  accse.setResultado(Accesibilidad.RES_ERROR);
 						else if (resultado.getWarnings()>0)  accse.setResultado(Accesibilidad.RES_WARN);
