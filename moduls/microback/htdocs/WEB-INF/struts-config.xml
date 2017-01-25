@@ -478,6 +478,10 @@
 	<action path="/indexarPrincipal" type="es.caib.gusite.microback.action.IndexarPrincipalAction" unknown="false">
 		<forward name="indexarPrincipal" path="/indexarPrincipal.jsp"/>
 	</action>
+	
+	<action path="/archivoInfo" type="es.caib.gusite.microback.action.ArchivoInfoAction" unknown="false">
+		<forward name="archivoInfo" path="/indexarPrincipal.jsp"/>
+	</action>
 
 	<action path="/indexarMicrosite" type="es.caib.gusite.microback.action.IndexarMicrositeAction" unknown="false">
 		<forward name="indexarMicrosite" path="/indexarMicrosite.jsp"/>

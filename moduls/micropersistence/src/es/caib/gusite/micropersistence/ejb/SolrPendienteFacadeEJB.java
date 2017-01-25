@@ -20,6 +20,7 @@ import org.hibernate.criterion.Restrictions;
 
 import es.caib.gusite.micromodel.Agenda;
 import es.caib.gusite.micromodel.Archivo;
+import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Faq;
@@ -332,5 +333,27 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
         } finally {
             close(session);
         }
+    }
+    
+    /**
+     * Devuelve un solrPendienteJob a partir de su id.
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *
+     * @return Devuelve un listado de todos los SolrPendientes.
+     */
+    public SolrPendienteJob obtenerSolrPendienteJob(Long id) {
+    	Session session = this.getSession();
+		try {
+			SolrPendienteJob solrPendienteJob = (SolrPendienteJob) session.get(SolrPendienteJob.class, id);
+			return solrPendienteJob;
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
     }
 }

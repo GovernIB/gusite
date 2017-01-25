@@ -132,9 +132,9 @@ public class SolrPendienteDelegate implements StatelessDelegate {
      public List<SolrPendienteJob> getListJobs(int cuantos) throws DelegateException{
     	 try {
 			 return this.getFacade().getListJobs(cuantos);
-	 }  catch (RemoteException e) {
-			throw new DelegateException(e);
-	 }
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
      }
      
 	/* ========================================================= */
@@ -159,6 +159,20 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
+	}
+
+    /**
+	  * Obtiene un solrpendienteJob jobs.  
+	  * 
+	  * @param id
+	  * @throws DelegateException
+	  */
+	public SolrPendienteJob obtenerSolrPendienteJob(Long id) throws DelegateException{
+		 try {
+			 return this.getFacade().obtenerSolrPendienteJob(id);
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
 	}
 
 }

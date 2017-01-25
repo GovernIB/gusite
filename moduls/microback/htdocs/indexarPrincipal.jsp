@@ -51,7 +51,7 @@
 						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
 								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
 								     <td>
-									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp("<bean:write name="i" property="info" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='descargar("<bean:write name="i" property="id" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button> 
 								     </td>
 								   
 						       </tr>					
@@ -164,14 +164,8 @@
 		</div>
 		</logic:notEmpty>
 		
-		<div id="popup" class="popup" style="display: none;">
-    		<div class="content-popup">
-        		<div class="close"><a href="#" onclick="cerrarPopUp();" id="close"><img src="imgs/botons/cerrar.gif"/></a></div>
-        		<div>
-            		<textarea id="item_texto" name="item_texto" cols="70" rows="15" class="nou"></textarea>     
-        		</div>
-    		</div>
-		</div>
+        <textarea style="display: none;" id="item_texto" name="item_texto" cols="70" rows="15" class="nou"></textarea>     
+        	
 </body>
 </html>
 
@@ -212,20 +206,9 @@
 		document.location.href="indexarPrincipal.do?indexar=verinfo";
 	}
     
-    function pintarPopUp(descripcion){
-		 $('.popup').fadeIn('slow');
-	     $('.popup-overlay').fadeIn('slow');
-	     $('.popup-overlay').height($(window).height());
-	     $("#item_texto").html(descripcion);
-	    
-	     return false;
-	}
-	
-	function cerrarPopUp(){
-		 $('.popup').fadeOut('slow');
-	     $('.popup-overlay').fadeOut('slow');
-	     $("#item_texto").html("");
-	     return false;
-	}
+    function descargar(id){
+
+    	document.location.href="archivoInfo.do?id="+id;
+	} 
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>
