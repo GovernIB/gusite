@@ -416,10 +416,10 @@ public class MicrositeDelegate implements StatelessDelegate {
 	}
 	
 	  
-	public List<?> obtenerMicrositesbyUA(String key)
+	public List<Long> obtenerMicrositesbyUA(List<Integer> listaIds)
 			   throws java.rmi.RemoteException,DelegateException {		
 		try {
-			return this.getFacade().obtenerMicrositesbyUA(key);
+			return this.getFacade().obtenerMicrositesbyUA(listaIds);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

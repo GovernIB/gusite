@@ -1,6 +1,8 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +43,9 @@ import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
+import es.caib.gusite.plugins.PluginFactory;
+import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
+import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 import es.caib.solr.api.SolrFactory;
 import es.caib.solr.api.SolrIndexer;
@@ -827,10 +832,20 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     		StringBuffer info = new StringBuffer();
             MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
           
-            List<?> listaMicro = micrositedel.obtenerMicrositesbyUA(idUAdministrativa);
+            OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
+            Collection<UnidadListData> unidades = op.getUnidadesHijas(idUAdministrativa, "ca");
+            List<Integer> listaIds = new ArrayList<Integer>();
+            listaIds.add(Integer.parseInt((idUAdministrativa)));
+            for (UnidadListData unidadListData : unidades) {
+            	Long id= (Long) unidadListData.getId();
+            	listaIds.add(Integer.valueOf(id.intValue() ));
+			}
             
-            for ( Object micro : listaMicro){
-            	if (((Microsite) micro).getId() != null){
+            List<Long> listaMicro = micrositedel.obtenerMicrositesbyUA(listaIds);
+            
+            for ( Long idMicro : listaMicro){
+            	Microsite micro = micrositedel.obtenerMicrosite(idMicro);
+            	if (micro.getId() != null){
             		try{
             			info.append(" Vamos a enviar a indexación el microsite (id:"+((Microsite) micro).getId()+", idUA: "+idUAdministrativa +")  <br /> ");
             			indexarMicrosite(((Microsite) micro).getId(),solrPendienteJob, info);            			

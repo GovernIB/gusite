@@ -1524,12 +1524,13 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> obtenerMicrositesbyUA(String key) {
+	public List<Long> obtenerMicrositesbyUA(List<Integer> listIds) {
 
 		Session session = this.getSession();
 		try {
-			String hql = "select mic" + " from Microsite mic" + " where mic.unidadAdministrativa = '" + key + "'";
-			Query query = session.createQuery(hql);
+			 String hql = "select mic.id from Microsite mic where mic.unidadAdministrativa in  (:list)";
+			 Query query = session.createQuery(hql);
+			 query.setParameterList("list", listIds);
 			 List list = query.list();
 			 return list;
 
