@@ -555,6 +555,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, pre.getIdencuesta());
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(enc.getIdmicrosite(), pre, op);
+			
+			//Indexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.REINDEXAR);
 
 		} catch (HibernateException e) {
 			
@@ -701,6 +705,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 				this.grabarAuditoria(enc.getIdmicrosite(), p, Auditoria.ELIMINAR);
 				
 			}
+			
+			//Indexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.REINDEXAR);
 
 		} catch (HibernateException e) {
 			
@@ -760,6 +768,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(enc.getIdmicrosite(), res, op);
+			
+			//Indexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.REINDEXAR);
 
 		} catch (HibernateException e) {
 			throw new EJBException(e);
@@ -920,6 +932,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 						Auditoria.ELIMINAR);
 			}
 
+			//Indexamos
+			SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
+			pendienteDel.grabarSolrPendiente(EnumCategoria.GUSITE_ENCUESTA.toString(), enc.getId(), null, IndexacionUtil.REINDEXAR);
+			
 		} catch (HibernateException e) {
 			throw new EJBException(e);
 		} finally {

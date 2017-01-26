@@ -5,10 +5,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--[if !IE]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
 	<title>Gestor Microsites</title>
-	<link href="css/estils.css" rel="stylesheet" type="text/css" />
+    
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" href="css/index.css" />
+    <link type="text/css" rel="stylesheet" href="css/estils.css" />
+    <link type="text/css" rel="stylesheet" href="css/jquery.alerts.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="css/editorCSS.css" />
+    
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="js/jsListados.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
@@ -16,6 +22,15 @@
 </head>
 
 <body>	
+
+ 	<!-- cap -->
+    <jsp:include page="cabecera.jsp"/>
+    <!-- /cap -->
+    
+    <!-- marc lateral -->
+    <jsp:include page="menuLateralIzq.jsp"/>
+    <!-- /marc lateral -->
+    
 		<!-- molla pa -->
 		<ul id="mollapa">
 			<li><a href="microsites.do" target="_parent"><bean:message key="micro.listado.microsites" /></a></li>
@@ -165,7 +180,10 @@
 		</logic:notEmpty>
 		
         <textarea style="display: none;" id="item_texto" name="item_texto" cols="70" rows="15" class="nou"></textarea>     
-        	
+      
+    <!-- peu -->
+    <jsp:include page="peu.jsp"/>
+    <!-- /peu -->  	
 </body>
 </html>
 
