@@ -1497,4 +1497,7 @@ h2 { font-size: 1.1em; padding: 10px; margin: 0; }
     margin-top: 29px !important;    
 }
 
-
+.deshabilitado{
+	color: #c0c0c0;
+	background-color: #ffffff;
+}

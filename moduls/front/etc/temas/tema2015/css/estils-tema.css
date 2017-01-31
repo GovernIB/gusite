@@ -45,6 +45,13 @@ form input[type="submit"]:hover,
 .body-encuesta #btnEnviarEncuesta:hover{
 	background-color: #3685B5;
 }
+
+
+.deshabilitado{ 
+	color: #c0c0c0 !important; 
+	background-color: #ffffff !important; 
+}
+
 header{
 	background-color: #fff;
 	width: 100%;
@@ -2981,6 +2988,7 @@ div#infoNoMenu{
 		display:table-row;
 	}
 
+	
 	/**********************************************************/
 	/* MEDIA QUERIES - RESPONSIVE */
 	/**********************************************************/

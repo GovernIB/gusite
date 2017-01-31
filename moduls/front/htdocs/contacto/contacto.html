@@ -67,6 +67,17 @@ Muestra un formulario de contacto.
 		else
 			return true;
 		}
+		
+	function habilitarEnviar(){
+		//Si está informado el captcha se habilita el botón
+		if (document.getElementById("captchaResp").value !="" ){				
+			document.getElementById("btnanar").disabled = false;
+      		document.getElementById("btnanar").className='';
+		}else{
+      		document.getElementById("btnanar").disabled = true;
+      		document.getElementById("btnanar").className='deshabilitado';
+    	}
+	}
 	/*]]>*/
 </script>
 <th:block th:remove="all">
@@ -117,14 +128,16 @@ Muestra un formulario de contacto.
         		 </div>
 				<p>
 					<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" />
-					<input type="text" name="captchaResp"  />
+					<input type="text" id="captchaResp" name="captchaResp" onchange="habilitarEnviar()" />
 				</p>
 				<p class="botonera">
-					<input name="btnanar" type="submit" th:value="#{contacto.enviar}" tabindex="500" />
+					<input id="btnanar" name="btnanar" type="submit" th:value="#{contacto.enviar}" tabindex="500" class="deshabilitado" disabled="true"  />
 				</p>
 			</form>				
 		</div>
 		<!-- fin informacio -->
 	</section>
 </body>
+
+
 </html>
