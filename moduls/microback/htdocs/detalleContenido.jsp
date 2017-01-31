@@ -340,7 +340,7 @@
 						<td class="etiqueta"><bean:message key="conte.textoalfa" />
 						<bean:define id="idis" name="es.caib.gusite.microback.LANGS_KEY"/>
 		                <% String codigoIdioma = ((java.util.List)idis).get(i).toString(); %>						                         
-						<p><button type="button" title='<bean:message key="conte.visualizaalfa"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=alfa&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizaalfa"/>' /></button></p>
+						<p><button type="button" title='<bean:message key="conte.visualizaalfa"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=alfa&previsual=previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizaalfa"/>' /></button></p>
 						</td>
 						<td>
 						<html:textarea property="texto" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true"  style="width:700px; height:300px;" />
@@ -385,7 +385,7 @@
 								<table id="mceTextoBeta<%=i%>">
 								<tr>
 									<td class="etiqueta"><bean:message key="conte.textobeta" />:
-									<p><button type="button" title='<bean:message key="conte.visualizabeta"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&idsite=<bean:write name="MVS_microsite" property="id"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=beta&previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizabeta"/>' /></button></p>
+									<p><button type="button" title='<bean:message key="conte.visualizabeta"/>' onclick="abrir('<bean:message key="url.aplicacion" />contenido.do?lang=<%=codigoIdioma%>&idsite=<bean:write name="MVS_microsite" property="id"/>&amp;cont=<bean:write name="contenidoForm" property="id"/>&stat=no&tipo=beta&previsual=previsual', '', 700, 500);"><img src="imgs/botons/previsualitzar.gif" alt='<bean:message key="conte.visualizabeta"/>' /></button></p>
 									</td>
 									<td>
 									<html:textarea property="txbeta" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true"   style="width:700px; height:300px;" />
