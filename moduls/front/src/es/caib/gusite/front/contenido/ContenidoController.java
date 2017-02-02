@@ -103,7 +103,7 @@ public class ContenidoController extends BaseViewController {
 			@PathVariable("uriContenido") String uriContenido, RedirectAttributes redir,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
 			@RequestParam(value = "tipo", required = false, defaultValue = "") String tipobeta,
 			@RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
 

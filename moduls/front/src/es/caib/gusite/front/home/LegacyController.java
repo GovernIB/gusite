@@ -59,9 +59,10 @@ public class LegacyController extends FrontController {
 			@PathVariable("tipoId") String tipoId, @RequestParam(Microfront.PIDSITE) Long idSite,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta) {
+			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
 
-		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta);
+		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta, previsual);
 	}
 
 	/**
@@ -73,14 +74,15 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta){
+			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual){
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
 
-			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta);
+			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta, previsual);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
@@ -103,7 +105,7 @@ public class LegacyController extends FrontController {
 		return uri.build().toUriString();
 	}
 	
-	private String addGenericParams(String baseUri, String pcampa, String mcont, String tipo) {
+	private String addGenericParams(String baseUri, String pcampa, String mcont, String tipo, String previsual) {
 		UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(baseUri);
 		if (!StringUtils.isEmpty(pcampa)) {
 			uri.replaceQueryParam(Microfront.PCAMPA, pcampa);
@@ -113,6 +115,9 @@ public class LegacyController extends FrontController {
 		}
 		if (!StringUtils.isEmpty(tipo)) {
 			uri.replaceQueryParam(Microfront.PTIPO, tipo);
+		}
+		if (!StringUtils.isEmpty(previsual)) {
+			uri.replaceQueryParam(Microfront.PVISUALIZAR, previsual);
 		}
 		return uri.build().toUriString();
 	}
@@ -130,9 +135,10 @@ public class LegacyController extends FrontController {
 			@PathVariable("tipoId") String tipoId, @RequestParam("mkey") String mkey,
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta) {
+			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
 
-		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta);
+		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta,previsual);
 	}
 
 	/**
@@ -144,17 +150,20 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta) {
+			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta);
+			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
 			// TODO: 404?
 			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
 		}
 	}
+	
+	
 
 	@Autowired
 	protected ContactosDataService contactosDataService;
