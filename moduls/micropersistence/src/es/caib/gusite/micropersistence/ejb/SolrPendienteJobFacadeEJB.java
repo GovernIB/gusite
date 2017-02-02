@@ -13,8 +13,8 @@ import org.hibernate.Session;
  * SessionBean para ejecutar los solr pendientes de manera unitaria.
  *
  * @ejb.bean
- *  name="sac/persistence/SolrPendienteJobFacade"
- *  jndi-name="org.ibit.rol.sac.persistence.SolrPendienteJobFacade"
+ *  name="sac/micropersistence/SolrPendienteJobFacade"
+ *  jndi-name="es.caib.gusite.micropersistence.SolrPendienteJobFacade"
  *  type="Stateless"
  *  view-type="remote"
  *  transaction-type="Container"
