@@ -109,68 +109,74 @@ var thDebug = false;
 							<select  onchange="mostrarCalendari();" name="agendaSelect"
 							id="agendaSelect"
 							th:with="nummeses=3 + ${nummesesaretroceder}">
-							<div th:each="i : ${#numbers.sequence( 0, nummeses-1)}"
-							th:remove="tag">
-							<div th:if="${i} !=0" th:remove="tag">
-								<div th:with="siguienteMes=${#calendars.month(gi)}"
+								<div th:each="i : ${#numbers.sequence( 0, nummeses-1)}"
 								th:remove="tag">
-								<div
-								th:with="gi=${#calendars.create(#calendars.year(gi),siguienteMes,#calendars.day(gi),#calendars.hour(gi),#calendars.minute(gi))}"
-								th:remove="tag">
-								<div th:unless="((${siguienteMes}+ ${i})>12)" th:remove="tag">
-									<div th:if="${i}==${nummesesaretroceder}" th:remove="tag"
-									th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
-									<option th:selected="selected" th:value="${i}">
-										<span class="bold"><span th:text="#{${calendarioMes}}" style="font-weight:bold"></span></span>
-										<span th:text="${#calendars.year(gi)}"></span>
-									</option>
+									<div th:if="${i} !=0" th:remove="tag">
+										<div th:with="siguienteMes=${#calendars.month(gi)}"
+										th:remove="tag">
+											<div
+											th:with="gi=${#calendars.create(#calendars.year(gi),siguienteMes,#calendars.day(gi),#calendars.hour(gi),#calendars.minute(gi))}"
+											th:remove="tag">
+												<div th:unless="((${siguienteMes}+ ${i})>12)" th:remove="tag">
+													<div th:if="${i}==${nummesesaretroceder}" th:remove="tag"
+													th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
+														<option th:selected="selected" th:value="${i}">
+															<span class="bold"><span th:text="#{${calendarioMes}}" style="font-weight:bold"></span></span>
+															<span th:text="${#calendars.year(gi)}"></span>
+														</option>
+													</div>
+													<div th:if="${i}!=${nummesesaretroceder}" th:remove="tag"
+													th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
+														<option th:value="${i}"
+														th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+													</div>
+												</div>
+												<div th:if="((${siguienteMes}+ ${i})>12)" th:remove="tag">
+													<div>
+														<div th:with="calendarioMes='calendario.mes.'+ ((${siguienteMes}+ ${i})-12)" th:remove="tag">
+															<div th:if="${i}!=${nummesesaretroceder}" th:remove="tag">
+																<option th:value="${i}"
+																th:text="#{${calendarioMes}}+ ' ' + (${#calendars.year(gi)}+1)"></option>
+															</div>
+															<div th:if="${i}==${nummesesaretroceder}" th:remove="tag">
+																<option th:value="${i}" th:selected="selected"
+																th:text="#{${calendarioMes}}+ ' ' + (${#calendars.year(gi)}+1)"></option>
+															</div>															
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div th:if="${i} ==0" th:remove="tag"
+									th:with="calendarioMes='calendario.mes.'+(${#calendars.month(gi)}+ ${i})">
+										<option th:value="${i}"
+										th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
+									</div>
 								</div>
-								<div th:if="${i}!=${nummesesaretroceder}" th:remove="tag"
-								th:with="calendarioMes='calendario.mes.'+ (${siguienteMes}+ ${i})">
-								<option th:value="${i}"
-								th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
-							</div>
-						</div>
-						<div th:if="((${siguienteMes}+ ${i})>12)" th:remove="tag">
-							<div>
-								<div th:with="calendarioMes='calendario.mes.'+ ((${siguienteMes}+ ${i})-12)" th:remove="tag">
-									<option th:value="${i}"
-									th:text="#{${calendarioMes}}+ ' ' + (${#calendars.year(gi)}+1)"></option>
-								</div>
-							</div>
+							</select>
+							<script type="text/javascript">
+							//$("agendaSelect").style.fontWeight = "bold";
+							$("agendaSelect").css('font-weight', 'bold')
+							jQuery("option").each(function() {
+								var mes = this.text.substring(0,3);
+								var any = this.text.substring(this.text.indexOf(" "))
+								this.text = mes + any;
+														});
+								if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
+									{
+									document.getElementById("agendaSelect").style.textIndent = ".2em";
+							 		}
+							</script>
+							<button type="button" id="mesPosterior" class="btn btn-default" aria-label="Left Align" onclick="cambiMes(this.id);">
+								<span class="button-month-text" th:text="#{general.siguiente}">mes posterior</span>	
+								<span class="icon icon-right" ></span>
+							</button>
+							</p>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div th:if="${i} ==0" th:remove="tag"
-			th:with="calendarioMes='calendario.mes.'+(${#calendars.month(gi)}+ ${i})">
-			<option th:value="${i}"
-			th:text="#{${calendarioMes}}+ ' ' + ${#calendars.year(gi)}"></option>
-		</div>
-	</div>
-</select>
-<script type="text/javascript">
-//$("agendaSelect").style.fontWeight = "bold";
-$("agendaSelect").css('font-weight', 'bold')
-jQuery("option").each(function() {
-	var mes = this.text.substring(0,3);
-	var any = this.text.substring(this.text.indexOf(" "))
-	this.text = mes + any;
-							});
-	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1)
-		{
-		document.getElementById("agendaSelect").style.textIndent = ".2em";
- 		}
-</script>
-<button type="button" id="mesPosterior" class="btn btn-default" aria-label="Left Align" onclick="cambiMes(this.id);">
-	<span class="button-month-text" th:text="#{general.siguiente}">mes posterior</span>	
-	<span class="icon icon-right" ></span>
-</button>
-</p>
-</div>
-</div>
-<!-- fi getSelectoragenda -->
-<span th:each="i : ${#numbers.sequence(1, nummeses)}" th:remove="tag">
+	<!-- fi getSelectoragenda -->
+	<span th:each="i : ${#numbers.sequence(1, nummeses)}" th:remove="tag">
 
 	<!--  Mes actual (inicialmente mostrado) -->
 
