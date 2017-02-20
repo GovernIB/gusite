@@ -11,5 +11,7 @@ zip : 'Archivo&nbsp;Comprimido',
 htm : 'P&aacute;gina&nbsp;Web',
 media : 'Archivo&nbsp;Multimedia',
 txt : 'Archivo&nbsp;de&nbsp;texto',
-fil : 'Archivo&nbsp;Gen&eacute;rico'
+fil : 'Archivo&nbsp;Gen&eacute;rico',
+odt : 'Editor&nbsp;de&nbsp;Texto&nbsp;odt'
+	
 });
