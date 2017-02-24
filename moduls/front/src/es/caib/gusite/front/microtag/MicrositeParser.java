@@ -505,18 +505,20 @@ public class MicrositeParser {
 		ComponenteDelegate compodel = DelegateUtil.getComponentesDelegate();
 		Componente componente = compodel.obtenerComponente(id);
 
-		if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {
-			// si es de clase noticia.
-			return this.getHtmlComponenteTNoticia(site, componente, idioma, request, response);
-		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
-			// si es de clase enlace.
-			return this.getHtmlComponenteTEnlace(site, componente, idioma, request, response);
-		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_DOCUMENTO)) {
-			// si es de clase documento
-			return this.getHtmlComponenteTDocumento(site, componente, idioma, request, response);
-		} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_CONEXIO_EXTERNA)) {
-			// si es de clase conexión externa
-			return this.getHtmlComponenteTExterno(site, componente, idioma, request, response);
+		if(componente != null) {
+			 if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {
+				// si es de clase noticia.
+				return this.getHtmlComponenteTNoticia(site, componente, idioma, request, response);
+			} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
+				// si es de clase enlace.
+				return this.getHtmlComponenteTEnlace(site, componente, idioma, request, response);
+			} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_DOCUMENTO)) {
+				// si es de clase documento
+				return this.getHtmlComponenteTDocumento(site, componente, idioma, request, response);
+			} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_CONEXIO_EXTERNA)) {
+				// si es de clase conexión externa
+				return this.getHtmlComponenteTExterno(site, componente, idioma, request, response);
+			}
 		}
 
 		// TODO: error?
