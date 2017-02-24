@@ -16,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import es.caib.gusite.micromodel.Agenda;
@@ -91,7 +92,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	final Session session = getSession();
         try {
             final Criteria criteri = session.createCriteria(SolrPendiente.class);
-            criteri.add(Restrictions.eq("resultado", 0));            
+            criteri.add(Restrictions.eq("resultado", 0));             
+            criteri.addOrder(Order.asc("id"));
             return  ( List<SolrPendiente>) criteri.list();
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -99,6 +101,32 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
             close(session);
         }
     }
+    
+    
+	 /**
+     * Lista todos los SolrPendientes ordenados
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"
+     * @ejb.transaction type="RequiresNew"
+     *
+     * @return Devuelve un listado de todos los SolrPendientes, ordenados por fecha creación.
+     */
+    public List<SolrPendiente> getPendientesOrdenFC() {
+    	final Session session = getSession();
+        try {
+            final Criteria criteri = session.createCriteria(SolrPendiente.class);
+            criteri.add(Restrictions.eq("resultado", 0));             
+            criteri.addOrder(Order.desc("fechaCreacion"));
+            return  ( List<SolrPendiente>) criteri.list();
+        } catch (HibernateException he) {
+            throw new EJBException(he);
+        } finally {
+            close(session);
+        }
+    }
+    
+    
     
     
     /**

@@ -140,4 +140,44 @@ public class IndexEncontrado {
 	    public void setConforo(String conforo) {
 	        this.conforo = conforo;
 	    }
+	    
+	    public String getStringValores(){
+	    	
+	    	try {
+				return "\n-id          :"+ getString(id) +", " 
+	    		+"\n-titulo      :"+ getString(titulo)+ ", "
+				+"\n-descripcion :"+ getString(descripcion)+", "
+				+"\n-site        :"+ getString(site) +", "
+				+"\n-url         :"+ getString(url)+", "    
+				+"\n-tiposervicio:"+ getString(tiposervicio)+", "
+				+"\n-familia     :"+ getString(familia)+", "
+				+"\n-seccion     :"+ getString(seccion)+", "
+				+"\n-materia     :"+ getString(materia)+", "
+				+"\n-uo          :"+ getString(uo)+", "
+				+"\n-tituloserviciomain:"+ getString(tituloserviciomain)+", "
+				+"\n-score       :"+ getFloat(score)+", "
+				+"\n-conforo     :"+ getString(conforo)+". ";
+			} catch (Exception e) {
+				return "Error al recuperar los datos del IndexEncontrado:" + e.getMessage();
+			}
+	    	
+	    }
+	    
+	    private String getString(String value){
+	    	String res = "null";
+	    	if(value!=null){
+	    		res=value;
+	    	}
+	    	return res;
+	    }
+	    
+	    private String getFloat(float value){
+	    	String res = "null";
+		    try {
+				res = String.valueOf(value);
+			} catch (Exception e) {
+				res = "??";
+			}
+	    	return res;
+	    }
 }

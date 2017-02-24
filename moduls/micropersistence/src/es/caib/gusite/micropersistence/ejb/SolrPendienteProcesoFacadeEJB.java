@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Faq;
+import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendiente;
@@ -38,6 +40,7 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
 import es.caib.gusite.micropersistence.delegate.FaqDelegate;
+import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
@@ -115,8 +118,30 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     				info.append(" Vamos a enviar una desindexación  (id:"+solrPendiente.getIdElem() +",tipo:"+solrPendiente.getTipo()+")  <br /> ");
 					try {
 						//Si es de tipo microsite y el archivo está relleno, es de tipo archivo
-						if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString()) && solrPendiente.getIdArchivo() != null) {
-							solrIndexer.desindexar(solrPendiente.getIdArchivo().toString(), EnumCategoria.GUSITE_ARCHIVO);
+						if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString()) && solrPendiente.getIdArchivo() != null) {							
+							//Los ficheros de microsites están indexados varias veces, una para cada idioma, los desindexamos todos los idiomas 
+							//(se pueden haber borrado los idiomas del microsite, por eso se buscan en todos los existentes)
+							
+							IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
+							List<Idioma> listaIdiomas = idiomaDelegate.listarIdiomas();	
+							Boolean almenosUnElementoDesindexado = false;
+							Exception ultimoError = null;
+							for (Idioma idioma : listaIdiomas){
+								try {
+									solrIndexer.desindexar(solrPendiente.getIdArchivo().toString() +"_" + idioma.getLang(), EnumCategoria.GUSITE_ARCHIVO);
+									almenosUnElementoDesindexado = true;
+								} catch (Exception e) {
+									log.error("  -- Error desindexando el archivo . "+ solrPendiente.getIdArchivo().toString() +"_" + idioma.getLang(), e);
+									ultimoError = e;
+								}
+							}	
+							
+							if(!almenosUnElementoDesindexado && ultimoError!=null){
+								//hay error y no hay almenos una desindexación 
+								solrPendienteResultado = new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(ultimoError));
+							}
+							
+							
 						} else {
 							solrIndexer.desindexar(solrPendiente.getIdElem().toString(), EnumCategoria.fromString(solrPendiente.getTipo()));
 						}
@@ -127,48 +152,52 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     				}
     				
 					if (solrPendienteResultado.isCorrecto()) {
-						if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
-							
-							info.append(" Vamos a enviar una indexacion de una agenda (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteAgenda(solrIndexer, solrPendiente.getIdElem(), info);
-    						
-    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
-    						
-    						info.append(" Vamos a enviar una indexacion de una noticia (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteNoticia(solrIndexer, solrPendiente.getIdElem(), info);
-    						
-    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
-    						
-    						info.append(" Vamos a enviar una indexacion de un contenido (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteContenido(solrIndexer, solrPendiente.getIdElem(), info);
-    						
-    					}else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){
-    						if (solrPendiente.getIdArchivo() == null) {
-    							info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    							solrPendienteResultado = indexarMicrosite(solrPendiente.getIdElem(), null, info);
-    						} else {
-    							info.append(" Vamos a enviar una indexacion de un archivo microsite (id:"+solrPendiente.getIdElem() +", idArchivo:"+solrPendiente.getIdArchivo()+")  <br /> ");
-        						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
-    						}
-    					} else  if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
-    		                
-    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info);
-    						
-    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
-    					
-    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info);
-    						
-    					}  /*else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ARCHIVO.toString())){
-    					
-    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
-    						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
-    						
-    					}*/ else {
-    						 log.error("Tipo de elemento no especificado correctamente");
-    				         solrPendienteResultado = new SolrPendienteResultado(false, "Tipo de elemento no existente ni controlado.");
-    					}
+						if(!(new Long(solrPendiente.getAccion())).equals(IndexacionUtil.DESINDEXAR)){
+							//Si no es desindexar indexamos	
+							// si es desindexar fichero se asume que debe existir un solrPendiente.indexar del padre del fichero encolado a posteriori. 
+							if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
+								
+								info.append(" Vamos a enviar una indexacion de una agenda (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteAgenda(solrIndexer, solrPendiente.getIdElem(), info);
+	    						
+	    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
+	    						
+	    						info.append(" Vamos a enviar una indexacion de una noticia (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteNoticia(solrIndexer, solrPendiente.getIdElem(), info);
+	    						
+	    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
+	    						
+	    						info.append(" Vamos a enviar una indexacion de un contenido (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteContenido(solrIndexer, solrPendiente.getIdElem(), info);
+	    						
+	    					}else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){
+	    						if (solrPendiente.getIdArchivo() == null) {
+	    							info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    							solrPendienteResultado = indexarMicrosite(solrPendiente.getIdElem(), solrJob, info);    							
+	    						} else {
+	    							info.append(" Vamos a enviar una indexacion de un archivo microsite (id:"+solrPendiente.getIdElem() +", idArchivo:"+solrPendiente.getIdArchivo()+")  <br /> ");
+	        						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
+	    						}
+	    					} else  if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
+	    		                
+	    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info);
+	    						
+	    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
+	    					
+	    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info);
+	    						
+	    					}  /*else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ARCHIVO.toString())){
+	    					
+	    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
+	    						
+	    					}*/ else {
+	    						 log.error("Tipo de elemento no especificado correctamente");
+	    				         solrPendienteResultado = new SolrPendienteResultado(false, "Tipo de elemento no existente ni controlado.");
+	    					}
+						}
 	                } else {
 	                	log.error("Error intentando desindexar, no ha sido capaz. Mensaje:" + solrPendienteResultado.getMensaje());
 					}
@@ -366,9 +395,14 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	}
     	
     	try{
-    		if (info != null) {
-				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (id:"+agenda.getId() +")  <br /> ");
-			}
+    		if (info != null){
+    			if(agenda != null && agenda.getId() != null ) {
+    				info.append(" Vamos a enviar una indexacion de una "+tipo+" del microsite (id:"+agenda.getId() +")  <br /> ");
+    			}else{
+    				info.append(" Vamos a enviar una indexacion de una "+tipo+" del elemento " + idElemento + "  <br /> ");
+    			}
+    		}
+			
 			resultado = agendaDelegate.indexarSolr(solrIndexer, idElemento,tipo);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());

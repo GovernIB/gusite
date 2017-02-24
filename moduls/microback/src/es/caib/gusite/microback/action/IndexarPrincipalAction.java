@@ -120,7 +120,7 @@ public class IndexarPrincipalAction extends BaseAction {
     private List<?> verListaPendientes() {
 		try {
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();			
-			return solrPendienteDel.getPendientes();			
+			return solrPendienteDel.getPendientesOrdenFC();			
 		} catch(Exception exception) {
 			return null;
 		}

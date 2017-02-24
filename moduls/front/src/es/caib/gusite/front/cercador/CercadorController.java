@@ -19,6 +19,7 @@ import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.view.CercarView;
+import es.caib.gusite.microback.action.lista.errorMenuAction;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -73,15 +74,25 @@ public class CercadorController extends BaseViewController {
 				
 			// hasta aqui metodo buscar();
 			
-			if (resultado.getLista() != null) {
+			if (resultado.getLista() != null) {				
 				for (IndexEncontrado res : resultado.getLista()) {
 					//Las urls están "hard-coded" en formato legacy
 					String url = res.getUrl();
-					if (url.startsWith("/sacmicrofront/")) {
-						//Quitamos el contextpath hardcoded
-						url = url.substring(15);
+					if(url!=null){
+						if (url.startsWith("/sacmicrofront/")) {
+							//Quitamos el contextpath hardcoded
+							url = url.substring(15);
+						}
+						res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
+					}else{
+						//Caso especial, la url obtenida es null y no debería.
+						String error = "";
+						error += "ERROR AL BUSCAR, la url del resultado está vacia: CercadorControler.java-->cercar;";
+						error += "BUSQUEDA:idsesion:"+req.getSession().getId()+", Microsite:" + microsite.getId().longValue() + ", idioma:" + lang.getLang() +", words:'" + cerca + "', booleano:true.";		
+						error += "VALOR INDEXENCONTRADO:"+ res.getStringValores();		
+						log.error(error);
+						res.setUrl("");
 					}
-					res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
 				}
 			}
 			

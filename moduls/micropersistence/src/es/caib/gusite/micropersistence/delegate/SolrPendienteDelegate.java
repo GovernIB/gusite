@@ -46,6 +46,21 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	}
 	
 	/**
+	 * Obtiene los SolrPendientes 
+	 * 	
+	 * @throws DelegateException
+	 */
+	public List<SolrPendiente> getPendientesOrdenFC()
+			throws DelegateException {
+		try {
+			return this.getFacade().getPendientesOrdenFC();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+		
+	}
+	
+	/**
 	 * Crear registro en solrPendiente
 	 *  
 	 * @throws DelegateException

@@ -574,6 +574,10 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
 			
+			if (agenda.getActividad()==null) {
+				return new SolrPendienteResultado(false, "No se puede indexar, El evento no tiene asignada una actividad.");
+			}
+			
 			//Iteramos las traducciones
 			final MultilangLiteral titulo = new MultilangLiteral();
 			final MultilangLiteral descripcion = new MultilangLiteral();
@@ -749,7 +753,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					indexFile.setSearchTextOptional(searchTextOptional);
 					indexFile.setIdioma(enumIdioma);
 					indexFile.setFileContent(contenidoFichero);
-					indexFile.setElementoIdPadre(agenda.getIdi());
+					indexFile.setElementoIdPadre(agenda.getId().toString());
 					indexFile.setCategoriaPadre(EnumCategoria.GUSITE_AGENDA);
 					indexFile.setDescripcionPadre(descripcionPadre);
 					indexFile.setExtension(extension);
