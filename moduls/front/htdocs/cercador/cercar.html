@@ -46,10 +46,26 @@ Resultados de una busqueda.
 					</p>
 					
 					<ul class="resultatsRecercaInteligent">
-						<li th:each="resultado : ${MVS_listado_buscador.lista}"><a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
-							th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <p><span
-							th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
-							th:text="${resultado.descripcion}">Descripcion</span></p></li>
+						<li th:each="resultado : ${MVS_listado_buscador.lista}">
+							<div th:switch="${resultado.disponible}"   th:remove="tag"> 						 
+							  <div th:case="false"  th:remove="tag">
+								  	<span th:text="${resultado.titulo}" class="tituloNoDisponible">titulo documento del resultado</span> 
+								  	<span class="literalNoDisponible" th:text="' ' + #{cercar.no.disponible} + ' '">No disponible</span> 
+								  	<p>
+								  		<span th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span>
+								  		<span class="detall" th:text="${resultado.descripcion}">Descripcion</span>
+									</p>							  
+							  </div>
+							  <div th:case="*"  th:remove="tag">
+							  		<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
+									th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <p><span
+									th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
+									th:text="${resultado.descripcion}">Descripcion</span></p>
+							  
+							  </div> 
+							</div>	
+							
+						</li>
 					</ul>
 					<p />
 				</div>

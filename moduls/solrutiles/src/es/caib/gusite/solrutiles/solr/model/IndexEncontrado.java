@@ -14,10 +14,11 @@ public class IndexEncontrado {
 	    private String uo;
 	    private String conforo;
 	    private String tituloserviciomain;
+	    private boolean disponible;
 
 
 	    public IndexEncontrado(String id, String tiposervicio, String site, String familia, String seccion, String materia, String uo, String conforo, String titulo, String descripcion,
-	        String tituloserviciomain, String url, float score) {
+	        String tituloserviciomain, String url, float score,boolean disponible) {
 	        this.id = id;
 	        this.titulo = titulo;
 	        this.descripcion = descripcion;
@@ -31,10 +32,11 @@ public class IndexEncontrado {
 	        this.uo = uo;
 	        this.conforo = conforo;
 	        this.tituloserviciomain = tituloserviciomain;
+	        this.setDisponible(disponible);
 	    }
 
-	    public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, float score) {
-	        this(id, null, site, null, null, null, null, null, titulo, descripcion, null, url, score);
+	    public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, float score, boolean disponible) {
+	        this(id, null, site, null, null, null, null, null, titulo, descripcion, null, url, score,disponible);
 	    }
 
 	    public String getId() {
@@ -141,7 +143,15 @@ public class IndexEncontrado {
 	        this.conforo = conforo;
 	    }
 	    
-	    public String getStringValores(){
+	    public boolean isDisponible() {
+			return disponible;
+		}
+
+		public void setDisponible(boolean disponible) {
+			this.disponible = disponible;
+		}
+
+		public String getStringValores(){
 	    	
 	    	try {
 				return "\n-id          :"+ getString(id) +", " 

@@ -3578,3 +3578,11 @@ div#infoNoMenu{
 			margin: 0 auto;
 		}
 	}
+	
+	.tituloNoDisponible{
+		color: #000;
+	}
+	
+	.literalNoDisponible{
+		color: #F00;
+	}

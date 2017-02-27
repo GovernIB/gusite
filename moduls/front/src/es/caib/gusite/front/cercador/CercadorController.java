@@ -83,7 +83,12 @@ public class CercadorController extends BaseViewController {
 							//Quitamos el contextpath hardcoded
 							url = url.substring(15);
 						}
-						res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
+						
+						if(!res.isDisponible()){
+							res.setUrl("");
+						}else{
+							res.setUrl( this.urlFactory.legacyToFrontUri(url, lang));
+						}						
 					}else{
 						//Caso especial, la url obtenida es null y no debería.
 						String error = "";
@@ -92,6 +97,7 @@ public class CercadorController extends BaseViewController {
 						error += "VALOR INDEXENCONTRADO:"+ res.getStringValores();		
 						log.error(error);
 						res.setUrl("");
+						res.setDisponible(false);
 					}
 				}
 			}
