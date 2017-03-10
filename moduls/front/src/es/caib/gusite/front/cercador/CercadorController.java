@@ -19,7 +19,6 @@ import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.view.CercarView;
-import es.caib.gusite.microback.action.lista.errorMenuAction;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.DelegateException;

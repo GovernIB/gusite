@@ -32,7 +32,7 @@
 		
 		<div id="botonera">
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar" />" onclick='submitURL(<bean:write name="MVS_microsite" property="id"/>);'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar" />" /> &nbsp;<bean:message key="menu.indexar" /></button>
-				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='indexarVerInfo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='indexarVerInfo(<bean:write name="MVS_microsite" property="id"/>);'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
 		</div>		
 		
 		<p>
@@ -107,8 +107,8 @@
 		document.location="indexarMicrosite.do?indexar=si&site="+idsite;
 	}
 	
-	function indexarVerInfo(){
-		document.location.href="indexarMicrosite.do?indexar=verinfo";
+	function indexarVerInfo(idsite){
+		document.location.href="indexarMicrosite.do?indexar=verinfo&site="+idsite;
 	}
 	
 	function limpiarTexto(descripcion) {

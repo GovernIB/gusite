@@ -1,13 +1,8 @@
 package es.caib.gusite.micropersistence.ejb;
 
-import java.rmi.RemoteException;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -19,40 +14,14 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import es.caib.gusite.micromodel.Agenda;
-import es.caib.gusite.micromodel.Archivo;
-import es.caib.gusite.micromodel.Contacto;
-import es.caib.gusite.micromodel.Contenido;
-import es.caib.gusite.micromodel.Encuesta;
-import es.caib.gusite.micromodel.Faq;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendiente;
 import es.caib.gusite.micromodel.SolrPendienteJob;
-import es.caib.gusite.micromodel.SolrPendienteResultado;
-import es.caib.gusite.micromodel.Traduccion;
-import es.caib.gusite.micromodel.TraduccionAgenda;
-import es.caib.gusite.micromodel.TraduccionNoticia;
-import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
-import es.caib.gusite.micropersistence.delegate.ArchivoDelegate;
-import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
-import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
-import es.caib.gusite.micropersistence.delegate.FaqDelegate;
-import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
-import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
-import es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
-import es.caib.gusite.utilities.property.GusitePropertiesUtil;
-import es.caib.solr.api.SolrFactory;
-import es.caib.solr.api.SolrIndexer;
-import es.caib.solr.api.exception.ExcepcionSolrApi;
-import es.caib.solr.api.model.types.EnumAplicacionId;
 import es.caib.solr.api.model.types.EnumCategoria;
 
 
@@ -255,11 +224,17 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      *
      * @return Devuelve un listado de todos los SolrPendientes.
      */
-    public List<SolrPendienteJob> getListJobs(final int cuantos, final String tipoIndexacion) {
+    public List<SolrPendienteJob> getListJobs(final int cuantos, final String tipoIndexacion, String idElemento) {
 
         Session session = getSession();
         try {
-        	Query query = session.createQuery(" from SolrPendienteJob solrpendientejob where solrpendientejob.tipo = '"+tipoIndexacion+"' order by solrpendientejob.id desc");
+        	StringBuffer sql = new StringBuffer();
+        	sql.append(" from SolrPendienteJob solrpendientejob where solrpendientejob.tipo = '"+tipoIndexacion+"' ");
+        	if (idElemento != null && !idElemento.isEmpty()) {
+        		sql.append(" and solrpendientejob.idElem = "+idElemento+" ");
+        	}
+        	sql.append(" order by solrpendientejob.id desc ");
+        	Query query = session.createQuery(sql.toString());
         	query.setMaxResults(cuantos);
         	return query.list();
         } catch (HibernateException he) {
@@ -279,14 +254,14 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
    	 * 
    	 * @return Booleano indicando si se indexan todos los procesos pendientes .     *  
    	 */
-	public SolrPendienteJob crearSorlPendienteJob(String tipo) {
+	public SolrPendienteJob crearSorlPendienteJob(String tipo, Long idElemento) {
 		try
     	{
 			final Session session = getSession();
 			final SolrPendienteJob solrpendienteJob = new SolrPendienteJob();
 	    	solrpendienteJob.setFechaIni(new Date());
 	    	solrpendienteJob.setTipo(tipo);
-	    	
+	    	solrpendienteJob.setIdElem(idElemento);
 	    	session.save(solrpendienteJob); 
 			session.flush();
 			session.close();

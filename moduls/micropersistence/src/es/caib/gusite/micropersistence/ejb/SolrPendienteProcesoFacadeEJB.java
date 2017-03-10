@@ -180,12 +180,12 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	    						}
 	    					} else  if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
 	    		                
-	    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						info.append(" Vamos a enviar una indexacion de un faq (id:"+solrPendiente.getIdElem() +")  <br /> ");
 	    						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info);
 	    						
 	    					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
 	    					
-	    						info.append(" Vamos a enviar una indexacion de un microsite (id:"+solrPendiente.getIdElem() +")  <br /> ");
+	    						info.append(" Vamos a enviar una indexacion de una encuesta (id:"+solrPendiente.getIdElem() +")  <br /> ");
 	    						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info);
 	    						
 	    					}  /*else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ARCHIVO.toString())){

@@ -59,6 +59,11 @@ public class SolrPendienteJob implements ValueObject {
 	@Transient
 	private String info;
 	
+	/** Id del elemento (microsite, ua). **/
+	@Column(name = "JOB_IDELEM")
+	private Long idElem;
+	
+	
 	/**
 	 * @return the id
 	 */
@@ -162,6 +167,18 @@ public class SolrPendienteJob implements ValueObject {
 		
 		
 		return buffer.toString();
+	}
+	/**
+	 * @return the idElem
+	 */
+	public Long getIdElem() {
+		return idElem;
+	}
+	/**
+	 * @param idElem the idElem to set
+	 */
+	public void setIdElem(Long idElem) {
+		this.idElem = idElem;
 	}
 	
 	

@@ -29,7 +29,7 @@ public class GeneraIndexador implements Job {
 			SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
 			SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
 			
-			SolrPendienteJob solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob("IDX_PDT");
+			SolrPendienteJob solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob("IDX_PDT", null);
 			
 			solrDelegate.indexarPendientes(solrPendienteJob);	
 			

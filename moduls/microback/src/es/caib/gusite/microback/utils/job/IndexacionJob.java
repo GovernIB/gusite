@@ -44,9 +44,18 @@ public class IndexacionJob implements Job  {
     	SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
     	SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
     	
+    	//PASO 0. EXTRAER MICROSITE SI ES UN JOB.
+    	Long idElemento = null;
+		if (tipoIndexacion != null && "IDX_MIC".equals(tipoIndexacion)) {
+			idElemento = (Long) schedulerContext.get("idMicrosite");
+    	}
+		if (tipoIndexacion != null && "IDX_UA".equals(tipoIndexacion)) {
+			idElemento = (Long) schedulerContext.get("idUAdministrativa");;
+    	}
+		
     	///PASO 1. GUARDAR EL JOB.
     	try {    		 
-			 solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(tipoIndexacion);
+			 solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(tipoIndexacion, idElemento);
 		} catch (DelegateException e) {
 			log.debug("Error creando el job en bbdd.", e);
 			return;
@@ -60,15 +69,13 @@ public class IndexacionJob implements Job  {
 	    			solrDelegate.indexarTodo(solrPendienteJob);
 	    			break;
 	    		case "IDX_UA":
-	    			final String idUAdministrativa = (String) schedulerContext.get("idUAdministrativa");
-	    			solrDelegate.indexarMicrositeByUA(idUAdministrativa,solrPendienteJob);
+	    			solrDelegate.indexarMicrositeByUA(idElemento.toString(),solrPendienteJob);
 	    			break;
 	    		case "IDX_PDT":
 	    			solrDelegate.indexarPendientes(solrPendienteJob);
 	    			break;
 	    		case "IDX_MIC":
-	    			final Long idMicrosite = (Long) schedulerContext.get("idMicrosite");
-	    			solrDelegate.indexarMicrosite(idMicrosite,solrPendienteJob, null);
+	    			solrDelegate.indexarMicrosite(idElemento,solrPendienteJob, null);
 	    			break;    			
 	    		default:
 	    			break;

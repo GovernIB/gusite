@@ -16,7 +16,23 @@ public class IndexEncontrado {
 	    private String tituloserviciomain;
 	    private boolean disponible;
 
-
+	    /**
+	     * Constructor base. 
+	     * @param id
+	     * @param tiposervicio
+	     * @param site
+	     * @param familia
+	     * @param seccion
+	     * @param materia
+	     * @param uo
+	     * @param conforo
+	     * @param titulo
+	     * @param descripcion
+	     * @param tituloserviciomain
+	     * @param url
+	     * @param score
+	     * @param disponible
+	     */
 	    public IndexEncontrado(String id, String tiposervicio, String site, String familia, String seccion, String materia, String uo, String conforo, String titulo, String descripcion,
 	        String tituloserviciomain, String url, float score,boolean disponible) {
 	        this.id = id;
@@ -35,9 +51,34 @@ public class IndexEncontrado {
 	        this.setDisponible(disponible);
 	    }
 
+	    /**
+	     * Constructor base 1. 
+	     * @param id
+	     * @param titulo
+	     * @param descripcion
+	     * @param site
+	     * @param url
+	     * @param score
+	     * @param disponible
+	     */
 	    public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, float score, boolean disponible) {
 	        this(id, null, site, null, null, null, null, null, titulo, descripcion, null, url, score,disponible);
 	    }
+	    
+	    /**
+	     * Constructor base 2. 
+	     * @param id
+	     * @param titulo
+	     * @param descripcion
+	     * @param site
+	     * @param url
+	     * @param score
+	     */
+      public IndexEncontrado(String id, String titulo, String descripcion, String site, String url, float score) { 
+    	  this(id, null, site, null, null, null, null, null, titulo, descripcion, null, url, score,true); 
+      }
+
+
 
 	    public String getId() {
 	        return id;

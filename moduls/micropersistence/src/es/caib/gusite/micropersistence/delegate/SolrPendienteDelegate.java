@@ -90,9 +90,9 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	 * @return
 	 * @throws DelegateException
 	 */
-	 public SolrPendienteJob crearSorlPendienteJob(String tipo) throws DelegateException {
+	 public SolrPendienteJob crearSorlPendienteJob(String tipo, Long idElemento) throws DelegateException {
 		 try {
-				return this.getFacade().crearSorlPendienteJob(tipo);
+				return this.getFacade().crearSorlPendienteJob(tipo, idElemento);
 		 }  catch (RemoteException e) {
 				throw new DelegateException(e);
 		 }
@@ -130,9 +130,9 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	  * @param cuantos La lista de elementos a devolver.
 	  * @throws DelegateException
 	  */
-     public List<SolrPendienteJob> getListJobs(int cuantos, String tipo) throws DelegateException {
+     public List<SolrPendienteJob> getListJobs(int cuantos, String tipo, String idElemento) throws DelegateException {
     	 try {
-    			 return this.getFacade().getListJobs(cuantos, tipo);
+    			 return this.getFacade().getListJobs(cuantos, tipo, idElemento);
     	 }  catch (RemoteException e) {
 				throw new DelegateException(e);
 		 }
