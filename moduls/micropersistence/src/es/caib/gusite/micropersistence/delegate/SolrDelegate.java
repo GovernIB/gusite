@@ -16,6 +16,7 @@ import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.solrutiles.solr.model.IndexEncontrado;
 import es.caib.gusite.solrutiles.solr.model.IndexResultados;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
@@ -55,7 +56,7 @@ public class SolrDelegate implements StatelessDelegate {
 		final String index = GusitePropertiesUtil.getIndexSOLR();
 		final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 		
-		final SolrSearcher buscador = SolrFactory.getSearcher(urlSolr, index, username, password);
+		final SolrSearcher buscador = SolrFactory.getSearcher(IndexacionUtil.APLICACION_CALLER_ID,urlSolr, index, username, password);
 		
 		final FilterSearch filterSearch = new FilterSearch();		
 		filterSearch.setElementoRaizCategoria(EnumCategoria.GUSITE_MICROSITE);

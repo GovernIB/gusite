@@ -12,6 +12,7 @@ import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.base.Bdbase;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.solrutiles.solr.model.IndexEncontrado;
 import es.caib.gusite.solrutiles.solr.model.IndexResultados;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
@@ -85,7 +86,7 @@ public class Bdcercador extends Bdbase {
 			final String index = GusitePropertiesUtil.getIndexSOLR();
 			final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 			
-			final SolrSearcher buscador = SolrFactory.getSearcher(urlSolr, index, username, password);
+			final SolrSearcher buscador = SolrFactory.getSearcher(IndexacionUtil.APLICACION_CALLER_ID, urlSolr, index, username, password);
 			
 			//IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
 			final String words = "" + req.getParameter("cerca");
