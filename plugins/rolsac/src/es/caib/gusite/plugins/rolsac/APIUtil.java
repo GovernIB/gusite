@@ -6,10 +6,18 @@ import es.caib.rolsac.api.v2.general.BeanUtils.STRATEGY;
 import es.caib.rolsac.api.v2.general.CertificadoUtil;
 import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
 
+/**
+ * Clase API. 
+ * 
+ * @author slromero
+ *
+ */
 public class APIUtil {
 	
+	/** Estrategia: WS o EJB. **/
 	public static final STRATEGY API_STRATEGY = STRATEGY.WS;
     
+	/** Enumerado del sexo. **/
     public static enum Sexo {
         MASCULINO, 
         FEMENINO;
@@ -19,8 +27,13 @@ public class APIUtil {
         }
     };
     
+    /** Constructor. **/
     private APIUtil() {}
     
+    /**
+     * Obtiene el servicio de rolsac. 
+     * @return
+     */
     public static RolsacQueryService getRolsacQueryService() {
     	
     	String keyStoreName = System.getProperty("es.caib.gusite.api.rolsac.keystore.nombre");
@@ -40,10 +53,19 @@ public class APIUtil {
     	
     }
     
+    /**
+     * Obtiene el servicio de estadística.
+     * @return
+     */
     public static EstadisticaInsertService getEstadisticaInsertService() {
-		
-        return (EstadisticaInsertService)BeanUtils.getAdapter("estadistica", APIUtil.API_STRATEGY);
-        
+    	final String url = System.getProperty("es.caib.gusite.url.rolsac");
+    	EstadisticaInsertService eis;
+    	if (url == null || url.isEmpty()) {
+    		eis = (EstadisticaInsertService)BeanUtils.getAdapter("estadistica", APIUtil.API_STRATEGY);
+    	} else {
+    		eis = (EstadisticaInsertService)BeanUtils.getAdapter("estadistica", APIUtil.API_STRATEGY, url);
+    	}
+    	return eis;
 	}
 
 }
