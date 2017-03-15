@@ -55,7 +55,7 @@ public class listaContenidosAction extends BaseAction {
     	
     	//Metemos en el request el CSS que utilizará el tinymce
     	Microsite micro = (Microsite)request.getSession().getAttribute("MVS_microsite");
-    	request.setAttribute("MVS_css_tiny",tagCSS(micro.getEstiloCSS()));    	
+    	request.setAttribute("MVS_css_tiny",tagCSS(micro.getEstiloCSS(),micro.getEstiloCSSPatron()));    	
     	request.setAttribute("idmicrosite", ((Microsite)request.getSession().getAttribute("MVS_microsite")).getId().toString());
         
         //********************************************************
@@ -123,15 +123,30 @@ public class listaContenidosAction extends BaseAction {
 
     }
 
-	//MCR v1.1
-	public String tagCSS(Archivo archivocss) {
+	//MCR v1.1    
+	public String tagCSS(Archivo archivocss, String idcsspatron) {
 		String retorno="";
 		if (archivocss!=null)
-			retorno="archivo.do?id=" + archivocss.getId().longValue();
-		else
-			retorno="/sacmicrofront/css/dummy_estilos01_blau.css";
+			retorno="[\"/sacmicrofront/css/tiny_estils.css\",\"archivo.do?id=" + archivocss.getId().longValue()+"\"]";		
+		else 
+		{
+			retorno="\"/sacmicrofront/css/tiny_estils.css\"";		
+		    if (idcsspatron.equals("A"))
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_blau.css\"]";
+		    if (idcsspatron.equals("R"))
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_roig.css\"]";
+		    if (idcsspatron.equals("V"))
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_verd.css\"]";
+		    if (idcsspatron.equals("G"))
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_groc.css\"]";
+		    if (idcsspatron.equals("M"))
+		    	retorno= "[" +retorno +",\"/sacmicrofront/v4/css/estils_morat.css\"]";
+		}
+	    
 		return retorno;
-	}	
+	}
+    
+    
 	
 	
 	

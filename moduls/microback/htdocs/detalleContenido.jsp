@@ -63,14 +63,13 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste, anchor "
 			,contextmenu: "link image inserttable | cell row column deletetable textcolor colorpicker forecolor backcolor"
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
-			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink image removeformat cleanup '+editarCodigo+' acheck '
+			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink anchor image cleanup '+editarCodigo+' acheck '
 			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullscreen '
 			,menubar: false
-			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
-			,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"
+			,content_css : <bean:write name="MVS_css_tiny" filter="false" ignore="true"/>				
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js",
 				"insertararchivos": "plugins/insertararchivos/editor_plugin.js",
@@ -83,20 +82,7 @@
 			, theme_advanced_toolbar_align : "left"
 			, theme_advanced_path_location : "bottom"
 			, verify_html : false
-			, setupcontent_callback : "Obtener_Idform"
-		    , file_browser_callback : function(field_name, url, type, win){
-                
-                Rcajatemp_tiny=field_name;
-                Rwin_tiny=win;
-                <logic:notEmpty name="contenidoForm">
-                               window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
-                </logic:notEmpty>
-                <logic:empty name="contenidoForm">
-                               window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
-                </logic:empty>
-                return false;
-			}
-	
+			, setupcontent_callback : "Obtener_Idform"		
 			, theme_advanced_resizing : false
 			, accessibility_warnings : true	
 			, plugin_insertdate_dateFormat : "%d/%m/%Y"
@@ -107,16 +93,18 @@
 			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
 			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
 			  ]
-			, file_browser_callback : function(field_name, url, type, win){
-                Rcajatemp_tiny=field_name;
-                Rwin_tiny=win;
-                <logic:notEmpty name="contenidoForm">
-                               window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
-                </logic:notEmpty>
-                <logic:empty name="contenidoForm">
-                               window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
-                </logic:empty>
-                return false;
+			,image_advtab: true
+			,file_picker_types: 'file image media'
+			,file_picker_callback: function(callback, value, meta) {			    
+				Rcallback_tiny=callback;
+				Rmeta_tiny=meta;	
+			    
+			<logic:notEmpty name="contenidoForm">
+				window.open("/sacmicroback/recursos.do?tiny=true&id=<bean:write name='contenidoForm' property='id'/>&idMenu=<bean:write name='contenidoForm' property='idMenu'/>",'recursos','scrollbars=yes,width=700,height=400');
+			</logic:notEmpty>
+			<logic:empty name="contenidoForm">
+				window.open("/sacmicroback/recursos.do?tiny=true",'recursos','scrollbars=yes,width=700,height=400');
+			</logic:empty>
 			}
 
 			, theme_advanced_resizing : false
@@ -142,57 +130,44 @@
 				,idform:<bean:write name="contenidoForm" property="id"/>
 			</logic:present>
 			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
-				,paste_as_text: false
+				,paste_as_text: true
      			,invalid_elements: 'br'
 			</logic:notEqual>
 		  });
 		
+   	
+   	var Rcallback_tiny;
+    var Rmeta_tiny;		
+	
+	function Rmeterurl_tiny(laurl, texto) {		
+		var prefijo_alt= 'desc_';
+				
+		var desc_alt = prefijo_alt + laurl;
+		if (typeof texto != 'undefined'){
+			if(desc_alt != ""){
+				desc_alt = texto;	
+				// si es una miga de pan cogemos el ultimo valor
+				var at = texto.split(">");
+				var archivo = at[at.length-1];
+				if(archivo.length>0){
+					desc_alt = prefijo_alt + archivo;
+				}				
+			}			
+		}
+				
+		if (Rmeta_tiny.filetype == 'file') {
+			 Rcallback_tiny(laurl);
+	    }
 		
-		/*
-	tinyMCE.init({
-		mode : "textareas",
-		theme : "advanced",
-		plugins : "media ,style,layer,table,advhr,advimage,advlink,iespell,searchreplace,print,contextmenu,paste,directionality,fullscreen,tipoarchivos,insertararchivos,template,componentesmicros",
-		//plugins : "media ,style,layer,table,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,searchreplace,print,contextmenu,paste,directionality,fullscreen,tipoarchivos,insertararchivos,template,componentesmicros",
-		theme_advanced_buttons1_add_before : "newdocument,separator,insertararchivos,tipoarchivos,componentesmicros,template,separator",
-		theme_advanced_buttons2_add : "",
-		//theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview",
-		theme_advanced_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
-		theme_advanced_buttons3_add_before : "tablecontrols,separator,forecolor,backcolor,separator",
-		//theme_advanced_buttons3_add : "emotions,flash,advhr,separator,fullscreen",
-		theme_advanced_buttons3_add : "media,advhr,separator,fullscreen",
-		theme_advanced_buttons4 : "",
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_path_location : "bottom",
-		verify_html : false,
-		content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>",
-		plugin_insertdate_dateFormat : "%d/%m/%Y",
-		plugin_insertdate_timeFormat : "%H:%M:%S",
-		extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
-		onpageload  : "initCaib",
-		template_external_list_url : "tinymce/jscripts/tiny_mce/microsites_template_list.js",
-		file_browser_callback : "fileBrowserCallBack",
-		theme_advanced_resizing : false,
-		nonbreaking_force_tab : true,
-		apply_source_formatting : true,		
-		convert_urls: false,			
-		relative_urls: true,		
-		language: "ca"
-		<logic:present name="contenidoForm" property="id">		
-			,idform:<bean:write name="contenidoForm" property="id"/>
-		</logic:present>
-	});*/
-	
-   	var Rcajatemp_tiny;
-   	var Rwin_tiny;
-	
-	function Rmeterurl_tiny(laurl) {
-		//Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
-		//No tiene name el campo de texto x eso se sustituye
-		document.getElementById(Rcajatemp_tiny).value = laurl;
+		if ( Rmeta_tiny.filetype == 'media' ) {
+			 Rcallback_tiny(laurl);
+	    }
+		
+	    if (Rmeta_tiny.filetype == 'image') {
+	    	Rcallback_tiny(laurl, {alt: desc_alt});
+	    }
 	}	
-
+	
 	var valor="";
 
 
@@ -574,8 +549,8 @@ var mensa3='<bean:message key="conte.nuevoarchimensa"/>';
 	function publica (idioma) {
 	var txtbeta;
 		if (confirm('<bean:message key="conte.mensacopia1" />')) {
-			txtbeta = tinyMCE.getInstanceById('traducciones['+idioma+'].txbeta').getBody().innerHTML;
-			tinyMCE.getInstanceById('traducciones['+idioma+'].texto').getBody().innerHTML = txtbeta;
+			txtbeta = tinyMCE.get('traducciones['+idioma+'].txbeta').getBody().innerHTML;
+			tinyMCE.get('traducciones['+idioma+'].texto').getBody().innerHTML = txtbeta;
 			tinyMCE.triggerSave(); 
 		}
 	}

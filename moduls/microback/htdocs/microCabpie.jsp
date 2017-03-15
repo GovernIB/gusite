@@ -52,7 +52,7 @@
 			,toolbar2: 'bullist numlist | outdent indent | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
 			,menubar: false
 			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
-			,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"
+			//,importcss_file_filter: "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			} 
@@ -65,13 +65,7 @@
 			, setupcontent_callback : function (editor_id, body, doc) {
 				tinymce.settings['idform'] = document.microForm.id.value;
 			}
-		    , file_browser_callback : function(field_name, url, type, win){
-		        Rcajatemp_tiny=field_name;
-				Rwin_tiny=win;
-				window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
-
-	        	return false;	
-		    }
+		  
 			, theme_advanced_resizing : false
 			, accessibility_warnings : true	
 			, plugin_insertdate_dateFormat : "%d/%m/%Y"
@@ -82,33 +76,55 @@
 			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
 			    {title: "Component agenda", 	description: "Component agenda en una taula de dues col.lumnes", url:"tinymce/templates/agenda.htm"}			    
 			  ]
-			, file_browser_callback : function(field_name, url, type, win){
-		        Rcajatemp_tiny=field_name;
-				Rwin_tiny=win;
+			,image_advtab: true
+			,file_picker_types: 'file image media'
+			,file_picker_callback: function(callback, value, meta) {			    
+				Rcallback_tiny=callback;
+				Rmeta_tiny=meta;				    
 				window.open('/sacmicroback/recursos.do?tiny=true','recursos','scrollbars=yes,width=700,height=400');
-
-	        	return false;	
-		    }
+			}
 			, theme_advanced_resizing : false
 			, nonbreaking_force_tab : true
 			, apply_source_formatting : true		
 			, convert_urls: false				
 			, block_formats: 'Paràgraf=p;Adreça=address;Preformatat=pre;Títol=h1;Subtítol nivell 1=h2;Subtítol nivell 2=h3;Subtítol nivell 3=h4;Subtítol nivell 4=h5;Subtítol nivell 5=h6'
 			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
-				,paste_as_text: false
- 				,invalid_elements: 'br'
+				,paste_as_text: true
+				,invalid_elements: 'br'
 			</logic:notEqual>
 		});
+				
 		
-
+		var Rcallback_tiny;
+	    var Rmeta_tiny;		
 		
-		
-	   	var Rcajatemp_tiny;
-	   	var Rwin_tiny;
-		
-		function Rmeterurl_tiny(laurl) {
-			//Rwin_tiny.document.forms[0].elements[Rcajatemp_tiny].value = laurl;
-			document.getElementById(Rcajatemp_tiny).value = laurl;
+		function Rmeterurl_tiny(laurl, texto) {		
+			var prefijo_alt= 'desc_';
+					
+			var desc_alt = prefijo_alt + laurl;
+			if (typeof texto != 'undefined'){
+				if(desc_alt != ""){
+					desc_alt = texto;	
+					// si es una miga de pan cogemos el ultimo valor
+					var at = texto.split(">");
+					var archivo = at[at.length-1];
+					if(archivo.length>0){
+						desc_alt = prefijo_alt + archivo;
+					}				
+				}			
+			}
+					
+			if (Rmeta_tiny.filetype == 'file') {
+				 Rcallback_tiny(laurl);
+		    }
+			
+			if ( Rmeta_tiny.filetype == 'media' ) {
+				 Rcallback_tiny(laurl);
+		    }
+			
+		    if (Rmeta_tiny.filetype == 'image') {
+		    	Rcallback_tiny(laurl, {alt: desc_alt});
+		    }
 		}	
 	
 		

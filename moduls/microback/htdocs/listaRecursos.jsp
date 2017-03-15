@@ -360,17 +360,16 @@ int indiceX=0;
 <!--
 
 	<logic:equal name="MVA_forcetiny" value="true">
-		 function Rutilizaurl(url) {
-		 opener.Rmeterurl_tiny(url);
-		 window.close();
-				}
+		function Rutilizaurl(url, descripcion) {
+		 	opener.Rmeterurl_tiny(url, descripcion);
+			window.close();
+		}
 	</logic:equal>
 
 	<logic:equal name="MVA_forcetiny" value="false">
 	  	function Rutilizaurl(url, descripcion) {
         opener.Rmeterurl(url, descripcion);
         window.close();
-
       }
 	</logic:equal>
 	 

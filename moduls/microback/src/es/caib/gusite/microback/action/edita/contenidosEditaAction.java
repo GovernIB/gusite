@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.utils.Cadenas;
 
 import org.apache.commons.logging.Log;
@@ -394,20 +395,20 @@ public class contenidosEditaAction extends BaseAction
 	public String tagCSS(Archivo archivocss, String idcsspatron) {
 		String retorno="";
 		if (archivocss!=null)
-			retorno="/sacmicrofront/css/tiny_estils.css,archivo.do?id=" + archivocss.getId().longValue();
+			retorno="[\"/sacmicrofront/css/tiny_estils.css\",\"archivo.do?id=" + archivocss.getId().longValue()+"\"]";		
 		else 
 		{
-			retorno="/sacmicrofront/css/tiny_estils.css";		
+			retorno="\"/sacmicrofront/css/tiny_estils.css\"";		
 		    if (idcsspatron.equals("A"))
-		    	  retorno+=",/sacmicrofront/v4/css/estils_blau.css";
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_blau.css\"]";
 		    if (idcsspatron.equals("R"))
-		    	  retorno+=",/sacmicrofront/v4/css/estils_roig.css";
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_roig.css\"]";
 		    if (idcsspatron.equals("V"))
-		    	  retorno+=",/sacmicrofront/v4/css/estils_verd.css";
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_verd.css\"]";
 		    if (idcsspatron.equals("G"))
-		    	  retorno+=",/sacmicrofront/v4/css/estils_groc.css";
+		    	retorno= "[" +retorno + ",\"/sacmicrofront/v4/css/estils_groc.css\"]";
 		    if (idcsspatron.equals("M"))
-		    	  retorno+=",/sacmicrofront/v4/css/estils_morat.css";
+		    	retorno= "[" +retorno +",\"/sacmicrofront/v4/css/estils_morat.css\"]";
 		}
 	    
 		return retorno;
