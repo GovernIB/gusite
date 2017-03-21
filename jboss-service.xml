@@ -35,7 +35,8 @@
 	   es.caib.gusite.front.templateHotLoadingPath=/home/web/proyectos/ADCaib/gusite/plantillasDev/
 	   
        
-        es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/
+        <!--  es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/-->
+        es.caib.gusite.url.rolsac = http://localhost:48080/sacws-api/services/
         
         <!-- Buscador solr  -->
         es.caib.gusite.user.solr=admin
