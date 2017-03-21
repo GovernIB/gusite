@@ -415,10 +415,12 @@
                         <td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
                         <td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
                     </tr>
-                    <tr class="par">
-                        <td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
-                        <td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
-                    </tr>
+                    <logic:equal name="MVS_usuario" property="perfil" value="gusadmin">
+						<tr class="par">
+							<td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
+							<td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
+						</tr>
+					</logic:equal>
                     <logic:equal name="MVS_microsite" property="versio" value="v5">
                     <tr>
                         <td class="etiqueta"><bean:message key="micro.tema" /> &gt;</td>
