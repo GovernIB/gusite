@@ -31,6 +31,7 @@ import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.solr.api.model.PathUO;
 
 public class IndexacionUtil {
+	public static final String APLICACION_CALLER_ID = "GUSITE";
 	
 	public static Long REINDEXAR = 1l;
 	public static Long DESINDEXAR = 0l;

@@ -23,6 +23,7 @@ import es.caib.solr.api.model.ResultData;
 import es.caib.solr.api.model.StoredData;
 import es.caib.solr.api.model.types.EnumCategoria;
 import es.caib.solr.api.model.types.EnumIdiomas;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 
 /**
  * Clase Bdcercador. Recoge los datos para mostrarlos en el front.
@@ -85,7 +86,7 @@ public class Bdcercador extends Bdbase {
 			final String index = GusitePropertiesUtil.getIndexSOLR();
 			final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 			
-			final SolrSearcher buscador = SolrFactory.getSearcher(urlSolr, index, username, password);
+			final SolrSearcher buscador = SolrFactory.getSearcher(IndexacionUtil.APLICACION_CALLER_ID,urlSolr, index, username, password);
 			
 			//IndexerDelegate indexo = DelegateUtil.getIndexerDelegate();
 			final String words = "" + req.getParameter("cerca");
