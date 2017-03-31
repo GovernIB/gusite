@@ -1,5 +1,7 @@
 package es.caib.gusite.front.home;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,9 +62,10 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 
-		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta, previsual);
+		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta, previsual, response);
 	}
 
 	/**
@@ -75,7 +78,8 @@ public class LegacyController extends FrontController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual){
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response){
 
 		Microsite microsite = null;
 		try {
@@ -83,6 +87,7 @@ public class LegacyController extends FrontController {
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
 			//#81 Si el contenido ha sido borrado, esto se encarga de redirigirlo.
 			if (contenido == null) {
+				response.setStatus(404);
 				return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 			}
 			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta, previsual);
@@ -139,9 +144,10 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 
-		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta,previsual);
+		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta,previsual, response);
 	}
 
 	/**
@@ -154,11 +160,12 @@ public class LegacyController extends FrontController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual);
+			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
 			// TODO: 404?
