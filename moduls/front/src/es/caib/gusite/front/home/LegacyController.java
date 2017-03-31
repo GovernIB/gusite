@@ -81,7 +81,9 @@ public class LegacyController extends FrontController {
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
-
+			if (contenido == null) {
+				return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			}
 			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta, previsual);
 
 		} catch (ExceptionFrontMicro e) {
