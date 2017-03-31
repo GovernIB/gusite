@@ -33,6 +33,7 @@ import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Convierte peticiones antiguas a nuevas.
@@ -60,9 +61,10 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 
-		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta, previsual);
+		return this.contenido(idSite, lang, idContenido, model, pcampa, null,tipobeta, previsual, response);
 	}
 
 	/**
@@ -75,13 +77,15 @@ public class LegacyController extends FrontController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual){
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response){
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
 			if (contenido == null) {
+				response.setStatus(404);
 				return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 			}
 			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta, previsual);
@@ -138,9 +142,10 @@ public class LegacyController extends FrontController {
 			@RequestParam(Microfront.PCONT) Long idContenido, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 
-		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta,previsual);
+		return this.contenido(mkey, lang, idContenido, model, pcampa, null,tipobeta,previsual, response);
 	}
 
 	/**
@@ -153,11 +158,12 @@ public class LegacyController extends FrontController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipobeta,
-			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual) {
+			@RequestParam(value = Microfront.PVISUALIZAR, required = false, defaultValue = "") String previsual,
+			HttpServletResponse response) {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual);
+			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
 			// TODO: 404?
