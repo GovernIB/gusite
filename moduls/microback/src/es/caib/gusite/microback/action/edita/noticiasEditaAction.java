@@ -31,6 +31,7 @@ import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 import es.caib.gusite.solrutiles.solr.model.Catalogo;
+import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 
 /**
  * Action que edita las noticias (elementos de un listado) de un microsite <BR>
@@ -203,7 +204,14 @@ public class noticiasEditaAction extends BaseAction
         } else {
             noticiaBean.setOrden(null);
         }
-
+       	
+       	////////
+       	//campos del mapa
+       	noticiaBean.setLatitud("" + noticiaForm.get("latitud"));
+       	noticiaBean.setLongitud("" + noticiaForm.get("longitud"));
+       	noticiaBean.setColorIcono("" + noticiaForm.get("colorIcono"));
+       	////////
+       	
         // Tratamos la imagen de la noticia
        	FormFile imagen = (FormFile) noticiaForm.get("imagen");
         if (archivoValido(imagen)) {
@@ -335,6 +343,11 @@ public class noticiasEditaAction extends BaseAction
                 noticiaForm.set("visible",noticiaBean.getVisible());
                 noticiaForm.set("visibleweb",noticiaBean.getVisibleweb());
                 noticiaForm.set("orden", noticiaBean.getOrden());
+                //campos mapa
+                noticiaForm.set("latitud", noticiaBean.getLatitud());
+                noticiaForm.set("longitud", noticiaBean.getLongitud());
+                noticiaForm.set("colorIcono", noticiaBean.getColorIcono());
+                
                 noticiaForm.set("idTipo",noticiaBean.getTipo().getId());
                 
                 VOUtils.describe(noticiaForm, noticiaBean);  // bean --> form

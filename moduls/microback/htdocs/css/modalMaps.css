@@ -1,0 +1,73 @@
+/* background del modal */
+.modal {
+    display: none;
+    position: fixed; 
+    z-index: 1; 
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+/* contenido modal */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 15px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* boton cerrar superior */
+.close_modal {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close_modal:hover,
+.close_modal:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*div del mapa*/
+#modal_map {
+	height: 300px;
+	width:100%;
+}
+
+/*barra  de botones superior*/
+#modal_cabecera {
+	clear:both;
+	margin-bottom:8px;
+}
+#modal_cabecera>span{
+	min-width: 10%;	
+	margin-right: 8px;
+}
+#modal_direccion {
+	min-width: 45%;
+	margin-right: 8px;
+}
+#modal_buscarDireccion {
+	margin-right: 8px;
+}
+#modal_centrar{
+	float:right;	
+}
+
+#modal_footer {
+	clear:both;
+	margin-top:10px;
+}
+
+#modal_footer > input{	
+	margin-right: 8px;
+}

@@ -94,6 +94,7 @@
 	   	    	        <html:option value="2"><bean:message key="tipo.cod2" /></html:option>
 	   	    	        <html:option value="3"><bean:message key="tipo.cod3" /></html:option>
 	   	    	        <html:option value="4"><bean:message key="tipo.cod4" /></html:option>
+	   	    	        <html:option value="5"><bean:message key="tipo.cod5" /></html:option>
 			        </html:select>
 				</td>
 				<td class="etiqueta">&nbsp;</td>
@@ -330,9 +331,15 @@
 			obj.style.display="none";
 			obj = document.getElementById("diferenteExterno");
 			obj.style.display="block";
-		}
-	 	else
-	 	{
+		}else if(obj.options[obj.selectedIndex].value == '5'){ // 5 = MAPA
+			obj = document.getElementById("Externo");
+	 		obj.style.display="none";	
+	 		obj = document.getElementById("diferenteExterno");
+	 		obj.style.display="none";
+	 		obj = document.getElementById("fotosporfila");
+	 		obj.style.display="none";
+	 		
+		}else{
 	 		obj = document.getElementById("Externo");
 	 		obj.style.display="none";
 	 		obj = document.getElementById("diferenteExterno");

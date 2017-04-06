@@ -97,6 +97,7 @@
 					<logic:equal name="MVS_tipo_elemento" property="tipoelemento" value="1"><bean:message key="tipo.cod1" /></logic:equal>
 					<logic:equal name="MVS_tipo_elemento" property="tipoelemento" value="2"><bean:message key="tipo.cod2" /></logic:equal>
 					<logic:equal name="MVS_tipo_elemento" property="tipoelemento" value="4"><bean:message key="tipo.cod4" /></logic:equal>
+					<logic:equal name="MVS_tipo_elemento" property="tipoelemento" value="5"><bean:message key="tipo.cod5" /></logic:equal>
 				</dd>
 				<dt><bean:message key="noticia.resumen.paginacion" />:</dt>
 				<dd>

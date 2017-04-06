@@ -92,7 +92,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		super.tampagina = 10;
 		super.pagina = 0;
 		// super.select="";
-		super.select = "select noti.id, noti.fcaducidad, noti.fpublicacion, noti.tipo, trad.titulo, trad.subtitulo,trad.texto,noti.orden ";
+		super.select = "select noti.id, noti.fcaducidad, noti.fpublicacion, noti.tipo, trad.titulo, trad.subtitulo,trad.texto,noti.orden,noti.latitud,noti.longitud,noti.colorIcono ";
 		super.from = " from Noticia noti join noti.traducciones trad ";
 		super.where = " where trad.id.codigoIdioma = '"
 				+ Idioma.getIdiomaPorDefecto() + "' and noti.idmicrosite = "
@@ -117,7 +117,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		super.tampagina = 10;
 		super.pagina = 0;
 		// super.select="";
-		super.select = "select noti.id, noti.fcaducidad, noti.fpublicacion, noti.tipo, trad.titulo, trad.subtitulo,noti.orden ";
+		super.select = "select noti.id, noti.fcaducidad, noti.fpublicacion, noti.tipo, trad.titulo, trad.subtitulo,noti.orden,noti.latitud,noti.longitud,noti.colorIcono ";
 		super.from = " from Noticia noti join noti.traducciones trad ";
 		super.where = " where trad.id.codigoIdioma = '"
 				+ Idioma.getIdiomaPorDefecto() + "'";

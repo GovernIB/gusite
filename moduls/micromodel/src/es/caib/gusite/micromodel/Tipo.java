@@ -53,6 +53,7 @@ public class Tipo extends AuditableModel implements Traducible2 {
 	public static String TIPO_DOCUMENTOS = "2";
 	public static String TIPO_CONEXIO_EXTERNA = "3";
 	public static String TIPO_FOTO = "4";
+	public static String TIPO_MAPA = "5";
 
 	@XmlAttribute
 	@Id

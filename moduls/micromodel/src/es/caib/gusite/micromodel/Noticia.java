@@ -85,7 +85,22 @@ public class Noticia extends AuditableModel implements Traducible2 {
 	@XmlAttribute
 	@Column(name = "NOT_VISWEB")
 	private String visibleweb;
-
+	
+	/////////////////
+	// campos mapa
+	@XmlAttribute
+	@Column(name = "NOT_LATITUD")
+	private String latitud;
+	
+	@XmlAttribute
+	@Column(name = "NOT_LONGITUD")
+	private String longitud;	
+	
+	@XmlAttribute
+	@Column(name = "NOT_ICOCOLOR")
+	private String colorIcono;	
+	///////////////
+	
 	@XmlElement
 	@ManyToOne
 	@JoinColumn(name = "NOT_TIPO")
@@ -188,6 +203,33 @@ public class Noticia extends AuditableModel implements Traducible2 {
 	public void setOrden(Integer orden) {
 		this.orden = orden;
 	}
+	
+	///////
+	// campos mapa
+	public String getLatitud() {
+		return latitud;
+	}
+
+	public void setLatitud(String latitud) {
+		this.latitud = latitud;
+	}
+
+	public String getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(String longitud) {
+		this.longitud = longitud;
+	}
+
+	public String getColorIcono() {
+		return colorIcono;
+	}
+
+	public void setColorIcono(String colorIcono) {
+		this.colorIcono = colorIcono;
+	}
+	////////
 
 	@Override
 	public Map<String, TraduccionNoticia> getTraducciones() {
@@ -238,5 +280,6 @@ public class Noticia extends AuditableModel implements Traducible2 {
 	public void setIdi(String idi) {
 		this.idi = idi;
 	}
+	
 
 }

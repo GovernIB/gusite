@@ -10,6 +10,7 @@ public class GusitePropertiesUtil
 	  private static final String URL_SOLR = "es.caib.gusite.url.solr";
 	  private static final String DIAS_SOLR = "es.caib.gusite.dias.solr";
 	  private static final String INDEX_SOLR = "es.caib.gusite.index.solr";
+	  private static final String KEY_GOOGLEMAPS = "es.caib.gusite.key.google.maps";
 	  
 	  private static final String ERROR_MESSAGE = "Error obteniendo la propiedad ";
 
@@ -53,6 +54,10 @@ public class GusitePropertiesUtil
 		}
 		
 		return dias;
+	}
+
+	public static String getKeyGooglemaps() {
+		 return getProperty( KEY_GOOGLEMAPS);
 	}
 
  

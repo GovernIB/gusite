@@ -200,6 +200,7 @@
 		      <logic:equal name="i" property="tipoelemento" value="2"><bean:message key="tipo.cod2" /></logic:equal>
 		      <logic:equal name="i" property="tipoelemento" value="3"><bean:message key="tipo.cod3" /></logic:equal>
    		      <logic:equal name="i" property="tipoelemento" value="4"><bean:message key="tipo.cod4" /></logic:equal>
+   		      <logic:equal name="i" property="tipoelemento" value="5"><bean:message key="tipo.cod5" /></logic:equal>
 	      </td>
 	      <td>
     		   <bean:write name="i" property="clasificacion" />

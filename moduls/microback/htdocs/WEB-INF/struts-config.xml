@@ -60,6 +60,11 @@
 		<form-property name="ficherosid"  type="java.lang.Long[]"/>		
  	    <form-property name="ficherosnom" type="java.lang.String[]"/>
 	    <form-property name="ficherosbor" type="boolean[]" initial="false"/>
+	    <form-property name="latitud" type="java.lang.String"/>
+	    <form-property name="longitud" type="java.lang.String"/>
+	    <form-property name="colorIcono" type="java.lang.String"/>
+	    
+	    
 	</form-bean>
     
     <form-bean name="PerPlantillasForm" type="es.caib.gusite.microback.actionform.formulario.PerPlantillasForm"

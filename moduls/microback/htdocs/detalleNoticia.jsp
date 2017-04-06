@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="es.caib.gusite.utilities.property.GusitePropertiesUtil"  %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@page import="es.caib.gusite.micromodel.Accesibilidad"%>
@@ -15,6 +16,10 @@
 	<script type="text/javascript" src="moduls/funcions.js"></script>
 	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript" src="js/checkUri.js"></script>
+	<script type="text/javascript" src="js/jscolor.min.js"></script>
+	<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
+	<link href="css/modalMaps.css" rel="stylesheet" type="text/css" />	
+	<%} %>
 </head>
 
 <body>
@@ -24,8 +29,28 @@
 		<logic:present name="MVS_tipolistado">
 		<bean:define id="tipovisible" name="MVS_tipolistado" property="tipoelemento" />
 		</logic:present>
-
-
+				
+<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>		
+		
+<!-- ventana Modal para google maps MODALMAPS -->
+<div id="modalMaps" class="modal">
+  <div class="modal-content">
+    <span class="close_modal">&times;</span>
+	<div id="modal_cabecera">
+		<span>Dirección:</span> 
+		<input type="text" id="modal_direccion"/> 
+		<input type="button" id="modal_buscarDireccion" onclick="buscarDireccion()" value="<bean:message key="boton.buscar.direccion"/>"/> 
+		<input type="button" id="modal_centrar" onclick="centrarMapa()" value="<bean:message key="boton.centrar.mapa"/>"/> 
+	</div>
+	<div id="modal_map">mapa</div>
+	<div id="modal_footer">
+		<input type="button" id="modal_guardar" onclick="guardarPosicion();cerrarModal();" value="<bean:message key="boton.usar.ubicacion"/>"/> 
+		<input type="button" id="modal_borrar" onclick="borrarPosicion();cerrarModal();" value="<bean:message key="boton.borrar.ubicacion"/>"/> 
+		<input type="button" id="modal_volver" onclick="cerrarModal();" value="<bean:message key="boton.volver"/>"/> 	
+	</div>   
+  </div>
+</div>
+<%} %>	
 	<!-- molla pa -->
 	<ul id="mollapa">
 		<li><a href="microsites.do" target="_parent"><bean:message key="micro.listado.microsites" /></a></li>
@@ -129,7 +154,7 @@
 			</logic:equal>
 
 			</logic:present>
-		    <button type="submit" title='<bean:message key="operacion.guardar"/>' onclick="submitForm('Guardar');">
+		    <button type="button" title='<bean:message key="operacion.guardar"/>' onclick="submitForm('Guardar');">
 		   		<img src="imgs/botons/guardar.gif" alt='<bean:message key="operacion.guardar"/>' /> &nbsp;<bean:message key="operacion.guardar" />
 		   	</button>
 		   	<logic:present name="noticiaForm" property="id">
@@ -177,12 +202,35 @@
 			</tr>
 	
 			<tr style="display:block;">
-				<td class="etiqueta"><bean:message key="noticia.orden" /></td>
-				<td><html:text property="orden"/></td>
+				<td class="etiqueta"  <%= tipovisible.equals("5")?"style=\"display:none;\"":""%> ><bean:message key="noticia.orden" /></td>
+				<td <%= tipovisible.equals("5")?"style=\"display:none;\"":""%> ><html:text property="orden"/></td>
 				<td class="etiqueta"><bean:message key="noticia.visible" /></td>
-				<td><label><html:radio property="visible" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visible" value="N" />&nbsp;No</label></td>
+				<td style="min-width: 120px"><label><html:radio property="visible" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visible" value="N" />&nbsp;No</label></td>
 			</tr>
-	
+			
+
+			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("5")?"block":"none"%>;" id="CamposMapa" class="par">
+				<td class="etiqueta"><bean:message key="noticia.latitud" /></td>
+				<td><html:text property="latitud" styleId="latitud"/></td>
+				<td class="etiqueta"><bean:message key="noticia.longitud" /></td>
+				<td>
+					<html:text property="longitud" styleId="longitud"/> 
+					<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
+					<button type="button" title="<bean:message key="boton.ubicarenmapa" />" onclick="ubicarEnMapa();"><img src="imgs/botons/ubicacion.gif" alt="<bean:message key="boton.ubicarenmapa" />" /></button>
+					<%} %>
+				</td>
+			</tr>
+			
+			<tr style="display:<%= tipovisible.equals("5")?"block":"none"%>;" id="CamposMapa2">				
+				<td class="etiqueta"><bean:message key="noticia.color" /></td>
+				<% if(tipovisible.equals("5")){ %>
+				<td><html:text property="colorIcono" styleClass="jscolor" styleId="colorIcono" /></td>
+				<%}else{ %>
+				<td><html:text property="colorIcono" styleClass="jscolor {required:false}" styleId="colorIcono" /></td>
+				<%} %>
+			</tr>
+
+						
 			<tr class="par" style="display:none;">
 				<td class="etiqueta"><bean:message key="noticia.tipo" /></td>
 				<td>
@@ -195,7 +243,7 @@
 				<td><label><html:radio property="visibleweb" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visibleweb" value="N" />&nbsp;No</label></td>				
 			</tr>
 	
-			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
+			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4") || tipovisible.equals("5")?"block":"none"%>;" <%= tipovisible.equals("5")?"class=\"par\"":""%> >
 				
 				<td class="etiqueta"><bean:message key="noticia.imagen" /></td>
 				<td>
@@ -246,7 +294,7 @@
 				<td class="etiqueta"><bean:message key="noticia.titulo" />:</td>
 				<td><html:text property="titulo" name="traducciones" styleId="<%="titulo"+i%>" size="50" maxlength="512" indexed="true" /></td>
 			</tr>
-			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
+			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4") || tipovisible.equals("5")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.subtitulo" />:</td>
 				<td><html:text property="subtitulo" name="traducciones" size="50" maxlength="256" indexed="true" /></td>
 			</tr>
@@ -266,7 +314,7 @@
 				<td class="etiqueta"><bean:message key="noticia.fuente" />:</td>
 				<td><html:text property="fuente" name="traducciones" size="50" maxlength="256" indexed="true" /></td>
 			</tr>							
-			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("2")|| tipovisible.equals("4") ?"block":"none"%>;">
+			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("2")|| tipovisible.equals("4") || tipovisible.equals("5")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.documento" /></td>
 				<td colspan="3">
 	
@@ -320,6 +368,13 @@
 	}
 
 	function submitForm(nom_accio){
+		<% if(tipovisible.equals("5") || tipovisible.equals("0") ){ %>
+		if (nom_accio== "Guardar"){//solo validamos al guardar
+			if (!validaCampos(<%= tipovisible.equals("5")?"true":"false"%>)){
+				return false;
+			}
+		}
+		<%}%>
 		var accForm = document.getElementById('accFormulario');
 		accForm.accion.value= nom_accio;
 		 if (nom_accio== "Traduir") {
@@ -357,12 +412,24 @@
             RcajatempUrl.value=laurl;
 			RcajatempDesc.value=descr;
 
-    }
-
-
+    } 
 	
 	
 // -->
 </script>
 
+<script type="text/javascript" src="js/modalMaps.js"></script>
 
+<script type="text/javascript">
+<!--
+//labels por defecto	 
+var lb_coordenadasInvalidas = "<bean:message key="error.coordenadas.invalidas"/>";
+var lb_colorInvalido = "<bean:message key="error.color.invalido"/>";
+var lb_completeDireccion = "<bean:message key="error.complete.direccion"/>";
+var lb_DireccionNoEncontrada = "<bean:message key="error.direccion.erronea"/>";	
+//-->
+</script>
+
+<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=GusitePropertiesUtil.getKeyGooglemaps() %>&callback=initialize" async defer></script>
+<% } %>
