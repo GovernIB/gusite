@@ -88,6 +88,10 @@ public class TemplateNameFactory {
 	public String mostrarGaleriaFotos(Microsite microsite) {
 		return getPlantilla(microsite, TemplateView.NOTICIA_GALERIA_FOTOS);
 	}
+	
+	public String listarUbicaciones(Microsite microsite) {
+		return getPlantilla(microsite, TemplateView.NOTICIA_LISTAR_UBICACIONES);
+	}
 
 	public String listarFaqs(Microsite microsite) {
 		return getPlantilla(microsite, TemplateView.FAQ_LISTAR_FAQS);
@@ -107,6 +111,10 @@ public class TemplateNameFactory {
 
 	public String mostrarNoticia(Microsite microsite) {
 		return getPlantilla(microsite, TemplateView.NOTICIA_FICHA);
+	}
+	
+	public String mostrarUbicacion(Microsite microsite) {
+		return getPlantilla(microsite, TemplateView.NOTICIA_UBICACION);
 	}
 
 	public String listarAgendaFecha(Microsite microsite) {

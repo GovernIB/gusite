@@ -56,9 +56,7 @@ var thDebug = false;
 				<h3 id="titolNoticia" th:text="${MVS_noticia.traduce.titulo}">
 					Titulo de la noticia (traducido)
 				</h3>
-				<p id="subtitol" th:text="${MVS_noticia.traduce.subtitulo}">
-					Subtitulo de la noticia (traducido)
-				</p>
+				
 				<div class="redes-container">
 					<div>
 						<div class="btn-red-social fb">
@@ -86,57 +84,48 @@ var thDebug = false;
 						</div>
 					</div>
 				</div>
-				<div id="imgNoticia">
-					<img th:if="${MVS_noticia.imagen}" src="../files/news.png" th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" alt="" th:width="${MVS_anchoImg}" />
-				</div>
-				<div class="content">
-					<p th:utext="${MVS_noticia.traduce.texto}" th:remove="tag">
-						Contenido texto html de la noticia
-					</p>
-				</div>
-				
-				<p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''">										
-					<a href="archivopub.html"
-						th:href="@{${#gusuri.noticiaFuerzaMapa(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"
-						th:text="#{maps.ubicacion}">ubicacion</a>						
-				</p>
 
-				<div class="url" th:if="${MVS_noticia.traduce.laurl} !=null" th:with="externa=${MVS_noticia.traduce.laurl}">
-					<span class="titulo-url"> 
-						Enlaces de interes:
-					</span>
-					<div> 
-						<img th:src="@{${MVS_uriTema + 'files/enlace.png'}}" src="../files/enlace.png" alt="" /> 
-						<a href="#" th:href="@{${MVS_noticia.traduce.laurl}}" th:target="${#strings.startsWith(externa,'http')}? '_blank' : '_self'" th:text="${MVS_noticia.traduce.urlnom} !=null ? ${MVS_noticia.traduce.urlnom} : #{url.adicional}">
-							Titulo del enlace
-						</a>
-					</div>
-				</div>
-				<div class="documentosAdjuntos" th:if="${MVS_noticia.traduce.docu} !=null">
-					<p th:utext="#{noticia.descdocumento}">
-						Documentos adjuntos:
-					</p>
-					<div>
-						<a href="archivopub.html" th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}" target="blank">
-							<div class="imgMime"  th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(MVS_noticia.traduce.docu.mime,'.','-')}__','/','-')}">
+				
+				<div id="gusiteMaps"></div>	
+				
+				
+						<!--  añadir las ubicaciones despues de gusiteMaps.js -->
+				<div style="display: none;" class="gusiteMapsMarker" id="gusiteMapsMarker">
+					<input class="gMMLatitud"  th:value="${MVS_noticia.latitud}" />
+					<input class="gMMLongitud"  th:value="${MVS_noticia.longitud}" />
+					<input class="gMMColor"  th:value="${MVS_noticia.colorIcono}" />
+					<input class="gMMTitulo"  th:value="${MVS_noticia.traduce.titulo}" />
+					<div class="gMMContenido">
+						<div class="gMMInfoWindow">
+							<h3 th:text="${MVS_noticia.traduce.titulo}">Título de la noticia título</h3>
+							<div th:if="!${MVS_forzarmapa}" th:remove="tag">							
+								<h4 th:if="${MVS_noticia.traduce.subtitulo}!=null" 
+									th:text="${MVS_noticia.traduce.subtitulo}">Traduce subtitulo</h4>						  
+								<img th:if="${MVS_noticia.imagen} !=null" th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" th:alt="${MVS_noticia.traduce.titulo}" />
+								<p th:if="${MVS_noticia.traduce.texto}!=null"
+								th:utext="${MVS_noticia.traduce.texto}" th:remove="tag"  >Contenido</p>
 								
-							</div>
-							<div>
-								<div>
-									<span class="nombreMime" th:with="mimeVar=${#strings.arraySplit(MVS_noticia.traduce.docu.nombre,'.')}" th:text="${mimeVar[#arrays.length(mimeVar)-1]}"> 
-										pdf
-									</span>
-									<span class="tamano" th:text="'(' + ${MVS_noticia.traduce.docu.peso/1000} + ' kb)'">
-										(200 kb)
-									</span>
+								<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
+									<p th:utext="#{noticia.descdocumento}">
+										Per a <strong>més informació</strong> podeu descarregar el següent document
+									</p>
+									<p>
+										<span
+											th:text="#{general.archivo} + ' '+ ${MVS_noticia.traduce.docu.mime} + ', ' + ${MVS_noticia.traduce.docu.peso} + ' bytes - '"
+											th:remove="tag">Arxiu pdf, 24265 bytes - </span>
+										<a href="archivopub.html"
+											th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}"
+											target="blank" th:text="${MVS_noticia.traduce.docu.nombre}">nombre de archivo</a>
+									</p>
 								</div>
-								<p id="nombreArchivo"  th:text="${MVS_noticia.traduce.docu.nombre}">
-									Nombre de archivo lorem
-								</p>
 							</div>
-						</a>
+						</div>
 					</div>
 				</div>
+				<a class="btn btn-default btn-xs gMMBVolver" th:if="${MVS_forzarmapa}" th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"  th:text="#{noticia.volver}" >Volver</a>
+				<script type="text/javascript" src="/resources/js/gusiteMaps.js" th:src="@{/resources/js/gusiteMaps.js}"></script>
+				<script src="https://maps.googleapis.com/maps/api/js?key=XXXXXXXX&amp;callback=initialize" th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${#gusuri.keyGoogleMaps()} + '&amp;callback=initialize'}"   async="async" defer="defer" ></script>
+
 			</div>
 		</div>
 		<!-- fin informacio -->

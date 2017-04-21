@@ -43,6 +43,13 @@ Ficha de noticia
 					<span th:if="${MVS_noticia.traduce.fuente}!=null" th:text="' - ' + ${MVS_noticia.traduce.fuente}" th:remove="tag">Fuente</span>
 				</p>
 				<p th:utext="${MVS_noticia.traduce.texto}" th:remove="tag">Contenido texto html de la noticia</p>
+				
+				<p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''">													
+					<a href="archivopub.html"
+						th:href="@{${#gusuri.noticiaFuerzaMapa(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"
+						target="blank" th:text="#{maps.ubicacion}">ubicacion</a>						
+				</p>
+				
 				<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
 					<p th:utext="#{noticia.descdocumento}">
 						Per a <strong>més informació</strong> podeu descarregar el següent document

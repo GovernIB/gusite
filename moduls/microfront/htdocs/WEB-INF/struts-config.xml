@@ -47,6 +47,7 @@
     </action>
     <action path="/noticias" name="BuscaOrdenaNoticiasActionForm" type="es.caib.gusite.microfront.noticia.actions.ListarNoticiasAction" unknown="false" scope="request">
       <forward name="listarnoticiasv4" path="/v4/noticia/listarnoticias.jsp"/>
+      <forward name="listarubicacionesv4" path="/v4/noticia/listarUbicaciones.jsp"/>
       <forward name="listarnoticiasanyosv4" path="/v4/noticia/listarnoticiasanual.jsp"/>      
       <forward name="listarlinksnormalv4" path="/v4/noticia/listarlinksnormal.jsp"/> 
       <forward name="listarlinksanyosv4" path="/v4/noticia/listarlinksanual.jsp"/>       
@@ -84,6 +85,7 @@
     </action>
     <action path="/noticia" type="es.caib.gusite.microfront.noticia.actions.NoticiaAction" unknown="false">
       <forward name="contenidov4" path="/v4/noticia/noticia.jsp"/>
+      <forward name="contenidoMapav4" path="/v4/noticia/ubicacion.jsp"/>
       <forward name="contenidov1" path="/v1/noticia/noticia.jsp"/>
     </action>
     <action path="/contenido" type="es.caib.gusite.microfront.contenido.actions.ContenidoAction" unknown="false">

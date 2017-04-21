@@ -90,6 +90,10 @@ public class Microfront {
 														// encuesta
 	static public final String MCONT = "mcont"; // usado en urls ¿menú de
 												// contenido?
+	
+	static public final String FMAPA = "fmapa"; // usado en urls noticia, 
+												//fuerza que se muestre el mapa si tiene lat long
+	
 	static public final String URICONT = "uricont"; // usado en urls ¿menú de contenido?
 	
 	// clases de los elementos
@@ -103,6 +107,7 @@ public class Microfront {
 															// predefinido link
 															// externo
 	static public final String ELEM_FOTO = Tipo.TIPO_FOTO;
+	static public final String ELEM_MAPA = Tipo.TIPO_MAPA; // Elemento predefinido Mapa (maps)
 
 	// tipo de paginacion
 	static public final String ELEM_PAG_NORMAL = "0"; // paginacion tradicional

@@ -30,6 +30,7 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  *  action path="/noticias" <BR> 
  *  unknown="false" <BR>
  *  forward name="listarnoticiasv4" path="/v4/noticia/listarnoticias.jsp"<BR>
+ *  forward name="listarubicacionesv4" path="/v4/noticia/listarUbicaciones.jsp"<BR>
  * 	forward name="listarnoticiasanyosv4" path="/v4/noticia/listarnoticiasanual.jsp" <BR>
  *	forward name="listarlinksnormalv4" path="/v4/noticia/listarlinksnormal.jsp"<BR>
  *	forward name="listarlinksanyosv4" path="/v4/noticia/listarlinksanual.jsp"   <BR>    
@@ -111,7 +112,7 @@ public class ListarNoticiasAction extends BaseAction  {
 			    		forwardlocal="mostrarGaleriaFotos";
 			    	}
 		    		
-				}				    
+				}				    			   
 
 		  
 				String sIdMenuContenidoNotic= request.getParameter("mcont");
@@ -129,9 +130,13 @@ public class ListarNoticiasAction extends BaseAction  {
 				microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
 			    if ( (microsite.getRestringido().equals("N")) || (microsite.getRestringido().equals("S")) )  
 			    	return mapping.findForward(forwardlocal+"v1");
-				else
+				else{
+					//solo llamamos a listar ubicaciones para la version v4
+					if (bdlistanoticias.getClaseelemento().getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+				    	forwardlocal="listarubicaciones";
+				    }
 			    	return mapping.findForward(forwardlocal+"v4");
-		    
+				}
 		    } else {
 		    	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA));
 			}

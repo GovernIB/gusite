@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+//  Listado de noticias
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title
+    th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>    
+    <th:block th:remove="all">
+<!--
+    //Este bloque se usa para visualización en prototipo estático.
+    //Al ejecutarse dinámicamente, se eliminará automáticamente
+-->
+<link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link>
+<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+<script type="text/javascript">
+var thDebug = false;
+</script>
+<link rel="stylesheet" type="text/css" media="all" href="../files/estilsListarNoticias.css" th:href="@{/resources/files/estilsListarNoticias.css}"></link>
+</th:block>
+</head>
+<body>
+    <section th:remove="tag" layout:fragment="content">
+        <div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="contenedorNoticiasListadas">   
+            <div gus:replace="noticia/modulos :: capcelera_buscador">Listado cabecera buscador</div>
+            <div th:if="${MVS_parametros_pagina.nreg}!=0">
+                <div gus:replace="noticia/modulos :: infoCursor">Listado info cursor</div>
+                <div id="noticiesLlistat">
+   				<div id="gusiteMaps"></div>	                 
+                </div>
+                <div gus:replace="noticia/modulos :: paginacio">
+                    Listado paginación
+                </div>
+                
+                <!--  añadir las ubicaciones despues de gusiteMaps.js -->
+				<div th:each="elementoListado : ${MVS_listado}" 
+					th:if="${elementoListado.traduce.titulo}!=null"
+					style="display: none;" class="gusiteMapsMarker" id="gusiteMapsMarker">
+					<input class="gMMLatitud"  th:value="${elementoListado.latitud}" />
+					<input class="gMMLongitud"  th:value="${elementoListado.longitud}" />
+					<input class="gMMColor"  th:value="${elementoListado.colorIcono}" />
+					<input class="gMMTitulo"  th:value="${elementoListado.traduce.titulo}" />
+					<div class="gMMContenido">
+						<div class="gMMInfoWindow">
+							<h3 th:text="${elementoListado.traduce.titulo}">Título de la noticia título</h3>
+							<h4 th:if="${elementoListado.traduce.subtitulo}!=null" 
+								th:text="${elementoListado.traduce.subtitulo}">Traduce subtitulo</h4>						  
+							<img th:if="${elementoListado.imagen} !=null" th:src="@{${#gusuri.archivopub(MVS_microsite,elementoListado.imagen)}}" th:alt="${elementoListado.traduce.titulo}" />
+							<p th:if="${elementoListado.traduce.texto}!=null"
+							th:utext="${elementoListado.traduce.texto}" th:remove="tag"  >Contenido</p>
+							
+							<div th:if="${elementoListado.traduce.docu} !=null" th:remove="tag">
+								<p th:utext="#{noticia.descdocumento}">
+									Per a <strong>més informació</strong> podeu descarregar el següent document
+								</p>
+								<p>
+									<span
+										th:text="#{general.archivo} + ' '+ ${elementoListado.traduce.docu.mime} + ', ' + ${elementoListado.traduce.docu.peso} + ' bytes - '"
+										th:remove="tag">Arxiu pdf, 24265 bytes - </span>
+									<a href="archivopub.html"
+										th:href="@{${#gusuri.archivopub(MVS_microsite,elementoListado.traduce.docu)}}"
+										target="blank" th:text="${elementoListado.traduce.docu.nombre}">nombre de archivo</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<script type="text/javascript" src="/resources/js/gusiteMaps.js" th:src="@{/resources/js/gusiteMaps.js}"></script>
+				<script src="https://maps.googleapis.com/maps/api/js?key=XXXXXXXX&amp;callback=initialize" th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${#gusuri.keyGoogleMaps()} + '&amp;callback=initialize'}"   async="async" defer="defer" ></script>
+				<!-- <script src="https://maps.googleapis.com/maps/api/js?key=XXXXXXXX&amp;callback=initialize" th:src="@{${#gusuri.urlGoogleMaps('https://maps.googleapis.com/maps/api/js?key={KEYGOOGLEMAPS}&amp;callback=initialize')}}"   async="async" defer="defer" ></script>-->
+				
+                
+                
+                
+            </div>
+        </div>
+    </section>
+</body>
+</html>

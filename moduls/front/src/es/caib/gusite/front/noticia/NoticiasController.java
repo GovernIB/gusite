@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.View;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -24,6 +25,7 @@ import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.service.NoticiasDataService;
 import es.caib.gusite.front.util.Fechas;
+import es.caib.gusite.front.view.LayoutView.ArchivoCSS;
 import es.caib.gusite.front.view.ListarNoticiasView;
 import es.caib.gusite.front.view.NoticiaView;
 import es.caib.gusite.front.view.PageView;
@@ -183,6 +185,10 @@ public class NoticiasController extends BaseViewController {
 						view.setAltoFoto(tamanyo[1]);
 						plantillaForward = this.templateNameFactory.mostrarGaleriaFotos(microsite);
 					}
+										
+					if (tipo.getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+						plantillaForward = this.templateNameFactory.listarUbicaciones(microsite);						
+					}
 
 					// TODO: averiguar para qué sirve mcont. Creo que para la
 					// opción de menú que hay que resaltar (confirmar)
@@ -288,7 +294,8 @@ public class NoticiasController extends BaseViewController {
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/n/{uriNoticia}")
 	public ModelAndView noticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriNoticia") String uriNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			@RequestParam(value = Microfront.FMAPA, required = false, defaultValue = "") String fmapa) {
 
 		NoticiaView view = new NoticiaView();
 		try {
@@ -330,8 +337,21 @@ public class NoticiasController extends BaseViewController {
 				view.setMenuContenidoNoticia(mcont);
 			}
 			this.cargarMollapan(view, noticia);
+			
+			ModelAndView viewNoticia;
+			
+			if (noticia.getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {				
+				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite),view);				
+			}else if((fmapa.equals("true")
+					 && !StringUtils.isEmpty(noticia.getLatitud())
+					 && !StringUtils.isEmpty(noticia.getLongitud()))){			
+				view.setForzarMapa(true);
+				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite),view);				
+			}else{
+				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarNoticia(microsite), view);				
+			}
 
-			return this.modelForView(this.templateNameFactory.mostrarNoticia(microsite), view);
+			return viewNoticia;
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
@@ -344,6 +364,12 @@ public class NoticiasController extends BaseViewController {
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
 		}
 	}
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * @param lang

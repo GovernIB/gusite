@@ -63,6 +63,8 @@ public class Microfront {
 	static public final String PACTION = "accio"; //parametro que servirá para indicar la operacion a realizar
 	static public final String PDISTRIB = "distrib"; //identificador de la lista de distribucion
 	static public final String ENCPARAM = "encParam"; //preguntas que vienen perfijadas en una encuesta
+	static public final String FMAPA = "fmapa"; //fuerza la visualización del mapa
+	
 	
 	//clases de los elementos
 	//OJO! duplicacion con Tipo.java 
@@ -71,6 +73,7 @@ public class Microfront {
 	static public final String ELEM_DOCUMENTO = "2"; //elemento predefinido documento
 	static public final String ELEM_CONEXIO_EXTERNA = "3"; //elemento predefinido link externo
 	static public final String ELEM_FOTO = Tipo.TIPO_FOTO; 
+	static public final String ELEM_MAPA = Tipo.TIPO_MAPA; 
 	
 	//tipo de paginacion
 	static public final String ELEM_PAG_NORMAL = "0"; //paginacion tradicional

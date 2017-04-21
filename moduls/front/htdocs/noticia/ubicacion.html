@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!--/*
+
+Ficha de noticia
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+<title th:if="${MVS_noticia} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_noticia.traduce.titulo}">Microsite título - Noticia traduce título</title>	
+<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+		var thDebug = false;
+	</script>
+	<!-- QUITADO 2015
+<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estilsListarNoticias.css" th:href="@{/resources/css/estilsListarNoticias.css}"></link>-->
+</th:block>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="content">
+		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="noticiasInfo  NoticiasContainer">
+			<div th:if="!${MVS_forzarmapa}" th:remove="tag">
+			<h2 th:text="#{noticia.detalle}+' '+${MVS_tiponoticia}"></h2>
+			</div>
+			<div th:if="${MVS_forzarmapa}" th:remove="tag">
+			<h2 th:text="#{maps.ubicacion}+' '+${MVS_tiponoticia}"></h2>
+			</div>			
+			<div id="infoNoticia" th:if="${MVS_noticia.traduce} !=null">
+				<h3 id="titolNoticia" th:text="${MVS_noticia.traduce.titulo}"> traduce título</h3>
+				<div id="gusiteMaps"></div>			
+		
+						<!--  añadir las ubicaciones despues de gusiteMaps.js -->
+				<div style="display: none;" class="gusiteMapsMarker" id="gusiteMapsMarker">
+					<input class="gMMLatitud"  th:value="${MVS_noticia.latitud}" />
+					<input class="gMMLongitud"  th:value="${MVS_noticia.longitud}" />
+					<input class="gMMColor"  th:value="${MVS_noticia.colorIcono}" />
+					<input class="gMMTitulo"  th:value="${MVS_noticia.traduce.titulo}" />
+					<div class="gMMContenido">
+						<div class="gMMInfoWindow">
+							<h3 th:text="${MVS_noticia.traduce.titulo}">Título de la noticia título</h3>
+							<div th:if="!${MVS_forzarmapa}" th:remove="tag">							
+								<h4 th:if="${MVS_noticia.traduce.subtitulo}!=null" 
+									th:text="${MVS_noticia.traduce.subtitulo}">Traduce subtitulo</h4>						  
+								<img th:if="${MVS_noticia.imagen} !=null" th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" th:alt="${MVS_noticia.traduce.titulo}" />
+								<p th:if="${MVS_noticia.traduce.texto}!=null"
+								th:utext="${MVS_noticia.traduce.texto}" th:remove="tag"  >Contenido</p>
+								
+								<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
+									<p th:utext="#{noticia.descdocumento}">
+										Per a <strong>més informació</strong> podeu descarregar el següent document
+									</p>
+									<p>
+										<span
+											th:text="#{general.archivo} + ' '+ ${MVS_noticia.traduce.docu.mime} + ', ' + ${MVS_noticia.traduce.docu.peso} + ' bytes - '"
+											th:remove="tag">Arxiu pdf, 24265 bytes - </span>
+										<a href="archivopub.html"
+											th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}"
+											target="blank" th:text="${MVS_noticia.traduce.docu.nombre}">nombre de archivo</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>				
+				<a class="btn btn-default btn-xs gMMBVolver" th:if="${MVS_forzarmapa}" th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"  th:text="#{noticia.volver}" >Volver</a>				
+				<script type="text/javascript" src="/resources/js/gusiteMaps.js" th:src="@{/resources/js/gusiteMaps.js}"></script>
+				<script src="https://maps.googleapis.com/maps/api/js?key=XXXXXXXX&amp;callback=initialize" th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${#gusuri.keyGoogleMaps()} + '&amp;callback=initialize'}"   async="async" defer="defer" ></script>
+		
+			</div>
+		</div>
+		
+		
+		<!-- fin informacio -->
+	</section>
+	<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

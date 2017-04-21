@@ -86,15 +86,9 @@ public class tiposEditaAction extends BaseAction {
                 tipo.setIdmicrosite(((Microsite) request.getSession().getAttribute("MVS_microsite")).getId());
                 String tipoelemento = (String) f.get("tipoelemento");
                 tipo.setTipoelemento(tipoelemento);
-
-                if (!tipoelemento.equals(Tipo.TIPO_CONEXIO_EXTERNA)) {
-                    tipo.setTampagina(Integer.parseInt("" + f.get("tampagina")));
-                    tipo.setTipopagina((String) f.get("tipopagina"));
-                    tipo.setBuscador((String) f.get("buscador"));
-                    tipo.setOrden((String) f.get("orden"));
-                    tipo.setClasificacion((String) f.get("clasificacion"));
-
-                } else {
+            
+                if (tipoelemento.equals(Tipo.TIPO_CONEXIO_EXTERNA)) {
+                	//tipo conexio externa
                     tipo.setTipopagina("0");
                     tipo.setBuscador("N");
                     tipo.setOrden("0");
@@ -104,7 +98,25 @@ public class tiposEditaAction extends BaseAction {
                     tipo.setXpwd((String) f.get("xpwd"));
                     tipo.setXid((String) f.get("xid"));
                     tipo.setClasificacion((String) f.get("clasificacion_ext"));
+                }else if(tipoelemento.equals(Tipo.TIPO_MAPA)){
+                	// tipo Mapa, todos los campos por defecto
+                	// Evitamos que se cambie el tipo de listado
+                	// y se use lo que ya estaba rellenado.
+                	tipo.setTampagina(0);
+                	tipo.setTipopagina("0");
+                    tipo.setBuscador("N");
+                    tipo.setOrden("0");
+                    tipo.setClasificacion("");                	                
+                } else {
+					//otro tipo 
+                	tipo.setTampagina(Integer.parseInt("" + f.get("tampagina")));
+					tipo.setTipopagina((String) f.get("tipopagina"));
+					tipo.setBuscador((String) f.get("buscador"));
+					tipo.setOrden((String) f.get("orden"));
+					tipo.setClasificacion((String) f.get("clasificacion"));
                 }
+                
+                
 
                 if (tipoelemento.equals(Tipo.TIPO_FOTO)) {
                     tipo.setFotosporfila((Integer)f.get("fotosporfila"));

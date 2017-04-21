@@ -32,6 +32,7 @@ import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Traducible2;
 import es.caib.gusite.plugins.organigrama.UnidadData;
+import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 
 /**
  * Generador de Uris para front gusite
@@ -445,6 +446,33 @@ public class FrontUrlFactory {
 		} else {
 			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/";
 		}
+	}
+	
+	public String noticiaFuerzaMapa(Microsite microsite, Idioma lang, Noticia noticia, String mcont) {
+		
+		String url = noticia(microsite,lang,noticia,mcont);
+			
+		if (!StringUtils.isEmpty(mcont)) {
+			url += "&";
+		} else {
+			url += "?";
+		}
+		
+		return url + Microfront.FMAPA + "=true";
+	}
+	
+	public String ubicacionNoticia(String latitud, String longitud, String zoom){
+		
+		return "https://www.google.com/maps/place/" + latitud + "," + longitud + "/@" + latitud + "," + longitud + "," + zoom +"z/";
+	}
+	
+	
+	public String urlGoogleMaps(String urlGoogleMaps) {
+		return urlGoogleMaps.replace("{KEYGOOGLEMAPS}",GusitePropertiesUtil.getKeyGooglemaps());
+	}
+	
+	public String keyGoogleMaps() {
+		return GusitePropertiesUtil.getKeyGooglemaps()!=null?GusitePropertiesUtil.getKeyGooglemaps():"";
 	}
 
 

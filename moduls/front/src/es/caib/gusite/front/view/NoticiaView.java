@@ -14,6 +14,7 @@ public class NoticiaView extends PageView {
 	private Noticia noticia;
 	private String anchoImg;
 	private String tipoNoticia;
+	private boolean esForzarMapa = false;
 
 	public void setMenuContenidoNoticia(String mcont) {
 		this.menuContenidoNoticia = mcont;
@@ -67,6 +68,21 @@ public class NoticiaView extends PageView {
 	@Variable("MVS_tiponoticia")
 	public String getTipoNoticia() {
 		return tipoNoticia;
+	}
+
+	
+	
+	/**
+	 * indica si se intenta forzar la visualización del mapa 
+	 * @return
+	 */
+	@Variable("MVS_forzarmapa")	
+	public boolean getForzarMapa() {
+		return esForzarMapa;
+	}
+
+	public void setForzarMapa(boolean forzarMapa) {
+		this.esForzarMapa = forzarMapa;
 	}
 
 }

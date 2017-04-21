@@ -19,7 +19,9 @@ public @interface TemplateView {
 	public static final String NOTICIA_LISTAR_DOCUMENTOS				= "noticia/listardocumentos";
 	public static final String NOTICIA_LISTAR_NOTICIAS_EXTERNAS 		= "noticia/listarnoticiasexternas";
 	public static final String NOTICIA_GALERIA_FOTOS 					= "noticia/mostrarGaleriaFotos";
+	public static final String NOTICIA_LISTAR_UBICACIONES				= "noticia/listarUbicaciones";
 	public static final String NOTICIA_FICHA 							= "noticia/noticia";
+	public static final String NOTICIA_UBICACION						= "noticia/ubicacion";
 	public static final String AGENDA_FECHA 							= "agenda/agenda";
 	public static final String AGENDA_LISTADO 							= "agenda/listaragenda";
 	public static final String FAQ_LISTAR_FAQS 							= "faq/listarfaqs";

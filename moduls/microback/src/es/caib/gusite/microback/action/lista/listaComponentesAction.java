@@ -1,5 +1,7 @@
 package es.caib.gusite.microback.action.lista;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,7 @@ import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.listaActionForm;
 import es.caib.gusite.microback.actionform.formulario.componenteForm;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
@@ -49,7 +52,10 @@ public class listaComponentesAction extends BaseAction {
     		HttpServletRequest request, HttpServletResponse response) throws Exception  {
 
         listaActionForm f = (listaActionForm) form;
-        
+      
+        //los tipos 
+        ArrayList<String> tiposNoIncluidosCompo = new ArrayList<String>();
+		tiposNoIncluidosCompo.add(Tipo.TIPO_MAPA);
      
         //********************************************************
         //************* ERROR DE VALIDACION **********************
@@ -59,7 +65,7 @@ public class listaComponentesAction extends BaseAction {
         	request.setAttribute("componenteForm", fdet);
             // Relleno el combo de Tipos de Noticias
             TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
+            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(),tiposNoIncluidosCompo));
             request.setAttribute("validacion", "si");
             return mapping.findForward("detalleCompo");
         }
@@ -69,7 +75,7 @@ public class listaComponentesAction extends BaseAction {
         if ( f.getAccion().equals("crear")) {
             // Relleno el combo de Tipos de Noticias
             TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
+            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(),tiposNoIncluidosCompo));
         	request.getSession().removeAttribute("componenteForm");
         	return mapping.findForward("detalleCompo");
         }

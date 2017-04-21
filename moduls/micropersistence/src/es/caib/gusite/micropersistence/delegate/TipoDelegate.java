@@ -1,6 +1,7 @@
 package es.caib.gusite.micropersistence.delegate;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -329,6 +330,14 @@ public class TipoDelegate implements StatelessDelegate {
 	public List<?> listarCombo(Long idmicrosite) throws DelegateException {
 		try {
 			return this.getFacade().listarCombo(idmicrosite);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	public List<?> listarCombo(Long idmicrosite, ArrayList<String> tiposNoIncluidos ) throws DelegateException {
+		try {
+			return this.getFacade().listarCombo(idmicrosite,tiposNoIncluidos);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

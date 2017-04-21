@@ -53,12 +53,11 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 <!-- Reset default bootstrap elements -->
 <link href="resources/bootstrap/css/bootstrap-reset.css" th:href="@{/resources/bootstrap/css/bootstrap-reset.css}" rel="stylesheet" media="screen" />
 <!-- Fin reset bootstrap -->
+<link href="resources/css/gusiteMaps.css" th:href="@{/resources/css/gusiteMaps.css}" rel="stylesheet" media="screen" />
 <script type="text/javascript" src="resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
 
 <!--/* TAGS css pel microsite  */-->
 <link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
-
-
 
 <th:block th:remove="all">
 <!--/*  

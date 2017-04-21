@@ -11,3 +11,7 @@ ALTER table "GUS_NOTICS" ADD (
 COMMENT ON COLUMN "GUS_NOTICS"."NOT_LATITUD" IS 'Indica la ubicación de la notícia (Latitud)';
 COMMENT ON COLUMN "GUS_NOTICS"."NOT_LONGITUD" IS 'Indica la ubicación de la notícia (Longitud)';
 COMMENT ON COLUMN "GUS_NOTICS"."NOT_ICOCOLOR" IS 'Indica el color hexadecimal del marcador de la ubicación (color del icono en el mapa)';
+
+
+INSERT INTO GUS_FR_PLANTILLA (PLA_CODI, PLA_VERSION, PLA_NOMBRE, PLA_TITULO) values (GUS_NEXTVAL('GUS_SEQPLA'), '50', 'noticia/ubicacion', 'Ficha de ubicacion');
+INSERT INTO GUS_FR_PLANTILLA (PLA_CODI, PLA_VERSION, PLA_NOMBRE, PLA_TITULO) values (GUS_NEXTVAL('GUS_SEQPLA'), '50', 'noticia/listarUbicaciones', 'Listado de Ubicaciones');

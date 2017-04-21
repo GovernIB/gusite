@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
@@ -372,6 +373,21 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 		}
 	}
 
+	
+	
+	/**
+	 * Retorna la query que Lista todos los tipos de noticias para usar en Combos
+	 */
+	private String listarComboQuery(Long idmicrosite, String filtro) {
+			return "select tipo" + " from Tipo tipo"
+					+ " join tipo.traducciones trad"
+					+ " where trad.id.codigoIdioma = '"
+					+ Idioma.getIdiomaPorDefecto() + "'"
+					+ " and tipo.idmicrosite = " + idmicrosite.toString()
+					+ filtro
+					+ " order by tipo.tipoelemento ";
+	}
+	
 	/**
 	 * Lista todos los tipos de noticias para usar en Combos
 	 * 
@@ -382,12 +398,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 		Session session = this.getSession();
 		try {
-			Query query = session.createQuery("select tipo" + " from Tipo tipo"
-					+ " join tipo.traducciones trad"
-					+ " where trad.id.codigoIdioma = '"
-					+ Idioma.getIdiomaPorDefecto() + "'"
-					+ " and tipo.idmicrosite = " + idmicrosite.toString()
-					+ " order by tipo.tipoelemento ");
+			Query query = session.createQuery(listarComboQuery( idmicrosite,""));
 			return query.list();
 
 		} catch (HibernateException he) {
@@ -396,6 +407,43 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 			this.close(session);
 		}
 	}
+	
+	
+	/**
+	 * Lista todos los tipos de noticias para usar en Combos, filtrando los tipos indicados
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<?> listarCombo(Long idmicrosite, ArrayList<String> tiposNoIncluidos ) {
+		String filtro = "";
+		if(tiposNoIncluidos!=null && tiposNoIncluidos.size()>0){
+			boolean inicial = true;
+			for (String tipo : tiposNoIncluidos) {
+				if(!inicial){
+					filtro +=",";
+				}
+				filtro += tipo;
+			}			
+			if(!StringUtils.isEmpty(filtro.trim())){
+				filtro = " and tipo.tipoelemento not in ('" + filtro +"') ";
+			}
+		}
+		Session session = this.getSession();
+		try {
+			Query query = session.createQuery(listarComboQuery(idmicrosite,filtro));
+			return query.list();
+
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	
+	
+	
 
 	/**
 	 * Comprueba que el elemento pertenece al Microsite

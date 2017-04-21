@@ -86,7 +86,9 @@ public class componentesEditaAction extends BaseAction
 				
 			}
 
-			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId()));
+			ArrayList<String> tiposNoIncluidosCompo = new ArrayList<String>();
+			tiposNoIncluidosCompo.add(Tipo.TIPO_MAPA);
+			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId(), tiposNoIncluidosCompo));
 			
 			return mapping.findForward("detalle");
 

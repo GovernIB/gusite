@@ -1,6 +1,9 @@
 // Document JavaScript
 
 //Funciones generales estáticas. Antes estaban en scriptmenu
+//modificado para que no sobrescriba la funcion $ de JQUERY
+//$('xxx')[0] --> retorna lo mismo que document.getElementById('xxx') pero haciendo uso de JQUERY.
+
 var nodo='0'; //Nodo actual del menú
 
 function onClickAnyo(anyo) {
@@ -16,20 +19,20 @@ function establecerAnyoEnBuscador(anyo) {
 /* mostrar calendari de l'agenda */
 
 function mostrarCalendari() {
-	num = $('agendaSelect').options[$('agendaSelect').selectedIndex].value;
-	divs = $('agendaCalendaris').getElementsByTagName('div');
+	num = $('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex].value;
+	divs = $('#agendaCalendaris')[0].getElementsByTagName('div');
 	for(i=0;i<divs.length;i++) {
 		divs[i].style.display = (i==num) ? 'block' : 'none';
 	}
 }
 function cambiMes(click){
 if(click=="mesPosterior"){
-	if(window.$('agendaSelect').options[$('agendaSelect').selectedIndex+1]){
-		$('agendaSelect').value = $('agendaSelect').options[$('agendaSelect').selectedIndex+1].value;
+	if(window.$('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex+1]){
+		$('#agendaSelect')[0].value = $('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex+1].value;
 	}
 }else{
-	if(window.$('agendaSelect').options[$('agendaSelect').selectedIndex-1]){
-		$('agendaSelect').value = $('agendaSelect').options[$('agendaSelect').selectedIndex-1].value;
+	if(window.$('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex-1]){
+		$('#agendaSelect')[0].value = $('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex-1].value;
 	}
 }
 mostrarCalendari();
@@ -38,8 +41,8 @@ mostrarCalendari();
 
 var menuJS = {
 	iniciar: function() {
-		if($('marcLateral') != null) {
-			As = $('marcLateral').getElementsByTagName('a');
+		if($('#marcLateral')[0] != null) {
+			As = $('#marcLateral')[0].getElementsByTagName('a');
 			var nodoX;
 			//return;
 			for(i=0;i<As.length;i++) {		
@@ -53,7 +56,7 @@ var menuJS = {
 			}
 			if(nodo != 0 && nodo == nodoX) {
 				// obri carpeta de segon nivell
-				nodeUL = $(nodo).parentNode;
+				nodeUL = $('#'+nodo)[0].parentNode;
 				nodeUL.style.display = 'block';
 				nodeA = nodeUL.parentNode.firstChild;
 				if(nodeUL.parentNode.nodeName != 'DIV') nodeA.className = 'pareADon';
@@ -86,24 +89,24 @@ var menuJS = {
 tamanyInicial = 80; // %
 var tamanyLletra = {
 	iniciar: function() {
-		if($('eines') != null) {
+		if($('#eines')[0] != null) {
 			
 			if(getCookie("caib") != null) {
 				tamanyInicial = getCookie("caib");
 				document.body.style.fontSize = tamanyInicial + '%';
 			};		
-			DIVs = $('eines').getElementsByTagName('div');
+			DIVs = $('#eines')[0].getElementsByTagName('div');
 			if(DIVs[2] != null) {
 				codi = DIVs[2].innerHTML;
 				codiNou = codi + "<a id=\"lletraAumentar\" href=\"javascript:void(0);\" title=\"Aumentar tamany lletra\">A+</a> / <a id=\"lletraDisminuir\" href=\"javascript:void(0);\" title=\"Disminuir tamany lletra\">A-</a>";
 				DIVs[2].innerHTML = codiNou;
 			};
-			addEvent($('lletraAumentar'),'click',tamanyLletra.aumentar,false);
-			addEvent($('lletraDisminuir'),'click',tamanyLletra.disminuir,false);
+			addEvent($('#lletraAumentar')[0],'click',tamanyLletra.aumentar,false);
+			addEvent($('#lletraDisminuir')[0],'click',tamanyLletra.disminuir,false);
 		}
 	},
 	aumentar: function() {
-		if($('eines') != null) {		
+		if($('#eines')[0] != null) {		
 			tamanyInicial = parseInt(tamanyInicial) + 8;
 			if(tamanyInicial > 128) tamanyInicial = 128;
 			document.body.style.fontSize = tamanyInicial + '%';
@@ -111,7 +114,7 @@ var tamanyLletra = {
 		}
 	},
 	disminuir: function() {
-		if($('eines') != null) {	
+		if($('#eines')[0] != null) {	
 			tamanyInicial = parseInt(tamanyInicial) - 8;
 			if(tamanyInicial < 48) tamanyInicial = 48;
 			document.body.style.fontSize = tamanyInicial + '%';
@@ -128,9 +131,10 @@ function addEvent(obj,tipo,fn,captura) {
 	} else { obj['on'+tipo] = fn; }
 }
 
-function $(id) {
+/*function $(id) {
 	elemento = document.getElementById(id); return elemento;
 }
+*/
 
 function setCookie(nombre, valor, expiraDias) {
 	var ExpiraFecha = new Date(); ExpiraFecha.setTime(ExpiraFecha.getTime() + (expiraDias * 24 * 3600 * 1000));

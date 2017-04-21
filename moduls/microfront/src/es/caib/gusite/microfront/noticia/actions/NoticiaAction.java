@@ -6,10 +6,12 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.caib.gusite.microfront.Microfront;
 import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.BaseAction;
 import es.caib.gusite.microfront.exception.ExceptionFrontMicro;
@@ -25,6 +27,7 @@ import es.caib.gusite.micromodel.TraduccionMicrosite;
  *  action path="/noticia" <BR> 
  *  unknown="false" <BR>
  *  forward name="contenidov4" path="/v4/noticia/noticia.jsp"<BR>
+ *  forward name="contenidoMapav4" path="/v4/noticia/ubicacion.jsp"<BR>
  * 	forward name="contenidov1" path="/v1/noticia/noticia.jsp"
  *  
  *  @author - Indra
@@ -33,6 +36,7 @@ public class NoticiaAction extends BaseAction   {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String forwardlocal="contenido";
+		boolean forzarmapa = false;
 	  	
 		try {
 		  	Bdnoticia bdnoticia = new Bdnoticia(request);
@@ -61,10 +65,24 @@ public class NoticiaAction extends BaseAction   {
 			    microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
 			    request.setAttribute(" MVS_idsite",microsite);
 			    
-			    if ( (microsite.getRestringido().equals("N")) || (microsite.getRestringido().equals("S")) )  
+			    if ( (microsite.getRestringido().equals("N")) || (microsite.getRestringido().equals("S")) ){  
 			    	return mapping.findForward(forwardlocal+"v1");
-		    	else
-			    	return mapping.findForward(forwardlocal+"v4");
+			    }else{
+		    		
+			    	String fmapa = request.getParameter(Microfront.FMAPA);
+			    	
+		    		if (bdnoticia.getNoticia().getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+		    			forwardlocal += "Mapa";
+		    		}else if(  !StringUtils.isEmpty(fmapa) && fmapa.equals("true")
+							&& !StringUtils.isEmpty(bdnoticia.getNoticia().getLatitud())
+							&& !StringUtils.isEmpty(bdnoticia.getNoticia().getLongitud())){
+		    			forwardlocal += "Mapa";
+		    			forzarmapa = true;		    			
+		    		}	
+			    }
+		    				    		
+	    		request.setAttribute("MVS_forzarmapa", forzarmapa);
+		    	return mapping.findForward(forwardlocal+"v4");
 		    
 		    } else {
 		    	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA)); 	

@@ -218,7 +218,7 @@ table.Taula_SombrejatClar { width:99%; margin:1em 0; empty-cells:show; border-to
 table.Taula_SombrejatClar thead th, table.Taula_SombrejatClar thead td { font-weight:bold; text-align:left; border-bottom:1px solid #ccc; }
 table.Taula_SombrejatClar thead th, table.Taula_SombrejatClar thead td, table.Taula_SombrejatClar tbody td { padding:.2em .5em; }
 table.Taula_SombrejatClar tbody tr:nth-child(2n+1) { background-color:#f2f2f2 }
-table.Taula_SombrejatClar tbody tr.Taula_SClar_línia_imparell { background-color:#f2f2f2 }
+table.Taula_SombrejatClar tbody tr.Taula_SClar_lÃ­nia_imparell { background-color:#f2f2f2 }
 
 table.Taula_SenseContorn { width:99%; margin:1em 0; empty-cells:show; border:0; border-collapse:collapse; }
 table.Taula_SenseContorn thead tr th:first-child, table.Taula_SenseContorn thead tr td:first-child, table.Taula_SenseContorn tbody tr td:first-child { border-left:0 !important; }
@@ -250,4 +250,8 @@ table.Taula_ContornSimple thead th, table.Taula_ContornSimple thead td, table.Ta
 #infoFAQ table.falsa {border-collapse:collapse; text-align:justify; border:0px; position: relative;}
 
 
-
+/*div del mapa*/
+#gusiteMaps { width:100%; height: 400px; }
+div.gMMInfoWindow{	max-width: 300px; max-height: 225px; }
+div.gMMInfoWindow img{	max-width: 270px; }
+a.gMMBVolver{ margin-top: 10px; }
