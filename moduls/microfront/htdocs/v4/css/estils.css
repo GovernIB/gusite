@@ -254,4 +254,47 @@ table.Taula_ContornSimple thead th, table.Taula_ContornSimple thead td, table.Ta
 #gusiteMaps { width:100%; height: 400px; }
 div.gMMInfoWindow{	max-width: 300px; max-height: 225px; }
 div.gMMInfoWindow img{	max-width: 270px; }
-a.gMMBVolver{ margin-top: 10px; }
+div.gMMBVolver{ padding-top: 10px; }
+
+a.gMMBVolver {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;  
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px
+}
+
+a.gMMBVolver:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+a.gMMBVolver:active {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+a.gMMBVolver:active:hover {
+  color: #333;
+  background-color: #d4d4d4;
+  border-color: #8c8c8c;
+}
+

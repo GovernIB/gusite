@@ -58,7 +58,22 @@
 				<div id="info">
 			</logic:notEqual>								
 					<!-- titol -->
-					<h2 ><bean:message key="noticia.detalle"/> <bean:write name="MVS_tiponoticia" /></h2>
+					
+			<logic:present name="MVS_forzarmapa">	
+				<logic:equal name="MVS_forzarmapa" value="true">					
+					<h2 ><bean:message key="noticia.ubicacion"/> <bean:write name="MVS_tiponoticia" /></h2>								
+				</logic:equal>
+				<logic:notEqual name="MVS_forzarmapa" value="true">					
+					<h2 ><bean:message key="noticia.detalle"/> <bean:write name="MVS_tiponoticia" /></h2>							
+				</logic:notEqual>	
+			</logic:present>
+			<logic:notPresent name="MVS_forzarmapa">																		
+				<h2 ><bean:message key="noticia.detalle"/> <bean:write name="MVS_tiponoticia" /></h2>																	
+			</logic:notPresent>		
+					
+					
+					
+					
 					<!-- Mapa -->
 					<div id="gusiteMaps"></div>																	
 					<logic:present name="MVS_noticia" property="traduce">
@@ -101,14 +116,14 @@
 		<logic:equal name="MVS_forzarmapa" value="true">
 			<logic:present name="MVS_menu_cont_notic">								
 				<logic:equal name="MVS_menu_cont_notic" value="-1">
-					<a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />" ><bean:message key="noticia.volver"/></a>							
+					<div class="gMMBVolver" ><a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />" ><bean:message key="noticia.volver"/></a></div>							
 				</logic:equal>
 				<logic:notEqual name="MVS_menu_cont_notic" value="-1">
-					<a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />&amp;mcont=<bean:write name="MVS_menu_cont_notic" />"><bean:message key="noticia.volver"/></a>							
+					<div class="gMMBVolver" ><a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />&amp;mcont=<bean:write name="MVS_menu_cont_notic" />"><bean:message key="noticia.volver"/></a></div>							
 				</logic:notEqual>
 			</logic:present>
 			<logic:notPresent name="MVS_menu_cont_notic">																		
-				<a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />"><bean:message key="noticia.volver"/></a>																	
+				<div class="gMMBVolver" ><a class="gMMBVolver" href="noticia.do?mkey=<bean:write name="MVS_microsite" property="claveunica"/>&amp;cont=<bean:write name="MVS_noticia" property="id" />&amp;lang=<bean:write name="MVS_idioma" />"><bean:message key="noticia.volver"/></a></div>																	
 			</logic:notPresent>								
 		</logic:equal>	
 	</logic:present>	

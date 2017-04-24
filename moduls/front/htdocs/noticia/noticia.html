@@ -47,7 +47,7 @@ Ficha de noticia
 				<p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''">													
 					<a href="archivopub.html"
 						th:href="@{${#gusuri.noticiaFuerzaMapa(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"
-						target="blank" th:text="#{maps.ubicacion}">ubicacion</a>						
+						th:text="#{maps.ubicacion}">ubicacion</a>						
 				</p>
 				
 				<div th:if="${MVS_noticia.traduce.docu} !=null" th:remove="tag">
