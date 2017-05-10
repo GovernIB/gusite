@@ -242,7 +242,6 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 		Session session = this.getSession();
 		try {
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, id);
-			session.refresh(enc);
 			return enc;
 
 		} catch (HibernateException he) {
@@ -551,8 +550,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			if (archivosPorBorrar.size() > 0)
 				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
-			// Actualizamos el indice
+			//refrescamos la encuesta para que actualice la lista de preguntas del backoffice (#82)
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, pre.getIdencuesta());
+			session.refresh(enc);	
+			
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(enc.getIdmicrosite(), pre, op);
 			
@@ -761,9 +762,10 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 			}
 
 			tx.commit();
-			// Actualizamos el indice
+			//refrescamos la encuesta para que actualice la lista de respuestas del backoffice (#82)
 			Encuesta enc = this.obtenerEncuesta(this.obtenerPregunta(
 					res.getIdpregunta()).getIdencuesta());
+			session.refresh(enc);	
 			this.close(session);
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
@@ -1187,7 +1189,6 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 		final Session session = this.getSession();
 		try {
 			Encuesta enc = (Encuesta) session.get(Encuesta.class, id);
-			session.refresh(enc);
 			return enc;
 		} catch (Exception e) {
 			log.error("Error obtenido la encuesta", e);
