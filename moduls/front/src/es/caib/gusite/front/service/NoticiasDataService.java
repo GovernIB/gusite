@@ -1,5 +1,6 @@
 package es.caib.gusite.front.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -33,6 +34,10 @@ import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 
 @Service
 public class NoticiasDataService {
+	// FORMATOS FECHA Y HORA, EL RESULTADO DEL FORMATEO DEBE COINCIDIR
+	private static final String FORMATOFECHAHORAJAVA = "yyyy-MM-dd HH:mm";
+	private static final String FORMATOFECHAHORABBDD = "yyyy-MM-dd HH24:MI";
+	
 
 	protected static Log log = LogFactory.getLog(NoticiasDataService.class);
 
@@ -130,10 +135,11 @@ public class NoticiasDataService {
 			if (StringUtils.isEmpty(txtsearch)) {
 				NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
 				noticiadel.init();
+				SimpleDateFormat df = new SimpleDateFormat(FORMATOFECHAHORAJAVA);
 				java.sql.Date dt = new java.sql.Date((new Date()).getTime());
 				String wherenoticias = "where noti.visible='S' and noti.idmicrosite=" + microsite.getId() + " and noti.tipo=" + txttipo;
-				wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
-				wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
+				wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'"+ FORMATOFECHAHORABBDD +"')<='" + df.format(dt) + "')";
+				wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'"+ FORMATOFECHAHORABBDD +"')>='" + df.format(dt) + "')";
 
 				if (criteria.getAnyo() > 0) {
 					wherenoticias += " and " + this.construirPartialWhereAnyo(criteria.getAnyo());
@@ -185,10 +191,11 @@ public class NoticiasDataService {
 		// preparar el tipo de noticias.
 		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
 		noticiadel.init();
+		SimpleDateFormat df = new SimpleDateFormat(FORMATOFECHAHORAJAVA);
 		java.sql.Date dt = new java.sql.Date((new Date()).getTime());
 		String wherenoticias = "where noti.visible='S' and noti.idmicrosite=" + microsite.getId() + " and noti.tipo=" + tipo.getId();
-		wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
-		wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
+		wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'"+ FORMATOFECHAHORABBDD +"')<='" + df.format(dt) + "')";
+		wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'"+ FORMATOFECHAHORABBDD +"')>='" + df.format(dt) + "')";
 
 		noticiadel.setWhere(wherenoticias);
 		noticiadel.setOrderby2(this.getOrdenNoticias(tipo));
