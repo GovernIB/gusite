@@ -36,12 +36,13 @@ public class APIUtil {
      */
     public static RolsacQueryService getRolsacQueryService() {
     	
-    	String keyStoreName = System.getProperty("es.caib.gusite.api.rolsac.keystore.nombre");
-    	String keyStorePass = System.getProperty("es.caib.gusite.api.rolsac.keystore.pass");
-    	String url = System.getProperty("es.caib.gusite.url.rolsac");
+    	final String keyStoreName = System.getProperty("es.caib.gusite.api.rolsac.keystore.nombre");
+    	final String keyStorePass = System.getProperty("es.caib.gusite.api.rolsac.keystore.pass");
+    	final String url = System.getProperty("es.caib.gusite.url.rolsac");
     	
-    	if (API_STRATEGY == STRATEGY.WS)
+    	if (API_STRATEGY == STRATEGY.WS) {
     		CertificadoUtil.autentificar(keyStorePass, keyStoreName);
+    	}
     	
     	RolsacQueryService rqs;
     	if (url == null || url.isEmpty()) {
