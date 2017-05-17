@@ -48,6 +48,3 @@ ALTER table "GUS_MUSUAR" ADD (
 	"MSU_PERMIS" Number(19,0)
 ); 
 Comment on column "GUS_MUSUAR"."MSU_PERMIS" is 'Permisos para Tiny';
-
-ALTER TABLE GUS_SOLJOB ADD JOB_IDELEM NUMBER(19,0);
-COMMENT ON COLUMN "GUS_SOLJOB"."JOB_IDELEM" IS 'Identificador del id elemento, microsite/ua';

@@ -4,61 +4,81 @@
 Plantilla para la cabecera general de microsite
 
 */-->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite"
-th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
-th:lang-xmllang="${lang}">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
 <head>
-    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <th:block th:remove="all">
-    <!-- Bloque de estilos y js general para visualización en estático. Al ejecutarse dinámicamente, se elimina completamente -->
-    <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link> 
-    <!-- Bootstrap -->
-    <script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
-    <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- Bootstrap -->
-    <link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-    <script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
-    <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- Fin bootstrap -->
-    <!-- Fin bootstrap -->
-    <!-- Reset default bootstrap elements -->
-    <!-- Fin reset bootstrap -->
-    <!-- css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina -->
-    <link href="../files/bootstrap/css/bootstrap-reset.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-    <link rel="stylesheet" type="text/css" media="all" href="../files/estilsCapsalera.css" th:href="@{/resources/files/estilsCapsalera.css}"/>
-</th:block> 
+<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<th:block th:remove="all">
+	<!-- Bloque de estilos y js general para visualización en estático. Al ejecutarse dinámicamente, se elimina completamente -->
+	<link rel="stylesheet" type="text/css" media="all"
+		href="../css/estils-tema.css"></link>
+	<!-- Bootstrap -->
+	<script src="../files/bootstrap/jquery-1.11.0.min.js"
+		th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<script src="../files/bootstrap/js/bootstrap.min.js"
+		th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Bootstrap -->
+	<link href="../files/bootstrap/css/bootstrap.min.css"
+		th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
+		rel="stylesheet" media="screen" />
+	<script src="../files/bootstrap/jquery-1.11.0.min.js"
+		th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<script src="../files/bootstrap/js/bootstrap.min.js"
+		th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Fin bootstrap -->
+	<!-- Fin bootstrap -->
+	<!-- Reset default bootstrap elements -->
+	<!-- Fin reset bootstrap -->
+	<!-- css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina -->
+	<link href="../files/bootstrap/css/bootstrap-reset.css"
+		th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
+		rel="stylesheet" media="screen" />
+	<link rel="stylesheet" type="text/css" media="all"
+		href="../files/estilsCapsalera.css"
+		th:href="@{/resources/files/estilsCapsalera.css}" />
+</th:block>
 </head>
 <body>
-    <header  th:class="((${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null)? '' :'noCabecera' )" th:fragment="cabecera" >
-        <div class="cabecera-main">
-            <div class="cabecera-contingut container">
-                <div th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null " th:remove="tag" >
-                    <div class="cap-full row">
-                        <!--/* tipocabecera 1: por defecto */-->
-                        <!-- Logo govern -->
-                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" id="logo-cont">
-                            <a accesskey="0" href="http://www.caib.es/" class="destacat">
-                                <span class="logo" id="imagenCabecera2">&nbsp;</span>
-                            </a>
-                        </div>
-                        <!--/* Titulo del microsite */-->
-                        <div class="titol removeTag col-lg-6 col-xs-12 col-sm-5 col-md-6 ">
-                            <div  th:if="${MVS_microsite} !=null" th:remove="tag">
-                                <!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
-                                <div th:if="${MVS_micrositetitulo} !=null" th:remove="tag">
-                                    <div>
-                                        <h1>
-                                            <!-- #gusuri.home(MVS_microsite,MVS_idioma): devuelve la URL hacia la home -->
-                                            <a accesskey="2" href="index.html" th:href="@{${#gusuri.home(MVS_microsite,MVS_idioma)}}" title="volver al inicio" th:title="#{cabecera.volverinicio}" th:text="${MVS_micrositetitulo}">
-                                                Título del microsite
-                                            </a>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Inicio de titol para test 
+	<header th:fragment="cabecera" th:if="${MVS_microsite}!=null" th:remove="tag">
+		<div
+			th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null "
+			th:remove="tag">
+			<header>
+				<div class="cabecera-main">
+					<div class="cabecera-contingut container">
+						<div class="cap-full row">
+							<!--/* tipocabecera 1: por defecto */-->
+							<!-- Logo govern -->
+							<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" id="logo-cont">
+								<a accesskey="0" href="http://www.caib.es/" class="destacat">
+									<span class="logo" id="imagenCabecera2">&nbsp;</span>
+								</a>
+							</div>
+							<!--/* Titulo del microsite */-->
+							<div
+								class="titol removeTag col-lg-6 col-xs-12 col-sm-5 col-md-6 ">
+								<div th:if="${MVS_microsite} !=null" th:remove="tag">
+									<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+									<div th:if="${MVS_micrositetitulo} !=null" th:remove="tag">
+										<div>
+											<h1>
+												<!-- #gusuri.home(MVS_microsite,MVS_idioma): devuelve la URL hacia la home -->
+												<a accesskey="2" href="index.html"
+													th:href="@{${#gusuri.home(MVS_microsite,MVS_idioma)}}"
+													title="volver al inicio"
+													th:title="#{cabecera.volverinicio}"
+													th:text="${MVS_micrositetitulo}"> Título del microsite
+												</a>
+											</h1>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Inicio de titol para test 
                         <div class="titol  col-lg-5 col-xs-12 col-sm-4 col-md-5 " th:remove="all">
                             <h1>
                                 <a href="#">
@@ -66,207 +86,201 @@ th:lang-xmllang="${lang}">
                                 </a>
                             </h1>
                         </div> -->
-                        <!-- Fin de titol para test -->
-                        <div class="enlaces  col-lg-3 col-xs-12 col-sm-3 col-md-3 " th:if="${#arrays.length(MVS_listaidiomas)} > 1" >
-                            <div class="idiomes dropdown">
-                                <span th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}"> 
-                                    <span th:each="idiomaLista,iterStat:${MVS_listaidiomas}" th:remove="tag">
-                                        <a href="#" class="idioma idioma-actual dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" th:if="${idiomaLower}==${idiomaLista.key}">
-                                            <span class="glyphicon glyphicon-globe "></span> 
-                                            <span  th:utext="${idiomaLista.value}">Català</span>
-                                            <span class="caret"></span>
-                                        </a> 
-                                    </span>
-                                    <ul  class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li th:each="idiomaLista,iterStat:${MVS_listaidiomas}" role="presentation" class="idioma idioma-adicional">
-                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}" th:utext="${idiomaLista.value}">
-                                                Castellano
-                                            </a>
-                                        </li>
-                                        <!-- Inicio de otros idiomas para probar -->
-                                        <li role="presentation" class="idioma idioma-adicional" th:remove="all">
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                Ingles
-                                            </a>
-                                        </li>
-                                        <li role="presentation" class="idioma idioma-adicional" th:remove="all">
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                Aleman
-                                            </a>
-                                        </li>
-                                        <!-- Fin de otros idiomas para probar -->
-                                    </ul>
-                                </span>
-                            </div>
-                            <div class="dreta">
-                                <!-- enllaços -->
-                                <!-- MVS_listacabecera: devuelve una lista de arrays para la cabecera -->
-                                <div>
-                                    <div  th:if="${MVS_listacabecera} !=null" th:each="i,iterStat:${MVS_listacabecera}" th:with="indice2=${iterStat.index}" th:remove="tag">
-                                        <span th:if="${iterStat.index != 0}" th:remove="tag">
-                                            - 
-                                        </span>
-                                        <a href="" th:href="@{${i.value1}}" th:text="${i.key}">
-                                            Menu - enlaces - rapidos
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="idiomes dropdown idiomes2" style="display:none;">
-                                <span th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}"> 
-                                    <span th:each="idiomaLista,iterStat:${MVS_listaidiomas}" th:remove="tag">
-                                        <a href="#" class="idioma idioma-actual dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" th:if="${idiomaLower}==${idiomaLista.key}">
-                                            <span class="glyphicon glyphicon-globe "></span> 
-                                            <span  th:utext="${idiomaLista.value}">Català</span>
-                                            <span class="caret"></span>
-                                        </a> 
-                                    </span>
-                                    <ul  class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li th:each="idiomaLista,iterStat:${MVS_listaidiomas}" role="presentation" class="idioma idioma-adicional">
-                                            <a role="menuitem" tabindex="-1" th:if="${idiomaLower}!=${idiomaLista.key}"  href="#" th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}" th:utext="${idiomaLista.value}">
-                                                Castellano
-                                            </a>
-                                        </li>
-                                        <!-- Inicio de otros idiomas para probar -->
-                                        <li role="presentation" class="idioma idioma-adicional" th:remove="all">
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                Ingles
-                                            </a>
-                                        </li>
-                                        <li role="presentation" class="idioma idioma-adicional" th:remove="all">
-                                            <a role="menuitem" tabindex="-1" href="#">
-                                                Aleman
-                                            </a>
-                                        </li>
-                                        <!-- Fin de otros idiomas para probar -->
-                                    </ul>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- fin de titulo titol-->
-                    <!-- INICIO de menu corporativo corporatiu -->
-                    <div th:if="${MVS_microsite.menucorporativo}=='S'" >
-                        <nav  class="navbar navbar-default " >
-                         <div class="container-fluid">
-                            <!-- Brand and toggle get grouped for better mobile display -->
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                            </div>
-                            <!--   Collect the nav links, forms, and other content for toggling -->
-                            <div class="collapse navbar-collapse serveisV2" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav">
-                                    <li  th:class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"  ><span th:text="#{WEB_CIU003} + ' '"></span><span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="button">
-                                         <li>
-                                            <a href="/govern/presidencia.do?lang" th:href="@{~/govern/presidencia.do(lang=${#strings.toLowerCase(MVS_idioma)})}" th:text="#{WEB2_GOV001}">
-                                                <img th:if="${submenu.imagenmenu} !=null" src="archivopub.html" th:src="@{${#gusuri.archivopub(MVS_microsite,submenu.imagenmenu)}}" alt="Nombre del menú" th:alt="${submenu.traduce.nombre}" />
-                                            </a>
-                                        </li>
-                                        <li th:class="dropdown-submenu">
-                                            <a href="@"  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span th:text="#{WEB_POR015}"></span><span class="caret"></span>
-                                            </a>
-                                            <ul class="dropdown-submenu govern" role="button">
-                                                <!--/* MVS2_uos: listado de las consellerias para la cabecera */-->
-                                                <li th:if="${MVS2_uos}!=null" th:each="i : ${MVS2_uos}" th:remove="(${i.id}=='2') ? all : none">
-                                                    <span class="guion">&nbsp;-&nbsp;</span>
-                                                    <a href="/govern/organigrama/area.do?lang=ca&amp;coduo=2" th:href="${i.url}" th:text="${i.abreviatura}">
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>  
-                                    </ul>
-                                </li>
-                                <!-- EL PRESIDENT -->
-                                <li>
-                                    <span class="guion"> - </span>
-                                    <a href="/govern/president/index.do?lang=ca" th:href="@{~/govern/president/index.do(lang=${#strings.toLowerCase(MVS_idioma)})}" accesskey="5" th:text="#{WEB_ILL013} + ' '">
-                                        El president
-                                    </a>
-                                </li>
-                                <!-- DESCOBREIX BALEARS -->
-                                <li>
-                                    <span class="guion"> - </span>
-                                    <a href="http://www.illesbalears.es/" accesskey="6" th:text="#{WEB2_TEM103} + ' '">
-                                        Descobreix Balears
-                                    </a>
-                                </li>
-                                <!-- SALA DE PREMSA -->
-                                <li  th:class="dropdown">  
-                                    <span class="guion"> - </span>
-                                    <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span th:text="#{WEB2_GEN141} + ' '"></span><span class="caret"></span></a>
+							<!-- Fin de titol para test -->
+							<div class="enlaces  col-lg-3 col-xs-12 col-sm-3 col-md-3 "
+								th:if="${#arrays.length(MVS_listaidiomas)} > 1">
+								<div class="idiomes dropdown">
+									<span th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
+										<span th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+										th:remove="tag"> <a href="#"
+											class="idioma idioma-actual dropdown-toggle" type="button"
+											id="dropdownMenu1" data-toggle="dropdown"
+											aria-expanded="true"
+											th:if="${idiomaLower}==${idiomaLista.key}"> <span
+												class="glyphicon glyphicon-globe "></span> <span
+												th:utext="${idiomaLista.value}">Català</span> <span
+												class="caret"></span>
+										</a>
+									</span>
+										<ul class="dropdown-menu dropdown-menu-right" role="menu"
+											aria-labelledby="dropdownMenu1">
+											<li th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+												role="presentation" class="idioma idioma-adicional"><a
+												role="menuitem" tabindex="-1"
+												th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
+												th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+												th:utext="${idiomaLista.value}"> Castellano </a></li>
+											<!-- Inicio de otros idiomas para probar -->
+											<li role="presentation" class="idioma idioma-adicional"
+												th:remove="all"><a role="menuitem" tabindex="-1"
+												href="#"> Ingles </a></li>
+											<li role="presentation" class="idioma idioma-adicional"
+												th:remove="all"><a role="menuitem" tabindex="-1"
+												href="#"> Aleman </a></li>
+											<!-- Fin de otros idiomas para probar -->
+										</ul>
+									</span>
+								</div>
+								<div class="dreta">
+									<!-- enllaços -->
+									<!-- MVS_listacabecera: devuelve una lista de arrays para la cabecera -->
+									<div>
+										<div th:if="${MVS_listacabecera} !=null"
+											th:each="i,iterStat:${MVS_listacabecera}"
+											th:with="indice2=${iterStat.index}" th:remove="tag">
+											<span th:if="${iterStat.index != 0}" th:remove="tag">
+												- </span> <a href="" th:href="@{${i.value1}}" th:text="${i.key}">
+												Menu - enlaces - rapidos </a>
+										</div>
+									</div>
+								</div>
+								<div class="idiomes dropdown idiomes2" style="display: none;">
+									<span th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
+										<span th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+										th:remove="tag"> <a href="#"
+											class="idioma idioma-actual dropdown-toggle" type="button"
+											id="dropdownMenu1" data-toggle="dropdown"
+											aria-expanded="true"
+											th:if="${idiomaLower}==${idiomaLista.key}"> <span
+												class="glyphicon glyphicon-globe "></span> <span
+												th:utext="${idiomaLista.value}">Català</span> <span
+												class="caret"></span>
+										</a>
+									</span>
+										<ul class="dropdown-menu dropdown-menu-right" role="menu"
+											aria-labelledby="dropdownMenu1">
+											<li th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+												role="presentation" class="idioma idioma-adicional"><a
+												role="menuitem" tabindex="-1"
+												th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
+												th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+												th:utext="${idiomaLista.value}"> Castellano </a></li>
+											<!-- Inicio de otros idiomas para probar -->
+											<li role="presentation" class="idioma idioma-adicional"
+												th:remove="all"><a role="menuitem" tabindex="-1"
+												href="#"> Ingles </a></li>
+											<li role="presentation" class="idioma idioma-adicional"
+												th:remove="all"><a role="menuitem" tabindex="-1"
+												href="#"> Aleman </a></li>
+											<!-- Fin de otros idiomas para probar -->
+										</ul>
+									</span>
+								</div>
+							</div>
+						</div>
+						<!-- fin de titulo titol-->
+						<!-- INICIO de menu corporativo corporatiu -->
+						<div th:if="${MVS_microsite.menucorporativo}=='S'">
+							<nav class="navbar navbar-default ">
+								<div class="container-fluid">
+									<!-- Brand and toggle get grouped for better mobile display -->
+									<div class="navbar-header">
+										<button type="button" class="navbar-toggle collapsed"
+											data-toggle="collapse"
+											data-target="#bs-example-navbar-collapse-1">
+											<span class="sr-only">Toggle navigation</span> <span
+												class="icon-bar"></span> <span class="icon-bar"></span> <span
+												class="icon-bar"></span>
+										</button>
+									</div>
+									<!--   Collect the nav links, forms, and other content for toggling -->
+									<div class="collapse navbar-collapse serveisV2"
+										id="bs-example-navbar-collapse-1">
+										<ul class="nav navbar-nav">
+											<li th:class="dropdown"><a href="#"
+												class="dropdown-toggle" data-toggle="dropdown" role="button"
+												aria-expanded="false"><span
+													th:text="#{WEB_CIU003} + ' '"></span><span class="caret"></span></a>
+												<ul class="dropdown-menu" role="button">
+													<li><a href="/govern/presidencia.do?lang"
+														th:href="@{~/govern/presidencia.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+														th:text="#{WEB2_GOV001}"> <img
+															th:if="${submenu.imagenmenu} !=null"
+															src="archivopub.html"
+															th:src="@{${#gusuri.archivopub(MVS_microsite,submenu.imagenmenu)}}"
+															alt="Nombre del menú" th:alt="${submenu.traduce.nombre}" />
+													</a></li>
+													<li th:class="dropdown-submenu"><a href="@"
+														class="dropdown-toggle" data-toggle="dropdown"
+														role="button" aria-expanded="false"><span
+															th:text="#{WEB_POR015}"></span><span class="caret"></span>
+													</a>
+														<ul class="dropdown-submenu govern" role="button">
+															<!--/* MVS2_uos: listado de las consellerias para la cabecera */-->
+															<li th:if="${MVS2_uos}!=null" th:each="i : ${MVS2_uos}"
+																th:remove="(${i.id}=='2') ? all : none"><span
+																class="guion">&nbsp;-&nbsp;</span> <a
+																href="/govern/organigrama/area.do?lang=ca&amp;coduo=2"
+																th:href="${i.url}" th:text="${i.abreviatura}"> </a></li>
+														</ul></li>
+												</ul></li>
+											<!-- EL PRESIDENT -->
+											<li><span class="guion"> - </span> <a
+												href="/govern/president/index.do?lang=ca"
+												th:href="@{~/govern/president/index.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+												accesskey="5" th:text="#{WEB_ILL013} + ' '"> El
+													president </a></li>
+											<!-- DESCOBREIX BALEARS -->
+											<li><span class="guion"> - </span> <a
+												href="http://www.illesbalears.es/" accesskey="6"
+												th:text="#{WEB2_TEM103} + ' '"> Descobreix Balears </a></li>
+											<!-- SALA DE PREMSA -->
+											<li th:class="dropdown"><span class="guion"> - </span> <a
+												href="#" class="dropdown-toggle" data-toggle="dropdown"
+												role="button" aria-expanded="false"><span
+													th:text="#{WEB2_GEN141} + ' '"></span><span class="caret"></span></a>
 
-                                    <ul class="dropdown-menu" role="button">
-                                        <li>
-                                            <a href="/pidip/comunicats.do?filtro=A&amp;data=null&amp;lang=ca" th:href="@{~/pidip/comunicats.do(lang=${#strings.toLowerCase(MVS_idioma)},data=null,filtro=A)}" th:text="#{WEB2_GEN119}">
-                                                Convocatòries
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pidip/comunicats.do?filtro=C&amp;data=null&amp;lang=ca" th:href="@{~/pidip/comunicats.do(lang=${#strings.toLowerCase(MVS_idioma)},data=null,filtro=C)}" th:text="#{WEB2_GEN123}">
-                                                Notes de premsa
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pidip/consells.do?lang" th:href="@{~/pidip/consells.do(lang=${#strings.toLowerCase(MVS_idioma)})}" th:text="#{COM_COG001}">
-                                                Consells de Govern
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pidip/videoteca.do?lang" th:href="@{~/pidip/videoteca.do(lang=${#strings.toLowerCase(MVS_idioma)})}" th:text="#{COM_VID001}">
-                                                Videoteca
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pidip/guia.do?lang" th:href="@{~/pidip/guia.do(lang=${#strings.toLowerCase(MVS_idioma)})}" th:text="#{COM_COM013}">
-                                                Guia de la comunicació
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pidip/directori.do?lang" th:href="@{~/pidip/directori.do(lang=${#strings.toLowerCase(MVS_idioma)})}" th:text="#{COM_COM003}">
-                                                Mitjans a internet
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="http://www.caib.es/webcaib/twitter/twitter.pdf" th:text="#{COM_COM018}">
-                                                Directori Twitter
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="http://mic.caib.es" th:text="#{COM_COM019}">
-                                                Manual d'identitat corporativa
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <!-- SEU ELECTRONICA -->
-                                <li><span class="guion"> - </span>
-                                    <a href="https://www.caib.es/seucaib" th:utext="#{WEB2_SEU} + ' '">
-                                        Seu electrònica
-                                    </a>
-                                </li>   
-                                <li>
-                                    <span class="guion"> - </span>
-                                    <a href="http://www.caib.es/eboibfront" th:text="#{WEB_CER020} + ' '">
-                                        Butlletí Oficial
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- /.navbar-collapse -->
-                    </div>
-                    <!-- /.container-fluid -->
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-</header>
+												<ul class="dropdown-menu" role="button">
+													<li><a
+														href="/pidip/comunicats.do?filtro=A&amp;data=null&amp;lang=ca"
+														th:href="@{~/pidip/comunicats.do(lang=${#strings.toLowerCase(MVS_idioma)},data=null,filtro=A)}"
+														th:text="#{WEB2_GEN119}"> Convocatòries </a></li>
+													<li><a
+														href="/pidip/comunicats.do?filtro=C&amp;data=null&amp;lang=ca"
+														th:href="@{~/pidip/comunicats.do(lang=${#strings.toLowerCase(MVS_idioma)},data=null,filtro=C)}"
+														th:text="#{WEB2_GEN123}"> Notes de premsa </a></li>
+													<li><a href="/pidip/consells.do?lang"
+														th:href="@{~/pidip/consells.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+														th:text="#{COM_COG001}"> Consells de Govern </a></li>
+													<li><a href="/pidip/videoteca.do?lang"
+														th:href="@{~/pidip/videoteca.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+														th:text="#{COM_VID001}"> Videoteca </a></li>
+													<li><a href="/pidip/guia.do?lang"
+														th:href="@{~/pidip/guia.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+														th:text="#{COM_COM013}"> Guia de la comunicació </a></li>
+													<li><a href="/pidip/directori.do?lang"
+														th:href="@{~/pidip/directori.do(lang=${#strings.toLowerCase(MVS_idioma)})}"
+														th:text="#{COM_COM003}"> Mitjans a internet </a></li>
+													<li><a
+														href="http://www.caib.es/webcaib/twitter/twitter.pdf"
+														th:text="#{COM_COM018}"> Directori Twitter </a></li>
+													<li><a href="http://mic.caib.es"
+														th:text="#{COM_COM019}"> Manual d'identitat
+															corporativa </a></li>
+												</ul></li>
+											<!-- SEU ELECTRONICA -->
+											<li><span class="guion"> - </span> <a
+												href="https://www.caib.es/seucaib"
+												th:utext="#{WEB2_SEU} + ' '"> Seu electrònica </a></li>
+											<li><span class="guion"> - </span> <a
+												href="http://www.caib.es/eboibfront"
+												th:text="#{WEB_CER020} + ' '"> Butlletí Oficial </a></li>
+										</ul>
+									</div>
+									<!-- /.navbar-collapse -->
+								</div>
+								<!-- /.container-fluid -->
+							</nav>
+						</div>
+					</div>
+				</div>
+			</header>
+		</div>
+		<!-- /* tipocabecera 2: personalizada */-->
+		<div
+			th:if="(${MVS_microsite.tipocabecera}=='2')" th:remove="tag"
+			th:utext="${MVS_microsite.traduce.cabecerapersonal}">HTML de cabecera personalizada del microsite</div>
+
+	</header>
 </body>
 </html>
