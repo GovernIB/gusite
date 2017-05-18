@@ -136,7 +136,7 @@ th:lang-xmllang="${lang}">
         <label th:text="${MVS_captcha.error}" th:if="${MVS_captcha.error} != null" style="color: red;">Error</label> 
        
         <div class="etiqueta">
-             <label>Rellene el captcha:</label>
+             <label th:text="#{contacto.captcha.rellene}">Emplenau el captcha.</label>
         </div>
         <div class="input" style="display: flex;">
 			<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" style="width: 100px;margin-right: 50px" />    
