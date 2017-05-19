@@ -23,7 +23,17 @@ public class UriLocaleResolver extends AbstractLocaleResolver {
 
 			}
 		}
-		if (req.getParameter("lang") != null) {
+		
+		
+		if (req.getParameter("lang") == null) {
+			if (path.contains("/contacto/")) {
+				return new Locale("ES", "ES");
+			} else if (path.contains("/contacte/")) {
+				return new Locale("CA", "CA");
+			} else if (path.contains("/contact/")) {
+				return new Locale("EN", "EN");
+			} 
+		} else {
 			return new Locale(req.getParameter("lang").toUpperCase(), req.getParameter("lang").toUpperCase());
 		}
 
