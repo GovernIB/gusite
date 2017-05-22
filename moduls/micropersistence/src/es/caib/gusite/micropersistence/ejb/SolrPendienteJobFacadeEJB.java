@@ -232,6 +232,10 @@ public abstract class SolrPendienteJobFacadeEJB extends HibernateEJB {
     	Session session = null;
     	try {
 	    	 	session = getSession();
+	    	 	//Para evitar problemas por tamaño demasiado grande.
+	    	 	if (solrpendiente.getMensajeError() != null && solrpendiente.getMensajeError().length() > 300) {
+	    	 		solrpendiente.setMensajeError(solrpendiente.getMensajeError().substring(0, 299));
+	    	 	}
 	    	 	session.update(solrpendiente);
 	    	 	session.flush();
     	} catch(Exception e) {
