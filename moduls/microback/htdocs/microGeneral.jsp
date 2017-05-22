@@ -274,8 +274,7 @@
 									<tr>
 										<td>
 											<html:hidden name="microForm" property="rol" />
-											<html:hidden name="microForm" property="restringido" />
-											<html:hidden name="microForm" property="menucorporativo" />
+											<html:hidden name="microForm" property="restringido" />											
 											<html:hidden name="microForm" property="buscador" />
 										</td>
 									</tr>
@@ -411,12 +410,13 @@
                             </html:select>
                         </td>
                     </tr>
-                                        
-				<logic:equal name="puedoeditar" value="1">
+                                        				
                     <tr>
                         <td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
                         <td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
-                    </tr>                  
+                    </tr>  
+                    
+                <logic:equal name="puedoeditar" value="1">                
 					<tr class="par">
 						<td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
 						<td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
