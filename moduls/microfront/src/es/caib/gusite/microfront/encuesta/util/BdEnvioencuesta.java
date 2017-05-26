@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import es.caib.gusite.utilities.auth.CertsPrincipal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -242,14 +243,11 @@ public class BdEnvioencuesta  extends Bdbase {
 				    			if ((!paramValue.isEmpty()) && (paramValue!=null) && (!paramValue.equals("null"))){				    				
 				    				resdatdel.grabarRespuestaDato(resdat);
 				    				
-				    				if(anterior.charAt(0) != 'R'){		//El anterior no es radio(mono) asociado a textarea de usuario										
+				    				if(StringUtils.isEmpty(anterior) || anterior.charAt(0) != 'R'){		//El anterior no es radio(mono) asociado a textarea de usuario										
 				    					idPreguntaAux = str[1];
 				    					encuestadel.sumarRespuesta(new Long(respuesta));
 									}
 				    			}
-				    			
-				    			
-				    		  	
 				    	  } else {
 				    		  	cuerpomensaje+= paramName + " = ";
 							    String[] paramValues = req.getParameterValues(paramName);
