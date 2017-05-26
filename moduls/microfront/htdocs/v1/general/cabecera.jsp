@@ -49,7 +49,7 @@
 							<form name="cercadorForm" action="cercar.do" method="post">
 								<input type="hidden" name="idsite" value="<bean:write name="MVS_idsite"/>">
 								<input type="hidden" name="lang" value="<bean:write name="MVS_idioma"/>">
-								<img src="/root/imgs/capsal/ico_cercador.gif" alt="<bean:message key="cercador.cercador"/>" /> 
+								<img src="/sacmicrofront/imgs/capsal/ico_cercador.png" alt="<bean:message key="cercador.cercador"/>" /> 
 								<label for="cercadorTxt">
 									<span class="invisible">Cercar en www.caib.es:</span>
 									<input name="cerca" id="cercadorTxt" type="text" value="" style="color:#777;" />
