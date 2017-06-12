@@ -40,6 +40,15 @@ public class MParserEncuesta extends MParserHTML {
 		super(version);
 	}
 	
+	
+	private String textoEnFuncionNumero(String txtUna,String txtVarias,Integer numero ){
+		if(numero==1){
+			return txtUna.replaceAll("\\{1\\}", numero.toString());
+		}else{
+			return txtVarias.replaceAll("\\{1\\}", numero.toString());
+		}
+	}
+	
 	/**
 	 * Método que devuelve un string preparado para insertar en un html.
 	 * Ese string contiene una encuesta.
@@ -98,11 +107,18 @@ public class MParserEncuesta extends MParserHTML {
 				
 				StringBuffer scriptValidar = new StringBuffer();
 				scriptValidar.append("<script>\n function comptaChecks(pregunta){ \n");
-				scriptValidar.append("	 var num=0; \n");
-				scriptValidar.append("	 for (i=0; i<eval('document.encuesta.' + pregunta + '.length'); i++){ \n");
-				scriptValidar.append("	 	if (eval('document.encuesta.' + pregunta + '[i].checked')==true) \n");
-				scriptValidar.append("	 		num++; \n");
-				scriptValidar.append("	 } \n");
+				scriptValidar.append("    var num=0; \n");
+				scriptValidar.append("    if(typeof(document.encuesta[pregunta].length)==\"undefined\" && document.encuesta[pregunta].checked==true){  \n");
+				scriptValidar.append("        //solo hay una respuesta y está marcada  \n");
+				scriptValidar.append("	      num++;  \n");
+				scriptValidar.append("    }else{  \n");
+				scriptValidar.append("        //hay varias respuestas  \n");				
+				scriptValidar.append("	      for (i=0; i<eval('document.encuesta.' + pregunta + '.length'); i++){  \n");
+				scriptValidar.append("	 	      if (eval('document.encuesta.' + pregunta + '[i].checked')==true){  \n");
+				scriptValidar.append("	 		      num++; \n");
+				scriptValidar.append("            } \n");
+				scriptValidar.append("        } \n");
+				scriptValidar.append("    } \n");
 				scriptValidar.append("	 return num;  \n } \n \n");
 				
 				scriptValidar.append("function marcaCheck(idResp, idChk){ \n");
@@ -150,9 +166,8 @@ public class MParserEncuesta extends MParserHTML {
 		    					
 		    					scriptValidar.append("if (comptaChecks(\"C" + pregunta.getId() +"\") < " + min + ") ");
 		    					scriptValidar.append(" txtError = txtError + \"\\n" + ((pregunta.getTraduce()!=null)?((TraduccionPregunta)pregunta.getTraduce()).getTitulo():"Error en traduccion" + "\"") + "\";\n");
-		    				}else if (max!=0){
-		    					obligatoriedad = rb.getString("encuesta.respcont.max");
-		    					obligatoriedad = obligatoriedad.replaceAll("\\{1\\}", max.toString());
+		    				}else if (max!=0){		    		
+		    					obligatoriedad = textoEnFuncionNumero(rb.getString("encuesta.respcont.max.una"),rb.getString("encuesta.respcont.max"),max);
 		    					
 		    					scriptValidar.append("if (comptaChecks(\"C" + pregunta.getId() +"\") > " + max + ") ");
 		    					scriptValidar.append(" txtError = txtError + \"\\n" + ((pregunta.getTraduce()!=null)?((TraduccionPregunta)pregunta.getTraduce()).getTitulo():"Error en traduccion" + "\"") + "\";\n");

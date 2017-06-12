@@ -244,7 +244,10 @@ public class BdEnvioencuesta  extends Bdbase {
 				    				resdatdel.grabarRespuestaDato(resdat);
 				    				
 				    				if(StringUtils.isEmpty(anterior) || anterior.charAt(0) != 'R'){		//El anterior no es radio(mono) asociado a textarea de usuario										
-				    					idPreguntaAux = str[1];
+				    					if(idPreguntaAux.compareTo(idpregunta) != 0){
+				    						encuestadel.sumarPregunta(new Long(idpregunta));
+											idPreguntaAux = idpregunta;
+				    					}
 				    					encuestadel.sumarRespuesta(new Long(respuesta));
 									}
 				    			}
