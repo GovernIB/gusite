@@ -384,6 +384,12 @@ public class EncuestasController extends BaseViewController {
 										upm.getId().setIdrespuesta(new Long(respuesta));
 										encuestadel.grabarUsuarioPropietarioRespuesta(upm);
 										preguntasTratadas.add(cadenaSinLetra);
+										
+										//Si la pregunta no se ha contado ya la contamos ahora
+										if (!preguntasContadas.contains(idpregunta)){													
+											encuestadel.sumarPregunta(new Long(idpregunta));
+											preguntasContadas.add(idpregunta);
+										}
 									}
 								}
 

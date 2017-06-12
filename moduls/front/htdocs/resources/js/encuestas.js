@@ -1,9 +1,18 @@
 function comptaChecks(pregunta){ 
 	 var num=0; 
-	 for (i=0; i<document.encuesta[pregunta].length; i++){ 
-	 	if (document.encuesta[pregunta][i].checked==true) 
-	 		num++; 
+	 if(typeof(document.encuesta[pregunta].length)=="undefined" && document.encuesta[pregunta].checked==true){
+		 //solo hay una respuesta y está marcada
+		 num++;
+	 }else{
+		 //hay varias respuestas
+		for (i=0; i<document.encuesta[pregunta].length; i++){ 
+		 	if (document.encuesta[pregunta][i].checked==true) {
+		 		num++;
+		 	}	 		 
+		} 
 	 }
+	 
+	 
 	 return num;  
  } 
 

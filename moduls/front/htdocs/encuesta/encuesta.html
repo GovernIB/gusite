@@ -71,11 +71,19 @@ Página de formulario de encuesta.
 							<div th:if="(${min}!=0) and (${max}==0)" th:remove="tag"
 								 th:with="obligatoriedad=#{encuesta.respcont.min('', ${min})}">												
 								<div th:replace="::encuestaPregunta"></div>
-							</div>											
-							<div th:if="(${max}!=0) and (${min}==0)" th:remove="tag"
+							</div>	
+							
+																	
+							<div th:if="(${max}==1) and (${min}==0)" th:remove="tag"
+								 th:with="obligatoriedad=#{encuesta.respcont.max.una('', ${max})}">												
+								<div th:replace="::encuestaPregunta"></div>
+							</div>
+							<div th:if="(${max}>1) and (${min}==0)" th:remove="tag"
 								 th:with="obligatoriedad=#{encuesta.respcont.max('', ${max})}">												
 								<div th:replace="::encuestaPregunta"></div>
 							</div>
+							
+							
 							<div th:if="(${min}==0) and (${max}==0)" th:remove="tag"
 								th:with="obligatoriedad=''">												
 								<div th:replace="::encuestaPregunta"></div>
