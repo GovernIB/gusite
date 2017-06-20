@@ -228,12 +228,13 @@ public class TemaFrontEditaAction extends BaseAction {
                 temaFrontForm.set("cssId", temaFront.getCss().getId());
                 temaFrontForm.set("cssNom", temaFront.getCss().getNombre());
             }
-        } else {
-            temaFront.setCss(null);
+        }else if(file != null ){
+        	//El filename es vacio
+        	temaFront.setCss(null);
             temaFrontForm.set("css", null);
             temaFrontForm.set("cssId", null);
             temaFrontForm.set("cssNom", null);
-        }
+        } //Si file==null no hacemos nada, dejamos el que estaba 
 
         return temaFront;
     }
