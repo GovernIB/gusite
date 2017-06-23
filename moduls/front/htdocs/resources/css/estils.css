@@ -402,7 +402,7 @@ a.docPDF {
 }
 
 #indexCercador input.texto {
-    width: 107.80%;
+    width: 100%;
     margin-bottom: 1px;
     border: 2px solid #e5e5e5;
 }

@@ -84,9 +84,7 @@
 								</logic:iterate>
 								<script type="text/javascript" src="v4/js/gusiteMaps.js"></script>														
 							 	<script src="https://maps.googleapis.com/maps/api/js?key=<%=GusitePropertiesUtil.getKeyGooglemaps() %>&amp;callback=initialize" async="async" defer="defer" ></script>
-							</div>
-					
-						    <jsp:include page="/general/inc_llistats_paginacio.jsp"/>
+							</div>					
 						
 					</logic:notEqual>						
 				</div>	

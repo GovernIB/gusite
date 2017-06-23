@@ -97,11 +97,11 @@ var thDebug = false;
 					<input class="gMMTitulo"  th:value="${MVS_noticia.traduce.titulo}" />
 					<div class="gMMContenido">
 						<div class="gMMInfoWindow">
-							<h3 th:text="${MVS_noticia.traduce.titulo}">Título de la noticia título</h3>
-							<div th:if="!${MVS_forzarmapa}" th:remove="tag">							
-								<h4 th:if="${MVS_noticia.traduce.subtitulo}!=null" 
-									th:text="${MVS_noticia.traduce.subtitulo}">Traduce subtitulo</h4>						  
-								<img th:if="${MVS_noticia.imagen} !=null" th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" th:alt="${MVS_noticia.traduce.titulo}" />
+							<h3 th:text="${MVS_noticia.traduce.titulo}">Título de la noticia título</h3>													
+							<h4 th:if="${MVS_noticia.traduce.subtitulo}!=null" 
+								th:text="${MVS_noticia.traduce.subtitulo}">Traduce subtitulo</h4>						  
+							<img th:if="${MVS_noticia.imagen} !=null" th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" th:alt="${MVS_noticia.traduce.titulo}" />
+							<div th:if="!${MVS_forzarmapa}" th:remove="tag">
 								<p th:if="${MVS_noticia.traduce.texto}!=null"
 								th:utext="${MVS_noticia.traduce.texto}" th:remove="tag"  >Contenido</p>
 								

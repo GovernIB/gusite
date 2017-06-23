@@ -84,16 +84,16 @@
 							<input class="gMMTitulo"  value="<bean:write name="MVS_noticia" property="traduce.titulo" />" />
 							<div class="gMMContenido">
 								<div class="gMMInfoWindow">
-									<h3><bean:write name="MVS_noticia" property="traduce.titulo" ignore="true" filter="false"/></h3>
+									<h3><bean:write name="MVS_noticia" property="traduce.titulo" ignore="true" filter="false"/></h3>									
+									<logic:notEmpty name="MVS_noticia" property="traduce.subtitulo">
+									<h4>
+										<bean:write name="MVS_noticia" property="traduce.subtitulo" ignore="true" filter="false"/>
+									</h4>
+									</logic:notEmpty>
+									<logic:notEmpty name="MVS_noticia" property="imagen">
+										<img src="archivopub.do?ctrl=<bean:write name="MVS_servicio"/><bean:write name="MVS_noticia" property="id" />ZI<bean:write name="MVS_noticia" property="imagen.id" />&amp;id=<bean:write name="MVS_noticia" property="imagen.id" />" alt="<bean:write name="MVS_noticia" property="traduce.titulo" ignore="true" filter="false"/>"  align="middle"/>
+									</logic:notEmpty>
 									<logic:notEqual name="MVS_forzarmapa" value="true">
-										<logic:notEmpty name="MVS_noticia" property="traduce.subtitulo">
-										<h4>
-											<bean:write name="MVS_noticia" property="traduce.subtitulo" ignore="true" filter="false"/>
-										</h4>
-										</logic:notEmpty>
-										<logic:notEmpty name="MVS_noticia" property="imagen">
-											<img src="archivopub.do?ctrl=<bean:write name="MVS_servicio"/><bean:write name="MVS_noticia" property="id" />ZI<bean:write name="MVS_noticia" property="imagen.id" />&amp;id=<bean:write name="MVS_noticia" property="imagen.id" />" alt="<bean:write name="MVS_noticia" property="traduce.titulo" ignore="true" filter="false"/>"  align="middle"/>
-										</logic:notEmpty>
 										<logic:notEmpty name="MVS_noticia" property="traduce.texto">	
 											<p>									
 												<bean:write name="MVS_noticia" property="traduce.texto" ignore="true" filter="false"/>
