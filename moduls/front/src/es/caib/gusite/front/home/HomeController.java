@@ -2,6 +2,8 @@ package es.caib.gusite.front.home;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -51,12 +53,15 @@ public class HomeController extends BaseViewController {
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}")
 	public ModelAndView home(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String uricontenido) {
+			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String uricontenido, HttpServletResponse response) {
 		HomeView view = new HomeView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, uricontenido);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			// microsite = super.loadMicrosite(URI.uri, lang, model, pcampa);
 
 			this.cargarCampanya(view);
@@ -84,10 +89,10 @@ public class HomeController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		}
 
 	}
@@ -100,10 +105,10 @@ public class HomeController extends BaseViewController {
 	@RequestMapping("{uri}")
 	public ModelAndView home(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, 
-			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String pcontenido) {
+			@RequestParam(value = Microfront.URICONT, required = false, defaultValue = "") String pcontenido, HttpServletResponse response) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.home(URI, DEFAULT_IDIOMA, pcampa, pcontenido);
+		return this.home(URI, DEFAULT_IDIOMA, pcampa, pcontenido, response);
 
 	}
 
@@ -115,7 +120,7 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/mapa")
 	public ModelAndView mapa(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 
 		MapaView view = new MapaView();
 		try {
@@ -125,7 +130,7 @@ public class HomeController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 
 	}
@@ -137,10 +142,10 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/mapa")
 	public ModelAndView mapa(@PathVariable("uri") SiteId URI,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.mapa(URI, DEFAULT_IDIOMA, pcampa);
+		return this.mapa(URI, DEFAULT_IDIOMA, pcampa, response);
 
 	}
 
@@ -152,7 +157,7 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/accessibility")
 	public ModelAndView accessibility(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 		AccesibilidadView view = new AccesibilidadView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
@@ -163,7 +168,7 @@ public class HomeController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 
 	}
@@ -175,8 +180,8 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/accessibility")
 	public ModelAndView accessibility(@PathVariable("uri") SiteId URI,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_EN), pcampa);
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
+		return this.accessibility(URI, new Idioma(LANG_EN), pcampa, response);
 
 	}
 
@@ -187,8 +192,8 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/accessibilitat")
 	public ModelAndView accessibilitat(@PathVariable("uri") SiteId URI,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, new Idioma(LANG_CA), pcampa);
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
+		return this.accessibility(URI, new Idioma(LANG_CA), pcampa, response);
 
 	}
 
@@ -199,8 +204,8 @@ public class HomeController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/accesibilidad")
 	public ModelAndView accesibilidad(@PathVariable("uri") SiteId URI,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
-		return this.accessibility(URI, DEFAULT_IDIOMA, pcampa);
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
+		return this.accessibility(URI, DEFAULT_IDIOMA, pcampa, response);
 
 	}
 

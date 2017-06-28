@@ -1,5 +1,6 @@
 package es.caib.gusite.front.home;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import es.caib.gusite.front.general.ExceptionFrontContenido;
+import es.caib.gusite.front.general.ExceptionFrontEncuesta;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
+import es.caib.gusite.front.general.ExceptionFrontNoticia;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.FrontController;
 import es.caib.gusite.front.general.Microfront;
@@ -84,22 +88,36 @@ public class LegacyController extends FrontController {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, idContenido, lang.getLang());
 			//#81 Si el contenido ha sido borrado, esto se encarga de redirigirlo.
 			if (contenido == null) {
-				response.setStatus(404);
-				return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				throw new ExceptionFrontContenido(microsite.getUri(), idContenido);
 			}
+
 			return "redirect:" + addGenericParams(this.urlFactory.contenido(microsite, lang, contenido), pcampa, mcont, tipobeta, previsual);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontContenido e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
+		
+		
 	}
 
 	private String addGenericParams(String baseUri, String pcampa, String mcont) {
@@ -165,12 +183,20 @@ public class LegacyController extends FrontController {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
 			return this.contenido(microsite.getId(), lang, idContenido, model, pcampa, mcont, tipobeta, previsual, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 	
 	
@@ -187,20 +213,28 @@ public class LegacyController extends FrontController {
 	public String contacto(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContacto, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 
 			return "redirect:" + addGenericParams(this.urlFactory.contacto(microsite, lang, contacto), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -212,16 +246,24 @@ public class LegacyController extends FrontController {
 	public String contacto(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idContacto, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.contacto(microsite.getId(), lang, idContacto, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.contacto(microsite.getId(), lang, idContacto, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -232,18 +274,23 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "contactos.do", params = { Microfront.PIDSITE })
 	public String contactos(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarContactos(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -255,16 +302,24 @@ public class LegacyController extends FrontController {
 	public String contactos(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarContactos(microsite, lang), pcampa, mcont);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	@Autowired
@@ -280,26 +335,42 @@ public class LegacyController extends FrontController {
 	public String noticia(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idNoticia, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			Noticia noticia = this.noticiasDataService.loadNoticia(idNoticia, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (noticia == null) {
+				if (idNoticia == null) {
+					throw new ExceptionFrontNoticia();	
+				}
+				throw new ExceptionFrontNoticia(idSite.toString(), idNoticia.toString());		
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.noticia(microsite, lang, noticia), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontNoticia e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
+		
 	}
 
 	/**
@@ -312,16 +383,25 @@ public class LegacyController extends FrontController {
 	public String noticia(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idNoticia, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.noticia(microsite.getId(), lang, idNoticia, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.noticia(microsite.getId(), lang, idNoticia, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -334,27 +414,33 @@ public class LegacyController extends FrontController {
 	public String noticias(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			Tipo tipo = this.noticiasDataService.loadTipo(idTipo, lang);
 
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + addGenericParams(this.urlFactory.listarElementos(microsite, lang, tipo), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -367,16 +453,24 @@ public class LegacyController extends FrontController {
 	public String noticias(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.noticias(microsite.getId(), lang, idTipo, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.noticias(microsite.getId(), lang, idTipo, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -389,27 +483,33 @@ public class LegacyController extends FrontController {
 	public String noticiasAnyo(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, @RequestParam("tanyo") String anyo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			Tipo tipo = this.noticiasDataService.loadTipo(idTipo, lang);
 
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarAnual(microsite, lang, tipo, anyo), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -422,16 +522,24 @@ public class LegacyController extends FrontController {
 	public String noticiasAnyo(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PTIPO) Long idTipo, @RequestParam("tanyo") String anyo, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.noticiasAnyo(microsite.getId(), lang, idTipo, anyo, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.noticiasAnyo(microsite.getId(), lang, idTipo, anyo, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -444,22 +552,28 @@ public class LegacyController extends FrontController {
 	public String qssi(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) long idQssi, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException,
 			ExceptionFrontPagina {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.qssi(microsite, lang, idQssi), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -471,17 +585,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "qssi.do", params = "mkey")
 	public String qssi(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, @RequestParam(Microfront.PCONT) long idQssi,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException,
 			ExceptionFrontPagina {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.qssi(microsite.getId(), lang, idQssi, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.qssi(microsite.getId(), lang, idQssi, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -494,22 +616,28 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "elementodocumento.do", params = { Microfront.PIDSITE })
 	public String elementodocumento(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idDocumento, Model model,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) throws DelegateException,
 			ExceptionFrontPagina {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.urlFactory.noticiaDescarga(microsite, lang, idDocumento);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -522,17 +650,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "elementodocumento.do", params = "mkey")
 	public String elementodocumento(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idDocumento, Model model,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) throws DelegateException,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) throws DelegateException,
 			ExceptionFrontPagina {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.elementodocumento(microsite.getId(), lang, idDocumento, model, pcampa);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.elementodocumento(microsite.getId(), lang, idDocumento, model, pcampa, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -544,21 +680,27 @@ public class LegacyController extends FrontController {
 	public String agenda(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idAgenda, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarAgendaFechaFormateada(microsite, lang, idAgenda), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -570,16 +712,25 @@ public class LegacyController extends FrontController {
 	public String agenda(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) String idAgenda, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.agenda(microsite.getId(), lang, idAgenda, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.agenda(microsite.getId(), lang, idAgenda, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -591,21 +742,26 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "agendas.do", params = { Microfront.PIDSITE })
 	public String agendas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarAgenda(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -617,16 +773,24 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "agendas.do", params = "mkey")
 	public String agendas(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.agendas(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			return this.agendas(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	@Autowired
@@ -642,18 +806,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "encuestas.do", params = { Microfront.PIDSITE })
 	public String encuestas(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			Model model, @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
-			//TODO: pendiente implementar listado encuestas, mientras se redirecciona a la HOME
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.home(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 	
 	//********************************************************
@@ -668,25 +839,41 @@ public class LegacyController extends FrontController {
 	public String encuesta(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idEncuesta, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, lang, idEncuesta);
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idEncuesta == null) {
+					throw new ExceptionFrontEncuesta();	
+				}
+				throw new ExceptionFrontEncuesta(idSite.toString(), idEncuesta.toString());				
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.encuesta(microsite, lang, encuesta), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontEncuesta e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -699,16 +886,25 @@ public class LegacyController extends FrontController {
 	public String encuesta(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam(Microfront.PCONT) Long idEncuesta, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.encuesta(microsite.getId(), lang, idEncuesta, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.encuesta(microsite.getId(), lang, idEncuesta, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -719,22 +915,28 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "index.do", params = { Microfront.PIDSITE })
 	public String index(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.home(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -745,16 +947,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "index.do", params = "mkey")
 	public String index(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.index(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.index(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -765,22 +976,28 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "home.do", params = { Microfront.PIDSITE })
 	public String home(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
-			return this.index(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
+			return this.index(microsite.getId(), lang, model, pcampa, mcont, response);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -791,16 +1008,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "home.do", params = "mkey")
 	public String home(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.index(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.index(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -811,22 +1037,27 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "mapa.do", params = { Microfront.PIDSITE })
 	public String mapa(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.mapa(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -837,16 +1068,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "mapa.do", params = "mkey")
 	public String mapa(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.mapa(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.mapa(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	
@@ -856,16 +1096,25 @@ public class LegacyController extends FrontController {
 	 * @throws DelegateException
 	 */
 	@RequestMapping(value = "menupreview.do", params = "mkey")
-	public String menupreview(@RequestParam("mkey") String mkey, Model model) throws DelegateException {
+	public String menupreview(@RequestParam("mkey") String mkey, Model model, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, DEFAULT_IDIOMA);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
 			return "redirect:" + this.urlFactory.menuPreview(microsite, DEFAULT_IDIOMA);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 	
 		
@@ -877,22 +1126,27 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "accessibilitat.do", params = { Microfront.PIDSITE })
 	public String accessibilitat(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
 			return "redirect:" + this.addGenericParams(this.urlFactory.accessibilitat(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -903,17 +1157,27 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "accessibilitat.do", params = "mkey")
 	public String accessibilitat(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.accessibilitat(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			
+			return this.accessibilitat(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -924,22 +1188,28 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "faqs.do", params = { Microfront.PIDSITE })
 	public String faqs(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont)
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response)
 			throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.addGenericParams(this.urlFactory.listarFaqs(microsite, lang), pcampa, mcont);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -950,16 +1220,25 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "faqs.do", params = "mkey")
 	public String faqs(@RequestParam("mkey") String mkey, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang, Model model,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont) throws DelegateException {
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont, HttpServletResponse response) throws DelegateException {
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByKey(mkey, lang);
-			return this.faqs(microsite.getId(), lang, model, pcampa, mcont);
+			if (microsite == null) {
+				if (mkey == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + mkey);				
+			}
+			
+			return this.faqs(microsite.getId(), lang, model, pcampa, mcont, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -972,9 +1251,9 @@ public class LegacyController extends FrontController {
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/archivopub.do", params = { Microfront.PCTRL, "id" })
 	public String archivopubRelativo(@PathVariable("mkey") SiteId prevSiteId, @PathVariable(value=Microfront.PLANG) Idioma lang, @PathVariable("tipo") char tipo,
 			@PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PCTRL) String ctrl, @RequestParam(value = "id") Long id,
-			Model model) {
+			Model model, HttpServletResponse response) {
 
-		return this.archivopub(ctrl, id, model);
+		return this.archivopub(ctrl, id, model, response);
 
 	}
 
@@ -984,7 +1263,7 @@ public class LegacyController extends FrontController {
 	 * 
 	 */
 	@RequestMapping(value = "archivopub.do", params = { Microfront.PCTRL, "id" })
-	public String archivopub(@RequestParam(Microfront.PCTRL) String ctrl, @RequestParam("id") Long id, Model model) {
+	public String archivopub(@RequestParam(Microfront.PCTRL) String ctrl, @RequestParam("id") Long id, Model model, HttpServletResponse response) {
 
 		Microsite microsite = null;
 		try {
@@ -992,16 +1271,22 @@ public class LegacyController extends FrontController {
 			Long idSite = this.idSiteFromCtrl(ctrl);
 
 			microsite = this.dataService.getMicrosite(idSite, DEFAULT_IDIOMA);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.urlFactory.archivopubById(microsite, id);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -1050,22 +1335,28 @@ public class LegacyController extends FrontController {
 	 */
 	@RequestMapping(value = "archivopub.do", params = Microfront.PNAME)
 	public String archivopubPorNombre(@RequestParam(Microfront.PNAME) String nombre, @RequestParam(value = Microfront.PIDSITE) Long idSite,
-			Model model) {
+			Model model, HttpServletResponse response) {
 
 		Microsite microsite = null;
 		try {
 
 			microsite = this.dataService.getMicrosite(idSite, DEFAULT_IDIOMA);
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			return "redirect:" + this.urlFactory.archivopubByNombre(microsite, nombre);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -1078,8 +1369,8 @@ public class LegacyController extends FrontController {
 	 */
 	@RequestMapping(value = "/{mkey}/{lang:[a-zA-Z][a-zA-Z]}/{tipo}/{tipoId}/archivopub.do", params = Microfront.PNAME)
 	public String archivopubRelativoPorNombre(@PathVariable("mkey") SiteId siteId, @PathVariable(value=Microfront.PLANG) Idioma lang,
-			@PathVariable("tipo") char tipo, @PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PNAME) String name, Model model) {
-		return this.archivopubRelativoPorNombre(siteId, name, model);
+			@PathVariable("tipo") char tipo, @PathVariable("tipoId") String tipoId, @RequestParam(value = Microfront.PNAME) String name, Model model, HttpServletResponse response) {
+		return this.archivopubRelativoPorNombre(siteId, name, model, response);
 
 	}
 
@@ -1088,26 +1379,28 @@ public class LegacyController extends FrontController {
 	 * como archivopub
 	 */
 	@RequestMapping(value = "/{uri}/f/archivopub.do", params = Microfront.PNAME)
-	public String archivopubRelativoPorNombre(@PathVariable("uri") SiteId URI, @RequestParam(value = Microfront.PNAME) String name, Model model) {
+	public String archivopubRelativoPorNombre(@PathVariable("uri") SiteId URI, @RequestParam(value = Microfront.PNAME) String name, Model model, HttpServletResponse response) {
 
 		Microsite microsite = null;
 		try {
 
 			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
-				// TODO: 404
-				return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				if (URI == null || URI.uri == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);				
 			}
-
-			// TODO: cambiar a forward si no deseamos que se vea la url. Por
-			// ahora lo dejamos como "redirect" para facil depuración
+			
 			return "redirect:" + this.urlFactory.archivopubByNombre(microsite, name);
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, DEFAULT_IDIOMA, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -1122,12 +1415,18 @@ public class LegacyController extends FrontController {
 	public String taw(@RequestParam(Microfront.PIDSITE) Long idSite, @RequestParam(value=Microfront.PLANG, defaultValue=Microfront.DEFAULT_IDIOMA) Idioma lang,
 			@RequestParam("id") Long idCont,
 			@RequestParam("ttr") String ttr,
-			Model model) throws DelegateException {
+			Model model, HttpServletResponse response) throws DelegateException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrosite(idSite, lang);
-
+			if (microsite == null) {
+				if (idSite == null) {
+					throw new ExceptionFrontMicro();	
+				}
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + idSite);				
+			}
+			
 			String url = "";
 			if (ttr.equals(Microfront.RNOTICIA)) {
 				url = this.urlFactory.tawItemNoticia(microsite, lang, this.noticiasDataService.loadNoticia(idCont, lang));
@@ -1141,13 +1440,14 @@ public class LegacyController extends FrontController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			// TODO: 404?
-			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 

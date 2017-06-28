@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import nl.captcha.Captcha;
 
@@ -27,6 +28,7 @@ import es.caib.gusite.front.captcha.CaptchaUtil;
 import es.caib.gusite.front.captcha.ImagenCaptcha;
 import es.caib.gusite.front.general.BaseCriteria;
 import es.caib.gusite.front.general.BaseViewController;
+import es.caib.gusite.front.general.ExceptionFrontContactos;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
@@ -78,12 +80,16 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req, HttpServletResponse response) {
 
 		ListarContactosView view = new ListarContactosView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			BaseCriteria criteria = new BaseCriteria(filtro, pagina, ordenacion);
 			ResultadoBusqueda<Contacto> formularios = this.contactosDataService.getListadoFormularios(microsite, lang, criteria);
 
@@ -94,7 +100,7 @@ public class ContactosController extends BaseViewController {
 				 * + this.urlFactory.contacto(microsite, lang,
 				 * formularios.getResultados().iterator().next());
 				 */
-				return this.contacto(URI, lang, idContacto, mcont, pcampa, req,null);
+				return this.contacto(URI, lang, idContacto, mcont, pcampa, req,null, response);
 			}
 
 			List<Pardato> listaNombreContactos = new ArrayList<Pardato>();
@@ -115,11 +121,14 @@ public class ContactosController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -140,9 +149,9 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.listarcontactos(URI, DEFAULT_IDIOMA, mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, DEFAULT_IDIOMA, mcont, pcampa, filtro, pagina, ordenacion, req, response);
 	}
 
 	/**
@@ -162,9 +171,9 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.listarcontactos(URI, new Idioma(LANG_CA), mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, new Idioma(LANG_CA), mcont, pcampa, filtro, pagina, ordenacion, req, response);
 	}
 
 	/**
@@ -184,9 +193,9 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.listarcontactos(URI, new Idioma(LANG_EN), mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarcontactos(URI, new Idioma(LANG_EN), mcont, pcampa, filtro, pagina, ordenacion, req, response);
 	}
 
 	/**
@@ -199,7 +208,7 @@ public class ContactosController extends BaseViewController {
 	public ModelAndView contacto(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req,
-			@RequestParam(value = Microfront.ERRORCAPTCHA, required = false, defaultValue = "") String errorCaptcha) {
+			@RequestParam(value = Microfront.ERRORCAPTCHA, required = false, defaultValue = "") String errorCaptcha, HttpServletResponse response) {
 
 		ContactoView view = new ContactoView();
 		try {
@@ -207,21 +216,24 @@ public class ContactosController extends BaseViewController {
 			
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
-			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
 			
+			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
 			if (contacto == null) {
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				throw new ExceptionFrontContactos(URI.uri, idContacto);
 			}
 			
 			// comprobacion de microsite
 			if (contacto.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 			// comprobacion de visibilidad
 			if (!contacto.getVisible().equals("S")) {
 				log.error("El elemento solicitado no está visible");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 
 			view.setContacto(contacto);
@@ -244,11 +256,17 @@ public class ContactosController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (ExceptionFrontContactos e) {
+			log.error(e.getMessage()); 
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -263,7 +281,7 @@ public class ContactosController extends BaseViewController {
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "docAnex", required = false) CommonsMultipartFile docAnexFileData, MultipartHttpServletRequest req,
-			@RequestParam(value = Microfront.RCAPTCHA, required = false, defaultValue = "") String respCaptcha) {
+			@RequestParam(value = Microfront.RCAPTCHA, required = false, defaultValue = "") String respCaptcha, HttpServletResponse response) {
 
 		ContactoDatosView view = new ContactoDatosView();
 		try {
@@ -273,19 +291,26 @@ public class ContactosController extends BaseViewController {
 			//No se ha rellenado le captcha
 			if (respCaptcha == null || respCaptcha.isEmpty()){
 				
-				return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.no.relleno", lang));
+				return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.no.relleno", lang), response);
 			}
 			//Comprobamos
 			if (captchaKey!=null){
 				Captcha captcha = CaptchaUtil.creaCaptcha(captchaKey);
 				if (!captcha.isCorrect(respCaptcha)){
-					return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.incorrecto", lang));
+					return this.contacto(URI, lang, idContacto, mcont, pcampa, req, this.getMessage("captcha.incorrecto", lang), response);
 				}
 			}
 			
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			Contacto contacto = this.contactosDataService.getFormulario(microsite, lang, idContacto);
+			if (contacto == null) {
+				throw new ExceptionFrontContactos(URI.uri, idContacto);
+			}
 			
 			view.setContacto(contacto);
 			view.setContactoTitulo(contacto.getTitulocontacto(lang.getLang()));
@@ -293,12 +318,12 @@ public class ContactosController extends BaseViewController {
 			// comprobacion de microsite
 			if (contacto.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 			// comprobacion de visibilidad
 			if (!contacto.getVisible().equals("S")) {
 				log.error("El elemento solicitado no está visible");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 
 			String mensaje = this.procesaFormulario(contacto, view.getLang(), req);
@@ -315,17 +340,23 @@ public class ContactosController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (IOException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontContactos e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -484,9 +515,9 @@ public class ContactosController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contacto/{contacto}/")
 	public ModelAndView contactoEs(@PathVariable("uri") SiteId URI, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.contacto(URI, new Idioma(LANG_ES), idContacto, mcont, pcampa, req,null);
+		return this.contacto(URI, new Idioma(LANG_ES), idContacto, mcont, pcampa, req,null, response);
 	}
 
 	/**
@@ -498,9 +529,9 @@ public class ContactosController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contacte/{contacto}/")
 	public ModelAndView contactoCa(@PathVariable("uri") SiteId URI, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.contacto(URI, new Idioma(LANG_CA), idContacto, mcont, pcampa, req,null);
+		return this.contacto(URI, new Idioma(LANG_CA), idContacto, mcont, pcampa, req,null, response);
 	}
 
 	/**
@@ -512,9 +543,9 @@ public class ContactosController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/contact/{contacto}/")
 	public ModelAndView contactoEn(@PathVariable("uri") SiteId URI, @PathVariable("contacto") long idContacto,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
-		return this.contacto(URI, new Idioma(LANG_EN), idContacto, mcont, pcampa, req,null);
+		return this.contacto(URI, new Idioma(LANG_EN), idContacto, mcont, pcampa, req,null, response);
 	}
 
 	/**

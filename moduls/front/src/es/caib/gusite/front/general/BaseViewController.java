@@ -42,6 +42,8 @@ import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author at4.net
  * 
@@ -661,30 +663,51 @@ public abstract class BaseViewController extends FrontController {
 	 *            request, Microsite microsite, ErrorMicrosite errorMicrosite
 	 * @exception Exception
 	 */
-	protected ModelAndView getForwardError(PageView causeView, String ambitError) {
+	protected ModelAndView getForwardError(PageView causeView, String ambitError, HttpServletResponse response) {
 
 		ErrorGenericoView view = new ErrorGenericoView(causeView);
 		Microsite microsite = view.getMicrosite();
 
 		ErrorMicrosite errorMicrosite = null;
 
-		if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
-
-			if (microsite != null) {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+		
+		if (ErrorMicrosite.ERROR_AMBIT_MICRO.equals(ambitError)) {
+			//MICROSITE
+			if (microsite == null) {
+				response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			} else {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+				response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			}
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_PAGINA.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_DOCUMENT.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_ACCES.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_FORBIDDEN_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"","",ErrorMicrosite.ESTADO_FORBIDDEN);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SESSIO.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SESSION_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"","",ErrorMicrosite.ESTADO_SESSION);
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SERVER.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SOLR.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SOLR_TIT, ErrorMicrosite.ERROR_SOLR_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
+			
 		} else {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
 		}
 
 		if (errorMicrosite != null) {
@@ -702,5 +725,6 @@ public abstract class BaseViewController extends FrontController {
 		return this.modelForView(this.templateNameFactory.errorGenerico(microsite), view);
 
 	}
+	
 
 }

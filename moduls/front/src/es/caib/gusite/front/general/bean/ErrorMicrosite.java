@@ -22,29 +22,43 @@ public class ErrorMicrosite {
 	static public final String ERROR_AMBIT_DOCUMENT = "document";
 	static public final String ERROR_AMBIT_ACCES = "acces";
 	static public final String ERROR_AMBIT_SESSIO = "sessio";
+	static public final String ERROR_AMBIT_SOLR = "solr";
+	static public final String ERROR_AMBIT_SERVER = "server";
+	
 
 	// Mensajes de Error - Forwarding
 
 	static public final String ERROR_MICRO_TIT = "Error de Microsite";
-	static public final String ERROR_MICRO_MSG = "No s' ha trobat el microsite amb id ";
-	static public final String ERROR_MICRO_MSG_NULL = "No s' ha sol·licitat un microsite";
-
+	static public final String ERROR_MICRO_MSG = "No s' ha trobat el microsite ";
+	static public final String ERROR_MICRO_URI_MSG = "No s' ha trobat el microsite amb uri ";
+	
+	static public final String ERROR_SERVER_TIT = "Error de Servidor";
+	static public final String ERROR_SERVER_MSG = "S' ha trobat un problema en el servidor al microsite amb id ";
+	
 	static public final String ERROR_PAGINA_TIT = "Error de Pàgina";
 	static public final String ERROR_PAGINA_MSG = "No s' ha trobat la pàgina sol·licitada";
 
 	static public final String ERROR_DOCU_TIT = "Error de Document";
 	static public final String ERROR_DOCU_MSG = "No s' ha trobat el document sol·licitat";
-
+	
 	static public final String ERROR_ACCES_TIT = "Error d' Accés";
 	static public final String ERROR_ACCES_MSG = "No disposa del ROL necessari per accedir al microsite.";
 
 	static public final String ERROR_SESSIO_TIT = "Error de Sessió";
 	static public final String ERROR_SESSIO_MSG = "Ha excedit el temps màxim de sessió.";
 	
+	static public final String ERROR_SOLR_TIT = "Error de SOLR";
+	static public final String ERROR_SOLR_MSG = "Problemes en SOLR.";
+	
 	static public final String ESTADO_NOT_FOUNT = "404";
+	static public final int	   ESTADO_NOT_FOUNT_INT = 404;
 	static public final String ESTADO_FORBIDDEN = "403";
+	static public final int    ESTADO_FORBIDDEN_INT = 403;
 	static public final String ESTADO_SESSION = "440";
-
+	static public final int    ESTADO_SESSION_INT = 440;
+	static public final String ESTADO_SERVER = "500";
+	static public final int    ESTADO_SERVER_INT = 500;
+	
 	public ErrorMicrosite() {
 	}
 

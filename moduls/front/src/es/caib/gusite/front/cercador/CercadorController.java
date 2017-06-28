@@ -3,6 +3,7 @@ package es.caib.gusite.front.cercador;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,13 +58,16 @@ public class CercadorController extends BaseViewController {
 	public ModelAndView cercar(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)   {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)   {
 
 		CercarView view = new CercarView();
 		Microsite microsite = new Microsite();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			microsite = view.getMicrosite();
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
 
 			// metodo buscar(); de Bdcercador.java
 			SolrDelegate indexo = DelegateUtil.getSolrDelegate();
@@ -108,15 +112,17 @@ public class CercadorController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (DelegateException e) {
 			log.error("Error en la busqueda: " + e);
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
-		}catch (ExcepcionSolrApi e) {
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES, response);
+		} catch (ExcepcionSolrApi e) {
 			log.error("Error en la busqueda: " + e);
-			return this.modelForView(this.templateNameFactory.cercar(microsite), view);
-		}
-
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SOLR, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -132,9 +138,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/buscar/")
 	public ModelAndView cercarEs(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercar(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req, response);
 	}
 
 	/**
@@ -150,9 +156,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/cercar/")
 	public ModelAndView cercarCa(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercar(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req, response);
 	}
 
 	/**
@@ -168,9 +174,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.POST, value = "{uri}/search/")
 	public ModelAndView cercarEn(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercar(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req);
+		return this.cercar(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req, response);
 	}
 
 	/**
@@ -189,9 +195,9 @@ public class CercadorController extends BaseViewController {
 	public ModelAndView cercarGet(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercar(URI, lang, cerca, mcont, pcampa, req);
+		return this.cercar(URI, lang, cerca, mcont, pcampa, req, response);
 
 	}
 
@@ -208,9 +214,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/buscar/")
 	public ModelAndView cercarEsGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercarGet(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_ES), cerca, mcont, pcampa, req, response);
 	}
 
 	/**
@@ -226,9 +232,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/cercar/")
 	public ModelAndView cercarCaGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercarGet(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_CA), cerca, mcont, pcampa, req, response);
 	}
 
 	/**
@@ -244,9 +250,9 @@ public class CercadorController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/search/")
 	public ModelAndView cercarEnGet(@PathVariable("uri") SiteId URI, @RequestParam(value = "cerca", required = true, defaultValue = "") String cerca,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req)  {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response)  {
 
-		return this.cercarGet(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req);
+		return this.cercarGet(URI, new Idioma(LANG_EN), cerca, mcont, pcampa, req, response);
 	}
 
 	@Override

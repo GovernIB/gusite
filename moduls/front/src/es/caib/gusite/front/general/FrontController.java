@@ -3,7 +3,8 @@ package es.caib.gusite.front.general;
 import java.beans.PropertyEditorSupport;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,22 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.service.FrontDataService;
 import es.caib.gusite.front.service.FrontUrlFactory;
 import es.caib.gusite.front.service.TemplateNameFactory;
+import es.caib.gusite.front.view.ErrorGenericoView;
+import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 
+/**
+ * Front controller.
+ * @author slromero
+ *
+ */
 public class FrontController {
 
 	/**
@@ -137,40 +146,55 @@ public class FrontController {
 	}
 
 	/**
-	 * Metodo protegido que devuelve String de error de contenido de un site
+	 * Metodo protegido que devuelve String de error de contenido de un site.
 	 * 
 	 * @param HttpServletRequest
 	 *            request, Microsite microsite, ErrorMicrosite errorMicrosite
 	 * @exception Exception
 	 */
-	protected String getForwardError(Microsite microsite, Idioma lang, Model model, String ambitError) {
+	protected String getForwardError(Microsite microsite, Idioma lang, Model model, String ambitError, HttpServletResponse response) {
 
 		ErrorMicrosite errorMicrosite;
 
 		if (ambitError.equals(ErrorMicrosite.ERROR_AMBIT_MICRO)) {
-
-			if (microsite != null) {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG + microsite.getId(),"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+			if (microsite == null) {
+				response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			} else {
-				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG_NULL,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+				response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG + microsite.getId(),"","",ErrorMicrosite.ESTADO_SERVER);
 			}
-			model.addAttribute("MVS_errparam", errorMicrosite);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_PAGINA) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_PAGINA.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-			model.addAttribute("MVS_errparam", errorMicrosite);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_DOCUMENT) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_DOCUMENT.equals(ambitError) ) {
+			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-			model.addAttribute("MVS_errparam", errorMicrosite);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_ACCES) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_ACCES.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_FORBIDDEN_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"","",ErrorMicrosite.ESTADO_FORBIDDEN);
-			model.addAttribute("MVS_errparam", errorMicrosite);
-		} else if (ambitError == ErrorMicrosite.ERROR_AMBIT_SESSIO) {
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SESSIO.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SESSION_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"","",ErrorMicrosite.ESTADO_SESSION);
-			model.addAttribute("MVS_errparam", errorMicrosite);
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SERVER.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SOLR_TIT, ErrorMicrosite.ERROR_SOLR_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
+			
+		} else if (ErrorMicrosite.ERROR_AMBIT_SOLR.equals(ambitError)) {
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SOLR_TIT, ErrorMicrosite.ERROR_SOLR_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
+			
 		} else {
-			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-			model.addAttribute("MVS_errparam", errorMicrosite);
+			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
+			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
+			
 		}
+		model.addAttribute("MVS_errparam", errorMicrosite);
 
 		if (microsite != null) {
 			microsite.setTipocabecera("1");

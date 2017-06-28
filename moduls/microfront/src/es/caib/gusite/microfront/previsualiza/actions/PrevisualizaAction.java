@@ -34,7 +34,7 @@ public class PrevisualizaAction extends BaseAction    {
 		return mapping.findForward("previsualiza");
 		
 		} else {
-        	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_MICRO));
+        	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_MICRO, response));
 		}
 		
 	  }

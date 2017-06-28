@@ -57,7 +57,7 @@ public class HomeAction extends BaseAction {
 		    microsite = recuperarMicrositeDeSesion(request);
 	  	    
 		    if (bdhome.isError()) {
-		    	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+		    	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
 		    }
 
 		    forwardlocal = crearHomeParaVersionesAntiguas(request, forwardlocal, bdhome);
@@ -84,15 +84,15 @@ public class HomeAction extends BaseAction {
 	
         } catch (ExceptionFrontPagina efp) {  	
         	log.error(efp.getMessage());
-        	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+        	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
 
         } catch (ExceptionFrontMicro efm) {
 	    	log.error(efm.getMessage());
-	    	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_MICRO));
+	    	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_MICRO, response));
 	    	
 	    }  catch (Exception e) {
         	log.error(e.getMessage());
-        	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+        	return mapping.findForward(getForwardError (request, microsite, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
         }      
 
   	}

@@ -35,8 +35,10 @@ public class TemplateNameFactory {
 			fragmento = plantillaOfragmento.substring(index).trim();
 		}
 		try {
-			PersonalizacionPlantilla persPlant = this.templateDataService.getPlantilla(microsite, plantilla);
-			if (persPlant != null) {
+			final PersonalizacionPlantilla persPlant = this.templateDataService.getPlantilla(microsite, plantilla);
+			if (persPlant == null) {
+				return plantilla + fragmento;
+			} else {
 				if ("S".equals(microsite.getDesarrollo())) {
 					// En caso de que el microsite esté en modo de desarrollo,
 					// incluimos "template resolver" con caching deshabilitado
@@ -48,9 +50,7 @@ public class TemplateNameFactory {
 				} else {
 					return "db:" + persPlant.getId() + fragmento;
 				}
-			} else {
-				return plantilla + fragmento;
-			}
+			} 
 		} catch (ExceptionFront e) {
 			log.error("Problema obteniendo plantilla:" + plantilla + " para el microsite:" + microsite.getId());
 			return plantilla + fragmento;

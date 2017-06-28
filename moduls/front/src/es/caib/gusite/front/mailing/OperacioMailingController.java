@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +43,7 @@ public class OperacioMailingController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/msggenerico/")
 	public ModelAndView mailing(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, 
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		ResourceBundle rb = ResourceBundle.getBundle("ApplicationResources_front", req.getLocale());
 
@@ -62,7 +62,7 @@ public class OperacioMailingController extends BaseViewController {
 				// hasta aqui recogerlista de bdSuscripcion
 			} else {
 				log.error("No hay microsite o no existe el servicio");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES, response);
 			}
 			// hasta aqui bdSuscripcion
 
@@ -122,10 +122,10 @@ public class OperacioMailingController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 	}
 

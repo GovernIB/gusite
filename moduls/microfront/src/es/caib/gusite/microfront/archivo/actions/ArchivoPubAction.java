@@ -75,7 +75,7 @@ public class ArchivoPubAction extends BaseAction {
 		
         } catch (Exception e) {  	
         	log.info(e.getMessage());
-        	return mapping.findForward(getForwardError (request, new Microsite(), ErrorMicrosite.ERROR_AMBIT_DOCUMENT));
+        	return mapping.findForward(getForwardError (request, new Microsite(), ErrorMicrosite.ERROR_AMBIT_DOCUMENT, response));
         }  
    	
         return null;

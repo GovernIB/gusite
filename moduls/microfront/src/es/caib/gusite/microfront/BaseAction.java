@@ -10,6 +10,7 @@ import org.apache.struts.action.Action;
 import es.caib.gusite.microfront.base.bean.ErrorMicrosite;
 import es.caib.gusite.microfront.job.MenuCabecera;
 import es.caib.gusite.micromodel.Microsite;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *  Clase BaseAction
@@ -32,11 +33,11 @@ public class BaseAction extends Action {
      * @param HttpServletRequest request, Microsite microsite, ErrorMicrosite errorMicrosite
      * @exception Exception
      */
-	protected String getForwardError (HttpServletRequest request, String ambitError) throws Exception {
+	protected String getForwardError (HttpServletRequest request, String ambitError, HttpServletResponse response) throws Exception {
      
 	   Microsite microsite = getMicrositeFromSession(request);
 	
-	   return (getForwardError (request, microsite, ambitError));
+	   return (getForwardError (request, microsite, ambitError, response));
 	}		
 	
     /**
@@ -44,7 +45,7 @@ public class BaseAction extends Action {
      * @param HttpServletRequest request, Microsite microsite, ErrorMicrosite errorMicrosite
      * @exception Exception
      */
-	protected String getForwardError (HttpServletRequest request, Microsite microsite, String ambitError) throws Exception {
+	protected String getForwardError (HttpServletRequest request, Microsite microsite, String ambitError, HttpServletResponse response) throws Exception {
      
 	   ErrorMicrosite errorMicrosite;
 		

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.View;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -19,13 +19,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
+import es.caib.gusite.front.general.ExceptionFrontNoticia;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.service.NoticiasDataService;
 import es.caib.gusite.front.util.Fechas;
-import es.caib.gusite.front.view.LayoutView.ArchivoCSS;
 import es.caib.gusite.front.view.ListarNoticiasView;
 import es.caib.gusite.front.view.NoticiaView;
 import es.caib.gusite.front.view.PageView;
@@ -65,9 +65,9 @@ public class NoticiasController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req,HttpServletResponse response) {
 	
-		return this.listarnoticias(URI, lang, uriListaNoticia, 0, mcont, pcampa, filtro, pagina, ordenacion, req);
+		return this.listarnoticias(URI, lang, uriListaNoticia, 0, mcont, pcampa, filtro, pagina, ordenacion, req, response);
 		
 	}
 
@@ -85,7 +85,7 @@ public class NoticiasController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req,HttpServletResponse response) {
 
 		NoticiaCriteria criteria = new NoticiaCriteria(filtro, pagina, ordenacion);
 		criteria.setAnyo(anyo);
@@ -93,7 +93,10 @@ public class NoticiasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			Tipo tipo = this.getTipo(uriListaNoticia, lang.getLang(), microsite.getId().toString());
 			view.setClaseElementoId(tipo.getId());
 
@@ -149,7 +152,7 @@ public class NoticiasController extends BaseViewController {
 
 				if (noticias.isError()) {
 
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				} else {
 
 					view.setSeuletSin(this.urlFactory.listarNoticiasSinPagina(microsite, lang, tipo, criteria, mcont, pcampa));
@@ -202,14 +205,17 @@ public class NoticiasController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -295,28 +301,35 @@ public class NoticiasController extends BaseViewController {
 	public ModelAndView noticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriNoticia") String uriNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.FMAPA, required = false, defaultValue = "") String fmapa) {
+			@RequestParam(value = Microfront.FMAPA, required = false, defaultValue = "") String fmapa, HttpServletResponse response) {
 
 		NoticiaView view = new NoticiaView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			Noticia noticia = this.noticiasDataService.loadNoticia(uriNoticia, lang.getLang(), view.getMicrosite().getId().toString());
-
+			if (noticia == null) {
+				throw new ExceptionFrontNoticia(URI.uri, uriNoticia);				
+			}
+			
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 			// comprobacion de visibilidad
 			if (!noticia.getVisible().equals("S")) {
 				log.error("El elemento solicitado no está visible");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			// o bien comprobacion de que esté vigente
 			if (!Fechas.vigente(noticia.getFpublicacion(), noticia.getFcaducidad())) {
 				log.error("El contenido solicitado está caducado");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			view.setNoticia(noticia);
 			if (noticia.getImagen() != null) {
@@ -355,14 +368,20 @@ public class NoticiasController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontNoticia e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 	
 	
@@ -381,33 +400,41 @@ public class NoticiasController extends BaseViewController {
 	public ModelAndView documento(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriDocumentoNoticia") String uriDocumentoNoticia, Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+			HttpServletResponse response) {
 
 		NoticiaView view = new NoticiaView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			Noticia noticia = this.noticiasDataService.loadNoticia(uriDocumentoNoticia, lang.getLang(), view.getMicrosite().getId().toString());
-
+			if (noticia == null) {
+				throw new ExceptionFrontNoticia(URI.uri, uriDocumentoNoticia);				
+			}
+			
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 			// comprobacion de visibilidad
 			if (!noticia.getVisible().equals("S")) {
 				log.error("El elemento solicitado no está visible");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			// o bien comprobacion de que esté vigente
 			if (!Fechas.vigente(noticia.getFpublicacion(), noticia.getFcaducidad())) {
 				log.error("El contenido solicitado está caducado");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			
 			if (((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu() == null){
 				log.error("No existe un documento asociado");
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			
 			Long iddocumento = ((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu().getId();
@@ -415,14 +442,20 @@ public class NoticiasController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontNoticia e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	@Override

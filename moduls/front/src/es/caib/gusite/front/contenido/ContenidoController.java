@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.caib.gusite.front.general.BaseViewController;
+import es.caib.gusite.front.general.ExceptionFrontContenido;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
@@ -111,12 +112,13 @@ public class ContenidoController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, uriContenido);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			Contenido contenido = this.contenidoDataService.getContenido(microsite, uriContenido, lang.getLang());
-
 			if (contenido == null) {
-				// TODO: 404
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				throw new ExceptionFrontContenido(URI.uri,uriContenido );
 			}
 
 			String urlredireccionada = ((TraduccionContenido) contenido.getTraduccion(lang.getLang())).getUrl();
@@ -144,37 +146,22 @@ public class ContenidoController extends BaseViewController {
 			if (!menu.getMicrosite().getId().equals(microsite.getId())) {
 				log.error("[error logico] idsite.longValue=" + microsite.getId() + ", menu.getIdmicrosite.longValue="
 						+ menu.getMicrosite().getId().longValue());
-				// beanerror.setAviso("Aviso");
-				// beanerror.setMensaje("El contenido solicitado no pertenece al site.");
-				// error=true;
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 
 			// o bien comprobacion de que no esté vacio
 			if (contenido.getTraduccion(lang.getLang()) == null) {
-				// beanerror.setAviso("Aviso");
-				// beanerror.setMensaje("El contenido solicitado no contiene información.");
-				// error=true;
-				// TODO: 404?
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 
 			// o bien comprobacion de que esté vigente
 			if (!previsualizar && !Fechas.vigente(contenido.getFpublicacion(), contenido.getFcaducidad())) {
-				// beanerror.setAviso("Aviso");
-				// beanerror.setMensaje("El contenido solicitado está caducado.");
-				// error=true;
-				// TODO: 404?
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 
 			// o bien comprobacion de que no esté vacio
 			if (!previsualizar && !contenido.getVisible().equals("S")) {
-				// beanerror.setAviso("Aviso");
-				// beanerror.setMensaje("El contenido solicitado no está disponible al público");
-				// error=true;
-				// TODO: 404?
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 
 			this.cargarMollapan(view, contenido, menu, redi);
@@ -189,13 +176,17 @@ public class ContenidoController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.contenido(microsite), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			response.setStatus(Integer.valueOf(ErrorMicrosite.ESTADO_NOT_FOUNT));
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (ExceptionFrontContenido e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -362,7 +353,7 @@ public class ContenidoController extends BaseViewController {
 				}
 			}
 			return contenido;
-		} catch (Exception e) { // TODO: catch Exception!!!
+		} catch (Exception e) {
 
 			throw new ExceptionFrontPagina(" [reemplazarTags, idsite=" + microsite.getId() + ", cont=" + contenido.getId() + ", idioma=" + idioma
 					+ " ] Error=" + e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));

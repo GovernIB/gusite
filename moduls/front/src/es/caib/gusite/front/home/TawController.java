@@ -1,6 +1,7 @@
 package es.caib.gusite.front.home;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +49,7 @@ public class TawController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/contenido/{contenido}")
 	public ModelAndView tawContenido(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("contenido") long idContenido,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		TawItemView view = new TawItemView();
 		try {
@@ -72,10 +73,10 @@ public class TawController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class TawController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/agenda/{agenda}")
 	public ModelAndView tawAgenda(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("agenda") long idAgenda,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		TawItemView view = new TawItemView();
 		try {
@@ -101,10 +102,10 @@ public class TawController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.tawItem(view.getMicrosite()), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 	}
 
@@ -118,7 +119,7 @@ public class TawController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/tawitem/noticia/{noticia}")
 	public ModelAndView tawNoticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("noticia") long idNoticia,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		TawItemView view = new TawItemView();
 		try {
@@ -131,10 +132,10 @@ public class TawController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.tawItem(view.getMicrosite()), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 	}
 

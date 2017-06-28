@@ -25,7 +25,7 @@ public class InvalidRolAction extends BaseAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 		  
 		request.getSession().setAttribute(INVALID_SESSION_ROL, true);
-		 return mapping.findForward(getForwardError(request, ErrorMicrosite.ERROR_AMBIT_ACCES));
+		 return mapping.findForward(getForwardError(request, ErrorMicrosite.ERROR_AMBIT_ACCES, response));
 		 
 	}
 	

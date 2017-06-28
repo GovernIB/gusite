@@ -1,5 +1,7 @@
 package es.caib.gusite.front.home;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -33,7 +35,7 @@ public class ErrorController extends BaseViewController {
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/errorrol")
 	public ModelAndView mapa(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 
 		ErrorGenericoView view = new ErrorGenericoView();
 		try {
@@ -45,7 +47,7 @@ public class ErrorController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		}
 
 	}

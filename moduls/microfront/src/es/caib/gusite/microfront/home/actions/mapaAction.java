@@ -53,15 +53,15 @@ public class mapaAction extends BaseAction {
 
 		  } catch (ExceptionFrontPagina efp) {
 			  log.error(efp.getMessage());
-			  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+			  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
 
 	      } catch (ExceptionFrontMicro efm) {
 	    	  log.error(efm.getMessage());
-	    	  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_MICRO));
+	    	  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_MICRO, response));
 		    	
 	      } catch (Exception e) {
 	    	  log.error(e.getMessage());
-	    	  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+	    	  return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
 	      } 	    
 		    
 	  }

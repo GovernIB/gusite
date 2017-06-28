@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,14 +58,17 @@ public class AgendaController extends BaseViewController {
 			@PathVariable("fecha") @DateTimeFormat(pattern = "yyyyMMdd") Date fecha,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina, HttpServletRequest req) {
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina, HttpServletRequest req, HttpServletResponse response) {
 
 		AgendaFechaView view = new AgendaFechaView();
 		try {
 
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			ResultadoBusqueda<Agenda> eventos = this.dataService.getListadoAgenda(microsite, lang, fecha, pagina);
 
 			SimpleDateFormat agendaFechaEvento = new SimpleDateFormat("dd/MM/yyyy");
@@ -80,12 +84,14 @@ public class AgendaController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
-
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} 
 	}
 
 	/**
@@ -103,14 +109,17 @@ public class AgendaController extends BaseViewController {
 			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
 			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion) {
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletResponse response) {
 
 		AgendaView view = new AgendaView();
 		try {
 
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			ResultadoBusqueda<Agenda> eventos = this.dataService.getListadoAgenda(microsite, lang, new AgendaCriteria(filtro, pagina, ordenacion));
 
 			view.setSeuletSin(this.urlFactory.listarAgendaSinPagina(microsite, lang, mcont, pcampa));
@@ -124,11 +133,14 @@ public class AgendaController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 

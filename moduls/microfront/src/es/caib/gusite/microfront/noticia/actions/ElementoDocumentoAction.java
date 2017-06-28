@@ -47,12 +47,12 @@ public class ElementoDocumentoAction extends BaseAction  {
 			        return elforward;
 	
 			    } else {
-			    	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_DOCUMENT));				    	
+			    	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_DOCUMENT, response));				    	
 				}
 
 		    }  catch (Exception e) {
 		    	log.warn("[ElementoDocumentoAction] ha solicitado un documento con datos incosistentes.");
-	        	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_DOCUMENT));
+	        	return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_DOCUMENT, response));
 	        } 		  	  	
 
 	  }

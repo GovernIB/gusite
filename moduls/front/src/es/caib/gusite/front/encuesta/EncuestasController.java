@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.BaseViewController;
+import es.caib.gusite.front.general.ExceptionFrontEncuesta;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Microfront;
@@ -66,7 +68,7 @@ public class EncuestasController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/encuesta/{uriEncuesta}")
 	public ModelAndView encuesta(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		boolean error = false;
 		boolean ensesion = false;
@@ -74,7 +76,10 @@ public class EncuestasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			if (this.estaEnMantenimiento()) {
 				view.setManteniment(new Boolean(true));
 			}
@@ -113,13 +118,13 @@ public class EncuestasController extends BaseViewController {
 			if (!(encuesta.getIdmicrosite().longValue() == microsite.getId().longValue())) {
 				log.error("El elemento solicitado no pertenece al site");
 				error = true;
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 			}
 			// comprobacion de visibilidad
 			if (!encuesta.getVisible().equals("S")) {
 				log.error("El elemento solicitado no está visible");
 				error = true;
-				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			// o bien comprobacion de que esté vigente
 			if (!Fechas.vigente(encuesta.getFpublicacion(), encuesta.getFcaducidad())) {
@@ -154,7 +159,7 @@ public class EncuestasController extends BaseViewController {
 			
 			
 			if (ensesion == true) {
-				return this.enviarEncuesta(URI, lang, uriEncuesta, mcont, pcampa, req);
+				return this.enviarEncuesta(URI, lang, uriEncuesta, mcont, pcampa, req, response);
 			}
 
 			if (encuesta.getIdentificacion().equals("S")) {
@@ -218,11 +223,14 @@ public class EncuestasController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**
@@ -239,7 +247,7 @@ public class EncuestasController extends BaseViewController {
 	public ModelAndView enviarEncuesta(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		boolean error = false;
 		boolean entera = true;
@@ -248,7 +256,10 @@ public class EncuestasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			// sustitucion procesaSesion(); de BdEnvioEncuesta.java
 			String idencuesta = "" + req.getParameter(Microfront.PCONT);
 			String solover = "" + req.getParameter(Microfront.PVIEW);
@@ -262,7 +273,9 @@ public class EncuestasController extends BaseViewController {
 			}
 
 			Encuesta encuesta = this.encuestasDataService.getEncuesta(microsite, uriEncuesta, lang.getLang(), microsite.getId().toString());
-			
+			if (encuesta == null) {
+				throw new ExceptionFrontEncuesta(URI.uri, uriEncuesta);				
+			}
 
 			// Canvi Salvador 05/10/2010
 			String encuestaRellena = (String) req.getSession().getAttribute("MVS_encuestarellena" + encuesta.getId().toString());
@@ -467,13 +480,13 @@ public class EncuestasController extends BaseViewController {
 				if (encuesta.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 					log.error("El elemento solicitado no pertenece al site");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 				}
 				// comprobacion de visibilidad
 				if (!encuesta.getVisible().equals("S")) {
 					log.error("El elemento solicitado no está visible");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				}
 
 				// traduce encuesta
@@ -507,13 +520,13 @@ public class EncuestasController extends BaseViewController {
 				if (encuesta.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 					log.error("El elemento solicitado no pertenece al site");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 				}
 				// comprobacion de visibilidad
 				if (!encuesta.getVisible().equals("S")) {
 					log.error("El elemento solicitado no está visible");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				}
 
 				// traduce encuesta
@@ -550,14 +563,26 @@ public class EncuestasController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+			
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+			
+		} catch (ExceptionFrontEncuesta e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+			
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+			
+		} 
+		
 	}
 
 
@@ -576,7 +601,7 @@ public class EncuestasController extends BaseViewController {
 	public ModelAndView resultadoEncuestas(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@PathVariable("uriEncuesta") String uriEncuesta,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletRequest req, HttpServletResponse response) {
 
 		boolean error = false;
 		boolean entera = true;
@@ -585,7 +610,10 @@ public class EncuestasController extends BaseViewController {
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa, null);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			// sustitucion procesaSesion(); de BdEnvioEncuesta.java
 			String idencuesta = "" + req.getParameter(Microfront.PCONT);
 			String solover = "" + req.getParameter(Microfront.PVIEW);
@@ -747,13 +775,13 @@ public class EncuestasController extends BaseViewController {
 				if (encuesta.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 					log.error("El elemento solicitado no pertenece al site");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 				}
 				// comprobacion de visibilidad
 				if (!encuesta.getVisible().equals("S")) {
 					log.error("El elemento solicitado no está visible");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				}
 
 				// traduce encuesta
@@ -787,13 +815,13 @@ public class EncuestasController extends BaseViewController {
 				if (encuesta.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 					log.error("El elemento solicitado no pertenece al site");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 				}
 				// comprobacion de visibilidad
 				if (!encuesta.getVisible().equals("S")) {
 					log.error("El elemento solicitado no está visible");
 					error = true;
-					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				}
 
 				// traduce encuesta
@@ -830,14 +858,17 @@ public class EncuestasController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 	}
 
 	/**

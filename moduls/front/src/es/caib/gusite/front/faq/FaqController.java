@@ -2,6 +2,8 @@ package es.caib.gusite.front.faq;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.gusite.front.general.BaseViewController;
+import es.caib.gusite.front.general.ExceptionFrontFaq;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.Front;
 import es.caib.gusite.front.general.Microfront;
@@ -40,13 +43,16 @@ public class FaqController extends BaseViewController {
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/faq")
 	public ModelAndView listarfaqs(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 
 		ListarFaqsView view = new ListarFaqsView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
 			Microsite microsite = view.getMicrosite();
-
+			if (microsite == null) {
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+			}
+			
 			this.cargarFaq(view);
 			this.cargarMollapan(view);
 			view.setIdContenido(mcont);
@@ -54,11 +60,17 @@ public class FaqController extends BaseViewController {
 
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO);
-		}
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+		} catch (ExceptionFrontFaq e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
+		} 
 
 	}
 
@@ -70,10 +82,10 @@ public class FaqController extends BaseViewController {
 	@RequestMapping("{uri}/faq")
 	public ModelAndView listarfaqs(@PathVariable("uri") SiteId URI,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa) {
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa, HttpServletResponse response) {
 		// TODO: implementar negociación de idioma y, tal vez, redireccionar en
 		// lugar de aceptar la uri.
-		return this.listarfaqs(URI, DEFAULT_IDIOMA, pcampa, mcont);
+		return this.listarfaqs(URI, DEFAULT_IDIOMA, pcampa, mcont, response);
 
 	}
 
@@ -85,8 +97,9 @@ public class FaqController extends BaseViewController {
 	 * @param model
 	 * @param microsite
 	 * @throws DelegateException
+	 * @throws ExceptionFrontFaq 
 	 */
-	private void cargarFaq(ListarFaqsView view) throws DelegateException {
+	private void cargarFaq(ListarFaqsView view) throws DelegateException, ExceptionFrontFaq {
 
 		if (this.existeServicio(view.getMicrosite(), view.getLang(), Front.RFAQ)) {
 
@@ -94,7 +107,7 @@ public class FaqController extends BaseViewController {
 			view.setListado(listafaqstema);
 
 		} else {
-			// TODO: error 404
+			throw new ExceptionFrontFaq(view.getMicrosite().getUri(), view.getLang().getLang());		
 		}
 	}
 

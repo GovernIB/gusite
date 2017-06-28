@@ -84,7 +84,7 @@ public class TawAction extends BaseAction {
     	
 		} catch (Exception e) {			
 			log.error(e.getMessage());
-			return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA));
+			return mapping.findForward(getForwardError (request, ErrorMicrosite.ERROR_AMBIT_PAGINA, response));
 		}			
 		
 	}
