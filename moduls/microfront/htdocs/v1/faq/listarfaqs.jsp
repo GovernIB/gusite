@@ -80,8 +80,8 @@
 										<h3><bean:write name="i" property="tema" ignore="true"/></h3>
 										<dl>
 											<logic:iterate name="i" id="j" property="listadopreguntas">
-												<dt><strong><bean:write name="j" property="traduce.pregunta" ignore="true" /></strong></dt>
-												<dd><bean:write name="j" property="traduce.respuesta" ignore="true" />
+												<dt><strong><bean:write name="j" property="traduce.pregunta" ignore="true" filter="false" /></strong></dt>
+												<dd><bean:write name="j" property="traduce.respuesta" ignore="true" filter="false" />
 												<logic:present name="j" property="traduce.url">
 														<br/>
 														<bean:define id="externa" name="j" property="traduce.url" type="java.lang.String" />
