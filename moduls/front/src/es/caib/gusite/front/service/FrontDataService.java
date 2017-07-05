@@ -324,7 +324,9 @@ public class FrontDataService {
 		try {
 			DelegateBase _delegateBase = new DelegateBase();
 			Microsite ret = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
-			ret.setIdi(lang.getLang());
+			if (ret != null) {
+				ret.setIdi(lang.getLang());
+			}
 			return ret;
 
 		} catch (DelegateException e) {

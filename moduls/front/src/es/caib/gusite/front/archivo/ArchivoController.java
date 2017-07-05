@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;
@@ -51,32 +53,30 @@ public class ArchivoController extends FrontController {
 	 */
 	@RequestMapping("{uri}/f/{id}")
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile, HttpServletResponse response) throws IOException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
 				log.error("Microsite " + URI.uri + " no encontrado");
-				// TODO: 404?
-				// return getForwardError (microsite, lang, model,
-				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				response.setStatus(404);
 				return null;
 			}
-
-			// TODO: if (this.checkControl(ctrl, idFile)) {
-			return this.sirveArchivo(this.dataService.obtenerArchivo(idFile));
+			
+			return this.sirveArchivo(this.dataService.obtenerArchivo(idFile), response);
 
 		} catch (ExceptionFrontMicro e) {
-			log.error(e.getMessage());
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
 			return null;
 		} catch (ExceptionFrontPagina e) {
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
+			return null;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			response.setStatus(500);
 			return null;
 		}
 
@@ -97,101 +97,36 @@ public class ArchivoController extends FrontController {
 	 */
 	@RequestMapping(value = "{uri}/f/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException {
 
 		Microsite microsite = null;
 		try {
 			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
 				log.error("Microsite " + URI.uri + " no encontrado");
-				// TODO: 404?
-				// return getForwardError (microsite, lang, model,
-				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				response.setStatus(404);
 				return null;
 			}
 
-			// TODO: if (this.checkControl(ctrl, idFile)) {
-			return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename));
+			return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);
 
 		} catch (ExceptionFrontMicro e) {
-			log.error(e.getMessage());
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
 			return null;
 		} catch (ExceptionFrontPagina e) {
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_PAGINA);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
+			return null;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			response.setStatus(500);
 			return null;
 		}
 
 	}
 
-	/**
-	 * 
-	 * Este método comprueba que en el parametro 'ctrl' del request se ha pasado
-	 * el siguiente formato: SSSSSxxxZIyyy donde SSSSS es el tipo de servicio
-	 * sacado de la clase es.caib.gusite.microfront.Microfront. donde xxx es el
-	 * id del elemento al que pertenece el documento donde ZI es el separador
-	 * donde yyy es el id del documento En el parametro id se ha pasado también
-	 * el id de la imagen.
-	 * 
-	 * @return boolean
-	 */
-	private boolean checkControl(String ctrl, Long idelemento) {
-
-		/*
-		 * TODO: //comprobar si solicitamos por nombre el archivo. Si es
-		 * así----> no hay chequeo //String bynombre = "" +
-		 * req.getParameter(Microfront.PNAME); if (!bynombre.equals("null"))
-		 * return retorno;
-		 */
-
-		Long yyy;
-		ctrl.substring(0, 5);
-		new Long(ctrl.substring(5, ctrl.indexOf(Microfront.separatordocs)));
-		yyy = new Long(ctrl.substring(ctrl.indexOf(Microfront.separatordocs) + 2, ctrl.length()));
-
-		if (!idelemento.equals(yyy)) {
-			return false;
-		}
-
-		/*
-		 * TODO_ if (SSSSS.equals(Microfront.RAGENDA)) { AgendaDelegate
-		 * agendadel = DelegateUtil.getAgendaDelegate(); Agenda agenda =
-		 * agendadel.obtenerAgenda(xxx); String previ=
-		 * ""+req.getSession().getAttribute("previsualiza"); if
-		 * (!previ.equals("si")) { if (!agenda.getVisible().equals("S")) {
-		 * retorno=false; } } }
-		 * 
-		 * if ((retorno) && (SSSSS.equals(Microfront.RCONTENIDO))) {
-		 * ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
-		 * Contenido contenido = contenidodel.obtenerContenido(xxx); String
-		 * previ= ""+req.getSession().getAttribute("previsualiza"); if
-		 * (!previ.equals("si")) { if (!contenido.getVisible().equals("S")) {
-		 * retorno=false; } } }
-		 * 
-		 * if ((retorno) && (SSSSS.equals(Microfront.RNOTICIA))) {
-		 * NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
-		 * Noticia noticia = noticiadel.obtenerNoticia(xxx); String previ=
-		 * ""+req.getSession().getAttribute("previsualiza"); if
-		 * (!previ.equals("si")) { if (!noticia.getVisible().equals("S")) {
-		 * retorno=false; } } }
-		 * 
-		 * if ((retorno) && (SSSSS.equals(Microfront.RMICROSITE))) {
-		 * MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
-		 * Microsite microsit = micrositedel.obtenerMicrosite(xxx); String
-		 * previ= ""+req.getSession().getAttribute("previsualiza"); if
-		 * (!previ.equals("si")) { if (!microsit.getVisible().equals("S")) {
-		 * retorno=false; } }
-		 * 
-		 * }
-		 */
-		return true;
-
-	}
-
+	
 	/**
 	 * Archivo de nombre "filename" del tema {uri}. El nombre se recibe en
 	 * el RequestParam {@link Microfront.PNAME}
@@ -203,15 +138,13 @@ public class ArchivoController extends FrontController {
 	 */
 	@RequestMapping(value = "ft/{uriTema}/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivoTema(@PathVariable("uriTema") String uriTema, @RequestParam(Microfront.PNAME) String filename) throws IOException {
+	public ResponseEntity<byte[]> archivoTema(@PathVariable("uriTema") String uriTema, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException {
 
 		try {
 			List<ArchivoTemaFront> archivos  = this.dataService.getArchivoTema(uriTema, filename);
 			if (archivos == null || archivos.size() < 1) {
 				log.error("Archivo " + filename + " no encontrado en tema " + uriTema);
-				// TODO: 404?
-				// return getForwardError (microsite, lang, model,
-				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				response.setStatus(404);
 				return null;
 			}
 
@@ -221,18 +154,19 @@ public class ArchivoController extends FrontController {
 					archivo = a.getArchivo();
 				}
 			}
-			return this.sirveArchivo(archivo);
+			return this.sirveArchivo(archivo, response);
 
 		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage());
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
+			return null;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			response.setStatus(500);
 			return null;
 		}
 
 	}
-	
 	
 	/**
 	 * Css del tema {uri}.
@@ -242,38 +176,44 @@ public class ArchivoController extends FrontController {
 	 */
 	@RequestMapping(value = "ft/{uriTema}/css")
 	@ResponseBody
-	public ResponseEntity<byte[]> cssTema(@PathVariable("uriTema") String uriTema) throws IOException {
+	public ResponseEntity<byte[]> cssTema(@PathVariable("uriTema") String uriTema, HttpServletResponse response) throws IOException {
 
 		TemaFront tema = null;
 		try {
 			tema = this.dataService.getTemaFrontByUri(uriTema);
 			if (tema == null || tema.getCss() == null) {
 				log.error("Css para tema " + uriTema + " no encontrado");
-				// TODO: 404?
-				// return getForwardError (microsite, lang, model,
-				// ErrorMicrosite.ERROR_AMBIT_MICRO);
+				response.setStatus(404);
 				return null;
 			}
 
-			return this.sirveArchivo(tema.getCss());
+			return this.sirveArchivo(tema.getCss(), response);
 
 		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage());
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			log.error(e.getMessage(), e);
+			response.setStatus(404);
+			return null;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			response.setStatus(500);
 			return null;
 		}
 
 	}
 
-	
-	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo) throws IOException, ExceptionFrontPagina {
+	/** 
+	 * Obtiene el archivo.
+	 * 
+	 * @param archivo
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 * @throws ExceptionFrontPagina
+	 */
+	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo, HttpServletResponse response) throws IOException, ExceptionFrontPagina {
 		if (archivo == null) {
 			log.error("Archivo no encontrado");
-			// TODO: 404?
-			// return getForwardError (microsite, lang, model,
-			// ErrorMicrosite.ERROR_AMBIT_MICRO);
+			response.setStatus(404);
 			return null;
 		}
 
@@ -284,6 +224,9 @@ public class ArchivoController extends FrontController {
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
 	}
 	
+	/** 
+	 * Mime extensions
+	 */
 	private static final Map<String, String> MIME_EXTENSIONES;  
 	 static {
 	        Map<String, String> aMap = new HashMap<String, String>();
@@ -292,6 +235,13 @@ public class ArchivoController extends FrontController {
 			MIME_EXTENSIONES = Collections.unmodifiableMap(aMap);
 	    }
 	 
+	 /** 
+	  * Prase mime.
+	  *  
+	  * @param archivo
+	  * @return
+	  */
+	  
 	private String parseMime(Archivo archivo) {
 		if (archivo.getNombre() != null) {
 			int i = archivo.getNombre().lastIndexOf('.');
