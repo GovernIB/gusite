@@ -173,10 +173,11 @@ public class lineaFormularioEditaAction extends BaseAction
    				lineaDatoContacto.setLineas(Integer.parseInt(""+lineaFormularioForm.get("numSelectors2")));
    			}
 
+   			//Se remmplaza el caracter # por su correspondinete código html
    			for (int j=0; j<langs.size(); j++) {
-   				fila=""+etiquetas[j]+"#"; // El primero es la etiqueta
+   				fila=""+etiquetas[j].replace("#", "&num;")+"#"; // El primero es la etiqueta
         		for (int i=0; i<limite;i++)	
-       				fila+=textos[(i*langs.size())+j]+"#";
+       				fila+=textos[(i*langs.size())+j].replace("#", "&num;")+"#";
         		if (fila.length()>0)
         			etiquetasTipo4o5[j]=fila.substring(0,fila.length()-1);
    			}
@@ -258,8 +259,8 @@ public class lineaFormularioEditaAction extends BaseAction
                 
         		if (lineaDatoContactoBean.getTipo().equals("4") || lineaDatoContactoBean.getTipo().equals("5")){
         			for (int m=0; m<vector.length; m++) {
-        				if (m==0) 	etis[i]=vector[0]; // El primero es la etiqueta
-        				if (m>0)    textos[(numLangs*(m-1))+i]=vector[m];
+        				if (m==0) 	etis[i]=vector[0].replace("&num;","#"); // El primero es la etiqueta
+        				if (m>0)    textos[(numLangs*(m-1))+i]=vector[m].replace("&num;","#");
         			}
             	    int cont = Cadenas.countSubstr(trad_texto, "#");
         			if (cont > 0 ){

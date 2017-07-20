@@ -1,7 +1,10 @@
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=utf8"  pageEncoding="utf8"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -160,11 +163,29 @@
 					<logic:notMatch name="i" property="visible" value="S">No</logic:notMatch>
 				</td>
 	   	    	<td>
-			   	    <logic:notEmpty name="i" property="traduccion.texto">
-						  <bean:define id="textoetiquetas"><bean:write name="i" property="traduccion.texto" /></bean:define>
-						  <% String[] vector= textoetiquetas.split("#"); %>
-						 <bean:define id="textolinea"><%=vector[0] %></bean:define>
-						 <bean:write name="textolinea"/>
+	   	   	
+			   	    <logic:notEmpty name="i" property="traduccion.texto">			   	    
+			   	    	<c:set var="valorTraduccion"><bean:write name="i" property="traduccion.texto"/></c:set>	
+			   	    	<c:set var="tipoLinea"><bean:write name="i" property="tipo"/></c:set>	
+						<%
+						String etiqueta = "";
+						String str = (String)pageContext.getAttribute("valorTraduccion");
+						Integer tipo = Integer.parseInt((String)pageContext.getAttribute("tipoLinea"));
+						if(tipo == 4 || tipo == 5){						
+							if(!StringUtils.isEmpty(str.trim())){
+								String[] vector= str.split("#");
+								if(vector.length>0){
+									etiqueta = vector[0].replace("&num;","#").replace("&amp;num;","#");
+								}
+							}							
+						}else{
+							etiqueta = str.trim();
+						}						
+						if(!StringUtils.isEmpty(etiqueta)){%>						  
+						<%=etiqueta %>						
+						<% } else{ %>
+							[<bean:message key="formu.noetiq" />]							
+						<% }%>						
 					</logic:notEmpty>
 					<logic:empty name="i" property="traduccion.texto">
 						[<bean:message key="formu.noetiq" />]
