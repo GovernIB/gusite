@@ -159,7 +159,17 @@ public class NoticiasController extends BaseViewController {
 					view.setParametrosPagina(noticias.getParametros());
 
 					view.setListado(noticias.getResultados());
-					String desctiponoticia = ((TraduccionTipo) tipo.getTraduccion(lang.getLang())).getNombre();
+					TraduccionTipo trad = ((TraduccionTipo) tipo.getTraduccion(lang.getLang()));
+					if(trad == null){
+						String mensaje = "No existe traduccion '"+ lang.getLang() +"' para el listado " + tipo.getIdi() ;
+						try{
+							mensaje += " (" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang())).getNombre()+") ";
+						}catch(Exception e){
+							
+						}
+						throw new ExceptionFrontPagina(mensaje,  ExceptionFrontPagina.HTTP_NOT_FOUND);
+					}
+					String desctiponoticia = trad.getNombre();
 					view.setTipoListado(desctiponoticia);
 					view.setClaseElemento(tipo);
 					view.setBusqueda("" + noticias.isBusqueda());
