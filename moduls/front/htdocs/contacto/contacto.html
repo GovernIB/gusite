@@ -109,7 +109,7 @@ Muestra un formulario de contacto.
 						th:with="indice=${iterStat.index}" th:remove="tag">
 						<div class="separacio"></div>
 						<div class="etiqueta">
-							<label th:for="${i.key}" th:text="${i.key}">Etiqueta campo</label>
+							<label th:for="${i.key}" th:utext="${i.key}">Etiqueta campo</label>
 						</div>
 						<div th:utext="${i.value}" th:remove="tag"></div>
 					</div>

@@ -138,7 +138,7 @@
 										<input type="hidden" name="cont" value ="<bean:write name="MVS_contacto" property="id"/>"/>		
 										<logic:iterate name="MVS_contacto_listatags" id="i" indexId="indice">
 											<div class="separacio"></div>
-											<div class="etiqueta"><label for="<bean:write name="i" property="key"/>"><bean:write name="i" property="key"/></label></div> <bean:write name="i" property="value" filter="false"/>
+											<div class="etiqueta"><label for="<bean:write name="i" property="key" />"><bean:write name="i" property="key" filter="false"/></label></div> <bean:write name="i" property="value" filter="false"/>
 										</logic:iterate>
 										<div class="separacio"></div>
 			
