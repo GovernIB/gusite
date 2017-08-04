@@ -18,7 +18,7 @@ public class Microfront {
 	// Antiguas microfront
 	// ------------------------------------------------------------
 
-	// estas variables coinciden con el campo TPS_REF de la tabla RSC_TIPSER
+	// estas variables coinciden con el campo TPS_REF de la tabla GUS_TIPSER
 	static public final String RAGENDA = "GND00";
 	static public final String RQSSI = "FQSSI";
 	static public final String RBANNER = "BNNR0";
@@ -30,6 +30,7 @@ public class Microfront {
 	static public final String RENCUESTA = "NCSTS";
 	static public final String RMAILING = "MAIL0";
 	static public final String RLDISTRIB = "DISTR";
+	static public final String RARCHIVO = "NOEXISTE"; //No existe, creado por defecto.
 
 	// maximo entero
 	static public final int MAX_INTEGER = 32000;

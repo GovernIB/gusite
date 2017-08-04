@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -15,17 +16,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
-import es.caib.gusite.front.general.FrontController;
 import es.caib.gusite.front.general.Microfront;
+import es.caib.gusite.front.general.bean.ErrorMicrosite;
+import es.caib.gusite.front.view.ErrorGenericoView;
 import es.caib.gusite.micromodel.Archivo;
 import es.caib.gusite.micromodel.ArchivoTemaFront;
+import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TemaFront;
 
@@ -35,7 +42,7 @@ import es.caib.gusite.micromodel.TemaFront;
  * @author brujula-at4
  */
 @Controller
-public class ArchivoController extends FrontController {
+public class ArchivoController extends BaseViewController {
 
 	private static Log log = LogFactory.getLog(ArchivoController.class);
 
@@ -49,39 +56,21 @@ public class ArchivoController extends FrontController {
 	 * @param id
 	 *            Identificador de archivo
 	 * @return bytes y encabezados para la petición del archivo
-	 * @throws IOException
+	 * @throws Exception 
 	 */
 	@RequestMapping("{uri}/f/{id}")
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile, Model model, HttpServletResponse response, final HttpServletRequest req) throws Exception {
 
-		Microsite microsite = null;
-		try {
-			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+			final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 			if (microsite == null) {
 				log.error("Microsite " + URI.uri + " no encontrado");
-				response.setStatus(404);
-				return null;
+				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 			}
 			
 			return this.sirveArchivo(this.dataService.obtenerArchivo(idFile), response);
-
-		} catch (ExceptionFrontMicro e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(404);
-			return null;
-		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(404);
-			return null;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(500);
-			return null;
-		}
-
 	}
-
+	
 	/**
 	 * Archivo de nombre "filename" del microsite {uri}. El nombre se recibe en
 	 * el RequestParam {@link Microfront.PNAME}
@@ -94,36 +83,19 @@ public class ArchivoController extends FrontController {
 	 *            Nombre del archivo
 	 * @return bytes y encabezados para la petición del archivo
 	 * @throws IOException
+	 * @throws ExceptionFrontPagina 
+	 * @throws ExceptionFrontMicro 
 	 */
 	@RequestMapping(value = "{uri}/f/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException, ExceptionFrontPagina, ExceptionFrontMicro {
 
-		Microsite microsite = null;
-		try {
-			microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
-			if (microsite == null) {
-				log.error("Microsite " + URI.uri + " no encontrado");
-				response.setStatus(404);
-				return null;
-			}
-
-			return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);
-
-		} catch (ExceptionFrontMicro e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(404);
-			return null;
-		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(404);
-			return null;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			response.setStatus(500);
-			return null;
+		Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+		if (microsite == null) {
+			log.error("Microsite " + URI.uri + " no encontrado");
+			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
-
+		return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);	
 	}
 
 	
@@ -253,6 +225,34 @@ public class ArchivoController extends FrontController {
 			} 
 		}
 		return archivo.getMime();
+	}
+
+	@Override
+	public String setServicio() {
+		return Microfront.RARCHIVO;
+	}
+	
+	
+	@ExceptionHandler(ExceptionFrontPagina.class)
+	public ModelAndView handleExceptionFrontPagina(ExceptionFrontPagina ex, HttpServletResponse response) {
+
+		Microsite microsite = null;
+		ErrorGenericoView view = new ErrorGenericoView();
+		Idioma lang = new Idioma();
+		lang.setLang(LANG_CA);
+		view.setLang(lang);
+		view.setIdioma(LANG_CA);
+		ErrorMicrosite errorMicrosite = new ErrorMicrosite();
+		errorMicrosite.setAviso("Aviso:" + ex.getMessage());
+		errorMicrosite.setMensaje(ex.getMessage());
+		view.setErrParam(errorMicrosite);
+		view.setErrEstado(errorMicrosite.getEstado());
+		
+		//El 404
+		response.setStatus(HttpStatus.NOT_FOUND.value());
+				
+		return this.modelForView(this.templateNameFactory.errorGenerico(microsite ), view);		
+
 	}
 	
 	
