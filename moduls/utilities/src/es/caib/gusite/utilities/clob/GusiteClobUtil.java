@@ -19,7 +19,7 @@ public class GusiteClobUtil {
 		final Clob clob;
 		if (GusitePropertiesUtil.getTamanyoMaximoClob() < texto.length()) {
 			final String nuevaDescripcion = texto.substring(0, GusitePropertiesUtil.getTamanyoMaximoClob().intValue());
-			clob = Hibernate.createClob(nuevaDescripcion);
+			clob = Hibernate.createClob(nuevaDescripcion+"....Cortado por exceso de tamaño.");
 		} else {
 			clob = Hibernate.createClob(texto);
 		}

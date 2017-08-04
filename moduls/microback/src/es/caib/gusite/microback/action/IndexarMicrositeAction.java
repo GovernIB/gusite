@@ -78,7 +78,7 @@ public class IndexarMicrositeAction extends BaseAction {
 			if (idMicrosite == null)
 				return false;
 			else {				
-				IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_MICROSITE, null, Long.valueOf(idMicrosite));                
+				IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_MICROSITE, IndexacionUtil.TIPO_MICROSITE, Long.valueOf(idMicrosite));                
 			}	
 		}catch(Exception e){
 			log.error("Error indexando microsite: " + idMicrosite );

@@ -33,7 +33,7 @@ public class IndexacionJobUtil {
     	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
     	//  se da por hecho que se está ejecutando.
     	SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();
-    	List<SolrPendienteJob> jobs = solrPendienteDel.getListJobs(10, tipoIndexacion, null);
+    	List<SolrPendienteJob> jobs = solrPendienteDel.getListJobs(10, null, null); //Quitamos el tipoIndexacion para que no permita dos indexaciones juntas.
     	for(SolrPendienteJob job : jobs) {
     		if (job.getFechaFin() == null) {
     			throw new Exception("Se está ejecutando un job, intentelo más tarde");
