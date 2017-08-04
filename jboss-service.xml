@@ -44,6 +44,9 @@
         es.caib.gusite.url.solr=localhost:8983/solr
         es.caib.gusite.index.solr=caib
 		es.caib.gusite.solr.jobpendientes=0 0 2 * * ?
+		es.caib.gusite.maxjob.solr = 10
+				<!-- En MB. -->
+	    es.caib.gusite.maxclob.solr = 100
         <!-- Fecha revisión accesibilidad dd/MM/yyyy -->
 		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015 
 		

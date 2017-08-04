@@ -1,5 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -22,6 +24,7 @@ import es.caib.gusite.plugins.PluginException;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
+import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 import es.caib.solr.api.model.types.EnumCategoria;
 
 
@@ -236,6 +239,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
         	sql.append(" order by solrpendientejob.id desc ");
         	Query query = session.createQuery(sql.toString());
         	query.setMaxResults(cuantos);
+        	
         	return query.list();
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -285,7 +289,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	try
     	{
     		Session session = getSession();
-	    	session.update(solrpendienteJob); 
+    		session.update(solrpendienteJob); 
 			session.flush();
 			session.close();
 	    } catch(Exception exception) {
@@ -306,6 +310,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	try
     	{
     		Session session = getSession();
+    		
+    		
 	    	solrpendienteJob.setFechaFin(new Date());
 	    	session.update(solrpendienteJob); 
 			session.flush();
@@ -328,9 +334,21 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 
         Session session = getSession();
         try {
-        	Query query = session.createQuery(" from SolrPendienteJob solrpendientejob  order by solrpendientejob.id desc");
+        	Query query = session.createQuery("select solrpendientejob.id, solrpendientejob.fechaIni, solrpendientejob.fechaFin, solrpendientejob.tipo, solrpendientejob.idElem  from SolrPendienteJob solrpendientejob  order by solrpendientejob.id desc");
         	query.setMaxResults(cuantos);
-        	return query.list();
+        	List<SolrPendienteJob> jobs= new ArrayList<SolrPendienteJob>();
+        	List<Object[]> lvalores = query.list();
+        	for(int i = 0 ; i < lvalores.size() ; i++) {
+        		Object[] valores = lvalores.get(i);
+        		SolrPendienteJob job = new SolrPendienteJob();
+        		if (valores[0] != null) { job.setId(Long.valueOf(valores[0].toString())); }
+        		if (valores[1] != null) { job.setFechaIni((Date) valores[1]); }
+        		if (valores[2] != null) { job.setFechaFin((Date) valores[2]); }
+        		if (valores[3] != null) { job.setTipo(valores[3].toString()); }
+        		if (valores[4] != null) { job.setId(Long.valueOf(valores[4].toString())); }
+        		jobs.add(job);
+        	}
+        	return jobs;
         } catch (HibernateException he) {
             throw new EJBException(he);
         } finally {

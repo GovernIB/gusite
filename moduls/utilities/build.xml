@@ -38,6 +38,13 @@
 			<include name="struts.jar"/>
             <include name="pdfbox-app-1.8.4.jar"/>
 		</fileset>
+		
+		<fileset dir="${lib.dir}/jboss">
+    		<include name="hibernate-core.jar"/>
+    		<include name="hibernate-annotations.jar"/>
+    		<include name="ejb3-persistence.jar"/>
+    	</fileset>
+
 	</path>
 
 	<target name="prepare">

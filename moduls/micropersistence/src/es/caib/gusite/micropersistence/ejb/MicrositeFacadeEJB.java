@@ -980,14 +980,12 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarMicrosites() {
+	public List<Long> listarMicrosites() {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session.createQuery(" from Microsite micro ");
-			List<?> microlista = query.list();
-			return microlista;
-
+			final Query query = session.createQuery(" select micro.id from Microsite micro ");
+			return query.list();
 		} catch (HibernateException he) {
 			throw new EJBException(he);
 		} finally {

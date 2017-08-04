@@ -208,7 +208,7 @@ public class MicrositeDelegate implements StatelessDelegate {
 	 * @return una lista de microsites
 	 * @throws DelegateException
 	 */
-	public List<?> listarMicrosites() throws DelegateException {
+	public List<Long> listarMicrosites() throws DelegateException {
 		try {
 			return this.getFacade().listarMicrosites();
 		} catch (RemoteException e) {

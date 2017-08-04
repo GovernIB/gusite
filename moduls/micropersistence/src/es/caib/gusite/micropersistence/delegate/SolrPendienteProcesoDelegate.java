@@ -84,6 +84,34 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	}
 	
 
+    /**
+	  * Marca todas las tareas como finalizadas.  
+	  *
+	  * @throws DelegateException
+	  */
+    public void finalizarTodo() throws DelegateException{
+   	 try {
+			 this.getFacade().finalizarTodo();
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+    }
+	
+    /**
+	  * Limpieza de jobs.
+	  * 
+	  * @param minimoId El identificador mínimo.
+	  * @throws DelegateException
+	  */
+    public void limpiezaJobs(final Long minimoId) throws DelegateException {
+   	 try {
+			 this.getFacade().limpiezaJobs(minimoId);
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+	}
+    
+
      
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -108,5 +136,10 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
+
+
+	
+     
 
 }

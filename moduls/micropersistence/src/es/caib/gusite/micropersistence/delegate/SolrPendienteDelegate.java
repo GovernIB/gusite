@@ -152,6 +152,8 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
      }
      
+     
+     
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */
@@ -189,5 +191,7 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 				throw new DelegateException(e);
 		 }
 	}
+
+	
 
 }

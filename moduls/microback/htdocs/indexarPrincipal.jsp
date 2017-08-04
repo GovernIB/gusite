@@ -154,6 +154,11 @@
 				
 		</div>	
 		
+		<div id="botonera">
+				<button type="button" name="fichero" title="<bean:message key="menu.indexar.cerrar" />" onclick='cerrarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.cerrar" />" /> &nbsp;<bean:message key="menu.indexar.cerrar" /></button>
+				<button type="button" name="fichero" title="<bean:message key="menu.indexar.limpiar" />" onclick='limpiarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.limpiar" />" /> &nbsp;<bean:message key="menu.indexar.limpiar" /></button>
+		</div>
+		
 		<p>
 		<strong>
 			<bean:message key="indexador.p1" /><br/> 
@@ -190,7 +195,13 @@
 <script>
 	function indexarTodo(){
 		document.location="indexarPrincipal.do?indexar=todo";
-		
+	}
+	
+	function cerrarJobs() {
+		document.location="indexarPrincipal.do?indexar=cerrar";
+	}
+	function limpiarJobs() {
+		document.location="indexarPrincipal.do?indexar=limpiar";
 	}
 
 	function indexarByUA(){
@@ -204,20 +215,14 @@
 		}
 		
 		document.location.href="indexarPrincipal.do?indexar=byUA&uaId="+idUA;
-		
-	
-		
 	}
+	
     function indexarPendientes(){
-		
 		document.location.href="indexarPrincipal.do?indexar=pendientes";
-		
 	}
     
     function indexarVerPendientes(){
-		
 		document.location.href="indexarPrincipal.do?indexar=verpendientes";
-		
 	}
     
     function jobVerInfo(){
@@ -225,7 +230,6 @@
 	}
     
     function descargar(id){
-
     	document.location.href="archivoInfo.do?id="+id;
 	} 
 </script>
