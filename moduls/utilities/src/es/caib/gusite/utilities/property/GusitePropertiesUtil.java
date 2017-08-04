@@ -70,8 +70,8 @@ public class GusitePropertiesUtil
 			final String sNumeroMaximo = getProperty(TAMANYO_MAX_CLOB);
 			if (sNumeroMaximo == null) {
 				numeroMaximo = 1048576l*300; //300MB
-			} else {
-				numeroMaximo = Long.valueOf(sNumeroMaximo) * 1048576l; //Para pasarlo a MB
+			} else { 
+				numeroMaximo = (long) (Double.valueOf(sNumeroMaximo) * 1048576l); //Para pasarlo a MB
 			}
 			
 			return numeroMaximo;
