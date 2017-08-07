@@ -227,17 +227,20 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      *
      * @return Devuelve un listado de todos los SolrPendientes.
      */
-    public List<SolrPendienteJob> getListJobs(final int cuantos, final String tipoIndexacion, String idElemento) {
+    public List<SolrPendienteJob> getListJobs(final int cuantos, final String tipoIndexacion, final String idElemento) {
 
-        Session session = getSession();
+        final Session session = getSession();
         try {
-        	StringBuffer sql = new StringBuffer();
-        	sql.append(" from SolrPendienteJob solrpendientejob where solrpendientejob.tipo = '"+tipoIndexacion+"' ");
+        	final StringBuffer sql = new StringBuffer();
+        	sql.append(" from SolrPendienteJob solrpendientejob where 1 = 1 ");
+        	if (tipoIndexacion != null && !tipoIndexacion.isEmpty()) {
+        		sql.append(" and solrpendientejob.tipo = '"+tipoIndexacion+"' ");
+        	}
         	if (idElemento != null && !idElemento.isEmpty()) {
         		sql.append(" and solrpendientejob.idElem = "+idElemento+" ");
         	}
         	sql.append(" order by solrpendientejob.id desc ");
-        	Query query = session.createQuery(sql.toString());
+        	final Query query = session.createQuery(sql.toString());
         	query.setMaxResults(cuantos);
         	
         	return query.list();
