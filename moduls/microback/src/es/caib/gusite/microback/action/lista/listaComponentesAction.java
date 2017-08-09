@@ -53,10 +53,7 @@ public class listaComponentesAction extends BaseAction {
 
         listaActionForm f = (listaActionForm) form;
       
-        //los tipos 
-        ArrayList<String> tiposNoIncluidosCompo = new ArrayList<String>();
-		tiposNoIncluidosCompo.add(Tipo.TIPO_MAPA);
-     
+          
         //********************************************************
         //************* ERROR DE VALIDACION **********************
         //********************************************************
@@ -65,7 +62,7 @@ public class listaComponentesAction extends BaseAction {
         	request.setAttribute("componenteForm", fdet);
             // Relleno el combo de Tipos de Noticias
             TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(),tiposNoIncluidosCompo));
+            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
             request.setAttribute("validacion", "si");
             return mapping.findForward("detalleCompo");
         }
@@ -75,7 +72,7 @@ public class listaComponentesAction extends BaseAction {
         if ( f.getAccion().equals("crear")) {
             // Relleno el combo de Tipos de Noticias
             TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId(),tiposNoIncluidosCompo));
+            request.setAttribute("tiposCombo", bdTipo.listarCombo(((Microsite)request.getSession().getAttribute("MVS_microsite")).getId()));
         	request.getSession().removeAttribute("componenteForm");
         	return mapping.findForward("detalleCompo");
         }

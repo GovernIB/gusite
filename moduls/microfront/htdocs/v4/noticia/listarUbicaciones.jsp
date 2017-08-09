@@ -46,7 +46,7 @@
 							<jsp:include page="/general/inc_llistats_info_cursor.jsp"/>
 					  <!-- lu noti llistat -->
 							<div id="noticiesLlistat">							
-								<div id="gusiteMaps"></div>	
+								<div class="gusiteMaps"></div>	
 							<logic:iterate name="MVS_listado" id="i">
 								<logic:notEmpty name="i" property="traduce.titulo">
 									<div style="display: none;" class="gusiteMapsMarker">

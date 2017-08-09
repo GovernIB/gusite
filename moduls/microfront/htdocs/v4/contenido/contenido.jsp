@@ -16,6 +16,7 @@
 	<logic:present name="MVS_css">
 			<bean:write name="MVS_css" filter="false"/>
 	</logic:present>
+	<script type="text/javascript" src="v4/js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="v4/js/globales.js"></script>
 	
 	

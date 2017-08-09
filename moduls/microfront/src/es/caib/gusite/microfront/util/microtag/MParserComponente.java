@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,6 +21,7 @@ import es.caib.gusite.micropersistence.delegate.ComponenteDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
+import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 
 
 
@@ -34,7 +36,7 @@ public class MParserComponente extends MParserHTML {
 	
 	
 	protected static Log log = LogFactory.getLog(MParserComponente.class);
-
+	private boolean hayComponenteMapa = false;
 	/**
 	 * Constructor de la clase
 	 * @param version
@@ -59,20 +61,24 @@ public class MParserComponente extends MParserHTML {
 			ComponenteDelegate compodel = DelegateUtil.getComponentesDelegate();
 			Componente componente = compodel.obtenerComponente( new Long(Long.parseLong(idcomponente)) );
 	        
-    		//si es de clase noticia. 
+    		
     		if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) { 
+    			//si es de clase noticia. 
     			retorno.append(getHtmlComponenteTNoticia3(idmicrosite,componente,idioma));
-    		}
-    		//si es de clase enlace. 
-    		if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
+    		}else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+				// si es de clase mapa.
+				this.setHayComponenteMapa(true);
+				// si se incluye el mapa, hay que incluir el script del mapa. 
+				// el script se incluye fuera, para que solo se realice una vez. (por si se incluyen varios mapas)
+				retorno.append(getHtmlComponenteTUbicacion(idmicrosite,componente,idioma));	    		
+    		}else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
+    			//si es de clase enlace. 
     			retorno.append(getHtmlComponenteTEnlace(idmicrosite,componente,idioma));        			
-    		}
-    		//si es de clase documento
-    		if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_DOCUMENTO)) {
+    		}else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_DOCUMENTO)) {
+    			//si es de clase documento
     			retorno.append(getHtmlComponenteTDocumento(idmicrosite,componente,idioma));
-    		}
-    		//si es de clase documento
-    		if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_CONEXIO_EXTERNA)) {
+    		}else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_CONEXIO_EXTERNA)) {
+    			//si es de clase documento
     			retorno.append(getHtmlComponenteTExterno(idmicrosite,componente,idioma));
     		}
    
@@ -134,6 +140,102 @@ public class MParserComponente extends MParserHTML {
 		
 		return retorno;
 	}	
+	
+
+	/**
+	 * Método privado que devuelve un string para insertar en un HTML una lista de ubicaciones
+	 * @param idmicrosite
+	 * @param componente
+	 * @param idioma
+	 * @return StringBuffer Código Html
+	 */
+	private StringBuffer getHtmlComponenteTUbicacion(Long idmicrosite, Componente componente, String idioma) {
+		StringBuffer retorno = new StringBuffer();
+		
+		ResourceBundle rb =	ResourceBundle.getBundle("ApplicationResources_front", new Locale(idioma.toUpperCase(), idioma.toUpperCase()));
+
+		try {			
+			
+			NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+	    	noticiadel.init();noticiadel.setPagina(1);noticiadel.setTampagina(componente.getNumelementos().intValue());
+	    	java.sql.Date dt = new java.sql.Date((new Date()).getTime());
+	    	String wherenoticias = "where noti.visible = 'S' and noti.idmicrosite = " + idmicrosite + " and noti.tipo = " + componente.getTipo().getId().toString();
+	    	wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd') <= '" + dt + "')";
+	    	wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd') >= '" + dt + "')";
+	    	noticiadel.setWhere(wherenoticias);
+	    	noticiadel.setOrderby2(preparaOrden(componente.getOrdenacion().toString()));
+        	List<?> listanoticias = noticiadel.listarNoticiasThin(idioma);
+	        
+        	String nombre_elemento=((TraduccionComponente)componente.getTraduccion(idioma))!=null?((TraduccionComponente)componente.getTraduccion(idioma)).getTitulo():"[ empty ]";
+        	
+   
+        	retorno.append("<div id=\"element" + componente.getId() + "\">\n");          	
+        	retorno.append("	<h2>" + nombre_elemento + "</h2>\n");
+        	
+        	if (listanoticias.size()!=0) {
+        		retorno.append("	<div class=\"gusiteMaps\" id=\"GM" + componente.getId() + "\"></div>\n");        			
+        		Iterator<?> iter = listanoticias.iterator();        		
+        		while (iter.hasNext()) {
+    				
+        			Noticia noti = (Noticia)iter.next();
+    				String titulo = ((TraduccionNoticia)noti.getTraduccion(idioma)).getTitulo();
+    				
+    				if(!StringUtils.isEmpty(titulo)){
+    					String tituloHtml="				<h3>"+titulo+"</h3>\n";
+    					String latitud = noti.getLatitud();
+        				String longitud = noti.getLongitud();
+        				String color = noti.getColorIcono();
+        				String subtitulo = StringUtils.isEmpty(((TraduccionNoticia)noti.getTraduccion(idioma)).getSubtitulo())?"":"				<h4>"+((TraduccionNoticia)noti.getTraduccion(idioma)).getSubtitulo()+"</h4>\n";
+        				String imagen = noti.getImagen()==null?"":"				<img src=\""+MicroURI.uriImg(Microfront.RNOTICIA, noti.getId().longValue(), noti.getImagen().getId().longValue())+"\" alt=\""+titulo+"\" />\n";
+        				String texto = StringUtils.isEmpty(((TraduccionNoticia)noti.getTraduccion(idioma)).getTexto())?"":"				<p>"+((TraduccionNoticia)noti.getTraduccion(idioma)).getTexto()+"</p>\n";
+        				String documento = ((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu()==null?"":"				<p>"+rb.getString("noticia.descdocumento")+"</p>\n" + 
+        						"				<p>" + rb.getString("general.archivo") + " " + ((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu().getMime() + ", " + ((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu().getPeso() +" bytes - " +
+								"<a href=\"archivopub.do?ctrl="+ Microfront.RNOTICIA + noti.getId()+"ZI" + ((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu().getId() + "&amp;id="+((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu().getId() + "\" target=\"blank\">"+ ((TraduccionNoticia)noti.getTraduccion(idioma)).getDocu().getNombre() + "</a></p>\n";
+        				
+    					
+        				retorno.append("	<div style=\"display: none;\" class=\"gusiteMapsMarker GM" + componente.getId() + "\">\n" ); 
+        				retorno.append("		<input class=\"gMMLatitud\"  value=\"" + latitud + "\" />\n");
+        				retorno.append("		<input class=\"gMMLongitud\" value=\"" + longitud + "\" />\n");
+						retorno.append("		<input class=\"gMMColor\"  value=\"" + color + "\" />\n");
+						retorno.append("		<input class=\"gMMTitulo\"  value=\"" + titulo + "\" /> \n");
+						retorno.append("		<div class=\"gMMContenido\">  \n");
+						retorno.append("			<div class=\"gMMInfoWindow\">\n");
+						retorno.append(tituloHtml);
+						retorno.append(subtitulo);
+						retorno.append(imagen);
+						retorno.append(texto);
+						retorno.append(documento);
+						retorno.append("			</div>\n");
+						retorno.append("		</div>\n");
+						retorno.append("	</div>\n");                						
+    				}
+
+        		}        						      
+        	} else {
+        		retorno.append("<p>" + rb.getString("microhtml.nonoticias") + "</p>\n");
+        	}
+        	retorno.append("</div>\n");
+		} catch (Exception e) {
+			log.error("[getHtmlComponenteTNoticia]: " + e.getMessage());
+			retorno= new StringBuffer("[error:]" + e.getMessage());
+		}		
+		
+		return retorno;
+	}	
+	
+	/**
+	 * Método privado que devuelve un string para insertar en un HTML el script de la lista de ubicaciones
+	 * @param idmicrosite
+	 * @param componente
+	 * @param idioma
+	 * @return StringBuffer Código Html
+	 */
+	public static StringBuffer getHtmlComponenteTUbicacionScript() {
+		StringBuffer retorno = new StringBuffer();
+		retorno.append("<script type=\"text/javascript\" src=\"v4/js/gusiteMaps.js\" ></script>");
+		retorno.append("<script src=\"https://maps.googleapis.com/maps/api/js?key=" + GusitePropertiesUtil.getKeyGooglemaps() + "&amp;callback=initialize\"   async=\"async\" defer=\"defer\" ></script>");
+		return retorno;
+	}
 	
 	/**
 	 * Método privado que devuelve un string para insertar en un HTML una Noticia
@@ -242,7 +344,11 @@ public class MParserComponente extends MParserHTML {
 		}		
 		
 		return retorno;
-	}	
+	}
+	
+	
+	
+	
 	
 	/**
 	 * Método privado que devuelve un string para insertar en un HTML un Enlace
@@ -459,6 +565,14 @@ public class MParserComponente extends MParserHTML {
 		retorno.append(" </style>" + "\n");
 		
 		return retorno;
+	}
+
+	public boolean getHayComponenteMapa() {
+		return hayComponenteMapa;
+	}
+
+	private void setHayComponenteMapa(boolean hayComponenteMapa) {
+		this.hayComponenteMapa = hayComponenteMapa;
 	}		
 
 }

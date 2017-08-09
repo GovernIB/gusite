@@ -171,7 +171,17 @@ public class TemplateNameFactory {
 	
 	public String moduloListaNoticias(Microsite microsite) {
 		return getPlantilla(microsite, "general/componentes :: componenteListaNoticias");
-	}	
+	}
+	
+	public String moduloListaUbicaciones(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: componenteListaUbicaciones");
+	}
+	
+	public String moduloListaUbicacionesScript(Microsite microsite) {
+		return getPlantilla(microsite, "general/componentes :: componenteListaUbicacionesScript");
+	}
+
+	
 	public String moduloListaEnlaces(Microsite microsite) {
 		return getPlantilla(microsite, "general/componentes :: componenteListaEnlaces");
 	}

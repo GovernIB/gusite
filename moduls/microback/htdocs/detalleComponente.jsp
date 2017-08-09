@@ -206,20 +206,22 @@
 		var esexterno='N';
 		var elseleccionado = obj.options[obj.selectedIndex].value;
 		//recorrer los que son externos
-		var listadoExternos = new Array( '-1'
+		var listadoExternosOMapa = new Array( '-1'
 		<logic:present name="tiposCombo">
 			<logic:iterate name="tiposCombo" id="clase">
 						<logic:match name="clase" property="tipoelemento" value="3">
 							,'<bean:write name="clase" property="id"/>'
 						</logic:match>	
+						<logic:match name="clase" property="tipoelemento" value="5">
+							,'<bean:write name="clase" property="id"/>'
+						</logic:match>
 			</logic:iterate>
 		</logic:present>
 		);
 		
-		for(f=0;f<listadoExternos.length;f++) {
-			if (parseInt(listadoExternos[f])==parseInt(elseleccionado))
-				esexterno='S';
-				
+		for(f=0;f<listadoExternosOMapa.length;f++) {
+			if (parseInt(listadoExternosOMapa[f])==parseInt(elseleccionado))
+				esexterno='S';				
 		};
 		
 		if(esexterno == 'S') {

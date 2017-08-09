@@ -31,6 +31,7 @@ public class MicrositeParser {
 	private Long idsite;
 	private String idioma;
 	private int numeronoticias;
+	private boolean hayComponenteMapa = false;
 	
 	/**
 	 * Constructor de la clase Inicia variables.
@@ -217,6 +218,8 @@ public class MicrositeParser {
 	 */
 	public void doParser(String idioma) {
 		try {
+			this.hayComponenteMapa = false;
+			
 			doAnalisy(idioma);
 			doCalculaTags();
 			 
@@ -236,7 +239,9 @@ public class MicrositeParser {
 				  }
 			}   
 			  			
-			
+			if(this.hayComponenteMapa){
+				htmlParsed.append(MParserComponente.getHtmlComponenteTUbicacionScript());
+			}	
 			
 		} catch (Exception e) {
 			log.error("Se ha producido un error parseando html. " + e);
@@ -359,6 +364,7 @@ public class MicrositeParser {
     			}
     			if (tridato.getValue1().equals("V1.4")) {
     				hshTags.put(key, parsecomponente.getHtmlElementosComponente(idsite,tridato.getValue2(),idioma).toString());
+    				hayComponenteMapa = hayComponenteMapa || parsecomponente.getHayComponenteMapa();
     			}    			
     		}
     		if (tridato.getKey().equals(Microfront.TAG_GENERICO_DUMMY + Microfront.RENCUESTA)) {

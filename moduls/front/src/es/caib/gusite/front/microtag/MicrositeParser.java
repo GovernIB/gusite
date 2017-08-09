@@ -81,6 +81,7 @@ public class MicrositeParser {
 		private Hashtable<String, String> hshTags = new Hashtable<String, String>();
 		private Hashtable<String, Tridato> hshTagsStatus = new Hashtable<String, Tridato>();
 	}
+	private boolean hayComponenteMapa = false;
 
 	/**
 	 * Método que analiza el código html. Meterá en hshTagsStatus un listado con
@@ -246,6 +247,7 @@ public class MicrositeParser {
 			if (htmlOld == null) {
 				return null;
 			}
+			this.hayComponenteMapa = false;
 			MicrositeParserAnalysis analysis = this.doAnalyze(htmlOld, idioma);
 			this.doCalculaTags(site, idioma, analysis, request, response);
 
@@ -266,7 +268,13 @@ public class MicrositeParser {
 					}
 				}
 			}
+			
+			if(this.hayComponenteMapa){
+				htmlParsed.append(getHtmlComponenteTUbicacionScripts(site, idioma, request, response));
+			}	
 			return htmlParsed.toString();
+			
+			
 
 		} catch (Exception e) {
 			log.error("Se ha producido un error parseando html. ", e);
@@ -509,6 +517,10 @@ public class MicrositeParser {
 			if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {
 				// si es de clase noticia.
 				return this.getHtmlComponenteTNoticia(site, componente, idioma, request, response);
+			} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+				// si es de clase mapa.
+				this.hayComponenteMapa = true;
+				return this.getHtmlComponenteTUbicacion(site, componente, idioma, request, response);					
 			} else if (componente.getTipo().getTipoelemento().equals(Microfront.ELEM_LINK)) {
 				// si es de clase enlace.
 				return this.getHtmlComponenteTEnlace(site, componente, idioma, request, response);
@@ -598,6 +610,48 @@ public class MicrositeParser {
 		return this.templateProcessor.process(model, this.templateNameFactory.moduloListaNoticias(site), idioma,
 				request, response);
 	}
+	
+	
+	/**
+	 * Método privado que devuelve un string para insertar en un HTML una
+	 * Noticia
+	 * 
+	 * @param idmicrosite
+	 * @param componente
+	 * @param idioma
+	 * @return StringBuffer Código Html
+	 * @throws DelegateException
+	 */
+	private String getHtmlComponenteTUbicacion(Microsite site, Componente componente, String idioma,
+		HttpServletRequest request, HttpServletResponse response) throws DelegateException {
+		Map<String, Object> model = new HashMap<String, Object>();
+		// -TODO: TEST plantilla thymeleaf
+		Collection<Noticia> colnoticias = this.getListaNoticias(site, componente, idioma);
+		String nombre_elemento = ((TraduccionComponente) componente.getTraduccion(idioma)) != null ? ((TraduccionComponente) componente
+				.getTraduccion(idioma)).getTitulo() : "[ empty ]";
+		List<Noticia> listanoticias;
+		if (colnoticias instanceof List) {
+			listanoticias = (List<Noticia>) colnoticias;
+		} else {
+			listanoticias = new ArrayList<Noticia>(colnoticias);
+		}
+		model.put("nombre_elemento", nombre_elemento);
+		model.put("MVS_listado", listanoticias);
+		model.put("MVS_componente", componente);
+		model.put("MVS_microsite", site);
+		model.put("MVS_idioma", new Idioma(idioma));
+		return this.templateProcessor.process(model, this.templateNameFactory.moduloListaUbicaciones(site), idioma,
+				request, response);
+	}
+	
+	private String getHtmlComponenteTUbicacionScripts(Microsite site, String idioma,
+		HttpServletRequest request, HttpServletResponse response) throws DelegateException {
+		
+		Map<String, Object> model = new HashMap<String, Object>();		
+		return this.templateProcessor.process(model, this.templateNameFactory.moduloListaUbicacionesScript(site), idioma,
+				request, response);
+	}
+	
 
 	private Collection<Noticia> getListaNoticias(Microsite site, Componente componente, String idioma)
 			throws DelegateException {

@@ -85,10 +85,8 @@ public class componentesEditaAction extends BaseAction
 				setBeantoForm(request, componenteForm, new Long("" + request.getParameter("id")), micrositeBean);
 				
 			}
-
-			ArrayList<String> tiposNoIncluidosCompo = new ArrayList<String>();
-			tiposNoIncluidosCompo.add(Tipo.TIPO_MAPA);
-			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId(), tiposNoIncluidosCompo));
+			
+			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId()));
 			
 			return mapping.findForward("detalle");
 
@@ -124,34 +122,56 @@ public class componentesEditaAction extends BaseAction
     	
 	    componenteBean.setIdmicrosite(micrositeBean.getId());
 	   	componenteBean.setNombre(""+componenteForm.get("nombre"));
-	   	componenteBean.setFilas(""+componenteForm.get("filas"));
+	   
 	   	
-	   	if (componenteForm.get("numelem")!=null)
-	   		componenteBean.setNumelementos(new Integer(""+componenteForm.get("numelem")));
-	   	else
-	   		componenteBean.setNumelementos(null);
-	   	
-	   	componenteBean.setOrdenacion(new Integer(""+componenteForm.get("orden")));
-	   	componenteBean.setSoloimagen(""+componenteForm.get("soloimg"));
-		
 	    // Establezco el objeto Tipo de Noticia
 	    Tipo tp=null;
 	    TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-	    if (componenteForm.get("id") == null)  	tp = bdTipo.obtenerTipo((Long)componenteForm.get("idTipo"));
-	    else 			        	tp = componenteBean.getTipo();
+	    if (componenteForm.get("id") == null || (componenteBean.getTipo() != null && !((Long)componenteForm.get("idTipo")).equals(componenteBean.getTipo().getId()) ))   {
+	    	//Si es alta o si los tipos son diferentes, recuperamos el tipo correspondiente
+	    	tp = bdTipo.obtenerTipo((Long)componenteForm.get("idTipo"));
+	    } else{
+	    	tp = componenteBean.getTipo();
+	    }
+	    
 	    tp.setId((Long)componenteForm.get("idTipo"));
 	    componenteBean.setTipo(tp);
+	   	
+	   	
+	   	if(componenteBean.getTipo().getTipoelemento().equals(Tipo.TIPO_MAPA)){
+	   		//si es de tipo mapa, dejamos estos valores por defecto
+	   		componenteBean.setNumelementos(0);
+	   		componenteBean.setOrdenacion(0);
+	   		componenteBean.setSoloimagen("N");
+	   		componenteBean.setImagenbul(null);
+	   		componenteBean.setFilas("S");
+	   	}else{
+	   		componenteBean.setFilas(""+componenteForm.get("filas"));
+
+		   	if (componenteForm.get("numelem")!=null){
+		   		componenteBean.setNumelementos(new Integer(""+componenteForm.get("numelem")));
+		   	}else{
+		   		componenteBean.setNumelementos(null);
+		   	}
+		   	
+		   	componenteBean.setOrdenacion(new Integer(""+componenteForm.get("orden")));
+		   	componenteBean.setSoloimagen(""+componenteForm.get("soloimg"));
+			
+		    //	Establezco la imagen bullet
+		    FormFile imagen = (FormFile) componenteForm.get("imagen");
+		    if (archivoValido(imagen)){
+		    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
+		    }else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) {
+		    	componenteBean.setImagenbul(null);
+		    }	    
+	   	}
 	    
-	    //	Establezco la imagen bullet
-	    FormFile imagen = (FormFile) componenteForm.get("imagen");
-	    if (archivoValido(imagen))
-	    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
-	    else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) componenteBean.setImagenbul(null);
-	    
-	    if (componenteBean.getImagenbul() != null) 
-	        if ((""+componenteForm.get("imagennom")).length()>0) 
+	    if (componenteBean.getImagenbul() != null){ 
+	        if ((""+componenteForm.get("imagennom")).length()>0){ 
 	        	componenteBean.getImagenbul().setNombre(""+componenteForm.get("imagennom"));
-	
+	        }
+	    }
+	    
 	    VOUtils.populate(componenteBean, componenteForm);  // form --> bean
     	
     	return componenteBean;
@@ -192,6 +212,9 @@ public class componentesEditaAction extends BaseAction
             if (componenteBean.getImagenbul() != null) {
             	componenteForm.set("imagennom", componenteBean.getImagenbul().getNombre());
             	componenteForm.set("imagenid", componenteBean.getImagenbul().getId());
+            }else{
+            	componenteForm.set("imagennom", "");
+                componenteForm.set("imagenid", null);
             }
     	
     }     

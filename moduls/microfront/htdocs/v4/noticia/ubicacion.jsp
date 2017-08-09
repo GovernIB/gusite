@@ -75,7 +75,7 @@
 					
 					
 					<!-- Mapa -->
-					<div id="gusiteMaps"></div>																	
+					<div class="gusiteMaps"></div>																	
 					<logic:present name="MVS_noticia" property="traduce">
 						<div style="display: none;" class="gusiteMapsMarker">
 							<input class="gMMLatitud"  value="<bean:write name="MVS_noticia" property="latitud" />" />
