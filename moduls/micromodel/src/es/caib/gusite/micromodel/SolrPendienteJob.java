@@ -123,10 +123,11 @@ public class SolrPendienteJob implements ValueObject {
 	public String toString() {
 		StringBuffer texto = new StringBuffer();
 		texto.append("SolrPendienteJob id:");
-		texto.append(fechaIni);
+		texto.append(id);
 		texto.append(" fechaIni:");
-		texto.append(fechaFin);
+		texto.append(fechaIni);
 		texto.append(" fechaFin:");
+		texto.append(fechaFin);
 		texto.append(tipo);
 		texto.append(" tipo:");
 		return texto.toString();

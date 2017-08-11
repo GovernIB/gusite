@@ -52,12 +52,13 @@
 					<div style="font-weight:bold;">
 						<logic:notEmpty name="listInfo">
 							<p></p><p></p>
-							<table cellpadding="0" cellspacing="0" class="llistat" style="width:78%;">
+							<table cellpadding="0" cellspacing="0" class="llistat" style="width:98%;">
 							<thead>
 								<tr>
 									<th width="15%"><bean:message key="menu.indexar.cab.fechaIni" /></th>
 									<th width="15%"><bean:message key="menu.indexar.cab.fechaFin" /></th>	
-									<th width="15%"></th>					
+									<th width="15%"><bean:message key="menu.indexar.cab.tipo" /></th>	
+									<th width="15%"></th>											
 								</tr>
 							</thead>
 							<tbody>
@@ -65,10 +66,22 @@
 						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
 						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
 								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
-								     <td>
+								     <td><logic:equal name="i" property="tipo" value="IDX_TODO">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_TODO" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_UA">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_UA" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_PDT">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_PDT" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_MIC">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_MIC" />
+								     	</logic:equal>
+									</td>
+  								    <td>
 									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='descargar("<bean:write name="i" property="id" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button> 
-								     </td>
-								   
+								    </td>
 						       </tr>					
 					   		 </logic:iterate>
 				    		</tbody>

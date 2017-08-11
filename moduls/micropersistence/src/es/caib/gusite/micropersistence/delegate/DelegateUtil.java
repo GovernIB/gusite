@@ -176,8 +176,4 @@ public final class DelegateUtil {
 				.getDelegate(es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate.class);
 	}
 
-	public static SolrPendienteJobDelegate getSolrPendienteJobDelegate() {
-		return (SolrPendienteJobDelegate) DelegateFactory
-				.getDelegate(es.caib.gusite.micropersistence.delegate.SolrPendienteJobDelegate.class);
-	}
 }

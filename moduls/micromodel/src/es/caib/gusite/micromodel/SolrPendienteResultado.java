@@ -12,6 +12,8 @@ public class SolrPendienteResultado implements ValueObject {
 	private boolean correcto;
 	/** Devuelve el mensaje de error en caso de ejecución errónea. **/
 	private String 	mensaje;
+	/** Devuelve si es indexable o no. **/
+	private boolean indexable = true;
 	
 	/** 
 	 * Constructor 
@@ -57,6 +59,14 @@ public class SolrPendienteResultado implements ValueObject {
 		this.mensaje = mensaje;
 	}
 	
+	public boolean isIndexable() {
+		return indexable;
+	}
+
+	public void setIndexable(boolean indexable) {
+		this.indexable = indexable;
+	}
+
 	@Override
 	public String toString() {
 		final StringBuffer texto = new StringBuffer();

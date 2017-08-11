@@ -33,7 +33,7 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarPendientes(SolrPendienteJob solrPendienteJob) throws DelegateException {
+	public Boolean indexarPendientes(SolrPendienteJob solrPendienteJob) throws Exception {
 		try {
 			return this.getFacade().indexarPendientes(solrPendienteJob);
 		}catch (RemoteException e) {
@@ -47,7 +47,7 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	 *  
 	 * @throws DelegateException
 	 */
-	public SolrPendienteResultado indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob, StringBuffer info) throws DelegateException {
+	public SolrPendienteResultado indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob, StringBuffer info) throws Exception {
 		try {
 			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob, info);
 		}catch (RemoteException e) {
@@ -61,7 +61,7 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarTodo(SolrPendienteJob solrPendienteJob) throws DelegateException {
+	public Boolean indexarTodo(SolrPendienteJob solrPendienteJob) throws Exception {
 		try {
 			return this.getFacade().indexarTodo(solrPendienteJob);
 		}catch (RemoteException e) {
@@ -75,7 +75,7 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	 *  
 	 * @throws DelegateException
 	 */
-	public Boolean indexarMicrositeByUA(String idUAdministrativa, SolrPendienteJob solrPendienteJob) throws DelegateException, RemoteException {
+	public Boolean indexarMicrositeByUA(String idUAdministrativa, SolrPendienteJob solrPendienteJob) throws Exception {
 		try {
 			return this.getFacade().indexarMicrositeByUA(idUAdministrativa,solrPendienteJob);
 		}catch (RemoteException e) {
@@ -84,32 +84,6 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	}
 	
 
-    /**
-	  * Marca todas las tareas como finalizadas.  
-	  *
-	  * @throws DelegateException
-	  */
-    public void finalizarTodo() throws DelegateException{
-   	 try {
-			 this.getFacade().finalizarTodo();
-		 }  catch (RemoteException e) {
-				throw new DelegateException(e);
-		 }
-    }
-	
-    /**
-	  * Limpieza de jobs.
-	  * 
-	  * @param minimoId El identificador mínimo.
-	  * @throws DelegateException
-	  */
-    public void limpiezaJobs(final Long minimoId) throws DelegateException {
-   	 try {
-			 this.getFacade().limpiezaJobs(minimoId);
-		 }  catch (RemoteException e) {
-				throw new DelegateException(e);
-		 }
-	}
     
 
      

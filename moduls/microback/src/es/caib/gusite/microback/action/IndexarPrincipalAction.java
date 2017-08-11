@@ -20,7 +20,6 @@ import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
-import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
@@ -148,7 +147,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		        	}
 		        }
 		        
-		        DelegateUtil.getSolrPendienteProcesoDelegate().limpiezaJobs(minimoId);
+		        DelegateUtil.getSolrPendienteDelegate().limpiezaJobs(minimoId);
 	      
 	        
 	}
@@ -171,7 +170,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		try 
 		{
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
-			return solrPendienteDel.getListJobs(10);			
+			return solrPendienteDel.getListJobs(20);			
 		} catch(Exception exception) {
 			return null;
 		}

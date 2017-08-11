@@ -62,7 +62,7 @@ import es.caib.solr.api.model.types.EnumIdiomas;
  * 
  * @ejb.transaction type="Required"
  */
-@SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes"})
 public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		DominioInterface, NoticiaServiceItf {
 
@@ -949,16 +949,16 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			//Paso 0. Obtenemos la noticia y comprobamos si se puede indexar.
 			final Noticia noticia = obtenerNoticiaBySolr(idElemento);
 			if (noticia == null) {
-				return new SolrPendienteResultado(false, "Error obteniendo noticia.");
+				return new SolrPendienteResultado(true, "Error obteniendo noticia.");
 			}
 			
 			if (!IndexacionUtil.isIndexable(noticia)) {
-				return new SolrPendienteResultado(false, "No se puede indexar");
+				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
 			
 			Microsite micro = micrositedel.obtenerMicrosite(noticia.getIdmicrosite());
 			if (!IndexacionUtil.isIndexable(micro)) {
-				return new SolrPendienteResultado(false, "No se puede indexar");
+				return new SolrPendienteResultado(true, "No se puede indexar");
 			}
 			
 			//Iteramos las traducciones
@@ -971,7 +971,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			final MultilangLiteral tituloPadre = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			List<PathUO> uosPath = null;
-			boolean noEntra = true;
+			//boolean noEntra = true;
 			for (String keyIdioma : noticia.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
 				final TraduccionNoticia traduccion = (TraduccionNoticia) noticia.getTraduccion(keyIdioma);
@@ -986,7 +986,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 					if (laUrl == null || laUrl.isEmpty()) {
 						continue;
 					}
-					noEntra = false;
+					//noEntra = false;
 					
 					// Path UO
 					PathUOResult pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
