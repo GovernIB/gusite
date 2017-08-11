@@ -1072,17 +1072,17 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			//Paso 0. Obtenemos el contenido y comprobamos si se puede indexar.
 			final Noticia noticia = obtenerNoticiaBySolr(idElemento);
 			if (noticia == null) {
-				return new SolrPendienteResultado(false, "No se puede indexar");
+				return new SolrPendienteResultado(true, "No se puede indexar, noticia nulo.");
 			}
 			
 			final Archivo archivo = archi.obtenerArchivo(idArchivo);
 			if (!IndexacionUtil.isIndexable(archivo)) {
-				return new SolrPendienteResultado(false, "No se puede indexar");
+				return new SolrPendienteResultado(true, "No se puede indexar, archivo a nulo.");
 			}
 			
 			Microsite micro = micrositedel.obtenerMicrosite(noticia.getIdmicrosite());
 			if (!IndexacionUtil.isIndexable(micro)) {
-				return new SolrPendienteResultado(false, "No se puede indexar");
+				return new SolrPendienteResultado(true, "No se puede indexar, microsite nulo.");
 			}
 			
 			byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
