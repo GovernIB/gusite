@@ -11,6 +11,7 @@ import org.quartz.TriggerUtils;
 import org.quartz.impl.StdSchedulerFactory;
 
 import es.caib.gusite.micromodel.SolrPendienteJob;
+import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
@@ -32,12 +33,8 @@ public class IndexacionJobUtil {
     	
     	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
     	//  se da por hecho que se está ejecutando.
-    	SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();
-    	List<SolrPendienteJob> jobs = solrPendienteDel.getListJobs(10, null, null); //Quitamos el tipoIndexacion para que no permita dos indexaciones juntas.
-    	for(SolrPendienteJob job : jobs) {
-    		if (job.getFechaFin() == null) {
+    	if (existeJobAbierto(null)) {
     			throw new Exception("Se está ejecutando un job, intentelo más tarde");
-    		}
     	}
     	
     	Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler(); 
@@ -79,10 +76,50 @@ public class IndexacionJobUtil {
     	//Paso 2. Marcar jobs como finalizados.
     	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
     	//  se da por hecho que se está ejecutando.
-    	DelegateUtil.getSolrPendienteProcesoDelegate().finalizarTodo();
+    	DelegateUtil.getSolrPendienteDelegate().finalizarTodo();
     	
     
     }
+
+
+    /**
+     * Tarea que se encarga de comprobar si hay alguna tarea abierta. 
+     * @return
+     * @throws SchedulerException 
+     * @throws DelegateException 
+     */
+	public static boolean existeJobAbierto(JobExecutionContext context) throws SchedulerException, DelegateException {
+		
+		boolean existeJobAbierto = false;
+		
+		//Paso 1. Buscar los jobs abiertos en el quartz. 
+    	List<JobExecutionContext> currentlyExecuting = StdSchedulerFactory.getDefaultScheduler().getCurrentlyExecutingJobs();
+    	//verifying if job is running       
+    	for (JobExecutionContext jobExecutionContext : currentlyExecuting) {
+    	    if(jobExecutionContext.getJobDetail().getKey().getName().startsWith("IndexacionJob")){
+    	    	if (context == null) {
+	    	    	existeJobAbierto = true;
+	    	    	break;
+    	    	} else if (!context.getJobDetail().getKey().getName().equals(jobExecutionContext.getJobDetail().getKey().getName())) {
+    	    		existeJobAbierto = true;
+	    	    	break;
+    	    	}
+    	    }
+    	}
+    	
+
+    	//Paso 2. Marcar jobs que no estén finalizados.
+    	if (!existeJobAbierto) {
+	    	List<SolrPendienteJob> tareas = DelegateUtil.getSolrPendienteDelegate().getListJobs(15);
+	    	for(SolrPendienteJob job : tareas) {
+	    		if (job != null && job.getFechaFin() == null) {
+	    			existeJobAbierto = true;
+	    			break;
+	    		}
+	    	}
+    	}
+    	return existeJobAbierto;
+	}
 	
 
 }

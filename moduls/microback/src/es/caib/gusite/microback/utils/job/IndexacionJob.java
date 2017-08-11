@@ -41,6 +41,21 @@ public class IndexacionJob implements Job, InterruptableJob  {
     	SchedulerContext schedulerContext;
     	SolrPendienteJob solrPendienteJob = null;
     	
+    	SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
+    	SolrPendienteProcesoDelegate solrProcesoDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
+    	
+    	//PASO -1. Comprobamos que no haya ya una tarea ejecutándose 
+    	try {
+			if (IndexacionJobUtil.existeJobAbierto(context)) {
+				log.error("Hay alguna tarea abierta");
+				return;
+			}
+		} catch (Exception exception) {
+			log.error("Error mirando los jobs activos.", exception);
+		}
+    	
+    	
+    	//PASO 0.1 Obtenemos el schedulerContext para saber el tipo de indexación.
     	try {
 			schedulerContext = context.getScheduler().getContext();
 		} catch (SchedulerException e) {
@@ -49,10 +64,8 @@ public class IndexacionJob implements Job, InterruptableJob  {
 		}
     	final String tipoIndexacion = (String) schedulerContext.get("tipoindexacion");
         
-    	SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
-    	SolrPendienteProcesoDelegate solrProcesoDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
-    	
-    	//PASO 0. EXTRAER MICROSITE SI ES UN JOB.
+    	 
+    	//PASO 0.2 Extraemos el microsite.
     	Long idElemento = null;
 		if (tipoIndexacion != null && "IDX_MIC".equals(tipoIndexacion)) {
 			idElemento = (Long) schedulerContext.get("idMicrosite");
@@ -112,7 +125,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
 	        	}
 	        }
 	        
-	        solrProcesoDelegate.limpiezaJobs(minimoId);
+	        solrPendienteDelegate.limpiezaJobs(minimoId);
         } catch (DelegateException e) {
 			log.error("Error borrando jobs", e);
 		}

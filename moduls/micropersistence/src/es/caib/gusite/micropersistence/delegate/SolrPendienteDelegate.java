@@ -9,6 +9,7 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.SolrPendienteJob;
+import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.SolrPendiente;
 import es.caib.gusite.micropersistence.intf.SolrPendienteFacade;
 import es.caib.gusite.micropersistence.intf.SolrPendienteFacadeHome;
@@ -192,6 +193,73 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
 	}
 
-	
+	 /**
+	  * Actualiza el solrpendiente.
+	  * 
+	  * @param solrPendiente
+	  * @throws DelegateException
+	  */
+    public void actualizarSolrPendiente(SolrPendiente solrPendiente) throws DelegateException {
+    	try {
+            getFacade().actualizarSolrPendiente(solrPendiente);
+    	} catch (RemoteException e) {
+            throw new DelegateException(e);
+        } 
+	}
+    
 
+    /**
+	  * Marca todas las tareas como finalizadas.  
+	  *
+	  * @throws DelegateException
+	  */
+    public void finalizarTodo() throws DelegateException{
+   	 try {
+			 this.getFacade().finalizarTodo();
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+    }
+	
+    /**
+	  * Limpieza de jobs.
+	  * 
+	  * @param minimoId El identificador mínimo.
+	  * @throws DelegateException
+	  */
+    public void limpiezaJobs(final Long minimoId) throws DelegateException {
+   	 try {
+			 this.getFacade().limpiezaJobs(minimoId);
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+	}
+    
+    /**
+	 * Indexa los pendientes de indexar
+	 * @param solrPendienteJob 
+	 *  
+	 * @throws DelegateException
+	 */
+	public SolrPendienteResultado indexarPendiente(SolrPendiente solrPendiente, StringBuffer info) throws DelegateException {
+		try {
+			return this.getFacade().indexarPendiente(solrPendiente, info);
+		}catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Indexa un Microsite
+	 * @param solrPendienteJob 
+	 *  
+	 * @throws DelegateException
+	 */
+	public SolrPendienteResultado indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob, StringBuffer info) throws DelegateException {
+		try {
+			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob, info);
+		}catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 }
