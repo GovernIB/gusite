@@ -611,7 +611,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idArchivo+"):"+ resultado.toString());
  	    		if (info != null) {
- 	    			info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 	    			info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		}
  	    	 }
  			 
@@ -645,7 +645,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idEncuesta+"):"+ resultado.toString());
  	    		if (info != null) {
- 		    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 		    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		}
  	    	}
  			
@@ -676,7 +676,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
  	    		if (info != null) {
- 	    			info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 	    			info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		}
  	    	 }
  	    }catch (Exception e) {
@@ -716,7 +716,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
  	    		if (info != null) {
- 		    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 		    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		}
  	    		return resultado;
  	    	 } 
@@ -749,7 +749,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
          				if (!resultado.isCorrecto()) {
          					 log.debug("Error indexando documento (DOC:"+arc.getId()+"):"+ resultado.toString());
  							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
- 							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  						}
          				
          			} catch (Exception e) {
@@ -791,7 +791,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      		resultado = noticiaDelegate.indexarSolr(solrIndexer, idElemento, tipo);
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
- 	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		return resultado;
  	    	 }
  	    } catch (Exception e) {
@@ -822,7 +822,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
          				if (!resultado.isCorrecto()) {
          					 log.debug("Error indexando documento(DOC:"+arc.getId()+"):"+ resultado.toString());
  							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
- 							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 							 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  						}
          				
          			} catch (Exception e) {
@@ -864,7 +864,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      		resultado = contenidoDelegate.indexarSolr(solrIndexer, idElemento, tipo);
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
- 	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 	    		info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  	    		return resultado;
  	    	 }
  	    } catch (Exception e) {
@@ -893,7 +893,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  							if (!resultado.isCorrecto()) {
  	        					 log.debug("Error indexando documento(DOC:"+docu.getId()+"):"+ resultado.toString());
  								 msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
- 								 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 								 info.append(" ** Parece que no se ha indexado. Resultado: " + resultado.getMensaje().replace("\\","/")+"<br />");
  							}
  							
  	        			} catch (Exception e) {
