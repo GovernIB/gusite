@@ -343,7 +343,7 @@
                               classpath="lib/maven-ant-tasks-2.1.3.jar"/>
              <echo>Obtenemos la librería de sac-api-client (${rolsac.version.tag}) y lo copiamos en la carpeta lib.</echo>
              <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" >
-             		<localRepository path="${svn.repository.path}" />
+             		<localRepository path="${mvn.repository.path}" />
              	    <dependency groupId="${rolsac.groupId}" artifactId="${rolsac.artifactId}" version="${rolsac.version.tag}" />
              </artifact:dependencies>
             
@@ -366,7 +366,7 @@
              
              <echo>Obtenemos la librería de solrapi (${solrapi.version.tag}) y lo copiamos en la carpeta lib/solr.</echo>
              <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" >
-             		<localRepository path="${svn.repository.path}" />
+             		<localRepository path="${mvn.repository.path}" />
                     <dependency groupId="${solrapi.groupId}" artifactId="${solrapi.artifactId}" version="${solrapi.version.tag}" />
              </artifact:dependencies>
              <copy todir="lib/solr" flatten="true">
