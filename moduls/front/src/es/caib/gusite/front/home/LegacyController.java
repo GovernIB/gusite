@@ -120,8 +120,11 @@ public class LegacyController extends FrontController {
 		
 	}
 
-	private String addGenericParams(String baseUri, String pcampa, String mcont) {
-		UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(baseUri);
+	private String addGenericParams(String baseUri, String pcampa, String mcont) {		
+		if(!StringUtils.isEmpty(pcampa) || !StringUtils.isEmpty(mcont) ){
+			baseUri = this.urlFactory.borraUltimaBarra(baseUri);	
+		}
+		UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(baseUri);		
 		if (!StringUtils.isEmpty(pcampa)) {
 			uri.replaceQueryParam(Microfront.PCAMPA, pcampa);
 		}
@@ -131,8 +134,12 @@ public class LegacyController extends FrontController {
 		return uri.build().toUriString();
 	}
 	
-	private String addGenericParams(String baseUri, String pcampa, String mcont, String tipo, String previsual) {
-		UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(baseUri);
+	private String addGenericParams(String baseUri, String pcampa, String mcont, String tipo, String previsual) {				
+		if(!StringUtils.isEmpty(pcampa) || !StringUtils.isEmpty(mcont) || !StringUtils.isEmpty(tipo) || !StringUtils.isEmpty(previsual) ){
+			baseUri = this.urlFactory.borraUltimaBarra(baseUri);	
+		}		
+		UriComponentsBuilder uri = UriComponentsBuilder.fromUriString(baseUri);		
+		
 		if (!StringUtils.isEmpty(pcampa)) {
 			uri.replaceQueryParam(Microfront.PCAMPA, pcampa);
 		}

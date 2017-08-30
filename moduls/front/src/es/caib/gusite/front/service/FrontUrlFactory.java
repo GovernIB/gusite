@@ -442,7 +442,7 @@ public class FrontUrlFactory {
 	public String noticia(Microsite microsite, Idioma lang, Noticia noticia, String mcont) {
 
 		if (!StringUtils.isEmpty(mcont)) {
-			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/" + "?" + Microfront.MCONT + "=" + mcont;
+			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "?" + Microfront.MCONT + "=" + mcont;
 		} else {
 			return this.microsite(microsite, lang) + "n/" + ((TraduccionNoticia) this.getTraducion(noticia, lang)).getUri() + "/";
 		}
@@ -451,7 +451,7 @@ public class FrontUrlFactory {
 	public String noticiaFuerzaMapa(Microsite microsite, Idioma lang, Noticia noticia, String mcont) {
 		
 		String url = noticia(microsite,lang,noticia,mcont);
-			
+		url = borraUltimaBarra(url);	
 		if (!StringUtils.isEmpty(mcont)) {
 			url += "&";
 		} else {
@@ -459,6 +459,14 @@ public class FrontUrlFactory {
 		}
 		
 		return url + Microfront.FMAPA + "=true";
+	}
+	
+	public String borraUltimaBarra(String url){
+		if(url.charAt(url.length()-1)=='/'){
+			return url.substring(0, url.length()-1);
+		}else{
+			return url;
+		}
 	}
 	
 	public String ubicacionNoticia(String latitud, String longitud, String zoom){

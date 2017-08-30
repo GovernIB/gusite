@@ -72,21 +72,25 @@ var menuJS = {
 				var primerLI = jQuery(".seleccionado").parent().parent();
 				var primerA = primerLI.find("a")[0];
 				if(primerA != undefined){
+					if(jQuery(primerA).hasClass("pareAD")){
+						menuJS.obrir(primerA);
+					}
 					primerA = jQuery(primerA);
 					primerA.off("click");
 					primerA.attr("href","#");
 					primerA.removeClass("pareADon pareAD");
 					primerA.addClass("carpetaSelec");
 					var ultimoLI = primerLI.parent().parent();
-					if(ultimoLI[0].tagName == "LI"){
-						primerA.parent().find('ul').show();
-						var ultimoA = ultimoLI.find("a")[0];
+					if(ultimoLI[0].tagName == "LI"){						
+						var ultimoA = ultimoLI.find("a")[0];						
+						if(jQuery(ultimoA).hasClass("pareAD")){
+							menuJS.obrir(ultimoA);
+						}						
 						ultimoA = jQuery(ultimoA);
 						ultimoA.off("click");
 						ultimoA.attr("href","#");
 						ultimoA.removeClass("pareADon pareAD");
-						ultimoA.addClass("carpetaSelec");
-						//ultimoA.parent().find('ul').show();
+						ultimoA.addClass("carpetaSelec");						
 					}else{
 						primerA.parent().find('.primerosHijos').show();
 					}
