@@ -130,21 +130,38 @@
 				</logic:notEqual>		
 				
 
-								<logic:present name="MVS_contacto">
-								<h2 id="titolPagina"><bean:write name="MVS_contacto_titulo" /></h2>												
-								<form action="enviocontacto.do" onsubmit="return checkrequired(this)" method="post" >
-										<input type="hidden" name="idsite" value ="<bean:write name="MVS_idsite" />"/>
-										<input type="hidden" name="lang" value ="<bean:write name="MVS_idioma" />"/>
-										<input type="hidden" name="cont" value ="<bean:write name="MVS_contacto" property="id"/>"/>		
-										<logic:iterate name="MVS_contacto_listatags" id="i" indexId="indice">
-											<div class="separacio"></div>
-											<div class="etiqueta"><label for="<bean:write name="i" property="key" />"><bean:write name="i" property="key" filter="false"/></label></div> <bean:write name="i" property="value" filter="false"/>
-										</logic:iterate>
-										<div class="separacio"></div>
-			
-									<p class="botonera"><input name="btnanar" type="submit" value="<bean:message key="contacto.enviar"/>" tabindex="500" /></p>
-								</form>
-								</logic:present>
+				<logic:present name="MVS_contacto">
+					<h2><bean:write name="MVS_contacto_titulo" /></h2>
+					<logic:equal name="MVS_contacto" property = "anexarch" value ="S">												
+						<form action="enviocontacto.do" onsubmit="return checkrequired(this)" enctype="multipart/form-data" method="post" >
+							<input type="hidden" name="idsite" value ="<bean:write name="MVS_idsite" />"/>
+							<input type="hidden" name="lang" value ="<bean:write name="MVS_idioma" />"/>
+							<input type="hidden" name="cont" value ="<bean:write name="MVS_contacto" property="id"/>"/>		
+							<logic:iterate name="MVS_contacto_listatags" id="i" indexId="indice">
+								<div class="separacio"></div>
+								<div class="etiqueta"><label for="<bean:write name="i" property="key"/>"><bean:write name="i" property="key" filter="false"/></label></div> <bean:write name="i" property="value" filter="false"/>
+							</logic:iterate>
+							<div class="separacio"></div>
+							<div class="etiqueta"><label><bean:message key="contacto.docanex"/></label> 
+							<input type="file" name="docAnex" id="docAnex" size="30" />
+							</div>	
+							<p class="botonera"><input name="btnanar" type="submit" value="<bean:message key="contacto.enviar"/>" tabindex="500" /></p>					
+						</form>
+					</logic:equal>
+					<logic:notEqual name="MVS_contacto" property = "anexarch" value ="S">	
+					<form action="enviocontacto.do" onsubmit="return checkrequired(this)" method="post" >
+							<input type="hidden" name="idsite" value ="<bean:write name="MVS_idsite" />"/>
+							<input type="hidden" name="lang" value ="<bean:write name="MVS_idioma" />"/>
+							<input type="hidden" name="cont" value ="<bean:write name="MVS_contacto" property="id"/>"/>		
+							<logic:iterate name="MVS_contacto_listatags" id="i" indexId="indice">
+								<div class="separacio"></div>
+								<div class="etiqueta"><label for="<bean:write name="i" property="key"/>"><bean:write name="i" property="key"/></label></div> <bean:write name="i" property="value" filter="false"/>
+							</logic:iterate>
+							<div class="separacio"></div>	
+							<p class="botonera"><input name="btnanar" type="submit" value="<bean:message key="contacto.enviar"/>" tabindex="500" /></p>				
+						</form>
+					</logic:notEqual>
+				</logic:present>
 				
 				
 				</div>	
