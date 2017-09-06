@@ -176,7 +176,7 @@ public class ContenidoController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.contenido(microsite), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,request);
 		} catch (ExceptionFrontPagina e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);

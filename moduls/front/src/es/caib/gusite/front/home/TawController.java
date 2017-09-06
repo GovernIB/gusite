@@ -73,7 +73,7 @@ public class TawController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,req);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
@@ -102,7 +102,7 @@ public class TawController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.tawItem(view.getMicrosite()), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,req);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
@@ -132,7 +132,7 @@ public class TawController extends BaseViewController {
 			return this.modelForView(this.templateNameFactory.tawItem(view.getMicrosite()), view);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,req);
 		} catch (DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);

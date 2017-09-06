@@ -63,7 +63,7 @@ public class FaqController extends BaseViewController {
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,null);
 		} catch (ExceptionFrontFaq e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);

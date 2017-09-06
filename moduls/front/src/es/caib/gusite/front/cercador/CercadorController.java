@@ -112,7 +112,7 @@ public class CercadorController extends BaseViewController {
 
 		} catch (ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response);
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,req);
 		} catch (DelegateException e) {
 			log.error("Error en la busqueda: " + e);
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_ACCES, response);

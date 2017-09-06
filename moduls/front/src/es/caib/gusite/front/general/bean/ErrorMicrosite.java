@@ -58,6 +58,9 @@ public class ErrorMicrosite {
 	static public final int    ESTADO_SESSION_INT = 440;
 	static public final String ESTADO_SERVER = "500";
 	static public final int    ESTADO_SERVER_INT = 500;
+	static public final String ESTADO_MOVED_PERMANENTLY = "301";
+	static public final int ESTADO_MOVED_PERMANENTLY_INT = 301;
+	
 	
 	public ErrorMicrosite() {
 	}

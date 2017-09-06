@@ -11,11 +11,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.Pardato;
@@ -42,6 +47,7 @@ import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -658,12 +664,13 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Metodo protegido que devuelve String de error de contenido de un site
+	 * los parámetros microsite,lang y req solo se usan si se trata de un error de microsite
 	 * 
 	 * @param HttpServletRequest
 	 *            request, Microsite microsite, ErrorMicrosite errorMicrosite
 	 * @exception Exception
 	 */
-	protected ModelAndView getForwardError(PageView causeView, String ambitError, HttpServletResponse response) {
+	protected ModelAndView getForwardError(PageView causeView, String ambitError, HttpServletResponse response,String micrositeKey, Idioma lang, HttpServletRequest req) {
 
 		ErrorGenericoView view = new ErrorGenericoView(causeView);
 		Microsite microsite = view.getMicrosite();
@@ -674,8 +681,34 @@ public abstract class BaseViewController extends FrontController {
 		if (ErrorMicrosite.ERROR_AMBIT_MICRO.equals(ambitError)) {
 			//MICROSITE
 			if (microsite == null) {
+				if(!StringUtils.isEmpty(micrositeKey)){								
+					try {
+						microsite = this.dataService.getMicrositeByKey(micrositeKey, lang);
+					} catch (Exception e) {
+						log.error(e + "Error intentando obtener el microsite a partir de su key");
+					}
+				}
+				if(microsite != null){
+					try{
+						//la clave existe, hay que redirigir a la nueva uri
+						HttpServletRequest request = req==null?((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest():req;
+						//HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+						String urlFinal = request.getRequestURL().toString() + (request.getQueryString()==null?"": "?" + request.getQueryString());
+						String uriNueva = microsite.getUri();
+						urlFinal = urlFinal.replace(micrositeKey, uriNueva);
+						RedirectView rv = new RedirectView(urlFinal, true);
+						rv.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+						ModelAndView mv = new ModelAndView(rv);
+						return mv;
+					}catch (Exception e){
+						log.error(e + "Error intentando obtener y redirigir a la nueva url del microsite");
+					}
+				}
+				
 				response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
+				
+				
 			} else {
 				response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
 				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
@@ -724,6 +757,14 @@ public abstract class BaseViewController extends FrontController {
 
 		return this.modelForView(this.templateNameFactory.errorGenerico(microsite), view);
 
+	}
+
+	/**
+	 * Metodo protegido que devuelve String de error de contenido de un site
+	 * usar este método si no se trata de un error de microsite.
+	 * */
+	protected ModelAndView getForwardError(PageView causeView, String ambitError, HttpServletResponse response) {
+		return this.getForwardError( causeView,  ambitError,  response,"",null,null);
 	}
 	
 
