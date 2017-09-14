@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--/*
+
+	Imprime la miga de pan
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>	
+</head>
+<body>
+	<ul th:fragment="mollaPan" id="mollaPa">
+		<li th:each="item,iterStat : ${MVS2_pathdata}" th:with="indice=${iterStat.index}">
+			<span th:if="${indice} != 0" th:remove="tag">&gt;</span> 
+			<a th:if="${item.href}!=null" th:href="@{${item.href}}" th:utext="${item.label}">Molla de pa</a>
+			<span th:if="${item.href}==null" th:utext="${item.label}" th:remove="tag">Molla de pa</span>
+		</li>
+	</ul>
+</body>
+</html>

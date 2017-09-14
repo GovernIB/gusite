@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--/*
+
+Plantilla para la cabecera general de microsite
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<th:block th:remove="all">
+	<!-- Bloque de estilos y js general para visualización en estático. Al ejecutarse dinámicamente, se elimina completamente -->
+	<link rel="stylesheet" type="text/css" media="all"
+		href="../css/estils-tema.css"></link>
+	<!-- Bootstrap -->
+	<script src="../files/bootstrap/jquery-1.11.0.min.js"
+		th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<script src="../files/bootstrap/js/bootstrap.min.js"
+		th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Bootstrap -->
+	<link href="../files/bootstrap/css/bootstrap.min.css"
+		th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
+		rel="stylesheet" media="screen" />
+	<script src="../files/bootstrap/jquery-1.11.0.min.js"
+		th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<script src="../files/bootstrap/js/bootstrap.min.js"
+		th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- Fin bootstrap -->
+	<!-- Fin bootstrap -->
+	<!-- Reset default bootstrap elements -->
+	<!-- Fin reset bootstrap -->
+	<!-- css para incluir el logo de la cabecera en todas las páginas y que se vea correctamente en retina -->
+	<link href="../files/bootstrap/css/bootstrap-reset.css"
+		th:href="@{/resources/bootstrap/css/bootstrap.min.css}"
+		rel="stylesheet" media="screen" />
+	<link rel="stylesheet" type="text/css" media="all"
+		href="../files/estilsCapsalera.css"
+		th:href="@{/resources/files/estilsCapsalera.css}" />
+</th:block>
+</head>
+<body>
+	<header th:fragment="cabecera" th:if="${MVS_microsite}!=null" th:remove="tag">
+		<div
+			th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null "
+			th:remove="tag">
+		
+			
+			
+			<header class="imc-titol" id="imc-titol">
+				<div class="imc--contingut">
+					<a href="javascript:history.back()" class="imc-torna"><span>torna</span></a>
+						<h1>
+							<div th:if="${MVS_micrositetitulo} !=null" th:remove="tag">
+								<span th:text="${MVS_micrositetitulo}"> Título del microsite</span>
+							</div>
+						</h1>
+					<ul>
+						<li>
+							<a th:href="@{'http://www.caib.es/govern/organigrama/directori.do?lang=' + ${lang}}" class="imc-bt-directori"><span>Directori</span></a>
+						</li>
+						<li>
+							<button type="button" class="imc-bt-menu" id="imc-bt-menu" title="Menú"><span>Menú</span></button>
+						</li>
+					</ul>
+				</div>
+			</header>
+					
+					<!-- marc -->
+			<div class="imc-marc" id="imc-marc">	 
+				<div class="imc--fons"></div>
+				<!-- menu lateral -->
+				<div class="imc-marc-menu" id="imc-marc-menu" aria-hidden="true">
+					<div class="imc-cercador" id="imc-cercador">
+						<!--<form id="cercador" action="/govern/cercador.do?lang=ca" method="get">
+							<p>
+								<input type="hidden" name="coduo" id="coduo" value="" />
+								<input type="hidden" name="lang" id="lang" value="ca" />
+							 <input id="cercadorText" name="cercadorText" type="text" placeholder="Cerca amb les paraules" title="Cerca amb les paraules" />	
+								<button type="submit">Cercar</button> 
+							</p>
+						</form>-->
+					</div>
+					<ul>
+						<li>
+							<a th:href="@{'http://www.caib.es/govern/cercadorAv.do?lang=' + ${lang}}" class="imc-marc-ico imc--avanzada"><span>Recerca Avançada</span></a>
+						</li>
+						<li class="imc-marc-ico imc--idioma" th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
+							<div th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+								th:remove="tag">
+								<span  th:if="${iterStat.index != 0}"  th:remove="tag">\</span>
+								<strong th:if="${idiomaLower}==${idiomaLista.key}"								
+								th:utext="${idiomaLista.value}"> Catalan </strong>
+								<a th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
+								th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+								th:utext="${idiomaLista.value}"> Castellano </a>
+							</div>
+						</li>
+						<li>
+							<a th:href="@{'http://www.caib.es/govern/external/accessibilitat.do?lang=' + ${lang}}" class="imc-marc-ico imc--accessibilitat" id="imc-marc-accessibilitat" title="Accessibilitat"><span>Accessibilitat</span></a>
+						</li>
+						
+						<li th:if="${MVS_listacabecera} !=null"
+							th:each="i,iterStat:${MVS_listacabecera}"
+							th:with="indice2=${iterStat.index}">						
+							<a href="" class="imc-marc-ico" th:href="@{${i.value1}}" th:title="${i.key}" ><span th:text="${i.key}"> texto enlace</span></a>
+						</li>						
+					</ul>
+				</div>
+			</div>				
+		</div>
+		<!-- /* tipocabecera 2: personalizada */-->
+		<div
+			th:if="(${MVS_microsite.tipocabecera}=='2')" th:remove="tag"
+			th:utext="${MVS_microsite.traduce.cabecerapersonal}">HTML de cabecera personalizada del microsite</div>
+
+	</header>
+</body>
+</html>
