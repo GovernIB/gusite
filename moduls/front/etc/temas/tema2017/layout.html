@@ -101,11 +101,11 @@ var thDebug = false;
 </head>
 <body class="bodyFontSize" style="font-size: 100%">
 	<div class="imc-logo" id="imc-logo">
-		<a href="http://www.caib.es/govern/index.do?lang=ca" class="imc--goib" title="Govern Illes Balears"><span>Govern Illes Balears</span></a>
+		<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('govern','{0}',lang)}}" class="imc--goib" title="Govern Illes Balears"><span>Govern Illes Balears</span></a>
 		<ul>
-			<li><a href="http://www.caib.es/govern/pidip/comunicats.do?tipus=C?lang=ca" class="imc-logo-ico imc--informat" title="Notícies"><span>Notícies</span></a></li>
-			<li><a href="http://www.caib.es/govern/administracio.do?lang=ca" class="imc-logo-ico imc--administracio" title="Administració"><span>Administració</span></a></li>
-			<li><a href="http://www.illesbalears.travel/?lang=ca" class="imc-logo-ico imc--illes" title="illes"><span>illes</span></a></li>
+			<li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('noticies','{0}',lang)}}" class="imc-logo-ico imc--informat" th:title="#{general.noticies}" ><span th:text="#{general.noticies}">Notícies</span></a></li>
+			<li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('administracio','{0}',lang)}}" class="imc-logo-ico imc--administracio" th:title="#{general.administracio}" ><span th:text="#{general.administracio}">Administració</span></a></li>
+			<li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('illes','{0}',lang)}}" class="imc-logo-ico imc--illes" th:title="#{general.illes}" ><span th:text="#{general.illes}">illes</span></a></li>
 		</ul>
 	</div>
 

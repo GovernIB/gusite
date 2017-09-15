@@ -58,6 +58,17 @@
 		es.caib.gusite.key.google.maps=keyGoogleMaps
 		
 		
+		<!-- Propiedades tema2017 {0} sustituye el idioma -->
+		es.caib.gusite.enlaces.govern = http://www.caib.es/govern/index.do?lang={0}
+		es.caib.gusite.enlaces.noticies = http://www.caib.es/govern/pidip/comunicats.do?tipus=C?lang={0} 
+		es.caib.gusite.enlaces.administracio = http://www.caib.es/govern/administracio.do?lang={0}
+		es.caib.gusite.enlaces.illes = http://www.illesbalears.travel/?lang={0}
+		es.caib.gusite.enlaces.directori = http://www.caib.es/govern/organigrama/directori.do?lang={0}		 		
+		es.caib.gusite.enlaces.cercaplus = http://www.caib.es/govern/cercadorAv.do?lang={0}
+		es.caib.gusite.enlaces.accessibilitat =http://www.caib.es/govern/external/accessibilitat.do?lang={0}
+		es.caib.gusite.enlaces.avislegal = http://www.caib.es/govern/external/infoLegal.do?lang={0}
+		es.caib.gusite.enlaces.rss = http://www.caib.es/govern/rss.do?lang={0}
+		
 		
     </attribute>
 

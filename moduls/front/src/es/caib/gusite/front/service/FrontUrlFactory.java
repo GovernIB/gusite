@@ -614,5 +614,23 @@ public class FrontUrlFactory {
 		return "/ft/" + tema.getUri() + "/";
 
 	}
+	
+	/**
+	 * Retorna el enlace indicado en la propiedad es.caib.gusite.enlaces. + nombre, remplazando 
+	 * el texto indicado.
+	 * @param nombre
+	 * @param antiguo
+	 * @param nuevo
+	 * @return
+	 */
+	public String enlacePropiedadesTema (String nombre, String antiguo, String nuevo ){
+		String p = GusitePropertiesUtil.getEnlace(nombre);
+		if(StringUtils.isEmpty(antiguo)){
+			return p;
+		}else{
+			String n = StringUtils.isEmpty(nuevo)?"":nuevo;
+			return StringUtils.replace(p, antiguo, n);			
+		}
+	}
 
 }

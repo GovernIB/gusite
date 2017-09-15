@@ -3311,7 +3311,7 @@ a.imc-bt-xarxa {
 .imc-logo li { padding-bottom: .7em; }
 .imc-logo li a { display: block; width: 3.5em; height: 3em; padding: 0; }
 
-.imc-logo li a::before { content: ""; display: block; width: 3.5em; height: 3em; background: transparent url() no-repeat center center / 55% auto; opacity: 0; }
+.imc-logo li a::before { content: ""; display: inline-block; width: 3.5em; height: 3em; background: transparent url() no-repeat center center / 55% auto; opacity: 0; }
 
 .imc-logo li a.imc--informat { background: transparent url(../files/noticies.png) no-repeat center center / 55% auto; }
 .imc-logo li a.imc--administracio { background: transparent url(../files/administracio.png) no-repeat center center / 55% auto; }

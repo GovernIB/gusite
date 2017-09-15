@@ -61,10 +61,10 @@ Este código muestra el pie de página.
 
 				<div class="imc-peu-opcions">
 					<ul>
-						<li><a th:href="@{${#gusuri.mapa(MVS_microsite, MVS_idioma)}}">Mapa web</a></li>
-						<li><a href="http://www.caib.es/govern/external/infoLegal.do?lang=ca">Avís legal</a></li>
+						<li><a th:href="@{${#gusuri.mapa(MVS_microsite, MVS_idioma)}}"  th:text="#{pie.mapaweb}" >Mapa web</a></li>
+						<li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('avislegal','{0}',lang)}}" th:text="#{pie.avislegal}">Avís legal</a></li>
 						<li>
-							<a href="http://www.caib.es/govern/rss.do?lang=ca" class="imc-en-rss">
+							<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('rss','{0}',lang)}}" class="imc-en-rss">
 								<span>RSS</span>
 								<svg viewBox="0 0 430.117 430.118" xml:space="preserve">
 									<g>
@@ -84,7 +84,7 @@ Este código muestra el pie de página.
 				</div>
 
 				<div class="imc-peu-xarxes">
-					<p>Segueix-nos:</p>
+					<p th:text="#{pie.siguenos}">Segueix-nos:</p>
 					<ul>
 						<li>
 							<a href="http://www.youtube.com/CanalIllesBalears" class="imc-bt-xarxa imc-logo-youtube" title="YouTube">

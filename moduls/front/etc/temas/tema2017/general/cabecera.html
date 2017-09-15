@@ -52,7 +52,7 @@ Plantilla para la cabecera general de microsite
 			
 			<header class="imc-titol" id="imc-titol">
 				<div class="imc--contingut">
-					<a href="javascript:history.back()" class="imc-torna"><span>torna</span></a>
+					<a href="javascript:history.back()" class="imc-torna" th:title="#{cabecera.torna}"><span th:text="#{cabecera.torna}">torna</span></a>
 						<h1>
 							<div th:if="${MVS_micrositetitulo} !=null" th:remove="tag">
 								<span th:text="${MVS_micrositetitulo}"> Título del microsite</span>
@@ -60,10 +60,10 @@ Plantilla para la cabecera general de microsite
 						</h1>
 					<ul>
 						<li>
-							<a th:href="@{'http://www.caib.es/govern/organigrama/directori.do?lang=' + ${lang}}" class="imc-bt-directori"><span>Directori</span></a>
+							<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('directori','{0}',lang)}}" class="imc-bt-directori" th:title="#{cabecera.directori}"><span th:text="#{cabecera.directori}">Directori</span></a>
 						</li>
 						<li>
-							<button type="button" class="imc-bt-menu" id="imc-bt-menu" title="Menú"><span>Menú</span></button>
+							<button type="button" class="imc-bt-menu" id="imc-bt-menu" th:title="#{cabecera.menu}"><span th:text="#{cabecera.menu}">Menú</span></button>
 						</li>
 					</ul>
 				</div>
@@ -86,7 +86,7 @@ Plantilla para la cabecera general de microsite
 					</div>
 					<ul>
 						<li>
-							<a th:href="@{'http://www.caib.es/govern/cercadorAv.do?lang=' + ${lang}}" class="imc-marc-ico imc--avanzada"><span>Recerca Avançada</span></a>
+							<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('cercaplus','{0}',lang)}}" class="imc-marc-ico imc--avanzada" th:title="#{cabecera.recercaplus}"><span th:text="#{cabecera.recercaplus}">Recerca Avançada</span></a>
 						</li>
 						<li class="imc-marc-ico imc--idioma" th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
 							<div th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
@@ -100,7 +100,7 @@ Plantilla para la cabecera general de microsite
 							</div>
 						</li>
 						<li>
-							<a th:href="@{'http://www.caib.es/govern/external/accessibilitat.do?lang=' + ${lang}}" class="imc-marc-ico imc--accessibilitat" id="imc-marc-accessibilitat" title="Accessibilitat"><span>Accessibilitat</span></a>
+							<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('accessibilitat','{0}',lang)}}" class="imc-marc-ico imc--accessibilitat" id="imc-marc-accessibilitat" th:title="#{cabecera.accessibilitat}"><span th:text="#{cabecera.accessibilitat}">Accessibilitat</span></a>
 						</li>
 						
 						<li th:if="${MVS_listacabecera} !=null"
