@@ -330,11 +330,12 @@
        <!-- temas: Genera el zip con los temas.                                                             -->
        <!-- ================================================================== -->
        <target name="temas" description="Genera el zip con los temas">          
-             <zip destfile="${temas.dir}/zip/tema2015.zip"
-                    basedir="${temas.dir}/tema2015"
-                    update="true"
-               />
-            
+			<zip destfile="${temas.dir}/zip/tema2015.zip"
+				basedir="${temas.dir}/tema2015"
+				update="true"/>
+			<zip destfile="${temas.dir}/zip/tema2017.zip"
+				basedir="${temas.dir}/tema2017"
+				update="true" />	            
        </target>
  
        <!-- including tha maven-ant-tasks-jar into classpath -->

@@ -26,6 +26,9 @@ public class GusitePropertiesUtil
 	  private static final String INDEX_SOLR = "es.caib.gusite.index.solr";
 	  /** Clave de google maps. **/
 	  private static final String KEY_GOOGLEMAPS = "es.caib.gusite.key.google.maps";
+	  /** Clave de google maps. **/
+	  private static final String KEY_ENLACES = "es.caib.gusite.enlaces.";
+	  
 	  /** Mensaje de error. **/
 	  private static final String ERROR_MESSAGE = "Error obteniendo la propiedad ";
 	  
@@ -126,6 +129,24 @@ public class GusitePropertiesUtil
 	 */
 	public static String getKeyGooglemaps() {
 		 return getProperty( KEY_GOOGLEMAPS);
+	}
+	
+	
+	/**
+	 * Retorna el enlace (url) indicado a través del fichero properties.
+	 * La propiedad debe ser: es.caib.gusite.enlaces. + nombreEnlace
+	 * Si la propiedad no existe retorna "". 
+	 * Usado para establecer enlaces en las plantillas sin que sea dependiente de modificaciones de código.
+	 * @param nombreEnlace nombre de la propiedad
+	 * @return url
+	 */
+	public static String getEnlace(String nombreEnlace) {
+		String p = getProperty( KEY_ENLACES + nombreEnlace);
+		if (p==null){
+			return "";
+		}else{
+			return p;
+		}		 
 	}
 
  

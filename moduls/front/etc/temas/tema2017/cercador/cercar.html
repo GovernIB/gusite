@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!--/*
+
+Resultados de una busqueda.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
+<head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
+		titulo - Resultats recerca</title>
+
+
+		<th:block th:remove="all">
+<!--/*  
+	Este bloque se usa para visualización en prototipo estático.
+	Al ejecutarse dinámicamente, se eliminará automáticamente
+	*/-->
+	<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+	<script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+	<link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+	<link href="resources/files/estils-tema.css" th:href="@{/resources/files/estils-tema.css}" rel="stylesheet" media="screen" />
+
+	<link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"></link>
+	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript">
+	var thDebug = false;
+	</script>
+</th:block>
+</head>
+<body>
+	<!-- /* Esta página no tiene menú laterial */-->
+	<section layout:fragment="menuLateral"></section>
+
+	<section layout:fragment="content">
+		<!-- informacio sin menu -->
+		<div id="infoNoMenu" class="body-buscador">
+
+			<!-- titol -->
+			<ul id="inline-block">
+				<li><h3><span class="glyphicon glyphicon-search" aria-hidden="true"/><span th:utext="#{cercar.resultados}">Resultats recerca</span></h3></li>
+			</ul>
+
+			<p></p>
+			
+			<!-- MVS_listado_buscador: devuelve el resultado de una busqueda realizada -->
+			<div th:if="${MVS_listado_buscador} !=null" th:remove="tag">
+
+				<div th:if="${MVS_listado_buscador.lista} !=null" th:remove="tag">
+
+					<div>
+
+						<p>
+
+							<div id="resultat" class="barra-resultados">
+
+								<p id="lineaTexto">
+									<p th:utext="#{cercar.encontrados} + '  ' ">Trobat/s  </p>
+
+
+									<strong th:utext=" ' ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' '" class="actual">
+										0 resultat/s en 
+									</strong>
+
+									<p th:utext= "  ${MVS_listado_buscador.consultaOriginal}
+									+'\'\''  ">
+									
+									</p>
+									
+								</p>
+								<br /><br />
+								<ul class="resultatsRecercaInteligent">
+									<li th:each="resultado : ${MVS_listado_buscador.lista}">														 								  								
+										<div th:switch="${resultado.url}"   th:remove="tag"> 						 
+										  <div th:case="''"  th:remove="tag">
+											  	<span th:text="${resultado.titulo}" class="tituloNoDisponible">titulo documento del resultado</span> 											  	
+											  	<span class="literalNoDisponible">
+													<th:block th:if="${#messages.msgOrNull('cercar.no.disponible')}" th:text="' ' + #{cercar.no.disponible} + ' '" /><th:block th:unless="${#messages.msgOrNull('cercar.no.disponible')}"> No disponible. </th:block>
+												</span>										  	 
+											  	<p>
+											  		<span th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span>
+											  		<span class="detall" th:text="${resultado.descripcion}">Descripcion</span>
+												</p>							  
+										  </div>
+										  <div th:case="*"  th:remove="tag">
+										  		<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
+												th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <p><span
+												th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
+												th:text="${resultado.descripcion}">Descripcion</span></p>										  
+										  </div> 
+										</div>																										
+									</li>
+								</ul>
+							</div>
+					</p>
+
+				
+				</div>
+
+				<div th:if="${MVS_listado_buscador.consultaSugerida}!=''" th:remove="tag">
+					<ul class="resultatsRecercaInteligent">
+
+						<!--cada resultado-->
+						<li th:each="resultado : ${MVS_listado_buscador.lista}">
+							<p id="tituloResultado">
+								<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a>
+							</p> 
+
+							<!--<span th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> -->
+							<!--<span th:text=" ${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site} ">Site:</span>-->
+							<span class="detall"
+							th:text="${resultado.descripcion}">Descripcion</span>
+							<p></p><p></p>
+						</li>
+					</ul>
+				</div>
+				<p></p>
+			</div>
+
+			
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+</body>
+</html>
+
+
