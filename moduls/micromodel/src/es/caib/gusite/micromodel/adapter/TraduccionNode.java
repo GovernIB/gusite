@@ -10,6 +10,7 @@ import es.caib.gusite.micromodel.TraduccionAgenda;
 import es.caib.gusite.micromodel.TraduccionComponente;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionFContacto;
 import es.caib.gusite.micromodel.TraduccionFaq;
 import es.caib.gusite.micromodel.TraduccionFrqssi;
 import es.caib.gusite.micromodel.TraduccionLineadatocontacto;
@@ -31,7 +32,7 @@ import es.caib.gusite.micromodel.TraduccionTipo;
 		TraduccionLineadatocontacto.class, TraduccionMenu.class,
 		TraduccionMicrosite.class, TraduccionNoticia.class,
 		TraduccionPregunta.class, TraduccionRespuesta.class,
-		TraduccionTemafaq.class, TraduccionTipo.class,
+		TraduccionTemafaq.class, TraduccionTipo.class,TraduccionFContacto.class,
 		TraduccionComponente.class })
 public class TraduccionNode {
 
