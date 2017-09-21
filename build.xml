@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
 <project name="gusite" default="main" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
  
        <!--<property name="project.version" value="${ant.project.name}"/>-->
@@ -334,7 +333,9 @@
                     basedir="${temas.dir}/tema2015"
                     update="true"
                />
-            
+            <zip destfile="${temas.dir}/zip/tema2017.zip"
+			       basedir="${temas.dir}/tema2017"
+			       update="true" />		
        </target>
  
        <!-- including tha maven-ant-tasks-jar into classpath -->
@@ -379,5 +380,5 @@
 	       	 <jar destfile="lib/zookeeper-3.4.6.jar">
 	       	    	<zipfileset src="lib/solr/zookeeper-3.4.6.jar" excludes="**/MANIFEST.MF"/>
 	       	 </jar>
-       </target>
-</project>
+      </target>
+</project>f

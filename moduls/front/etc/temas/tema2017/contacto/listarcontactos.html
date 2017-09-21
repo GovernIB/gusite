@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+  //Muestra la lista de formularios de contacto disponibles.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:gus="http://www.caib.es/thymeleaf/gusite" gus:decorator="layout"
+th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">
+        Título Microsite - Formularis de contacte
+    </title>
+    <th:block th:remove="all">
+        <!--
+            //Este bloque se usa para visualización en prototipo estático.
+            //Al ejecutarse dinámicamente, se eliminará automáticamente
+        -->
+        <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"/>
+        <script type="text/javascript" src="../resources/Thymol-2.0/thymol.js"
+        data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js"
+        data-thymol-load="gus-dialect.js"></script>
+        <script type="text/javascript">
+        var thDebug = false;
+        </script>
+        <!-- Bootstrap -->
+        <link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+        <script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+        <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+        <link rel="stylesheet" type="text/css" media="all" href="../files/estilsListarNoticias.css" th:href="@{/resources/files/estilsListarNoticias.css}"></link>
+        <link rel="stylesheet" type="text/css" media="all" href="../files/estilsContactos.css" th:href="@{/resources/files/estilsContactos.css}"/>
+        <!-- Fin bootstrap -->
+    </th:block>
+    
+</head>
+<body>
+    <section th:remove="tag" layout:fragment="content">
+        <!-- informacio con o sin menu -->
+        <div class="container-contacte" th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info">
+            <!-- titol -->
+            <h2 id="titolPagina">
+                <span class="glyphicon glyphicon-search">
+                </span>
+                <span  th:text="#{listarcontactos.frmcontacto}">
+                    Formularis de contacte
+                </span>
+            </h2>
+            <div class="barra-resultados" th:if="${MVS_parametros_pagina.nreg} ==0" th:text="#{listarcontactos.nohay} + '.'">
+                No s`han trobat formularis de contacte.
+            </div>
+            <div class="" th:if="${MVS_parametros_pagina.nreg} !=0" th:remove="tag">
+                <div class="barra-resultados" th:text="#{listarcontactos.frmdisponibles} + ':'">
+                    Formularis de contacte disponibles:
+                </div>
+                <ul>
+                    <li th:each="i : ${MVS_listado}">
+                        <a th:href="@{${i.value}}" >
+                            <span class="span-separador">
+
+                            </span>
+                            <span class="txt" th:text="${i.key}">
+                                i key
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="navLlistat pie">
+                    <!-- INICI nova navegacio ##################################################### -->
+                    <span class="inici" th:if="${MVS_parametros_pagina.cursor}!=1">
+                        <a  th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}" th:text="#{general.param.inicio}">
+                            Inici
+                        </a> 
+                    </span> 
+                    <span class="anterior" th:if="${MVS_parametros_pagina.cursor}!=1">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.anterior})}" th:text="#{general.param.anterior}">
+                            Anterior
+                        </a>
+                    </span> 
+                    <span th:if="${MVS_listado} !=null">
+                        <span>
+                            -
+                        </span>
+                        <span class="elem-actual" th:text="${MVS_parametros_pagina.cursor}">
+                            cursor
+                        </span> 
+                        a 
+                        <span class="elem-max-pag" th:text="${MVS_parametros_pagina.cursor_final}">
+                            cursor final
+                        </span>
+                        de 
+                        <span class="max" th:text="${MVS_parametros_pagina.nreg}">
+                            pagina nreg
+                        </span>
+                        <span>
+                            -
+                        </span>
+                    </span> 
+                    <span class="seguent" th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}" th:text="#{general.param.siguiente}">
+                            Següent
+                        </a> 
+                    </span>     
+                    <span class="final" th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}" th:text="#{general.param.final}">
+                            Fi
+                        </a>
+                    </span> 
+                    <!-- FI nova navegacio #####################################################-->
+                </p>
+            </div>
+        </div>
+        <!-- fin informacio -->
+    </section>
+</body>
+</html>
+
+

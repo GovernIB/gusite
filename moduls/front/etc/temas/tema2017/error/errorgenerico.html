@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--
+	//Pantalla de mensaje de error genérico.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
+<head>	
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="Generator" th:if="${MVS_version} != null" th:content="${MVS_version.micrositesName} + ' v' + ${MVS_version.micrositesVersion} +';build '+${MVS_version.micrositesBuild}+';revision '+${MVS_version.gitRevision}"/>
+	<title th:if="${MVS_errparam.aviso} !=null" th:text="${MVS_errparam.aviso}"></title>
+	<th:block th:remove="all">
+		<script type="text/javascript">
+		var thDebug = false;
+		</script>
+	</th:block>
+<!--<link href="../files/estilsError.css" th:href="@{/resources/hotTemplates/files/estilsError.css}" rel="stylesheet" media="screen" />-->
+<link href="../css/estils-tema.css" th:href="@{/resources/hotTemplates/css/estils-tema.css}" rel="stylesheet" media="screen" />
+<!--/* TAGS css pel microsite  */-->
+<!-- Bootstrap -->
+<link href="../../bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+<script src="../../js/jquery/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+<script src="../../bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+<!-- Fin bootstrap -->
+<script gus:replace="general/scriptmenu :: script"></script>
+</head>
+<body id="errorMSG">
+	<!-- contenidor -->
+	<div id="contenedor">
+		<!-- capçal -->
+		<div th:if="${MVS_microsite} != null" th:remove="tag">
+			<header  th:class="((${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null)? '' :'noCabecera' )" th:fragment="cabecera" >
+				<div class="cabecera-contingut container">
+					<div th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null " th:remove="tag" >
+						<div class="cap-full row">
+							<!--/* tipocabecera 1: por defecto */-->
+							<!-- Logo govern -->
+							<div id="logo-cont" class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+								<a accesskey="0" href="http://www.caib.es/" class="destacat">
+									<span class="logo" id="imagenCabecera2">&nbsp;</span>
+								</a>
+							</div>
+							<!--/* Titulo del microsite */-->
+							<div class="titol removeTag col-lg-5 col-xs-11 col-sm-4 col-md-5 ">
+								<div  th:if="${MVS_microsite} !=null" th:remove="tag">
+									<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+									<div th:if="${MVS_micrositetitulo} !=null" th:remove="tag">
+										<div>
+											<h1>
+												<!-- #gusuri.home(MVS_microsite,MVS_idioma): devuelve la URL hacia la home -->
+												<a accesskey="2" href="index.html" th:href="@{${#gusuri.home(MVS_microsite,MVS_idioma)}}" title="volver al inicio" th:title="#{cabecera.volverinicio}" th:text="${MVS_micrositetitulo}">
+													Título del microsite
+												</a>
+											</h1>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Inicio de titol para test -->
+							<div class="titol  col-lg-5 col-xs-12 col-sm-4 col-md-5 " th:remove="all">
+								<h1>
+									<a href="#">
+										Título del microsite
+									</a>
+								</h1>
+							</div>
+							<!-- Fin de titol para test -->
+
+						</div>
+						<!-- fin de titulo titol-->
+						<!-- INICIO de menu corporativo corporatiu -->
+					</div>
+				</div>
+			</header>
+		</div>
+		<!--  Fi capçal -->
+		<!-- continguts -->
+		<div id="continguts">
+			<div>
+				<!-- missatge -->
+				<span class="glyphicon glyphicon-minus-sign"></span>
+				<div id="missatge">
+					<span th:text="#{error.titulo}" class="titulo">
+						Titulo ERROR:
+					</span>
+					<span th:if="${exception} !=null" th:remove="tag">
+						<span th:text="${exception}" class="excepcion err-titulo">
+							Titulo excepcion
+						</span>
+						<span th:text="${exception.message}" class="excepcion err-mensaje">
+							Mensaje excepcion
+						</span> 
+					</span>
+					<span th:if="${exception} ==null" th:remove="tag">
+						<span th:if="${MVS_errparam} !=null" th:remove="tag">
+							<span th:if="${MVS_errparam.mensaje} !=null" th:text="${MVS_errparam.mensaje}" class="error err-titulo">
+								Mensaje
+							</span>
+							<span th:if="${MVS_errparam.descripcion} !=null" th:text="${MVS_errparam.descripcion}" class="error err-mensaje">
+								Descripcion
+							</span>
+							<span th:if="${MVS_errparam.accion} !=null" th:text="${MVS_errparam.accion}" class="error err-accion">
+								Accion
+							</span>
+						</span>
+					</span>
+					<a href="http://www.caib.es">
+						<span class="url">
+							www.caib.es
+						</span>
+					</a>
+				</div>
+				<!-- fi missatge -->
+			</div>
+		</div>
+
+	<!-- fi continguts -->
+</div>
+		<div th:if="${MVS_microsite} !=null" th:remove="tag">
+			<footer th:fragment="pie" th:if="${MVS_microsite} !=null">
+				<div class="footer-contingut">
+					<div th:if="${MVS_microsite.tipopie}=='1' or ${MVS_microsite.tipopie}==null" th:remove="tag">
+						<!-- logo -->
+						<div id="logo-footer">
+							<a href="http://www.caib.es"> 
+								<span class="logoFooter" id="imagenFooter"></span>
+							</a>
+						</div>
+						<!-- /logo -->
+						<!--  peu -->
+						<div id="eines">		
+							<div class="centre">
+								<div class="tamanyLletra"><a id="lletraAumentar" href="javascript:void(0);" title="Aumentar tamany lletra">
+									A+
+								</a>
+								/ 
+								<a id="lletraDisminuir" href="javascript:void(0);" title="Disminuir tamany lletra">
+									A-
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+<!-- fi contenidor -->
+<script type="text/javascript" src="../files/globales.js" th:src="@{/resources/hotTemplates/files/globales.js}"></script>
+</body>
+</html>
