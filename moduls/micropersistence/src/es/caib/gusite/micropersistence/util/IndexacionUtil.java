@@ -214,6 +214,11 @@ public class IndexacionUtil {
 		if (!agenda.getVisible().equals("S") ) {
 			return false;
 		}
+		
+		if (agenda.getActividad() == null) {
+			return false;
+		}
+		
 		return true;
 	}
 	
