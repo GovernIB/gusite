@@ -971,6 +971,11 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			final MultilangLiteral tituloPadre = new MultilangLiteral();
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			List<PathUO> uosPath = null;
+			
+			if (noticia.getTraducciones() != null && noticia.getTraducciones().size() == 0) {
+				return new SolrPendienteResultado(true, "No se puede indexar , debe tener algún idioma a indexar.");
+			}
+			
 			//boolean noEntra = true;
 			for (String keyIdioma : noticia.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
@@ -1019,7 +1024,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			}
 			
 			if (idiomas.size() == 0) {
-				return new SolrPendienteResultado(false, "No se puede indexar, debe tener algún idioma a indexar.");
+				return new SolrPendienteResultado(true, "No se puede indexar, debe tener algún idioma a indexar.");
 			}
 			
 			final IndexData indexData = new IndexData();
