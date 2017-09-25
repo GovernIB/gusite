@@ -10,6 +10,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
@@ -630,6 +631,10 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			final MultilangLiteral urlPadre = new MultilangLiteral();
 			
 			
+			if (contenido.getTraducciones() == null || contenido.getTraducciones().size() == 0) {
+				return new SolrPendienteResultado(true, "No se puede indexar, debe tener algún idioma a indexar.");
+			}
+			
 			//Recorremos las traducciones
 			for (String keyIdioma : contenido.getTraducciones().keySet()) {
 				final EnumIdiomas enumIdioma = EnumIdiomas.fromString(keyIdioma);
@@ -678,7 +683,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			}
 			
 			if (idiomas.size() == 0) {
-				return new SolrPendienteResultado(false, "No se puede indexar, debe tener algún idioma a indexar.");
+				return new SolrPendienteResultado(true, "No se puede indexar, debe tener algún idioma a indexar.");
 			}
 			
 			//Seteamos datos multidioma.
@@ -702,7 +707,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
 			log.error("Error intentando indexar idElemento:" + idElemento + " categoria:" + categoria, exception);
-			return new SolrPendienteResultado(false, exception.getMessage());
+			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
 		}
 	}
 	
@@ -739,6 +744,10 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			
 			// Los archivos solo se indexa en un idioma, por lo que si se quiere que se encuentren en todos los idiomas,
 			// habrá que indexarse en todos los idiomas.
+			
+			if (contenido.getTraducciones() == null || contenido.getTraducciones().size() == 0) {
+				return new SolrPendienteResultado(true, "No se puede indexar, debe tener algún idioma a indexar.");
+			}
 			
 			//Recorremos las traducciones
 			for (String keyIdioma : contenido.getTraducciones().keySet()) {
@@ -807,7 +816,7 @@ public abstract class ContenidoFacadeEJB extends HibernateEJB {
 			return new SolrPendienteResultado(true);
 		} catch(Exception exception) {
 			log.error("Error intentando indexar idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo, exception);
-			return new SolrPendienteResultado(false, exception.getMessage());
+			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
 		}
 	}
 
