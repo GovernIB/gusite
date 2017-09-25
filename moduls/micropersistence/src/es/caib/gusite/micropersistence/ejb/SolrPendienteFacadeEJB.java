@@ -1139,7 +1139,10 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  	        	}
  	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
  	        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br /><br />");
- 	        	
+ 	        	if (actualizarSolrPendiente) {
+ 		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+ 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+ 	        	}
  	        
  	        } else {
  	        	info.append("El microsite no es indexable con id " + idMicrosite +".<br />");
