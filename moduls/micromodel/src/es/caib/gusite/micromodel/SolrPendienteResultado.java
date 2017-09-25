@@ -76,4 +76,18 @@ public class SolrPendienteResultado implements ValueObject {
 		texto.append(mensaje);
 		return texto.toString();
 	}
+
+	public String getMensajeCorto() {
+		String respuesta;
+		if (this.mensaje == null) {
+			respuesta = "<br />";
+		} else {
+			if (this.mensaje.indexOf("\n") == -1) {
+				respuesta = this.mensaje.replace("\\","/")+"<br />";
+			} else {
+				respuesta = this.mensaje.substring(0, this.mensaje.indexOf("\n")).replace("\\","/")+"<br />"; 
+			}
+		}
+		return respuesta;
+	}
 }
