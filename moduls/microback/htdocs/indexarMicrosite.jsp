@@ -78,8 +78,8 @@
 						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
 								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
 								     <td>
-									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='pintarPopUp(limpiarTexto("<bean:write name="i" property="info" />  "))'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
-								     </td>
+ 											<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='descargar("<bean:write name="i" property="id" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button> 
+								  	 </td>
 								   
 						       </tr>					
 					    </logic:iterate>
@@ -138,5 +138,10 @@
 	     $("#item_texto").html("");
 	     return false;
 	}
+	
+
+    function descargar(id){
+    	document.location.href="archivoInfo.do?id="+id;
+	} 
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>
