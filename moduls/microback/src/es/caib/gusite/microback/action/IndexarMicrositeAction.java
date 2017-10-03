@@ -55,7 +55,7 @@ public class IndexarMicrositeAction extends BaseAction {
 			request.setAttribute("mostrarinfo", true);
 			request.setAttribute("mostrarBoton", true);
 			String idSite = request.getParameter("site");
-			final List<?> listInfo = verListaJobs(idSite);	
+			final List<SolrPendienteJob> listInfo = verListaJobs(idSite);	
         	request.setAttribute("listado",listInfo);	
 		}
         return mapping.findForward(elforward);
@@ -66,7 +66,11 @@ public class IndexarMicrositeAction extends BaseAction {
 	private List<SolrPendienteJob> verListaJobs(String idMicrosite) {
 		try {
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
-			return solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE, idMicrosite);
+			List<SolrPendienteJob> resultados = solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE, idMicrosite);
+			for(SolrPendienteJob resultado : resultados) {
+				resultado.setDescripcion(null);
+			}
+			return resultados;
 		} catch(Exception exception) {
 			return null;
 		}
