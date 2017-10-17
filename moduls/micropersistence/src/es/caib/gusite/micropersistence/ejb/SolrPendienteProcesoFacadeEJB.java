@@ -200,7 +200,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             			}
             			resultado = DelegateUtil.getSolrPendienteDelegate().indexarMicrosite(idMicro,solrPendienteJob, info);	
             		} catch (Exception he) {                       
-                       log.error("No se ha indexado el microsite con id " + idMicro);
+                       log.error("No se ha indexado el microsite con id " + idMicro, he);
                        info.append(" No se ha indexado el microsite con id " + idMicro+"  <br /> ");
                     }
             		
@@ -271,7 +271,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             			DelegateUtil.getSolrPendienteDelegate().indexarMicrosite(((Microsite) micro).getId(),solrPendienteJob, info);            			
             		}        
                     catch (Exception he) {
-                    	log.error("No se ha indexado el microsite con id " + ((Microsite) micro).getId());   
+                    	log.error("No se ha indexado el microsite con id " + ((Microsite) micro).getId(), he);   
                     	info.append("No se ha indexado el microsite con id " + ((Microsite) micro).getId());
                     }
             	}

@@ -855,6 +855,9 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      	Contenido contenido = null;
      	try {
      		contenido =contenidoDelegate.obtenerContenido(idElemento);
+     		if (contenido == null) {
+     			return new SolrPendienteResultado(false, "Contenido con id " + idElemento + " es nulo");
+     		}
      	} catch (Exception exception) {
      		return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
      	}
@@ -908,7 +911,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		        }	
  	        }
      	} catch(Exception exception) {
-     		log.error("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId());
+     		log.error("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId(), exception);
  			info.append("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId()+"  <br /> ");
  			msgRetorno += "Error indexando documentos "+contenido.getId() + " (revise el log) <br />";
      	}
