@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -140,7 +141,7 @@ public class IndexacionUtil {
 		String url;
 		
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-    	if (micro.getVersio().equals("v5")) {
+    	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
     		url = "/"+ micro.getUri() + "/" + idioma;	    		
     	} else {
     		url = "/sacmicrofront/index.do?lang="+idioma +"&idsite="+ micro.getId();
@@ -157,7 +158,7 @@ public class IndexacionUtil {
 	public static String getUrlContenido(Contenido contenido, String idioma) {
 		String url = null;
 		
-		if (contenido.getMicrosite().getVersio().equals("v5")) {
+		if (contenido.getMicrosite() != null && contenido.getMicrosite().getVersio() != null && "v5".equals(contenido.getMicrosite().getVersio())) {
 			final TraduccionContenido traduccion = (TraduccionContenido) contenido.getTraduccion(idioma);
 			if (traduccion != null) {
 				url =  "/"+ contenido.getMicrosite().getUri() + "/" + idioma + "/" + traduccion.getUri();
@@ -184,7 +185,7 @@ public class IndexacionUtil {
 	public static String getUrlArchivo(Microsite micro, Archivo archivo, String idioma) {
 		String url = null;
 		
-		if (micro.getVersio().equals("v5")) {
+		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
     		url = "/"+ micro.getUri()  + "/f/" + archivo.getId();	    		
     	} else {
     		url = "/sacmicrofront/archivopub.do?ctrl=MCRST"+micro.getId()+ "ZI" +archivo.getId() +"&id=" + archivo.getId();
@@ -228,7 +229,7 @@ public class IndexacionUtil {
 		String fechaIni = new SimpleDateFormat("yyyyMMdd").format(agenda.getFinicio());
 		
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-		if (micro.getVersio().equals("v5")) {
+		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
 			url = "/"+ micro.getUri() + "/" + idioma + "/agenda/" + fechaIni;	    		
 		} else {
 			url = "/sacmicrofront/agenda.do?lang="+idioma +"&idsite="+micro.getId() 
@@ -255,7 +256,7 @@ public class IndexacionUtil {
 		String url = null;
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
 		final TraduccionEncuesta traduccion = (TraduccionEncuesta) encuesta.getTraduccion(idioma);
-		if (micro.getVersio().equals("v5")) {
+		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
 			url =  "/"+ micro.getUri() + "/" + idioma + "/encuesta/" + traduccion.getUri();	    		
 		} else {
 			url = "/sacmicrofront/encuesta.do?lang="+idioma +"&idsite="+micro.getId() 
@@ -282,7 +283,7 @@ public class IndexacionUtil {
 	public static String getUrlFaq(Microsite micro, Faq faq, String keyIdioma) {
 		String url = null;
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-    	if (micro.getVersio().equals("v5")) {
+    	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
     		url = "/"+ micro.getUri() + "/" + keyIdioma + "/faq/";	    		
     	} else {
     		url = "/sacmicrofront/faqs.do?lang="+keyIdioma +"&idsite="+micro.getId() 
@@ -313,7 +314,7 @@ public class IndexacionUtil {
 		final TraduccionNoticia traduccion = (TraduccionNoticia) noticia.getTraduccion(keyIdioma);
 		
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
-    	if (micro.getVersio().equals("v5")) {
+    	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
     		if (noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_FICHA)){
     			url = "/"+ micro.getUri() + "/" + keyIdioma + "/n/" + traduccion.getUri();	 
     		}else if (noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_FOTO) ){
@@ -394,4 +395,20 @@ public class IndexacionUtil {
 		return true;		
 	}	
 	
+	/**
+	 * Para obtener el texto del error. 
+	 * @param exception
+	 * @return
+	 */
+	public static String getError(Exception exception) {
+		
+		String error = ExceptionUtils.getStackTrace(exception);
+		if (error.contains("\n")) {
+			error = error.split("\n")[0];
+		}
+		if (error.length() > 400) {
+			error = error.substring(0, 399);
+		}
+		return error;
+	}
 }
