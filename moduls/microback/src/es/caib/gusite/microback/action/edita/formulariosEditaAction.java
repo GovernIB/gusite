@@ -1,6 +1,8 @@
 package es.caib.gusite.microback.action.edita;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +16,17 @@ import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.formulario.formularioconForm;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction;
+import es.caib.gusite.microback.utils.Cadenas;
+import es.caib.gusite.microback.utils.VOUtils;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Lineadatocontacto;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.TraduccionFContacto;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.microback.ajax.AjaxCheckUriAction.UriType;
 
 
 /**
@@ -54,7 +62,7 @@ public class formulariosEditaAction extends BaseAction
     	ContactoDelegate bdFormu = DelegateUtil.getContactoDelegate();
     	Contacto formu=null;
     	formularioconForm formularioconForm = (formularioconForm) form;
-    		
+    	request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId());	
     	/********************** CREAR ************************/
     	if((""+request.getParameter("accion")).equals(getResources(request).getMessage("operacion.crear"))) {
     		
@@ -82,7 +90,35 @@ public class formulariosEditaAction extends BaseAction
 	       	formu.setVisible(""+formularioconForm.get("visible"));
 	       	formu.setEmail(""+formularioconForm.get("email")); 	
 	    	formu.setAnexarch(""+formularioconForm.get("anexarch"));
+	    	VOUtils.populate(formu, formularioconForm);  // form --> bean
+	    	
+            List<String> eliminar = new ArrayList<String>();
+            for (String lang : formu.getTraducciones().keySet()) {
+            	TraduccionFContacto trad = formu.getTraducciones().get(lang);
+                if (trad.getNombre().equals("") && trad.getUri().equals("")) {
+                    eliminar.add(lang);
+                } else if (trad.getUri().equals("")) {
+                    final AjaxCheckUriAction ajax = new AjaxCheckUriAction();
+                    Long codigoTipo = null;
+                    if (trad.getId() != null) {
+                    	codigoTipo = trad.getId().getCodigoFContacto();
+                    }
+					final String nuevaUri = ajax.check(Cadenas.string2uri(trad.getNombre()),  UriType.TPI_URI,  ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId().toString(),  lang, codigoTipo, 0);
+					trad.setUri(Cadenas.string2uri(nuevaUri));
+                }
+            }
+            for (String key : eliminar) {
+            	formu.getTraducciones().remove(key);
+            }
+	    		    		    	
 	        bdFormu.grabarContacto(formu);
+	        
+	        Iterator<?> it = formu.getLineasdatocontacto().iterator();	
+            ArrayList<Lineadatocontacto> lineas= new ArrayList<Lineadatocontacto>();
+            while (it.hasNext()) {
+            	lineas.add((Lineadatocontacto)it.next());
+            }
+            formularioconForm.set("lineasdatocontacto",lineas);	        
 	        
 	        formularioconForm.set("id",  formu.getId());
 	        
@@ -141,6 +177,7 @@ public class formulariosEditaAction extends BaseAction
 	            fdet.set("visible", formu.getVisible());
 	            fdet.set("email", formu.getEmail());
 	            fdet.set("anexarch", formu.getAnexarch());
+	            VOUtils.describe(fdet, formu);  // bean --> form
 	                
 	            Iterator<?> it = formu.getLineasdatocontacto().iterator();	
 	            ArrayList<Lineadatocontacto> lineas= new ArrayList<Lineadatocontacto>();

@@ -1,5 +1,6 @@
 package es.caib.gusite.microback.ajax;
 
+import es.caib.gusite.microback.actionform.formulario.formularioconForm;
 import es.caib.gusite.microback.utils.Cadenas;
 import es.caib.gusite.micromodel.*;
 import es.caib.gusite.micropersistence.delegate.*;
@@ -122,6 +123,14 @@ public class AjaxCheckUriAction extends Action {
                     }
                     break;
                     
+                case FCO_URI:
+                    ContactoDelegate fcDelegate = DelegateUtil.getContactoDelegate();
+                    Contacto contacto = fcDelegate.obtenerContactoByUri(idioma, uri, site);
+                    if (contacto != null && !contacto.getId().equals(id)) {
+                        msg = BUSCAR_NUEVA;
+                    }
+                    break;    
+                    
                 default:
                     msg = ERROR;
                     break;
@@ -143,6 +152,7 @@ public class AjaxCheckUriAction extends Action {
         EID_URI,
         NID_URI,
         TPI_URI,
-        FTR_URI
+        FTR_URI,
+        FCO_URI
     }
 }

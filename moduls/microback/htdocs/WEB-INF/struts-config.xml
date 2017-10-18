@@ -356,14 +356,17 @@
         <form-property name="tema" type="java.lang.Long"/>
 	</form-bean>
 
-	<form-bean name="formularioconForm" type="es.caib.gusite.microback.actionform.formulario.formularioconForm">
+	<form-bean name="formularioconForm" type="es.caib.gusite.microback.actionform.formulario.formularioconForm" 
+		className="es.caib.gusite.microback.config.TraFormBeanConfig" >
+		<set-property property="traduccionClassName" value="es.caib.gusite.micromodel.TraduccionFContacto"/>		   	   
    	    <form-property name="id" type="java.lang.Long"/>
    	    <form-property name="idmicrosite" type="java.lang.Long" initial=""/>
    	    <form-property name="visible" type="java.lang.String" initial="S"/>
       	<form-property name="email" type="java.lang.String"/>
       	<form-property name="lineasdatocontacto" type="java.util.ArrayList"/>
       	<form-property name="anexarch" type="java.lang.String" initial="N"/>
-       	<form-property name="seleccionados" type="java.lang.String[]"/>
+       	<form-property name="seleccionados" type="java.lang.String[]"/>  
+       	<form-property name="traducciones" type="java.util.ArrayList"/>     	
 	</form-bean>
 
 	<form-bean name="lineaFormularioForm" type="es.caib.gusite.microback.actionform.formulario.lineaFormularioForm">

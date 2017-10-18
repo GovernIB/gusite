@@ -16,6 +16,8 @@
 	<script type="text/javascript" src="js/jsEncuestas.js"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>	
 	<script type="text/javascript" src="moduls/funcions.js"></script>
+	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/checkUri.js"></script>
 </head>
 
 <body>
@@ -42,7 +44,8 @@
 		    </logic:present>		
 		    <logic:notPresent name="formularioconForm" property="id">
 		        <bean:message key="formu.alta" />
-		    </logic:notPresent>				
+		    </logic:notPresent>	
+		    <input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />			
 		</span>
 	</h1>
 
@@ -90,19 +93,45 @@
 	<!-- las tablas están entre divs por un bug del FireFox -->
 	<div id="formulario">
 		<table cellpadding="0" cellspacing="0" class="edicio">
-		<tr>
-			<td class="etiqueta"><bean:message key="formu.visible" /></td>
-			<td><html:radio property="visible" value="S" />&nbsp;Sí­&nbsp;<html:radio property="visible" value="N" />&nbsp;No</td>
-			<td class="etiqueta"><bean:message key="formu.correo" /></td>
-			<td><html:text property="email" maxlength="256" size="50" /></td>
-		</tr>
-		<tr>
-			<td class="etiqueta"><bean:message key="formu.anexArch" /></td>
-			<td><html:radio property="anexarch" value="S" />&nbsp;Sí­&nbsp;<html:radio property="anexarch" value="N" />&nbsp;No</td>
-			<td></td>
-			<td></td>
-		</tr>
+			<tr>
+				<td class="etiqueta"><bean:message key="formu.visible" /></td>
+				<td><html:radio property="visible" value="S" />&nbsp;Sí­&nbsp;<html:radio property="visible" value="N" />&nbsp;No</td>
+				<td class="etiqueta"><bean:message key="formu.correo" /></td>
+				<td><html:text property="email" maxlength="256" size="50" /></td>
+			</tr>
+			<tr>
+				<td class="etiqueta"><bean:message key="formu.anexArch" /></td>
+				<td><html:radio property="anexarch" value="S" />&nbsp;Sí­&nbsp;<html:radio property="anexarch" value="N" />&nbsp;No</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr><td colspan="4">
+				<ul id="submenu">
+					<logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
+						<li<%=(j.intValue()==0?" class='selec'":"")%>><a href="#" onclick="mostrarForm(this);"><bean:message name="lang" /></a></li>
+					</logic:iterate>
+				</ul>    
+				<logic:iterate id="traducciones" name="formularioconForm" property="traducciones" indexId="i" >
+					<div id="capa_tabla<%=i%>" class="capaFormIdioma" style="<%=(i.intValue()==0?"display:true;":"display:none;")%>">
+						<table cellpadding="0" cellspacing="0" class="tablaEdicio">
+							<tr>
+								<td class="etiqueta"><bean:message key="tema.nombre" />:</td>
+								<td><html:text property="nombre" name="traducciones" styleId="<%="titulo"+i%>" size="40" maxlength="100" indexed="true" /></td>
+							</tr>
+							<tr>
+								<td class="etiqueta"><bean:message key="tema.uri"/>:</td>
+								<td><html:text property="uri" name="traducciones" styleId="<%="uri"+i%>" size="40" maxlength="100" indexed="true" /></td>
+								<input type="hidden" name="type" value="fco_uri" />
+							</tr>
+						</table>
+					</div>
+				</logic:iterate>
+	    
+			</td></tr>
 		</table>
+		
+		
+		
 	
 	<!-- ****************************** -->
 	<!-- Lista de Campos del Formulario -->

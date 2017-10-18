@@ -28,6 +28,7 @@ import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micromodel.Traduccion;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionFContacto;
 import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Traducible2;
@@ -82,31 +83,6 @@ public class FrontUrlFactory {
 
 				urlTraducida = urlTraducida + "/" + idioma;
 
-			} else if ((urlSeparada[i].contentEquals("contacte")) || (urlSeparada[i].contentEquals("contacto"))
-					|| (urlSeparada[i].contentEquals("contact"))) {
-
-				if (usarIdiomaEnContact) {
-					if (idioma.contentEquals("es")) {
-						urlTraducida = urlTraducida + "/" + "contact";
-					}
-					if (idioma.contentEquals("ca")) {
-						urlTraducida = urlTraducida + "/" + "contact";
-					}
-					if (idioma.contentEquals("en")) {
-						urlTraducida = urlTraducida + "/" + "contact";
-					}
-				} else {
-					if (idioma.contentEquals("es")) {
-						urlTraducida = urlTraducida + "/" + "contacto";
-					}
-					if (idioma.contentEquals("ca")) {
-						urlTraducida = urlTraducida + "/" + "contacte";
-					}
-					if (idioma.contentEquals("en")) {
-						urlTraducida = urlTraducida + "/" + "contact";
-					}
-				}
-				anyadirIdiomaFinal = false;
 			} else if ((urlSeparada[i].contentEquals("cercar")) || (urlSeparada[i].contentEquals("buscar"))
 					|| (urlSeparada[i].contentEquals("search"))) {
 
@@ -261,25 +237,14 @@ public class FrontUrlFactory {
 	}
 
 	public String contacto(Microsite microsite, Idioma lang, Contacto contacto) {
-
-		return this.listarContactos(microsite, lang) + contacto.getId() + "/";
+		return this.listarContactos(microsite, lang) + ((TraduccionFContacto) this.getTraducion(contacto, lang)).getUri() + "/";
 	}
 
 	public String listarContactos(Microsite microsite, Idioma lang) {
-
-		if (lang.getLang().equals(LANG_CA)) {
-			return this.microsite(microsite) + "contacte/";
-		} else if (lang.getLang().equals(LANG_ES)) {
-			return this.microsite(microsite) + "contacto/";
-		} else if (lang.getLang().equals(LANG_EN)) {
-			return this.microsite(microsite) + "contact/";
-		} else {
-			return this.microsite(microsite, lang) + "contact/";
-		}
+		return this.microsite(microsite, lang) + "fcontacto/";		
 	}
 
 	public String listarAgenda(Microsite microsite, Idioma lang) {
-
 		return this.microsite(microsite, lang) + "agenda/";
 	}
 

@@ -19,6 +19,10 @@ public class ExceptionFrontContactos extends ExceptionFront {
 		super(ERROR+" uri:"+uri+" id:"+id);
 	};
 	
+	public ExceptionFrontContactos(String uri, String uriContacto) {
+		super(ERROR+" uri:"+uri+" uriContacto:"+uriContacto);
+	};
+	
 	
 	public ExceptionFrontContactos(String msg) {
 		super(msg);

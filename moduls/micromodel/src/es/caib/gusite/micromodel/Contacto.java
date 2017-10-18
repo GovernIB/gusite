@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -84,9 +85,9 @@ public class Contacto extends AuditableModel implements Traducible2 {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Lineadatocontacto> lineasdatocontacto = new ArrayList();
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL },mappedBy="id.codigoFContacto")
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	@JoinColumn(name = "FCI_FCOCOD")
 	@MapKey(name = "id.codigoIdioma")
 	@Fetch(FetchMode.SUBSELECT)
 	private Map<String, TraduccionFContacto> traducciones = new HashMap<String, TraduccionFContacto>();
@@ -164,22 +165,37 @@ public class Contacto extends AuditableModel implements Traducible2 {
 		this.anexarch = anexarch;
 	}
 
-	public String getTitulocontacto(String idi) {
-		//TODO: verificar si se puede cambiar por el titulo de traducciones
+	public String getTitulocontacto(String idi) {		
+		return getTitulocontacto(idi, true);
+	}
+	
+	public String getTitulocontacto(String idi, boolean nuevo) {
+		
 		String retorno = "";
-		try {
-			Iterator<?> iter = this.lineasdatocontacto.iterator();
-			Lineadatocontacto lineadatocontacto;
-			while (iter.hasNext()) {
-				lineadatocontacto = (Lineadatocontacto) iter.next();
-				if (lineadatocontacto.getTipo().equals(RTYPE_TITULO)) {
-					retorno = ((TraduccionLineadatocontacto) lineadatocontacto
-							.getTraduccion(idi)).getTexto();
-					break;
+		
+		if(nuevo) {
+			//extraido de traducciones
+			try {
+				retorno = ((TraduccionFContacto) this.getTraduccion(idi)).getNombre(); 
+			} catch (Exception e) {
+				retorno = "[sense titol]";
+			}								
+		}else {
+			//extraido de titulo almacenado en la linea (obsoleto)
+			try {
+				Iterator<?> iter = this.lineasdatocontacto.iterator();
+				Lineadatocontacto lineadatocontacto;
+				while (iter.hasNext()) {
+					lineadatocontacto = (Lineadatocontacto) iter.next();
+					if (lineadatocontacto.getTipo().equals(RTYPE_TITULO)) {
+						retorno = ((TraduccionLineadatocontacto) lineadatocontacto
+								.getTraduccion(idi)).getTexto();
+						break;
+					}
 				}
-			}
-		} catch (Exception e) {
-			retorno = "[sense titol]";
+			} catch (Exception e) {
+				retorno = "[sense titol]";
+			}			
 		}
 		return retorno;
 	}

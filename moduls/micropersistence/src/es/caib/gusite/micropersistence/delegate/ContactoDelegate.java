@@ -96,6 +96,25 @@ public class ContactoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
+	/**
+	 * Obtiene un contacto
+	 * 
+	 * @param id
+	 *            Id del contato
+	 * @return Contacto
+	 * @throws DelegateException
+	 */
+	public Contacto obtenerContactoByUri(String idioma, String uri, String site)
+			throws DelegateException {
+		try {
+			return this.getFacade().obtenerContactoByUri(idioma, uri, site);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
 
 	/**
 	 * Lista todos los Formularios

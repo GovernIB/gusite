@@ -95,6 +95,7 @@
   <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioMicrosite"/>
   <mapping class="es.caib.gusite.micromodel.UsuarioPropietarioRespuesta"/>
   <mapping class="es.caib.gusite.micromodel.Version" />
+  <mapping class="es.caib.gusite.micromodel.TraduccionFContacto"/>
 
   <mapping resource="named-queries.hbm.xml"/>
 

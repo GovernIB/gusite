@@ -1,6 +1,9 @@
 package es.caib.gusite.microback.action.lista;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +17,9 @@ import org.apache.struts.action.ActionMapping;
 import es.caib.gusite.microback.action.BaseAction;
 import es.caib.gusite.microback.actionform.listaActionForm;
 import es.caib.gusite.microback.actionform.formulario.formularioconForm;
+import es.caib.gusite.micromodel.Contacto;
+import es.caib.gusite.micromodel.Lineadatocontacto;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 
@@ -48,14 +54,27 @@ public class listaFormulariosAction extends BaseAction {
     		HttpServletRequest request, HttpServletResponse response) throws Exception  {
 
         listaActionForm listaActionForm = (listaActionForm) form;
-        
+        request.setAttribute("idmicrosite", ((Microsite) request.getSession().getAttribute("MVS_microsite")).getId());
         //********************************************************
         //*********** ERROR DE VALIDACION FORMUALRIO *************
         //********************************************************
         if (request.getSession().getAttribute("formularioconForm")!=null && request.getAttribute(Globals.ERROR_KEY)!=null) {
-        	formularioconForm fdet=(formularioconForm) request.getSession().getAttribute("formularioconForm");
-        	request.setAttribute("formularioconForm", fdet);
-        	request.setAttribute("validacion", "si");
+        	formularioconForm fdet=(formularioconForm) request.getSession().getAttribute("formularioconForm");        	       
+        	
+        	//rellenamos las lineas del formulario (no venian informadas)
+        	Long id = (Long) fdet.get("id");        	
+        	ContactoDelegate bdFormu = DelegateUtil.getContactoDelegate();        
+        	Contacto formulario = bdFormu.obtenerContacto(id);
+        	Iterator<?> it = formulario.getLineasdatocontacto().iterator();	
+            ArrayList<Lineadatocontacto> lineas= new ArrayList<Lineadatocontacto>();
+            while (it.hasNext()) {
+            	lineas.add((Lineadatocontacto)it.next());
+            }         	
+            fdet.set("lineasdatocontacto",lineas);
+            
+            request.setAttribute("validacion", "si");
+            request.setAttribute("formularioconForm", fdet);
+            
             return mapping.findForward("detalleFormu");
         }
         

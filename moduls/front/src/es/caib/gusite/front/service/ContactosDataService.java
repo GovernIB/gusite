@@ -8,10 +8,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import es.caib.gusite.front.general.BaseCriteria;
+import es.caib.gusite.front.general.ExceptionFrontContactos;
+import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.bean.ResultadoBusqueda;
 import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -26,7 +29,8 @@ public class ContactosDataService {
 
 		ContactoDelegate contactodel = DelegateUtil.getContactoDelegate();
 		contactodel.init();
-		contactodel.setWhere("where contacto.visible='S' and contacto.idmicrosite=" + microsite.getId());
+		contactodel.setWhere("where contacto.visible='S' and contacto.idmicrosite=" + microsite.getId() + " and trad.id.codigoIdioma = '" + 
+								 lang.getCodigoEstandar() + "'" );
 
 		if (formulario.getFiltro() != null && formulario.getFiltro().length() > 0) {
 			contactodel.setFiltro(formulario.getFiltro());
@@ -48,6 +52,26 @@ public class ContactosDataService {
 	public Contacto getFormulario(Microsite microsite, Idioma lang, long idContacto) throws DelegateException {
 		ContactoDelegate contactoldel = DelegateUtil.getContactoDelegate();
 		return contactoldel.obtenerContacto(idContacto);
+	}
+	
+	public Contacto getFormularioByUri(Microsite microsite, Idioma lang, String uri) throws DelegateException, ExceptionFrontContactos, ExceptionFrontPagina {
+		ContactoDelegate contactoldel = DelegateUtil.getContactoDelegate();
+
+		try {
+			Contacto contacto = contactoldel.obtenerContactoByUri(lang.getCodigoEstandar(), uri, microsite.getId().toString());
+			if (contacto == null) {
+				// Si no lo encontramos por idioma, buscamos cualquiera. Esto
+				// sirve para el cambio de idioma sencillo
+				contacto = contactoldel.obtenerContactoByUri(null, uri, microsite.getId().toString());
+			}
+			if (contacto == null) {
+				throw new ExceptionFrontContactos("Contacto no encontrado: " + uri);
+			}
+			return contacto;
+		} catch (DelegateException e) {
+			throw new ExceptionFrontContactos("problemas al cargar el contacto (DelegateException): " + uri);
+		}
+		
 	}
 
 }

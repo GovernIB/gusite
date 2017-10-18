@@ -234,8 +234,8 @@ public class Bdrecursos {
 			  //ahora los contactos		  
 			  
 		    	ContactoDelegate contactodel = DelegateUtil.getContactoDelegate();
-		    	contactodel.init(microsite.getId());
-		    	contactodel.setWhere("where contacto.idmicrosite=" + microsite.getId());
+		    	contactodel.init(microsite.getId());		    	
+		    	contactodel.setWhere("where (trad.id.codigoIdioma='" + idiomapasado + "' or trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto()+"') and contacto.idmicrosite=" + microsite.getId());
 		    	contactodel.setPagina(1);contactodel.setTampagina(Microback.MAX_INTEGER);
 		        Iterator<?> iter = contactodel.listarContactos().iterator();
 		        while (iter.hasNext()) {

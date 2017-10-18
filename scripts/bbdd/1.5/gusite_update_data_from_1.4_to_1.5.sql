@@ -1,24 +1,63 @@
-Drop table "GUS_FCOIDI" CASCADE CONSTRAINTS;
+--SET SERVEROUTPUT ON;
+-- Actualización de campos de titulo y uri para la nueva tabla
+-- si el formulario tiene titulo usa ese campo para crear el nombre y la uri
+-- si no, usa el texto contacto.
+DECLARE
+  titulo varchar2(1000 CHAR) := '';
+  uri varchar2(1000 BYTE) := '';
+  contador number := 0;
+BEGIN
 
-CREATE TABLE "GUS_FCOIDI" (
-    "FCI_CODIDI" Varchar2 (6 CHAR) NOT NULL ,
-    "FCI_FCOCOD" Number NOT NULL ,
-    "FCI_NOMBRE" Varchar2 (100 CHAR),
-    "FCI_URI" Varchar2 (125) NOT NULL ,
-primary key ("FCI_CODIDI","FCI_FCOCOD") 
-);
-
-Create Index "GUS_FCOIDI_I"    ON "GUS_FCOIDI" ("FCI_CODIDI","FCI_URI") ;
-Alter table "GUS_FCOIDI"               add  foreign key ("FCI_FCOCOD")          references "GUS_FRMCON" ("FRM_CODI") ;
-Comment on table "GUS_FCOIDI" is 'Tabla que contiene los atributos dependientes de idioma para la definición de un formulario de contacto de un microsite.';
-Comment on column "GUS_FCOIDI"."FCI_CODIDI" is 'Identificador del idioma ca,es,de,en,fr';
-Comment on column "GUS_FCOIDI"."FCI_FCOCOD" is 'Codigo formulario de contacto';
-Comment on column "GUS_FCOIDI"."FCI_NOMBRE" is 'Nombre del formulario de contacto';
-Comment on column "GUS_FCOIDI"."FCI_URI"    is 'Uri para formar las urls del formulario de contacto';
-
-
-ALTER TABLE GUS_FCOIDI ADD (
-  CONSTRAINT GUS_FCIIDI_FK 
-  FOREIGN KEY (FCI_CODIDI) 
-  REFERENCES GUS_IDIOMA (IDI_CODI)
-  ENABLE VALIDATE);
+  -- buscamos todos los formularios
+  FOR FCON IN (select  FRM_MICCOD FMICRO, FRM_CODI FCOD, FRM_EMAIL FEMAIL from GUS_FRMCON order by frm_miccod) LOOP
+    -- PARA CADA FORMULARIO BUSCAMOS LOS IDIOMAS DEL MICROSITE
+      FOR IDIOMA IN (SELECT IMI_CODIDI IDI, IMI_MICCOD MICRO FROM GUS_IDIMIC WHERE IMI_MICCOD = FCON.FMICRO) LOOP
+        -- buscamos el titulo en la linea
+        select (select RID_TEXTO 
+                     from GUS_FRMLIN l,GUS_FRMIDI i 
+                     where  l.FLI_FRMCOD = FCON.FCOD
+                            AND l.FLI_TIPO = 1 
+                            AND i.RID_CODIDI = IDIOMA.IDI  and i.RID_FLICOD = l.FLI_CODI 
+                            AND rownum = 1) into titulo from dual;
+              
+      -- si el titulo no existe, añadimos uno por defecto                      
+      IF (titulo is null) or (titulo = '') THEN
+        IF IDIOMA.IDI = 'es' THEN
+          titulo := 'Contacto';
+        ELSIF IDIOMA.IDI = 'ca' THEN
+          titulo := 'Contacte';
+        ELSE 
+          titulo := 'Contact'; 
+        END IF;                      
+      END IF; 
+      
+      titulo := SUBSTR(titulo,1,100);
+       
+      -- verificamos si la uri ya existe en este microsite para este idioma       
+      select (select count(*) 
+                    from GUS_FCOIDI I, GUS_FRMCON F 
+                    where  I.FCI_URI = GUS_STRING2URI_F(titulo)
+                      and I.FCI_CODIDI = IDIOMA.idi 
+                      and F.FRM_CODI = I.FCI_FCOCOD
+                      and F.FRM_MICCOD = FCON.FMICRO) 
+              into contador from dual;
+      -- si la uri existe, la concatenamos con un valor unico
+      IF contador > 0 THEN
+        uri := GUS_STRING2URI_F(titulo) || FCON.FCOD;  
+      ELSE
+        uri := GUS_STRING2URI_F(titulo);        
+      END IF;
+      
+      --imprimimos los datos a insertar
+      -- dbms_output.put_line(IDIOMA.IDI ||  '-' || FCON.FCOD ||  '-' || titulo || '-' || uri);
+      
+      --insertamos los datos
+      INSERT INTO GUS_FCOIDI
+        (FCI_CODIDI,FCI_FCOCOD,FCI_NOMBRE,FCI_URI )
+      VALUES
+        (IDIOMA.IDI, FCON.FCOD ,SUBSTR(titulo,1,100), SUBSTR(uri,1,125) ); 
+        
+    END LOOP; 
+  END LOOP;
+  commit;
+END;

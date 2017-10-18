@@ -10,14 +10,19 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
 import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Contacto;
+import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Lineadatocontacto;
+import es.caib.gusite.micromodel.Tipo;
+import es.caib.gusite.micromodel.TraduccionFContacto;
 import es.caib.gusite.micromodel.TraduccionLineadatocontacto;
+import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 
 /**
@@ -55,9 +60,10 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 	public void init(Long site) {
 		super.tampagina = 10;
 		super.pagina = 0;
-		super.select = "";
-		super.from = " from Contacto contacto ";
-		super.where = "where contacto.idmicrosite = " + site.toString();
+		super.select = "select contacto ";		
+		super.from = " from Contacto contacto join contacto.traducciones trad ";
+		super.where = "where contacto.idmicrosite = " + site.toString() + " and trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 		super.camposfiltro = new String[] { "contacto.email",
@@ -77,9 +83,10 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 	public void init() {
 		super.tampagina = 10;
 		super.pagina = 0;
-		super.select = "";
-		super.from = " from Contacto contacto ";
-		super.where = "";
+		super.select = "select contacto ";
+		super.from = " from Contacto contacto join contacto.traducciones trad ";
+		super.where = "where trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 		super.camposfiltro = new String[] { "contacto.email",
@@ -88,7 +95,33 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 		super.nreg = 0;
 		super.npags = 0;
 	}
+	
+	
+	
+	/**
+	 * Inicializo los parámetros de la consulta....
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void init(Long site, String idiomapasado) {
+		super.tampagina = 10;
+		super.pagina = 0;
+		super.select = "select contacto.id,trad.nombre ";
+		super.from = " from Contacto contacto join contacto.traducciones trad ";
+		super.where = " where (trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto()
+				+ "' or trad.id.codigoIdioma = '" + idiomapasado
+				+ "') and contacto.idmicrosite = " + site.toString();
+		super.whereini = " ";
+		super.orderby = "";
 
+		super.camposfiltro = new String[] { "trad.nombre" };
+		super.cursor = 0;
+		super.nreg = 0;
+		super.npags = 0;
+	}
+	
 	/**
 	 * Crea o actualiza un Contacto
 	 * 
@@ -101,12 +134,50 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 		Session session = this.getSession();
 		try {
 			boolean nuevo = (contacto.getId() == null) ? true : false;
-
 			Transaction tx = session.beginTransaction();
+
+			Map<String, TraduccionFContacto> listaTraducciones = new HashMap<String, TraduccionFContacto>();
+			if (nuevo) {
+				Iterator<TraduccionFContacto> it = contacto.getTraducciones().values().iterator();
+				while (it.hasNext()) {
+					TraduccionFContacto trd = it.next();
+					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
+				}
+				contacto.setTraducciones(null);
+			} else {//#28 Incidencia borrando traducciones
+				String listIdiomaBorrar = "";
+				Iterator<TraduccionFContacto> it = contacto.getTraducciones().values().iterator();
+				while (it.hasNext()) {
+					TraduccionFContacto trd = it.next();
+					listIdiomaBorrar += "'" +trd.getId().getCodigoIdioma()+"'";
+					if(it.hasNext()){
+						listIdiomaBorrar += "," ;						
+					}
+				}
+				// Borramos los idiomas que no pertenecen a contenido y existen en la BBDD
+				if(!listIdiomaBorrar.isEmpty()){ 
+					Query query = session.createQuery("select tradFC from TraduccionFContacto tradFC where tradFC.id.codigoFContacto = " + contacto.getId() + " and tradFC.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+					final List<TraduccionFContacto> traduciones = query.list();
+					for(TraduccionFContacto traducI : traduciones ) {
+						session.delete(traducI);	
+					}
+					session.flush(); 
+				}				
+			}
+
 			session.saveOrUpdate(contacto);
 			session.flush();
-			tx.commit();
 
+			if (nuevo) {
+				for (TraduccionFContacto trad : listaTraducciones.values()) {
+					trad.getId().setCodigoFContacto(contacto.getId());
+					session.saveOrUpdate(trad);
+				}
+				session.flush();
+				contacto.setTraducciones(listaTraducciones);
+			}
+
+			tx.commit();
 			this.close(session);
 
 			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
@@ -120,6 +191,14 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 			this.close(session);
 		}
 	}
+
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * Obtiene una linea del Formulario
@@ -155,6 +234,43 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 			Contacto contacto = (Contacto) session.get(Contacto.class, id);
 			return contacto;
 
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	
+	
+	/**
+	 * Obtiene el Contacto de ese microsite que tiene la uri especificada en el idioma indicado
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Contacto obtenerContactoByUri(String idioma, String uri, String site) {
+
+		Session session = this.getSession();
+		try {
+			Query query;
+			if (idioma != null) {
+				query = session
+						.createQuery("select contacto from Contacto contacto JOIN contacto.traducciones ct where ct.id.codigoIdioma = :idioma and ct.uri = :uri and contacto.idmicrosite = :site");
+				query.setParameter("idioma", idioma);
+				
+			} else {
+				query = session
+						.createQuery("select contacto from Contacto contacto JOIN contacto.traducciones ct where ct.uri = :uri and contacto.idmicrosite = :site");
+			}
+			query.setParameter("uri", uri);
+			query.setParameter("site", Long.valueOf(site));
+			query.setMaxResults(1);
+			return (Contacto) query.uniqueResult();
+
+		} catch (ObjectNotFoundException oNe) {
+			log.error(oNe.getMessage());
+			return new Contacto();
 		} catch (HibernateException he) {
 			throw new EJBException(he);
 		} finally {
@@ -213,6 +329,13 @@ public abstract class ContactoFacadeEJB extends HibernateEJB {
 								+ linea.getId().toString()).executeUpdate();
 				session.flush();
 			}
+			
+
+			//Borramos las traducciones de ese Formulario de contacto
+			session.createQuery(
+					"delete TraduccionFContacto tFC where tFC.id.codigoFContacto = "
+								+ id.toString()).executeUpdate();				
+			session.flush();
 
 			session.createQuery(
 					"delete Contacto contact where contact.id = "

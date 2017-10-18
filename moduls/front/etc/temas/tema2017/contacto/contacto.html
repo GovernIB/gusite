@@ -139,7 +139,7 @@ th:lang-xmllang="${lang}">
              <label th:text="#{contacto.captcha.rellene}">Emplenau el captcha.</label>
         </div>
         <div class="input" style="display: flex;">
-			<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" style="width: 100px;margin-right: 50px" />    
+			<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" style="width: 100px;margin-right: 50px; min-width: 80px;" />    
 
 			<input type="text" id="captchaResp" name="captchaResp" style="margin: auto;" onchange="habilitarEnviar()"/>
 			

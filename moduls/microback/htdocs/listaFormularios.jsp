@@ -86,6 +86,25 @@
 	<tr>
 		<th class="check">&nbsp;</th>
 		<th>
+            <bean:message key="formu.eticolumna0" />&nbsp;
+            <html:link href="javascript:ordenar('Atrad.nombre');">
+                <logic:equal name="BuscaOrdenaFormularioActionForm" property="ordenacion" value="Atrad.nombre">
+                    <img src="imgs/iconos/orden_ascendente_on.gif" alt='<bean:message key="op.4"/>'>
+                </logic:equal>
+                <logic:notEqual name="BuscaOrdenaFormularioActionForm" property="ordenacion" value="Atrad.nombre">
+                    <img src="imgs/iconos/orden_ascendente_off.gif" alt='<bean:message key="op.4"/>'>
+                </logic:notEqual>
+            </html:link>
+            <html:link href="javascript:ordenar('Dtrad.nombre');">
+                <logic:equal name="BuscaOrdenaFormularioActionForm" property="ordenacion" value="Dtrad.nombre">
+                    <img src="imgs/iconos/orden_descendente_on.gif" alt='<bean:message key="op.5"/>'>
+                </logic:equal>
+                <logic:notEqual name="BuscaOrdenaFormularioActionForm" property="ordenacion" value="Dtrad.nombre">
+                    <img src="imgs/iconos/orden_descendente_off.gif" alt='<bean:message key="op.5"/>'>
+                </logic:notEqual>            
+            </html:link>
+        </th>
+		<th>
             <bean:message key="formu.eticolumna1" />&nbsp;
             <html:link href="javascript:ordenar('Acontacto.email');">
                 <logic:equal name="BuscaOrdenaFormularioActionForm" property="ordenacion" value="Acontacto.email">
@@ -154,6 +173,14 @@
         <html:multibox property="seleccionados" styleClass="radio"> 
             <bean:write name="i" property="id"/>
         </html:multibox>
+      </td>
+      <td>
+		<logic:notEmpty name="i" property="traduccion">
+			<bean:write name="i" property="traduccion.nombre" />
+		</logic:notEmpty>
+    	<logic:empty name="i" property="traduccion">
+			[<bean:message key="formu.nonombre" />]
+		</logic:empty>
       </td>
       <td>
        	<logic:notEmpty name="i" property="email">
