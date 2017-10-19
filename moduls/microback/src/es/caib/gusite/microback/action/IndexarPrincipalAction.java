@@ -198,7 +198,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		{									
 			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_TODO, null, null);						
 		} catch(Exception e){
-			log.error("Error indexando todo" );
+			log.error("Error indexando todo", e );
 			return false;
 		}
 	 		     	
@@ -219,7 +219,7 @@ public class IndexarPrincipalAction extends BaseAction {
 			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_UA, idUAdministrativa, null);						
 		
 		} catch(Exception e){
-			log.error("Error indexando UA " + idUAdministrativa );
+			log.error("Error indexando UA " + idUAdministrativa, e );
 			return false;
 		}
 	 		     	
@@ -238,7 +238,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		{									
 			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_PENDIENTE, null, null);							
 		}catch(Exception e){
-			log.error("Error indexando pendientes ");
+			log.error("Error indexando pendientes ", e);
 			return false;
 		}
 	 		     	

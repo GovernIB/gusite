@@ -96,7 +96,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
         try {
             final Criteria criteri = session.createCriteria(SolrPendiente.class);
             criteri.add(Restrictions.eq("resultado", 0));             
-            criteri.addOrder(Order.asc("id"));
+            criteri.addOrder(Order.asc("id"));            
             return  ( List<SolrPendiente>) criteri.list();
         } catch (HibernateException he) {
             throw new EJBException(he);
@@ -611,16 +611,16 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idArchivo+"):"+ resultado.toString());
  	    		if (info != null) {
- 	    			info.append(" ** Parece que no se ha indexado docMicrosite(ID:"+idArchivo+"):" + resultado.getMensaje().replace("\\","/")+"<br />");
+ 	    			info.append(" ** Parece que no se ha indexado docMicrosite(ID:"+idArchivo+"):" + resultado.getMensajeCorto());
  	    		}
  	    	 }
  			 
- 	    } catch (Exception e) {
+ 	    } catch (Exception exception) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  idArchivo);
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " + idArchivo + "  <br /> ");
+ 				info.append(" **Parece que no se ha indexado docMicrosite(ID:"+idArchivo+"):" + IndexacionUtil.getError(exception));
  			}
- 			resultado =  new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
+ 			resultado =  new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
  		}	
      	return resultado;
  	}
@@ -645,14 +645,14 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idEncuesta+"):"+ resultado.toString());
  	    		if (info != null) {
- 		    		info.append(" ** Parece que no se ha indexado encuesta(ID:"+idEncuesta+"):" + resultado.getMensaje().replace("\\","/")+"<br />");
+ 		    		info.append(" ** Parece que no se ha indexado encuesta(ID:"+idEncuesta+"):" + resultado.getMensajeCorto());
  	    		}
  	    	}
  			
  	    }catch (Exception e) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  +idEncuesta);
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " + idEncuesta + "  <br /> ");
+ 				info.append(" **Parece que no se ha indexado encuesta(ID:"+idEncuesta+"):" +  IndexacionUtil.getError(e));
  			}
  			resultado = new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
  		}	
@@ -676,13 +676,13 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
  	    		if (info != null) {
- 	    			info.append(" ** Parece que no se ha indexado faq(ID:"+idElemento+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 	    			info.append(" ** Parece que no se ha indexado faq(ID:"+idElemento+"): " + resultado.getMensajeCorto());
  	    		}
  	    	 }
  	    }catch (Exception e) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  idElemento);
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " + idElemento + "  <br /> ");
+ 				info.append(" **Parece que no se ha indexado faq(ID:"+idElemento+"): " + IndexacionUtil.getError(e));
  			}
  			resultado = new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
  		}
@@ -716,15 +716,14 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
  	    		if (info != null) {
- 		    		info.append(" ** Parece que no se ha indexado agenda(ID:"+idElemento+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 		    		info.append(" ** Parece que no se ha indexado agenda(ID:"+idElemento+"): " + resultado.getMensajeCorto());
  	    		}
  	    		return resultado;
  	    	 } 
  	    }catch (Exception e) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  agenda.getId());
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " +  agenda.getId() +"  <br /> ");
- 				info.append(" -- Parece que ha sido sido correcto. Resultado: " + resultado.toString().replace("\\","/")+"<br />");
+ 				info.append(" **Parece que no se ha indexado agenda(ID:"+idElemento+"): " + IndexacionUtil.getError(e));
  			}
  			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
  		}
@@ -749,13 +748,13 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
          				if (!resultado.isCorrecto()) {
          					 log.debug("Error indexando documento (DOC:"+arc.getId()+"):"+ resultado.toString());
  							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
- 							 info.append(" ** Parece que no se ha indexado docAgenda(ID:"+arc.getId() + "): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 							 info.append(" ** Parece que no se ha indexado docAgenda(ID:"+arc.getId() + "): " + resultado.getMensajeCorto());
  						}
          				
          			} catch (Exception e) {
      					log.error("Se ha producido un error en documento con id " + arc.getId());
-     					info.append(" Error enviando una indexacion de un archivo de "+tipo+" (idPadre:"+agenda.getId()+",idArchivo:"+tradAgen.getDocumento().getId() +")  <br /> ");
-     					msgRetorno += "Error indexando documento de "+tipo+" con id:"+arc.getId() + " (revise el log.) <br />";
+     					 info.append(" **Parece que no se ha indexado docAgenda(ID:"+arc.getId() + "): " + IndexacionUtil.getError(e));
+     					 msgRetorno += "Error indexando documento de "+tipo+" con id:"+arc.getId() + " (revise el log.) <br />";
      				}
          		}
          		
@@ -763,7 +762,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		}
      	
  		//Paso 3. Devolvemos resultado correcto con mensaje dependiendo si falla algun documento
- 		return new SolrPendienteResultado(true, msgRetorno);
+ 		return new SolrPendienteResultado(msgRetorno.isEmpty(), msgRetorno);
  	}
 
      
@@ -791,13 +790,13 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      		resultado = noticiaDelegate.indexarSolr(solrIndexer, idElemento, tipo);
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
- 	    		info.append(" ** Parece que no se ha indexado noticia(ID:"+idElemento+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 	    		info.append(" ** Parece que no se ha indexado noticia(ID:"+idElemento+"): " + resultado.getMensajeCorto());
  	    		return resultado;
  	    	 }
  	    } catch (Exception e) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  idElemento);
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " + idElemento + "  <br /> ");
+ 				info.append(" **Parece que no se ha indexado noticia(ID:"+idElemento+"): " + IndexacionUtil.getError(e));
  			}
  			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
  		}
@@ -822,12 +821,12 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
          				if (!resultado.isCorrecto()) {
          					 log.debug("Error indexando documento(DOC:"+arc.getId()+"):"+ resultado.toString());
  							 msgRetorno += "Error indexando documento "+arc.getId() + " (revise el log) <br />";
- 							 info.append(" ** Parece que no se ha indexado docNoticia(ID:"+arc.getId()+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 							 info.append(" ** Parece que no se ha indexado docNoticia(ID:"+arc.getId()+"): " + resultado.getMensajeCorto());
  						}
          				
          			} catch (Exception e) {
      					log.error("Se ha producido un error en documento agenda con id " + arc.getId());
-     					info.append(" Error enviando una indexacion de un archivo de "+tipo+" del microsite (idPadre:"+noticia.getId()+",idArchivo:"+tradNoticia.getDocu().getId() +")  <br /> ");
+     					info.append(" **Parece que no se ha indexado docNoticia(ID:"+arc.getId()+"): " + IndexacionUtil.getError(e));
      					msgRetorno += "Error indexando un documento de "+tipo+" con id "+arc.getId() + " (revise el log.) <br />";
      				}
          		}
@@ -836,12 +835,12 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		}
      	
  		//Paso 3. Devolvemos resultado correcto con mensaje dependiendo si falla algun documento
- 		return new SolrPendienteResultado(true, msgRetorno);
+ 		return new SolrPendienteResultado(msgRetorno.isEmpty(), msgRetorno);
  	}
      
      
      /***
-      * Indexa toda una noticia, incluido sus documentos. 
+      * Indexa toda un contenido, incluido sus documentos. 
       * @param solrIndexer
       * @param solrPendiente
       * @return
@@ -856,21 +855,26 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      	Contenido contenido = null;
      	try {
      		contenido =contenidoDelegate.obtenerContenido(idElemento);
+     		if (contenido == null) {
+     			return new SolrPendienteResultado(false, "Contenido con id " + idElemento + " es nulo");
+     		}
      	} catch (Exception exception) {
      		return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
      	}
      	
-     	try{
+     	try {
+     		
      		resultado = contenidoDelegate.indexarSolr(solrIndexer, idElemento, tipo);
  			if (!resultado.isCorrecto()) {
  	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
- 	    		info.append(" ** Parece que no se ha indexado contenido(ID:"+idElemento+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 	    		info.append(" ** Parece que no se ha indexado contenido(ID:"+idElemento+"): " + resultado.getMensajeCorto());
  	    		return resultado;
- 	    	 }
+ 	    	}
+ 			
  	    } catch (Exception e) {
  			log.error("Se ha producido un error en "+tipo+" con id " +  +idElemento);
  			if (info != null) {
- 				info.append(" Se ha producido un error en "+tipo+" con id " + idElemento + "  <br /> ");
+ 				info.append(" **Parece que no se ha indexado contenido(ID:"+idElemento+"): " + IndexacionUtil.getError(e)); 	    		
  			}
  			return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(e));
  		}
@@ -893,12 +897,12 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  							if (!resultado.isCorrecto()) {
  	        					 log.debug("Error indexando documento(DOC:"+docu.getId()+"):"+ resultado.toString());
  								 msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
- 								 info.append(" ** Parece que no se ha indexado docContenido(ID:"+docu.getId()+"): " + resultado.getMensaje().replace("\\","/")+"<br />");
+ 								 info.append(" ** Parece que no se ha indexado docContenido(ID:"+docu.getId()+"): " + resultado.getMensajeCorto());
  							}
  							
  	        			} catch (Exception e) {
  	    					log.error("Se ha producido un error en documento contenido con id " + docu.getId());
- 	    					info.append(" Se ha producido un error en documento contenido con id " +  docu.getId()+"  <br /> ");
+ 	    					info.append(" **Parece que no se ha indexado docContenido(ID:"+docu.getId()+"): " + IndexacionUtil.getError(e));
  	    					msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
  	    				}
  						
@@ -907,13 +911,15 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		        }	
  	        }
      	} catch(Exception exception) {
-     		log.error("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId());
+     		log.error("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId(), exception);
  			info.append("Se ha producido un error obteniendo la lista de archivos del contenido "+contenido.getId()+"  <br /> ");
  			msgRetorno += "Error indexando documentos "+contenido.getId() + " (revise el log) <br />";
      	}
      	
  		//Paso 3. Devolvemos resultado correcto con mensaje dependiendo si falla algun documento
- 		return new SolrPendienteResultado(true, msgRetorno);
+     	/////// Si el documento está vacío, es que todo ha ido correcto.
+     	return new SolrPendienteResultado(msgRetorno.isEmpty(), msgRetorno);
+     	
  	}
      
      /**

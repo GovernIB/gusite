@@ -22,7 +22,7 @@
     <module><java>lib/httpmime-4.4.1.jar</java></module>
     <module><java>lib/httpclient-4.4.1.jar</java></module>
     <module><java>lib/solr-solrj-5.5.1.jar</java></module>
-    <module><java>lib/solrapi-1.0.1.jar</java></module>
+    <module><java>lib/solrapi-1.0.2.jar</java></module>
     
     <!-- BACK -->
     <module><ejb>sac-micropersistence.jar</ejb></module>

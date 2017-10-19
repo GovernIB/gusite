@@ -85,7 +85,7 @@
 	<classpathentry kind="lib" path="lib/solr/httpmime-4.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/solr/noggit-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/solr/solr-solrj-5.5.1.jar"/>
-	<classpathentry kind="lib" path="lib/solr/solrapi-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/solr/solrapi-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/solr/stax2-api-3.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/solr/zookeeper-3.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
