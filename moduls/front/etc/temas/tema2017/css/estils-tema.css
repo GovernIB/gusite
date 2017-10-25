@@ -3359,6 +3359,14 @@ a.imc-bt-xarxa {
     background-color: transparent;
 }
 
+.imc-bt-intranet { display: inline-block; height: 2em; padding-left: 2.3em; margin-right: 2em; vertical-align: middle; background: transparent url(../files/intranet_fff.svg) no-repeat left center / auto 95%; }
+.imc-bt-intranet span { display: block; color: #fff; text-transform: uppercase; padding-top: .4em; }
+
+.imc-bt-intranet:hover,
+.imc-bt-intranet:focus {
+    color: #fff;
+    background-color: transparent;
+}
 
 .imc-bt-menu { display: inline-block; width: 2em; height: 2em; border: none; vertical-align: middle; background: transparent url(../files/menu.svg) no-repeat center center / 85% auto; }
 .imc-bt-menu span { display: block; position: absolute; top: -999em; left: -999em; }

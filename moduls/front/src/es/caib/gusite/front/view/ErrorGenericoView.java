@@ -15,6 +15,7 @@ public class ErrorGenericoView extends PageView {
 	private String errEstado;
 
 	public ErrorGenericoView(PageView causeView) {
+		
 		this.setMicrosite(causeView.getMicrosite());
 		this.setIdioma(causeView.getIdioma());
 		this.setLang(causeView.getLang());

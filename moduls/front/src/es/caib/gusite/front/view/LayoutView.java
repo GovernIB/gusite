@@ -17,6 +17,7 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Plantilla base que monta la estructura general del resto de páginas web de microsite.
@@ -365,4 +366,42 @@ public class LayoutView {
 		return uriTema;
 	}
 
+	/** Tiene la autorizacion/cookie para la intranet. **/
+	private boolean intranetAuth = false;
+	/**
+	 * Set request.
+	 * @param request
+	 */
+	public void setIntranetAuth(final HttpServletRequest request) {
+		
+		if (request != null) {
+			String rawCookie = request.getHeader("Cookie");
+			if (rawCookie != null) {
+				String[] rawCookieParams = rawCookie.split(";");
+				for(String rawCookieNameAndValue :rawCookieParams)
+				{
+					if (rawCookieNameAndValue != null)  {
+						  String[] rawCookieNameAndValuePair = rawCookieNameAndValue.split("=");
+						  if (rawCookieNameAndValuePair[0].equalsIgnoreCase("es.caib.loginModule/seycon-pro")) {
+							  intranetAuth = true;
+						  }
+					}
+				}
+			}
+		}
+		
+	}
+
+	public void setIntranetAuth(boolean intranetAuth) {
+		this.intranetAuth = intranetAuth;
+	}
+
+	/**
+	 * Uri para los archivos del tema actual
+	 */
+	@Variable("MVS_intranetAuth")
+	public boolean getIntranetAuth() {
+		return intranetAuth;
+	}
+	
 }

@@ -1,5 +1,6 @@
 package es.caib.gusite.front.qssi;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
@@ -48,7 +49,7 @@ public class QssiController extends BaseViewController {
 	@RequestMapping(method = RequestMethod.GET, value = "{uri}/{lang:[a-zA-Z][a-zA-Z]}/qssi/{qssi}/")
 	public ModelAndView qssi(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("qssi") long idQssi, Model model,
 			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			HttpServletResponse response) {
+			HttpServletResponse response, HttpServletRequest request) {
 
 		PageView view = new PageView();
 		try {
@@ -58,6 +59,7 @@ public class QssiController extends BaseViewController {
 			}
 
 			
+			view.setIntranetAuth(request);
 			view.setMicrosite(microsite);
 			view.setLang(lang);
 			view.setIdContenido(mcont);

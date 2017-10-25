@@ -42,7 +42,10 @@ import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author at4.net
@@ -95,7 +98,10 @@ public abstract class BaseViewController extends FrontController {
 		view.setIdioma(idi);
 		view.setLang(lang);
 		view.setVersion(version);
-
+		
+		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		
+		view.setIntranetAuth(request);
 		this.cargarSite(uri, lang, view);
 
 		// TODO: comprobar que el idioma es de los válidos para el microsite. En
