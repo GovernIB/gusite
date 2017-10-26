@@ -61,7 +61,7 @@ Plantilla para la cabecera general de microsite
 					<ul>
 						<div th:if="${MVS_intranetAuth}" th:remove="tag">
 							<li>
-								<a href="#" th:href="@{http://intranet.caib.es}" class="imc-bt-intranet" th:title="#{cabecera.intranet}"><span th:text="#{cabecera.intranet}">Intranet</span></a>
+								<a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('intranet','{0}',lang)}}" class="imc-bt-intranet" th:title="#{cabecera.intranet}"><span th:text="#{cabecera.intranet}">Intranet</span></a>
 							</li>
 						</div>
 						<li>
