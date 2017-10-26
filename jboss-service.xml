@@ -64,6 +64,7 @@
 		es.caib.gusite.enlaces.administracio=http://www.caib.es/govern/administracio.do?lang={0}
 		es.caib.gusite.enlaces.illes=http://www.illesbalears.travel/?lang={0}
 		es.caib.gusite.enlaces.directori=http://www.caib.es/govern/organigrama/directori.do?lang={0}		 		
+		es.caib.gusite.enlaces.intranet=http://intranet.caib.es/?lang={0}	 		
 		es.caib.gusite.enlaces.cercaplus=http://www.caib.es/govern/cercadorAv.do?lang={0}
 		es.caib.gusite.enlaces.accessibilitat=http://www.caib.es/govern/external/accessibilitat.do?lang={0}
 		es.caib.gusite.enlaces.avislegal=http://www.caib.es/govern/external/infoLegal.do?lang={0}
