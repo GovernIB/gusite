@@ -151,6 +151,9 @@ public class IndexacionUtil {
 	}
 	
 	public static boolean isRestringidoMicrosite(Microsite micro) {
+		if (micro.getAcceso() == null) {
+			return false;
+		} 
 		return !micro.getAcceso().equals("P");
 	}
 	
