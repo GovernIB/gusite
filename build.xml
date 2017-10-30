@@ -366,9 +366,13 @@
              <echo>Limpiamos la carpeta lib/solr</echo>
              
              <echo>Obtenemos la librería de solrapi (${solrapi.version.tag}) y lo copiamos en la carpeta lib/solr.</echo>
-             <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" >
+       		<artifact:remoteRepository id="github-governib-maven-repos" url="http://GovernIB.github.io/maven/maven/" />
+       		<artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" >
              		<localRepository path="${mvn.repository.path}" />
-                    <dependency groupId="${solrapi.groupId}" artifactId="${solrapi.artifactId}" version="${solrapi.version.tag}" />
+                    <!-- Repositorio remoto que se activará cuando se deploye solrapi.
+       						<remoteRepository refid="github-governib-maven-repos" />
+       				-->
+       				<dependency groupId="${solrapi.groupId}" artifactId="${solrapi.artifactId}" version="${solrapi.version.tag}" />
              </artifact:dependencies>
              <copy todir="lib/solr" flatten="true">
              		<fileset refid="compile.fileset" />
