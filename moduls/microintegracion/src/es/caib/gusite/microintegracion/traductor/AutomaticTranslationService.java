@@ -38,7 +38,8 @@ public class AutomaticTranslationService {
 							_markUnknowns = INACTIVE,
 							_markConstants = INACTIVE,
 							_markCompounds = INACTIVE,
-							_markAlternatives = INACTIVE;
+							_markAlternatives = INACTIVE,
+							_PPM_USE = INACTIVE;
 
 	/**
 	 * Método que guarda los parámetros de la petición de traducción y el texto a traducir, 
@@ -66,6 +67,7 @@ public class AutomaticTranslationService {
 			params.addParam(setDialegSetting(_dialegSetting));
 			params.addParam(setColorMarkups(_colorMarkups));
 			params.addParam(setMarkUnknowns(_markUnknowns));
+			params.addParam(setPPM_USE(_PPM_USE));
 			params.addParam(setMarkConstants(_markConstants));
 			params.addParam(setMarkCompounds(_markCompounds));
 			params.addParam(setMarkAlternatives(_markAlternatives));
@@ -178,7 +180,20 @@ public class AutomaticTranslationService {
 		String eMessage = "Error al carregar el parámetre COLOR_M";
 		return setParamTxtValue(inputName, colorMarkups, eMessage);
 	}	
+	/**
+	 * Método que guarda el parámetro PPM_USE del traductor Lucy
+	 * 
+	 * @param PPM_USE	Marcadores de color (Si/no)
+	 * @return Param		devuelve el parámetro con el texto y el valor
+	 * @throws Exception
+	 */
+	private Param setPPM_USE(String PPM_USE) throws TraductorException {
 
+	    String inputName = "PPM_USE";
+		String eMessage = "Error al carregar el parámetre PPM_USE";
+		return setParamTxtValue(inputName, PPM_USE, eMessage);
+	}	
+	
 	/**
 	 * Método que guarda el parámetro MARK_UNKNOWNS del traductor Lucy
 	 * 
