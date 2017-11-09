@@ -854,11 +854,12 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      	final ContenidoDelegate contenidoDelegate = DelegateUtil.getContenidoDelegate();
      	Contenido contenido = null;
      	try {
-     		contenido =contenidoDelegate.obtenerContenido(idElemento);
+     		contenido = contenidoDelegate.obtenerContenido(idElemento);
      		if (contenido == null) {
      			return new SolrPendienteResultado(false, "Contenido con id " + idElemento + " es nulo");
      		}
      	} catch (Exception exception) {
+     		log.error("Error obteniendo el contenido id:" + idElemento, exception);
      		return new SolrPendienteResultado(false, ExceptionUtils.getStackTrace(exception));
      	}
      	
@@ -872,7 +873,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  	    	}
  			
  	    } catch (Exception e) {
- 			log.error("Se ha producido un error en "+tipo+" con id " +  +idElemento);
+ 			log.error("Se ha producido un error en "+tipo+" con id " +  +idElemento, e);
  			if (info != null) {
  				info.append(" **Parece que no se ha indexado contenido(ID:"+idElemento+"): " + IndexacionUtil.getError(e)); 	    		
  			}
@@ -901,7 +902,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  							}
  							
  	        			} catch (Exception e) {
- 	    					log.error("Se ha producido un error en documento contenido con id " + docu.getId());
+ 	    					log.error("Se ha producido un error en documento contenido con id " + docu.getId(), e);
  	    					info.append(" **Parece que no se ha indexado docContenido(ID:"+docu.getId()+"): " + IndexacionUtil.getError(e));
  	    					msgRetorno += "Error indexando documento "+docu.getId() + " (revise el log) <br />";
  	    				}
@@ -918,6 +919,9 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      	
  		//Paso 3. Devolvemos resultado correcto con mensaje dependiendo si falla algun documento
      	/////// Si el documento está vacío, es que todo ha ido correcto.
+     	if (!msgRetorno.isEmpty()) {
+     		log.error("Error anexando documentos del contenido id:"+idElemento +" Mensaje:"+msgRetorno);
+     	}
      	return new SolrPendienteResultado(msgRetorno.isEmpty(), msgRetorno);
      	
  	}

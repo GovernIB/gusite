@@ -317,11 +317,13 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 			_colorMarkups = ACTIVE;
 			_markUnknowns = ACTIVE;
 			_markAlternatives = ACTIVE;
+			_PPM_USE= ACTIVE;
 			
 		} else {
-				_colorMarkups = INACTIVE;
-				_markUnknowns = INACTIVE;
-				_markAlternatives = INACTIVE;
+			_colorMarkups = INACTIVE;
+			_markUnknowns = INACTIVE;
+			_markAlternatives = INACTIVE;
+			_PPM_USE= INACTIVE;
 		}
 
 		return translate(textTraduccio);
