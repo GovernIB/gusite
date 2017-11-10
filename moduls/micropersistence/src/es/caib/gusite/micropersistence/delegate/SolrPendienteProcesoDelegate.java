@@ -6,6 +6,7 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
+import es.caib.gusite.micromodel.SolrPendiente;
 import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.SolrPendienteProcesoFacade;
@@ -84,7 +85,21 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 	}
 	
 
-    
+
+    /**
+	 * Indexa los pendientes de indexar
+	 * @param solrPendienteJob 
+	 *  
+	 * @throws DelegateException
+	 */
+	public SolrPendienteResultado indexarPendiente(SolrPendiente solrPendiente, StringBuffer info) throws DelegateException {
+		try {
+			return this.getFacade().indexarPendiente(solrPendiente, info);
+		}catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
 
      
 	/* ========================================================= */

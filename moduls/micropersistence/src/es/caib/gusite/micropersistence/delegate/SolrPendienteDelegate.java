@@ -235,31 +235,5 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
 	}
     
-    /**
-	 * Indexa los pendientes de indexar
-	 * @param solrPendienteJob 
-	 *  
-	 * @throws DelegateException
-	 */
-	public SolrPendienteResultado indexarPendiente(SolrPendiente solrPendiente, StringBuffer info) throws DelegateException {
-		try {
-			return this.getFacade().indexarPendiente(solrPendiente, info);
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
-
-	/**
-	 * Indexa un Microsite
-	 * @param solrPendienteJob 
-	 *  
-	 * @throws DelegateException
-	 */
-	public SolrPendienteResultado indexarMicrosite(Long idMicrosite, SolrPendienteJob solrPendienteJob, StringBuffer info) throws DelegateException {
-		try {
-			return this.getFacade().indexarMicrosite( idMicrosite, solrPendienteJob, info);
-		}catch (RemoteException e) {
-			throw new DelegateException(e);
-		}
-	}
+    
 }
