@@ -389,7 +389,6 @@ public class LayoutView {
 				}
 			}
 		}
-		
 	}
 
 	public void setIntranetAuth(boolean intranetAuth) {
