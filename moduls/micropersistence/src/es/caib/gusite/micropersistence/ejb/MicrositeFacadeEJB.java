@@ -993,6 +993,87 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 		}
 	}
 
+
+	/**
+	 * Marcar microsite como indexado. En caso de no pasar ID, se da por hecho que se quiere marcar todos como NO indexados.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public void marcarComoIndexado(final Long id, final int indexado) {
+
+		final Session session = this.getSession();
+		try {
+			final Query query;
+			if (id == null) {
+				query = session.createQuery("update Microsite set indexado = " + indexado);
+			} else {
+				query = session.createQuery("update Microsite set indexado = " + indexado + " where id = " + id);
+			}
+			query.executeUpdate();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	
+	/**
+	 * Resumen de los microsites indexados.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public String getResumenMicrositesIndexados() {
+		final Session session = this.getSession();
+		try {
+			final Query query = session.createQuery("select indexado, count(*) from Microsite group by indexado");
+			List<Object[]> objetos = query.list();
+			StringBuffer respuesta = new StringBuffer();
+			int total = 0;
+			for(Object[] objeto : objetos) {
+				String cuantos = objeto[1].toString();
+				total += Integer.parseInt(cuantos);
+				if (respuesta.length() != 0) {
+					respuesta.append(" , ");
+				}
+				
+				if ("0".equals(objeto[0].toString())) {
+					respuesta.append(cuantos+" no indexats");
+				} else {
+					respuesta.append(cuantos+" indexats");
+				}
+			}
+			respuesta.append(" )");
+			return "Hi ha un total de "+total+" microsites ( " + respuesta.toString();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	/**
+	 * Lista todos los Microsites sin indexar.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public List<Long> listarMicrositesSinIndexar(int cuantos) {
+
+		final Session session = this.getSession();
+		try {
+			final Query query = session.createQuery(" select micro.id from Microsite micro where micro.indexado = " + Microsite.NO_INDEXADO);
+			query.setMaxResults(cuantos);
+			return query.list();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+
 	/**
 	 * Listado ligero de todos los Microsites. Solo rellena el idioma por
 	 * defecto

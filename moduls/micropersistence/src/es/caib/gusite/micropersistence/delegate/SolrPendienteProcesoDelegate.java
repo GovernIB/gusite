@@ -70,6 +70,21 @@ public class SolrPendienteProcesoDelegate implements StatelessDelegate {
 		}
 	}
 	
+	
+	/**
+	 * Indexa Todo sin indexar
+	 * @param solrPendienteJob 
+	 *  
+	 * @throws DelegateException
+	 */
+	public Boolean indexarTodoSinIndexar(SolrPendienteJob solrPendienteJob) throws Exception {
+		try {
+			return this.getFacade().indexarTodoSinIndexar(solrPendienteJob);
+		}catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
 	/**
 	 * Indexa Todo
 	 * @param solrPendienteJob 

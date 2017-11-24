@@ -216,10 +216,12 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             
         	int correctos = 0, incorrectos = 0;
         	for (int i = 0; i < listaMicro.size(); i++) {
+        		
         		final Long idMicro = listaMicro.get(i);
-        		if (idMicro != null){
+        		if (idMicro != null) {
+        			
         			SolrPendienteResultado resultado = null;
-            		try{
+            		try {
             			if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
             				info.insert(0, "Finalizado a la fuerza!.<br />");
             				break;
@@ -234,11 +236,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	        	DelegateUtil.getSolrPendienteDelegate().actualizarSorlPendienteJob(solrPendienteJob);
     	        	
     	        	if (resultado != null && resultado.isIndexable()) {
+    	        		
     	        		if (resultado.isCorrecto()) {
     	        			correctos ++;
     	        		} else {
     	        			incorrectos ++;
     	        		}
+    	        		
     	        	}
             	}
             	
@@ -255,6 +259,73 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
            close(session);
         }
     }
+    
+    
+    /**
+     * Indexa Todos los microsites que no están indexados.
+     * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"      
+     * @return Booleano indicando si se ha indexado todo .
+     * @throws Exception 
+   	 */
+    public Boolean indexarTodoSinIndexar(SolrPendienteJob solrPendienteJob) throws Exception {
+    	GusiteJobUtil.interrumpirTarea = false;
+    	Session session = null;
+    	try 
+    	{
+        	final StringBuffer info = new StringBuffer();
+        	final MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
+        	final int descansoMicrosite = GusitePropertiesUtil.getCuantosMicrosites();
+            final List<Long> listaMicro = micrositedel.listarMicrositesSinIndexar(descansoMicrosite);
+        	
+        	int correctos = 0, incorrectos = 0;
+        	for (int i = 0; i < listaMicro.size(); i++) {
+        		
+        		final Long idMicro = listaMicro.get(i);
+        		if (idMicro != null) {
+        			
+        			
+        			SolrPendienteResultado resultado = null;
+            		try {
+            			if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+            				info.insert(0, "Finalizado a la fuerza!.<br />");
+            				break;
+            			}
+            			resultado = indexacionMicrosite(idMicro,solrPendienteJob, info);	
+            		} catch (Exception he) {                       
+                       log.error("No se ha indexado el microsite con id " + idMicro, he);
+                       info.append(" No se ha indexado el microsite con id " + idMicro+"  <br /> ");
+                    }
+            		
+            		solrPendienteJob.setDescripcion(GusiteClobUtil.getClob("La indexació està activa. Porta indexats "+(i+1)+" microsites ("+(100*(i+1)/listaMicro.size())+"%). <br /> "+info.toString()));
+    	        	DelegateUtil.getSolrPendienteDelegate().actualizarSorlPendienteJob(solrPendienteJob);
+    	        	
+    	        	if (resultado != null && resultado.isIndexable()) {
+    	        		
+    	        		if (resultado.isCorrecto()) {
+    	        			correctos ++;
+    	        		} else {
+    	        			incorrectos ++;
+    	        		}
+    	        		
+    	        	}
+            	}
+            	
+            }
+            
+        	String infoResumen = "La indexació ha finalitzat. Dels "+listaMicro.size()+" microsites en total, eren indexables "+(correctos + incorrectos)+" dels quals "+correctos+" han estat correctes i "+incorrectos+" estat incorrectes. <br />";
+            solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));
+            return true;
+        }        
+        catch (Exception exception) {
+           log.error("Error indexando todo" , exception);
+           throw new Exception(exception);
+        } finally {
+           close(session);
+        }
+    }
+    
     
     
     /**
@@ -340,6 +411,8 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
 	        	
+	        	//Liberamos memoria.
+	        	listArchivos.clear();
 	        	
 	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
 	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
@@ -369,6 +442,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
 	        	
+	        	//Liberamos memoria.
+	        	listEncuestas.clear();
+	        	
 	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
 	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
     			}
@@ -397,6 +473,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
 	        	
+	        	//Liberamos memoria.
+	        	listFaqs.clear();
+	        	
 	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
 	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
     			}
@@ -423,6 +502,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
+	        	
+	        	//Liberamos memoria.
+	        	listNoticias.clear();
 	        	
 	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
 	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
@@ -453,6 +535,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
 	        	
+	        	//Liberamos memoria.
+	        	listAgendas.clear();
+	        	
 	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
 	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
     			}
@@ -482,6 +567,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 	        	}
 	        
+	        	//Liberamos memoria.
+	        	listContenidos.clear();
+	        	
 	        } else {
 	        	info.append("El microsite no es indexable con id " + idMicrosite +".<br />");
 	        	resultadoMicrosite.setIndexable(false);
@@ -495,6 +583,10 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		    } catch (ExcepcionSolrApi e) {
 				log.error("No se ha podido comitear la indexación" + e.getMessage(), e);
 			}
+	    	 
+	    	//Marcamos el microsite como indexado
+	    	micrositedel.marcarComoIndexado(micro.getId(), Microsite.INDEXADO);
+	    	
 	    	return new SolrPendienteResultado(todoCorrecto, "Parece que ha funcionado correcto la indexación del MICROSITE con id " + idMicrosite+ ", ver la info para más información.");
     	}
          catch (Exception he) {

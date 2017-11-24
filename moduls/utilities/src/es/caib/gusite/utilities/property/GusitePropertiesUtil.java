@@ -18,6 +18,10 @@ public class GusitePropertiesUtil
 	  private static final String URL_SOLR = "es.caib.gusite.url.solr";
 	  /** Dias SOLR. **/
 	  private static final String DIAS_SOLR = "es.caib.gusite.dias.solr";
+	  /** Descanso SOLR en segundos. **/
+	  private static final String DESCANSO_MIN_SOLR = "es.caib.gusite.solr.descanso.minutos";
+	  /** Descanso SOLR en microsite. **/
+	  private static final String DESCANSO_MIC_SOLR = "es.caib.gusite.solr.descanso.microsites";
 	  /** Tamanyo máximo Job. **/
 	  private static final String TAMANYO_MAX_JOB = "es.caib.gusite.maxjob.solr";
 	  /** Tamanyo máximo Clob. **/
@@ -72,7 +76,7 @@ public class GusitePropertiesUtil
 		    final Long numeroMaximo;
 			final String sNumeroMaximo = getProperty(TAMANYO_MAX_CLOB);
 			if (sNumeroMaximo == null) {
-				numeroMaximo = 1048576l*300; //300MB
+				numeroMaximo = 1048576l*20; //20MB
 			} else { 
 				numeroMaximo = (long) (Double.valueOf(sNumeroMaximo) * 1048576l); //Para pasarlo a MB
 			}
@@ -163,5 +167,34 @@ public class GusitePropertiesUtil
 	        	log.error(ERROR_MESSAGE + property, e);
 	            return null;
 	        }
-	    } 
+	    }
+
+	/**
+	   * Devuelve cada cuantos microsites se tiene que realizar el descanso. Por defecto, 5 segundos.
+	   * @return
+	   */
+	public static int getTiempoEspera() {
+		 try {
+			 	int retorno =  Integer.valueOf(getProperty(DESCANSO_MIN_SOLR));
+	            //Si hubiese un dato error, 0 o negativo, ponemos 5.
+			 	if (retorno <= 0) { retorno = 5; }
+	            return retorno;
+	      } catch (Exception e) {
+	      	log.error(ERROR_MESSAGE, e);
+	          return 5;
+	      }
+	}
+
+
+	public static int getCuantosMicrosites() {
+		try {
+		 	int retorno =  Integer.valueOf(getProperty(DESCANSO_MIC_SOLR));
+            //Si hubiese un dato error, 0 o negativo, ponemos 5.
+		 	if (retorno <= 0) { retorno = 5; }
+            return retorno;
+      } catch (Exception e) {
+      	log.error(ERROR_MESSAGE, e);
+          return 5;
+      }
+	} 
 }

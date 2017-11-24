@@ -188,6 +188,9 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@Column(name = "MIC_TIPO_ACCESO")
 	private String acceso;
 
+	@Column(name = "MIC_INDEXADO")
+	private Integer indexado;
+	
 	/**
 	 * Pone el sitio web en modo desarrollo, deshabilitando caché de plantillas.
 	 */
@@ -848,6 +851,30 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	}
 	
 	
+	/**
+	 * @return the indexado
+	 */
+	public Integer getIndexado() {
+		return indexado;
+	}
+
+	/**
+	 * @param indexado the indexado to set
+	 */
+	public void setIndexado(Integer indexado) {
+		this.indexado = indexado;
+	}
+	
+	public final static int INDEXADO = 1;
+	public final static int NO_INDEXADO = 0;
+	public boolean isIndexado () {
+		if (this.indexado != null && this.indexado == INDEXADO) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * toString
 	 * 

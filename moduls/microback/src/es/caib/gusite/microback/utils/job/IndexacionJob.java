@@ -2,6 +2,8 @@ package es.caib.gusite.microback.utils.job;
 
 import java.util.List;
 
+import javax.xml.ws.spi.ServiceDelegate;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.InterruptableJob;
@@ -43,19 +45,8 @@ public class IndexacionJob implements Job, InterruptableJob  {
     	
     	SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
     	SolrPendienteProcesoDelegate solrProcesoDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
-    	
-    	//PASO -1. Comprobamos que no haya ya una tarea ejecutándose 
-    	try {
-			if (IndexacionJobUtil.existeJobAbierto(context)) {
-				log.error("Hay alguna tarea abierta");
-				return;
-			}
-		} catch (Exception exception) {
-			log.error("Error mirando los jobs activos.", exception);
-		}
-    	
-    	
-    	//PASO 0.1 Obtenemos el schedulerContext para saber el tipo de indexación.
+
+    	//PREPASO 1 Obtenemos el schedulerContext para saber el tipo de indexación.
     	try {
 			schedulerContext = context.getScheduler().getContext();
 		} catch (SchedulerException e) {
@@ -64,8 +55,18 @@ public class IndexacionJob implements Job, InterruptableJob  {
 		}
     	final String tipoIndexacion = (String) schedulerContext.get("tipoindexacion");
         
+    	//PREPASO 2 Comprobamos que no haya ya una tarea ejecutándose 
+    	try {
+			if (IndexacionJobUtil.existeJobAbierto(context, tipoIndexacion)) {
+				log.error("Hay alguna tarea abierta");
+				return;
+			}
+		} catch (Exception exception) {
+			log.error("Error mirando los jobs activos.", exception);
+		}
+    	
     	 
-    	//PASO 0.2 Extraemos el microsite.
+    	//PREPASO 3 Extraemos el microsite.
     	Long idElemento = null;
 		if (tipoIndexacion != null && "IDX_MIC".equals(tipoIndexacion)) {
 			idElemento = (Long) schedulerContext.get("idMicrosite");
@@ -87,8 +88,18 @@ public class IndexacionJob implements Job, InterruptableJob  {
         try { 
         	GusiteJobUtil.interrumpirTarea = false;
 	    	switch(tipoIndexacion) {
-	    		case "IDX_TODO":
+	    		/*De momento deseaparece esta opción. case "IDX_TODO":
 	    			solrProcesoDelegate.indexarTodo(solrPendienteJob);
+	    			break;*/
+	    		case "IDX_TSI":
+	    			int cuantosMicrosites = GusitePropertiesUtil.getCuantosMicrosites();
+	    	    	int tiempoEspera = GusitePropertiesUtil.getTiempoEspera();
+	    	    	solrProcesoDelegate.indexarTodoSinIndexar(solrPendienteJob);
+	    			/** Comprobamos si aun quedan microsites para que se ejecute más tarde.**/
+	    			List<Long> microsites = DelegateUtil.getMicrositeDelegate().listarMicrositesSinIndexar(cuantosMicrosites);
+	    			if (microsites.size() > 0) {
+	    				IndexacionJobUtil.crearJobTiempo(tiempoEspera);
+	    			}
 	    			break;
 	    		case "IDX_UA":
 	    			solrProcesoDelegate.indexarMicrositeByUA(idElemento.toString(),solrPendienteJob);
@@ -98,7 +109,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
 	    			break;
 	    		case "IDX_MIC":
 	    			solrProcesoDelegate.indexarMicrosite(idElemento,solrPendienteJob, null);
-	    			break;    			
+	    			break;   
 	    		default:
 	    			break;
 	    	}
