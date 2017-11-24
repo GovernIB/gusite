@@ -85,6 +85,9 @@ public class CercadorController extends BaseViewController {
 						if (url.startsWith("/sacmicrofront/")) {
 							//Quitamos el contextpath hardcoded
 							url = url.substring(15);
+						} else if (url.startsWith("/sites")) {
+							//Quitamos el contextpath hardcoded
+							url = url.substring(6); 
 						}
 						
 						if(!res.isDisponible()){

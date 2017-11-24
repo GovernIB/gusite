@@ -143,7 +143,7 @@ public class IndexacionUtil {
 		
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
     	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
-    		url = "/"+ micro.getUri() + "/" + idioma;	    		
+    		url = "/sites/"+ micro.getUri() + "/" + idioma;	    		
     	} else {
     		url = "/sacmicrofront/index.do?lang="+idioma +"&idsite="+ micro.getId();
     	}
@@ -165,7 +165,7 @@ public class IndexacionUtil {
 		if (contenido.getMicrosite() != null && contenido.getMicrosite().getVersio() != null && "v5".equals(contenido.getMicrosite().getVersio())) {
 			final TraduccionContenido traduccion = (TraduccionContenido) contenido.getTraduccion(idioma);
 			if (traduccion != null) {
-				url =  "/"+ contenido.getMicrosite().getUri() + "/" + idioma + "/" + traduccion.getUri();
+				url =  "/sites/"+ contenido.getMicrosite().getUri() + "/" + idioma + "/" + traduccion.getUri();
 			}				    	
     	} else {
     		url = "/sacmicrofront/contenido.do?lang="+idioma +"&idsite="+contenido.getMicrosite().getId() 
@@ -190,7 +190,7 @@ public class IndexacionUtil {
 		String url = null;
 		
 		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
-    		url = "/"+ micro.getUri()  + "/f/" + archivo.getId();	    		
+    		url = "/sites/"+ micro.getUri()  + "/f/" + archivo.getId();	    		
     	} else {
     		url = "/sacmicrofront/archivopub.do?ctrl=MCRST"+micro.getId()+ "ZI" +archivo.getId() +"&id=" + archivo.getId();
     	}
@@ -234,7 +234,7 @@ public class IndexacionUtil {
 		
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
 		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
-			url = "/"+ micro.getUri() + "/" + idioma + "/agenda/" + fechaIni;	    		
+			url = "/sites/"+ micro.getUri() + "/" + idioma + "/agenda/" + fechaIni;	    		
 		} else {
 			url = "/sacmicrofront/agenda.do?lang="+idioma +"&idsite="+micro.getId() 
 					+"&cont="+ fechaIni;
@@ -261,7 +261,7 @@ public class IndexacionUtil {
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
 		final TraduccionEncuesta traduccion = (TraduccionEncuesta) encuesta.getTraduccion(idioma);
 		if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
-			url =  "/"+ micro.getUri() + "/" + idioma + "/encuesta/" + traduccion.getUri();	    		
+			url =  "/sites/"+ micro.getUri() + "/" + idioma + "/encuesta/" + traduccion.getUri();	    		
 		} else {
 			url = "/sacmicrofront/encuesta.do?lang="+idioma +"&idsite="+micro.getId() 
 					+"&cont="+encuesta.getId();
@@ -288,7 +288,7 @@ public class IndexacionUtil {
 		String url = null;
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
     	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
-    		url = "/"+ micro.getUri() + "/" + keyIdioma + "/faq/";	    		
+    		url = "/sites/"+ micro.getUri() + "/" + keyIdioma + "/faq/";	    		
     	} else {
     		url = "/sacmicrofront/faqs.do?lang="+keyIdioma +"&idsite="+micro.getId() 
     				+"&cont="+faq.getId();
@@ -320,13 +320,13 @@ public class IndexacionUtil {
 		//v5 version 2015, IN intranet, v1 primera version, v4 segunda version
     	if (micro != null && micro.getVersio() != null && "v5".equals(micro.getVersio())) {
     		if (noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_FICHA)){
-    			url = "/"+ micro.getUri() + "/" + keyIdioma + "/n/" + traduccion.getUri();	 
+    			url = "/sites/"+ micro.getUri() + "/" + keyIdioma + "/n/" + traduccion.getUri();	 
     		}else if (noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_FOTO) ){
     			String idFoto = noticia.getImagen() !=null && noticia.getImagen().getId() !=null ? noticia.getImagen().getId().toString() : "";
-    			url = "/"+ micro.getUri() +  "/f/" + idFoto;
+    			url = "/sites/"+ micro.getUri() +  "/f/" + idFoto;
     		}else if ( noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_DOCUMENTOS)){
     			String idDocu = traduccion.getDocu() !=null && traduccion.getDocu().getId() !=null ? traduccion.getDocu().getId().toString() : "";
-    			url =  "/"+ micro.getUri() + "/f/" + idDocu;
+    			url =  "/sites/"+ micro.getUri() + "/f/" + idDocu;
     		}else if (noticia.getTipo().getTipoelemento().equals(Tipo.TIPO_LINK)){
     			url = traduccion.getLaurl();
     		}
