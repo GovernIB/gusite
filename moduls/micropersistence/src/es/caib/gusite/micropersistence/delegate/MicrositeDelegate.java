@@ -215,6 +215,21 @@ public class MicrositeDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
+
+	/**
+	 * Lista todos los Microsites sin indexar.
+	 * 
+	 * @return una lista de microsites
+	 * @throws DelegateException
+	 */
+	public List<Long> listarMicrositesSinIndexar(int cuantosMicrosites) throws DelegateException {
+		try {
+			return this.getFacade().listarMicrositesSinIndexar(cuantosMicrosites);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	/**
 	 * Listado ligero de todos los Microsites. Solo rellena el idioma por
@@ -415,6 +430,24 @@ public class MicrositeDelegate implements StatelessDelegate {
 		}
 	}
 	
+
+	public void marcarComoIndexado(Long id, int indexado) throws java.rmi.RemoteException,DelegateException {		
+		try {
+			 this.getFacade().marcarComoIndexado(id, indexado);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+
+	public String getResumenMicrositesIndexados() throws java.rmi.RemoteException,DelegateException {
+		try {
+			 return this.getFacade().getResumenMicrositesIndexados();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
 	  
 	public List<Long> obtenerMicrositesbyUA(List<Integer> listaIds)
 			   throws java.rmi.RemoteException,DelegateException {		
@@ -447,4 +480,8 @@ public class MicrositeDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
+	
+
+
 }

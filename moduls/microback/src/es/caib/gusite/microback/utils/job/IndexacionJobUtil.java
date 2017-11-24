@@ -1,11 +1,13 @@
 package es.caib.gusite.microback.utils.job;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerUtils;
 import org.quartz.impl.StdSchedulerFactory;
@@ -15,6 +17,7 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 
 /**
  * Clase de apoyo para realizar tareas de indexación con quartz.
@@ -33,7 +36,7 @@ public class IndexacionJobUtil {
     	
     	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
     	//  se da por hecho que se está ejecutando.
-    	if (existeJobAbierto(null)) {
+    	if (existeJobAbierto(null, tipoIndexacion)) {
     			throw new Exception("Se está ejecutando un job, intentelo más tarde");
     	}
     	
@@ -53,6 +56,37 @@ public class IndexacionJobUtil {
     	scheduler.scheduleJob(jobDetail, trigger);    	
     	
     }
+    
+    
+    /**
+     *  Crea el job con tiempo, no se comprueba si hay otro job.
+     * @param tipoIndexacion
+     * @throws SchedulerException 
+     *  
+     */
+    public static void crearJobTiempo(final int tiempoEspera) throws Exception  {
+    	
+    	final Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler(); 
+    	scheduler.start(); 
+    	final Calendar calendar = Calendar.getInstance();
+    	calendar.add(Calendar.MINUTE, tiempoEspera);
+    	final String aleatorio = String.valueOf(calendar.getTimeInMillis());
+    	final JobDetail jobDetail = new JobDetail("IndexacionJob" + IndexacionUtil.TIPO_TODO_SIN_INDEXAR+aleatorio, Scheduler.DEFAULT_GROUP, IndexacionJob.class);
+    	final SimpleTrigger trigger = new SimpleTrigger("triggerJobSinIndexar",
+                null,
+                calendar.getTime(),
+                null,
+                0,
+                1); 
+    	scheduler.getContext().put("tipoindexacion", IndexacionUtil.TIPO_TODO_SIN_INDEXAR);
+    	
+    	
+        trigger.setName("FireOnceNowTrigger"+aleatorio);  
+    	scheduler.scheduleJob(jobDetail, trigger);    	
+    	
+    }
+	
+
 	
 
 
@@ -88,9 +122,9 @@ public class IndexacionJobUtil {
      * @throws SchedulerException 
      * @throws DelegateException 
      */
-	public static boolean existeJobAbierto(JobExecutionContext context) throws SchedulerException, DelegateException {
+	public static boolean existeJobAbierto(JobExecutionContext context, String tipoIndexacion) throws SchedulerException, DelegateException {
 		
-		boolean existeJobAbierto = false;
+		boolean existeJobAbierto = false; //StdSchedulerFactory.getDefaultScheduler().getJobGroupNames() //[Generadores, DEFAULT]
 		
 		//Paso 1. Buscar los jobs abiertos en el quartz. 
     	List<JobExecutionContext> currentlyExecuting = StdSchedulerFactory.getDefaultScheduler().getCurrentlyExecutingJobs();
@@ -117,6 +151,18 @@ public class IndexacionJobUtil {
 	    			break;
 	    		}
 	    	}
+    	}
+    	
+    	//Paso 3. Si no somos del tipo todo sin indexar, comprobamos si hay alguna tarea pendiente
+    	if (!existeJobAbierto) {
+    		//if (!tipoIndexacion.equals(IndexacionUtil.TIPO_TODO_SIN_INDEXAR)) {
+	    		String[] tareas = StdSchedulerFactory.getDefaultScheduler().getJobNames("DEFAULT");
+	    		for (String tarea : tareas) {
+	    			if (!tarea.contains(tipoIndexacion)) { //Comprobamos que no sea del mismo tipo
+	    				existeJobAbierto = true;
+	    			}
+	    		}
+    		//}
     	}
     	return existeJobAbierto;
 	}

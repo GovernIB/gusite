@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import es.caib.gusite.microback.utils.job.IndexacionJobUtil;
+import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.SolrPendiente;
 import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -71,6 +72,15 @@ public class IndexarPrincipalAction extends BaseAction {
 					request.setAttribute("ok", true);
 					addMessage(request, "indexa.ok");
 				}					
+			}if ("todoSIN".equals(accion)) {
+				
+				if (indexarTodoSinIndexar() == false){
+					request.setAttribute("nok", true);
+					addMessage(request, "indexa.nok");
+				} else {			
+					request.setAttribute("ok", true);
+					addMessage(request, "indexa.ok");
+				}					
 			} else if ("byUA".equals(accion)) {
 				
 				String idUA = request.getParameter("uaId");
@@ -104,7 +114,17 @@ public class IndexarPrincipalAction extends BaseAction {
 				
 				final List<SolrPendienteJob> listInfo = verListaJobs();	
 	        	request.setAttribute("listInfo",listInfo);
+
+			}  else if("verinfoSIN".equals(accion)) { 
+				
+				final String listInfo = verInfoSIN();	
+	        	request.setAttribute("listInfoSIN",listInfo);
 	        	
+			}  else if("marcarSIN".equals(accion)) { 
+				
+				marcarMicrositesSIN();
+				addMessage(request, "marcarSIN.ok");
+				
 			} else if ("cerrar".equals(accion)) { 
 				try {
 					cerrarJobs();
@@ -134,6 +154,25 @@ public class IndexarPrincipalAction extends BaseAction {
 	}	
 	
 	/**
+	 * Marca todos los microsites como NO indexados.
+	 * @throws DelegateException 
+	 * @throws RemoteException 
+	 */
+	private void marcarMicrositesSIN() throws RemoteException, DelegateException {
+		DelegateUtil.getMicrositeDelegate().marcarComoIndexado(null, Microsite.NO_INDEXADO);
+	}
+
+	/**
+	 * Devuelve un resumen básico de los microsites indexados.
+	 * @return
+	 * @throws DelegateException 
+	 * @throws RemoteException 
+	 */
+	private String verInfoSIN() throws RemoteException, DelegateException { 
+		return DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados();
+	}
+
+	/** 
 	 * Limpia los jobs.
 	 * @throws DelegateException
 	 */
@@ -193,7 +232,7 @@ public class IndexarPrincipalAction extends BaseAction {
      * @throws Exception
      */
     private Boolean indexarTodo() throws Exception {
-		 
+		 /*
 		try
 		{									
 			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_TODO, null, null);						
@@ -203,8 +242,32 @@ public class IndexarPrincipalAction extends BaseAction {
 		}
 	 		     	
 		return true;
+			*/
+    	return true;
+	}
+    
+    
+
+    /**
+     * Indexa todos los microsites.
+     * @return
+     * @throws Exception
+     */
+    private Boolean indexarTodoSinIndexar() throws Exception {
+		 
+		try
+		{									
+			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_TODO_SIN_INDEXAR, null, null);						
+		} catch(Exception e){
+			log.error("Error indexando todo", e );
+			return false;
+		}
+	 		     	
+		return true;
 			
 	}
+    
+    
     
     /**
      * Indexa por ua.

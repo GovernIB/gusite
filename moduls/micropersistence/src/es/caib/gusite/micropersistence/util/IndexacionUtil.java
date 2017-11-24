@@ -38,6 +38,7 @@ public class IndexacionUtil {
 	public static final Long DESINDEXAR = 0l;
 	
 	public static final String TIPO_TODO = "IDX_TODO";
+	public static final String TIPO_TODO_SIN_INDEXAR = "IDX_TSI";
 	public static final String TIPO_UA ="IDX_UA";
 	public static final String TIPO_PENDIENTE="IDX_PDT";
 	public static final String TIPO_MICROSITE = "IDX_MIC";
