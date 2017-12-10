@@ -48,13 +48,23 @@ public class SolrPendienteJob implements ValueObject {
 	@Column(name = "JOB_FECFIN")
 	private Date fechaFin;
 	
-	/** Tipo. IDX_TODO = INDEXAR TODO, IDX_UA = INDEXAR POR UNID. ADMINISTRATIVA, IDX_PDT = INDEXAR PENDIENTE, IDX_MIC = INDEXAR POR MICROSITE. **/
+	/** Tipo. IDX_TODO = INDEXAR TODO, IDX_TSI = INDEXAR TODO SIN INDEXAR, IDX_UA = INDEXAR POR UNID. ADMINISTRATIVA, IDX_PDT = INDEXAR PENDIENTE, IDX_MIC = INDEXAR POR MICROSITE. **/
 	@Column(name = "JOB_TIPO")
 	private String tipo;
 	
+	/** Descripcion del job. **/
 	@Column(name = "JOB_DESCRI")
 	private Clob descripcion;
 	
+	/** Finalizado, se necesita en el indexar todo sin indexar.**/
+	@Column(name = "JOB_FINALI")
+	private int finalizado;
+	
+	/** Resumen. **/
+	@Column(name = "JOB_RESUME")
+	private String resumen;
+	
+	/** Campo transient para transformarlo en el descripcion. **/
 	//@Column(name = "JOB_DESCRI",updatable=false, insertable=false)
 	@Transient
 	private String info;
@@ -119,19 +129,6 @@ public class SolrPendienteJob implements ValueObject {
 		this.tipo = tipo;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuffer texto = new StringBuffer();
-		texto.append("SolrPendienteJob id:");
-		texto.append(id);
-		texto.append(" fechaIni:");
-		texto.append(fechaIni);
-		texto.append(" fechaFin:");
-		texto.append(fechaFin);
-		texto.append(tipo);
-		texto.append(" tipo:");
-		return texto.toString();
-	}
 	/**
 	 * @return the descripcion
 	 */
@@ -181,7 +178,51 @@ public class SolrPendienteJob implements ValueObject {
 	public void setIdElem(Long idElem) {
 		this.idElem = idElem;
 	}
+	/**
+	 * @return the finalizado
+	 */
+	public int getFinalizado() {
+		return finalizado;
+	}
+	/**
+	 * @param finalizado the finalizado to set
+	 */
+	public void setFinalizado(int finalizado) {
+		this.finalizado = finalizado;
+	}
+	/**
+	 * @return the resumen
+	 */
+	public String getResumen() {
+		return resumen;
+	}
+	/**
+	 * @param resumen the resumen to set
+	 */
+	public void setResumen(String resumen) {
+		this.resumen = resumen;
+	}
+	/**
+	 * @param info the info to set
+	 */
+	public void setInfo(String info) {
+		this.info = info;
+	}
 	
 	
+	@Override
+	public String toString() {
+		StringBuffer texto = new StringBuffer();
+		texto.append("SolrPendienteJob id:");
+		texto.append(id);
+		texto.append(" fechaIni:");
+		texto.append(fechaIni);
+		texto.append(" fechaFin:");
+		texto.append(fechaFin);
+		texto.append(" tipo:");
+		texto.append(tipo);
+		//No se añaden mas propiedades porque podría provocar problemas de memoria y no son necesarios.
+		return texto.toString();
+	}	
 	
 }

@@ -275,11 +275,26 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	try 
     	{
         	final StringBuffer info = new StringBuffer();
+        	if (!solrPendienteJob.getInfo().isEmpty()) {
+        		int posicion = solrPendienteJob.getInfo().indexOf("<br ");
+        		if (posicion <= 0 ) {
+        			info.append(solrPendienteJob.getInfo());
+        		} else {
+        			info.append(solrPendienteJob.getInfo().substring(posicion + 5));
+        		}
+        	}
+        	
         	final MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
         	final int descansoMicrosite = GusitePropertiesUtil.getCuantosMicrosites();
             final List<Long> listaMicro = micrositedel.listarMicrositesSinIndexar(descansoMicrosite);
         	
-        	int correctos = 0, incorrectos = 0;
+        	Long correctos = 0l, incorrectos = 0l;
+        	correctos = micrositedel.getCuantosMicrosites(Microsite.INDEXADO, Microsite.INDEXADO_CORRECTAMENTE);
+        	incorrectos = micrositedel.getCuantosMicrosites(Microsite.INDEXADO, Microsite.INDEXADO_INCORRECTAMENTE);
+        	
+        	
+        	
+        	
         	for (int i = 0; i < listaMicro.size(); i++) {
         		
         		final Long idMicro = listaMicro.get(i);
@@ -316,6 +331,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             
         	String infoResumen = "La indexació ha finalitzat. Dels "+listaMicro.size()+" microsites en total, eren indexables "+(correctos + incorrectos)+" dels quals "+correctos+" han estat correctes i "+incorrectos+" estat incorrectes. <br />";
             solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));
+           //olrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
             return true;
         }        
         catch (Exception exception) {
@@ -584,8 +600,9 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 				log.error("No se ha podido comitear la indexación" + e.getMessage(), e);
 			}
 	    	 
+	    	
 	    	//Marcamos el microsite como indexado
-	    	micrositedel.marcarComoIndexado(micro.getId(), Microsite.INDEXADO);
+	    	micrositedel.marcarComoIndexado(micro.getId(), Microsite.INDEXADO, todoCorrecto);
 	    	
 	    	return new SolrPendienteResultado(todoCorrecto, "Parece que ha funcionado correcto la indexación del MICROSITE con id " + idMicrosite+ ", ver la info para más información.");
     	}

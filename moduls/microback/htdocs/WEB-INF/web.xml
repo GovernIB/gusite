@@ -41,6 +41,15 @@
 	</servlet>
 	
 	<servlet>
+    	<servlet-name>IndexadorCheckSchedulerServlet</servlet-name>
+    	<display-name>Quartz Check indexador Servlet</display-name>
+    	<servlet-class>es.caib.gusite.microback.utils.job.IndexadorCheckSchedulerServlet</servlet-class>
+       	<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	
+	
+	<servlet>
     	<servlet-name>DiccionarioSchedulerServlet</servlet-name>
     	<display-name>Quartz diccionario Servlet</display-name>
     	<servlet-class>es.caib.gusite.microback.utils.job.DiccionarioSchedulerServlet</servlet-class>

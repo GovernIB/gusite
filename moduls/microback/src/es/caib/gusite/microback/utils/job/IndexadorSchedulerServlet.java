@@ -16,7 +16,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerFactory;
 
 /**
- * Job indexador de microsites
+ * 
+ * Servlet encargado del indexador de pendientes.
  * 
  * @author Indra
  * 
@@ -35,9 +36,7 @@ public class IndexadorSchedulerServlet implements Servlet {
 					GeneraIndexador.class);
 			CronTrigger trigger = new CronTrigger("Indexador", "Generadores");
 			String value = System.getProperty("es.caib.gusite.solr.jobpendientes");
-			//trigger.setCronExpression("0 0 5 ? * MON-FRI"); 
 			trigger.setCronExpression(value);
-			
 			sched.scheduleJob(jobDetail, trigger);
 			log.info("Job Indexador programado...");
 		} catch (Exception ex) {

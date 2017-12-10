@@ -23,7 +23,7 @@ public class GusitePropertiesUtil
 	  /** Descanso SOLR en microsite. **/
 	  private static final String DESCANSO_MIC_SOLR = "es.caib.gusite.solr.descanso.microsites";
 	  /** Tamanyo máximo Job. **/
-	  private static final String TAMANYO_MAX_JOB = "es.caib.gusite.maxjob.solr";
+	  private static final String DIAS_MAX_JOB = "es.caib.gusite.diasjobs.solr";
 	  /** Tamanyo máximo Clob. **/
 	  private static final String TAMANYO_MAX_CLOB = "es.caib.gusite.maxclob.solr";
 	  /** Index SOLR. **/
@@ -86,12 +86,13 @@ public class GusitePropertiesUtil
   
    
 	  /**
-	   * Devuelve el numero máximo de jobs de solr que puede haber.
+	   * Devuelve los días máximos que puede estar los jobs en las tablas.
+	   * 
 	   * @return
 	   */
-	  public static final int getTamanyoMaximoJobs() {
+	  public static final int getDiasMaximoJobs() {
 		   final int numeroMaximo;
-			final String sNumeroMaximo = getProperty(TAMANYO_MAX_JOB);
+			final String sNumeroMaximo = getProperty(DIAS_MAX_JOB);
 			if (sNumeroMaximo == null) {
 				numeroMaximo = 10;
 			} else {
@@ -119,7 +120,7 @@ public class GusitePropertiesUtil
 			final int dias;
 			final String sDias = getProperty(DIAS_SOLR);
 			if (sDias == null) {
-				dias = 10;
+				dias = 10 ;
 			} else {
 				dias = Integer.valueOf(sDias);
 			}
@@ -180,8 +181,9 @@ public class GusitePropertiesUtil
 			 	if (retorno <= 0) { retorno = 5; }
 	            return retorno;
 	      } catch (Exception e) {
-	      	log.error(ERROR_MESSAGE, e);
-	          return 5;
+	      //	log.error(ERROR_MESSAGE, e);
+	    	  log.warn("Falta introducir la propiedad DESCANSO_MIN_SOLR");
+	          return 10;
 	      }
 	}
 
@@ -193,8 +195,9 @@ public class GusitePropertiesUtil
 		 	if (retorno <= 0) { retorno = 5; }
             return retorno;
       } catch (Exception e) {
-      	log.error(ERROR_MESSAGE, e);
-          return 5;
+//    		log.error(ERROR_MESSAGE, e);
+    	  log.warn("Falta introducir la propiedad DESCANSO_MIC_SOLR");
+            return 15;
       }
 	} 
 }

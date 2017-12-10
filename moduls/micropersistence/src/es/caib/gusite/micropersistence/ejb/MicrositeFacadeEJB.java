@@ -72,12 +72,9 @@ import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
 import es.caib.gusite.micropersistence.util.ArchivoUtil;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.micropersistence.util.PathUOResult;
-import es.caib.gusite.plugins.PluginFactory;
-import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.IndexFile;
 import es.caib.solr.api.model.MultilangLiteral;
-import es.caib.solr.api.model.PathUO;
 import es.caib.solr.api.model.types.EnumAplicacionId;
 import es.caib.solr.api.model.types.EnumCategoria;
 import es.caib.solr.api.model.types.EnumIdiomas;
@@ -1000,15 +997,24 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void marcarComoIndexado(final Long id, final int indexado) {
+	public void marcarComoIndexado(final Long id, final int indexado, final Boolean todoCorrecto) {
 
 		final Session session = this.getSession();
 		try {
+			int indexadoCorrecto;
+			if (todoCorrecto == null) {
+				indexadoCorrecto = Microsite.INDEXADO_INICIAL;
+			} else if (todoCorrecto) {
+				indexadoCorrecto = Microsite.INDEXADO_CORRECTAMENTE;
+			} else {
+				indexadoCorrecto = Microsite.INDEXADO_INCORRECTAMENTE;
+			}
+			
 			final Query query;
 			if (id == null) {
-				query = session.createQuery("update Microsite set indexado = " + indexado);
+				query = session.createQuery("update Microsite set indexado = " + indexado +" , indexadoCorrectamente = " + indexadoCorrecto);
 			} else {
-				query = session.createQuery("update Microsite set indexado = " + indexado + " where id = " + id);
+				query = session.createQuery("update Microsite set indexado = " + indexado +" , indexadoCorrectamente = " + indexadoCorrecto + " where id = " + id);
 			}
 			query.executeUpdate();
 		} catch (HibernateException he) {
@@ -1028,25 +1034,61 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	public String getResumenMicrositesIndexados() {
 		final Session session = this.getSession();
 		try {
-			final Query query = session.createQuery("select indexado, count(*) from Microsite group by indexado");
+			final Query query = session.createQuery("select id, indexado, indexadoCorrectamente, uri from Microsite");
 			List<Object[]> objetos = query.list();
 			StringBuffer respuesta = new StringBuffer();
-			int total = 0;
+			int indexados = 0;
+			int indexadosNO = 0;
+			StringBuffer micrositeErrores = new StringBuffer();
 			for(Object[] objeto : objetos) {
-				String cuantos = objeto[1].toString();
-				total += Integer.parseInt(cuantos);
-				if (respuesta.length() != 0) {
-					respuesta.append(" , ");
+				Long indexado = null;
+				if (objeto[1] != null) {
+					indexado = Long.valueOf(objeto[1].toString());
+				}
+				if (indexado == null || indexado == Microsite.NO_INDEXADO) {
+					indexadosNO++;
+				} else {
+					indexados++;
+					Long indexadoCorrectamente = null;
+					if (objeto[2] == null) {
+						indexadoCorrectamente = Long.valueOf(objeto[2].toString());
+					}
+					if (indexadoCorrectamente != null && indexadoCorrectamente == Microsite.INDEXADO_INCORRECTAMENTE ) {
+						String id = objeto[1].toString();
+						String uri = objeto[3].toString();
+						micrositeErrores.append(id+":"+uri+" , ");
+					}
 				}
 				
-				if ("0".equals(objeto[0].toString())) {
-					respuesta.append(cuantos+" no indexats");
-				} else {
-					respuesta.append(cuantos+" indexats");
-				}
+				
+				
+				
 			}
-			respuesta.append(" )");
-			return "Hi ha un total de "+total+" microsites ( " + respuesta.toString();
+			int total = indexados + indexadosNO;
+			respuesta.append( "Hi ha un total de "+total+" microsites ( " + indexadosNO + " no indexats , "+indexados+" indexats ). ");
+			if (micrositeErrores.length() > 0) {
+				respuesta.append("\n Amb errors " + micrositeErrores);
+			}
+			return respuesta.toString();
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	/**
+	 * Obtiene el total de microsites indexado, o no, y en que estado.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long getCuantosMicrosites(Integer indexado, Integer estadoIndexacion)throws java.rmi.RemoteException,DelegateException {		
+		final Session session = this.getSession();
+		try {
+			final Query query = session.createQuery(" select count(micro) from Microsite micro where micro.indexado = " + indexado + " and micro.indexadoCorrectamente = " + estadoIndexacion);
+			
+			return (Long) query.uniqueResult();
 		} catch (HibernateException he) {
 			throw new EJBException(he);
 		} finally {
@@ -1613,6 +1655,34 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			 List list = query.list();
 			 return list;
 
+		} catch (HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+	
+	/**
+	 * Comprueba si estan todos los microsites indexados.
+	 * 
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public boolean isTodosIndexados () {
+
+		Session session = this.getSession();
+		try {
+			 String hql = "select count(mic.id) from Microsite mic where mic.indexado = " + Microsite.NO_INDEXADO;
+			 Query query = session.createQuery(hql);
+			 int idCuantos = Integer.parseInt(query.uniqueResult().toString());
+			 boolean todosIndexados;
+			 if (idCuantos  == 0)  {
+				 todosIndexados = true;
+			 } else {
+				 todosIndexados = false;
+			 }
+			 return todosIndexados;
+			 
 		} catch (HibernateException he) {
 			throw new EJBException(he);
 		} finally {

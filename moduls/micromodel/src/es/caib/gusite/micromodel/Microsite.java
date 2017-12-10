@@ -191,6 +191,9 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@Column(name = "MIC_INDEXADO")
 	private Integer indexado;
 	
+	@Column (name = "MIC_IDXCOR")
+	private Integer indexadoCorrectamente;
+	
 	/**
 	 * Pone el sitio web en modo desarrollo, deshabilitando caché de plantillas.
 	 */
@@ -865,10 +868,36 @@ public class Microsite extends AuditableModel implements Traducible2 {
 		this.indexado = indexado;
 	}
 	
+	/**
+	 * @return the indexadoCorrectamente
+	 */
+	public Integer getIndexadoCorrectamente() {
+		return indexadoCorrectamente;
+	}
+
+	/**
+	 * @param indexadoCorrectamente the indexadoCorrectamente to set
+	 */
+	public void setIndexadoCorrectamente(Integer indexadoCorrectamente) {
+		this.indexadoCorrectamente = indexadoCorrectamente;
+	}
+
 	public final static int INDEXADO = 1;
 	public final static int NO_INDEXADO = 0;
+	public final static int INDEXADO_INICIAL = -1;
+	public final static int INDEXADO_CORRECTAMENTE = 1;
+	public final static int INDEXADO_INCORRECTAMENTE = 0;
+	
 	public boolean isIndexado () {
 		if (this.indexado != null && this.indexado == INDEXADO) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isIndexadoCorrectamente () {
+		if (this.indexadoCorrectamente != null && this.indexadoCorrectamente == INDEXADO_CORRECTAMENTE) {
 			return true;
 		} else {
 			return false;

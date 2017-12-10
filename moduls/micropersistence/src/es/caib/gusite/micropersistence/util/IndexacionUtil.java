@@ -32,8 +32,10 @@ import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.solr.api.model.PathUO;
 
 public class IndexacionUtil {
+	/** ID Apllicacion para el SOLR. **/
 	public static final String APLICACION_CALLER_ID = "GUSITE";
 	
+	/** Constantes*/
 	public static final Long REINDEXAR = 1l;
 	public static final Long DESINDEXAR = 0l;
 	
@@ -43,12 +45,17 @@ public class IndexacionUtil {
 	public static final String TIPO_PENDIENTE="IDX_PDT";
 	public static final String TIPO_MICROSITE = "IDX_MIC";
 	
+	public static final int NO_FINALIZADO = 0;
+	public static final int FINALIZADO = 1;
+	
 	/** Extensiones. **/
 	private static Map<String, String> extensiones = null;
 	private static Long tamanyoMaximo = null;
 	
 	/** LOG. **/
 	protected final static Log log = LogFactory.getLog(IndexacionUtil.class);
+
+	
 
 	public static PathUOResult calcularPathUOsMicrosite(Microsite micro, String lang) throws Exception {
 		
@@ -414,5 +421,16 @@ public class IndexacionUtil {
 			error = error.substring(0, 399);
 		}
 		return error;
+	}
+
+
+	/**
+	 * Comprueba si el tipo indexacion es tipo todo sin indexar.
+	 * @param tipoIndexacion
+	 * @return
+	 */
+	public static boolean isTipoIndexacionPendiente(String tipoIndexacion) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

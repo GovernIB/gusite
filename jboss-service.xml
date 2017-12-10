@@ -49,7 +49,7 @@
 	    es.caib.gusite.maxclob.solr = 20
 	    <!--  Las siguiente dos propiedades es para realizar descansos en las indexaciones microsite sin indexar y cuanto es el descanso. -->
 	    es.caib.gusite.solr.descanso.minutos=5
-	    es.caib.gusite.solr.descanso.microsites=20
+	    es.caib.gusite.solr.descanso.microsites=50
 	  
         <!-- Fecha revisión accesibilidad dd/MM/yyyy -->
 		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015 
@@ -57,6 +57,8 @@
 		es.caib.gusite.solr.tamanyomaximo=20
 	   	es.caib.gusite.solr.ficheros=doc,docx,xls,xlsx,pdf,pdfx,odt,ods,odp,odf,txt,rtf
 		es.caib.gusite.dias.solr = 10
+		<!--  Dias máximo que puede estar el job en la tabla. -->
+		es.caib.gusite.diasjobs.solr = 10
 		
 		<!-- key google Maps  -->
 		es.caib.gusite.key.google.maps=keyGoogleMaps

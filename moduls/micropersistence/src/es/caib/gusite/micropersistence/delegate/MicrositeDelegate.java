@@ -431,14 +431,27 @@ public class MicrositeDelegate implements StatelessDelegate {
 	}
 	
 
-	public void marcarComoIndexado(Long id, int indexado) throws java.rmi.RemoteException,DelegateException {		
+	public void marcarComoIndexado(Long id, int indexado, Boolean todoCorrecto) throws java.rmi.RemoteException,DelegateException {		
 		try {
-			 this.getFacade().marcarComoIndexado(id, indexado);
+			 this.getFacade().marcarComoIndexado(id, indexado, todoCorrecto);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 	
+	/**
+	 * Cuantos microsites indexados, o no, y en que estado (correcto o incorrecto)
+	 * @param indexado
+	 * @param indexadoCorrectamente
+	 * @return
+	 */
+	public Long getCuantosMicrosites(Integer indexado, Integer estadoIndexacion)throws java.rmi.RemoteException,DelegateException {		
+		try {
+			 return this.getFacade().getCuantosMicrosites(indexado, estadoIndexacion);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 	public String getResumenMicrositesIndexados() throws java.rmi.RemoteException,DelegateException {
 		try {
@@ -457,6 +470,16 @@ public class MicrositeDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
+
+	public boolean isTodosIndexados() throws java.rmi.RemoteException,DelegateException {		
+		try { 
+			return this.getFacade().isTodosIndexados();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */
@@ -480,6 +503,8 @@ public class MicrositeDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+
+	
 
 	
 
