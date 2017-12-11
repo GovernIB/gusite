@@ -2,8 +2,6 @@ package es.caib.gusite.microback.utils.job;
 
 import java.util.List;
 
-import javax.xml.ws.spi.ServiceDelegate;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.InterruptableJob;
@@ -19,12 +17,14 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.utilities.job.GusiteJobUtil;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 
 
 /***
- * la indexación. 
+ * La tarea de indexación.
+ *  
  * @author slromero
  *
  */
@@ -75,9 +75,14 @@ public class IndexacionJob implements Job, InterruptableJob  {
 			idElemento = (Long) schedulerContext.get("idUAdministrativa");;
     	}
 		
-    	///PASO 1. GUARDAR EL JOB.
+    	///PASO 1. GUARDAR O RECUPERAR EL JOB EL JOB.
     	try {    		 
-			 solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(tipoIndexacion, idElemento);
+    		 //Si la tarea es de indexar todo sin indexar, hay que mirar si hay alguno pendiente de indexar o hay que crearlo. 
+    		if (IndexacionUtil.TIPO_TODO_SIN_INDEXAR.equals(tipoIndexacion)) {
+    			solrPendienteJob = solrPendienteDelegate.obtenerSorlPendienteJobSinIndexar(tipoIndexacion, idElemento);
+    		} else {
+    			solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(tipoIndexacion, idElemento);
+    		}
 		} catch (DelegateException e) {
 			log.debug("Error creando el job en bbdd.", e);
 			return;
@@ -91,24 +96,33 @@ public class IndexacionJob implements Job, InterruptableJob  {
 	    		/*De momento deseaparece esta opción. case "IDX_TODO":
 	    			solrProcesoDelegate.indexarTodo(solrPendienteJob);
 	    			break;*/
-	    		case "IDX_TSI":
-	    			int cuantosMicrosites = GusitePropertiesUtil.getCuantosMicrosites();
-	    	    	int tiempoEspera = GusitePropertiesUtil.getTiempoEspera();
+	    		case IndexacionUtil.TIPO_TODO_SIN_INDEXAR:
+	    			int tiempoEspera = GusitePropertiesUtil.getTiempoEspera();
 	    	    	solrProcesoDelegate.indexarTodoSinIndexar(solrPendienteJob);
 	    			/** Comprobamos si aun quedan microsites para que se ejecute más tarde.**/
-	    			List<Long> microsites = DelegateUtil.getMicrositeDelegate().listarMicrositesSinIndexar(cuantosMicrosites);
-	    			if (microsites.size() > 0) {
+	    			if (DelegateUtil.getMicrositeDelegate().isTodosIndexados()) {
+	    				solrPendienteJob.setFinalizado(IndexacionUtil.FINALIZADO);
+	    				solrPendienteJob.setResumen("Tots els microsites han estat indexats");	    				
+	    			} else {
 	    				IndexacionJobUtil.crearJobTiempo(tiempoEspera);
+	    				solrPendienteJob.setFinalizado(IndexacionUtil.NO_FINALIZADO);
+	    				solrPendienteJob.setResumen(DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados());
 	    			}
 	    			break;
-	    		case "IDX_UA":
+	    		case IndexacionUtil.TIPO_UA:
 	    			solrProcesoDelegate.indexarMicrositeByUA(idElemento.toString(),solrPendienteJob);
+	    			solrPendienteJob.setFinalizado(IndexacionUtil.FINALIZADO);
 	    			break;
-	    		case "IDX_PDT":
+	    		case IndexacionUtil.TIPO_PENDIENTE:
 	    			solrProcesoDelegate.indexarPendientes(solrPendienteJob);
+	    			solrPendienteJob.setFinalizado(IndexacionUtil.FINALIZADO);
+	    			//Postpaso. Limpieza de jobs.
+	    			final int tamanyoMaximo = GusitePropertiesUtil.getDiasMaximoJobs();
+	    			solrPendienteDelegate.limpiezaJobs(tamanyoMaximo);
 	    			break;
-	    		case "IDX_MIC":
+	    		case IndexacionUtil.TIPO_MICROSITE:
 	    			solrProcesoDelegate.indexarMicrosite(idElemento,solrPendienteJob, null);
+	    			solrPendienteJob.setFinalizado(IndexacionUtil.FINALIZADO);
 	    			break;   
 	    		default:
 	    			break;
@@ -124,22 +138,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
 		} catch (DelegateException e) {
 			log.error("Error cerrando el job", e);
 		}
-        
-        ///PASO 4. LIMPIAR LOS JOBS obteniendo el mínimo id.
-        try {
-	        final int tamanyoMaximo = GusitePropertiesUtil.getTamanyoMaximoJobs();
-	        final List<SolrPendienteJob> jobs = solrPendienteDelegate.getListJobs(tamanyoMaximo);
-	        Long minimoId = GusitePropertiesUtil.minimoIdMax;
-	        for(final SolrPendienteJob job : jobs) {
-	        	if (job.getId() < minimoId) {
-	        		minimoId = job.getId();
-	        	}
-	        }
-	        
-	        solrPendienteDelegate.limpiezaJobs(minimoId);
-        } catch (DelegateException e) {
-			log.error("Error borrando jobs", e);
-		}
+       
         
     }
     

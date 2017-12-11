@@ -113,7 +113,7 @@ public class IndexarPrincipalAction extends BaseAction {
 			} else if("verinfo".equals(accion)) { 
 				
 				final List<SolrPendienteJob> listInfo = verListaJobs();	
-	        	request.setAttribute("listInfo",listInfo);
+	        	request.setAttribute("listInfo", listInfo);
 
 			}  else if("verinfoSIN".equals(accion)) { 
 				
@@ -159,7 +159,7 @@ public class IndexarPrincipalAction extends BaseAction {
 	 * @throws RemoteException 
 	 */
 	private void marcarMicrositesSIN() throws RemoteException, DelegateException {
-		DelegateUtil.getMicrositeDelegate().marcarComoIndexado(null, Microsite.NO_INDEXADO);
+		DelegateUtil.getMicrositeDelegate().marcarComoIndexado(null, Microsite.NO_INDEXADO, null);
 	}
 
 	/**
@@ -177,16 +177,8 @@ public class IndexarPrincipalAction extends BaseAction {
 	 * @throws DelegateException
 	 */
 	private void limpiarJobs() throws DelegateException {
-		      final int tamanyoMaximo = GusitePropertiesUtil.getTamanyoMaximoJobs();
-		        final List<SolrPendienteJob> jobs =  DelegateUtil.getSolrPendienteDelegate().getListJobs(tamanyoMaximo);
-		        Long minimoId = GusitePropertiesUtil.minimoIdMax;
-		        for(final SolrPendienteJob job : jobs) {
-		        	if (job.getId() < minimoId) {
-		        		minimoId = job.getId();
-		        	}
-		        }
-		        
-		        DelegateUtil.getSolrPendienteDelegate().limpiezaJobs(minimoId);
+		        final int tamanyoMaximo = GusitePropertiesUtil.getDiasMaximoJobs();
+		         DelegateUtil.getSolrPendienteDelegate().limpiezaJobs(tamanyoMaximo);
 	      
 	        
 	}
@@ -209,7 +201,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		try 
 		{
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
-			return solrPendienteDel.getListJobs(20);			
+			return solrPendienteDel.getListJobs(40);			
 		} catch(Exception exception) {
 			return null;
 		}

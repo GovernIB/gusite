@@ -49,53 +49,11 @@
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfoSIN" />" onclick='jobVerInfoSIN()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfoSIN" />" /> &nbsp;<bean:message key="menu.indexar.verinfoSIN" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.marcar" />" onclick='marcarSIN()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.marcar" />" /> &nbsp;<bean:message key="menu.indexar.marcar" /></button>
 				
-					
-					<div style="font-weight:bold;">
-						<logic:notEmpty name="listInfo">
-							<p></p><p></p>
-							<table cellpadding="0" cellspacing="0" class="llistat" style="width:98%;">
-							<thead>
-								<tr>
-									<th width="15%"><bean:message key="menu.indexar.cab.fechaIni" /></th>
-									<th width="15%"><bean:message key="menu.indexar.cab.fechaFin" /></th>	
-									<th width="15%"><bean:message key="menu.indexar.cab.tipo" /></th>	
-									<th width="15%"></th>											
-								</tr>
-							</thead>
-							<tbody>
-							<logic:iterate id="i" name="listInfo" indexId="indice">
-						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
-						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
-								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
-								     <td><logic:equal name="i" property="tipo" value="IDX_TODO">
-								     		<bean:message key="menu.indexar.job.tipo.IDX_TODO" />
-								     	</logic:equal>
-										<logic:equal name="i" property="tipo" value="IDX_TSI">
-								     		<bean:message key="menu.indexar.job.tipo.IDX_TSI" />
-								     	</logic:equal>
-										<logic:equal name="i" property="tipo" value="IDX_UA">
-								     		<bean:message key="menu.indexar.job.tipo.IDX_UA" />
-								     	</logic:equal>
-										<logic:equal name="i" property="tipo" value="IDX_PDT">
-								     		<bean:message key="menu.indexar.job.tipo.IDX_PDT" />
-								     	</logic:equal>
-										<logic:equal name="i" property="tipo" value="IDX_MIC">
-								     		<bean:message key="menu.indexar.job.tipo.IDX_MIC" />
-								     	</logic:equal>
-									</td>
-  								    <td>
-									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='descargar("<bean:write name="i" property="id" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button> 
-								    </td>
-						       </tr>					
-					   		 </logic:iterate>
-				    		</tbody>
-				    		</table>
-			    		</logic:notEmpty>	
+				<div style="font-weight:bold;">
 						<logic:notEmpty name="listInfoSIN">
 							<p><bean:write name="listInfoSIN"/></p>
 						</logic:notEmpty>
-					</div>
-		
+				</div>
 		</div>
 		
 		<div id="botonera">
@@ -177,6 +135,62 @@
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.cerrar" />" onclick='cerrarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.cerrar" />" /> &nbsp;<bean:message key="menu.indexar.cerrar" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.limpiar" />" onclick='limpiarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.limpiar" />" /> &nbsp;<bean:message key="menu.indexar.limpiar" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='jobVerInfo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
+
+				<div style="font-weight:bold;">
+						<logic:notEmpty name="listInfo">
+							<p></p><p></p>
+							<table cellpadding="0" cellspacing="0" class="llistat" style="width:98%;">
+							<thead>
+								<tr>
+									<th width="15%"><bean:message key="menu.indexar.cab.fechaIni" /></th>
+									<th width="15%"><bean:message key="menu.indexar.cab.fechaFin" /></th>	
+									<th width="15%"><bean:message key="menu.indexar.cab.tipo" /></th>
+									<th width="15%"><bean:message key="menu.indexar.cab.finalizado" /></th>
+									<th width="15%"><bean:message key="menu.indexar.cab.resumen" /></th>	
+									<th width="15%"></th>											
+								</tr>
+							</thead>
+							<tbody>
+							<logic:iterate id="i" name="listInfo" indexId="indice">
+						       <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+						       		 <td><bean:write name="i" property="fechaIni" formatKey="date.short.format"/></td>
+								     <td><bean:write name="i" property="fechaFin" formatKey="date.short.format"/></td>
+								     <td><logic:equal name="i" property="tipo" value="IDX_TODO">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_TODO" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_TSI">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_TSI" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_UA">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_UA" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_PDT">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_PDT" />
+								     	</logic:equal>
+										<logic:equal name="i" property="tipo" value="IDX_MIC">
+								     		<bean:message key="menu.indexar.job.tipo.IDX_MIC" />
+								     	</logic:equal>
+									</td>
+									<td>
+										<logic:equal name="i" property="finalizado" value="1">
+								     		<bean:message key="menu.indexar.job.finalizado" />
+								     	</logic:equal>
+										<logic:equal name="i" property="finalizado" value="0">
+								     		<bean:message key="menu.indexar.job.nofinalizado" />
+								     	</logic:equal>
+								     </td>
+								     <td><bean:write name="i" property="resumen" /></td>
+								     <td>
+									 	<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='descargar("<bean:write name="i" property="id" />  ")'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button> 
+									 </td>
+						       </tr>					
+					   		 </logic:iterate>
+				    		</tbody>
+				    		</table>
+			    		</logic:notEmpty>	
+						
+					</div>
+
 		</div>
 		
 		<p>

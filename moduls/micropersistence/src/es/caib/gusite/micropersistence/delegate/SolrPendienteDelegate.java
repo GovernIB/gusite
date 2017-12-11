@@ -153,6 +153,18 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 		 }
      }
      
+     /**
+	  * Cierra los jobs por fecha fin.  
+	  * 
+	  * @throws DelegateException
+	  */
+     public void cerrarJobsPorFechaFin()  throws DelegateException{
+    	 try {
+			  this.getFacade().cerrarJobsPorFechaFin();
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+     }
      
      
 	/* ========================================================= */
@@ -227,13 +239,30 @@ public class SolrPendienteDelegate implements StatelessDelegate {
 	  * @param minimoId El identificador mínimo.
 	  * @throws DelegateException
 	  */
-    public void limpiezaJobs(final Long minimoId) throws DelegateException {
+    public void limpiezaJobs(final int minimoId) throws DelegateException {
    	 try {
 			 this.getFacade().limpiezaJobs(minimoId);
 		 }  catch (RemoteException e) {
 				throw new DelegateException(e);
 		 }
 	}
+
+    /**
+	  * Obtiene el job sin dexar.
+	  * 
+	  * @param tipo
+	  * @param idElemento
+	  * 
+	  * @throws DelegateException
+	  */
+	public SolrPendienteJob obtenerSorlPendienteJobSinIndexar(String tipo, Long idElemento)  throws DelegateException {
+		try {
+			 return this.getFacade().obtenerSorlPendienteJobSinIndexar(tipo, idElemento);
+		 }  catch (RemoteException e) {
+				throw new DelegateException(e);
+		 }
+	}
+
     
     
 }

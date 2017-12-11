@@ -10,6 +10,7 @@ import es.caib.gusite.micromodel.SolrPendienteJob;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteProcesoDelegate;
+import es.caib.gusite.micropersistence.util.IndexacionUtil;
 
 /**
  * Job que realiza el proceso diario de indexar el buscador
@@ -26,15 +27,16 @@ public class GeneraIndexador implements Job {
 
 		log.debug("Job que se ejecuta para la Indexacion pendiente: inicio");
 		try {
-			SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
+			/*SolrPendienteProcesoDelegate solrDelegate = DelegateUtil.getSolrPendienteProcesoDelegate();
 			SolrPendienteDelegate solrPendienteDelegate = DelegateUtil.getSolrPendienteDelegate();
 			
-			SolrPendienteJob solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob("IDX_PDT", null);
+			SolrPendienteJob solrPendienteJob = solrPendienteDelegate.crearSorlPendienteJob(IndexacionUtil.TIPO_PENDIENTE, null);
 			
 			solrDelegate.indexarPendientes(solrPendienteJob);	
-			
+			solrPendienteJob.setFinalizado(IndexacionUtil.FINALIZADO);
 			solrPendienteDelegate.cerrarSorlPendienteJob(solrPendienteJob);
-			
+			*/
+			IndexacionJobUtil.crearJob(IndexacionUtil.TIPO_PENDIENTE, null, null);
 		} catch (Exception ex) {
 			log.error("Error indexando pendientes", ex);
 		}

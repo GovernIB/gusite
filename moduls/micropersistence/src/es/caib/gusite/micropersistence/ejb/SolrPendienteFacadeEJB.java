@@ -1,6 +1,9 @@
 package es.caib.gusite.micropersistence.ejb;
 
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.List;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
+import org.apache.commons.io.IOUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -311,9 +315,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	try
     	{
     		Session session = getSession();
-    		
-    		
-	    	solrpendienteJob.setFechaFin(new Date());
+    		solrpendienteJob.setFechaFin(new Date());
 	    	session.update(solrpendienteJob); 
 			session.flush();
 			session.close();
@@ -335,7 +337,7 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
 
         Session session = getSession();
         try {
-        	Query query = session.createQuery("select solrpendientejob.id, solrpendientejob.fechaIni, solrpendientejob.fechaFin, solrpendientejob.tipo, solrpendientejob.idElem  from SolrPendienteJob solrpendientejob  order by solrpendientejob.id desc");
+        	Query query = session.createQuery("select solrpendientejob.id, solrpendientejob.fechaIni, solrpendientejob.fechaFin, solrpendientejob.tipo, solrpendientejob.idElem, solrpendientejob.finalizado, solrpendientejob.resumen  from SolrPendienteJob solrpendientejob  order by solrpendientejob.id desc");
         	query.setMaxResults(cuantos);
         	List<SolrPendienteJob> jobs= new ArrayList<SolrPendienteJob>();
         	List<Object[]> lvalores = query.list();
@@ -347,6 +349,8 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
         		if (valores[2] != null) { job.setFechaFin((Date) valores[2]); }
         		if (valores[3] != null) { job.setTipo(valores[3].toString()); }
         		if (valores[4] != null) { job.setIdElem(Long.valueOf(valores[4].toString())); }
+        		if (valores[5] != null) { job.setFinalizado(Integer.valueOf(valores[5].toString())); }
+        		if (valores[6] != null) { job.setResumen(valores[6].toString()); }
         		jobs.add(job);
         	}
         	return jobs;
@@ -440,11 +444,17 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true"     
      * @throws DelegateException 
      */
-     public void limpiezaJobs(final Long minimoId) throws DelegateException {
+     public void limpiezaJobs(final int minimoId) throws DelegateException {
      	 Session session = null;
      	 try {
+     		 Calendar calendar = Calendar.getInstance();
+     		 calendar.add(Calendar.DAY_OF_YEAR, -1 * minimoId );
+     		 
  			 session = getSession();
- 			 List<SolrPendienteJob> jobs = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.id < " + minimoId).list();
+ 			 Query query = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.fechaIni < :fecha");
+ 			 query.setParameter("fecha", calendar.getTime());
+ 			 
+ 			 List<SolrPendienteJob> jobs = query.list();
  			 for(SolrPendienteJob job : jobs) {
  				session.delete(job);
  			 }
@@ -454,8 +464,81 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
  		 }
      }
      
-    
+     /**
+  	 * Genera el sorlpendientejob para el job de tipo de indexar todos los microsites que no hayan sido indexados. 
+  	 * La idea es comprobar si hay alguna sin terminar de indexar, si lo hay lo devuelve y sino lo crea. 
+  	 * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"     
+     * @param tipo
+     * @param idElemento
+     * @throws DelegateException 
+     */
+     public SolrPendienteJob obtenerSorlPendienteJobSinIndexar(String tipo, Long idElemento)  throws DelegateException {
+    	 SolrPendienteJob solrPendienteJob = null;
+    	 
+    	 solrPendienteJob = getSolrPendienteJobSinIndexarNoFinalizado();
+    	 if (solrPendienteJob == null) {
+    		 solrPendienteJob = crearSorlPendienteJob(tipo, idElemento);
+    	 } else {
+    		 //Mejor dejamos la fecha inicial: solrPendienteJob.setFechaIni(new Date());
+    		 solrPendienteJob.setFechaFin(null);
+    		 getSession().update(solrPendienteJob);
+    		 getSession().flush();
+    	 }
+    	 return solrPendienteJob;
+     }
+     
+     
+     /**
+      * Método privado para obtener el solrjob de tipo indexacion de microsites no indexados que no haya finalizado.
+      * @return
+      */
+     private SolrPendienteJob getSolrPendienteJobSinIndexarNoFinalizado() {
+    	 SolrPendienteJob solrPendienteJob = null;
+    	 try {
+    		 Session session = getSession();
+     		 Query query = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.tipo = '"+IndexacionUtil.TIPO_TODO_SIN_INDEXAR+"' and solrjob.finalizado = 0");
+     		 query.setMaxResults(1);
+     		 solrPendienteJob = (SolrPendienteJob) query.uniqueResult();
+     		 if (solrPendienteJob.getDescripcion() != null) {
+     			InputStream in = solrPendienteJob.getDescripcion().getAsciiStream();
+     			StringWriter w = new StringWriter();
+     			IOUtils.copy(in, w);
+     			solrPendienteJob.setInfo(w.toString());
+     		 }
+     		 session.flush();
+     		
+    	 } catch (Exception exception) {
+    		 //Se manda por debug a la fuerza
+    		 log.debug("No ha obtenido el solrjob, eso es que no existe" , exception);    		 
+    	 }
+    	 return solrPendienteJob;
+     }
      
      
      
+     /**
+  	 * Cierra jobs por fecha fin.
+  	 * 
+     * @ejb.interface-method
+     * @ejb.permission unchecked="true"     
+     * @throws DelegateException 
+     */
+     public void cerrarJobsPorFechaFin()  throws DelegateException {
+    	 try {
+    		 Session session = getSession();
+     		 Query query = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.fechaFin is null");
+     		 List<SolrPendienteJob> lista = query.list();
+     		 for(SolrPendienteJob job : lista) {
+     			 job.setFechaFin(new Date());
+     			 session.update(job);
+     		 }
+     		 session.flush();
+     		
+    	 } catch (Exception exception) {
+    		 //Se manda por debug a la fuerza
+    		 log.debug("No ha obtenido el solrjob, eso es que no existe" , exception);    		 
+    	 }
+     }
 }
