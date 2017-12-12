@@ -290,7 +290,7 @@ a.imc-bt {
     transition: color .2s ease-out, background-color .2s ease-out;
 }
 
-a.imc-bt-especial { display: flex; flex-direction: column; justify-content: center; align-content: center; overflow: hidden; width: 20em; height: 6em; font-size: .8em; padding: 0 1em 0 5em; background: #fff url() no-repeat 1em 50% / 3em auto; will-change: background-position; }
+a.imc-bt-especial { box-sizing: border-box; display: inline-flex; flex-direction: column; justify-content: center; align-content: center; overflow: hidden; width: 25em; height: 6em; font-size: .8em; vertical-align: middle; padding: 0 1em 0 5em; background: #fff url() no-repeat 1em 50% / 3em auto; will-change: background-position; }
 
 a.imc-bt-especial svg { display: none; width: 3em; height: 3em; vertical-align: middle; margin-right: 1em; }
 a.imc-bt-especial path { fill: #edb2c7; }
@@ -300,7 +300,7 @@ a.imc-bt-especial span { display: block; overflow: hidden; max-height: 0; font-s
 
 a.imc-bt-especial:hover span,
 a.imc-bt-especial:focus span,
-a.imc-bt-especial:active span { max-height: 2.8em; opacity: 1; }
+a.imc-bt-especial:active span { max-height: 2.6em; opacity: 1; }
 
 a.imc-bt-especial {
     -webkit-transition: background-position .2s ease-out;
@@ -316,4 +316,12 @@ a.imc-bt-especial span {
     -ms-transition: opacity .2s ease-out, max-height .2s ease-out;
     -o-transition: opacity .2s ease-out, max-height .2s ease-out;
     transition: opacity .2s ease-out, max-height .2s ease-out;
+}
+
+
+@media only screen and (max-width : 450px) {
+
+    a.imc-bt-especial { display: flex; width: 100%; margin-bottom: .7em; }
+
+
 }
