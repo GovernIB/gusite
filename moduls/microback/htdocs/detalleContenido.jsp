@@ -63,10 +63,10 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste, anchor "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste, anchor, botonMIC "
 			,contextmenu: "link image inserttable | cell row column deletetable textcolor colorpicker forecolor backcolor"
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
-			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink anchor image cleanup '+editarCodigo+' acheck '
+			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink anchor image cleanup '+editarCodigo+' acheck | botonMIC'
 			,toolbar3: 'table | forecolor backcolor | hr removeformat | subscript superscript | charmap media | fullscreen '
 			,menubar: false
 			,content_css : <bean:write name="MVS_css_tiny" filter="false" ignore="true"/>				
@@ -121,6 +121,9 @@
 				{ title: 'Subtítol nivell 4', block: 'h5'}, 
 				{ title: 'Subtítol nivell 5', block: 'h6'},
 			]*/
+			, content_css: [
+			    'css/estils.css'
+			] 
             , table_default_styles: {
                 title: 'Tabla',
                 width: '70%'
@@ -133,6 +136,7 @@
 				,paste_as_text: true
      			,invalid_elements: 'br'
 			</logic:notEqual>
+			, extended_valid_elements : "span"
 		  });
 		
    	

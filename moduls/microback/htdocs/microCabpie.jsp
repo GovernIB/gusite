@@ -47,8 +47,8 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, importcss, image ,paste "
-			,toolbar1: 'newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
+			plugins: "code, compat3x, link, textcolor, acheck, importcss, image ,paste, botonMIC "
+			,toolbar1: 'newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect | botonMIC' 
 			,toolbar2: 'bullist numlist | outdent indent | link unlink image removeformat cleanup '+editarCodigo+' insertararchivos acheck '
 			,menubar: false
 			,content_css : "<bean:write name="MVS_css_tiny" filter="false" ignore="true"/>"	
@@ -92,6 +92,10 @@
 				,paste_as_text: true
 				,invalid_elements: 'br'
 			</logic:notEqual>
+			, content_css: [
+			    'css/estils.css'
+			] 
+			, extended_valid_elements : "span"
 		});
 				
 		
