@@ -97,8 +97,8 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck ,paste"
-			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste'
+			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC"
+			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste | botonMIC'
 			,menubar: false
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
@@ -119,6 +119,10 @@
                 </logic:empty>
                 return false;
 			}
+			, content_css: [
+			    'css/estils.css'
+			]
+			, extended_valid_elements : "span"
 		  });
 		
 			var Rcajatemp_tiny;
