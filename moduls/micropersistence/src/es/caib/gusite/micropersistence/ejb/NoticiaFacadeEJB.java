@@ -1032,6 +1032,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 			indexData.setAplicacionId(EnumAplicacionId.GUSITE);
 			indexData.setElementoId(idElemento.toString());
 			indexData.setFechaPublicacion(noticia.getFpublicacion());
+			indexData.setFechaCaducidad(noticia.getFcaducidad());
 			indexData.setTitulo(titulo);
 			indexData.setDescripcion(descripcion);
 			indexData.setUrl(urls);

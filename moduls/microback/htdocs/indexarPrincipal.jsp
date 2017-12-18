@@ -45,18 +45,20 @@
 		<!-- continguts -->
 		
 		<div id="botonera">
+				<h2><bean:message key="menu.indexar.header.indexarPrincipal" /></h2>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.todoSIN" />" onclick='indexarTodoSIN()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.todoSIN" />" /> &nbsp;<bean:message key="menu.indexar.todoSIN" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfoSIN" />" onclick='jobVerInfoSIN()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfoSIN" />" /> &nbsp;<bean:message key="menu.indexar.verinfoSIN" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.marcar" />" onclick='marcarSIN()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.marcar" />" /> &nbsp;<bean:message key="menu.indexar.marcar" /></button>
 				
 				<div style="font-weight:bold;">
 						<logic:notEmpty name="listInfoSIN">
-							<p><bean:write name="listInfoSIN"/></p>
+							<p><bean:write name="listInfoSIN" filter="false" /></p>
 						</logic:notEmpty>
 				</div>
 		</div>
 		
 		<div id="botonera">
+				<h2><bean:message key="menu.indexar.header.indexarPendents" /></h2>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.pendientes" />" onclick='indexarPendientes()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.pendientes" />" /> &nbsp;<bean:message key="menu.indexar.pendientes" /></button>
 				<logic:empty name="listado">
 					<button type="button" name="fichero" title="<bean:message key="menu.indexar.verpendientes" />" onclick='indexarVerPendientes()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verpendientes" />" /> &nbsp;<bean:message key="menu.indexar.verpendientes" /></button>
@@ -121,6 +123,7 @@
 		</div>		
 		
 		<div id="botonera">
+				<h2><bean:message key="menu.indexar.header.indexarUA" /></h2>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.unidad.administrativa" />" onclick='indexarByUA()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.unidad.administrativa" />" /> &nbsp;<bean:message key="menu.indexar.unidad.administrativa" /></button>  								
                 <select id="unidadAdministrativa" >				       	
 			       	<logic:iterate id="i" name="listaUA">
@@ -132,6 +135,7 @@
 		</div>	
 		
 		<div id="botonera">
+				<h2><bean:message key="menu.indexar.header.gestionarTasques" /></h2>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.cerrar" />" onclick='cerrarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.cerrar" />" /> &nbsp;<bean:message key="menu.indexar.cerrar" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.limpiar" />" onclick='limpiarJobs()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.limpiar" />" /> &nbsp;<bean:message key="menu.indexar.limpiar" /></button>
 				<button type="button" name="fichero" title="<bean:message key="menu.indexar.verinfo" />" onclick='jobVerInfo()'><img src="imgs/botons/indexar.gif" alt="<bean:message key="menu.indexar.verinfo" />" /> &nbsp;<bean:message key="menu.indexar.verinfo" /></button>
