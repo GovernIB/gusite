@@ -1050,24 +1050,25 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 				} else {
 					indexados++;
 					Long indexadoCorrectamente = null;
-					if (objeto[2] == null) {
+					if (objeto[2] != null) {
 						indexadoCorrectamente = Long.valueOf(objeto[2].toString());
 					}
 					if (indexadoCorrectamente != null && indexadoCorrectamente == Microsite.INDEXADO_INCORRECTAMENTE ) {
-						String id = objeto[1].toString();
+						String id = objeto[0].toString();
 						String uri = objeto[3].toString();
-						micrositeErrores.append(id+":"+uri+" , ");
+						if (micrositeErrores.length() == 0) {
+							micrositeErrores.append("<ul>");
+						} 
+						micrositeErrores.append("<li><a target='_blank' href='index.do?idsite=" + id +"'>" + id + ":" + uri + "</a></li>");
 					}
 				}
-				
-				
-				
-				
 			}
+			
+			
 			int total = indexados + indexadosNO;
 			respuesta.append( "Hi ha un total de "+total+" microsites ( " + indexadosNO + " no indexats , "+indexados+" indexats ). ");
 			if (micrositeErrores.length() > 0) {
-				respuesta.append("\n Amb errors " + micrositeErrores);
+				respuesta.append("\n Amb errors: " + micrositeErrores +" </ul>");
 			}
 			return respuesta.toString();
 		} catch (HibernateException he) {

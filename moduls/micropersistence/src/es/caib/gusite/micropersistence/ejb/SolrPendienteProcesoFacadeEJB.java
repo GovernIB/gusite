@@ -329,7 +329,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             	
             }
             
-        	String infoResumen = "La indexació ha finalitzat. Dels "+listaMicro.size()+" microsites en total, eren indexables "+(correctos + incorrectos)+" dels quals "+correctos+" han estat correctes i "+incorrectos+" estat incorrectes. <br />";
+        	String infoResumen = "La indexació ha finalitzat. S'han indexat " + (correctos + incorrectos) +" microsites, dels quals "+incorrectos+" s'han indexat amb errors. <br />";
             solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));
            //olrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
             return true;
