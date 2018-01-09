@@ -38,7 +38,7 @@
 			, content_css: [
 			    'css/estils.css'
 			] 
-			, extended_valid_elements : "span"
+			//, extended_valid_elements : "span"
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			}

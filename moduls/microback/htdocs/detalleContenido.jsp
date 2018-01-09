@@ -87,7 +87,7 @@
 			, accessibility_warnings : true	
 			, plugin_insertdate_dateFormat : "%d/%m/%Y"
 			, plugin_insertdate_timeFormat : "%H:%M:%S"
-			, extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+			//, extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
 			, templates: [
 			    {title: "Basica", 				description: "Pàgina Bàsica.", 								url:"tinymce/templates/basica.htm"},
 			    {title: "Taula corporativa", 	description: "Taula amb capçalera i files alternant color de fons", 	url:"tinymce/templates/tabla.htm"},
@@ -136,7 +136,7 @@
 				,paste_as_text: true
      			,invalid_elements: 'br'
 			</logic:notEqual>
-			, extended_valid_elements : "span"
+			//, extended_valid_elements : "span"
 		  });
 		
    	
