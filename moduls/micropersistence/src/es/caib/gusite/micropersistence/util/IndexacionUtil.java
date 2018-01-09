@@ -55,15 +55,29 @@ public class IndexacionUtil {
 	/** LOG. **/
 	protected final static Log log = LogFactory.getLog(IndexacionUtil.class);
 
-	
-
+	/**
+	 * Calcula el pathUO del microsite para SOLR.
+	 * @param micro
+	 * @param lang
+	 * @return
+	 * @throws Exception
+	 */
 	public static PathUOResult calcularPathUOsMicrosite(Microsite micro, String lang) throws Exception {
 		
 		List<UnidadData> pathAscendente = new ArrayList<UnidadData>();
 		OrganigramaProvider op = PluginFactory.getInstance().getOrganigramaProvider();
 		UnidadData unidad = null;
 		unidad = op.getUnidadData(micro.getUnidadAdministrativa(), lang);
+		
+		if (unidad == null) {
+			return null;
+		}
+		
 		while (unidad != null) {
+			if (!unidad.isVisible()) {
+				return null;
+			}
+			
 			pathAscendente.add(unidad);
 			unidad = ( unidad.getIdUnidadPadre() != null ? op.getUnidadData(unidad.getIdUnidadPadre(), lang) : null);				
 		}
@@ -105,7 +119,11 @@ public class IndexacionUtil {
 		return true;
 	}
 	
-	
+	/**
+	 * Comprueba si una UA es indexable.
+	 * @param micro
+	 * @return
+	 */
 	public static boolean isIndexable(Microsite micro) {
 		
 		if (!StringUtils.equalsIgnoreCase(micro.getVisible(), "S")) {

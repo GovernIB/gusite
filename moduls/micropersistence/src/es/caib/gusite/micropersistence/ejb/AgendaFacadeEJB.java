@@ -552,7 +552,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true"
      * @ejb.transaction type="RequiresNew"
 	 */
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO) {
 		log.debug("AgendafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
 		
 		try {
@@ -601,7 +601,17 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					}
 					
 					// Path UO
-					PathUOResult pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					PathUOResult pathUO;
+					if (iPathUO == null) {
+						pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					} else {
+						pathUO = iPathUO;
+					}
+					
+					//Si sigue a nulo, es que no es visible o no existe la UO.
+					if (pathUO == null) {
+						return new SolrPendienteResultado(false, "El microsite està associat a una Unitat Orgànica inexistent, per favor, posis en contacte amb l'administrador.");
+					}
 					
 					idiomas.add(enumIdioma);
 					titulo.addIdioma(enumIdioma, traduccion.getTitulo());
@@ -672,7 +682,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true"
      * @ejb.transaction type="RequiresNew"
 	 */
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) {
 		log.debug("AgendafacadeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
 		
 		try {
@@ -731,14 +741,25 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 						continue;
 					}
 					
-					PathUOResult pathUo = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					// Path UO
+					PathUOResult pathUO;
+					if (iPathUO == null) {
+						pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					} else {
+						pathUO = iPathUO;
+					}
+					
+					//Si sigue a nulo, es que no es visible o no existe la UO.
+					if (pathUO == null) {
+						return new SolrPendienteResultado(false, "El microsite està associat a una Unitat Orgànica inexistent, per favor, posis en contacte amb l'administrador.");
+					}
 					
 					idiomas.add(enumIdioma); 
 					
 					titulo.addIdioma(enumIdioma, IndexacionUtil.getTituloArchivo(archivo));
 			    	descripcion.addIdioma(enumIdioma, IndexacionUtil.getDescripcionArchivo(archivo));
 			    	extension.addIdioma(enumIdioma, FilenameUtils.getExtension(archivo.getNombre()));
-			    	searchTextOptional.addIdioma(enumIdioma, pathUo.getUosText());
+			    	searchTextOptional.addIdioma(enumIdioma, pathUO.getUosText());
 			    	urls.addIdioma(enumIdioma, IndexacionUtil.getUrlArchivo(micro, archivo, keyIdioma));
 			    	urlPadre.addIdioma(enumIdioma, IndexacionUtil.getUrlAgenda(micro, agenda, keyIdioma));
 					descripcionPadre.addIdioma(enumIdioma, traduccion.getDescripcion() !=null ? solrIndexer.htmlToText(traduccion.getDescripcion()):"");
@@ -758,7 +779,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 					indexFile.setDescripcionPadre(descripcionPadre);
 					indexFile.setExtension(extension);
 					indexFile.setUrlPadre(urlPadre);
-					indexFile.setUos(pathUo.getUosPath());
+					indexFile.setUos(pathUO.getUosPath());
 					indexFile.setCategoriaRaiz(EnumCategoria.GUSITE_MICROSITE);
 					indexFile.setElementoIdRaiz(micro.getId().toString());
 					indexFile.setInterno(IndexacionUtil.isRestringidoMicrosite(micro));

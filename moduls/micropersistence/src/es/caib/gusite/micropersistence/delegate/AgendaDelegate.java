@@ -16,6 +16,7 @@ import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.AgendaFacade;
 import es.caib.gusite.micropersistence.intf.AgendaFacadeHome;
 import es.caib.gusite.micropersistence.util.AgendaFacadeUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 
@@ -268,19 +269,19 @@ public class AgendaDelegate implements StatelessDelegate {
 		}
 	}
 
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
 			throws DelegateException {
 		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
+			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 	
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo)
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO)
 			throws DelegateException {
 		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo);
+			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo, iPathUO);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

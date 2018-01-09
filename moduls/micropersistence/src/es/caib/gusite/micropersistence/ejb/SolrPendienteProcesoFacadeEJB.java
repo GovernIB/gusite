@@ -42,6 +42,7 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
@@ -399,193 +400,200 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         	
         	int totalCorrectos, totalIncorrectos;
         	
+        	
         	if (IndexacionUtil.isIndexable(micro)) {
         		  
-        		info.append("-Anem a indexar els components<br />");
+        		PathUOResult pathUO =  IndexacionUtil.calcularPathUOsMicrosite(micro, "ca");
         		
-        		
-        		
-	        	//Obtenemos los ARCHIVOS del microsite
-        		info.append("** Arxius:<br />"); totalCorrectos = 0; totalIncorrectos = 0;
-        		ArchivoDelegate archivodel = DelegateUtil.getArchivoDelegate();
-	        	List<Archivo> listArchivos = archivodel.obtenerArchivoByMicrositeId(idMicrosite);
-	        	
-	        	for ( Archivo archivo : listArchivos){
-	        		if (archivo !=null && archivo.getId()!=null){
-	        			SolrPendienteResultado resultado = this.indexarPendienteArchivo(solrIndexer, micro.getId(), archivo.getId(), info);
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}
-	        	}
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total arxius "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        	
-	        	//Liberamos memoria.
-	        	listArchivos.clear();
-	        	
-	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
-	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
-    			}
-	        	
-	        	
-	        	
-	        	//Obtenemos las ENCUESTAS del microsite
-	        	info.append("** Enquestes:<br />"); totalCorrectos = 0; totalIncorrectos = 0;
-        		EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();        	
-	        	List<Encuesta> listEncuestas = encuestadel.obtenerEncuestasByMicrositeId(idMicrosite);
-	        	
-	        	for ( Encuesta encuesta : listEncuestas){
-	        		if (encuesta != null && encuesta.getId() != null) {
-	        			SolrPendienteResultado resultado = this.indexarPendienteEncuesta(solrIndexer, encuesta.getId(), info);
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}
-	        	}    
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total enquestes "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        	
-	        	//Liberamos memoria.
-	        	listEncuestas.clear();
-	        	
-	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
-	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
-    			}
-	        	
-	        	
-	        	
-	        	//Obtenemos los FAQ's del microsite
-	        	info.append("** Faqs: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
-	        	FaqDelegate faqdel = DelegateUtil.getFaqDelegate();        	        	
-	        	List<Faq> listFaqs = faqdel.obtenerFaqsByMicrositeId(idMicrosite);
-	        	
-	        	for ( Faq faq : listFaqs){
-	        		if (faq !=null && faq.getId() != null) {    
-	        			SolrPendienteResultado resultado = this.indexarPendienteFAQ(solrIndexer, faq.getId(), info);
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}
-	        	} 
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total faqs "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        	
-	        	//Liberamos memoria.
-	        	listFaqs.clear();
-	        	
-	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
-	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
-    			}
-	        	
-	        	
-	        	//Obtenemos las NOTICIAS del microsite        	
-	        	info.append("** Noticies: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
-	        	NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();        	        	      
-	        	List<Noticia> listNoticias = noticiadel.obtenerNoticiasByMicrositeId(idMicrosite);
-	        	        	
-	        	for ( Noticia noticia : listNoticias){
-	        		if (noticia != null && noticia.getId() != null) {
-	        			SolrPendienteResultado resultado = this.indexarPendienteNoticia(solrIndexer, noticia.getId(), info);	
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}
-	        	}  
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total noticias "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        	
-	        	//Liberamos memoria.
-	        	listNoticias.clear();
-	        	
-	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
-	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
-    			}
-	        	
-	        	
-	        	
-	        	
-	        	//Obtenemos las AGENDAS del microsite
-	        	info.append("** Agendas: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
-	        	AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();        	        	
-	        	List<Agenda> listAgendas = agendadel.obtenerAgendasByMicrositeId(idMicrosite);
-	        	
-	        	for ( Agenda agenda : listAgendas){
-	        		if (agenda != null && agenda.getId() != null) {
-	        			SolrPendienteResultado resultado = this.indexarPendienteAgenda(solrIndexer, agenda.getId(), info);	 
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}	        		
-	        	}  
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total agenda "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        	
-	        	//Liberamos memoria.
-	        	listAgendas.clear();
-	        	
-	        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
-	        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
-    			}
-	        	
-	        	
-	        	
-	        	
-	        	//Obtenemos los CONTENIDOS del microsite
-	        	info.append("** Continguts: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
-	        	ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();                	        
-	        	List<Contenido> listContenidos = contenidodel.listarAllContenidos(idMicrosite.toString());
-	        	        	
-	        	for (Contenido contenido : listContenidos) {
-	        		if (contenido != null && contenido.getId() != null) {
-	        			SolrPendienteResultado resultado = this.indexarPendienteContenido(solrIndexer, contenido.getId(), info);
-	        			if (resultado.isCorrecto()) {
-	        				totalCorrectos ++;
-	        			} else {
-	        				totalIncorrectos ++;
-	        			}
-	        		}	        		
-	        	}
-	        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-	        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br /><br />");
-	        	if (actualizarSolrPendiente) {
-		        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
-		        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
-	        	}
-	        
-	        	//Liberamos memoria.
-	        	listContenidos.clear();
-	        	
+        		if (pathUO == null) {
+        		   	
+        			info.append("El microsite amb id "+idMicrosite+" està associat a una Unitat Orgànica inexistent o no visible.<br />");
+    	        	resultadoMicrosite.setIndexable(false);
+    	      
+        		} else {
+	        		info.append("-Anem a indexar els components<br />");
+	        		
+		        	//Obtenemos los ARCHIVOS del microsite
+	        		info.append("** Arxius:<br />"); totalCorrectos = 0; totalIncorrectos = 0;
+	        		ArchivoDelegate archivodel = DelegateUtil.getArchivoDelegate();
+		        	List<Archivo> listArchivos = archivodel.obtenerArchivoByMicrositeId(idMicrosite);
+		        	
+		        	for ( Archivo archivo : listArchivos){
+		        		if (archivo !=null && archivo.getId()!=null){
+		        			SolrPendienteResultado resultado = this.indexarPendienteArchivo(solrIndexer, micro.getId(), archivo.getId(), info, pathUO);
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}
+		        	}
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total arxius "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        	
+		        	//Liberamos memoria.
+		        	listArchivos.clear();
+		        	
+		        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+		        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
+	    			}
+		        	
+		        	
+		        	
+		        	//Obtenemos las ENCUESTAS del microsite
+		        	info.append("** Enquestes:<br />"); totalCorrectos = 0; totalIncorrectos = 0;
+	        		EncuestaDelegate encuestadel = DelegateUtil.getEncuestaDelegate();        	
+		        	List<Encuesta> listEncuestas = encuestadel.obtenerEncuestasByMicrositeId(idMicrosite);
+		        	
+		        	for ( Encuesta encuesta : listEncuestas){
+		        		if (encuesta != null && encuesta.getId() != null) {
+		        			SolrPendienteResultado resultado = this.indexarPendienteEncuesta(solrIndexer, encuesta.getId(), info, pathUO);
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}
+		        	}    
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total enquestes "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        	
+		        	//Liberamos memoria.
+		        	listEncuestas.clear();
+		        	
+		        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+		        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
+	    			}
+		        	
+		        	
+		        	
+		        	//Obtenemos los FAQ's del microsite
+		        	info.append("** Faqs: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
+		        	FaqDelegate faqdel = DelegateUtil.getFaqDelegate();        	        	
+		        	List<Faq> listFaqs = faqdel.obtenerFaqsByMicrositeId(idMicrosite);
+		        	
+		        	for ( Faq faq : listFaqs){
+		        		if (faq !=null && faq.getId() != null) {    
+		        			SolrPendienteResultado resultado = this.indexarPendienteFAQ(solrIndexer, faq.getId(), info, pathUO);
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}
+		        	} 
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total faqs "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        	
+		        	//Liberamos memoria.
+		        	listFaqs.clear();
+		        	
+		        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+		        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
+	    			}
+		        	
+		        	
+		        	//Obtenemos las NOTICIAS del microsite        	
+		        	info.append("** Noticies: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
+		        	NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();        	        	      
+		        	List<Noticia> listNoticias = noticiadel.obtenerNoticiasByMicrositeId(idMicrosite);
+		        	        	
+		        	for ( Noticia noticia : listNoticias){
+		        		if (noticia != null && noticia.getId() != null) {
+		        			SolrPendienteResultado resultado = this.indexarPendienteNoticia(solrIndexer, noticia.getId(), info, pathUO);	
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}
+		        	}  
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total noticias "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        	
+		        	//Liberamos memoria.
+		        	listNoticias.clear();
+		        	
+		        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+		        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
+	    			}
+		        	
+		        	
+		        	
+		        	
+		        	//Obtenemos las AGENDAS del microsite
+		        	info.append("** Agendas: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
+		        	AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();        	        	
+		        	List<Agenda> listAgendas = agendadel.obtenerAgendasByMicrositeId(idMicrosite);
+		        	
+		        	for ( Agenda agenda : listAgendas){
+		        		if (agenda != null && agenda.getId() != null) {
+		        			SolrPendienteResultado resultado = this.indexarPendienteAgenda(solrIndexer, agenda.getId(), info, pathUO);	 
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}	        		
+		        	}  
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total agenda "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        	
+		        	//Liberamos memoria.
+		        	listAgendas.clear();
+		        	
+		        	if (GusiteJobUtil.interrumpirTarea) { //El semaforo para salir de esto.
+		        		return new SolrPendienteResultado(false, "Finalitzat per força mentre estava amb el MICROSITE id " + idMicrosite);
+	    			}
+		        	
+		        	
+		        	
+		        	
+		        	//Obtenemos los CONTENIDOS del microsite
+		        	info.append("** Continguts: <br />"); totalCorrectos = 0; totalIncorrectos = 0;
+		        	ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();                	        
+		        	List<Contenido> listContenidos = contenidodel.listarAllContenidos(idMicrosite.toString());
+		        	        	
+		        	for (Contenido contenido : listContenidos) {
+		        		if (contenido != null && contenido.getId() != null) {
+		        			SolrPendienteResultado resultado = this.indexarPendienteContenido(solrIndexer, contenido.getId(), info, pathUO);
+		        			if (resultado.isCorrecto()) {
+		        				totalCorrectos ++;
+		        			} else {
+		        				totalIncorrectos ++;
+		        			}
+		        		}	        		
+		        	}
+		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
+		        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br /><br />");
+		        	if (actualizarSolrPendiente) {
+			        	solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
+			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
+		        	}
+		        
+		        	//Liberamos memoria.
+		        	listContenidos.clear();
+        		}
 	        } else {
 	        	info.append("El microsite no es indexable con id " + idMicrosite +".<br />");
 	        	resultadoMicrosite.setIndexable(false);
@@ -742,17 +750,17 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 					if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_AGENDA.toString())){
 						
 						info.append(" Vamos a enviar una indexacion de una agenda (id:"+solrPendiente.getIdElem() +")  <br /> ");
-						solrPendienteResultado = indexarPendienteAgenda(solrIndexer, solrPendiente.getIdElem(), info);
+						solrPendienteResultado = indexarPendienteAgenda(solrIndexer, solrPendiente.getIdElem(), info, null);
 						
 					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_NOTICIA.toString())){
 						
 						info.append(" Vamos a enviar una indexacion de una noticia (id:"+solrPendiente.getIdElem() +")  <br /> ");
-						solrPendienteResultado = indexarPendienteNoticia(solrIndexer, solrPendiente.getIdElem(), info);
+						solrPendienteResultado = indexarPendienteNoticia(solrIndexer, solrPendiente.getIdElem(), info, null);
 						
 					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_CONTENIDO.toString())){
 						
 						info.append(" Vamos a enviar una indexacion de un contenido (id:"+solrPendiente.getIdElem() +")  <br /> ");
-						solrPendienteResultado = indexarPendienteContenido(solrIndexer, solrPendiente.getIdElem(), info);
+						solrPendienteResultado = indexarPendienteContenido(solrIndexer, solrPendiente.getIdElem(), info, null);
 						
 					}else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_MICROSITE.toString())){
 						if (solrPendiente.getIdArchivo() == null) {
@@ -760,17 +768,17 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 							solrPendienteResultado = indexacionMicrosite(solrPendiente.getIdElem(), null, info);    							
 						} else {
 							info.append(" Vamos a enviar una indexacion de un archivo microsite (id:"+solrPendiente.getIdElem() +", idArchivo:"+solrPendiente.getIdArchivo()+")  <br /> ");
-						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info);
+						solrPendienteResultado = indexarPendienteArchivo(solrIndexer, solrPendiente.getIdElem(), solrPendiente.getIdArchivo(), info, null);
 						}
 					} else  if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_FAQ.toString())){
 		                
 						info.append(" Vamos a enviar una indexacion de un faq (id:"+solrPendiente.getIdElem() +")  <br /> ");
-						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info);
+						solrPendienteResultado = indexarPendienteFAQ(solrIndexer, solrPendiente.getIdElem(), info, null);
 						
 					} else if (solrPendiente.getTipo().equals(EnumCategoria.GUSITE_ENCUESTA.toString())){
 					
 						info.append(" Vamos a enviar una indexacion de una encuesta (id:"+solrPendiente.getIdElem() +")  <br /> ");
-						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info);
+						solrPendienteResultado = indexarPendienteEncuesta(solrIndexer, solrPendiente.getIdElem(), info, null);
 						
 					}  else {
 						 log.error("Tipo de elemento no especificado correctamente");
@@ -793,13 +801,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
      * @param info
      * @return
      */
-    private SolrPendienteResultado indexarPendienteArchivo(SolrIndexer solrIndexer, Long idMicrosite, Long idArchivo, StringBuffer info) {
+    private SolrPendienteResultado indexarPendienteArchivo(SolrIndexer solrIndexer, Long idMicrosite, Long idArchivo, StringBuffer info, final PathUOResult iPathUO) {
     	SolrPendienteResultado resultado = null;
     	
     	final MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
     	EnumCategoria tipo = EnumCategoria.GUSITE_ARCHIVO;
     	try{
-    		resultado = micrositeDelegate.indexarSolrArchivo(solrIndexer, Long.valueOf(idMicrosite), tipo, Long.valueOf(idArchivo));
+    		resultado = micrositeDelegate.indexarSolrArchivo(solrIndexer, Long.valueOf(idMicrosite), tipo, Long.valueOf(idArchivo), iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idArchivo+"):"+ resultado.toString());
 	    		if (info != null) {
@@ -826,14 +834,14 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
      */
 	private SolrPendienteResultado indexarPendienteEncuesta(
 			SolrIndexer solrIndexer, Long idEncuesta,
-			StringBuffer info) {
+			StringBuffer info, final PathUOResult iPathUO) {
     	
     	SolrPendienteResultado resultado = null;
     	EnumCategoria tipo = EnumCategoria.GUSITE_ENCUESTA;
     	
     	final EncuestaDelegate encuestaDelegate = DelegateUtil.getEncuestaDelegate();
     	try{
-    		resultado = encuestaDelegate.indexarSolr(solrIndexer, idEncuesta, tipo);
+    		resultado = encuestaDelegate.indexarSolr(solrIndexer, idEncuesta, tipo, iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idEncuesta+"):"+ resultado.toString());
 	    		if (info != null) {
@@ -858,13 +866,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 	 * @param info
 	 * @return
 	 */
-	private SolrPendienteResultado indexarPendienteFAQ(SolrIndexer solrIndexer, Long idElemento, StringBuffer info) {
+	private SolrPendienteResultado indexarPendienteFAQ(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info, final PathUOResult iPathUO) {
     	SolrPendienteResultado resultado = null;
     	
     	final FaqDelegate faqDelegate = DelegateUtil.getFaqDelegate();
     	final EnumCategoria tipo = EnumCategoria.GUSITE_FAQ;
     	try{
-    		resultado = faqDelegate.indexarSolr(solrIndexer, idElemento, tipo);
+    		resultado = faqDelegate.indexarSolr(solrIndexer, idElemento, tipo, iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
 	    		if (info != null) {
@@ -888,7 +896,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
      * @param solrPendiente
      * @return
      */
-    private SolrPendienteResultado indexarPendienteAgenda(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info) {
+    private SolrPendienteResultado indexarPendienteAgenda(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info, final PathUOResult iPathUO) {
 
     	SolrPendienteResultado resultado = null;
     	EnumCategoria tipo = EnumCategoria.GUSITE_AGENDA;
@@ -904,7 +912,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	
     	try{
     		
-			resultado = agendaDelegate.indexarSolr(solrIndexer, idElemento,tipo);
+			resultado = agendaDelegate.indexarSolr(solrIndexer, idElemento, tipo, iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
 	    		if (info != null) {
@@ -935,7 +943,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         			{
         				 
         				//Indexamos las AGENDAS con archivo 
-        				resultado = agendaDelegate.indexarSolrArchivo(solrIndexer,  agenda.getId(), EnumCategoria.GUSITE_AGENDA,tradAgen.getDocumento().getId());
+        				resultado = agendaDelegate.indexarSolrArchivo(solrIndexer,  agenda.getId(), EnumCategoria.GUSITE_AGENDA,tradAgen.getDocumento().getId(), iPathUO);
         				
         				if (!resultado.isCorrecto()) {
         					 log.debug("Error indexando documento (DOC:"+arc.getId()+"):"+ resultado.toString());
@@ -964,7 +972,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
      * @param solrPendiente
      * @return
      */
-    private SolrPendienteResultado indexarPendienteNoticia(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info) {
+    private SolrPendienteResultado indexarPendienteNoticia(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info, final PathUOResult iPathUO) {
 
     	SolrPendienteResultado resultado = new SolrPendienteResultado(true);
     	EnumCategoria tipo = EnumCategoria.GUSITE_NOTICIA;
@@ -979,7 +987,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	}
     	
     	try{
-    		resultado = noticiaDelegate.indexarSolr(solrIndexer, idElemento, tipo);
+    		resultado = noticiaDelegate.indexarSolr(solrIndexer, idElemento, tipo, iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
 	    		info.append(" ** Parece que no se ha indexado noticia(ID:"+idElemento+"): " + resultado.getMensajeCorto());
@@ -1008,7 +1016,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         			{
         				
         				//Indexamos las AGENDAS con archivo 
-        				resultado = noticiaDelegate.indexarSolrArchivo(solrIndexer,  noticia.getId(), EnumCategoria.GUSITE_NOTICIA,tradNoticia.getDocu().getId());
+        				resultado = noticiaDelegate.indexarSolrArchivo(solrIndexer,  noticia.getId(), EnumCategoria.GUSITE_NOTICIA,tradNoticia.getDocu().getId(), iPathUO);
         				
         				if (!resultado.isCorrecto()) {
         					 log.debug("Error indexando documento(DOC:"+arc.getId()+"):"+ resultado.toString());
@@ -1037,7 +1045,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
      * @param solrPendiente
      * @return
      */
-    private SolrPendienteResultado indexarPendienteContenido(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info) {
+    private SolrPendienteResultado indexarPendienteContenido(final SolrIndexer solrIndexer, final Long idElemento, final StringBuffer info, final PathUOResult iPathUO) {
 
     	SolrPendienteResultado resultado = new SolrPendienteResultado(true);
     	EnumCategoria tipo = EnumCategoria.GUSITE_CONTENIDO;
@@ -1057,7 +1065,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	
     	try {
     		
-    		resultado = contenidoDelegate.indexarSolr(solrIndexer, idElemento, tipo);
+    		resultado = contenidoDelegate.indexarSolr(solrIndexer, idElemento, tipo, iPathUO);
 			if (!resultado.isCorrecto()) {
 	    		log.error("Error indexando "+tipo+"(ID:"+idElemento+"):"+ resultado.toString());
 	    		info.append(" ** Parece que no se ha indexado contenido(ID:"+idElemento+"): " + resultado.getMensajeCorto());
@@ -1085,7 +1093,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 						try{
 							
 	        				//Indexamos las CONTENIDOS con archivo 
-							resultado = contenidoDelegate.indexarSolrArchivo(solrIndexer,  contenido.getId(), EnumCategoria.GUSITE_CONTENIDO, docu.getId());
+							resultado = contenidoDelegate.indexarSolrArchivo(solrIndexer,  contenido.getId(), EnumCategoria.GUSITE_CONTENIDO, docu.getId(), iPathUO);
 	        				
 							if (!resultado.isCorrecto()) {
 	        					 log.debug("Error indexando documento(DOC:"+docu.getId()+"):"+ resultado.toString());
