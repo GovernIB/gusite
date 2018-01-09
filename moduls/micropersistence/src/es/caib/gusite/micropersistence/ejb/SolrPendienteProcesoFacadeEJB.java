@@ -407,7 +407,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         		
         		if (pathUO == null) {
         		   	
-        			info.append("El microsite amb id "+idMicrosite+" està associat a una Unitat Orgànica inexistent o no visible.<br />");
+        			info.append("El microsite amb id "+idMicrosite+" està associat a una Unitat Orgànica inexistent o no visible.<br /><br />");
     	        	resultadoMicrosite.setIndexable(false);
     	      
         		} else {
@@ -595,7 +595,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	listContenidos.clear();
         		}
 	        } else {
-	        	info.append("El microsite no es indexable con id " + idMicrosite +".<br />");
+	        	info.append("El microsite no es indexable con id " + idMicrosite +".<br /><br />");
 	        	resultadoMicrosite.setIndexable(false);
 	        }
 	        
