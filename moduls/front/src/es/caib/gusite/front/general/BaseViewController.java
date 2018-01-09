@@ -274,7 +274,7 @@ public abstract class BaseViewController extends FrontController {
 		} else {
 			archivosCss.add( new ArchivoCSS( "/resources/css/estils.css", "screen") );
 			archivosCss.add( new ArchivoCSS( "/resources/css/estils_print.css", "print"));
-			
+			archivosCss.add( new ArchivoCSS( "/resources/css/imc-menu-horitzontal.css", "print"));
 			if (view.getMicrosite().getEstiloCSSPatron().equals("A")) {
 				archivosCss.add( new ArchivoCSS( "/resources/css/estils_blau.css", "screen") );
 			}

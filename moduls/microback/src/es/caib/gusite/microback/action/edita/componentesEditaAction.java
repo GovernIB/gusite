@@ -137,6 +137,9 @@ public class componentesEditaAction extends BaseAction
 	    tp.setId((Long)componenteForm.get("idTipo"));
 	    componenteBean.setTipo(tp);
 	   	
+	    if (componenteForm.get("visualizacion") != null) {
+	    	componenteBean.setVisualizacion(componenteForm.get("visualizacion").toString());
+	    }
 	   	
 	   	if(componenteBean.getTipo().getTipoelemento().equals(Tipo.TIPO_MAPA)){
 	   		//si es de tipo mapa, dejamos estos valores por defecto
@@ -206,6 +209,7 @@ public class componentesEditaAction extends BaseAction
             componenteForm.set("orden", componenteBean.getOrdenacion());
             componenteForm.set("idTipo", componenteBean.getTipo().getId());
             componenteForm.set("soloimg", componenteBean.getSoloimagen());
+            componenteForm.set("visualizacion", componenteBean.getVisualizacion());
             
             VOUtils.describe(componenteForm, componenteBean);  // bean --> form
   

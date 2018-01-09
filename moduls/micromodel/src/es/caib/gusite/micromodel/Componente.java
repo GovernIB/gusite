@@ -44,6 +44,11 @@ public class Componente extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = 5072614956105180822L;
 
+	/** Visualización del componente en modo listado. **/
+	public static String VISUALIZACION_LISTADO = "L";
+	/** Visualización del componente en modo boton. **/
+	public static String VISUALIZACION_BOTON = "B";
+	
 	@XmlAttribute
 	@Id
 	@SequenceGenerator(name = "GUS_COMPONENTE_ID_GENERATOR", sequenceName = "GUS_SEQCMP", allocationSize = 1, initialValue = 1)
@@ -54,6 +59,10 @@ public class Componente extends AuditableModel implements Traducible2 {
 	@XmlAttribute
 	@Column(name = "CMP_MICCOD")
 	private Long idmicrosite;
+	
+	/** Indica si es modo listado (L) o modo boton (B) */
+	@Column(name = "CMP_VISUAL")
+	private String visualizacion;
 
 	// bi-directional many-to-one association to GusDocus
 	@XmlElement
@@ -185,6 +194,20 @@ public class Componente extends AuditableModel implements Traducible2 {
 
 	public void setSoloimagen(String soloimagen) {
 		this.soloimagen = soloimagen;
+	}
+
+	/**
+	 * @return the visualizacion
+	 */
+	public String getVisualizacion() {
+		return visualizacion;
+	}
+
+	/**
+	 * @param visualizacion the visualizacion to set
+	 */
+	public void setVisualizacion(String visualizacion) {
+		this.visualizacion = visualizacion;
 	}
 
 	public Tipo getTipo() {

@@ -273,7 +273,10 @@ public class microEditaAction extends BaseAction  {
     	micrositeBean.setTipomenu((String) microForm.get("tipomenu"));
     	micrositeBean.setUrlcampanya((String) microForm.get("urlcampanya"));
     	micrositeBean.setNumeronoticias(((Integer) microForm.get("numeronoticias")).intValue());
-
+    	if (microForm.get("orientacionMenu") != null) {
+    		micrositeBean.setOrientacionMenu(microForm.get("orientacionMenu").toString());
+    	}
+    	
         if (isRolAdmin) {
     		micrositeBean.setUnidadAdministrativa(Integer.parseInt(microForm.get("idUA").toString()));
             micrositeBean.setAnalytics((String) microForm.get("analytics"));
@@ -474,6 +477,7 @@ public class microEditaAction extends BaseAction  {
         microForm.set("analytics", micrositeBean.getAnalytics());
         microForm.set("uri", micrositeBean.getUri());
         microForm.set("versio", micrositeBean.getVersio());
+        microForm.set("orientacionMenu",  micrositeBean.getOrientacionMenu());
 		microForm.set("acceso", micrositeBean.getAcceso());
         microForm.set("desarrollo", micrositeBean.getDesarrollo());
         if (micrositeBean.getTema() != null) {

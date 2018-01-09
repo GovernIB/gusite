@@ -235,6 +235,15 @@
 										</td>
 									</tr>
 									<tr>
+										<td class="etiqueta"><bean:message key="micro.orientacionmenu" /> &gt;</td>
+										<td>
+											<html:select property="orientacionMenu">
+												<html:option value="C"><bean:message key="micro.orientacion.clasico" /></html:option>
+												<html:option value="H"><bean:message key="micro.orientacion.horizontal" /></html:option>
+											</html:select>
+										</td>
+									</tr>
+									<tr class="par">
 										<td class="etiqueta"><bean:message key="micro.acceso" /> &gt;</td>
 										<td>
 											<table cellpadding="0" cellspacing="0">

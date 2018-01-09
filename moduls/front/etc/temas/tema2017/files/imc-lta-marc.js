@@ -217,8 +217,8 @@ imc_bt_menu
 Modernizr
 	.load({
 		test: Modernizr.cssscrollbar,
-		nope: [ APP_SERVIDOR+"files/jquery-1.12.4.min.js", APP_SERVIDOR+"files/jquery.slimscroll.min.js" ],
-		both: [APP_SERVIDOR+"files/modernizr.cssscroll.js"],
+		//nope: [ APP_SERVIDOR+"files/jquery-1.12.4.min.js", APP_SERVIDOR+"files/jquery.slimscroll.min.js" ],
+		//both: [APP_SERVIDOR+"files/modernizr.cssscroll.js"],
 		complete: function() {
 
 			if (!Modernizr.cssscrollbar) {

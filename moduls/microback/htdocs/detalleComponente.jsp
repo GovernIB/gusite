@@ -121,6 +121,16 @@
 						</tr>
 				
 						<tr>
+							<td class="etiqueta"><bean:message key="compo.visualizacion" /></td>
+							<td>
+								<html:select property="visualizacion">
+				   	    	        <html:option value="L"><bean:message key="compo.visualizacion.listado" /></html:option>
+				   	    	        <html:option value="B"><bean:message key="compo.visualizacion.boton" /></html:option>
+						        </html:select>
+							</td>
+						</tr>
+						
+						<tr class="par">
 							<td class="etiqueta"><bean:message key="compo.imagen" /></td>
 							<td>
 								<div style="text-align:left" id="microManagedFile">

@@ -48,7 +48,7 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 
 <!-- Bootstrap -->
 <link href="resources/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-<script src="resources/js/jquery/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
+<script src="resources/js/jquery/jquery-1.12.4.min.js" th:src="@{/resources/js/jquery/jquery-1.12.4.min.js}"></script>
 <script src="resources/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
 <!-- Fin bootstrap -->
 <!-- Reset default bootstrap elements -->
@@ -60,6 +60,26 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 <!--/* TAGS css pel microsite  */-->
 <link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 
+	<!-- menu horitzontal -->
+	<script type="text/javascript">
+	<!--
+		var txtTanca = "Tanca",
+			txtMenu = "Menú";
+	-->
+	</script>
+	
+	<!-- Boton listado. -->
+	<script src="resources/js/imc-menu-horitzontal.js" th:src="@{/resources/js/imc-menu-horitzontal.js}"></script>
+	<link href="resources/css/imc-menu-horitzontal.css" th:href="@{/resources/css/imc-menu-horitzontal.css}" rel="stylesheet" media="screen" />
+		
+	<!-- botó desplegable -->
+	<script src="resources/js/imc-menu-desplegable.js" type="text/javascript" th:src="@{/resources/js/imc-menu-desplegable.js}"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="resources/css/imc-boto-desplegable.css" th:href="@{/resources/css/imc-boto-desplegable.css}" />
+	
+	
+	<!-- botó especial -->
+	<link rel="stylesheet" type="text/css" media="screen" href="css/imc-boto-especial.css" />
+		
 <th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.
@@ -69,7 +89,7 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 		- el soporte para thymol está roto. Es necesario implementar el dialecto gus para soportar gus:replace
 		- por otro lado, la extensión para thymol de layout dialect está en desarrollo: https://github.com/ultraq/thymeleaf-layout-dialect-js/ 
 	*/-->
-	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+	<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.12.4.min.js" data-thymol-load="gus-dialect.js"></script>
 	<script type="text/javascript">
 		var thDebug = false;
 	</script>
@@ -82,8 +102,10 @@ Plantilla base que monta la estructura general del resto de páginas web de micr
 	<div id="contenedor">
 		<!-- Cabecera-->
 		<header gus:replace="general/cabecera::cabecera">Cabecera del web</header>
+		
 		<!-- Contenido -->
-		<div id="continguts">
+		<div id="continguts" class="imc-continguts">
+			<div th:remove="tag" gus:replace="general/menu :: menuSuperior">Menú superior</div>
 			<div th:remove="tag" layout:fragment="campanya">
 				<!-- campanya -->
 				<div th:if="${MVS_home_campanya} !=null" th:utext="${MVS_home_campanya}" th:remove="tag">Campaña del home</div>

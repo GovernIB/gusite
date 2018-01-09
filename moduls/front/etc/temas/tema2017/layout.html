@@ -48,7 +48,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 	</script>
 	<!-- Bootstrap -->
 	<link href="resources/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-	<!--<script src="resources/js/jquery/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>-->
 	<script src="../files/jquery-1.12.4.min.js" th:src="@{${MVS_uriTema + 'files/jquery-1.12.4.min.js'}}"></script>
 	<script src="../files/modernizr.js" th:src="@{${MVS_uriTema + 'files/modernizr.js'}}"></script>
 	<script src="../files/jquery.slimscroll.min.js" th:src="@{${MVS_uriTema + 'files/jquery.slimscroll.min.js'}}"></script>
@@ -75,6 +74,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 	
 	<link th:each="archivoCss : ${MVS_css}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
 	<!--<link href="resources/css/estils.css" rel="stylesheet" media="all" th:href="@{/resources/hotTemplates/css/estils-tema.css}"></link>-->
+	
+	
+	
 	<th:block th:remove="all">
 <!--/*  
 	Este bloque se usa para visualización en prototipo estático.
@@ -88,7 +90,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 	<!--  
 	<script type="text/javascript" src="http://cdn.jsdelivr.net/thymol/latest/thymol.min.js"></script>
 -->
-<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+<script type="text/javascript" src="./resources/Thymol-2.0/thymol.js" data-jquery-src="resources/js/jquery/jquery-1.12.4.min.js" data-thymol-load="gus-dialect.js"></script>
 <script type="text/javascript">
 var thDebug = false;
 </script>
@@ -98,6 +100,26 @@ var thDebug = false;
          type="text/css" media="screen, projection">
          <script type="text/javascript" th:src="@{${MVS_uriTema + '/files/html5shiv.min.js'}}"></script>
 <![endif]-->
+
+
+	<!-- menu horitzontal -->
+	<script type="text/javascript">
+	<!--
+		var txtTanca = "Tanca",
+			txtMenu = "Menú";
+	-->
+	</script>
+	<script src="resources/js/imc-menu-horitzontal.js" th:src="@{/resources/js/imc-menu-horitzontal.js}"></script>
+	<link href="resources/css/imc-menu-horitzontal.css" th:href="@{/resources/css/imc-menu-horitzontal.css}" rel="stylesheet" media="screen" />
+	
+	<!-- botó desplegable -->
+	<script src="resources/js/imc-menu-desplegable.js" type="text/javascript" th:src="@{/resources/js/imc-menu-desplegable.js}"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="resources/css/imc-boto-desplegable.css" th:href="@{/resources/css/imc-boto-desplegable.css}" />
+	
+	<!-- botó especial -->
+	<link rel="stylesheet" type="text/css" media="screen" href="css/imc-boto-especial.css" />
+
+
 </head>
 <body class="bodyFontSize" style="font-size: 100%">
 	<div class="imc-logo" id="imc-logo">
@@ -125,7 +147,9 @@ var thDebug = false;
 			<!-- fin campanya -->
 		</div>
 		<!-- Contenido -->
-		<div id="continguts">
+		<div id="continguts" class="imc-continguts">
+			
+			
 			<!-- Molla de pa -->
 			<div class="row clearfix" th:remove="tag">
 				<div class="col-md-12 column" th:remove="tag">
@@ -139,7 +163,11 @@ var thDebug = false;
 					</div>
 				</div>
 			</div>
+			 
+			<!-- Menu superior -->
+			<div th:remove="tag" gus:replace="general/menu :: menuSuperior">Menú superior</div>
 			
+					
 			<!--/* Sección del menú lateral */-->
 			<section th:remove="tag" layout:fragment="menuLateral">
 				<!-- menu -->

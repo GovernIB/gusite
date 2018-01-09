@@ -22,3 +22,13 @@ ALTER TABLE GUS_FCOIDI ADD (
   FOREIGN KEY (FCI_CODIDI) 
   REFERENCES GUS_IDIOMA (IDI_CODI)
   ENABLE VALIDATE);
+
+  /** Incluye un nuevo campo en microsite para indicar el menu orientacion. Valores C (Clasico) H (Horizontal) **/
+ ALTER TABLE GUS_MICROS ADD MIC_MENORI VARCHAR2(1) DEFAULT 'C';
+COMMENT ON COLUMN GUS_MICROS.MIC_MENORI is '  indicar el menu orientacion. Valores C (Clasico) H (Horizontal) ';
+
+/** Incluye un nuevo campo en componentes para la visualización en modo lista o botón. **/
+ALTER TABLE GUS_COMPOS ADD CMP_VISUAL VARCHAR2(1) DEFAULT 'L';
+COMMENT ON COLUMN GUS_COMPOS.CMP_VISUAL is '  Indica si es modo listado (L) o modo boton (B) ';
+
+ 

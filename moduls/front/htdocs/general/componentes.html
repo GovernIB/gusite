@@ -16,7 +16,7 @@
     Al ejecutarse dinámicamente, se eliminará automáticamente
     */-->
     <link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>
-    <script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
+    <script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.12.4.min.js" data-thymol-load="gus-dialect.js"></script>
     <script type="text/javascript">
     var thDebug = false;
     </script>
@@ -160,8 +160,28 @@
             </table>
         </div>
     </div>
-    <div th:fragment="componenteListaEnlaces" >
-        <div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="micro-elemento">
+    <!--  Listado de tipo boton -->
+   <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'B'}" class="imc-bt-desplegable">
+		<div class="imc-bt-desplegable" th:if="${MVS_componente.visualizacion == 'B'}">
+			<div th:if="${MVS_componente.imagenbul != null}" th:remove="tag">
+                <button type="button" th:style="'background: url(' + @{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}} + ')"
+				><span th:text="${MVS_componente.nombre == null}? '[ empty ]' : '__${MVS_componente.nombre}__'">Titulo del componente</span></button>
+            </div>
+			<div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
+                <button type="button" 
+				><span th:text="${MVS_componente.nombre == null}? '[ empty ]' : '__${MVS_componente.nombre}__'">Titulo del componente</span></button>
+            </div>								
+			
+			<ul th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
+				<li th:each="noticia,iterStat : ${lista_noticias}">
+					<a th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}" th:text="${noticia.traduccion.titulo}">Texto de enlace</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--  Listado de tipo lista. -->
+    <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'L'}">
+		<div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="micro-elemento" th:if="${MVS_componente.visualizacion == 'L'}">
             <style gus:replace="::componenteStyle"></style>
             <h2 th:text="${MVS_componente.nombre == null}? '[ empty ]' : '__${MVS_componente.nombre}__'">Nombre del elemento</h2>
             <div th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">

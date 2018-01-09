@@ -8,18 +8,101 @@
     <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <th:block th:remove="all">
-    <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"/>
-    <link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
-    <script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}">
-    </script>
-    <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}">
-    </script>
-    <link href="../../resources/bootstrap/css/bootstrap-reset.css" rel="stylesheet" media="screen" />
-    <script type="text/javascript" src="../files/globales.js"></script>
-</th:block>
+	    <link rel="stylesheet" type="text/css" media="all" href="../css/estils-tema.css"/>
+	    <link href="../files/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+	    <script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}">
+	    </script>
+	    <link href="../../resources/bootstrap/css/bootstrap-reset.css" rel="stylesheet" media="screen" />
+	    <script type="text/javascript" src="../files/globales.js"></script>
+	</th:block>
 </head>
 <body style="*{list-style:none;}">
-    <div th:fragment="menu" class="menuLateral">
+
+	<div th:fragment="menuSuperior" th:if="${MVS_microsite.orientacionMenu}=='H'" >
+	
+			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-fila="S" data-complet="N">
+	
+				
+					<nav id="imc-menu-h" class="imc-menu imc-menu-h" role="navigation">
+						<ul>
+							<li th:each="submenu : ${MVS_menu}">
+								<!-- 
+									Cosas a tener en cuenta:
+									 - Si tiene submenus, entonces es un button.
+									 - Si no tiene submenus, es un enlace a.
+									
+									Tipomenu indica si lleva iconos o no. Valor 1 indica 'sin iconos', valor 2 con imagenes. 
+								
+								-->
+								<!-- De tipo button si tiene hijos / raices -->
+								<button type="button" th:if="${#lists.size(submenu.listacosas)} > 0"><img th:src="@{${#gusuri.archivopub(MVS_microsite,submenu.imagenmenu)}}" alt="Imagen menu" th:if="(${MVS_microsite.tipomenu}==2) and (${submenu.imagenmenu}!=null)"/><span th:text="${submenu.traduce.nombre}">Nombre del menú</span></button>
+								
+								<!-- De tipo enlace a si NO tiene hijos / raices -->
+								<a href="#"  th:if="${#lists.size(submenu.listacosas)} == 0"><img th:src="@{${#gusuri.archivopub(MVS_microsite,submenu.imagenmenu)}}" alt="Imagen menu" th:if="(${MVS_microsite.tipomenu}==2) and (${submenu.imagenmenu}!=null)"/><span th:text="${submenu.traduce.nombre}">Nombre del menú</span></a>
+								
+								<!-- Si no tiene hijos. -->
+								<ul th:if="${#lists.size(submenu.listacosas)} > 0">
+									<th:block th:each="contenido : ${submenu.listacosas}">
+										
+										<!-- Es de tipo raiz --> 
+										<li th:if="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}"  
+											th:id="${contenido.id}==${idcontenido} ? 'p'+${contenido.id} : ''"
+											th:class="${contenido.id}==${idcontenido} ? 'seleccionado' : ''">
+											<a href="contenido.html"
+											    th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}"
+											    target=""
+												th:target="(${contenido.urlExterna}) ? '_blank' : '_self'"
+												th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+												th:text="${contenido.traduce.titulo}"><img th:src="@{${#gusuri.archivopub(MVS_microsite,contenido.imagenmenu)}}" alt="Imagen menu" th:if="(${MVS_microsite.tipomenu}==1)"/><span th:text="${submenu.traduce.nombre}">Nombre del menú</span></a>
+										</li>
+										
+										<!-- Es de tipo carpeta --> 
+										<li th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}"
+											th:with="tamano=${#lists.size(contenido.listacosas)}">
+											
+											<button type="button" th:if="${tamano} > 0"><img th:src="@{${#gusuri.archivopub(MVS_microsite,contenido.imagenmenu)}}" alt="Imagen menu" th:if="(${MVS_microsite.tipomenu}==2) and (${contenido.imagenmenu}!=null)"/><span th:text="${contenido.traduce.nombre}">Nombre del menú</span></button>
+													
+											<a href="#"  th:if="${tamano} == 0"><img th:src="@{${#gusuri.archivopub(MVS_microsite,contenido.imagenmenu)}}" alt="Imagen menu" th:if="(${MVS_microsite.tipomenu}==2) and (${contenido.imagenmenu}!=null)"/><span th:text="${contenido.traduce.nombre}">Nombre del menú</span></a>
+											
+											<ul th:if="${tamano}!=0">
+												<li th:each="opcion : ${contenido.listacosas}"  
+													th:id="${opcion.id}==${idcontenido} ? 'p'+${opcion.id} : ''"
+													th:class="${opcion.id}==${idcontenido} ? 'seleccionado' : ''" >
+													<!--/* #gusuri.contenido(MVS_microsite,MVS_idioma,opcion):devuelve la URL hacia el contenido con el id correspondiente */-->
+													<a href="contenido.html" target=""
+													th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,opcion)}}"
+													th:target="(${opcion.urlExterna})? '_blank' : '_self'"
+													th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+													><span th:text="${opcion.traduce.titulo}">Título opción menú</span></a>
+												</li>
+											</ul>
+										</li>
+									</th:block>
+								</ul>
+							</li>
+						</ul>
+					</nav>
+	
+					<div th:if="${MVS_microsite.buscador}=='S'" th:remove="tag">
+						<div class="imc-menu-cercador">
+							<form name="cercadorForm" th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}" method="post">
+							
+								<input type="hidden" name="idsite" value="" th:value="${MVS_idsite}" /> 
+								<input type="hidden" name="lang" value="ca" th:value="${#strings.toLowerCase(MVS_idioma)}" />  
+		
+								<label for="cercadorTxt">
+									<input name="cerca" id="cercadorTxt" type="text" value="" placeholder="Cerqueu" />
+									<button type="submit"><span>Cerca</span></button>
+								</label>
+		
+							</form>
+						</div>
+					</div>
+	
+				</div>
+	</div>
+	
+    <div th:fragment="menu" class="menuLateral" th:if="${MVS_microsite.orientacionMenu}=='C'" >
 		<!-- cercador -->
         <div th:if="${MVS_microsite.buscador}=='S'" th:remove="tag">
             <div id="indexCercador">

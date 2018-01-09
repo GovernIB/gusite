@@ -12,24 +12,23 @@
 	th:lang-xmllang="${lang}">
 	<head>
 		<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
-	<title th:if="${MVS_micrositetitulo} !=null"
+		<title th:if="${MVS_micrositetitulo} !=null"
 		th:text="(${MVS_micrositetitulo}) + '-' + #{agenda.agenda}"></title>	
 		<th:block th:remove="all">
-<!--/*  
-	Este bloque se usa para visualización en prototipo estático.globals
-	Al ejecutarse dinámicamente, se eliminará automáticamente
-	*/-->
-	<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
-
-	<script src="../files/bootstrap/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.11.0.min.js}"></script>
-	<!--<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>-->
-
-	<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.11.0.min.js" data-thymol-load="gus-dialect.js"></script>
-
-	<script type="text/javascript">
-	var thDebug = false;
-	</script>
-</th:block>
+		<!--/*  
+			Este bloque se usa para visualización en prototipo estático.globals
+			Al ejecutarse dinámicamente, se eliminará automáticamente
+			*/-->
+			<script src="../files/bootstrap/js/bootstrap.min.js" th:src="@{/resources/bootstrap/js/bootstrap.min.js}"></script>
+		
+			<!--<link rel="stylesheet" type="text/css" media="all" href="../resources/css/estils.css"></link>-->
+		
+			<script type="text/javascript" src="../resources/Thymol-2.0/thymol.js" data-jquery-src="../resources/js/jquery/jquery-1.12.4.min.js" data-thymol-load="gus-dialect.js"></script>
+		
+			<script type="text/javascript">
+			var thDebug = false;
+			</script>
+		</th:block>
 
 </head>
 <body>

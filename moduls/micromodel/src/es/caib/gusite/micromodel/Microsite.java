@@ -50,7 +50,27 @@ import org.hibernate.annotations.Cascade;
 public class Microsite extends AuditableModel implements Traducible2 {
 
 	private static final long serialVersionUID = -608935483446670811L;
+	
+	/** Orientación Clásica. **/
+	public static final String orientacionClasica = "C";
+	/** Orientación Horizontal. **/
+	public static final String orientacionHorizontal = "H";
+	/** Orientación Vertical. **/
+	public static final String orientacionVertical = "V";
 
+	/** Indexado microsite. **/
+	public final static int INDEXADO = 1;
+	/** No se ha indexado el microsite. **/
+	public final static int NO_INDEXADO = 0;
+	/** Estado sin indexar. **/
+	public final static int INDEXADO_INICIAL = -1;
+	/** Estado indexado correctamente. **/
+	public final static int INDEXADO_CORRECTAMENTE = 1;
+	/** Estado indexado con algún error. **/
+	public final static int INDEXADO_INCORRECTAMENTE = 0;
+	
+	
+	
 	@XmlAttribute
 	@Id
 	@SequenceGenerator(name = "GUS_MICROSITE_ID_GENERATOR", sequenceName = "GUS_SEQMIC", allocationSize = 1, initialValue = 1)
@@ -69,8 +89,7 @@ public class Microsite extends AuditableModel implements Traducible2 {
 	@XmlAttribute
 	@Column(name = "MIC_URI")
 	private String uri;
-	// TEST
-
+	
 	@Transient
 	private int idUA;
 
@@ -92,7 +111,10 @@ public class Microsite extends AuditableModel implements Traducible2 {
 
 	@Column(name = "MIC_MENU")
 	private String tipomenu;
-
+	
+	@Column(name = "MIC_MENORI")
+	private String orientacionMenu;
+	
 	@Column(name = "MIC_PLANTI")
 	private String plantilla;
 
@@ -882,12 +904,10 @@ public class Microsite extends AuditableModel implements Traducible2 {
 		this.indexadoCorrectamente = indexadoCorrectamente;
 	}
 
-	public final static int INDEXADO = 1;
-	public final static int NO_INDEXADO = 0;
-	public final static int INDEXADO_INICIAL = -1;
-	public final static int INDEXADO_CORRECTAMENTE = 1;
-	public final static int INDEXADO_INCORRECTAMENTE = 0;
-	
+	/**
+	 * Is indexado.
+	 * @return
+	 */
 	public boolean isIndexado () {
 		if (this.indexado != null && this.indexado == INDEXADO) {
 			return true;
@@ -896,12 +916,30 @@ public class Microsite extends AuditableModel implements Traducible2 {
 		}
 	}
 	
+	/**
+	 * Indexado correctamente.
+	 * @return
+	 */
 	public boolean isIndexadoCorrectamente () {
 		if (this.indexadoCorrectamente != null && this.indexadoCorrectamente == INDEXADO_CORRECTAMENTE) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return the orientacionMenu
+	 */
+	public String getOrientacionMenu() {
+		return orientacionMenu;
+	}
+
+	/**
+	 * @param orientacionMenu the orientacionMenu to set
+	 */
+	public void setOrientacionMenu(String orientacionMenu) {
+		this.orientacionMenu = orientacionMenu;
 	}
 
 	/**

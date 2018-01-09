@@ -107,6 +107,7 @@
    	    <form-property name="numelem" type="java.lang.Integer"/>
 	    <form-property name="filas" type="java.lang.String" initial="S"/>
 	    <form-property name="soloimg" type="java.lang.String" initial="N"/>
+       	<form-property name="visualizacion" type="java.lang.String" />
        	<form-property name="traducciones" type="java.util.ArrayList"/>
    	    <form-property name="imagen" type="org.apache.struts.upload.FormFile" />
 		<form-property name="imagenid"  type="java.lang.Long"/>		
@@ -351,6 +352,7 @@
     	<form-property name="analytics" type="java.lang.String"/>
     	<form-property name="uri" type="java.lang.String"/>
 		<form-property name="versio" type="java.lang.String"/>
+		<form-property name="orientacionMenu" type="java.lang.String"/>
 		<form-property name="acceso" type="java.lang.String"/>
         <form-property name="desarrollo" type="java.lang.String"/>
         <form-property name="tema" type="java.lang.Long"/>
