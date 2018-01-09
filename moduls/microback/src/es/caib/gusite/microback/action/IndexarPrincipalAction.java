@@ -191,6 +191,7 @@ public class IndexarPrincipalAction extends BaseAction {
 		// DelegateUtil.getSolrPendienteProcesoDelegate().finalizarTodo();
 		IndexacionJobUtil.matarJobs(null);
 	}
+	
 
 	/**
 	 * Obtiene la lista de jobs.

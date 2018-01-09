@@ -87,9 +87,6 @@ public class IndexacionJobUtil {
     }
 	
 
-	
-
-
 	/**
      * Mata los jobs el job.
      * @param tipoIndexacion
@@ -98,15 +95,14 @@ public class IndexacionJobUtil {
     public static void matarJobs(final String tipoIndexacion) throws Exception  {
     		
     	//Paso 1. Parar jobs.
-    	List<JobExecutionContext> currentlyExecuting = StdSchedulerFactory.getDefaultScheduler().getCurrentlyExecutingJobs();
+    	@SuppressWarnings("unchecked")
+		List<JobExecutionContext> currentlyExecuting = StdSchedulerFactory.getDefaultScheduler().getCurrentlyExecutingJobs();
     	//verifying if job is running       
     	for (JobExecutionContext jobExecutionContext : currentlyExecuting) {
-    	    if(jobExecutionContext.getJobDetail().getKey().getName().startsWith("IndexacionJob")){
-    	    	StdSchedulerFactory.getDefaultScheduler().interrupt(jobExecutionContext.getJobDetail().getKey().getName(), Scheduler.DEFAULT_GROUP);
-    	    }
+    	    StdSchedulerFactory.getDefaultScheduler().interrupt(jobExecutionContext.getJobDetail().getKey().getName(), Scheduler.DEFAULT_GROUP);    	    
     	}
     	
-
+    	 
     	//Paso 2. Marcar jobs como finalizados.
     	//Se ha simplificado, se verán los últimos jobs ejecutados y, si alguno de ellos está sin fecha fin
     	//  se da por hecho que se está ejecutando.
