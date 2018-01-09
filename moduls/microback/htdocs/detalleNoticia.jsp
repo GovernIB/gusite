@@ -122,7 +122,7 @@
 			, content_css: [
 			    'css/estils.css'
 			]
-			, extended_valid_elements : "span"
+			//, extended_valid_elements : "span"
 		  });
 		
 			var Rcajatemp_tiny;

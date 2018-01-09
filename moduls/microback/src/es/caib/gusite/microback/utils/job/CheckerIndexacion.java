@@ -42,7 +42,7 @@ public class CheckerIndexacion implements Job {
 		    	List<JobExecutionContext> currentlyExecuting = StdSchedulerFactory.getDefaultScheduler().getCurrentlyExecutingJobs();
 		    	//verifying if job is running       
 		    	for (JobExecutionContext jobExecutionContext : currentlyExecuting) {
-		    	    if(jobExecutionContext.getJobDetail().getKey().getName().startsWith("IndexacionJob" + IndexacionUtil.TIPO_TODO_SIN_INDEXAR)){
+		    		if(jobExecutionContext.getJobDetail().getKey().getName().startsWith("IndexacionJob" + IndexacionUtil.TIPO_TODO_SIN_INDEXAR)){
 		    	    	existeJobAbierto = true;
 		    	    }
 		    	}
