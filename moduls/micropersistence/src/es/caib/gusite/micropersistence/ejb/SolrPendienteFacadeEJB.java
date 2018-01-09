@@ -426,9 +426,10 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
     	 try {
 			 session = getSession();
 			 //session.createQuery("update SolrPendienteJob set fechaFin = sysdate where fechaFin is null").uniqueResult();
-			 List<SolrPendienteJob> jobs = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.fechaFin is null").list();
+			 List<SolrPendienteJob> jobs = session.createQuery("Select solrjob from SolrPendienteJob solrjob where solrjob.fechaFin is null or solrjob.finalizado = " + IndexacionUtil.NO_FINALIZADO).list();
 			 for(SolrPendienteJob job : jobs) {
 				 job.setFechaFin(new Date());
+				 job.setFinalizado(IndexacionUtil.FINALIZADO);
 				 session.update(job);
 			 }
 			 session.flush();
