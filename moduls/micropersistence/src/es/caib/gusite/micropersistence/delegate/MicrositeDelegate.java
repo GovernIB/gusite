@@ -17,6 +17,7 @@ import es.caib.gusite.micromodel.UsuarioPropietarioMicrosite;
 import es.caib.gusite.micropersistence.intf.MicrositeFacade;
 import es.caib.gusite.micropersistence.intf.MicrositeFacadeHome;
 import es.caib.gusite.micropersistence.util.MicrositeFacadeUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 
@@ -422,9 +423,9 @@ public class MicrositeDelegate implements StatelessDelegate {
 	}
 
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
-			final EnumCategoria categoria,final Long idArchivo) throws DelegateException{
+			final EnumCategoria categoria,final Long idArchivo, final PathUOResult iPathUO) throws DelegateException{
 		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo);
+			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria, idArchivo, iPathUO);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

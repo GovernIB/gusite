@@ -241,6 +241,7 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		unidadData.setNombre(ua.getNombre());
 		unidadData.setAbreviatura(ua.getAbreviatura());
 		unidadData.setIdUnidad(ua.getId());
+		unidadData.setValidacion(ua.getValidacion());
 		String idUOGovern = System.getProperty("es.caib.gusite.codigoUO.govern");
 		if (idUOGovern == null) {
 			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");

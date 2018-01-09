@@ -1535,7 +1535,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true" 
      * @ejb.transaction type="RequiresNew"
 	 */
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo) {
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) {
 		
 		log.debug("MicrositeEJB.indexarSolrArchivo. idElemento:" + idElemento +" categoria:"+categoria +" idArchivo:"+idArchivo);
 		
@@ -1584,7 +1584,17 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 						continue;
 					}
 					
-					PathUOResult pathUo = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					PathUOResult pathUO;
+					if (iPathUO == null) {
+						pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					} else {
+						pathUO = iPathUO;
+					}
+					
+					//Si sigue a nulo, es que no es visible o no existe la UO.
+					if (pathUO == null) {
+						return new SolrPendienteResultado(false, "El microsite està associat a una Unitat Orgànica inexistent, per favor, posis en contacte amb l'administrador.");
+					}
 					
 					//Anyadimos idioma al enumerado.
 					idiomas.add(enumIdioma);
@@ -1597,7 +1607,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			    	extension.addIdioma(enumIdioma, FilenameUtils.getExtension(archivo.getNombre()));
 
 			    	// Text optional
-			    	searchTextOptional.addIdioma(enumIdioma, pathUo.getUosText());
+			    	searchTextOptional.addIdioma(enumIdioma, pathUO.getUosText());
 			    	
 			    	//URL
 			    	urls.addIdioma(enumIdioma, IndexacionUtil.getUrlArchivo(micro, archivo, keyIdioma));
@@ -1616,7 +1626,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 					indexFile.setCategoriaPadre(EnumCategoria.GUSITE_MICROSITE);
 					indexFile.setElementoIdPadre(micro.getId().toString());
 					indexFile.setUrlPadre(urlPadre);
-					indexFile.setUos(pathUo.getUosPath());
+					indexFile.setUos(pathUO.getUosPath());
 					indexFile.setSearchTextOptional(searchTextOptional);
 					indexFile.setIdioma(enumIdioma);
 					indexFile.setFileContent(contenidoFichero);

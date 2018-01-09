@@ -30,7 +30,6 @@ import es.caib.gusite.micromodel.Respuesta;
 import es.caib.gusite.micromodel.RespuestaDato;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
-import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micromodel.TraduccionPregunta;
 import es.caib.gusite.micromodel.TraduccionRespuesta;
 import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
@@ -41,10 +40,6 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.micropersistence.util.PathUOResult;
-import es.caib.gusite.plugins.PluginFactory;
-import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
-import es.caib.gusite.plugins.organigrama.UnidadData;
-import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.IndexData;
 import es.caib.solr.api.model.MultilangLiteral;
@@ -1207,7 +1202,7 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true" 
      * @ejb.transaction type="RequiresNew"
 	 */
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO) {
 		log.debug("EncuestafacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
 		
 		try {
@@ -1252,7 +1247,18 @@ public abstract class EncuestaFacadeEJB extends HibernateEJB {
 					}
 					
 					// Path UO
-					PathUOResult pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+
+					PathUOResult pathUO;
+					if (iPathUO == null) {
+						pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					} else {
+						pathUO = iPathUO;
+					}
+					
+					//Si sigue a nulo, es que no es visible o no existe la UO.
+					if (pathUO == null) {
+						return new SolrPendienteResultado(false, "El microsite està associat a una Unitat Orgànica inexistent, per favor, posis en contacte amb l'administrador.");
+					}
 					
 					idiomas.add(enumIdioma);
 					titulo.addIdioma(enumIdioma, traduccion.getTitulo());

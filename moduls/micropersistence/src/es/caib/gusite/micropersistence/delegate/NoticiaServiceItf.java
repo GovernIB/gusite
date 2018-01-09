@@ -6,6 +6,7 @@ import java.util.Map;
 
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 
@@ -221,9 +222,9 @@ public interface NoticiaServiceItf {
 
 	public List<String> listarAnyos() throws Exception;
 	
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) throws Exception;
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO) throws Exception;
 	
 	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
-			final EnumCategoria categoria, final Long idArchivo) throws Exception;
+			final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) throws Exception;
 
 }

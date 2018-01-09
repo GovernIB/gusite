@@ -1,7 +1,6 @@
 package es.caib.gusite.micropersistence.ejb;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +21,6 @@ import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micromodel.TraduccionFaq;
-import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micromodel.TraduccionTemafaq;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
@@ -30,10 +28,6 @@ import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.SolrPendienteDelegate;
 import es.caib.gusite.micropersistence.util.IndexacionUtil;
 import es.caib.gusite.micropersistence.util.PathUOResult;
-import es.caib.gusite.plugins.PluginFactory;
-import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
-import es.caib.gusite.plugins.organigrama.UnidadData;
-import es.caib.gusite.plugins.organigrama.UnidadListData;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.IndexData;
 import es.caib.solr.api.model.MultilangLiteral;
@@ -355,7 +349,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
      * @ejb.permission unchecked="true"
      * @ejb.transaction type="RequiresNew"
 	 */
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria) {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO) {
 		log.debug("FaqfacadeEJB.indexarSolr. idElemento:" + idElemento +" categoria:"+categoria);
 		
 		try {
@@ -398,7 +392,17 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 						continue;
 					}
 					
-					PathUOResult pathUo = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					PathUOResult pathUO;
+					if (iPathUO == null) {
+						pathUO = IndexacionUtil.calcularPathUOsMicrosite(micro, keyIdioma);
+					} else {
+						pathUO = iPathUO;
+					}
+					
+					//Si sigue a nulo, es que no es visible o no existe la UO.
+					if (pathUO == null) {
+						return new SolrPendienteResultado(false, "El microsite està associat a una Unitat Orgànica inexistent, per favor, posis en contacte amb l'administrador.");
+					}
 					
 					idiomas.add(enumIdioma);
 					titulo.addIdioma(enumIdioma, traduccion.getPregunta() != null ? solrIndexer.htmlToText(traduccion.getPregunta()):"");
@@ -412,7 +416,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			    	searchText.addIdioma(enumIdioma, solrIndexer.htmlToText(search));
 			    	
 			    	// Texto busqueda opcional
-			    	searchTextOptional.addIdioma(enumIdioma, pathUo.getUosText());
+			    	searchTextOptional.addIdioma(enumIdioma, pathUO.getUosText());
 
 			    	// URL
 			    	urls.addIdioma(enumIdioma, IndexacionUtil.getUrlFaq(micro, faq, keyIdioma));
@@ -421,7 +425,7 @@ public abstract class FaqFacadeEJB extends HibernateEJB {
 			    	urlPadre.addIdioma(enumIdioma, IndexacionUtil.getUrlMicrosite(micro, keyIdioma));	    		
 			    	tituloPadre.addIdioma(enumIdioma, IndexacionUtil.getTituloMicrosite(micro, keyIdioma));
 			    	
-			    	uosPath = pathUo.getUosPath();
+			    	uosPath = pathUO.getUosPath();
 				}
 			}
 			

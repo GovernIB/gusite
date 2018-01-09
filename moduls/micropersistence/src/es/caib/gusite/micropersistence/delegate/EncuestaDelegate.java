@@ -18,6 +18,7 @@ import es.caib.gusite.micromodel.UsuarioPropietarioRespuesta;
 import es.caib.gusite.micropersistence.intf.EncuestaFacade;
 import es.caib.gusite.micropersistence.intf.EncuestaFacadeHome;
 import es.caib.gusite.micropersistence.util.EncuestaFacadeUtil;
+import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.model.types.EnumCategoria;
 
@@ -508,10 +509,10 @@ public class EncuestaDelegate implements StatelessDelegate {
 		}
 	}
 
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria)
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
 			throws DelegateException {
 		try {
-			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria);
+			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
