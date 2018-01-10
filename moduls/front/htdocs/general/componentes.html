@@ -164,17 +164,18 @@
    <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'B'}" class="imc-bt-desplegable">
 		<div class="imc-bt-desplegable" th:if="${MVS_componente.visualizacion == 'B'}">
 			<div th:if="${MVS_componente.imagenbul != null}" th:remove="tag">
-                <button type="button" th:style="'background: url(' + @{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}} + ')"
-				><span th:text="${MVS_componente.nombre == null}? '[ empty ]' : '__${MVS_componente.nombre}__'">Titulo del componente</span></button>
+                <button type="button" th:style="'background-image: url(' +@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}+' )'"
+				>
+				<span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : '__${MVS_componente.traduccion.titulo}__'">Titulo del componente</span></button>
             </div>
 			<div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
                 <button type="button" 
-				><span th:text="${MVS_componente.nombre == null}? '[ empty ]' : '__${MVS_componente.nombre}__'">Titulo del componente</span></button>
+				><span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : '__${MVS_componente.traduccion.titulo}__'">Titulo del componente</span></button>
             </div>								
 			
 			<ul th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
 				<li th:each="noticia,iterStat : ${lista_noticias}">
-					<a th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}" th:text="${noticia.traduccion.titulo}">Texto de enlace</a>
+					<a th:href="@{${noticia.traduce.laurl}}"  th:text="${noticia.traduccion.titulo}">Texto de enlace</a>
 				</li>
 			</ul>
 		</div>

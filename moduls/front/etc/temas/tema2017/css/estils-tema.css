@@ -168,7 +168,7 @@ h1.titol a{
 #continguts {
 	max-width: 1280px !important;
 	width: calc(100% - 9em);
-	margin: 3em auto 2em auto;
+	margin: 2.5em auto 2em auto;
 	padding-left: 0;
 }
 

@@ -91,8 +91,12 @@ public class componentesEditaAction extends BaseAction
 			return mapping.findForward("detalle");
 
 		} catch (Exception e) {
-			
-			addMessageError(request, "peticion.error");
+			if (e.getMessage() != null && "error.componente.visualizacion.tipoincorrecto".equals(e.getMessage())) {
+				addMessageError(request, "error.componente.visualizacion.tipoincorrecto");
+			} else {
+				addMessageError(request, "peticion.error");
+			}
+			log.error(e);
 			return mapping.findForward("info");
 		
 		}
@@ -139,6 +143,11 @@ public class componentesEditaAction extends BaseAction
 	   	
 	    if (componenteForm.get("visualizacion") != null) {
 	    	componenteBean.setVisualizacion(componenteForm.get("visualizacion").toString());
+	    	//#102-#103  Sólo los tipos enlace pueden ser de tipo boton
+	    	if (Componente.VISUALIZACION_BOTON.equals(componenteBean.getVisualizacion()) && !Tipo.TIPO_LINK.equals(tp.getTipoelemento())) {
+	    		throw new Exception("error.componente.visualizacion.tipoincorrecto");
+	    	}
+	    			
 	    }
 	   	
 	   	if(componenteBean.getTipo().getTipoelemento().equals(Tipo.TIPO_MAPA)){
