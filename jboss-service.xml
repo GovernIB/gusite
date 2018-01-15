@@ -39,14 +39,14 @@
         es.caib.gusite.url.rolsac = http://localhost:48080/sacws-api/services/
         
         <!-- Buscador solr  -->
-        es.caib.gusite.user.solr=admin
-        es.caib.gusite.pass.solr=password
-        es.caib.gusite.url.solr=localhost:8983/solr
-        es.caib.gusite.index.solr=caib
+        es.caib.gusite.solr.user=admin
+        es.caib.gusite.solr.pass=password
+        es.caib.gusite.solr.url=localhost:8983/solr
+        es.caib.gusite.solr.index=caib
 		es.caib.gusite.solr.jobpendientes=0 0 2 * * ?
-		es.caib.gusite.maxjob.solr = 10
+		es.caib.gusite.solr.maxjob = 10
 				<!-- En MB. -->
-	    es.caib.gusite.maxclob.solr = 20
+	    es.caib.gusite.solr.maxclob = 20
 	    <!--  Las siguiente dos propiedades es para realizar descansos en las indexaciones microsite sin indexar y cuanto es el descanso. -->
 	    es.caib.gusite.solr.descanso.minutos=5
 	    es.caib.gusite.solr.descanso.microsites=50
@@ -56,9 +56,9 @@
 		
 		es.caib.gusite.solr.tamanyomaximo=20
 	   	es.caib.gusite.solr.ficheros=doc,docx,xls,xlsx,pdf,pdfx,odt,ods,odp,odf,txt,rtf
-		es.caib.gusite.dias.solr = 10
+		es.caib.gusite.solr.dias = 10
 		<!--  Dias máximo que puede estar el job en la tabla. -->
-		es.caib.gusite.diasjobs.solr = 10
+		es.caib.gusite.solr.diasjobs = 10
 		
 		<!-- key google Maps  -->
 		es.caib.gusite.key.google.maps=keyGoogleMaps

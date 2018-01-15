@@ -503,10 +503,13 @@ public abstract class SolrPendienteFacadeEJB extends HibernateEJB {
      		 query.setMaxResults(1);
      		 solrPendienteJob = (SolrPendienteJob) query.uniqueResult();
      		 if (solrPendienteJob.getDescripcion() != null) {
-     			InputStream in = solrPendienteJob.getDescripcion().getAsciiStream();
+     			/*InputStream in = solrPendienteJob.getDescripcion().getAsciiStream();
      			StringWriter w = new StringWriter();
      			IOUtils.copy(in, w);
      			solrPendienteJob.setInfo(w.toString());
+     			*/
+     			 
+     			 solrPendienteJob.setInfo(solrPendienteJob.getDescripcion());
      		 }
      		 session.flush();
      		
