@@ -11,23 +11,23 @@ import org.apache.commons.logging.LogFactory;
 public class GusitePropertiesUtil
 {
 	/** Usuario SOLR. **/
-	  private static final String USER_SOLR = "es.caib.gusite.user.solr";
+	  private static final String USER_SOLR = "es.caib.gusite.solr.user";
 	  /** Contrasenya SOLR. **/
-	  private static final String PASS_SOLR = "es.caib.gusite.pass.solr";
+	  private static final String PASS_SOLR = "es.caib.gusite.solr.pass";
 	  /** Url SOLR. **/
-	  private static final String URL_SOLR = "es.caib.gusite.url.solr";
+	  private static final String URL_SOLR  = "es.caib.gusite.solr.url";
 	  /** Dias SOLR. **/
-	  private static final String DIAS_SOLR = "es.caib.gusite.dias.solr";
+	  private static final String DIAS_SOLR = "es.caib.gusite.solr.dias";
 	  /** Descanso SOLR en segundos. **/
 	  private static final String DESCANSO_MIN_SOLR = "es.caib.gusite.solr.descanso.minutos";
 	  /** Descanso SOLR en microsite. **/
 	  private static final String DESCANSO_MIC_SOLR = "es.caib.gusite.solr.descanso.microsites";
 	  /** Tamanyo máximo Job. **/
-	  private static final String DIAS_MAX_JOB = "es.caib.gusite.diasjobs.solr";
+	  private static final String DIAS_MAX_JOB = "es.caib.gusite.solr.diasjobs";
 	  /** Tamanyo máximo Clob. **/
-	  private static final String TAMANYO_MAX_CLOB = "es.caib.gusite.maxclob.solr";
+	  private static final String TAMANYO_MAX_CLOB = "es.caib.gusite.solr.maxclob";
 	  /** Index SOLR. **/
-	  private static final String INDEX_SOLR = "es.caib.gusite.index.solr";
+	  private static final String INDEX_SOLR = "es.caib.gusite.solr.index";
 	  /** Clave de google maps. **/
 	  private static final String KEY_GOOGLEMAPS = "es.caib.gusite.key.google.maps";
 	  /** Clave de google maps. **/

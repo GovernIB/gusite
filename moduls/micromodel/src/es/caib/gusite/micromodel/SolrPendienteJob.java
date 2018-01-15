@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -53,8 +54,9 @@ public class SolrPendienteJob implements ValueObject {
 	private String tipo;
 	
 	/** Descripcion del job. **/
+	@Lob
 	@Column(name = "JOB_DESCRI")
-	private Clob descripcion;
+	private String descripcion;
 	
 	/** Finalizado, se necesita en el indexar todo sin indexar.**/
 	@Column(name = "JOB_FINALI")
@@ -132,13 +134,13 @@ public class SolrPendienteJob implements ValueObject {
 	/**
 	 * @return the descripcion
 	 */
-	public Clob getDescripcion() {
+	public String getDescripcion() {
 		return descripcion;
 	}
 	/**
 	 * @param clob the descripcion to set
 	 */
-	public void setDescripcion(Clob clob) {
+	public void setDescripcion(String clob) {
 		this.descripcion = clob;
 	}
 	
@@ -148,7 +150,7 @@ public class SolrPendienteJob implements ValueObject {
 	 * @throws IOException 
 	 */
 	public String getInfo() throws SQLException, IOException {
-	
+		/*
 		String read;
 		StringBuffer buffer = new StringBuffer();
 		if (descripcion != null){
@@ -164,7 +166,8 @@ public class SolrPendienteJob implements ValueObject {
 		
 		
 		
-		return buffer.toString();
+		return buffer.toString();*/
+		return descripcion;
 	}
 	/**
 	 * @return the idElem
