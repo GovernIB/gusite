@@ -34,6 +34,7 @@ public class Fechas
     SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
     return localSimpleDateFormat.format(paramDate);
   }
+  
 
   public static Date stringToDate(String paramString)
     throws Exception
