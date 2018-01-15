@@ -2,6 +2,7 @@ package es.caib.gusite.micropersistence.ejb;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import es.caib.gusite.micropersistence.util.PathUOResult;
 import es.caib.gusite.plugins.PluginFactory;
 import es.caib.gusite.plugins.organigrama.OrganigramaProvider;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
-import es.caib.gusite.utilities.clob.GusiteClobUtil;
+import es.caib.gusite.utilities.date.Fechas;
 import es.caib.gusite.utilities.job.GusiteJobUtil;
 import es.caib.gusite.utilities.property.GusitePropertiesUtil;
 import es.caib.solr.api.SolrFactory;
@@ -54,6 +55,7 @@ import es.caib.solr.api.SolrIndexer;
 import es.caib.solr.api.exception.ExcepcionSolrApi;
 import es.caib.solr.api.model.types.EnumAplicacionId;
 import es.caib.solr.api.model.types.EnumCategoria;
+import es.caib.solr.api.util.Utilidades;
 
 
 
@@ -387,7 +389,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
         	solrIndexer = (SolrIndexer) SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE,  username, password);
         	//Desindexamos el microsite
         	try {
-        		info.append("-Anem a desindexar el microsite arrel.<br />");
+        		info.append(Fechas.formatFecha(Calendar.getInstance().getTime(), "dd-MM-yyyy HH:mm:ss") + " - Anem a desindexar el microsite arrel.<br />");
         		solrIndexer.desindexarRaiz(idMicrosite.toString(), EnumCategoria.GUSITE_MICROSITE);
 			} catch (ExcepcionSolrApi e) {
 				log.error("S'ha produit un error dexindexant el MICROSITE amb id " + idMicrosite, e);
@@ -416,7 +418,7 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	        	resultadoMicrosite.setIndexable(false);
     	      
         		} else {
-	        		info.append("-Anem a indexar els components<br />");
+	        		info.append(Fechas.formatFecha(Calendar.getInstance().getTime(), "dd-MM-yyyy HH:mm:ss") + " - Anem a indexar els components<br />");
 	        		
 		        	//Obtenemos los ARCHIVOS del microsite
 	        		info.append("** Arxius:<br />"); totalCorrectos = 0; totalIncorrectos = 0;
@@ -595,13 +597,15 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        		}	        		
 		        	}
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
-		        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br /><br />");
-		        	if (actualizarSolrPendiente) {
+		        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
+		        	info.append(Fechas.formatFecha(Calendar.getInstance().getTime(), "dd-MM-yyyy HH:mm:ss") + " - Fi de la indexacio <br /><br />");
+			        if (actualizarSolrPendiente) {
 			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
-		        
+		        	
+		        	
 		        	//Liberamos memoria.
 		        	listContenidos.clear();
         		}
