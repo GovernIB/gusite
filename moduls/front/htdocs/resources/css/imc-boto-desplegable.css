@@ -43,10 +43,8 @@
 
 .imc-bt-desplegable button span {
     display: block;
-}
-
-.imc-bt-desplegable button span::after {
-    content: ""; display: block; float: right; width: 1em; height: 1.5em; background: transparent url(../imgs/imc-menu/menu_desplegable_edb2c7.svg) no-repeat center center / auto 1em; opacity: .5;
+    padding-right: 1.5em;
+    background: transparent url(../imgs/imc-menu/menu_desplegable_edb2c7.svg) no-repeat right center / auto 1em;
 }
 
 .imc-bt-desplegable ul {

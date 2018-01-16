@@ -44,6 +44,10 @@ $.fn.appMenuDesplegable = function(opcions) {
                     .off(".appMenuDesplegable")
                     .on("click.appMenuDesplegable", submenu);
 
+                elm
+                    .find(".imc-bt-menu-tanca")
+                        .remove();
+
                 if (submenu_el.css("position") === "fixed") {
                     mobil();
                 }
@@ -82,7 +86,7 @@ $.fn.appMenuDesplegable = function(opcions) {
                     dinsDeLlista = (obj.closest("ul").length) ? true : false,
                     disnDeBotoDesplegable = (obj.closest("ul").parent().hasClass("imc-bt-desplegable")) ? true : false;
 
-                if (!dinsDeLlista && !disnDeBotoDesplegable) {
+                if (!dinsDeLlista || !disnDeBotoDesplegable) {
                     tanca();
                 }
 
