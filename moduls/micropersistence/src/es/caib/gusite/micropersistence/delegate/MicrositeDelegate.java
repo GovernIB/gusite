@@ -454,9 +454,9 @@ public class MicrositeDelegate implements StatelessDelegate {
 		}
 	}
 
-	public String getResumenMicrositesIndexados() throws java.rmi.RemoteException,DelegateException {
+	public String getResumenMicrositesIndexados(boolean conResumen) throws java.rmi.RemoteException,DelegateException {
 		try {
-			 return this.getFacade().getResumenMicrositesIndexados();
+			 return this.getFacade().getResumenMicrositesIndexados(conResumen);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}

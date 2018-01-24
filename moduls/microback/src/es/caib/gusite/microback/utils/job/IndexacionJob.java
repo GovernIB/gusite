@@ -106,7 +106,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
 	    			} else {
 	    				IndexacionJobUtil.crearJobTiempo(tiempoEspera);
 	    				solrPendienteJob.setFinalizado(IndexacionUtil.NO_FINALIZADO);
-	    				solrPendienteJob.setResumen(DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados());
+	    				solrPendienteJob.setResumen(DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados(true));
 	    			}
 	    			break;
 	    		case IndexacionUtil.TIPO_UA:
