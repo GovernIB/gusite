@@ -169,8 +169,8 @@ public class IndexarPrincipalAction extends BaseAction {
 	 * @throws RemoteException 
 	 */
 	private String verInfoSIN() throws RemoteException, DelegateException { 
-		return DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados();
-	}
+		return DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados(false);
+	} 
 
 	/** 
 	 * Limpia los jobs.

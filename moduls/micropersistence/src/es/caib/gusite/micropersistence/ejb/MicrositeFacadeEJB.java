@@ -1031,7 +1031,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public String getResumenMicrositesIndexados() {
+	public String getResumenMicrositesIndexados(boolean conResumen) {
 		final Session session = this.getSession();
 		try {
 			final Query query = session.createQuery("select id, indexado, indexadoCorrectamente, uri from Microsite");
@@ -1040,6 +1040,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			int indexados = 0;
 			int indexadosNO = 0;
 			StringBuffer micrositeErrores = new StringBuffer();
+			int indexadosErroneamente = 0;
 			for(Object[] objeto : objetos) {
 				Long indexado = null;
 				if (objeto[1] != null) {
@@ -1054,12 +1055,17 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 						indexadoCorrectamente = Long.valueOf(objeto[2].toString());
 					}
 					if (indexadoCorrectamente != null && indexadoCorrectamente == Microsite.INDEXADO_INCORRECTAMENTE ) {
-						String id = objeto[0].toString();
-						String uri = objeto[3].toString();
-						if (micrositeErrores.length() == 0) {
-							micrositeErrores.append("<ul>");
-						} 
-						micrositeErrores.append("<li><a target='_blank' href='index.do?idsite=" + id +"'>" + id + ":" + uri + "</a></li>");
+						
+						if (conResumen) {
+							indexadosErroneamente++;
+						} else {
+							String id = objeto[0].toString();
+							String uri = objeto[3].toString();
+							if (micrositeErrores.length() == 0) {
+								micrositeErrores.append("<ul>");
+							} 
+							micrositeErrores.append("<li><a target='_blank' href='index.do?idsite=" + id +"'>" + id + ":" + uri + "</a></li>");
+						}
 					}
 				}
 			}
@@ -1067,8 +1073,12 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			
 			int total = indexados + indexadosNO;
 			respuesta.append( "Hi ha un total de "+total+" microsites ( " + indexadosNO + " no indexats , "+indexados+" indexats ). ");
-			if (micrositeErrores.length() > 0) {
-				respuesta.append("\n Amb errors: " + micrositeErrores +" </ul>");
+			if (conResumen) {
+				respuesta.append("\n Amb errors un total de "+indexadosErroneamente+" microsites");
+			} else {
+				if (micrositeErrores.length() > 0) {
+					respuesta.append("\n Amb errors: " + micrositeErrores +" </ul>");
+				}
 			}
 			return respuesta.toString();
 		} catch (HibernateException he) {

@@ -58,7 +58,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
     	//PREPASO 2 Comprobamos que no haya ya una tarea ejecutándose 
     	try {
 			if (IndexacionJobUtil.existeJobAbierto(context, tipoIndexacion)) {
-				log.error("Hay alguna tarea abierta");
+				log.warn("Hay alguna tarea abierta");
 				return;
 			}
 		} catch (Exception exception) {
@@ -106,7 +106,7 @@ public class IndexacionJob implements Job, InterruptableJob  {
 	    			} else {
 	    				IndexacionJobUtil.crearJobTiempo(tiempoEspera);
 	    				solrPendienteJob.setFinalizado(IndexacionUtil.NO_FINALIZADO);
-	    				solrPendienteJob.setResumen(DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados());
+	    				solrPendienteJob.setResumen(DelegateUtil.getMicrositeDelegate().getResumenMicrositesIndexados(true));
 	    			}
 	    			break;
 	    		case IndexacionUtil.TIPO_UA:

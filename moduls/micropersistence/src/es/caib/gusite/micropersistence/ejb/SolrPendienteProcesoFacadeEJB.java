@@ -335,6 +335,8 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             	}
             	
             }
+        	info.append(Fechas.formatFecha(Calendar.getInstance().getTime(), "dd-MM-yyyy HH:mm:ss") + " - Descanso por finalización de indexación por bloque.<br /><br />");
+    		
             
         	String infoResumen = "La indexació ha finalitzat. S'han indexat " + (correctos + incorrectos) +" microsites, dels quals "+incorrectos+" s'han indexat amb errors. <br />";
             //solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));

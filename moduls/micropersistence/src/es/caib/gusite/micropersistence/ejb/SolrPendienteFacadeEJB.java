@@ -1,7 +1,5 @@
 package es.caib.gusite.micropersistence.ejb;
 
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -11,7 +9,6 @@ import java.util.List;
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 
-import org.apache.commons.io.IOUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
