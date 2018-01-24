@@ -54,7 +54,6 @@ public class SolrPendienteJob implements ValueObject {
 	private String tipo;
 	
 	/** Descripcion del job. **/
-	@Lob
 	@Column(name = "JOB_DESCRI")
 	private String descripcion;
 	
@@ -203,7 +202,16 @@ public class SolrPendienteJob implements ValueObject {
 	 * @param resumen the resumen to set
 	 */
 	public void setResumen(String resumen) {
-		this.resumen = resumen;
+		if (resumen == null) {
+			this.resumen = "";
+		} else { 
+			//Se pone el limite para evitar un posible error ORA al ir con un LOB
+			if (resumen.length() > 1000) {
+				this.resumen = resumen.substring(0, 999);
+			} else {
+				this.resumen = resumen;
+			}
+		}
 	}
 	/**
 	 * @param info the info to set
