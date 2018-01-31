@@ -192,7 +192,7 @@ public class ArchivoController extends BaseViewController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-		responseHeaders.setContentDispositionFormData("file",  archivo.getNombre());//Header("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
+		responseHeaders.add("content-disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
 	}
 	
