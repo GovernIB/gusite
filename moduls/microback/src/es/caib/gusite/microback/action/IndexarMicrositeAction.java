@@ -68,7 +68,7 @@ public class IndexarMicrositeAction extends BaseAction {
 			SolrPendienteDelegate solrPendienteDel = DelegateUtil.getSolrPendienteDelegate();	
 			List<SolrPendienteJob> resultados = solrPendienteDel.getListJobs(5, IndexacionUtil.TIPO_MICROSITE, idMicrosite);
 			for(SolrPendienteJob resultado : resultados) {
-				resultado.setDescripcion(null);
+				resultado.setDescripcion("");
 			}
 			return resultados;
 		} catch(Exception exception) {

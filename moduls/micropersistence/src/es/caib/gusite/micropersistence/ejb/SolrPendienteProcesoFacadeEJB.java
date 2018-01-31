@@ -169,7 +169,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     	   }
     		
     	   
-    		//solrJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
      	   solrJob.setDescripcion(info.toString());
     	       	   
     	   return true;
@@ -235,7 +234,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
                        info.append(" No se ha indexado el microsite con id " + idMicro+"  <br /> ");
                     }
             		
-            		//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob("La indexació està activa. Porta indexats "+(i+1)+" microsites ("+(100*(i+1)/listaMicro.size())+"%). <br /> "+info.toString()));
             		solrPendienteJob.setDescripcion("La indexació està activa. Porta indexats "+(i+1)+" microsites ("+(100*(i+1)/listaMicro.size())+"%). <br /> "+info.toString());
     	        	DelegateUtil.getSolrPendienteDelegate().actualizarSorlPendienteJob(solrPendienteJob);
     	        	
@@ -253,7 +251,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             }
             
         	String infoResumen = "La indexació ha finalitzat. Dels "+listaMicro.size()+" microsites en total, eren indexables "+(correctos + incorrectos)+" dels quals "+correctos+" han estat correctes i "+incorrectos+" estat incorrectes. <br />";
-            //solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));
             solrPendienteJob.setDescripcion(infoResumen+info.toString());
             return true;
         }        
@@ -318,7 +315,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
                        info.append(" No se ha indexado el microsite con id " + idMicro+"  <br /> ");
                     }
             		
-            		//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob("La indexació està activa. Porta indexats "+(i+1)+" microsites ("+(100*(i+1)/listaMicro.size())+"%). <br /> "+info.toString()));
             		solrPendienteJob.setDescripcion("La indexació està activa. Porta indexats "+(i+1)+" microsites ("+(100*(i+1)/listaMicro.size())+"%). <br /> "+info.toString());
     	        	DelegateUtil.getSolrPendienteDelegate().actualizarSorlPendienteJob(solrPendienteJob);
     	        	
@@ -338,7 +334,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
     		
             
         	String infoResumen = "La indexació ha finalitzat. S'han indexat " + (correctos + incorrectos) +" microsites, dels quals "+incorrectos+" s'han indexat amb errors. <br />";
-            //solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(infoResumen+info.toString()));
             solrPendienteJob.setDescripcion(infoResumen+info.toString());
               return true;
         }        
@@ -401,7 +396,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
          	SolrPendienteDelegate solrpendientedel = DelegateUtil.getSolrPendienteDelegate();
         	
         	if (actualizarSolrPendiente && solrPendienteJob != null) {
-	        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 	        	solrPendienteJob.setDescripcion(info.toString());
 	        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
         	}
@@ -439,7 +433,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
 		        	info.append("**** Total arxius "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -471,7 +464,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
 		        	info.append("**** Total enquestes "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -503,7 +495,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
 		        	info.append("**** Total faqs "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -534,7 +525,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
 		        	info.append("**** Total noticias "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -567,7 +557,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	if (totalIncorrectos > 0) { todoCorrecto = false; }
 		        	info.append("**** Total agenda "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -601,7 +590,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		        	info.append("**** Total continguts "+(totalCorrectos + totalIncorrectos)+" (Incorrectes:"+totalIncorrectos+") <br />");
 		        	info.append(Fechas.formatFecha(Calendar.getInstance().getTime(), "dd-MM-yyyy HH:mm:ss") + " - Fi de la indexacio <br /><br />");
 			        if (actualizarSolrPendiente) {
-			        	//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
 			        	solrPendienteJob.setDescripcion(info.toString());
 			        	solrpendientedel.actualizarSorlPendienteJob(solrPendienteJob);
 		        	}
@@ -634,7 +622,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             throw new EJBException(he);
         } finally {
         	if (solrPendienteJob != null) {
-        		//solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
         		solrPendienteJob.setDescripcion(info.toString());
 	    	}
         }
@@ -688,7 +675,6 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
             	
             }  
             
-            // solrPendienteJob.setDescripcion(GusiteClobUtil.getClob(info.toString()));
             solrPendienteJob.setDescripcion(info.toString());
             return true;
             

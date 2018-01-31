@@ -1,9 +1,6 @@
 package es.caib.gusite.micromodel;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -12,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -137,10 +133,10 @@ public class SolrPendienteJob implements ValueObject {
 		return descripcion;
 	}
 	/**
-	 * @param clob the descripcion to set
+	 * @param descripcion the descripcion to set
 	 */
-	public void setDescripcion(String clob) {
-		this.descripcion = clob;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	/**
