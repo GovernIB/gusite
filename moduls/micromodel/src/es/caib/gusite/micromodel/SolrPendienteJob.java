@@ -1,9 +1,6 @@
 package es.caib.gusite.micromodel;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Date;
 
