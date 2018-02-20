@@ -18,11 +18,10 @@
 </head>
 <body style="*{list-style:none;}">
 
-	<div th:fragment="menuSuperior" th:if="${MVS_microsite.orientacionMenu}=='H'" >
-	
-			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-fila="S" data-complet="N">
-	
-				
+	<div th:fragment="menuSuperior" th:if="${MVS_microsite.orientacionMenu}=='H'"   >
+                                                                                                                                      
+			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-complet="N"  th:attr="data-fila=${MVS_microsite.buscador}">
+			
 					<nav id="imc-menu-h" class="imc-menu imc-menu-h" role="navigation">
 						<ul>
 							<li th:each="submenu : ${MVS_menu}">
