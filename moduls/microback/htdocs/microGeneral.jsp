@@ -233,16 +233,7 @@
 												<html:option value="v5"><bean:message key="micro.version5.publico.5" /></html:option>
 											</html:select>
 										</td>
-									</tr>
-									<tr>
-										<td class="etiqueta"><bean:message key="micro.orientacionmenu" /> &gt;</td>
-										<td>
-											<html:select property="orientacionMenu">
-												<html:option value="C"><bean:message key="micro.orientacion.clasico" /></html:option>
-												<html:option value="H"><bean:message key="micro.orientacion.horizontal" /></html:option>
-											</html:select>
-										</td>
-									</tr>
+									</tr>									
 									<tr class="par">
 										<td class="etiqueta"><bean:message key="micro.acceso" /> &gt;</td>
 										<td>
@@ -419,21 +410,31 @@
                             </html:select>
                         </td>
                     </tr>
-                                        				
+                    <logic:equal name="MVS_microsite" property="versio" value="v5">
                     <tr>
+						<td class="etiqueta"><bean:message key="micro.orientacionmenu" /> &gt;</td>
+						<td>
+							<html:select property="orientacionMenu">
+								<html:option value="C"><bean:message key="micro.orientacion.clasico" /></html:option>
+								<html:option value="H"><bean:message key="micro.orientacion.horizontal" /></html:option>
+							</html:select>
+						</td>
+					</tr>
+                    </logic:equal>                    				
+                    <tr class="par">
                         <td class="etiqueta"><bean:message key="micro.menucorporativo" /> &gt;</td>
                         <td><label><html:radio property="menucorporativo" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="menucorporativo" value="N" />&nbsp;No</label></td>
                     </tr>  
                     
                 <logic:equal name="puedoeditar" value="1">                
-					<tr class="par">
+					<tr >
 						<td class="etiqueta"><bean:message key="micro.buscador" /> &gt;</td>
 						<td><label><html:radio property="buscador" value="S" />&nbsp;S&iacute;&nbsp;&nbsp;&nbsp;</label><label><html:radio property="buscador" value="N" />&nbsp;No</label></td>
 					</tr>
 			    </logic:equal>
 		
                     <logic:equal name="MVS_microsite" property="versio" value="v5">
-                    <tr>
+                    <tr class="par">
                         <td class="etiqueta"><bean:message key="micro.tema" /> &gt;</td>
                         <td>
                             <html:select property="tema">
@@ -443,7 +444,7 @@
                         </td>
                     </tr>
                     </logic:equal>
-                    <tr class="par">
+                    <tr >
                         <td class="etiqueta"><bean:message key="micro.css" /> &gt;</td>
                         <td><span><bean:message key="micro.csspatron" />:</span>
                             <label class="N"><html:radio property="estiloCSSPatron" value="N" /><bean:message key="micro.negre" />&nbsp;&nbsp;&nbsp;</label>&nbsp;&nbsp;
