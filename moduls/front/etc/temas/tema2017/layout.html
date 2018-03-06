@@ -165,7 +165,11 @@ var thDebug = false;
 			</div>
 			 
 			<!-- Menu superior -->
-			<div th:remove="tag" gus:replace="general/menu :: menuSuperior">Menú superior</div>
+			<div th:if="${MVS_microsite} != null" th:remove="tag">
+				<div th:if="${MVS_microsite.tipomenu}!='0'">
+					<div th:remove="tag" gus:replace="general/menu :: menuSuperior">Menú superior</div>
+				</div>
+			</div>                                  
 			
 					
 			<!--/* Sección del menú lateral */-->
