@@ -259,7 +259,6 @@ h1.titol a{
 	display: inline-block;
 	vertical-align: middle;
 	padding-top: 8px !important;
-	text-transform: capitalize;
 }
 #info h3,
 #infoNoMenu h3{
@@ -2140,9 +2139,9 @@ h2{
 		-moz-column-count: 3; /* Firefox */
 		column-count: 3;
 	}
-	div.noticiasInfo div.content p{
+/*	div.noticiasInfo div.content p{
 		margin: 0 !important;
-	}
+	}*/
 	div.noticiasInfo div.documentosAdjuntos{
 		font-size: 0.813em
 	}
@@ -2322,7 +2321,6 @@ h2{
 		color: #777777;
 		font-size: 0.938em;
 		font-weight: bold;
-		text-transform:  uppercase;
 	}
 	#noticiesLlistatDocumentos>ul>li>div>a:hover{
 		color: #0072a8;
@@ -2961,6 +2959,9 @@ h2{
 		#info{
 			width: 100%;
 			margin-top: 30px;
+		}
+		#info a{
+			color: #006699;
 		}
 		#enllasDest {
 			height: 250px;

@@ -55,7 +55,7 @@ var thDebug = false;
                     Anys
                 </span>  
                 <span th:each="anyo:${MVS_listadoanyos}" th:remove="tag">
-                    <a id="" href="noticias.html" th:href="@{${#gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo)}}" th:onclick="'onClickAnyo(Tots)'"  h:style="${MVS_anyo} == ${anyo} ? 'font-weight:bold':''" th:text="(${anyo}=='-1') ? Tots:(${anyo})">
+                    <a id="" href="noticias.html" th:href="@{${#gusuri.listarAnual(MVS_microsite,MVS_idioma,MVS_claseelemento,anyo)}}" th:onclick="'onClickAnyo(Tots)'"  th:style="${MVS_anyo} == ${anyo} ? 'font-weight:bold':''" th:text="(${anyo}=='-1') ? Tots:(${anyo})">
                         lista años
                     </a>
                 </span>

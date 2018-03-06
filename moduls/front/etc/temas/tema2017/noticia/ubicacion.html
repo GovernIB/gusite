@@ -39,7 +39,7 @@ var thDebug = false;
 		</script>
 		<div th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'" id="info" class="noticiasInfo">
 			<p id="enrere">
-				<a href="#" th:href="@{${#gusuri.listarElementos(MVS_microsite, MVS_idioma, MVS_noticia.tipo)}}">
+				<a href="#" th:href="@{${#gusuri.listarElementos(MVS_microsite, MVS_idioma, MVS_noticia.tipo)}}" th:text="#{noticia.volverListado}">
 					Volver al listado de noticias
 				</a>
 			</p>

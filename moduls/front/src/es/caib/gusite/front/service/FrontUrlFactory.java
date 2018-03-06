@@ -19,16 +19,16 @@ import es.caib.gusite.micromodel.Contacto;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Frqssi;
-import es.caib.gusite.micromodel.TemaFront;
-import es.caib.gusite.micromodel.TraduccionFrqssi;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.TemaFront;
 import es.caib.gusite.micromodel.Tipo;
 import es.caib.gusite.micromodel.Traduccion;
 import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionEncuesta;
 import es.caib.gusite.micromodel.TraduccionFContacto;
+import es.caib.gusite.micromodel.TraduccionFrqssi;
 import es.caib.gusite.micromodel.TraduccionNoticia;
 import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micromodel.Traducible2;
@@ -351,6 +351,7 @@ public class FrontUrlFactory {
 	/**
 	 * @deprecated usar listarElementos
 	 */
+	@Deprecated
 	public String listarNoticias(Microsite microsite, Idioma lang, Tipo tipo) {
 
 		return this.listarElementos(microsite, lang, tipo);
@@ -514,8 +515,8 @@ public class FrontUrlFactory {
 		if (!StringUtils.isEmpty(criteria.getOrdenacion())) {
 			params.put("ordenacion", criteria.getOrdenacion());
 		}
-		if (criteria.getAnyo() != 0) {
-			params.put("anyo", String.valueOf(criteria.getAnyo()));
+		if (criteria.getAnyo() > 0) {
+			ret.append(criteria.getAnyo()+"/");
 		}
 
 		return this.addParams(ret.toString(), params);
