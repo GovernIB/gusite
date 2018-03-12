@@ -97,7 +97,7 @@
 
 .imc--horitzontal.imc-menu-navegacio { display: inline; float: none; width: 100%; }
 
-.imc--horitzontal .imc-menu { position: relative; width: 100%; border: none; }
+.imc--horitzontal .imc-menu { position: relative; width: 100%; border: none; z-index:2 }
 
 .imc--horitzontal .imc-menu ul { width: 100%; border-top: 1px solid #ccc; border-right: 1px solid #ccc; }
 .imc--horitzontal .imc-menu li { border-bottom: 1px solid #ccc; border-left: 1px solid #ccc; border-right: none; }
