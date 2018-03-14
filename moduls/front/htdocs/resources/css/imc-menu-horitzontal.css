@@ -1,6 +1,10 @@
 /* MENU v3 */
 
+body { overflow-x: hidden; background-color: #F8F8F8; }
 .imc-continguts { padding-top: .5em; }
+#continguts {
+    overflow: inherit;
+}
 
 #marcLateralAmbIconesV2 { /*display: none;*/ }
 
@@ -179,6 +183,29 @@
     height: 2.85em;
 }
 
+.imc--horitzontal .imc-menu::before { 
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 100%;
+    width: 500em;
+    height: 3em;
+    background-color: #F8F8F8;
+}
+
+.imc--horitzontal .imc-menu::after { 
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 500em;
+    height: 3em;
+    background-color: #F8F8F8;
+}
+
 /* molla pa */
 
 .imc-molla-pa { width: calc(100% - 17em); padding-left: 1em; }
@@ -212,6 +239,9 @@ div#info.imc--menu-horizontal { width: 100%; }
         width: calc(100% - 5.5em);
         margin-bottom: 0;
     }
+
+    .imc--horitzontal .imc-menu::before,
+    .imc--horitzontal .imc-menu::after { display: none; }
 
     .imc-menu-h { overflow: hidden; position: fixed; z-index: 10; top: 0; left: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; }
     .imc-menu-h::before { content: ""; display: block; position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; opacity: .5; }

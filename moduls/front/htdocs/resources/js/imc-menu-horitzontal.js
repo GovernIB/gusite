@@ -277,6 +277,7 @@ $.fn.appMenuHoritzontal = function(opcions) {
             menu_H = false,
             llista_principal_H = false,
             moviment_llimit = false,
+            esMobil = false,
             inicia = function() {
 
                 menu_complet = imc_menu_navegacio.attr("data-complet");
@@ -414,6 +415,10 @@ $.fn.appMenuHoritzontal = function(opcions) {
 
                 // amaga submenus
 
+                esMobil = (imc_menu_h.css("position") === "fixed") ? true : false;
+                if (esMobil) {
+                    return;
+                }
                 elm
                     .find(".imc--obert")
                         .removeClass("imc--obert")
@@ -558,7 +563,6 @@ $.fn.appMenuMobil = function(opcions) {
 
                 var bt_f = $(e.target);
 
-                console.log(bt_f.attr("css"));
 
                 if (!bt_f.closest("ul").length) {
 
