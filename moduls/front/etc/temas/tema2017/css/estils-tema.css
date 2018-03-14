@@ -2913,7 +2913,7 @@ h2{
 
 	/**********************************************************/
 
-	@media screen and (max-width:767px) {
+	@media screen and (max-width:780px) {
 		#contenedor {
 			margin-left: 0px !important;
 			margin-right: 0px !important;
