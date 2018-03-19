@@ -109,9 +109,10 @@ var thDebug = false;
 			txtMenu = "Menú";
 	-->
 	</script>
+	<div	th:if="${MVS_microsite.tipomenu}!='0' and ${MVS_microsite.orientacionMenu}=='H'" th:remove="tag">			
 	<script src="resources/js/imc-menu-horitzontal.js" th:src="@{/resources/js/imc-menu-horitzontal.js}"></script>
 	<link href="resources/css/imc-menu-horitzontal.css" th:href="@{/resources/css/imc-menu-horitzontal.css}" rel="stylesheet" media="screen" />
-	
+	</div>
 	<!-- botó desplegable -->
 	<script src="resources/js/imc-menu-desplegable.js" type="text/javascript" th:src="@{/resources/js/imc-menu-desplegable.js}"></script>
 	<link rel="stylesheet" type="text/css" media="screen" href="resources/css/imc-boto-desplegable.css" th:href="@{/resources/css/imc-boto-desplegable.css}" />

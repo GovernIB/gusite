@@ -476,7 +476,6 @@ div.container-contacte>div>a:hover{
 .menuLateral li{
 	margin: 0;
 	padding: 0;
-	list-style: none;
 }
 .menuLateral li.primerElemento{
 	margin-bottom: 5px;
@@ -2914,7 +2913,7 @@ h2{
 
 	/**********************************************************/
 
-	@media screen and (max-width:780px) {
+	@media screen and (max-width:767px) {
 		#contenedor {
 			margin-left: 0px !important;
 			margin-right: 0px !important;
