@@ -476,6 +476,7 @@ div.container-contacte>div>a:hover{
 .menuLateral li{
 	margin: 0;
 	padding: 0;
+	list-style: none;
 }
 .menuLateral li.primerElemento{
 	margin-bottom: 5px;
