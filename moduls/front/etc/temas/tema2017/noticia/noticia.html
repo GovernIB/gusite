@@ -95,7 +95,7 @@ var thDebug = false;
 					</p>
 				</div>
 				
-				<p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''">										
+				<p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''" style="clear: left;">										
 					<a href="archivopub.html"
 						th:href="@{${#gusuri.noticiaFuerzaMapa(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"
 						th:text="#{maps.ubicacion}">ubicacion</a>						
