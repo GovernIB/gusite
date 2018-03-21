@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -166,7 +165,7 @@ public class Contacto extends AuditableModel implements Traducible2 {
 	}
 
 	public String getTitulocontacto(String idi) {		
-		return getTitulocontacto(idi, true);
+		return getTitulocontacto(idi, false);
 	}
 	
 	public String getTitulocontacto(String idi, boolean nuevo) {
