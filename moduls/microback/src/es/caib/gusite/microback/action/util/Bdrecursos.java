@@ -242,8 +242,8 @@ public class Bdrecursos {
 		        	Contacto contacto = (Contacto)iter.next();
 		        	Recurso recurso = new Recurso();
 		        	recurso.setHead(_Hpagina);
-		        	String titulo = contacto.getTitulocontacto(idiomapasado);
-		        	if (titulo.equals("[sense titol]")) titulo =contacto.getTitulocontacto(Idioma.getIdiomaPorDefecto());
+		        	String titulo = contacto.getTitulocontacto(idiomapasado,true);
+		        	if (titulo.equals("[sense titol]")) titulo =contacto.getTitulocontacto(Idioma.getIdiomaPorDefecto(),true);
 		  		  	recurso.setTitulo(titulo);
 		  		  	recurso.setUrlnom((micronombre+">"+titmenu+">"+titulo).replaceAll("'","´"));
 		  		  	recurso.setUrl("contacto.do?idsite=" + microsite.getId() + "&cont=" + contacto.getId());

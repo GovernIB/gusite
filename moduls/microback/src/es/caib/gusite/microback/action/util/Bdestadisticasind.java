@@ -8,13 +8,30 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import es.caib.gusite.micromodel.*;
-import es.caib.gusite.micropersistence.delegate.*;
 import org.apache.struts.action.ActionForm;
 
 import es.caib.gusite.microback.Microback;
 import es.caib.gusite.microback.actionform.busca.BuscaOrdenaEstadisticaIndActionForm;
 import es.caib.gusite.microback.base.bean.Pardato;
+import es.caib.gusite.micromodel.Agenda;
+import es.caib.gusite.micromodel.Contacto;
+import es.caib.gusite.micromodel.Contenido;
+import es.caib.gusite.micromodel.Encuesta;
+import es.caib.gusite.micromodel.EstadisticaGroup;
+import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.Noticia;
+import es.caib.gusite.micromodel.TraduccionAgenda;
+import es.caib.gusite.micromodel.TraduccionContenido;
+import es.caib.gusite.micromodel.TraduccionEncuesta;
+import es.caib.gusite.micromodel.TraduccionNoticia;
+import es.caib.gusite.micropersistence.delegate.AgendaDelegate;
+import es.caib.gusite.micropersistence.delegate.ContactoDelegate;
+import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
+import es.caib.gusite.micropersistence.delegate.DelegateUtil;
+import es.caib.gusite.micropersistence.delegate.EncuestaDelegate;
+import es.caib.gusite.micropersistence.delegate.EstadisticaGroupDelegate;
+import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 
 
 /**
@@ -183,7 +200,7 @@ public class Bdestadisticasind {
 			  while (iter.hasNext()) {
 				  EstadisticaGroup statg = (EstadisticaGroup)iter.next();
 				  if (statg.getReferencia().equals(Microback.RAGENDA)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RAGENDA));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RAGENDA));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  else
@@ -199,21 +216,21 @@ public class Bdestadisticasind {
 				  }
 
 				  if (statg.getReferencia().equals(Microback.RCONTACTO)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RCONTACTO));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RCONTACTO));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  else
 					  {
 						  try {
 						  Contacto contacto = contactodel.obtenerContacto(statg.getItem());
-						  statg.setTituloitem(contacto.getTitulocontacto(Idioma.getIdiomaPorDefecto()) );
+						  statg.setTituloitem(contacto.getTitulocontacto(Idioma.getIdiomaPorDefecto(),true) );
 						  } catch (Exception e) {
 							  statg.setTituloitem("[ contacto " + statg.getItem() + " eliminado ]");
 						  }
 					  }
 				  }
 				  if (statg.getReferencia().equals(Microback.RCONTENIDO)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RCONTENIDO));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RCONTENIDO));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  else
@@ -227,7 +244,7 @@ public class Bdestadisticasind {
 					  }
 				  }
 				  if (statg.getReferencia().equals(Microback.RNOTICIA)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RNOTICIA));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RNOTICIA));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  else
@@ -241,7 +258,7 @@ public class Bdestadisticasind {
 					  }
 				  }
 				  if (statg.getReferencia().equals(Microback.RENCUESTA)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RENCUESTA));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RENCUESTA));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  else
@@ -256,19 +273,19 @@ public class Bdestadisticasind {
 				  }
 				  /* Se mantienen los procedimientos por histórico */
 				  if (statg.getReferencia().equals(Microback.RPROCEDIMIENTO)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RPROCEDIMIENTO));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RPROCEDIMIENTO));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 
 				  }
 				  if (statg.getReferencia().equals(Microback.RFAQ)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RFAQ));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RFAQ));
 					  if (statg.getItem().intValue() == hist) {
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 					  }
 				  }		
 				  if (statg.getReferencia().equals(Microback.RQSSI)) {
-					  statg.setNombreservicio((String)Microback.RSERVICIOS.get(Microback.RQSSI));
+					  statg.setNombreservicio(Microback.RSERVICIOS.get(Microback.RQSSI));
 					  if (statg.getItem().intValue() == hist) 
 						  statg.setTituloitem("[ Accesos microsite reemplazado ]");
 

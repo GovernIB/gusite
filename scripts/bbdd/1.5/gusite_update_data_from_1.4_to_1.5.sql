@@ -7,7 +7,10 @@ DECLARE
   uri varchar2(1000 BYTE) := '';
   contador number := 0;
 BEGIN
-
+  -- BORRAMOS EL CONTENIDO DE LA TABLA DE FORMULARIO-IDIOMA		
+  DELETE FROM GUS_FCOIDI;
+  
+  -- REGENERAMOS LA INFORMACION.
   -- buscamos todos los formularios
   FOR FCON IN (select  FRM_MICCOD FMICRO, FRM_CODI FCOD, FRM_EMAIL FEMAIL from GUS_FRMCON order by frm_miccod) LOOP
     -- PARA CADA FORMULARIO BUSCAMOS LOS IDIOMAS DEL MICROSITE
@@ -32,7 +35,29 @@ BEGIN
       END IF; 
       
       titulo := SUBSTR(titulo,1,100);
-       
+      IF (length(titulo)=100) THEN
+        titulo := SUBSTR(titulo,1,length(titulo)-length(TO_CHAR(FCON.FCOD)))||TO_CHAR(FCON.FCOD);
+         --dbms_output.put_line( 'Titulo largo:' || titulo);
+      END IF;
+      
+      -- verificamos si el titulo ya existe en este microsite para este idioma       
+      select (select count(*) 
+                    from GUS_FCOIDI I, GUS_FRMCON F 
+                    where  I.FCI_NOMBRE = titulo
+                      and I.FCI_CODIDI = IDIOMA.idi 
+                      and F.FRM_CODI = I.FCI_FCOCOD
+                      and F.FRM_MICCOD = FCON.FMICRO) 
+              into contador from dual;
+              
+       IF contador>0 THEN
+            -- SI YA EXISTIA EL TITULO EN ESTE MICROISTE E IDIOMA AÑADIMOS EL CODIGO AL TITULO
+            IF (length(titulo)+ length(TO_CHAR(FCON.FCOD)))>100  THEN
+              titulo := SUBSTR(titulo,1,length(titulo)-length(TO_CHAR(FCON.FCOD)))||TO_CHAR(FCON.FCOD);
+            ELSE
+              titulo := titulo || TO_CHAR(FCON.FCOD);
+            END IF;       
+       END IF;
+      
       -- verificamos si la uri ya existe en este microsite para este idioma       
       select (select count(*) 
                     from GUS_FCOIDI I, GUS_FRMCON F 
@@ -49,14 +74,13 @@ BEGIN
       END IF;
       
       --imprimimos los datos a insertar
-      -- dbms_output.put_line(IDIOMA.IDI ||  '-' || FCON.FCOD ||  '-' || titulo || '-' || uri);
+      --dbms_output.put_line(IDIOMA.IDI ||  '-' || FCON.FCOD ||  '-' || titulo || '-' || uri);
       
       --insertamos los datos
       INSERT INTO GUS_FCOIDI
         (FCI_CODIDI,FCI_FCOCOD,FCI_NOMBRE,FCI_URI )
       VALUES
-        (IDIOMA.IDI, FCON.FCOD ,SUBSTR(titulo,1,100), SUBSTR(uri,1,125) ); 
-        
+        (IDIOMA.IDI, FCON.FCOD ,SUBSTR(titulo,1,100), SUBSTR(uri,1,125) );         
     END LOOP; 
   END LOOP;
   commit;
