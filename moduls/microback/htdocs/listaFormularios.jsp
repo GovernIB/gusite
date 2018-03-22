@@ -168,7 +168,7 @@
 			<tbody>
 					
     <logic:iterate id="i" name="listado" indexId="indice">
-      <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>">
+      <tr class="<%=((indice.intValue()%2==0) ? "par" : "")%>" title="<bean:write name="i" property="id"/>">
       <td class="check">
         <html:multibox property="seleccionados" styleClass="radio"> 
             <bean:write name="i" property="id"/>
