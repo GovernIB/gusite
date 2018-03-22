@@ -50,7 +50,8 @@ public class listaFormulariosAction extends BaseAction {
 
 	protected static Log log = LogFactory.getLog(listaFormulariosAction.class);
 	
-    public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
+    @Override
+	public ActionForward doExecute(ActionMapping mapping, ActionForm form, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception  {
 
         listaActionForm listaActionForm = (listaActionForm) form;
@@ -62,20 +63,22 @@ public class listaFormulariosAction extends BaseAction {
         	formularioconForm fdet=(formularioconForm) request.getSession().getAttribute("formularioconForm");        	       
         	
         	//rellenamos las lineas del formulario (no venian informadas)
-        	Long id = (Long) fdet.get("id");        	
-        	ContactoDelegate bdFormu = DelegateUtil.getContactoDelegate();        
-        	Contacto formulario = bdFormu.obtenerContacto(id);
-        	Iterator<?> it = formulario.getLineasdatocontacto().iterator();	
-            ArrayList<Lineadatocontacto> lineas= new ArrayList<Lineadatocontacto>();
-            while (it.hasNext()) {
-            	lineas.add((Lineadatocontacto)it.next());
-            }         	
-            fdet.set("lineasdatocontacto",lineas);
+        	Long id = (Long) fdet.get("id");
+        	if(id!=null) {
+	        	ContactoDelegate bdFormu = DelegateUtil.getContactoDelegate();        
+	        	Contacto formulario = bdFormu.obtenerContacto(id);
+	        	Iterator<?> it = formulario.getLineasdatocontacto().iterator();	
+	            ArrayList<Lineadatocontacto> lineas= new ArrayList<Lineadatocontacto>();
+	            while (it.hasNext()) {
+	            	lineas.add((Lineadatocontacto)it.next());
+	            }         	
+	            fdet.set("lineasdatocontacto",lineas);
+        	}
+	            request.setAttribute("validacion", "si");
+	            request.setAttribute("formularioconForm", fdet);
+	            return mapping.findForward("detalleFormu");
+        	
             
-            request.setAttribute("validacion", "si");
-            request.setAttribute("formularioconForm", fdet);
-            
-            return mapping.findForward("detalleFormu");
         }
         
         //********************************************************
