@@ -257,7 +257,7 @@
                             </div>
                             <div th:if="${!#strings.contains(MVS_componente.soloimagen,'S') or noticia.imagen == null}" th:remove="tag">
                                 <tr th:class="${iterStat.count%2 == 0}? 'par' : 'inpar' ">
-                                    <td>
+                                    <td class="CompoListaDocs LinkC  ">
                                         <div class="imagen">
                                             <div th:if="${noticia.traduce.docu != null}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
 
@@ -268,9 +268,17 @@
                                                 Titulo elemento
                                             </a>
                                         </div>
-                                        <div class="separadorHorizontalGris" th:class="${!iterStat.last}? 'separadorHorizontalGris'"></div>
+                                        <div class="separadorHorizontalGris" th:class="${!iterStat.last}? 'separadorHorizontalGris'" th:if="${noticia.traduce.texto == null}"></div>
                                     </td>
                                 </tr>
+                                <tr th:class="${iterStat.count%2 == 0}? 'par' : 'inpar' " th:if="${noticia.traduce.texto != null}">
+                                   <td class="CompoListaDocs TextoC" >
+                                       <div th:utext="${noticia.traduce.texto}">
+										Texto traducido
+									</div>
+                                       <div class="separadorHorizontalGris" th:class="${!iterStat.last}? 'separadorHorizontalGris'"></div>
+                                   </td>
+                               </tr>                
                             </div>
                         </div>
                     </tbody>
