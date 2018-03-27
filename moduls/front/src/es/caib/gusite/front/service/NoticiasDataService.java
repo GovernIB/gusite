@@ -247,7 +247,7 @@ public class NoticiasDataService {
 			noticiadel.init();
 			SimpleDateFormat df = new SimpleDateFormat(FORMATOFECHAHORAJAVA);
 			java.sql.Date dt = new java.sql.Date((new Date()).getTime());
-			String wherenoticias = "where trad.id.codigoIdioma='" + lang.getLang() + "' and noti.visible='S' and noti.idmicrosite="
+			String wherenoticias = "where trad.id.codigoIdioma='" + lang.getLang() + "'  and trad.titulo is not null  and noti.visible='S' and noti.idmicrosite="
 					+ microsite.getId() + " and noti.tipo=" + tipo.getId();
 			wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'"+ FORMATOFECHAHORABBDD +"')<='" + df.format(dt) + "')";
 			wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'"+ FORMATOFECHAHORABBDD +"')>='" + df.format(dt) + "')";

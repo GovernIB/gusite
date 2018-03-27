@@ -176,7 +176,11 @@ public class NoticiasController extends BaseViewController {
 
 					if (tipo.getTipopagina().equals(Microfront.ELEM_PAG_ANUAL)) {
 						view.setListadoAnyos(listaAnyos);
-						view.setAnyo(criteria.getAnyo());
+						if ((anyo == 0) && (listaAnyos == null || listaAnyos.size() <= 0)) {
+							view.setAnyo(0);
+						}else {
+							view.setAnyo(criteria.getAnyo());							
+						}
 					}
 
 					if (tipo.getTipoelemento().equals(Microfront.ELEM_NOTICIA)) {

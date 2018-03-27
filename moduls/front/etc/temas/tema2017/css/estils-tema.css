@@ -246,6 +246,11 @@ h1.titol a{
 	margin-left: 0;
 	margin-top: 0;	
 }
+
+#info a{
+	color: #006699;
+}
+
 #infoNoMenu {
 	padding: 0;
 	width: 99%;
@@ -2980,9 +2985,6 @@ h2{
 		#info{
 			width: 100%;
 			margin-top: 30px;
-		}
-		#info a{
-			color: #006699;
 		}
 		#enllasDest {
 			height: 250px;
