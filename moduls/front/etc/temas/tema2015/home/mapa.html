@@ -49,7 +49,7 @@ gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lan
 						</li>
 				</ul>
 			
-			<div th:if="(${MVS_microsite.tipomenu}!='2')" th:remove="tag">
+			<div th:remove="tag">
 				<div th:each="menu : ${MVS_menu}" th:remove="tag">
 					<h3 th:text="${menu.traduce.nombre}">Nombre menu</h3>
 					<ul th:each="contenido : ${menu.listacosas}">
