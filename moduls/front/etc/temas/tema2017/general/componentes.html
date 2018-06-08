@@ -166,11 +166,11 @@
 			<div th:if="${MVS_componente.imagenbul != null}" th:remove="tag">
                 <button type="button" th:style="'background-image: url(' +@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}+' )'"
 				>
-				<span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : '__${MVS_componente.traduccion.titulo}__'">Titulo del componente</span></button>
+				<span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Titulo del componente</span></button>
             </div>
 			<div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
                 <button type="button" 
-				><span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : '__${MVS_componente.traduccion.titulo}__'">Titulo del componente</span></button>
+				><span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Titulo del componente</span></button>
             </div>								
 			
 			<ul th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
