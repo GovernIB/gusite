@@ -20,7 +20,7 @@
 
 	<div th:fragment="menuSuperior" th:if="${MVS_microsite.orientacionMenu}=='H'"   >
                                                                                                                                       
-			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-complet="N"  th:attr="data-fila=${MVS_microsite.buscador}">
+			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-complet="N"  th:attr="data-fila=${MVS_microsite.buscador}"  th:styleappend="${#lists.size(MVS_menu)} == 0 ? 'display:none;' : ''">
 			
 					<nav id="imc-menu-h" class="imc-menu imc-menu-h" role="navigation">
 						<ul>
