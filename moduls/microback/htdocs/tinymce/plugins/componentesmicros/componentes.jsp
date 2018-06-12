@@ -1,7 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf8"  pageEncoding="utf8"%>
+<%@ page language="java" contentType="text/html; charset=utf8"  pageEncoding="utf8"%> 
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%> 
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <script language="javascript" type="text/javascript" src="tinymce/plugins/compat3x/tiny_mce_popup.js"></script>
@@ -47,7 +52,12 @@ int indiceX=1;
 						<td class="text">
 							<bean:write name="i" property="titulo"/>
 							<span class="opciones">
-								<button name="touse" type="button" title="usar este enlace" onclick="javascript:insertComponente('<bean:write name="i" property="tipo"/>','<bean:write name="i" property="url"/>','<bean:write name="i" property="titulo"/>');"><img src="imgs/iconos/sap_aceptar.gif" width="15" height="15" alt="usar este componente"/></button> 
+							
+								<c:set var="tituloJavaScript"><bean:write name="i" property="titulo"/></c:set>	
+													
+								<button name="touse" type="button" title="usar este enlace" onclick="javascript:insertComponente('<bean:write name="i" property="tipo"/>','<bean:write name="i" property="url"/>','<% 										
+								String tituloJS = (String)pageContext.getAttribute("tituloJavaScript");								
+								%><%=tituloJS.replace("&#39;", "\\\'")%>');"><img src="imgs/iconos/sap_aceptar.gif" width="15" height="15" alt="usar este componente"/></button> 
 							</span>						
 						</td>
 					</tr>
