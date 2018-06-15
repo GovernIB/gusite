@@ -121,7 +121,10 @@ $.fn.appMenuH = function(opcions) {
                 
                 imc_menu_h
             	.find(".imc_oculto_inicio")
-                .css({opacity: 0.0, visibility: "visible"}).animate({opacity: 1.0} , 400);
+                .css({opacity: 0.0, visibility: "visible"}).animate({opacity: 1.0} , 400, function() {
+                	imc_menu_h
+                	.find(".imc_oculto_inicio").removeClass("imc_oculto_inicio");
+                });
 
             },
             submenus = function(e) {
