@@ -118,6 +118,10 @@ $.fn.appMenuH = function(opcions) {
                     .find("ul button")
                         .off(".appMenuHoritzontal")
                         .on("click.appMenuHoritzontal", submenus);
+                
+                imc_menu_h
+            	.find(".imc_oculto_inicio")
+                .css({opacity: 0.0, visibility: "visible"}).animate({opacity: 1.0} , 400);
 
             },
             submenus = function(e) {

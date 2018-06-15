@@ -23,7 +23,7 @@
 			<div id="imc-menu-navegacio" class="imc-menu-navegacio" data-tipus="H" data-complet="N"  th:attr="data-fila=${MVS_microsite.buscador}"  th:styleappend="${#lists.size(MVS_menu)} == 0 ? 'display:none;' : ''">
 			
 					<nav id="imc-menu-h" class="imc-menu imc-menu-h" role="navigation">
-						<ul>
+						<ul class="imc_oculto_inicio">
 							<li th:each="submenu : ${MVS_menu}">
 								<!-- 
 									Cosas a tener en cuenta:
