@@ -189,6 +189,8 @@
        <target name="assemble" depends="generate.properties" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
                           
              <delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
+       		 <copy file="${etc.appgusite}/application_ori.xml" tofile="${etc.appgusite}/application.xml" overwrite="true" />
+       		 <replace file="${etc.appgusite}/application.xml" token="SOLRAPI_VERSION"  value="${solrapi.version.tag}" />
             
              <ear earfile="${product.dir}/${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application.xml" manifest="${etc.appgusite}/manifest.mf">
                     <manifest>

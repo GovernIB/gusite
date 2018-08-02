@@ -183,7 +183,7 @@
     <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'L'}">
 		<div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="micro-elemento" th:if="${MVS_componente.visualizacion == 'L'}">
             <style gus:replace="::componenteStyle"></style>
-            <h2 th:text="${MVS_componente.nombre == null}? '[ empty ]' : ${MVS_componente.nombre}">Nombre del elemento</h2>
+            <h2 th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Nombre del elemento</h2>
             <div th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
                 <table width="100%" border="0" cellPadding="0" cellSpacing="0" th:id="'element'+${MVS_componente.id}">
                     <tbody>
