@@ -64,7 +64,7 @@
             </logic:notEqual>
             <logic:equal name="MVS_microsite" property="versio" value="v5">
                 <logic:notEmpty name="MVS_microsite" property="analytics">
-                    <td><a href="#" onmouseup="window.open('https://www.google.com/analytics/', '_blank')"><bean:message key="menu.analytics" /></a></td>
+                    <td><a href="#" onmouseup="window.open('https://marketingplatform.google.com/about/analytics/', '_blank')"><bean:message key="menu.analytics" /></a></td>
                 </logic:notEmpty>
                 <logic:empty name="MVS_microsite" property="analytics">
                     <td><a href="#" onmouseup="alert('<bean:message key="menu.noAnalytics" />')"><bean:message key="menu.analytics" /></a></td>

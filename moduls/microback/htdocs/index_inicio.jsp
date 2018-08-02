@@ -88,7 +88,7 @@
 						<!-- Si tiene analytics realiza lo mismo que el botón del menú -->
 						<logic:equal name="MVS_microsite" property="versio" value="v5">
 							<logic:notEmpty name="MVS_microsite" property="analytics">
-	                    		<li><a href="#" onmouseup="window.open('https://www.google.com/analytics/', '_blank')"><bean:message key="menu.veure.analytics" /></a></li>
+	                    		<li><a href="#" onmouseup="window.open('https://marketingplatform.google.com/about/analytics/', '_blank')"><bean:message key="menu.veure.analytics" /></a></li>
 	                		</logic:notEmpty>
 	                		<logic:empty name="MVS_microsite" property="analytics">
 								<li><a href="estadisticagen.do"><bean:message key="index.inicio.statgen" /></a></li>
