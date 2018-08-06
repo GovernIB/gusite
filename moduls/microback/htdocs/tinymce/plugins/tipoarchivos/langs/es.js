@@ -12,5 +12,7 @@ htm : 'P&aacute;gina&nbsp;Web',
 media : 'Archivo&nbsp;Multimedia',
 txt : 'Archivo&nbsp;de&nbsp;texto',
 fil : 'Archivo&nbsp;Gen&eacute;rico',
-odt : 'Editor&nbsp;de&nbsp;Texto&nbsp;odt'
+odt : 'Editor&nbsp;de&nbsp;Texto&nbsp;odt',
+ods : 'Hoja&nbsp;de&nbsp;C&aacute;lculo&nbsp;ods',
+odp : 'Presentaci&oacute;n&nbsp;odp'
 });

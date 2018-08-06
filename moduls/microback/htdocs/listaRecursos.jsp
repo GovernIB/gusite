@@ -326,9 +326,18 @@ int indiceX=0;
 								    <logic:match name="i" property="tipo" value="VIDEO"><bean:define id="icono" value="media.gif"/></logic:match>
 								    <logic:match name="i" property="tipo" value="IMAGE"><bean:define id="icono" value="image.gif"/></logic:match>							    
 									<logic:match name="i" property="tipo" value="FLASH"><bean:define id="icono" value="flash.gif"/></logic:match>		
-									<logic:match name="i" property="tipo" value="OPENDOCUMENT"><bean:define id="icono" value="odt.gif"/></logic:match>		
+									
+									<logic:match name="i" property="tipo" value="OPENDOCUMENT.TEXT"><bean:define id="icono" value="odt.gif"/></logic:match>		
 									<logic:match name="i" property="tipo" value="SUN.XML.WRITER"><bean:define id="icono" value="odt.gif"/></logic:match>		
-									<logic:match name="i" property="tipo" value="STARDIVISION"><bean:define id="icono" value="odt.gif"/></logic:match>	
+									<logic:match name="i" property="tipo" value="STARDIVISION.WRITER"><bean:define id="icono" value="odt.gif"/></logic:match>	
+									
+									<logic:match name="i" property="tipo" value="OPENDOCUMENT.PRESENTATION"><bean:define id="icono" value="odp.gif"/></logic:match>		
+									<logic:match name="i" property="tipo" value="SUN.XML.IMPRESS"><bean:define id="icono" value="odp.gif"/></logic:match>		
+									<logic:match name="i" property="tipo" value="STARDIVISION.IMPRESS"><bean:define id="icono" value="odp.gif"/></logic:match>	
+									
+									<logic:match name="i" property="tipo" value="OPENDOCUMENT.SPREADSHEET"><bean:define id="icono" value="ods.gif"/></logic:match>		
+									<logic:match name="i" property="tipo" value="SUN.XML.CALC"><bean:define id="icono" value="ods.gif"/></logic:match>		
+									<logic:match name="i" property="tipo" value="STARDIVISION.CALC"><bean:define id="icono" value="ods.gif"/></logic:match>	
 							
 									<img name="nivel2" src="imgs/menu/nivel2.gif" alt="" /><img src='imgs/arxius/<bean:write name="icono"/>' alt='<bean:write name="i" property="tipo"/>' />
 							

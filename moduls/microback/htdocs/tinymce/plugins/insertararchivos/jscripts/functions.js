@@ -14,6 +14,8 @@ function incluirDoc(idsite, id, nom, mime) {
 		else if(mime=="text/html") url+="htm.gif";
 		else if(mime.indexOf("audio")!=-1 || mime.indexOf("video")!=-1) url+="media.gif";
 		else if(mime=="application/vnd.sun.xml.writer" || mime=="application/vnd.oasis.opendocument.text" || mime=="application/vnd.stardivision.writer") url+="odt.gif";
+		else if(mime=="application/vnd.sun.xml.calc" || mime=="application/vnd.oasis.opendocument.spreadsheet" || mime=="application/vnd.stardivision.calc") url+="ods.gif";
+		else if(mime=="application/vnd.sun.xml.impress" || mime=="application/vnd.oasis.opendocument.presentation" || mime=="application/vnd.stardivision.impress") url+="odp.gif";
 		else url+="file.gif";
 	url+="\">";
 

@@ -83,9 +83,17 @@
 	    <logic:match name="i" property="mime" value="VIDEO"><bean:define id="icono" value="media.gif"/></logic:match>
 	    <logic:match name="i" property="mime" value="IMAGE"><bean:define id="icono" value="image.gif"/></logic:match>							    
 		<logic:match name="i" property="mime" value="FLASH"><bean:define id="icono" value="flash.gif"/></logic:match>		
-		<logic:match name="i" property="mime" value="OPENDOCUMENT"><bean:define id="icono" value="odt.gif"/></logic:match>		
+		<logic:match name="i" property="mime" value="OPENDOCUMENT.TEXT"><bean:define id="icono" value="odt.gif"/></logic:match>		
 		<logic:match name="i" property="mime" value="SUN.XML.WRITER"><bean:define id="icono" value="odt.gif"/></logic:match>		
-		<logic:match name="i" property="mime" value="STARDIVISION"><bean:define id="icono" value="odt.gif"/></logic:match>				
+		<logic:match name="i" property="mime" value="STARDIVISION.WRITER"><bean:define id="icono" value="odt.gif"/></logic:match>	
+		
+		<logic:match name="i" property="mime" value="OPENDOCUMENT.PRESENTATION"><bean:define id="icono" value="odp.gif"/></logic:match>		
+		<logic:match name="i" property="mime" value="SUN.XML.IMPRESS"><bean:define id="icono" value="odp.gif"/></logic:match>		
+		<logic:match name="i" property="mime" value="STARDIVISION.IMPRESS"><bean:define id="icono" value="odp.gif"/></logic:match>	
+		
+		<logic:match name="i" property="mime" value="OPENDOCUMENT.SPREADSHEET"><bean:define id="icono" value="ods.gif"/></logic:match>		
+		<logic:match name="i" property="mime" value="SUN.XML.CALC"><bean:define id="icono" value="ods.gif"/></logic:match>		
+		<logic:match name="i" property="mime" value="STARDIVISION.CALC"><bean:define id="icono" value="ods.gif"/></logic:match>				
 
 		<td><img src='imgs/arxius/<bean:write name="icono"/>' alt='<bean:write name="i" property="mime"/>' /></td>
 		<td><bean:write name="i" property="nombre"/></td>
