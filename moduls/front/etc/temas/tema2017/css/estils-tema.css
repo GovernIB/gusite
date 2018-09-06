@@ -2376,12 +2376,19 @@ h2{
 	.imgMime.image-tiff{
 		background-image: url('../files/icono_imagen.png') ;
 	}
-	.imgMime.application-vnd-oasis-opendocument-text, 
+	.imgMime.application-vnd-oasis-opendocument-presentation {
+		background-image: url('../files/icono_odp.png') ;
+	}
+	.imgMime.application-vnd-oasis-opendocument-text {
+		background-image: url('../files/icono_odt.png') ;
+	}
 	.imgMime.application-msword {
 		background-image: url('../files/icono_word.png') ;
 	}
 
-	.imgMime.application-vnd-oasis-opendocument-spreadsheet, 
+	.imgMime.application-vnd-oasis-opendocument-spreadsheet{
+		background-image: url('../files/icono_ods.png') ;
+	}
 	.imgMime.application-vnd-msexcel {
 		background-image: url('../files/icono_excel.png') ;
 	}
