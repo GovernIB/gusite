@@ -107,7 +107,8 @@
             <role-name>GUS_ADMIN</role-name>
             <role-name>GUS_SUPER</role-name>
             <role-name>GUS_OPER</role-name>
-            <!--<role-name>tothom</role-name>-->
+            <!--Cualquier usuario autenticado puede tener acceso a los microsites-->
+            <role-name>tothom</role-name>
         </auth-constraint>
     </security-constraint>
 
