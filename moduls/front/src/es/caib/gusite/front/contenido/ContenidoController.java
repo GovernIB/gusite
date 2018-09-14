@@ -326,6 +326,78 @@ public class ContenidoController extends BaseViewController {
            
            return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());          
      }
+     
+     
+     /**
+     * Cuando un contenido de página (con idioma), en su contenido tiene un a href a un enlace de página.
+     * este caso es un caso especial para la agenda, ya que su redirección no funcionaba bien con el metodo generico.
+     * @param lang
+     * @param uri
+     * @param model
+     * @return
+     */
+     @RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/agenda/{url}.do")
+     public ModelAndView contenidoSmartAgenda(@PathVariable("uri") SiteId URI, 
+                  @PathVariable("lang") Idioma lang,
+                  @PathVariable("url") String url, 
+                  RedirectAttributes redir,
+                  @RequestParam(value = Microfront.PIDSITE, required = false, defaultValue = "") String idsite,
+                  @RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
+                  @RequestParam(value = Microfront.PCONT, required = false, defaultValue = "") String cont,
+                  @RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+                  @RequestParam(value = Microfront.PTIPO, required = false, defaultValue = "") String tipo,
+                  @RequestParam(value = "previsual", required = false, defaultValue = "") String previsual,
+                  @RequestParam(value = "redi", required = false, defaultValue = "") String redi, HttpServletRequest request, HttpServletResponse response) {
+       
+           String urlFact = this.urlFactory.legacyToFrontUri(url+".do", lang);
+           StringBuffer urlAppend = new StringBuffer();
+           urlAppend.append("?lang="+lang.getLang());
+           
+           if (idsite != null && !idsite.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PIDSITE);
+                  urlAppend.append("=");
+                  urlAppend.append(idsite);
+           }
+           
+           if (mcont != null && !mcont.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.MCONT);
+                  urlAppend.append("=");
+                  urlAppend.append(mcont);
+           }
+           
+           if (cont != null && !cont.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PCONT);
+               urlAppend.append("=");
+               urlAppend.append(cont);
+           }
+           
+           if (pcampa != null && !pcampa.isEmpty()) {
+                  urlAppend.append("&");
+                  urlAppend.append(Microfront.PCAMPA);
+                  urlAppend.append("=");
+                  urlAppend.append(pcampa);
+           }
+           
+           urlAppend.append("&uricont=");
+           urlAppend.append("agenda");
+           
+           if (tipo != null && !tipo.isEmpty()) {
+               urlAppend.append("&");
+               urlAppend.append(Microfront.PTIPO);
+               urlAppend.append("=");
+               urlAppend.append(tipo);
+           }
+           
+           return new ModelAndView("redirect:/" + urlFact + urlAppend.toString());          
+     }
+     
+     
+     
+     
+     
 
 	/**
 	 * Método privado para remplazar tags.
