@@ -92,7 +92,8 @@ public class MParserHTML {
 		 * value="a">a</option> </select>
 		 */
 		retorno.append("<select name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
-		retorno.append("\" id=\"" + nombre + "\"");
+		retorno.append((obligatorio == 1)?"\" required ":"\" ");	
+		retorno.append(" id=\"" + nombre + "\"");
 		if (tipo.equals(Contacto.RTYPE_SELECTORMULTIPLE)) {
 			if (lineas <= 1) {
 				retorno.append(" size=\"5\""); // por defecto 5
@@ -127,7 +128,8 @@ public class MParserHTML {
 		StringBuffer retorno = new StringBuffer();
 		// <textarea name="5" cols="34" rows="5"></textarea>
 		retorno.append("<textarea name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
-		retorno.append("\" id=\"" + nombre + "\" cols=\"" + columnas + "\" rows=\"" + lineas + "\"></textarea> " + ((obligatorio == 1) ? "*" : ""));
+		retorno.append((obligatorio == 1)?"\" required ":"\" ");	
+		retorno.append("id=\"" + nombre + "\" cols=\"" + columnas + "\" rows=\"" + lineas + "\"></textarea> " + ((obligatorio == 1) ? "*" : ""));
 		return retorno;
 	}
 
@@ -145,7 +147,8 @@ public class MParserHTML {
 		// <input name="4" id="4" type="text" />
 		retorno.append("<input name=\"" + ((obligatorio == 1) ? Microfront.VCAMPO_REQUERIDO : "") + nombre);
 		retorno.append("\" id=\"" + nombre);
-		retorno.append("\" type=\"text\" size=\"" + (longitudtexto + 2) + "\" maxlength=\"" + longitudtexto + "\" /> "
+		retorno.append((obligatorio == 1)?"\" required ":"\" ");		
+		retorno.append("type=\"text\" size=\"" + (longitudtexto + 2) + "\" maxlength=\"" + longitudtexto + "\" /> "
 				+ ((obligatorio == 1) ? "*" : ""));
 		return retorno;
 	}
@@ -234,6 +237,7 @@ public class MParserHTML {
 	 * @return String
 	 * @deprecated Comprobar que ya no se usa y eliminar
 	 */
+	@Deprecated
 	public String tagCSS(Long idsite, Long idcss, String idcsspatron) {
 		// <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 		String retorno = "";

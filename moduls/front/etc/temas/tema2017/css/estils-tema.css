@@ -48,7 +48,7 @@ form input[type="submit"]:hover,
 
 
 .deshabilitado{ 
-	color: #c0c0c0 !important; 
+	color: #757575 !important; 
 	background-color: #ffffff !important; 
 }
 
@@ -1114,7 +1114,7 @@ h2{
 	.contenedorFAQS h2{
 		display:inline-block;
 		vertical-align: middle;
-		display: inline !ie7;
+		display: inline;
 		padding:0 !important;
 		margin-bottom:1em;
 	}
@@ -1452,7 +1452,7 @@ h2{
 	.body-diaAgenda #volverAgenda{
 		color: #777777;
 		text-decoration: none;
-		text-transform: capitalize; !important;
+		text-transform: capitalize;
 		font-size:0.857em;
 	}
 	.body-diaAgenda #volverAgenda:hover{
@@ -1618,7 +1618,6 @@ h2{
 
 	}
 	.body-encuesta #enquestaPreguntaCom p {
-		text-align: none;
 		padding-right: 2px;
 	}
 	.body-encuesta div#enquestaPreguntaCom img {
@@ -2753,6 +2752,18 @@ h2{
 .CompoListaDocs.TextoC > div{
   padding:0px 0px 0px 40px !important;
 }
+
+
+#encuesta fieldset legend {
+	display:none;
+}
+
+#encuesta fieldset {
+	margin: 0 0 0 0;
+	padding:0 0 0 0;
+	border: none;
+}
+
 	
 	/**********************************************************/
 	/* MEDIA QUERIES - RESPONSIVE */
@@ -3552,10 +3563,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 
 	.imc-peu-xarxes p { display: none; }
 
-     #Gallery li>div>div>div>a>img {
-			width:100%;
-			height:159px;
-	}
+     #Gallery li>div>div>div>a>img {width:100%; height:159px;}
 }
 
 @media only screen and (max-width : 850px) {
@@ -3566,7 +3574,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 	
 	#continguts { width: calc(100% - 5em); }
 	
-	.imc-titol h1 {width: calc(100% - 9.5em)};
+	.imc-titol h1 {width: calc(100% - 9.5em)}
 	
 	.imc-sense-info h2 span { font-size: 1.8em; }
 

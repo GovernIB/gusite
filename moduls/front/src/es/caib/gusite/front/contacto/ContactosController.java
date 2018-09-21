@@ -477,6 +477,7 @@ public class ContactosController extends BaseViewController {
 
 		for (Lineadatocontacto ld : contacto.getLineasdatocontacto()) {
 			Pardato pardato = new Pardato();
+			pardato.setId(ld.getId().toString());
 			MParserHTML parserhtml = new MParserHTML();
 			if ((ld.getTipo().equals(Contacto.RTYPE_TEXTAREA)) || (ld.getTipo().equals(Contacto.RTYPE_TEXTO))) {
 				pardato.setKey(((TraduccionLineadatocontacto) ld.getTraduccion(lang.getLang())).getTexto());

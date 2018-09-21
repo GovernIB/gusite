@@ -46,7 +46,7 @@
 										<a th:if="${i.imagen} !=null" rel="lightbox[fotos]" href="archivopub.html"
 										th:href="@{${#gusuri.archivopub(MVS_microsite,i.imagen)}}"
 										th:title="${i.traduce.titulo}"> 
-										<img
+										<img th:alt="${i.traduce.titulo}"
 										th:src="@{${#gusuri.archivopub(MVS_microsite,i.imagen)}}" />											
 									</a>
 									<a th:if="${i.imagen} ==null" rel="lightbox[fotos]"

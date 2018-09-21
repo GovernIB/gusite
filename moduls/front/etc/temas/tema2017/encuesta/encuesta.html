@@ -208,24 +208,27 @@ numPreguntas++;
 		<!--<p th:if="${pregunta.imagen}!=null">
 			<img th:src="@{${#gusuri.archivopub(MVS_microsite,pregunta.imagen)}}" alt="" />
 		</p>-->
-		<ul id="respuestas">
-			<li th:each="respuesta: ${pregunta.respuestas}"
-				th:with="compId=(${respuesta.id} + '_' + ${pregunta.id})"><span
-				th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
-				th:remove="tag"
-				th:with="checked ='checked', disabledTxt ='readonly', disabledChk ='disabled', disabledRadio ='disabled'">
-
-					<span th:replace="::itemFormulario" th:remove="tag"></span>
-
-			</span> <span
-				th:if="${!#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
-				th:remove="tag"
-				th:with="checked ='', disabledTxt ='', disabledChk ='', disabledRadio =''">
-
-					<span th:replace="::itemFormulario" th:remove="tag"></span>
-
-			</span></li>
-		</ul>
+		<fieldset>
+		<legend th:text="#{encuesta.respuestas}">respuestas</legend>
+			<ul id="respuestas">
+				<li th:each="respuesta: ${pregunta.respuestas}"
+					th:with="compId=(${respuesta.id} + '_' + ${pregunta.id})"><span
+					th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
+					th:remove="tag"
+					th:with="checked ='checked', disabledTxt ='readonly', disabledChk ='disabled', disabledRadio ='disabled'">
+	
+						<span th:replace="::itemFormulario" th:remove="tag"></span>
+	
+				</span> <span
+					th:if="${!#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
+					th:remove="tag"
+					th:with="checked ='', disabledTxt ='', disabledChk ='', disabledRadio =''">
+	
+						<span th:replace="::itemFormulario" th:remove="tag"></span>
+	
+				</span></li>
+			</ul>
+		</fieldset>
 
 	</div>
 
@@ -257,7 +260,9 @@ numPreguntas++;
 		<span th:if="${respuesta.tipo}=='I'" th:remove="tag"><p></p> 
 			<textarea
 				COLS="120" ROWS="2"
+				th:title="${#strings.escapeJavaScript(respuesta.traduce.titulo)}"
 				th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
+				th:onchange="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
 				th:name="'T' + ${respuesta.id} + '_' + ${pregunta.id}"
 				th:readonly="${disabledTxt}=='readonly'"></textarea> <script
 				th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
