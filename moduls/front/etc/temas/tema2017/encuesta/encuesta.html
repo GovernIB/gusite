@@ -262,7 +262,7 @@ numPreguntas++;
 				COLS="120" ROWS="2"
 				th:title="${#strings.escapeJavaScript(respuesta.traduce.titulo)}"
 				th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
-				th:onchange="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
+				th:onmouseup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
 				th:name="'T' + ${respuesta.id} + '_' + ${pregunta.id}"
 				th:readonly="${disabledTxt}=='readonly'"></textarea> <script
 				th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
