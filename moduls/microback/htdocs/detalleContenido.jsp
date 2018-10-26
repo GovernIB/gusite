@@ -63,7 +63,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste, anchor, botonMIC "
+			plugins: "code, compat3x, link, textcolor, acheck, searchreplace, image, table colorpicker, hr, fullscreen, media, charmap, template, importcss, contextmenu ,paste, anchor, botonMIC, lists "
 			,contextmenu: "link image inserttable | cell row column deletetable textcolor colorpicker forecolor backcolor"
 			,toolbar1: 'newdocument | insertararchivos tipoarchivos componentesmicros template | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect ' 
 			,toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent | undo redo | link unlink anchor image cleanup '+editarCodigo+' acheck | botonMIC'

@@ -75,7 +75,7 @@
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
 			language: 'ca',
-			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC"
+			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC, lists"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck | botonMIC'
 			,menubar: false
 			,external_plugins: {
