@@ -42,7 +42,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
 	
-	var APP_SERVIDOR = /*[[@{${MVS_uriTema}}]]*/;
+	var APP_SERVIDOR = /*[[@{${MVS_uriTema}}]]*/;	
+	var	txtCookie =  /*[[@{#{cookies.txt}}]]*/;
+	var	txtCookieMes = /*[[@{#{cookies.mes}}]]*/;
+	var	txtCookieOk = /*[[@{#{cookies.ok}}]]*/;
 
 	/*]]>*/
 	</script>
@@ -195,6 +198,7 @@ var thDebug = false;
 	<!-- footer -->
 	<footer gus:replace="general/pie::pie"></footer>
 </div>
-	<script src="../files/imc-lta-marc.js" th:src="@{${MVS_uriTema + 'files/imc-lta-marc.js'}}" type="text/javascript" ></script>	<script src="../files/imc-lta-marc.js" th:src="@{${MVS_uriTema + 'files/imc-lta-marc.js'}}" type="text/javascript" ></script>
+	<script src="../files/imc-lta-marc.js" th:src="@{${MVS_uriTema + 'files/imc-lta-marc.js'}}" type="text/javascript" ></script>	
+	<script src="../files/aceptar_cookies.js" th:src="@{${MVS_uriTema + 'files/aceptar_cookies.js'}}" type="text/javascript" ></script>
 </body>
 </html>

@@ -3248,6 +3248,52 @@ h2{
 /* estilos nueva web*/
 
 
+/* cookie */
+.imc-cookie { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; font-size: 1.3em; color: #fff; text-align: center; padding: 2em; background-color: rgba(0,0,0,.8); }
+.imc-cookie p { margin-bottom: .5em; }
+.imc-cookie a:not(.imc-ac-bt) {
+	color: #ffe9c2; margin: 0 1em;
+	-webkit-transition: color .2s ease-out, background-color .2s ease-out;
+	-moz-transition: color .2s ease-out, background-color .2s ease-out;
+	-ms-transition: color .2s ease-out, background-color .2s ease-out;
+	-o-transition: color .2s ease-out, background-color .2s ease-out;
+	transition: color .2s ease-out, background-color .2s ease-out;
+}
+.imc-cookie a:not(.imc-ac-bt):hover, .imc-cookie a:not(.imc-ac-bt):focus{ background-color: #cc073c; }
+
+
+.imc-cookie-dacord {
+	-webkit-transform: translateY(-10em);
+	-moz-transform: translateY(-10em);
+	-o-transform: translateY(-10em);
+	-ms-transform: translateY(-10em);
+	transform: translateY(-10em);
+	opacity: 0;
+}
+
+.imc-cookie,
+.imc-cookie-dacord {
+	-webkit-transition: -webkit-transform .2s ease-out, opacity .2s ease-out;
+	-moz-transition: -moz-transform .2s ease-out, opacity .2s ease-out;
+	-ms-transition: -ms-transform .2s ease-out, opacity .2s ease-out;
+	-o-transition: -o-transform .2s ease-out, opacity .2s ease-out;
+	transition: transform .2s ease-out, opacity .2s ease-out;
+}
+
+.imc-ac-bt { display: inline-block; color: #cc073c; vertical-align: middle; padding: .5em 1em; background-color: #fff; will-change: color, background-color; }
+.imc-ac-bt:hover { color: #fff; background-color: #cc073c; }
+.imc-ac-bt {
+	-webkit-transition: color .2s ease-out, background-color .2s ease-out;
+	-moz-transition: color .2s ease-out, background-color .2s ease-out;
+	-ms-transition: color .2s ease-out, background-color .2s ease-out;
+	-o-transition: color .2s ease-out, background-color .2s ease-out;
+	transition: color .2s ease-out, background-color .2s ease-out;
+}
+.imc-ac-bt span { font-size: 1.3em; }
+
+/* fin cookie */
+
+
 footer,header { display: block; }
 
 footer * , header *, header *:before, header *:after, footer *:before, footer *:after, 
