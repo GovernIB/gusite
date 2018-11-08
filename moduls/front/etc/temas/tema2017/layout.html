@@ -43,10 +43,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 	})();
 	
 	var APP_SERVIDOR = /*[[@{${MVS_uriTema}}]]*/;	
-	var	txtCookie =  /*[[@{#{cookies.txt}}]]*/;
-	var	txtCookieMes = /*[[@{#{cookies.mes}}]]*/;
-	var	txtCookieOk = /*[[@{#{cookies.ok}}]]*/;
-
+	var	txtCookie =  /*[[#{cookies.txt}]]*/;
+	var	txtCookieMes = /*[[#{cookies.mes}]]*/;
+	var	txtCookieOk = /*[[#{cookies.ok}]]*/;
+	
 	/*]]>*/
 	</script>
 	<!-- Bootstrap -->
