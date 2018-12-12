@@ -32,7 +32,7 @@
        <property name="projecte.name.librerias" value="librerias"/>
        <property name="projecte.name.rolsac" value="rolsac"/>
       
-       <property name="projecte.name.gusite" value="gusite"/>
+       <property name="projecte.name.gusite" value="sites"/>
       
        <property name="projecte.name.foros" value="gforum"/>
        <property name="projecte.name.webcaib" value="webcaib"/>
