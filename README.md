@@ -1,4 +1,6 @@
 # ![Logo](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/icon.jpg) Gusite (gusite)
+> - Versió Estable: __gusite-1.5.3__ (Tag [gusite-1.5.3](https://github.com/GovernIB/gusite/tree/gusite-1.5.3))
+> - Versió Desenvolupament: __gusite-1.5__ (branca [gusite-1.5](https://github.com/GovernIB/gusite/tree/gusite-1.5))
 
 **Descripció**
 
@@ -20,16 +22,3 @@ L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'
 * Programming Language: Java  & JSP 
 * Translations: Catalan & Spanish 
 * User Interface: Web-based
-
-
-**Captures de pantalla**
-
-![Plana Principal](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_1.png)<br/>
-Plana Principal
-
-![Llistat de Microsites](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_2.png)<br/>
-Llistat de Microsites
-
-![Edició de Microsite](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/screenshots/captura_3.png)<br/>
-Edició de Microsite
-
