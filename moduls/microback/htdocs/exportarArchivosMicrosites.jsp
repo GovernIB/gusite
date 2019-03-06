@@ -84,10 +84,33 @@
 						<tfoot>
 							<tr>
 								<td>
-									<div id="botonera">
+									<div id="botonera">										
 										<button id="btnExport" name="fichero" title="<bean:message key="boton.exportar" />">
 											<img src="imgs/botons/exportar.gif" alt="<bean:message key="boton.exportar" />" /> &nbsp;<bean:message key="boton.exportar" />
 										</button>
+										<span>Numero Máximo de elementos a tratar: </Span>
+										<select id="numMaxElemTratar" name="numMaxElemTratar">
+											<option value="1000"   >1.000</option>
+											<option value="5000"   >5.000</option>
+											<option value="10000" selected >10.000</option>
+											<option value="30000"  >30.000</option>
+											<option value="50000"  >50.000</option>
+											<option value="100000" >100.000</option>
+											<option value="150000" >150.000</option>
+											<option value="200000" >200.000</option>
+											<option value="250000" >250.000</option>
+											<option value="300000" >300.000</option>
+											<option value="350000" >350.000</option>
+											<option value="400000" >400.000</option>
+											<option value="0"      >Todos</option>															
+										</select>
+										
+										<span>Desea omitir los ficheros ya tratados marcados con error?: </Span>
+										<select id="omitirEnError" name="omitirEnError">
+											<option value="0"   >NO</option>
+											<option value="1"   >SI</option>																				
+										</select>
+
 									</div>					
 								</td>
 							</tr>

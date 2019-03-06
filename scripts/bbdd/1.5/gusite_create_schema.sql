@@ -334,6 +334,7 @@ Create table "GUS_DOCUS" (
 	"DCM_TIPO" Varchar2 (256 CHAR),
 	"DCM_TAMANO" Number,
 	"DCM_PAGINA" Number,
+	"DCM_INFSYS" Varchar2 (1 CHAR) Default 'X',
 primary key ("DCM_CODI") 
 ) 
 STORAGE(
@@ -1376,6 +1377,7 @@ Comment on column "GUS_DOCUS"."DCM_NOMBRE"  is 'Nombre del documento físico';
 Comment on column "GUS_DOCUS"."DCM_TIPO"    is 'Identificacor de ficha';
 Comment on column "GUS_DOCUS"."DCM_TAMANO"  is 'identificador de procedimiento';
 Comment on column "GUS_DOCUS"."DCM_PAGINA"  is 'Orden aparición';
+COMMENT on column "GUS_DOCUS"."DCM_INFSYS"  is 'Indica si el fichero ya ha sido exportado a File system (S) si esta pendiente de exportar(N), si no se ha analizado (X) o ocurrio un error al exportar (E)';
 Comment on column "GUS_ENCIDI"."EID_CODIDI" is 'Identificador del idioma ca,es,de,en';
 Comment on column "GUS_ENCIDI"."EID_ENCCOD" is 'Identificador de contenido';
 Comment on column "GUS_ENCIDI"."EID_TITULO" is 'Título de la Encuesta';

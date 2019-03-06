@@ -124,11 +124,15 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	/**
 	 * Devuelve una lista con todos los Ids de los archivos en la tabla
 	 * GUS_DOCUS (necesario para proceso de exportación a disco).
-	 * 
+	 * solo retorna los no exportados a File System (los que tienen flag exportadoAFileSystem <> 'S' ), es decir los pendientes de analizar (X), los que se encuentran en error(E), y los que no están en FS (N)
+	 * - numeroMaximoElementos indica el numero máximo de elementos que se retornaran.
+	 * - omitirErroresYaTratados permite indicar si se deben omitir los ficheros ya tratados que al procesarlos dieron error.
+	 * @ejb.permission 
+	 * 			role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<Object[]> obtenerTodosLosArchivosSinBlobs() {
+	public List<Object[]> obtenerTodosLosArchivosSinBlobs(int numeroMaximoElementos,boolean omitirErroresYaTratados) {
 
 		Session session = this.getSession();
 		
@@ -136,7 +140,18 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 			// amartin: order by a.idmicrosite desc, a.id asc para que el último
 			// microsite sea el 0 (¿archivos comunes?).
-			Query query = session.createQuery("select a.id, a.nombre, a.idmicrosite from Archivo a order by a.idmicrosite desc, a.id asc");
+			
+			String sQuery = "select a.id, a.nombre, a.idmicrosite from Archivo a where exportadoAFileSystem <> '" + Archivo.ESTADO_ENFILESYSTEM_SI + "' ";
+			if(omitirErroresYaTratados) {
+				sQuery +=  " and exportadoAFileSystem <> '" + Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION + "' ";
+			}
+			sQuery += " order by a.idmicrosite desc, a.id asc";
+			
+			Query query = session.createQuery(sQuery);
+			if(numeroMaximoElementos>0) {
+				query.setMaxResults(numeroMaximoElementos);
+			}
+			
 			List<Object[]> lista = query.list();
 			
 			return lista;
@@ -147,11 +162,155 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 		} finally {
 			
-			this.close(session);
+			this.close(session);			
+		}		
+	}
+	
+	
+	/**
+	 * Retorna el numero total de ficheros
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long NumeroTotaldeFicheros() {
+
+		Session session = this.getSession();
+		
+		try {
+			Query query = session.createQuery("select count(a.id) as numficheros from Archivo a ");
+			return (Long) query.uniqueResult();
+
+		} catch (HibernateException he) {
 			
+			throw new EJBException(he);
+			
+		} finally {
+			
+			this.close(session);			
+		}		
+	}
+	
+	/**
+	 * Retorna el numero total de ficheros pendientes de ser tratados por el proceso de exportación a filesystem, (estados X,N y E)
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long NumeroPendientesExportarAFileSystem() {
+
+		Session session = this.getSession();
+		
+		try {
+			Query query = session.createQuery("select count(a.id) as numPendientesExportar from Archivo a where exportadoAFileSystem <> '" + Archivo.ESTADO_ENFILESYSTEM_SI + "'");
+			return (Long) query.uniqueResult();
+
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		} finally {
+			
+			this.close(session);			
+		}		
+	}
+	
+	/**
+	 * Retorna el numero total de ficheros ya tratados por el proceso de exportación a filesystem
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long NumeroExportadosAFileSystem() {
+
+		Session session = this.getSession();
+		
+		try {
+			Query query = session.createQuery("select count(a.id) as numPendientesExportar from Archivo a where exportadoAFileSystem = '"+ Archivo.ESTADO_ENFILESYSTEM_SI +"'");
+			return (Long) query.uniqueResult();
+
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		} finally {
+			
+			this.close(session);			
+		}		
+	}
+	
+	/**
+	 * Retorna el numero total de ficheros ya tratados por el proceso de exportación a filesystem y que se encuentran en error
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long NumeroExportadosAFileSystemConError() {
+
+		Session session = this.getSession();
+		
+		try {
+			Query query = session.createQuery("select count(a.id) as numPendientesExportar from Archivo a where exportadoAFileSystem = '"+ Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION +"'");
+			return (Long) query.uniqueResult();
+
+		} catch (HibernateException he) {
+			
+			throw new EJBException(he);
+			
+		} finally {
+			
+			this.close(session);			
+		}		
+	}
+	
+	
+	
+	/**
+	 * Actualiza los archivos indicados en listado y los marca con el estado indicado exportado a filesystem
+	 * (S) Indica que el fichero ya ha sido exportado a File system  
+	 * (N) Indica que el fichero esta pendiente de exportar, 
+	 * (X) Indica que el fichero no se ha analizado  o 
+	 * (E) Indica que ocurrio un error al exportar 
+	 * @ejb.permission 
+	 * 			role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public int MarcarcomoExportadosAFileSystem(List <Long> listado, String estado) {
+		int res = 0;
+		
+		if(estado.equals("S") || estado.equals("N") || estado.equals("X") || estado.equals("E")) {
+
+			if(listado!=null && listado.size()>0) {
+				Session session = this.getSession();			
+				try {
+					
+					StringBuilder ids = new StringBuilder();
+					boolean primero = true;
+					for (Long s : listado)
+					{
+						if(primero) {
+							primero = false;
+						}else {
+							ids.append(",");
+						}
+						ids.append(s);
+					}
+					
+					Query query = session.createQuery("Update Archivo a set a.exportadoAFileSystem = '" + estado + "' where a.id in ("+ ids.toString() +") ");
+					res = query.executeUpdate();				
+					session.flush();
+		
+				} catch (HibernateException he) {
+					throw new EJBException(he);
+				} finally {
+					this.close(session);			
+				}		
+			}
+		
 		}
 		
+		return res;
 	}
+	
+	
+	
 
 	/**
 	 * Obtiene un archivo por el nombre Comprobamos que pertenece al microsite o
@@ -277,6 +436,17 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			
 			// Guardamos archivo en FS.
 			ArchivoUtil.exportaArchivoAFilesystem(a);
+			
+						
+			//actualizamos el check que indica si el fichero está en filesystem o no
+			//por ahora se almacena tanto en FS como en BBDD, pero aún asi se marca como exportado o no exportado a fs
+			if (ArchivoUtil.almacenarEnFilesystem()) {
+				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_SI);	
+				//TODO: GRABAR EN FS (exportar a fs)
+			}else {
+				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_NO);
+				//TODO: GRABAR EN BBDD (rellenar archivo full)
+			}
 						
 			// Guardamos el archivo full.
 			final ArchivoFull archivoFull = new ArchivoFull();
@@ -468,8 +638,19 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 				}
 			}
 
+			
 			// Guardamos archivo en FS.
 			ArchivoUtil.exportaArchivoAFilesystem(a);
+			
+			//actualizamos el check que indica si el fichero está en filesystem o no
+			//por ahora se almacena tanto en FS como en BBDD, pero aún asi se marca como exportado o no exportado a fs
+			if (ArchivoUtil.almacenarEnFilesystem()) {
+				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_SI);	
+				//TODO: GRABAR EN FS (exportar a fs)
+			}else {
+				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_NO);
+				//TODO: GRABAR EN BBDD (rellenar archivo full)
+			}
 			
 			//Guardamos el fichero
 			session.saveOrUpdate(a);

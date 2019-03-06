@@ -25,6 +25,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 @Table(name = "GUS_DOCUS")
 @SuppressWarnings({"rawtypes", "unchecked"}) // Para los Map sin parametrizar.
 public class Archivo extends AuditableModel implements Indexable {
+	
+	public static final String ESTADO_ENFILESYSTEM_SI = "S";
+	public static final String ESTADO_ENFILESYSTEM_NO = "N";
+	public static final String ESTADO_ENFILESYSTEM_ERROR_EXPORTACION = "E";
+	public static final String ESTADO_ENFILESYSTEM_PENDIENTE_ANALIZAR = "X";
 
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = -3122017714028641802L;
@@ -64,6 +69,11 @@ public class Archivo extends AuditableModel implements Indexable {
 	@XmlAttribute
 	@Column(name = "DCM_MICCOD")
 	private Long idmicrosite;
+	
+	// Indica si el fichero ha sido exportado a File system (S) no ha sido exportado (N), está pendiente de analizar (X) o ocurrio un error al exportar (E)
+	@XmlAttribute
+	@Column(name = "DCM_INFSYS")
+	private String exportadoAFileSystem;
 
 	@Transient
 	private Map traducciones = new HashMap();
@@ -201,5 +211,19 @@ public class Archivo extends AuditableModel implements Indexable {
 
 	public String getIdi() {
 		return this.idi;
+	}
+
+	/**
+	 * @return the exportadoAFileSystem
+	 */
+	public String getExportadoAFileSystem() {
+		return exportadoAFileSystem;
+	}
+
+	/**
+	 * @param exportadoAFileSystem the exportadoAFileSystem to set
+	 */
+	public void setExportadoAFileSystem(String exportadoAFileSystem) {
+		this.exportadoAFileSystem = exportadoAFileSystem;
 	}
 }

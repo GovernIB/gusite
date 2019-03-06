@@ -86,12 +86,70 @@ public class ArchivoUtil {
 	 */
 	public static void exportarArchivosDeTodosLosMicrosites(HttpServletRequest request) throws DelegateException {
 
-		log.info("Comenzando proceso de exportación de archivos de los microsites");
-		addImportLogVisual(request, "Comenzando proceso de exportación de archivos de los microsites");
+		final int numelementosMaximosATratarPorDefecto = 10000;
+		String paramMaxelemtratar = request.getParameter("numMaxElemTratar");
+		
+		String somitirEnError = request.getParameter("omitirEnError");
+		boolean omitirEnError = !somitirEnError.isEmpty() && "1".equals(somitirEnError);
+		
+		int numelementosMaximosATratar = numelementosMaximosATratarPorDefecto;
+		try {
+			numelementosMaximosATratar = Integer.parseInt(paramMaxelemtratar);
+			if(numelementosMaximosATratar<0) {
+				log.error("Error al recuperar del request numMaxElemTratar, se ha obtenido un número negativo, se setea manualmente a 10.000 elementos");	
+				numelementosMaximosATratar = numelementosMaximosATratarPorDefecto;
+			}
+			
+		} catch (Exception e) {
+			log.error("Error al recuperar del request numMaxElemTratar, se setea manualmente a 10.000 elementos", e);	
+			numelementosMaximosATratar = numelementosMaximosATratarPorDefecto;
+		}
+		
+		int porcentaje = 0;
+		
+		
+		
+		log.info("Comenzando proceso de exportación de archivos de los microsites");	
+		
 
 		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		List<Object[]> listaArchivos = archivoDelegate.obtenerTodosLosArchivosSinBlobs();
+		List<Object[]> listaArchivos = archivoDelegate.obtenerTodosLosArchivosSinBlobs(numelementosMaximosATratar,omitirEnError);
+		int totalElementos = listaArchivos.size();
+		int elementosTratadosCada1PorCiento = (totalElementos/100)+1;
+		
+		
+		long numeroTotaldeFicheros = archivoDelegate.NumeroTotaldeFicheros();
+		Long numtotalPendientes = archivoDelegate.NumeroPendientesExportarAFileSystem();
+		Long numtotalYaExportados = archivoDelegate.NumeroExportadosAFileSystem();
+		Long numtotalYaExportadosConError = archivoDelegate.NumeroExportadosAFileSystemConError();		
+	
+		addImportLogVisual(request, "Numero total de archivos: " + numeroTotaldeFicheros);
+		addImportLogVisual(request, "Numero total Pendientes a Exportar al iniciar el proceso (estados X ,N y E): " + numtotalPendientes);
+		addImportLogVisual(request, "Numero total ficheros ya Exportados a Filesystem al iniciar el proceso (estado S): " + numtotalYaExportados);
+		addImportLogVisual(request, "Numero total ficheros con error al exportar a Filesystem al iniciar el proceso (estado E): " + numtotalYaExportadosConError);		
+		addImportLogVisual(request, "Comenzando proceso de exportación de archivos de los microsites. Numero elementos a tratar(max: " + numelementosMaximosATratar + "): " + listaArchivos.size() + "; Omitir archivos con error  : " +( omitirEnError?"SI (se omiten los archivos en estado E)":"NO") );
+		
+		log.info( "Numero total de archivos: " + numeroTotaldeFicheros);
+		log.info( "Numero total Pendientes a Exportar al iniciar el proceso (estados X ,N y E): " + numtotalPendientes);
+		log.info( "Numero total ficheros ya Exportados a Filesystem al iniciar el proceso (estado S): " + numtotalYaExportados);
+		log.info( "Numero total ficheros con error al exportar a Filesystem al iniciar el proceso (estado E): " + numtotalYaExportadosConError);		
+		log.info( "Comenzando proceso de exportación de archivos de los microsites. Numero elementos a tratar(" + (numelementosMaximosATratar==0?"Todos":"max:"+numelementosMaximosATratar) + "): " + listaArchivos.size() + "; Omitir archivos con error  : " +( omitirEnError?"SI (se omiten los archivos en estado E)":"NO") );
+		
+		
+		
+		
 		Iterator<Object[]> it = listaArchivos.iterator();
+		
+		//lista con los id que se van a marcar como exportados a filsystem
+		List<Long> archivosProcesados= new ArrayList();
+		List<Long> archivosConError= new ArrayList();
+		//numero máximo de elementos que se van a actualizar en BBDD de una sola vez.
+		int maxElementosActualizarPorVuelta = 150;
+		int numElemtratados=0;
+		int numElemtratadosError=0;
+		int indice = 0;
+		
+		
 
 		// Primero detectamos qué archivos hay que exportar y cuáles ya han sido
 		// exportados.
@@ -112,11 +170,36 @@ public class ArchivoUtil {
 					String mensaje = "El archivo " + obtenerRutaArchivosEnFileSystemMicrosite(idMicrosite) + File.separator + idArchivo.toString()
 							+ "" + " ya existe. Lo eliminamos de los pendientes de exportar.";
 					log.info(mensaje);
-					addImportLogVisual(request, mensaje);
-
+					//addImportLogVisual(request, mensaje);
+					archivosProcesados.add(idArchivo);
 					it.remove();
-
+					indice++;
 				}
+				
+				try {
+					if(archivosProcesados.size() >= maxElementosActualizarPorVuelta) {
+						numElemtratados += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosProcesados,Archivo.ESTADO_ENFILESYSTEM_SI);
+						archivosProcesados.clear();
+					}
+				} catch (Exception e) {
+					log.error("Error al tratar de marcar los ficheros como exportados a filesystem(1)", e);
+				}
+				
+				try {
+					if(archivosConError.size() >= maxElementosActualizarPorVuelta) {
+						numElemtratadosError += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosConError,Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION);
+						archivosConError.clear();
+					}
+				} catch (Exception e) {
+					log.error("Error al tratar de marcar los ficheros como Error al exportarlos a filesystem(2)", e);
+				}
+				
+				if((indice % elementosTratadosCada1PorCiento) == 0 && (indice >0)) {
+					porcentaje=(100*indice)/totalElementos;
+					addImportLogVisual(request, "Completado: "+ porcentaje + "%");
+					log.error("Porcentaje completado proceso exportación a file system: "+ porcentaje + "%; ("+indice+" tratados de "+totalElementos+" )");
+				}
+				
 
 			} catch (IOException e) {
 
@@ -124,17 +207,40 @@ public class ArchivoUtil {
 				log.error(mensaje, e);
 				addImportLogVisualStackTrace(request, mensaje, e.getStackTrace());
 
+				archivosConError.add(idArchivo);
 				// Eliminamos de la lista el archivo que no se ha podido tratar.
 				it.remove();
+				indice++;
 
 			}
-
+			
 		}
-
-		log.info("Procesados los archivos pendientes de tratar. Quedan por escribir en disco: " + listaArchivos.size() + " archivos");
-		addImportLogVisual(request, "Procesados los archivos pendientes de tratar. Quedan por escribir en disco: " + listaArchivos.size()
-				+ " archivos");
-
+		
+		try {
+			if(archivosProcesados.size() > 0) {
+				numElemtratados += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosProcesados,Archivo.ESTADO_ENFILESYSTEM_SI);
+				archivosProcesados.clear();
+			}
+		} catch (Exception e) {
+			log.error("Error al tratar de marcar los ficheros como exportados a filesystem(3)", e);
+		}
+		
+		try {
+			if(archivosConError.size() > 0) {
+				numElemtratadosError += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosConError,Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION);
+				archivosConError.clear();
+			}			
+		} catch (Exception e) {
+			log.error("Error al tratar de marcar los ficheros como Error al exportarlos a filesystem (4)", e);
+		}
+		
+		
+		
+		log.info("Se han encontrado " + numElemtratados + " elementos que ya estaban en file system y se han marcado en BBDD como ya exportados. Se han marcado con error "+ numElemtratadosError +" elementos. Quedan por escribir en disco: " + listaArchivos.size() + " archivos, de los " + numelementosMaximosATratar + " elementos a tratar. Iniciamos el proceso de volcado a Filesystem");
+		
+		addImportLogVisual(request, "Se han encontrado " + numElemtratados + " elementos que ya estaban en file system y se han marcado en BBDD como ya exportados. Se han marcado con error "+ numElemtratadosError +" elementos. Quedan por escribir en disco: " + listaArchivos.size() + " archivos, de los " + numelementosMaximosATratar + " elementos a tratar");
+		addImportLogVisual(request, "Iniciamos el proceso de volcado a Filesystem");
+		
 		// Exportamos los que quedan en la lista.
 		List<String> exportados = new ArrayList<String>();
 
@@ -153,17 +259,86 @@ public class ArchivoUtil {
 				//   cogería erróneamente el dato de filesystem.
 				archivo.setDatos(archivoDelegate.obtenerContenidoFichero(archivo, false));
 				exportaArchivoAFilesystem(archivo);
-				exportados.add(obtenerRutaArchivoExportadoEnFilesystem(archivo));
+				String ruta = obtenerRutaArchivoExportadoEnFilesystem(archivo);
+				log.info("Copiando fichero a disco :" + ruta +";"+(archivo.getDatos()==null?" Archivo sin datos (DCM_DATOS = NULL)":""));
+				exportados.add(ruta);
+				archivosProcesados.add(idArchivo);
 			} catch (IOException e) {
 				String mensaje = "Error exportando el archivo con id = " + idArchivo;
 				log.error(mensaje, e);
 				addImportLogVisualStackTrace(request, mensaje, e.getStackTrace());
+				archivosConError.add(idArchivo);
 			}
+			
+			
+			try {
+				if(archivosProcesados.size() >= maxElementosActualizarPorVuelta) {
+					numElemtratados += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosProcesados,Archivo.ESTADO_ENFILESYSTEM_SI);
+					archivosProcesados.clear();
+				}
+			} catch (Exception e) {
+				log.error("Error al tratar de marcar los ficheros como exportados a filesystem(5)", e);
+			}
+			
+			try {
+				if(archivosConError.size() >= maxElementosActualizarPorVuelta) {
+					archivoDelegate.MarcarcomoExportadosAFileSystem(archivosConError,Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION);
+					archivosConError.clear();
+				}
+			} catch (Exception e) {
+				log.error("Error al tratar de marcar los ficheros como Error al exportarlos a filesystem(6)", e);
+			}
+			
+			if((indice % elementosTratadosCada1PorCiento) == 0) {
+				porcentaje=(100*indice)/totalElementos;
+				addImportLogVisual(request, "Completado: "+ porcentaje + "%");
+				log.error("Porcentaje completado proceso exportación a file system: "+ porcentaje + "%; ("+indice+" tratados de "+totalElementos+" )");
+			}
+			indice++;
+		}
+		
+		
+		try {
+			if(archivosProcesados.size() > 0) {
+				numElemtratados += archivoDelegate.MarcarcomoExportadosAFileSystem(archivosProcesados,Archivo.ESTADO_ENFILESYSTEM_SI);
+				archivosProcesados.clear();
+			}
+		} catch (Exception e) {
+			log.error("Error al tratar de marcar los ficheros como exportados a filesystem(7)", e);
+		}
+		
+		try {
+			if(archivosConError.size() > 0) {
+				archivoDelegate.MarcarcomoExportadosAFileSystem(archivosConError,Archivo.ESTADO_ENFILESYSTEM_ERROR_EXPORTACION);
+				archivosConError.clear();
+			}			
+		} catch (Exception e) {
+			log.error("Error al tratar de marcar los ficheros como Error al exportarlos a filesystem (8)", e);
 		}
 
-		log.info("Finalizado el proceso de exportación de archivos a disco. Se han exportado " + exportados.size() + " archivos");
-		addImportLogVisual(request, "Finalizado el proceso de exportación de archivos a disco. Se han exportado " + exportados.size() + " archivos");
-
+		
+		if(porcentaje < 100) {
+			addImportLogVisual(request, "Completado: 100 %");
+			log.error("Porcentaje completado proceso exportación a file system: 100%");
+		}
+		
+		log.info("Finalizado el proceso de exportación de archivos a disco. Se han copiado en file System " + exportados.size() + " archivos");
+		addImportLogVisual(request, "Finalizado el proceso de exportación de archivos a disco. Se han copiado en file System " + exportados.size() + " archivos");
+		
+		Long numtotalPendientes2 = archivoDelegate.NumeroPendientesExportarAFileSystem();
+		Long numtotalYaExportados2 = archivoDelegate.NumeroExportadosAFileSystem();
+		Long numtotalYaExportadosConError2 = archivoDelegate.NumeroExportadosAFileSystemConError();
+		
+		log.info( "Numero total de archivos: " + numeroTotaldeFicheros);
+		log.info( "Numero total Pendientes a Exportar al finalizar el proceso (estados X ,N y E): " + numtotalPendientes2);
+		log.info( "Numero total ficheros ya Exportados a Filesystem al finalizar el proceso (estado S): " + numtotalYaExportados2);
+		log.info( "Numero total ficheros con error al exportar a Filesystem al finalizar el proceso (estado E): " + numtotalYaExportadosConError2);
+		
+		addImportLogVisual(request, "Numero total de archivos: " + numeroTotaldeFicheros);
+		addImportLogVisual(request, "Numero total Pendientes a Exportar al finalizar el proceso (estados X ,N y E): " + numtotalPendientes2);
+		addImportLogVisual(request, "Numero total ficheros ya Exportados a Filesystem al finalizar el proceso (estado S): " + numtotalYaExportados2);
+		addImportLogVisual(request, "Numero total ficheros con error al exportar a Filesystem al finalizar el proceso (estado E): " + numtotalYaExportadosConError2);
+		
 	}
 
 	/**
@@ -270,6 +445,7 @@ public class ArchivoUtil {
     	result.setPagina(a.getPagina());
     	result.setPeso(a.getPeso());
     	result.setTraduccionMap(a.getTraduccionMap());
+    	result.setExportadoAFileSystem(a.getExportadoAFileSystem());
     	
     	return result;
     	

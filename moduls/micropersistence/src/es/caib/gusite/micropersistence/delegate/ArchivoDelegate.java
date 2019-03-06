@@ -9,8 +9,6 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.Archivo;
-import es.caib.gusite.micromodel.Microsite;
-import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.intf.ArchivoFacade;
 import es.caib.gusite.micropersistence.intf.ArchivoFacadeHome;
 import es.caib.gusite.micropersistence.util.ArchivoFacadeUtil;
@@ -153,14 +151,63 @@ public class ArchivoDelegate implements StatelessDelegate {
 	 * @throws DelegateException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Object[]> obtenerTodosLosArchivosSinBlobs()
+	public List<Object[]> obtenerTodosLosArchivosSinBlobs(int numeroMaximoElementos,boolean omitirErroresYaTratados)
 			throws DelegateException {
 		try {
-			return this.getFacade().obtenerTodosLosArchivosSinBlobs();
+			return this.getFacade().obtenerTodosLosArchivosSinBlobs(numeroMaximoElementos,omitirErroresYaTratados);
 		} catch (RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
+	
+	
+	
+	public Long NumeroPendientesExportarAFileSystem() throws DelegateException {
+
+		try {
+			return this.getFacade().NumeroPendientesExportarAFileSystem();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+	public Long NumeroExportadosAFileSystem() throws DelegateException{
+
+		try {
+			return this.getFacade().NumeroExportadosAFileSystem();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	public int MarcarcomoExportadosAFileSystem(List <Long> listado, String estado) throws DelegateException {
+		try {
+			return this.getFacade().MarcarcomoExportadosAFileSystem(listado, estado);
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	public Long NumeroExportadosAFileSystemConError()  throws DelegateException {
+		try {
+			return this.getFacade().NumeroExportadosAFileSystemConError();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+	public Long NumeroTotaldeFicheros()  throws DelegateException {
+		try {
+			return this.getFacade().NumeroTotaldeFicheros();
+		} catch (RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+	
 
 	
 	/**

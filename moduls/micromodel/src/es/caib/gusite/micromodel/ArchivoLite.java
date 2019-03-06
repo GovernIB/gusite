@@ -55,6 +55,12 @@ public class ArchivoLite extends AuditableModel implements Indexable {
 	@XmlAttribute
 	@Column(name = "DCM_MICCOD")
 	private Long idmicrosite;
+	
+	
+	// Indica si el fichero ha sido exportado a File system (S) no ha sido exportado (N) o está pendiente de analizar (X)
+	@XmlAttribute
+	@Column(name = "DCM_INFSYS")
+	private String exportadoAFileSystem;
 
 	@Transient
 	private Map traducciones = new HashMap();
@@ -184,5 +190,21 @@ public class ArchivoLite extends AuditableModel implements Indexable {
 
 	public String getIdi() {
 		return this.idi;
+	}
+
+	/**
+	 * Indica si el fichero ha sido exportado a File system (S) no ha sido exportado (N),  está pendiente de analizar (X)  o ocurrio un error al exportar (E)
+	 * @return the exportadoAFileSystem
+	 */
+	public String getExportadoAFileSystem() {
+		return exportadoAFileSystem;
+	}
+
+	/**
+	 * Setea  si el fichero ha sido exportado a File system (S) no ha sido exportado (N), está pendiente de analizar (X) o ocurrio un error al exportar (E)
+	 * @param exportadoAFileSystem the exportadoAFileSystem to set
+	 */
+	public void setExportadoAFileSystem(String exportadoAFileSystem) {
+		this.exportadoAFileSystem = exportadoAFileSystem;
 	}
 }
