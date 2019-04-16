@@ -434,31 +434,25 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			// Guardamos para obtener el ID del registro.
 			session.saveOrUpdate(a);
 			
-			// Guardamos archivo en FS.
-			ArchivoUtil.exportaArchivoAFilesystem(a);
-			
-						
 			//actualizamos el check que indica si el fichero está en filesystem o no
 			//por ahora se almacena tanto en FS como en BBDD, pero aún asi se marca como exportado o no exportado a fs
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_SI);	
-				//TODO: GRABAR EN FS (exportar a fs)
+				// Guardamos archivo en FS.
+				ArchivoUtil.exportaArchivoAFilesystem(a);
 			}else {
 				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_NO);
-				//TODO: GRABAR EN BBDD (rellenar archivo full)
-			}
-						
-			// Guardamos el archivo full.
-			final ArchivoFull archivoFull = new ArchivoFull();
-			archivoFull.setId(a.getId());
-			archivoFull.setDatos(a.getDatos());			
+				// Guardamos el archivo full. (BBDD)
+				final ArchivoFull archivoFull = new ArchivoFull();
+				archivoFull.setId(a.getId());
+				archivoFull.setDatos(a.getDatos());
+				//Guardamos el contenido del fichero.
+				session.saveOrUpdate(archivoFull);
+			}				
 			
 			// Null datos para evitar cache 
 			a.setDatos(null);
-			
-			//Guardamos el contenido del fichero.
-			session.saveOrUpdate(archivoFull);
-			
+
 			session.flush();
 			
 			tx.commit();
@@ -512,7 +506,6 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			final Session session = this.getSession();
 			final Criteria criteri = session.createCriteria(ArchivoFull.class);
 			criteri.add(Restrictions.eq("id", archivo.getId()));
-
 			ArchivoFull archivoFull = (ArchivoFull) criteri.uniqueResult();
 			datos = archivoFull.getDatos();
 		}
@@ -639,33 +632,29 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			}
 
 			
-			// Guardamos archivo en FS.
-			ArchivoUtil.exportaArchivoAFilesystem(a);
-			
-			//actualizamos el check que indica si el fichero está en filesystem o no
-			//por ahora se almacena tanto en FS como en BBDD, pero aún asi se marca como exportado o no exportado a fs
+			// Actualizamos el check que indica si el fichero está en filesystem o no
+			// y guardamos el fichero en el soporte correspondiente
 			if (ArchivoUtil.almacenarEnFilesystem()) {
 				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_SI);	
-				//TODO: GRABAR EN FS (exportar a fs)
+				// Guardamos archivo en FS.
+				ArchivoUtil.exportaArchivoAFilesystem(a);
 			}else {
 				a.setExportadoAFileSystem(Archivo.ESTADO_ENFILESYSTEM_NO);
-				//TODO: GRABAR EN BBDD (rellenar archivo full)
+				//Guardamos el fichero full.
+				ArchivoFull archivoFull = new ArchivoFull();
+				archivoFull.setId(a.getId());
+				archivoFull.setDatos(a.getDatos());
+				
+				//Guardamos el contenido del fichero.
+				session.saveOrUpdate(archivoFull);				
 			}
-			
-			//Guardamos el fichero
-			session.saveOrUpdate(a);
-			
-			//Guardamos el fichero full.
-			ArchivoFull archivoFull = new ArchivoFull();
-			archivoFull.setId(a.getId());
-			archivoFull.setDatos(a.getDatos());
 			
 			// Null datos para evitar cache 
 			a.setDatos(null);
 			
-			//Guardamos el contenido del fichero.
-			session.saveOrUpdate(archivoFull);
-			
+			//Guardamos el fichero
+			session.saveOrUpdate(a);
+						
 			session.flush();
 			
 			tx.commit();
