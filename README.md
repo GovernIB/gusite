@@ -1,5 +1,5 @@
 # ![Logo](https://github.com/GovernIB/maven/raw/binaris/gusite/projectinfo_Attachments/icon.jpg) Gusite (gusite)
-> - Versió Estable: __gusite-1.5.3__ (Tag [gusite-1.5.3](https://github.com/GovernIB/gusite/tree/gusite-1.5.3))
+> - Versió Estable: __gusite-1.5.6__ (Tag [gusite-1.5.6](https://github.com/GovernIB/gusite/tree/gusite-1.5.6))
 > - Versió Desenvolupament: __gusite-1.5__ (branca [gusite-1.5](https://github.com/GovernIB/gusite/tree/gusite-1.5))
 
 **Descripció**
@@ -10,4 +10,4 @@ També proporciona altres eines de suport bàsiques a la gestió dels microsites
 
 L'ús d'aquesta eina facilita la homogeneització de la imatge corporativa de l'organització ja que permet definir un únic disseny que s'aplica automàticament a tots els microsites creats amb aquesta eina. Es facilita la creació de dissenys alternatius i la possibilitat de canvi massiu de disseny, que poden afectar a tots els microsites.
 
-[**Documentació**](https://github.com/GovernIB/gusite/tree/gusite-1.5.3/doc/pdf)
+[**Documentació**](https://github.com/GovernIB/gusite/tree/gusite-1.5.6/doc/pdf)
