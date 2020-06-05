@@ -99,7 +99,7 @@ Plantilla para la cabecera general de microsite
 								th:utext="${idiomaLista.value}"> Catalan </strong>
 								<a th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
 								th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
-								th:utext="${idiomaLista.value}"> Castellano </a>
+								th:lang="@{${idiomaLista.key}}" th:utext="${idiomaLista.value}"> Castellano </a>
 							</div>
 						</li>
 						<li>

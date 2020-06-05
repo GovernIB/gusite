@@ -140,7 +140,9 @@ th:lang-xmllang="${lang}">
         <div class="input" style="display: flex;">
 			<img  th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" alt="captcha" style="width: 100px;margin-right: 50px; min-width: 80px;" />    
 
-			<input type="text" id="captchaResp" name="captchaResp" style="margin: auto;" onchange="habilitarEnviar()"/>
+			<label for="captcha">
+				<input type="text" id="captchaResp" name="captchaResp" style="margin: auto;" onchange="habilitarEnviar()"/>
+			</label>			
 			
 		</div>
         
