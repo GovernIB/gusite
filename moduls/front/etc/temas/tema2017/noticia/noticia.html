@@ -101,8 +101,8 @@ var thDebug = false;
 						th:text="#{maps.ubicacion}">ubicacion</a>						
 				</p>
 
-				<div class="url" th:if="${MVS_noticia.traduce.laurl} !=null" th:with="externa=${MVS_noticia.traduce.laurl}">
-					<span class="titulo-url"> 
+				<div class="url" th:if="${MVS_noticia.traduce.laurl} !=null" th:with="externa=${MVS_noticia.traduce.laurl}" >
+					<span class="titulo-url" th:text="#{noticia.interes}"> 
 						Enlaces de interes:
 					</span>
 					<div> 
