@@ -166,16 +166,16 @@
 			<div th:if="${MVS_componente.imagenbul != null}" th:remove="tag">
                 <button type="button" th:style="'background-image: url(' +@{${#gusuri.archivopubById(MVS_microsite,MVS_componente.imagenbul.id)}}+' )'"
 				>
-				<span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Titulo del componente</span></button>
+				<span th:text="${nombre_elemento == null}? '[ empty ]' : ${nombre_elemento}">Titulo del componente</span></button>
             </div>
 			<div th:if="${MVS_componente.imagenbul == null}" th:remove="tag">
                 <button type="button" 
-				><span th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Titulo del componente</span></button>
+				><span th:text="${nombre_elemento == null}? '[ empty ]' : ${nombre_elemento}">Titulo del componente</span></button>
             </div>								
 			
 			<ul th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
 				<li th:each="noticia,iterStat : ${lista_noticias}">
-					<a th:href="@{${noticia.traduce.laurl}}"  th:text="${noticia.traduccion.titulo}">Texto de enlace</a>
+					<a th:href="@{${noticia.traduce.laurl}}"  th:text="${noticia.traduce.titulo}">Texto de enlace</a>
 				</li>
 			</ul>
 		</div>
@@ -183,7 +183,7 @@
     <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'L'}">
 		<div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="micro-elemento" th:if="${MVS_componente.visualizacion == 'L'}">
             <style gus:replace="::componenteStyle"></style>
-            <h2 th:text="${MVS_componente.traduccion.titulo == null}? '[ empty ]' : ${MVS_componente.traduccion.titulo}">Nombre del elemento</h2>
+            <h2 th:text="${nombre_elemento == null}? '[ empty ]' : ${nombre_elemento}">Nombre del elemento</h2>
             <div th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
                 <table width="100%" border="0" cellPadding="0" cellSpacing="0" th:id="'element'+${MVS_componente.id}">
                     <tbody>
@@ -196,7 +196,7 @@
                                                 <span class="imagenEnlaces" />
                                             </div>
                                             <div th:if="${noticia.imagen == null}" th:remove="tag">
-                                                <div th:text="${noticia.traduccion.titulo}" th:remove="tag"></div>
+                                                <div th:text="${noticia.traduce.titulo}" th:remove="tag"></div>
                                             </div>
                                         </a>
                                     </td>
@@ -206,7 +206,7 @@
                                         <div class="tituloContainer">
                                             <h3>
                                                <span class="imagenEnlaces" />
-                                                <a href="#" th:if="${noticia.traduccion.laurl != null}" th:href="@{${noticia.traduce.laurl}}" target="_blank" th:text="${noticia.traduce.titulo}">
+                                                <a href="#" th:if="${noticia.traduce.laurl != null}" th:href="@{${noticia.traduce.laurl}}" target="_blank" th:text="${noticia.traduce.titulo}">
                                                     traduce titulo
                                                 </a>
                                             </h3>
@@ -237,7 +237,7 @@
     <div th:fragment="componenteListaDocumentos">
         <div th:id="'elementoDocumentos'+${MVS_componente.id}"   class="micro-elemento documentos">
             <style gus:replace="::componenteStyle"></style>
-            <h2 th:text="${MVS_componente.nombre == null}? '[ empty ]' : ${MVS_componente.nombre}">Nombre del elemento</h2>
+            <h2 th:text="${nombre_elemento == null}? '[ empty ]' : ${nombre_elemento}">Nombre del elemento</h2>
             <div th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
                 <table width="100%" border="0" cellPadding="0" cellSpacing="0" id="" th:id="'element'+${MVS_componente.id}">
                     <tbody>
@@ -247,7 +247,7 @@
                                     <td>
                                         <a href="asd" th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,noticia)}}">
                                             <div class="imagen">
-                                                <div th:if="${noticia.traduce.docu != null}"  alt="${noticia.traduccion.titulo}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
+                                                <div th:if="${noticia.traduce.docu != null}"  alt="${noticia.traduce.titulo}" class="imgMime application-pdf" th:class="'imgMime ' + ${#strings.replace('__${#strings.replace(noticia.traduce.docu.mime,'.','-')}__','/','-')}">
 
                                                 </div>
                                             </div>
