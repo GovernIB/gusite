@@ -92,13 +92,21 @@ public class NoticiasDataService {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, String> traduccionMap = new HashMap<String, String>();
 
-		String whereAnyo = "";
+		String whereAnyoYVisible = "";
 
 		// Parámetros generales
 		if (criteria.getAnyo() > 0) {
-			whereAnyo = this.construirPartialWhereAnyo(criteria.getAnyo());
+			whereAnyoYVisible = this.construirPartialWhereAnyo(criteria.getAnyo());
 		} else {
 			paramMap.put("fpublicacion", txtsearch);
+		}
+		
+		if(criteria.getVisible()!=null) {
+			if(whereAnyoYVisible!=null && !"".equals(whereAnyoYVisible)  ) {
+				whereAnyoYVisible +=" and ";	
+			}
+			 
+			whereAnyoYVisible += " noti.visible='" +  (criteria.getVisible()!= null && criteria.getVisible() ?"S":"N") +"' ";
 		}
 
 		// Parámetros traducibles
@@ -116,7 +124,7 @@ public class NoticiasDataService {
 		paramsBuscador.idmicrosite = microsite.getId().toString();
 		paramsBuscador.idioma = idioma;
 		paramsBuscador.idtipo = "" + criteria.getTipo().getId();
-		paramsBuscador.where = whereAnyo;
+		paramsBuscador.where = whereAnyoYVisible;
 		return paramsBuscador;
 	}
 
@@ -169,7 +177,7 @@ public class NoticiasDataService {
 				return ret;
 
 			} else {
-
+				criteria.setVisible(true);
 				ResultadoNoticias<Noticia> ret = this.buscarNoticiasPorCampos(microsite, idioma, criteria);
 				ret.setBusqueda(true);
 				return ret;

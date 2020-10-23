@@ -25,6 +25,7 @@ public class NoticiaCriteria extends BaseCriteria {
 		return this.tipo;
 	}
 
+	private Boolean visible = null;
 	private Tipo tipo;
 	private int anyo = 0;
 	private int tamPagina;
@@ -43,6 +44,14 @@ public class NoticiaCriteria extends BaseCriteria {
 	
 	public int getTamPagina() {
 		return tamPagina;
+	}
+
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
 	}
 
 }
