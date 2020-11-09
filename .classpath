@@ -107,5 +107,7 @@
 	<classpathentry kind="lib" path="lib/thymeleaf/thymeleaf-extras-conditionalcomments-2.1.1.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/thymeleaf/unbescape-1.0.jar"/>
 	<classpathentry kind="src" path="/solrapi"/>
+	<classpathentry kind="lib" path="lib/translatorib-rest-api-1.0.0.jar"/>
+	<classpathentry kind="lib" path="/rolsac/lib/jersey/jersey-bundle-1.19.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
