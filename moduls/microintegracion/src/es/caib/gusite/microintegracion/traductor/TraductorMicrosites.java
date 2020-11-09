@@ -22,6 +22,7 @@ import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.translatorib.api.v1.model.Idioma;
 import es.caib.translatorib.api.v1.model.ParametrosTraduccionTexto;
 import es.caib.translatorib.api.v1.model.ResultadoTraduccionTexto;
+import es.caib.translatorib.api.v1.model.TipoEntrada;
 
 /**
  * Clase que traduce las propiedades de los beans del módulo Microsites
@@ -40,8 +41,7 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * new Hashtable<String,String>();
 	 */
 
-	private static final String MODE_TXT = "TXT", MODE_HTML = "HTML", TAG_INI_HTML = "<HTML><BODY>",
-			TAG_FI_HTML = "</BODY></HTML>";
+	private static final String MODE_TXT = "TXT", MODE_HTML = "HTML";
 
 	private static final String CONFIGURACION_GENERAL = "GENERAL";
 
@@ -74,13 +74,13 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				// traduccion si existe el origen.
 				if (null != microOrigen.getTitulo())
 					microDesti.setTitulo(traducir(microOrigen.getTitulo(), MODE_TXT));
-				if (null != microOrigen.getTitulocampanya() && null != microOrigen.getTitulocampanya())
+				if (null != microOrigen.getTitulocampanya() && microOrigen.getTitulocampanya() != null)
 					microDesti.setTitulocampanya(traducir(microOrigen.getTitulocampanya(), MODE_TXT));
-				if (null != microOrigen.getSubtitulocampanya() && null != microOrigen.getSubtitulocampanya())
+				if (null != microOrigen.getSubtitulocampanya() && microOrigen.getSubtitulocampanya() != null)
 					microDesti.setSubtitulocampanya(traducir(microOrigen.getSubtitulocampanya(), MODE_TXT));
-				if (null != microOrigen.getDescription() && null != microOrigen.getDescription())
+				if (null != microOrigen.getDescription() && microOrigen.getDescription() != null)
 					microDesti.setDescription(traducir(microOrigen.getDescription(), MODE_TXT));
-				if (null != microOrigen.getKeywords() && null != microOrigen.getKeywords())
+				if (null != microOrigen.getKeywords() && microOrigen.getKeywords() != null)
 					microDesti.setKeywords(traducir(microOrigen.getKeywords(), MODE_TXT));
 
 			} else {
@@ -189,7 +189,7 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 			if (null != lineadatocontactoOrigen.getTexto())
 				lineadatocontactoDesti.setTexto(traducir(lineadatocontactoOrigen.getTexto(), MODE_TXT));
 
-			if (boolSelector == true && (null != textoSelector)) {
+			if (boolSelector && (null != textoSelector)) {
 				int indexIdiomaDefault = 0;
 				while (indexIdiomaDefault < (limiteSelector * numLangs)) {
 					if (!textoSelector[indexIdiomaDefault].equals("")) {
@@ -225,8 +225,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 			if (null != actividadAgendaOrigen.getNombre())
 				actividadAgendaDesti.setNombre(traducir(actividadAgendaOrigen.getNombre(), MODE_TXT));
 		} catch (final TraductorException e) {
-
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -255,8 +253,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 			if (null != agendaOrigen.getUrl())
 				agendaDesti.setUrl(traducir(agendaOrigen.getUrl(), MODE_TXT));
 		} catch (final TraductorException e) {
-
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -281,7 +277,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				tipoDesti.setNombre(traducir(tipoOrigen.getNombre(), MODE_TXT));
 		} catch (final TraductorException e) {
 
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -317,7 +312,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				noticiaDesti.setTexto(traducir(noticiaOrigen.getTexto(), MODE_HTML));
 		} catch (final TraductorException e) {
 
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -342,7 +336,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				componenteDesti.setTitulo(traducir(componenteOrigen.getTitulo(), MODE_TXT));
 		} catch (final TraductorException e) {
 
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -375,7 +368,6 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 				contenidoDesti.setTxbeta(traducir(contenidoOrigen.getTxbeta(), MODE_HTML));
 		} catch (final TraductorException e) {
 
-			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			return false;
 		}
@@ -407,12 +399,15 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 		parametros.setIdiomaEntrada(Idioma.CATALAN);
 		parametros.setIdiomaSalida(Idioma.CASTELLANO);
 		parametros.setTextoEntrada(textTraduccio);
-		final WebResource resource2 = client
-				.resource("http://caibter.indra.es/translatorib/api/services/traduccion/v1/texto");
+		if (modeTraduccio == MODE_TXT) {
+			parametros.setTipoEntrada(TipoEntrada.TEXTO_PLANO);
+		} else {
+			parametros.setTipoEntrada(TipoEntrada.HTML);
+		}
+		final WebResource resource2 = client.resource(url);
 		final ResultadoTraduccionTexto resultadoTexto = resource2.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.WILDCARD).post(ResultadoTraduccionTexto.class, parametros);
 
-		// translate(textTraduccio);
 		return resultadoTexto.getTextoTraducido();
 
 	}

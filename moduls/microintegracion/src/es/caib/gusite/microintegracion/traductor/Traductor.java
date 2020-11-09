@@ -23,12 +23,8 @@ import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
  */
 public class Traductor {
 
-	private static final long serialVersionUID = 4007299757118205848L;
 	protected static Log log = LogFactory.getLog(Traductor.class);
 	private Hashtable<String, String> _hshIdiomes = new Hashtable<String, String>();
-
-	private static final String MODE_TXT = "TXT", MODE_HTML = "HTML", TAG_INI_HTML = "<HTML><BODY>",
-			TAG_FI_HTML = "</BODY></HTML>";
 
 	private List<String> _listLang, _listLangTraductor;
 	private boolean initialized = false;
@@ -83,7 +79,8 @@ public class Traductor {
 	 * @throws TraductorException
 	 *
 	 */
-	public Traductor() throws TraductorException {
+	public Traductor() {
+		// Constructor vacio
 	}
 
 	/**
