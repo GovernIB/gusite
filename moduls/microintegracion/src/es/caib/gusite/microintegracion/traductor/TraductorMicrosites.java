@@ -396,6 +396,7 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 	 * @throws TraductorException
 	 *             lanza una nueva excepción proceso de traducción no ha funcionado
 	 */
+<<<<<<< HEAD
 	private String traducir(final String textTraduccio, final String modeTraduccio) throws TraductorException {
 
 		final Client client = Client.create();
@@ -408,15 +409,56 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 		parametros.setIdiomaEntrada(Idioma.CATALAN);
 		parametros.setIdiomaSalida(Idioma.CASTELLANO);
 		parametros.setTextoEntrada(textTraduccio);
+=======
+	private String traducir(String textTraduccio, final String modeTraduccio) throws TraductorException {
+
+>>>>>>> branch 'gusite-1.5' of https://github.com/GovernIB/gusite.git
 		if (modeTraduccio == MODE_HTML) {
+<<<<<<< HEAD
 			parametros.setTipoEntrada(TipoEntrada.HTML);
+=======
+			textTraduccio = TAG_INI_HTML + textTraduccio + TAG_FI_HTML;
+			_colorMarkups = ACTIVE;
+			_markUnknowns = ACTIVE;
+			_markAlternatives = ACTIVE;
+			_PPM_USE = ACTIVE;
+
+>>>>>>> branch 'gusite-1.5' of https://github.com/GovernIB/gusite.git
 		} else {
+<<<<<<< HEAD
 			parametros.setTipoEntrada(TipoEntrada.TEXTO_PLANO);
+=======
+			_colorMarkups = INACTIVE;
+			_markUnknowns = INACTIVE;
+			_markAlternatives = INACTIVE;
+			_PPM_USE = INACTIVE;
+>>>>>>> branch 'gusite-1.5' of https://github.com/GovernIB/gusite.git
 		}
 		final WebResource resource2 = client.resource(url);
 		final ResultadoTraduccionTexto resultadoTexto = resource2.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.WILDCARD).post(ResultadoTraduccionTexto.class, parametros);
 
+<<<<<<< HEAD
+=======
+		final Client client = Client.create();
+		final String user = "api-tib";
+		final String password = "M0n1n@s";
+		client.addFilter(new HTTPBasicAuthFilter(user, password));
+		final ParametrosTraduccionTexto parametros = new ParametrosTraduccionTexto();
+		parametros.setIdiomaEntrada(Idioma.CATALAN);
+		parametros.setIdiomaSalida(Idioma.CASTELLANO);
+		parametros.setTextoEntrada(textTraduccio);
+		if (modeTraduccio == MODE_HTML) {
+			parametros.setTipoEntrada(TipoEntrada.HTML);
+		} else {
+			parametros.setTipoEntrada(TipoEntrada.TEXTO_PLANO);
+		}
+		final WebResource resource2 = client
+				.resource("http://caibter.indra.es/translatorib/api/services/traduccion/v1/texto");
+		final ResultadoTraduccionTexto resultadoTexto = resource2.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.WILDCARD).post(ResultadoTraduccionTexto.class, parametros);
+
+>>>>>>> branch 'gusite-1.5' of https://github.com/GovernIB/gusite.git
 		// translate(textTraduccio);
 		return resultadoTexto.getTextoTraducido();
 
