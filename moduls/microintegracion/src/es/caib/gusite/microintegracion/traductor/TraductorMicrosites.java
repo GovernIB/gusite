@@ -22,7 +22,6 @@ import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.translatorib.api.v1.model.Idioma;
 import es.caib.translatorib.api.v1.model.ParametrosTraduccionTexto;
 import es.caib.translatorib.api.v1.model.ResultadoTraduccionTexto;
-import es.caib.translatorib.api.v1.model.TipoEntrada;
 
 /**
  * Clase que traduce las propiedades de los beans del módulo Microsites
@@ -408,12 +407,8 @@ public class TraductorMicrosites extends Traductor implements Traduccion {
 		parametros.setIdiomaEntrada(Idioma.CATALAN);
 		parametros.setIdiomaSalida(Idioma.CASTELLANO);
 		parametros.setTextoEntrada(textTraduccio);
-		if (modeTraduccio == MODE_HTML) {
-			parametros.setTipoEntrada(TipoEntrada.HTML);
-		} else {
-			parametros.setTipoEntrada(TipoEntrada.TEXTO_PLANO);
-		}
-		final WebResource resource2 = client.resource(url);
+		final WebResource resource2 = client
+				.resource("http://caibter.indra.es/translatorib/api/services/traduccion/v1/texto");
 		final ResultadoTraduccionTexto resultadoTexto = resource2.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.WILDCARD).post(ResultadoTraduccionTexto.class, parametros);
 
