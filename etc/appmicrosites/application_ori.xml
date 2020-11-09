@@ -12,8 +12,12 @@
     <module><java>extractor.jar</java></module>
     <module><java>solrutiles.jar</java></module>
     <module><java>microintegracion.jar</java></module>
-	
-	<!-- SOLRJ -->
+
+	<!-- TRANSLATORIB -->
+    <module><java>lib/jersey-bundle-1.19.1.jar</java></module>
+    <module><java>lib/genson-0.99.jar</java></module>
+
+    <!-- SOLRJ -->
     <module><java>lib/commons-io-2.4.jar</java></module>
     <module><java>lib/noggit-0.6.jar</java></module>
     <module><java>lib/stax2-api-3.1.4.jar</java></module>
@@ -23,7 +27,7 @@
     <module><java>lib/httpclient-4.4.1.jar</java></module>
     <module><java>lib/solr-solrj-5.5.1.jar</java></module>
     <module><java>lib/solrapi-SOLRAPI_VERSION.jar</java></module>
-    
+
     <!-- BACK -->
     <module><ejb>sac-micropersistence.jar</ejb></module>
 
@@ -40,8 +44,8 @@
         </web>
     </module>
 
-	<!--  nou módul de front per GUSITE2014 
-			TODO: 
+	<!--  nou módul de front per GUSITE2014
+			TODO:
 				-context-root (lo ideal seria un positiu pel SEO, o al manco no negatiu
 				-web-uri. El nom del war hauria de seguir l'estandar
 	-->

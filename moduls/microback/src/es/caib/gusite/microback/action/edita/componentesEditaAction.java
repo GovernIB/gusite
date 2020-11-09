@@ -30,38 +30,36 @@ import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 /**
  * Action que edita los componentes de un microsite <BR>
  * <P>
- * 	Definición Struts:<BR>
- *  action path="/componenteEdita" <BR> 
- *  name="componenteForm" <BR> 
- *  input="/componentesAcc.do"  <BR>
- *	scope="session" <BR>
- *  unknown="false" <BR>
- *  forward name="detalle" path="/detalleComponente.jsp" <BR>
- *  
- *  @author Indra
+ * Definición Struts:<BR>
+ * action path="/componenteEdita" <BR>
+ * name="componenteForm" <BR>
+ * input="/componentesAcc.do" <BR>
+ * scope="session" <BR>
+ * unknown="false" <BR>
+ * forward name="detalle" path="/detalleComponente.jsp" <BR>
+ *
+ * @author Indra
  */
-public class componentesEditaAction extends BaseAction 
-{
-	
+public class componentesEditaAction extends BaseAction {
+
 	protected static Log log = LogFactory.getLog(componentesEditaAction.class);
-	
-	public ActionForward doExecute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-		throws Exception {
+
+	@Override
+	public ActionForward doExecute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
 
 		try {
 
-			ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
-			TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
+			final ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
+			final TipoDelegate tipoDelegate = DelegateUtil.getTipoDelegate();
 			Componente componenteBean = null;
-			componenteForm componenteForm = (componenteForm) form;
-			Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
+			final componenteForm componenteForm = (componenteForm) form;
+			final Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
 
 			if (request.getParameter("accion") != null) {
 
-				if (request.getParameter("modifica") != null
-						|| request.getParameter("anyade") != null
-						|| (request.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")))) {
+				if (request.getParameter("modifica") != null || request.getParameter("anyade") != null || (request
+						.getParameter("accion").equals(getResources(request).getMessage("operacion.guardar")))) {
 
 					componenteBean = setFormtoBean(request, componenteForm, micrositeBean);
 					componenteDelegate.grabarComponente(componenteBean);
@@ -71,26 +69,27 @@ public class componentesEditaAction extends BaseAction
 						addMessageWithDate(request, "mensa.nuevocompo");
 					} else
 						addMessageWithDate(request, "mensa.modifcompo");
-					
+
 					setBeantoForm(request, componenteForm, componenteBean.getId(), micrositeBean);
 
-				} else if (request.getParameter("accion").equals(getResources(request).getMessage("operacion.traducir"))) {
-					
+				} else if (request.getParameter("accion")
+						.equals(getResources(request).getMessage("operacion.traducir"))) {
+
 					traducir(request, componenteForm);
-					
+
 				}
 
 			} else {
-				
+
 				setBeantoForm(request, componenteForm, new Long("" + request.getParameter("id")), micrositeBean);
-				
+
 			}
-			
+
 			request.setAttribute("tiposCombo", tipoDelegate.listarCombo(micrositeBean.getId()));
-			
+
 			return mapping.findForward("detalle");
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			if (e.getMessage() != null && "error.componente.visualizacion.tipoincorrecto".equals(e.getMessage())) {
 				addMessageError(request, "error.componente.visualizacion.tipoincorrecto");
 			} else {
@@ -98,191 +97,206 @@ public class componentesEditaAction extends BaseAction
 			}
 			log.error(e);
 			return mapping.findForward("info");
-		
+
 		}
-	
+
 	}
-    
-    
-    /**
-     * Método que vuelca los datos del formulario en el Bean de Componente
-     * @param request			 petición
-     * @param componenteForm	 formulario dinámico enviado por usuario
-     * @param micrositeBean		 bean del microsite
-     * @return Componente 		 devuelve bean de Componente con los datos del formulario
-     * @throws Exception
-     */
-    private Componente setFormtoBean (HttpServletRequest request, componenteForm componenteForm, Microsite micrositeBean) throws Exception  {
 
-    	ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
-    	Componente componenteBean = null;
-    	
-    	if (componenteForm.get("id") == null) {  
-        	componenteBean = new Componente(); // Es Alta
-        } else {  // Es modificacion
-        	componenteBean = componenteDelegate.obtenerComponente((Long)componenteForm.get("id"));
-        	if (componenteBean.getIdmicrosite().longValue()!=micrositeBean.getId().longValue()) throw new Exception();
-        }
-    	
-	    componenteBean.setIdmicrosite(micrositeBean.getId());
-	   	componenteBean.setNombre(""+componenteForm.get("nombre"));
-	   
-	   	
-	    // Establezco el objeto Tipo de Noticia
-	    Tipo tp=null;
-	    TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
-	    if (componenteForm.get("id") == null || (componenteBean.getTipo() != null && !((Long)componenteForm.get("idTipo")).equals(componenteBean.getTipo().getId()) ))   {
-	    	//Si es alta o si los tipos son diferentes, recuperamos el tipo correspondiente
-	    	tp = bdTipo.obtenerTipo((Long)componenteForm.get("idTipo"));
-	    } else{
-	    	tp = componenteBean.getTipo();
-	    }
-	    
-	    tp.setId((Long)componenteForm.get("idTipo"));
-	    componenteBean.setTipo(tp);
-	   	
-	    if (componenteForm.get("visualizacion") != null) {
-	    	componenteBean.setVisualizacion(componenteForm.get("visualizacion").toString());
-	    	//#102-#103  Sólo los tipos enlace pueden ser de tipo boton
-	    	if (Componente.VISUALIZACION_BOTON.equals(componenteBean.getVisualizacion()) && !Tipo.TIPO_LINK.equals(tp.getTipoelemento())) {
-	    		throw new Exception("error.componente.visualizacion.tipoincorrecto");
-	    	}
-	    			
-	    }
-	   	
-	   	if(componenteBean.getTipo().getTipoelemento().equals(Tipo.TIPO_MAPA)){
-	   		//si es de tipo mapa, dejamos estos valores por defecto
-	   		componenteBean.setNumelementos(0);
-	   		componenteBean.setOrdenacion(0);
-	   		componenteBean.setSoloimagen("N");
-	   		componenteBean.setImagenbul(null);
-	   		componenteBean.setFilas("S");
-	   	}else{
-	   		componenteBean.setFilas(""+componenteForm.get("filas"));
+	/**
+	 * Método que vuelca los datos del formulario en el Bean de Componente
+	 * 
+	 * @param request
+	 *            petición
+	 * @param componenteForm
+	 *            formulario dinámico enviado por usuario
+	 * @param micrositeBean
+	 *            bean del microsite
+	 * @return Componente devuelve bean de Componente con los datos del formulario
+	 * @throws Exception
+	 */
+	private Componente setFormtoBean(final HttpServletRequest request, final componenteForm componenteForm,
+			final Microsite micrositeBean) throws Exception {
 
-		   	if (componenteForm.get("numelem")!=null){
-		   		componenteBean.setNumelementos(new Integer(""+componenteForm.get("numelem")));
-		   	}else{
-		   		componenteBean.setNumelementos(null);
-		   	}
-		   	
-		   	componenteBean.setOrdenacion(new Integer(""+componenteForm.get("orden")));
-		   	componenteBean.setSoloimagen(""+componenteForm.get("soloimg"));
-			
-		    //	Establezco la imagen bullet
-		    FormFile imagen = (FormFile) componenteForm.get("imagen");
-		    if (archivoValido(imagen)){
-		    	componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
-		    }else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) {
-		    	componenteBean.setImagenbul(null);
-		    }	    
-	   	}
-	    
-	    if (componenteBean.getImagenbul() != null){ 
-	        if ((""+componenteForm.get("imagennom")).length()>0){ 
-	        	componenteBean.getImagenbul().setNombre(""+componenteForm.get("imagennom"));
-	        }
-	    }
-	    
-	    VOUtils.populate(componenteBean, componenteForm);  // form --> bean
-    	
-    	return componenteBean;
-    }
-    
+		final ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
+		Componente componenteBean = null;
 
-    /**
-     * Método que vuelca los datos del Bean de Componente al formulario del usuario
-     * @param request			petición
-     * @param componenteForm	formulario dinámico enviado por usuario
-     * @param idComponente		Id del componente
-     * @param micrositeBean		bean de microsite
-     * @throws Exception
-     */
-    private void setBeantoForm (HttpServletRequest request, componenteForm componenteForm, Long idComponente, Microsite micrositeBean) throws Exception  {
+		if (componenteForm.get("id") == null) {
+			componenteBean = new Componente(); // Es Alta
+		} else { // Es modificacion
+			componenteBean = componenteDelegate.obtenerComponente((Long) componenteForm.get("id"));
+			if (componenteBean.getIdmicrosite().longValue() != micrositeBean.getId().longValue())
+				throw new Exception();
+		}
 
-    	ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
-    	Componente componenteBean = null;
+		componenteBean.setIdmicrosite(micrositeBean.getId());
+		componenteBean.setNombre("" + componenteForm.get("nombre"));
 
-        if (idComponente != null){
-            if (componenteDelegate.checkSite(micrositeBean.getId(),idComponente)) {
-            	addMessageError(request, "info.seguridad");
-            	throw new Exception();
-            }
-            componenteBean = componenteDelegate.obtenerComponente(idComponente);
-        	if (componenteBean.getIdmicrosite().longValue()!=micrositeBean.getId().longValue())	throw new Exception();
-        	}
-        
-            componenteForm.set("nombre", componenteBean.getNombre());
-            componenteForm.set("filas", componenteBean.getFilas());
-            componenteForm.set("numelem", componenteBean.getNumelementos());
-            componenteForm.set("orden", componenteBean.getOrdenacion());
-            componenteForm.set("idTipo", componenteBean.getTipo().getId());
-            componenteForm.set("soloimg", componenteBean.getSoloimagen());
-            componenteForm.set("visualizacion", componenteBean.getVisualizacion());
-            
-            VOUtils.describe(componenteForm, componenteBean);  // bean --> form
-  
-            if (componenteBean.getImagenbul() != null) {
-            	componenteForm.set("imagennom", componenteBean.getImagenbul().getNombre());
-            	componenteForm.set("imagenid", componenteBean.getImagenbul().getId());
-            }else{
-            	componenteForm.set("imagennom", "");
-                componenteForm.set("imagenid", null);
-            }
-    	
-    }     
-    
-    
-    /**
-     * Método que traduce un formulario de Componente
-     * @param request					petición de usuario
-     * @param componenteForm			formulario dinámico enviado por usuario
-     * @throws Exception
-     */
-    private void traducir (HttpServletRequest request, componenteForm componenteForm) throws Exception  {	
+		// Establezco el objeto Tipo de Noticia
+		Tipo tp = null;
+		final TipoDelegate bdTipo = DelegateUtil.getTipoDelegate();
+		if (componenteForm.get("id") == null || (componenteBean.getTipo() != null
+				&& !((Long) componenteForm.get("idTipo")).equals(componenteBean.getTipo().getId()))) {
+			// Si es alta o si los tipos son diferentes, recuperamos el tipo correspondiente
+			tp = bdTipo.obtenerTipo((Long) componenteForm.get("idTipo"));
+		} else {
+			tp = componenteBean.getTipo();
+		}
 
-    		TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext().getAttribute("traductor");
-    		String idiomaOrigen = "ca";
+		tp.setId((Long) componenteForm.get("idTipo"));
+		componenteBean.setTipo(tp);
 
-            TraduccionComponente ComponenteOrigen = (TraduccionComponente) componenteForm.get("traducciones", 0);
-            Microsite micrositeBean = (Microsite)request.getSession().getAttribute("MVS_microsite");
+		if (componenteForm.get("visualizacion") != null) {
+			componenteBean.setVisualizacion(componenteForm.get("visualizacion").toString());
+			// #102-#103 Sólo los tipos enlace pueden ser de tipo boton
+			if (Componente.VISUALIZACION_BOTON.equals(componenteBean.getVisualizacion())
+					&& !Tipo.TIPO_LINK.equals(tp.getTipoelemento())) {
+				throw new Exception("error.componente.visualizacion.tipoincorrecto");
+			}
 
-            Iterator<?> itTradFichas = ((ArrayList<?>) componenteForm.get("traducciones")).iterator();                
-            Iterator<String> itLang = traductor.getListLang().iterator(); 
-            List<String> idiomasMicro = Arrays.asList(micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
-            
-            while (itLang.hasNext()){
+		}
 
-            	String idiomaDesti = itLang.next();
-            	TraduccionComponente ComponenteDesti = (TraduccionComponente) itTradFichas.next();
-	
-			   	if (ComponenteDesti == null) {
-			   		micrositeBean.setTraduccion(idiomaDesti, new TraduccionComponente());
-			   		ComponenteDesti = (TraduccionComponente) micrositeBean.getTraduccion(idiomaDesti);
-			   	}
-      	
-            	//Comprobamos que el idioma Destino esté configurado en el Microsite si no está no se traduce
-            	if (idiomasMicro.contains(idiomaDesti)) {
+		if (componenteBean.getTipo().getTipoelemento().equals(Tipo.TIPO_MAPA)) {
+			// si es de tipo mapa, dejamos estos valores por defecto
+			componenteBean.setNumelementos(0);
+			componenteBean.setOrdenacion(0);
+			componenteBean.setSoloimagen("N");
+			componenteBean.setImagenbul(null);
+			componenteBean.setFilas("S");
+		} else {
+			componenteBean.setFilas("" + componenteForm.get("filas"));
 
-	            	if (!idiomaOrigen.equals(idiomaDesti)) {
-	            		traductor.setDirTraduccio(idiomaOrigen, idiomaDesti);
-	            		
-	            		if (traductor.traducir(ComponenteOrigen, ComponenteDesti)) {
-	            			request.setAttribute("mensajes", "traduccioCorrecte");
-	            		}
-	            		else {
-	            			request.setAttribute("mensajes", "traduccioIncorrecte");
-	            			break;
-	            		}
-	            	} 
-            	}
-            }
-            
-			if (request.getAttribute("mensajes").equals("traduccioCorrecte")) addMessage(request, "mensa.traduccion.confirmacion");
-			 else addMessageError(request, "mensa.traduccion.error");
-           
-			log.info("Traducción Componente - Id: " + (Long) componenteForm.get("id"));
-    }    
-    
+			if (componenteForm.get("numelem") != null) {
+				componenteBean.setNumelementos(new Integer("" + componenteForm.get("numelem")));
+			} else {
+				componenteBean.setNumelementos(null);
+			}
+
+			componenteBean.setOrdenacion(new Integer("" + componenteForm.get("orden")));
+			componenteBean.setSoloimagen("" + componenteForm.get("soloimg"));
+
+			// Establezco la imagen bullet
+			final FormFile imagen = (FormFile) componenteForm.get("imagen");
+			if (archivoValido(imagen)) {
+				componenteBean.setImagenbul(populateArchivo(componenteBean.getImagenbul(), imagen, null, null));
+			} else if (((Boolean) componenteForm.get("imagenbor")).booleanValue()) {
+				componenteBean.setImagenbul(null);
+			}
+		}
+
+		if (componenteBean.getImagenbul() != null) {
+			if (("" + componenteForm.get("imagennom")).length() > 0) {
+				componenteBean.getImagenbul().setNombre("" + componenteForm.get("imagennom"));
+			}
+		}
+
+		VOUtils.populate(componenteBean, componenteForm); // form --> bean
+
+		return componenteBean;
+	}
+
+	/**
+	 * Método que vuelca los datos del Bean de Componente al formulario del usuario
+	 * 
+	 * @param request
+	 *            petición
+	 * @param componenteForm
+	 *            formulario dinámico enviado por usuario
+	 * @param idComponente
+	 *            Id del componente
+	 * @param micrositeBean
+	 *            bean de microsite
+	 * @throws Exception
+	 */
+	private void setBeantoForm(final HttpServletRequest request, final componenteForm componenteForm,
+			final Long idComponente, final Microsite micrositeBean) throws Exception {
+
+		final ComponenteDelegate componenteDelegate = DelegateUtil.getComponentesDelegate();
+		Componente componenteBean = null;
+
+		if (idComponente != null) {
+			if (componenteDelegate.checkSite(micrositeBean.getId(), idComponente)) {
+				addMessageError(request, "info.seguridad");
+				throw new Exception();
+			}
+			componenteBean = componenteDelegate.obtenerComponente(idComponente);
+			if (componenteBean.getIdmicrosite().longValue() != micrositeBean.getId().longValue())
+				throw new Exception();
+		}
+
+		componenteForm.set("nombre", componenteBean.getNombre());
+		componenteForm.set("filas", componenteBean.getFilas());
+		componenteForm.set("numelem", componenteBean.getNumelementos());
+		componenteForm.set("orden", componenteBean.getOrdenacion());
+		componenteForm.set("idTipo", componenteBean.getTipo().getId());
+		componenteForm.set("soloimg", componenteBean.getSoloimagen());
+		componenteForm.set("visualizacion", componenteBean.getVisualizacion());
+
+		VOUtils.describe(componenteForm, componenteBean); // bean --> form
+
+		if (componenteBean.getImagenbul() != null) {
+			componenteForm.set("imagennom", componenteBean.getImagenbul().getNombre());
+			componenteForm.set("imagenid", componenteBean.getImagenbul().getId());
+		} else {
+			componenteForm.set("imagennom", "");
+			componenteForm.set("imagenid", null);
+		}
+
+	}
+
+	/**
+	 * Método que traduce un formulario de Componente
+	 * 
+	 * @param request
+	 *            petición de usuario
+	 * @param componenteForm
+	 *            formulario dinámico enviado por usuario
+	 * @throws Exception
+	 */
+	private void traducir(final HttpServletRequest request, final componenteForm componenteForm) throws Exception {
+
+		final TraductorMicrosites traductor = (TraductorMicrosites) request.getSession().getServletContext()
+				.getAttribute("traductor");
+		final String idiomaOrigen = "ca";
+
+		final TraduccionComponente ComponenteOrigen = (TraduccionComponente) componenteForm.get("traducciones", 0);
+		final Microsite micrositeBean = (Microsite) request.getSession().getAttribute("MVS_microsite");
+
+		final Iterator<?> itTradFichas = ((ArrayList<?>) componenteForm.get("traducciones")).iterator();
+		final Iterator<String> itLang = traductor.getListLang().iterator();
+		final List<String> idiomasMicro = Arrays.asList(micrositeBean.getIdiomas(micrositeBean.getIdiomas()));
+
+		while (itLang.hasNext()) {
+
+			final String idiomaDesti = itLang.next();
+			TraduccionComponente ComponenteDesti = (TraduccionComponente) itTradFichas.next();
+
+			if (ComponenteDesti == null) {
+				micrositeBean.setTraduccion(idiomaDesti, new TraduccionComponente());
+				ComponenteDesti = (TraduccionComponente) micrositeBean.getTraduccion(idiomaDesti);
+			}
+
+			// Comprobamos que el idioma Destino esté configurado en el Microsite si no está
+			// no se traduce
+			if (idiomasMicro.contains(idiomaDesti)) {
+
+				if (!idiomaOrigen.equals(idiomaDesti)) {
+
+					if (traductor.traducir(ComponenteOrigen, ComponenteDesti)) {
+						request.setAttribute("mensajes", "traduccioCorrecte");
+					} else {
+						request.setAttribute("mensajes", "traduccioIncorrecte");
+						break;
+					}
+				}
+			}
+		}
+
+		if (request.getAttribute("mensajes").equals("traduccioCorrecte"))
+			addMessage(request, "mensa.traduccion.confirmacion");
+		else
+			addMessageError(request, "mensa.traduccion.error");
+
+		log.info("Traducción Componente - Id: " + componenteForm.get("id"));
+	}
+
 }
-

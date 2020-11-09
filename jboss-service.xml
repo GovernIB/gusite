@@ -1,26 +1,26 @@
 <mbean code="org.jboss.varia.property.SystemPropertiesService"
         name="jboss.util:type=Service,name=GusitesProperties">
-        
+
     <!-- Set properties using the properties file style. -->
     <attribute name="Properties">
 	   es.caib.gusite.integracion.traductor=S
 	   es.caib.gusite.integracion.traductor.servidor=scatwnt1.caib.es:8080
-	   
-	   es.caib.gusite.portal.url=https://proves.caib.es	   
+
+	   es.caib.gusite.portal.url=https://proves.caib.es
 	   es.caib.gusite.intentosMailing=5
 	   es.caib.gusite.db.jndiname=es.caib.microsite.db
 	   es.caib.gusite.mantenimiento=no
-	   
+
 	   es.caib.gusite.codigoUO.govern=1
-	   
+
 	   es.caib.gusite.idioma.default=ca
-	   
+
 	   es.caib.gusite.api.rolsac.keystore.nombre=storerolsac.jks
 	   es.caib.gusite.api.rolsac.keystore.pass=contrasena
-	   
+
 	   es.caib.gusite.archivos.almacenarEnFilesystem=S
 	   es.caib.gusite.archivos.rutaArchivosEnFileSystem=F\:\\archivosGUSITE
-	   
+
 	   <!-- Cuenta a la que enviar emails, en lugar de a los contactos configuraddos  -->
 	   es.caib.gusite.email.debugMode=S
 	   es.caib.gusite.email.debugMail=agarcia@at4.net
@@ -33,11 +33,11 @@
 
 	   <!-- Ruta en la que se almacenan las plantillas en tiempo de desarrollo. Debe estar deshabilitado templateCaching para q se tenga en cuenta -->
 	   es.caib.gusite.front.templateHotLoadingPath=/home/web/proyectos/ADCaib/gusite/plantillasDev/
-	   
-       
+
+
         <!--  es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/-->
         es.caib.gusite.url.rolsac = http://localhost:48080/sacws-api/services/
-        
+
         <!-- Buscador solr  -->
         es.caib.gusite.solr.user=admin
         es.caib.gusite.solr.pass=password
@@ -50,27 +50,27 @@
 	    <!--  Las siguiente dos propiedades es para realizar descansos en las indexaciones microsite sin indexar y cuanto es el descanso. -->
 	    es.caib.gusite.solr.descanso.minutos=5
 	    es.caib.gusite.solr.descanso.microsites=50
-	  
+
         <!-- Fecha revisión accesibilidad dd/MM/yyyy -->
-		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015 
-		
+		es.caib.gusite.fecha.revision.accesibilidad=25/05/2015
+
 		es.caib.gusite.solr.tamanyomaximo=20
 	   	es.caib.gusite.solr.ficheros=doc,docx,xls,xlsx,pdf,pdfx,odt,ods,odp,odf,txt,rtf
 		es.caib.gusite.solr.dias = 10
 		<!--  Dias máximo que puede estar el job en la tabla. -->
 		es.caib.gusite.solr.diasjobs = 10
-		
+
 		<!-- key google Maps  -->
 		es.caib.gusite.key.google.maps=keyGoogleMaps
-		
-		
+
+
 		<!-- Propiedades tema2017 {0} sera substituido por el idioma de navegacion (ca,es,en,fr,de)-->
 		es.caib.gusite.enlaces.govern=http://www.caib.es/govern/index.do?lang={0}
-		es.caib.gusite.enlaces.noticies=http://www.caib.es/govern/pidip/comunicats.do?tipus=C?lang={0} 
+		es.caib.gusite.enlaces.noticies=http://www.caib.es/govern/pidip/comunicats.do?tipus=C?lang={0}
 		es.caib.gusite.enlaces.administracio=http://www.caib.es/govern/administracio.do?lang={0}
 		es.caib.gusite.enlaces.illes=http://www.illesbalears.travel/?lang={0}
-		es.caib.gusite.enlaces.directori=http://www.caib.es/govern/organigrama/directori.do?lang={0}		 		
-		es.caib.gusite.enlaces.intranet=http://intranet.caib.es/?lang={0}	 		
+		es.caib.gusite.enlaces.directori=http://www.caib.es/govern/organigrama/directori.do?lang={0}
+		es.caib.gusite.enlaces.intranet=http://intranet.caib.es/?lang={0}
 		es.caib.gusite.enlaces.cercaplus=http://www.caib.es/govern/cercadorAv.do?lang={0}
 		es.caib.gusite.enlaces.accessibilitat=http://www.caib.es/govern/external/accessibilitat.do?lang={0}
 		es.caib.gusite.enlaces.avislegal=http://www.caib.es/govern/external/infoLegal.do?lang={0}
@@ -79,7 +79,11 @@
 		es.caib.gusite.enlaces.youtube=http://www.youtube.com/CanalIllesBalears
 		es.caib.gusite.enlaces.twitter=http://twitter.com/iBalears
 		es.caib.gusite.enlaces.facebook=http://www.facebook.com/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?ref=ts#/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?v=wall&amp;viewas=0&amp;ref=ts
-		
+
+		<!-- Translatorib -->
+		es.caib.gusite.translatorib.user=api-tib
+		es.caib.gusite.translatorib.pass=XXX
+		es.caib.gusite.translatorib.url=http://caibter.indra.es/translatorib/api/services/traduccion/v1/texto
     </attribute>
 
 </mbean>

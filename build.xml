@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <project name="gusite" default="main" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
- 
+
        <!--<property name="project.version" value="${ant.project.name}"/>-->
-       <exec executable="git"  outputproperty="project.version" failifexecutionfails="true" errorproperty="">
+       <exec executable="C:\\Program Files\\Git\\bin\\git.exe"  outputproperty="project.version" failifexecutionfails="true" errorproperty="">
              <arg value="rev-parse"/>
              <arg value="--abbrev-ref"/>
              <arg value="HEAD"/>
        </exec>
- 
-      
+
+
        <property name="home" value="."/>
- 
+
        <property file="${home}/build.${user.name}.properties" />
        <property file="${home}/default.properties"/>
- 
+
        <property name="doc" value="${home}/doc"/>
        <property name="components" value="${home}/moduls"/>
        <property name="etc" value="${home}/etc"/>
-       <property name="etc.jboss" location="${etc}/jboss-${jboss.version}"/>    
- 
+       <property name="etc.jboss" location="${etc}/jboss-${jboss.version}"/>
+
        <property name="lib" value="${home}/lib"/>
        <property name="lib.caib" location="${lib}/caib"/>
- 
+
        <property name="output.dir" location="${home}/output"/>
        <property name="product.dir" location="${output.dir}/product"/>
        <property name="moduls.dir" location="${output.dir}/moduls"/>
        <property name="doc.dir" location="${output.dir}/doc"/>
        <property name="temas.dir" value="${home}/moduls/front/etc/temas"/>
- 
+
        <property name="projecte.name.librerias" value="librerias"/>
        <property name="projecte.name.rolsac" value="rolsac"/>
-      
+
        <property name="projecte.name.gusite" value="sites"/>
-      
+
        <property name="projecte.name.foros" value="gforum"/>
        <property name="projecte.name.webcaib" value="webcaib"/>
- 
+
        <property name="etc.applib" value="${etc}/applib"/>
        <property name="etc.approlsac" value="${etc}/approlsac"/>
        <property name="etc.appgusite" value="${etc}/appmicrosites"/>
        <property name="etc.appforos" value="${etc}/appforos"/>
        <property name="etc.appwebcaib" value="${etc}/appwebcaib"/>
-            
+
        <!-- *******************   TASQUES GENERALS  ****************************   -->
- 
+
        <!-- ================================================================== -->
        <!-- properties                                                         -->
        <!-- ================================================================== -->
@@ -52,7 +52,7 @@
              <echo>
                     ---------------------------------------------------------------------------------------------------
                     Propietats del sistema:
- 
+
                     home=${home}
                     components=${components}
                     product.dir=${product.dir}
@@ -65,15 +65,15 @@
                     ---------------------------------------------------------------------------------------------------
              </echo>
        </target>
- 
+
        <target name="clean" description="Destruye los directorios de trabajo">
              <delete dir="${output.dir}" quiet="yes"/>
        </target>
- 
- 
+
+
        <target name="generate.properties" description="Genera el archivo de propiedades del build">
-      
-            
+
+
              <!-- IMPORTANTE. PARA QUE FUNCIONE LO SIGUIENTE:
                            - En run/External Tools/External tools configuration.
                            - Seleccionar el ant.build nuestro y environment y añadir (el valor puede cambiar según la ruta de cada uno del git).
@@ -82,18 +82,18 @@
                            - Si no se agrega, se obtendrá un error de tipo 'git no se reconoce como un comando interno'
              -->
              <!-- Obtener revisión de GIT . -->
-             <exec executable="git"  outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+             <exec executable="C:\\Program Files\\Git\\bin\\git.exe"  outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
                     <arg value="rev-parse"/>
                     <arg value="--short"/>
                     <arg value="HEAD"/>
              </exec>
- 
-      
- 
+
+
+
                     <tstamp>
                            <format property="microsites.build" pattern="dd-MM-yyyy HH:mm:ss" locale="es,ES"/>
                     </tstamp>
-      
+
              <propertyfile file="${moduls.dir}/version.properties">
                     <entry key="git.revision" value="${git.revision}" />
                     <entry key="microsites.name" value="${microsites.name}" />
@@ -104,9 +104,9 @@
                     <entry key="java.version" value="${java.version}"/>
                     <entry key="microsites.urlrevision" value="${url.revision}"/>
              </propertyfile>
-                   
+
        </target>
-      
+
        <!-- ================================================================== -->
        <!-- prepare                                                            -->
        <!-- ================================================================== -->
@@ -116,8 +116,8 @@
              <mkdir dir="${moduls.dir}"/>
              <mkdir dir="${doc.dir}"/>
        </target>
- 
- 
+
+
        <!-- ================================================================== -->
        <!-- doc                                                                -->
        <!-- ================================================================== -->
@@ -126,8 +126,8 @@
                     <param name="task" value="doc"/>
              </antcall>
        </target>
- 
- 
+
+
        <!-- ================================================================== -->
        <!-- update                                                             -->
        <!-- ================================================================== -->
@@ -140,58 +140,58 @@
              <antcall target="update.micropersistence"/>
              <antcall target="update.microintegracion"/>
        </target>
- 
+
        <target name="update.plugins" description="Actualizar plugins">
              <ant dir="plugins" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.utilities" description="Actualizar utilidades que pertenecian a webcaib">
              <ant dir="moduls/utilities" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.extractor" description="Actualizar herramientas de texto">
              <ant dir="moduls/extractor" target="main" inheritall="false"/>
        </target>
-            
+
        <target name="update.solrutiles" description="Actualizar herramientas de texto">
              <ant dir="moduls/solrutiles" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.micromodel" description="Actualizar el modelo de datos de GUSITE.">
              <ant dir="moduls/micromodel" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.micropersistence" description="Actualizar la capa de persistencia de GUSITE">
              <ant dir="moduls/micropersistence" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.microintegracion" description="Actualizar el módulo de Integración de GUSITE">
              <ant dir="moduls/microintegracion" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.microback" depends="generate.properties" description="Actualizar el módulo web de backoffice de GUSITE">
              <ant dir="moduls/microback" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.microfront" description="Actualizar el módulo web legacy de frontoffice de GUSITE">
              <ant dir="moduls/microfront" target="main" inheritall="false"/>
        </target>
- 
+
        <target name="update.front" depends="generate.properties" description="Actualizar el módulo web de frontoffice de GUSITE">
              <ant dir="moduls/front" target="main" inheritall="false"/>
        </target>
- 
+
        <!-- ================================================================== -->
        <!-- assemble                                                           -->
        <!--                                                                                                              -->
        <!--   necessites declarar 'project.author' en el teu build properties -->
        <!-- ================================================================== -->
        <target name="assemble" depends="generate.properties" description="Actualiza el EAR con los componentes generados para gusite." if="project.author">
-                          
+
              <delete file="${product.dir}/02${projecte.name.gusite}.ear" quiet="yes"/>
        		 <copy file="${etc.appgusite}/application_ori.xml" tofile="${etc.appgusite}/application.xml" overwrite="true" />
        		 <replace file="${etc.appgusite}/application.xml" token="SOLRAPI_VERSION"  value="${solrapi.version.tag}" />
-            
+
              <ear earfile="${product.dir}/${projecte.name.gusite}.ear" appxml="${etc.appgusite}/application.xml" manifest="${etc.appgusite}/manifest.mf">
                     <manifest>
                            <attribute name="Version" value="${project.version}"/>
@@ -199,9 +199,9 @@
                            <attribute name="Build-Jdk" value="${java.version}"/>
                            <attribute name="GIT-revision" value="${git.revision}" />
                     </manifest>
- 
+
                     <metainf dir="${etc.jboss}" includes="jboss-app.xml"/>
- 
+
                     <!-- Incluimos los .war y .jar generados con la aplicación para gusite -->
                     <fileset dir="${moduls.dir}">
                            <include name="extractor.jar" />
@@ -216,10 +216,10 @@
                            <include name="utilities.jar" />
                            <include name="plugins.jar" />
                     </fileset>
- 
+
                     <!-- Librerías de utilidades comunes para los jar y wars -->
                     <zipfileset dir="${lib}" prefix="lib">
-                           <include name="antlr-2.7.6.jar" />
+                    	   <include name="antlr-2.7.6.jar" />
                            <include name="aopalliance-1.0.jar" />
                            <include name="commons-digester.jar" />
                            <include name="commons-fileupload-1.2.2.jar" />
@@ -229,8 +229,8 @@
                            <include name="simplecaptcha-1.2.1.jar"/>
                     	   <include name="zookeeper-3.4.6.jar" />
                     </zipfileset>
-                                 
-                                 
+
+
                     <zipfileset dir="${lib}/solr" prefix="lib">
                        	   <include name="commons-io-*.jar" />
                     	   <include name="noggit-*.jar" />
@@ -238,10 +238,10 @@
                            <include name="httpcore-*.jar" />
                            <include name="httpmime-*.jar" />
                            <include name="httpclient-*.jar" />
-                           <include name="solr-solrj-*.jar" />                        
+                           <include name="solr-solrj-*.jar" />
                            <include name="solrapi-*.jar" />
                     </zipfileset>
-                                                           
+
                     <zipfileset dir="${lib}/axis2-1.5" prefix="lib">
                            <include name="axiom-api-1.2.8.jar" />
                            <include name="axiom-impl-1.2.8.jar" />
@@ -269,16 +269,20 @@
                         <include name="wai.jar" />
                            <include name="wsdl4j.jar" />
                     </zipfileset>
+             		<zipfileset dir="${lib}/jersey"  prefix="lib">
+             					<include name="jersey-bundle-1.19.1.jar"/>
+             					<include name="genson-0.99.jar" />
+             		</zipfileset>
                     <zipfileset dir="${lib}/spring" prefix="lib">
-            <include name="spring-aop-3.2.0.RELEASE.jar"/>
-                    <include name="spring-aspects-3.2.0.RELEASE.jar"/>
-                    <include name="spring-beans-3.2.0.RELEASE.jar"/>
-                    <include name="spring-context-3.2.0.RELEASE.jar"/>
-                           <include name="spring-context-support-3.2.0.RELEASE.jar"/>
-                    <include name="spring-core-3.2.0.RELEASE.jar"/>
-                    <include name="spring-expression-3.2.0.RELEASE.jar"/>
-                           <include name="spring-web-3.2.0.RELEASE.jar"/>
-                    <include name="spring-webmvc-3.2.0.RELEASE.jar"/>
+	            		<include name="spring-aop-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-aspects-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-beans-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-context-3.2.0.RELEASE.jar"/>
+	                           <include name="spring-context-support-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-core-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-expression-3.2.0.RELEASE.jar"/>
+	                           <include name="spring-web-3.2.0.RELEASE.jar"/>
+	                    <include name="spring-webmvc-3.2.0.RELEASE.jar"/>
                     </zipfileset>
                     <zipfileset dir="${lib}/axis-1.4" prefix="lib">
                            <include name="axis.jar"/>
@@ -286,24 +290,24 @@
                            <include name="commons-discovery-0.2.jar"/>
                     </zipfileset>
              </ear>
-            
+
        </target>
- 
+
        <!-- ================================================================== -->
        <!-- main                                                               -->
        <!-- ================================================================== -->
        <target name="main" depends="prepare,generate.properties" description="Realiza todo el proceso de construcción de GUSITE">
              <antcall target="sacapiclientFromMVN" />
-             <antcall target="solrapiFromMVN" />       
+             <antcall target="solrapiFromMVN" />
              <antcall target="propagate">
                     <param name="task" value="main"/>
              </antcall>
- 
+
              <antcall target="assemble"/>
              <antcall target="deploy"/>
        </target>
- 
- 
+
+
        <!-- ================================================================== -->
        <!-- propagate                                                          -->
        <!-- ================================================================== -->
@@ -319,88 +323,88 @@
              <ant dir="moduls/microback" target="${task}" inheritall="false"/>
              <ant dir="moduls/microfront" target="${task}" inheritall="false"/>
        </target>
- 
- 
+
+
        <!-- ================================================================== -->
        <!-- deploy                                                             -->
        <!-- ================================================================== -->
        <target name="deploy">
              <copy file="${product.dir}/${projecte.name.gusite}.ear" todir="${deploy.dir}"/>
        </target>
-      
+
        <!-- ================================================================== -->
        <!-- temas: Genera el zip con los temas.                                                             -->
        <!-- ================================================================== -->
-       <target name="temas" description="Genera el zip con los temas">          
+       <target name="temas" description="Genera el zip con los temas">
 			<zip destfile="${temas.dir}/zip/tema2015.zip"
 				basedir="${temas.dir}/tema2015"
 				update="true"/>
 			<zip destfile="${temas.dir}/zip/tema2017.zip"
 				basedir="${temas.dir}/tema2017"
-				update="true" />	            
+				update="true" />
        </target>
- 
+
        <!-- including tha maven-ant-tasks-jar into classpath -->
        <target name="sacapiclientFromMVN" unless="compile.classpath" xmlns:artifact="urn:maven-artifact-ant"  description="Copia las librerías solrapi y dependencias en la carpeta correspondiente.">
              <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
                               classpath="lib/maven-ant-tasks-2.1.3.jar"/>
              <echo>Obtenemos la librería de sac-api-client (${rolsac.version.tag}) y lo copiamos en la carpeta lib.</echo>
-       		 <!-- ****** SI SE TIENEN PROBLEMAS al descargar la libreria y se usan versiones anteriores a la 1.8 de java puede ser necesario añadir "-Dhttps.protocols=TLSv1.2" como argumentos de la VM del JRE-->		
-       		 <artifact:remoteRepository id="github-governib-maven-repos" url="${mavencaib.url}" /> 
+       		 <!-- ****** SI SE TIENEN PROBLEMAS al descargar la libreria y se usan versiones anteriores a la 1.8 de java puede ser necesario añadir "-Dhttps.protocols=TLSv1.2" como argumentos de la VM del JRE-->
+       		 <artifact:remoteRepository id="github-governib-maven-repos" url="${mavencaib.url}" />
              <artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset" >
              	<localRepository path="${mvn.repository.path}" />
 				<!-- Repositorio remoto que se activará cuando se deploye solrapi.-->
 				<remoteRepository refid="github-governib-maven-repos" />
-				
+
              	<dependency groupId="${rolsac.groupId}" artifactId="${rolsac.artifactId}" version="${rolsac.version.tag}" />
              </artifact:dependencies>
-            
+
              <copy todir="lib/">
                <fileset refid="compile.fileset" />
                     <globmapper from="*.jar" to="sac-api-client.jar"/>
             </copy>
-       	
+
        		<!-- Borramos la carpeta temporal. -->
        		<delete dir="lib/sac-api-client.jares" />
-       	            
+
        </target>
-      
+
 		<!-- Para instalar solrapi de maven. -->
 		<target name="solrapiFromMVN" unless="compile.classpath" xmlns:artifact="urn:maven-artifact-ant" description="Copia las librerías solrapi y dependencias en la carpeta.">
 			<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
 					                 classpath="lib/maven-ant-tasks-2.1.3.jar"/>
-					
+
 			<echo>Limpiamos la carpeta lib/solr</echo>
 			<delete>
 			   <fileset dir="lib/solr">
 			       <include name="*.jar"/>
 			   </fileset>
 			</delete>
-			
+
 			<echo>Obtenemos la librería de solrapi (${solrapi.version.tag}) y lo copiamos en la carpeta lib/solr.</echo>
-			<!-- ****** SI SE TIENEN PROBLEMAS al descargar la libreria y se usan versiones anteriores a la 1.8 de java puede ser necesario añadir "-Dhttps.protocols=TLSv1.2" como argumentos de la VM del JRE-->		
-			<artifact:remoteRepository id="github-governib-maven-repos" url="${mavencaib.url}" /> 
-			
+			<!-- ****** SI SE TIENEN PROBLEMAS al descargar la libreria y se usan versiones anteriores a la 1.8 de java puede ser necesario añadir "-Dhttps.protocols=TLSv1.2" como argumentos de la VM del JRE-->
+			<artifact:remoteRepository id="github-governib-maven-repos" url="${mavencaib.url}" />
+
 			<artifact:dependencies pathId="compile.classpath" filesetId="compile.fileset">
-				
+
 				<localRepository path="${mvn.repository.path}" />
 				<!-- Repositorio remoto que se activará cuando se deploye solrapi.-->
 				<remoteRepository refid="github-governib-maven-repos" />
-				
+
 				<dependency groupId="${solrapi.groupId}" artifactId="${solrapi.artifactId}" version="${solrapi.version.tag}"  />
 			</artifact:dependencies>
-			
+
 			<copy todir="lib/solr" flatten="true">
              		<fileset refid="compile.fileset" />
             </copy>
-       	
-       		<!-- Excluimos el MANIFEST.MF porque sino generaría un error en jboss5. 
+
+       		<!-- Excluimos el MANIFEST.MF porque sino generaría un error en jboss5.
        		 	  Igualmente, se generará uno nuevo pero con la mínima información que no produce error en el despliegue.
        		-->
 	       	<jar destfile="lib/zookeeper-3.4.6.jar">
 	       	    	<zipfileset src="lib/solr/zookeeper-3.4.6.jar" excludes="**/MANIFEST.MF"/>
 	       	</jar>
 		</target>
-	
-     
+
+
 </project>

@@ -8,7 +8,7 @@
 	<property name="home.dir" location="${basedir}/../.."/>
 	<property file="${home.dir}/build.${user.name}.properties" />
 	<property file="${home.dir}/default.properties"/>
-	
+
     <property name="output.dir" location="${home.dir}/output"/>
     <property name="modul.output.dir" location="${output.dir}/${modul}"/>
 	<property name="moduls.output.dir" location="${output.dir}/moduls"/>
@@ -26,7 +26,7 @@
 
     <path id="jar.class.path">
         <fileset dir="${lib.dir}">
-            <include name="commons-beanutils.jar" />
+        	<include name="commons-beanutils.jar" />
             <include name="commons-collections.jar" />
             <include name="commons-logging.jar" />
         	<!--<include name="hibernate-jpa-2.0-api-1.0.1.Final.jar" />-->
@@ -34,7 +34,12 @@
         	<include name="sac-api-client.jar" />
             <include name="servlet-api.jar" />
         </fileset>
-    	
+
+    	<fileset dir="${lib.dir}/jersey">
+			<include name="jersey-bundle-1.19.1.jar"/>
+    		<include name="genson-0.99.jar" />
+		</fileset>
+
     	<fileset dir="${lib.dir}/jboss">
     		<include name="hibernate-core.jar"/>
     		<include name="hibernate-annotations.jar"/>
