@@ -223,6 +223,7 @@
                            <include name="plugins.jar" />
                     </fileset>
 
+
                     <!-- Librerías de utilidades comunes para los jar y wars -->
                     <zipfileset dir="${lib}" prefix="lib">
                            <include name="antlr-2.7.6.jar" />
@@ -275,25 +276,11 @@
                            <include name="wai.jar" />
                            <include name="wsdl4j.jar" />
                     </zipfileset>
-<<<<<<< Upstream, based on 5f8186f15c225d9b551a1449883b1c07e95794e2
-=======
              		<zipfileset dir="${lib}/jersey"  prefix="lib">
 		     	    		<include name="jersey-bundle-1.19.1.jar"/>
 		     	    		<include name="genson-0.99.jar" />
 		     	    </zipfileset>
->>>>>>> 2aab79b #139 Arreglado la librería que faltaba
                     <zipfileset dir="${lib}/spring" prefix="lib">
-<<<<<<< Upstream, based on 5f8186f15c225d9b551a1449883b1c07e95794e2
-            <include name="spring-aop-3.2.0.RELEASE.jar"/>
-                    <include name="spring-aspects-3.2.0.RELEASE.jar"/>
-                    <include name="spring-beans-3.2.0.RELEASE.jar"/>
-                    <include name="spring-context-3.2.0.RELEASE.jar"/>
-                           <include name="spring-context-support-3.2.0.RELEASE.jar"/>
-                    <include name="spring-core-3.2.0.RELEASE.jar"/>
-                    <include name="spring-expression-3.2.0.RELEASE.jar"/>
-                           <include name="spring-web-3.2.0.RELEASE.jar"/>
-                    <include name="spring-webmvc-3.2.0.RELEASE.jar"/>
-=======
 		            		<include name="spring-aop-3.2.0.RELEASE.jar"/>
 		                    <include name="spring-aspects-3.2.0.RELEASE.jar"/>
 		                    <include name="spring-beans-3.2.0.RELEASE.jar"/>
@@ -303,7 +290,6 @@
 		                    <include name="spring-expression-3.2.0.RELEASE.jar"/>
 		                    <include name="spring-web-3.2.0.RELEASE.jar"/>
 		                    <include name="spring-webmvc-3.2.0.RELEASE.jar"/>
->>>>>>> 2aab79b #139 Arreglado la librería que faltaba
                     </zipfileset>
                     <zipfileset dir="${lib}/axis-1.4" prefix="lib">
                            <include name="axis.jar"/>
