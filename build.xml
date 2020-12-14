@@ -223,6 +223,7 @@
                            <include name="plugins.jar" />
                     </fileset>
 
+
                     <!-- Librerías de utilidades comunes para los jar y wars -->
                     <zipfileset dir="${lib}" prefix="lib">
                            <include name="antlr-2.7.6.jar" />
