@@ -1,5 +1,6 @@
 package es.caib.gusite.front.noticia;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.service.NoticiasDataService;
+import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.front.view.ListarNoticiasView;
 import es.caib.gusite.front.view.NoticiaView;
@@ -40,9 +42,9 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.TipoDelegate;
 
 /**
- * 
+ *
  * @author brujula-at4
- * 
+ *
  */
 @Controller
 public class NoticiasController extends BaseViewController {
@@ -59,16 +61,18 @@ public class NoticiasController extends BaseViewController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/l/{uriListaNoticia}")
-	public ModelAndView listarnoticias(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@PathVariable("uriListaNoticia") String uriListaNoticia,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req,HttpServletResponse response) {
-	
-		return this.listarnoticias(URI, lang, uriListaNoticia, 0, mcont, pcampa, filtro, pagina, ordenacion, req, response);
-		
+	public ModelAndView listarnoticias(@PathVariable("uri") final SiteId URI, @PathVariable("lang") final Idioma lang,
+			@PathVariable("uriListaNoticia") final String uriListaNoticia,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") final String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") final String pcampa,
+			@RequestParam(value = "filtro", required = false, defaultValue = "") final String filtro,
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") final int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") final String ordenacion,
+			final HttpServletRequest req, final HttpServletResponse response) {
+
+		return this.listarnoticias(URI, lang, uriListaNoticia, 0, mcont, pcampa, filtro, pagina, ordenacion, req,
+				response);
+
 	}
 
 	/**
@@ -78,26 +82,36 @@ public class NoticiasController extends BaseViewController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/l/{uriListaNoticia}/{anyo}")
-	public ModelAndView listarnoticias(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@PathVariable("uriListaNoticia") String uriListaNoticia,
-			@PathVariable("anyo") int anyo,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
+	public ModelAndView listarnoticias(@PathVariable("uri") final SiteId URI, @PathVariable("lang") final Idioma lang,
+			@PathVariable("uriListaNoticia") final String uriListaNoticia, @PathVariable("anyo") final int anyo,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") final String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") final String pcampa,
 			@RequestParam(value = "filtro", required = false, defaultValue = "") String filtro,
-			@RequestParam(value = "pagina", required = false, defaultValue = "1") int pagina,
-			@RequestParam(value = "ordenacion", required = false, defaultValue = "") String ordenacion, HttpServletRequest req,HttpServletResponse response) {
+			@RequestParam(value = "pagina", required = false, defaultValue = "1") final int pagina,
+			@RequestParam(value = "ordenacion", required = false, defaultValue = "") final String ordenacion,
+			final HttpServletRequest req, final HttpServletResponse response) {
 
-		NoticiaCriteria criteria = new NoticiaCriteria(filtro, pagina, ordenacion);
+		if (!StringUtils.isEmpty(filtro)) {
+			try {
+				final String decodedToUTF8 = new String(filtro.getBytes("ISO-8859-1"), "UTF-8");
+				filtro = Cadenas.convert(decodedToUTF8);
+			} catch (final UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		final NoticiaCriteria criteria = new NoticiaCriteria(filtro, pagina, ordenacion);
 		criteria.setAnyo(anyo);
-		ListarNoticiasView view = new ListarNoticiasView();
+		final ListarNoticiasView view = new ListarNoticiasView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
-			Microsite microsite = view.getMicrosite();
+			final Microsite microsite = view.getMicrosite();
 			if (microsite == null) {
-				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);
 			}
-			
-			Tipo tipo = this.getTipo(uriListaNoticia, lang.getLang(), microsite.getId().toString());
+
+			final Tipo tipo = this.getTipo(uriListaNoticia, lang.getLang(), microsite.getId().toString());
 			view.setClaseElementoId(tipo.getId());
 
 			criteria.setTipo(tipo);
@@ -155,21 +169,23 @@ public class NoticiasController extends BaseViewController {
 					return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 				} else {
 
-					view.setSeuletSin(this.urlFactory.listarNoticiasSinPagina(microsite, lang, tipo, criteria, mcont, pcampa));
+					view.setSeuletSin(
+							this.urlFactory.listarNoticiasSinPagina(microsite, lang, tipo, criteria, mcont, pcampa));
 					view.setParametrosPagina(noticias.getParametros());
 
 					view.setListado(noticias.getResultados());
-					TraduccionTipo trad = ((TraduccionTipo) tipo.getTraduccion(lang.getLang()));
-					if(trad == null){
-						String mensaje = "No existe traduccion '"+ lang.getLang() +"' para el listado " + tipo.getIdi() ;
-						try{
-							mensaje += " (" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang())).getNombre()+") ";
-						}catch(Exception e){
-							
+					final TraduccionTipo trad = ((TraduccionTipo) tipo.getTraduccion(lang.getLang()));
+					if (trad == null) {
+						String mensaje = "No existe traduccion '" + lang.getLang() + "' para el listado "
+								+ tipo.getIdi();
+						try {
+							mensaje += " (" + ((TraduccionTipo) tipo.getTraduccion(lang.getLang())).getNombre() + ") ";
+						} catch (final Exception e) {
+
 						}
-						throw new ExceptionFrontPagina(mensaje,  ExceptionFrontPagina.HTTP_NOT_FOUND);
+						throw new ExceptionFrontPagina(mensaje, ExceptionFrontPagina.HTTP_NOT_FOUND);
 					}
-					String desctiponoticia = trad.getNombre();
+					final String desctiponoticia = trad.getNombre();
 					view.setTipoListado(desctiponoticia);
 					view.setClaseElemento(tipo);
 					view.setBusqueda("" + noticias.isBusqueda());
@@ -178,8 +194,8 @@ public class NoticiasController extends BaseViewController {
 						view.setListadoAnyos(listaAnyos);
 						if ((anyo == 0) && (listaAnyos == null || listaAnyos.size() <= 0)) {
 							view.setAnyo(0);
-						}else {
-							view.setAnyo(criteria.getAnyo());							
+						} else {
+							view.setAnyo(criteria.getAnyo());
 						}
 					}
 
@@ -197,14 +213,14 @@ public class NoticiasController extends BaseViewController {
 					}
 
 					if (tipo.getTipoelemento().equals(Microfront.ELEM_FOTO)) {
-						String[] tamanyo = this.calcularTamanyoFoto(tipo.getFotosporfila());
+						final String[] tamanyo = this.calcularTamanyoFoto(tipo.getFotosporfila());
 						view.setAnchoFoto(tamanyo[0]);
 						view.setAltoFoto(tamanyo[1]);
 						plantillaForward = this.templateNameFactory.mostrarGaleriaFotos(microsite);
 					}
-										
+
 					if (tipo.getTipoelemento().equals(Microfront.ELEM_MAPA)) {
-						plantillaForward = this.templateNameFactory.listarUbicaciones(microsite);						
+						plantillaForward = this.templateNameFactory.listarUbicaciones(microsite);
 					}
 
 					// TODO: averiguar para qué sirve mcont. Creo que para la
@@ -217,37 +233,38 @@ public class NoticiasController extends BaseViewController {
 			this.cargarMollapan(view, tipo);
 			return this.modelForView(plantillaForward, view);
 
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (ExceptionFrontMicro e) {
+		} catch (final ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,req);
-		} catch (ExceptionFrontPagina e) {
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response, URI.uri, lang, req);
+		} catch (final ExceptionFrontPagina e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
-		} 
+		}
 	}
 
 	/**
-	 * Método privado para guardar el recorrido que ha realizado el usuario por
-	 * el microsite.
-	 * 
+	 * Método privado para guardar el recorrido que ha realizado el usuario por el
+	 * microsite.
+	 *
 	 * @param microsite
 	 * @param model
 	 * @param lang
 	 * @return
 	 * @return string recorrido en el microsite
 	 */
-	private List<PathItem> cargarMollapan(PageView view, Tipo tipo) {
+	private List<PathItem> cargarMollapan(final PageView view, final Tipo tipo) {
 
-		List<PathItem> path = super.getBasePath(view);
-		String desctiponoticia = ((TraduccionTipo) tipo.getTraduccion(view.getLang().getLang())).getNombre();
+		final List<PathItem> path = super.getBasePath(view);
+		final String desctiponoticia = ((TraduccionTipo) tipo.getTraduccion(view.getLang().getLang())).getNombre();
 		if (!StringUtils.isEmpty(desctiponoticia)) {
-			path.add(new PathItem(desctiponoticia, this.urlFactory.listarElementos(view.getMicrosite(), view.getLang(), tipo)));
+			path.add(new PathItem(desctiponoticia,
+					this.urlFactory.listarElementos(view.getMicrosite(), view.getLang(), tipo)));
 		}
 		// Datos para la plantilla
 		view.setPathData(path);
@@ -256,29 +273,29 @@ public class NoticiasController extends BaseViewController {
 	}
 
 	/**
-	 * Método privado para guardar el recorrido que ha realizado el usuario por
-	 * el microsite.
-	 * 
+	 * Método privado para guardar el recorrido que ha realizado el usuario por el
+	 * microsite.
+	 *
 	 * @param microsite
 	 * @param model
 	 * @param lang
 	 * @return
 	 * @return string recorrido en el microsite
 	 */
-	private List<PathItem> cargarMollapan(PageView view, Noticia noticia) {
+	private List<PathItem> cargarMollapan(final PageView view, final Noticia noticia) {
 
-		List<PathItem> path = this.cargarMollapan(view, noticia.getTipo());
+		final List<PathItem> path = this.cargarMollapan(view, noticia.getTipo());
 		// TODO: añadir el título de la noticia?
-		path.add(new PathItem(this.getMessage("noticia.detalle", view.getLang()), this.urlFactory.noticia(view.getMicrosite(), view.getLang(),
-				noticia)));
+		path.add(new PathItem(this.getMessage("noticia.detalle", view.getLang()),
+				this.urlFactory.noticia(view.getMicrosite(), view.getLang(), noticia)));
 		// Datos para la plantilla
 		view.setPathData(path);
 
 		return path;
 	}
 
-	private Tipo getTipo(String uriTipo, String lang, String site) throws ExceptionFrontPagina {
-		TipoDelegate tipodel = DelegateUtil.getTipoDelegate();
+	private Tipo getTipo(final String uriTipo, final String lang, final String site) throws ExceptionFrontPagina {
+		final TipoDelegate tipodel = DelegateUtil.getTipoDelegate();
 		try {
 			Tipo tipo = tipodel.obtenerTipoDesdeUri(lang, uriTipo, site);
 			if (tipo == null) {
@@ -290,12 +307,12 @@ public class NoticiasController extends BaseViewController {
 				throw new ExceptionFrontPagina("Tipo no encontrado: " + uriTipo, ExceptionFrontPagina.HTTP_NOT_FOUND);
 			}
 			return tipo;
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
 
-	private String[] calcularTamanyoFoto(int numFotosFila) {
+	private String[] calcularTamanyoFoto(final int numFotosFila) {
 		int ancho = 0, alto = 0;
 
 		if (0 != numFotosFila) {
@@ -312,24 +329,27 @@ public class NoticiasController extends BaseViewController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/n/{uriNoticia}")
-	public ModelAndView noticia(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang, @PathVariable("uriNoticia") String uriNoticia,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			@RequestParam(value = Microfront.FMAPA, required = false, defaultValue = "") String fmapa, HttpServletResponse response) {
+	public ModelAndView noticia(@PathVariable("uri") final SiteId URI, @PathVariable("lang") final Idioma lang,
+			@PathVariable("uriNoticia") final String uriNoticia,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") final String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") final String pcampa,
+			@RequestParam(value = Microfront.FMAPA, required = false, defaultValue = "") final String fmapa,
+			final HttpServletResponse response) {
 
-		NoticiaView view = new NoticiaView();
+		final NoticiaView view = new NoticiaView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
-			Microsite microsite = view.getMicrosite();
+			final Microsite microsite = view.getMicrosite();
 			if (microsite == null) {
-				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);
 			}
-			
-			Noticia noticia = this.noticiasDataService.loadNoticia(uriNoticia, lang.getLang(), view.getMicrosite().getId().toString());
+
+			final Noticia noticia = this.noticiasDataService.loadNoticia(uriNoticia, lang.getLang(),
+					view.getMicrosite().getId().toString());
 			if (noticia == null) {
-				throw new ExceptionFrontNoticia(URI.uri, uriNoticia);				
+				throw new ExceptionFrontNoticia(URI.uri, uriNoticia);
 			}
-			
+
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
@@ -364,45 +384,38 @@ public class NoticiasController extends BaseViewController {
 				view.setMenuContenidoNoticia(mcont);
 			}
 			this.cargarMollapan(view, noticia);
-			
+
 			ModelAndView viewNoticia;
-			
-			if (noticia.getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {				
-				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite),view);				
-			}else if((fmapa.equals("true")
-					 && !StringUtils.isEmpty(noticia.getLatitud())
-					 && !StringUtils.isEmpty(noticia.getLongitud()))){			
+
+			if (noticia.getTipo().getTipoelemento().equals(Microfront.ELEM_MAPA)) {
+				viewNoticia = this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite), view);
+			} else if ((fmapa.equals("true") && !StringUtils.isEmpty(noticia.getLatitud())
+					&& !StringUtils.isEmpty(noticia.getLongitud()))) {
 				view.setForzarMapa(true);
-				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite),view);				
-			}else{
-				viewNoticia =  this.modelForView(this.templateNameFactory.mostrarNoticia(microsite), view);				
+				viewNoticia = this.modelForView(this.templateNameFactory.mostrarUbicacion(microsite), view);
+			} else {
+				viewNoticia = this.modelForView(this.templateNameFactory.mostrarNoticia(microsite), view);
 			}
 
 			return viewNoticia;
 
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (ExceptionFrontMicro e) {
+		} catch (final ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,null);
-		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (ExceptionFrontNoticia e) {
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response, URI.uri, lang, null);
+		} catch (final ExceptionFrontPagina e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (Exception e) {
+		} catch (final ExceptionFrontNoticia e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (final Exception e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
-		} 
+		}
 	}
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * @param lang
@@ -411,25 +424,26 @@ public class NoticiasController extends BaseViewController {
 	 * @return
 	 */
 	@RequestMapping("{uri}/{lang:[a-zA-Z][a-zA-Z]}/d/{uriDocumentoNoticia}")
-	public ModelAndView documento(@PathVariable("uri") SiteId URI, @PathVariable("lang") Idioma lang,
-			@PathVariable("uriDocumentoNoticia") String uriDocumentoNoticia, Model model,
-			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") String mcont,
-			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") String pcampa,
-			HttpServletResponse response) {
+	public ModelAndView documento(@PathVariable("uri") final SiteId URI, @PathVariable("lang") final Idioma lang,
+			@PathVariable("uriDocumentoNoticia") final String uriDocumentoNoticia, final Model model,
+			@RequestParam(value = Microfront.MCONT, required = false, defaultValue = "") final String mcont,
+			@RequestParam(value = Microfront.PCAMPA, required = false, defaultValue = "") final String pcampa,
+			final HttpServletResponse response) {
 
-		NoticiaView view = new NoticiaView();
+		final NoticiaView view = new NoticiaView();
 		try {
 			super.configureLayoutView(URI.uri, lang, view, pcampa);
-			Microsite microsite = view.getMicrosite();
+			final Microsite microsite = view.getMicrosite();
 			if (microsite == null) {
-				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);				
+				throw new ExceptionFrontMicro(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI);
 			}
-			
-			Noticia noticia = this.noticiasDataService.loadNoticia(uriDocumentoNoticia, lang.getLang(), view.getMicrosite().getId().toString());
+
+			final Noticia noticia = this.noticiasDataService.loadNoticia(uriDocumentoNoticia, lang.getLang(),
+					view.getMicrosite().getId().toString());
 			if (noticia == null) {
-				throw new ExceptionFrontNoticia(URI.uri, uriDocumentoNoticia);				
+				throw new ExceptionFrontNoticia(URI.uri, uriDocumentoNoticia);
 			}
-			
+
 			// comprobacion de microsite
 			if (noticia.getIdmicrosite().longValue() != microsite.getId().longValue()) {
 				log.error("El elemento solicitado no pertenece al site");
@@ -445,31 +459,31 @@ public class NoticiasController extends BaseViewController {
 				log.error("El contenido solicitado está caducado");
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
-			
-			if (((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu() == null){
+
+			if (((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu() == null) {
 				log.error("No existe un documento asociado");
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
-			
-			Long iddocumento = ((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu().getId();
+
+			final Long iddocumento = ((TraduccionNoticia) noticia.getTraduccion(lang.getLang())).getDocu().getId();
 			return new ModelAndView("forward:" + this.urlFactory.archivopubById(microsite, iddocumento));
 
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (ExceptionFrontMicro e) {
+		} catch (final ExceptionFrontMicro e) {
 			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response,URI.uri,lang,null);
-		} catch (ExceptionFrontPagina e) {
-			log.error(e.getMessage());
-			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (ExceptionFrontNoticia e) {
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_MICRO, response, URI.uri, lang, null);
+		} catch (final ExceptionFrontPagina e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
-		} catch (Exception e) {
+		} catch (final ExceptionFrontNoticia e) {
+			log.error(e.getMessage());
+			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
+		} catch (final Exception e) {
 			log.error(e.getMessage());
 			return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_SERVER, response);
-		} 
+		}
 	}
 
 	@Override
@@ -477,4 +491,5 @@ public class NoticiasController extends BaseViewController {
 
 		return Microfront.RNOTICIA;
 	}
+
 }
