@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +27,6 @@ import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.PathItem;
 import es.caib.gusite.front.service.NoticiasDataService;
-import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.front.view.ListarNoticiasView;
 import es.caib.gusite.front.view.NoticiaView;
@@ -94,7 +94,8 @@ public class NoticiasController extends BaseViewController {
 		if (!StringUtils.isEmpty(filtro)) {
 			try {
 				final String decodedToUTF8 = new String(filtro.getBytes("ISO-8859-1"), "UTF-8");
-				filtro = Cadenas.convert(decodedToUTF8);
+				filtro = StringEscapeUtils.escapeHtml(decodedToUTF8);
+
 			} catch (final UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
