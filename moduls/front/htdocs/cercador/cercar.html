@@ -13,9 +13,9 @@ Resultados de una busqueda.
 <head>
 	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 <title th:text="${MVS_micrositetitulo}+ ' - ' + #{cercar.resultados}">Microsite
-	titulo - Resultats recerca</title>	
+	titulo - Resultats recerca</title>
 <th:block th:remove="all">
-<!--/*  
+<!--/*
 	Este bloque se usa para visualización en prototipo estático.
 	Al ejecutarse dinámicamente, se eliminará automáticamente
 	*/-->
@@ -44,27 +44,27 @@ Resultados de una busqueda.
 							th:utext="#{cercar.encontrados} + '  ' + ${MVS_listado_buscador.numEncontrados} + ' ' + #{cercar.resultados.en} + ' \'\'' + ${MVS_listado_buscador.consultaOriginal}+ '\'\''">
 							Trobat/s 0 resultat/s en 3 mil·lisegons per al terme "busqued"</strong>
 					</p>
-					
+
 					<ul class="resultatsRecercaInteligent">
 						<li th:each="resultado : ${MVS_listado_buscador.lista}">
-							<div th:switch="${resultado.disponible}"   th:remove="tag"> 						 
+							<div th:switch="${resultado.disponible}"   th:remove="tag">
 							  <div th:case="false"  th:remove="tag">
-								  	<span th:text="${resultado.titulo}" class="tituloNoDisponible">titulo documento del resultado</span> 
-								  	<span class="literalNoDisponible" th:text="' ' + #{cercar.no.disponible} + ' '">No disponible</span> 
+								  	<span th:text="${resultado.titulo}" class="tituloNoDisponible">titulo documento del resultado</span>
+								  	<span class="literalNoDisponible" th:text="' ' + #{cercar.no.disponible} + ' '">No disponible</span>
 								  	<p>
 								  		<span th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span>
 								  		<span class="detall" th:text="${resultado.descripcion}">Descripcion</span>
-									</p>							  
+									</p>
 							  </div>
 							  <div th:case="*"  th:remove="tag">
 							  		<a th:href="@{${resultado.url}}" th:text="${resultado.titulo}">titulo documento del resultado</a> <span
 									th:text="'(' + ' ' + ${resultado.score}+ ' ' +'%)'">90%</span> <p><span
 									th:text="${resultado.id} + ' ' + 'Site:' + ' ' +${resultado.site}">Site:</span><span class="detall"
 									th:text="${resultado.descripcion}">Descripcion</span></p>
-							  
-							  </div> 
-							</div>	
-							
+
+							  </div>
+							</div>
+
 						</li>
 					</ul>
 					<p />
@@ -75,7 +75,7 @@ Resultados de una busqueda.
 						<p>
 						<span style="font-size: 2; color: #ff0000"
 							th:utext="#{cercar.quisodecir} + ':'">Potser va voler dir:</span>&nbsp;
-						<a href="cercar.html"	
+						<a href="cercar.html"
 							th:href="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
 							th:text="${MVS_listado_buscador.consultaSugerida}">Listado
 							buscador Consulta sugerida</a>
@@ -89,7 +89,7 @@ Resultados de una busqueda.
 						th:remove="tag">
 						<div th:utext="#{cercar.subusqueda} + ' - '" th:remove="tag">La
 							seva recerca -</div>
-						<strong th:utext="${MVS_listado_buscador.consultaOriginal}">Consulta
+						<strong th:utext="${MVS_busquedaBuscador}">Consulta
 							original</strong>
 						<div th:utext="' - '+ #{cercar.no.resultados} " th:remove="tag">
 							- no va produir cap resultat</div>
