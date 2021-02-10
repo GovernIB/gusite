@@ -8,12 +8,12 @@ html {
 }
 a:hover {
 	color: #0072a8;
-} 
+}
 a:focus,
 input:focus,
-select:focus, 
-.btn-primary:focus, 
-.btn-primary:active, 
+select:focus,
+.btn-primary:focus,
+.btn-primary:active,
 .btn-primary.active,
 button,
 button:active{
@@ -47,9 +47,9 @@ form input[type="submit"]:hover,
 }
 
 
-.deshabilitado{ 
-	color: #757575 !important; 
-	background-color: #ffffff !important; 
+.deshabilitado{
+	color: #757575 !important;
+	background-color: #ffffff;
 }
 
 
@@ -217,7 +217,7 @@ h1.titol a{
 	position: relative;
 	width: 100%;
 }
-#indexCercador input, 
+#indexCercador input,
 #indexCercador input:focus{
 	width: 93%;
 	margin-bottom: 0;
@@ -244,7 +244,7 @@ h1.titol a{
 	padding: 0;
 	width: 78%;
 	margin-left: 0;
-	margin-top: 0;	
+	margin-top: 0;
 }
 
 #info a{
@@ -255,12 +255,12 @@ h1.titol a{
 	padding: 0;
 	width: 99%;
 	margin: 0 auto;
-} 
+}
 #info h2,
 #infoNoMenu h2,
 #titolPagina{
 	font-size:1.1em !important;
-	color: #666; 
+	color: #666;
 	display: inline-block;
 	vertical-align: middle;
 	padding-top: 8px !important;
@@ -268,7 +268,7 @@ h1.titol a{
 #info h3,
 #infoNoMenu h3{
 	font-size:1em !important;
-	color: #666; 
+	color: #666;
 	display: inline-block;
 	vertical-align: middle;
 	padding-top: 5px !important;
@@ -280,7 +280,7 @@ h1.titol a{
 	font-size: 1.1em;
 	top: 2px;
 	margin-right: 5px;
-} 
+}
 #info ul li,
 #infoNoMenu ul li {
 	padding-bottom: 0;
@@ -292,7 +292,7 @@ h1.titol a{
 .navbar{
 	width: initial;
 }
-.navbar-default .navbar-collapse, 
+.navbar-default .navbar-collapse,
 .navbar-default .navbar-form{
 	padding: 0 !important;
 }
@@ -319,8 +319,8 @@ div.cap-full *{
 	background-position: left;
 	margin: 0;
 	bottom: 7px;
-	left: 0; 
-	background-size: contain; 
+	left: 0;
+	background-size: contain;
 	display: block;
 }
 div.cabecera-main{
@@ -353,7 +353,7 @@ div.enlaces>div{
 	position: relative;
 }
 div.enlaces .dreta a{
-	color: #888888; 
+	color: #888888;
 }
 div.enlaces .dreta a:hover{
 	text-decoration:underline !important;
@@ -363,13 +363,13 @@ div.enlaces>div.idiomes{
 	display: inline-block;
 }
 div.enlaces>div.idiomes a{
-	color: black; 
+	color: black;
 	text-decoration: none;
-	color: #666; 
+	color: #666;
 	font-size: 0.8em;
 }
 div.enlaces>div.idiomes a:hover{
-	color: black; 
+	color: black;
 }
 div.enlaces>div.idiomes a span.glyphicon,
 div.enlaces>div.idiomes a:hover span.glyphicon {
@@ -397,7 +397,7 @@ div.idioma.otros-container span.idioma.idioma-adicional>a{
 	width: 100%;
 	display: block;
 	padding: 0px 10px 0px 10px;
-} 
+}
 div.enlaces>div.idiomes>span{
 	top: 50%;
 	position: relative;
@@ -711,7 +711,7 @@ ul#Gallery .rectangle-content span {
 .captionSummaryTable {
 	display: none;
 }
-.tituloMes{	
+.tituloMes{
 	display: table-caption;
 	text-align: center;
 	width: 217px;
@@ -832,7 +832,7 @@ h2{
 		appearance: none;
 		background-color: #F4F4F4;
 		font-size: 0.938em;
-		line-height: 1.8em !important;
+		line-height: 1.8em;
 
 	}
 	.listarAgenda #mesAnterior{
@@ -987,9 +987,9 @@ h2{
 	.body-buscador label {
 		font-weight: 100 !important;
 	}
-	.body-buscador .probables a{	
+	.body-buscador .probables a{
 		font-weight: normal !important;
-		text-decoration: underline;	
+		text-decoration: underline;
 	}
 	.body-buscador span.span-separador{
 		background-color: red;
@@ -1001,16 +1001,16 @@ h2{
 		margin-right: 5px;
 	}
 	.body-buscador#infoNoMenu {
-		padding: 0 0 0 0; 	
+		padding: 0 0 0 0;
 	}
 	.body-buscador#info p,
 	.body-buscador#infoNoMenu p {
-		margin: 0 0; 
+		margin: 0 0;
 	}
 	.body-buscador div.barra-resultados{
 		font-size: 0.813em;
 		background-color: white;
-		padding: 7px 0px 7px 10px; 
+		padding: 7px 0px 7px 10px;
 		border-top: 1px solid #dddddd;
 		border-bottom: 1px solid #dddddd;
 		width: 100%;
@@ -1020,7 +1020,7 @@ h2{
 	.body-buscador div.barra-resultados-sinResultado{
 		font-size: 0.813em;
 		background-color: white;
-		padding: 4px 0px 4px 10px; 
+		padding: 4px 0px 4px 10px;
 		border-top: 1px solid #dddddd;
 		border-bottom: 1px solid #dddddd;
 		width: 100%;
@@ -1034,11 +1034,11 @@ h2{
 		padding-right: 2px;
 		float:left;
 	}
-	.body-buscador div .barra-resultados > p{	
+	.body-buscador div .barra-resultados > p{
 		float:left;
 		color:black;
 	}
-	.body-buscador div.barra-resultados-sinResultado strong{  
+	.body-buscador div.barra-resultados-sinResultado strong{
 		vertical-align: middle;
 	}
 	.body-buscador .resultatsRecercaInteligent a:hover {
@@ -1060,7 +1060,7 @@ h2{
 		vertical-align: middle;
 	}
 	.body-buscador #inline-block h3{
-		padding: 0 0 0 0; 
+		padding: 0 0 0 0;
 		font-size: 1.125em;
 	}
 	.body-buscador ul#inline-block2 li{
@@ -1070,7 +1070,7 @@ h2{
 		background-image: url("../files/sin_resultado.png") ;
 		width: 22px;
 		height: 20px;
-		background-repeat: no-repeat; 	
+		background-repeat: no-repeat;
 		display:block;
 		float:left;
 		vertical-align: middle;
@@ -1081,7 +1081,7 @@ h2{
 	}
 	.body-buscador#info ul,.body-buscador#infoNoMenu ul {
 		padding: 0;
-		margin: .0 0 0 0;	
+		margin: .0 0 0 0;
 		list-style-position: inherit;
 	}
 	.body-buscador#infoNoMenu a{
@@ -1103,7 +1103,7 @@ h2{
 		-webkit-margin-start: auto !important;
 		-webkit-margin-end: auto !important;
 		border-style: inset !important;
-		border-width: 1px !important;	
+		border-width: 1px !important;
 	}
 
 	.contenedorFAQS div#info,
@@ -1128,7 +1128,7 @@ h2{
 	.contenedorFAQS#infoNoMenu h2 {
 		font-weight: bold !important;
 	}
-	.contenedorFAQS#info p, 
+	.contenedorFAQS#info p,
 	.contenedorFAQS#infoNoMenu p {
 		line-height: 1.2em;
 		margin: 0 0;
@@ -1176,7 +1176,7 @@ h2{
 		border-left: 5px solid transparent;
 		border-right: 5px solid transparent;
 	}
-	.contenedorFAQS #infoFAQ dl li span.nivel1, 
+	.contenedorFAQS #infoFAQ dl li span.nivel1,
 	#infoFAQ dl li a:active:hover dl {
 		clear: both;
 	}
@@ -1194,7 +1194,7 @@ h2{
 	}
 
 	.contenedorFAQS .bloquePreguntas{
-		margin-top: 0.313em !important;	
+		margin-top: 0.313em !important;
 	}
 	.contenedorFAQS .textoOculto{
 		clear:both;
@@ -1219,7 +1219,7 @@ h2{
 		font-size:0.813em;
 		color:#0085B2 !important;
 	}
-	.contenedorFAQS .textoOculto > dd > a:hover{	
+	.contenedorFAQS .textoOculto > dd > a:hover{
 		text-decoration: underline !important;
 	}
 
@@ -1309,7 +1309,7 @@ h2{
 	.container-contacte div.container-contacte>ul>li{
 		margin-top: 7px;
 	}
-	.container-contacte span.span-separador{    
+	.container-contacte span.span-separador{
 		width: 5px;
 		height: 5px;
 		margin-bottom: 1px;
@@ -1328,7 +1328,7 @@ h2{
 
 	/*** ESTILS CONTENIDo ***/
 
-	div.container-contenido#info, 
+	div.container-contenido#info,
 	div.container-contenido#infoNoMenu{
 		background-color: transparent;
 	}
@@ -1380,7 +1380,7 @@ h2{
 	.body-diaAgenda .activitat #fontNoticia{
 	  width: 100%;
 		text-transform: uppercase;
-		
+
 	}
 	.body-diaAgenda .activitat .linkDocument .imgMime{
 		float:left;
@@ -1406,7 +1406,7 @@ h2{
 		font-size:1em;
 		margin-bottom: 1em;
 	}
-	
+
 	.body-diaAgenda .activitat a{
 		color: #0575aa;
 		text-decoration: underline;
@@ -1468,22 +1468,22 @@ h2{
 		padding: 0 0 5px 0;
 		font-size: 1.125em !important;
 	}
-/*.body-encuesta#info, 
+/*.body-encuesta#info,
 .body-encuesta#infoNoMenu {
 	padding: 0 0 0 0;
 	}*/
 	.body-encuesta label {
-		font-weight: 100 !important; 
+		font-weight: 100 !important;
 	}
 	.body-encuesta ul#inline-block li{
 		display: inline-block;
 		font-size: 1.125em;
-		vertical-align: middle;	
+		vertical-align: middle;
 	}
 	.body-encuesta#info ul,
 	.body-encuesta#infoNoMenu ul {
 		padding: 0;
-		margin: 0 0 0 1px;	
+		margin: 0 0 0 1px;
 		list-style-position: inside;
 		margin-left: 0;
 
@@ -1501,7 +1501,7 @@ h2{
 	.body-encuesta#info p,
 	.body-encuesta#infoNoMenu p {
 		line-height: 1.2em;
-		margin: 0 0; 
+		margin: 0 0;
 	}
 	.body-encuesta .visto{
 		background-image: url("../files/visto.png");
@@ -1510,7 +1510,7 @@ h2{
 		margin-left: auto;
 		margin-right: auto;
 		padding-bottom: 8px;
-		background-repeat: no-repeat; 
+		background-repeat: no-repeat;
 	}
 	.body-encuesta #contenidoEnvio ,
 	.body-encuesta #contenidoEnvio h2,
@@ -1526,7 +1526,7 @@ h2{
 		border-radius: 10px;
 	}
 	.body-encuesta #contenidoEnvio p{
-		color: red;	
+		color: red;
 	}
 	.body-encuesta #graciasText{
 		color:#0072A8;
@@ -1540,7 +1540,7 @@ h2{
 		width:100%;
 	}
 
-	.container-contenido .body-encuesta#info{	
+	.container-contenido .body-encuesta#info{
 		width:100%;
 	}
 	.body-encuesta .panel {
@@ -1552,7 +1552,7 @@ h2{
 		line-height: 130%;
 	}
 	.body-encuesta #infoNoMenuEnvio .panel{
-		background-color: #fff;	
+		background-color: #fff;
 
 	}
 
@@ -1579,7 +1579,7 @@ h2{
 	}
 	.body-encuesta #btnAceptar{
 		border: 1px solid #696 !important;
-		text-align: center; 
+		text-align: center;
 		width: initial;
 		height: initial;
 		color: white;
@@ -1601,16 +1601,16 @@ h2{
 	.body-encuesta .enunciat h3{
 		display:table-cell;
 		width:90%;
-	} 
+	}
 	.body-encuesta #enquestaPreguntaCom{
 		clear:both;
 		padding-right: 25px;
 	}
-	.body-encuesta #enquestaPreguntaCom label {	
+	.body-encuesta #enquestaPreguntaCom label {
 		margin-bottom: 0px;
 		margin-top: 8px;
 	}
-	.body-encuesta #enquestaPreguntaCom textarea {	
+	.body-encuesta #enquestaPreguntaCom textarea {
 		margin-top: 0px;
 	}
 	.body-encuesta #respuestas {
@@ -1680,7 +1680,7 @@ h2{
 	}
 	#errorMSG div#continguts>div>span.glyphicon{
 		color: #e54649;
-		font-size: 50px !important; 
+		font-size: 50px !important;
 	}
 	#errorMSG div#continguts span{
 		font-size: 1.600em !important;
@@ -1702,7 +1702,7 @@ h2{
 	#errorMSG div#continguts span.url{
 		margin-top: 40px
 	}
-	
+
 	#errorMSG div#contenedor{
 		width: 100%;
 		margin: 0;
@@ -1742,7 +1742,7 @@ h2{
 	}
 	.tamanoIndex div#noticies ul li img {
 		width: 100%;
-		margin-top: 15px;  
+		margin-top: 15px;
 		height: 100%;
 		display: none;
 	}
@@ -1794,7 +1794,7 @@ h2{
 		padding: 0 10px;
 	}
 	.tamanoIndex #diasAbreviados{
-		display:table-row !important; 
+		display:table-row !important;
 	}
 	.tamanoIndex #diasNoAbreviados{
 		display:none !important;
@@ -1825,7 +1825,7 @@ h2{
 	}
 	.tamanoIndex .evento .numDia{
 		top:43% !important;
-	}  
+	}
 	.tamanoIndex #enrere{
 		width: 100%;
 		display: block;
@@ -1844,7 +1844,7 @@ h2{
 		display: inline-block;
 		right: 0;
 		line-height: 0;
-	} 
+	}
 	.tamanoIndex .listarAgenda .acte a span {
 }
 	.tamanoIndex .calendariTabla td.acte a {
@@ -1865,12 +1865,12 @@ h2{
 	}
 	.tamanoIndex .fechaEvento{
 		width:31%;
-		margin-right: 10px; 
+		margin-right: 10px;
 		margin-bottom: 0;
 	}
 	.tamanoIndex .infoEvento:hover{
 		text-decoration: underline;
-	}  
+	}
 	.tamanoIndex .infoEvento {
 		width: 55%;
 		margin-top: 0.2em;
@@ -1883,7 +1883,7 @@ h2{
 	.tamanoIndex .infoEvento a{
 		font-weight: normal;
 		color: #000 !important;
-		text-decoration: none;  
+		text-decoration: none;
 	}
 	.tamanoIndex .infoEvento:hover, .listarAgenda .infoEvento:hover a, body .listarAgenda .infoEvento:hover a strong{
   		color: #0072A8 !important;
@@ -2010,13 +2010,13 @@ h2{
 	.container-noticias-buscador>*{
 		position: relative;
 	}
-	.container-noticias-buscador{	
+	.container-noticias-buscador{
 		margin-top: 20px;
 		position: relative;
 		margin-bottom: 10px;
 	}
 	.container-noticias-buscador p{
-		padding: 0;	
+		padding: 0;
 	}
 	.container-noticias-buscador>p{
 		min-width: 0;
@@ -2096,7 +2096,7 @@ h2{
 		background-color: white;
 		font-size: 0.8em;
 	}
-	p.navLlistat.pie span.inici>a, 
+	p.navLlistat.pie span.inici>a,
 	p.navLlistat.pie span.final>a{
 		color: white;
 		background-color: #cccccc;
@@ -2366,12 +2366,12 @@ h2{
 	.imgMime.text-plain{
 		background-image: url('../files/icono_txtplain.png') ;
 	}
-	.imgMime.image-jpeg, 
-	.imgMime.image-png, 
-	.imgMime.image-bmp, 
-	.imgMime.image-x-windows-bmp, 
-	.imgMime.image-gif, 
-	.imgMime.image-x-icon, 
+	.imgMime.image-jpeg,
+	.imgMime.image-png,
+	.imgMime.image-bmp,
+	.imgMime.image-x-windows-bmp,
+	.imgMime.image-gif,
+	.imgMime.image-x-icon,
 	.imgMime.image-tiff{
 		background-image: url('../files/icono_imagen.png') ;
 	}
@@ -2472,7 +2472,7 @@ h2{
 		text-align: left;
 		display: block;
 		padding: 10px 0px 10px 0px;
-	} 
+	}
 
 	.container-contenido .micro-elemento.documentos td .imagen{
 		position: relative;
@@ -2495,7 +2495,7 @@ h2{
 	.container-contenido .micro-elemento.documentos td>div>a{
 		color: #707070;
 		font-size: 0.938em;
-		font-weight: bold;		
+		font-weight: bold;
 	}
 	.container-contenido .micro-elemento.documentos td>div>a:hover{
 		color: #0072a8;
@@ -2640,12 +2640,12 @@ h2{
   	appearance: none;
   	background-color: #F4F4F4;
   	font-size: .9em !important;
-  	line-height: 1.5em !important;
+  	line-height: 1.5em;
 	}
 	.container-contenido .micro-elemento #agendaCalendaris > p {
 		margin:0;
 	}
-	.container-contenido .micro-elemento .tituloMes{	
+	.container-contenido .micro-elemento .tituloMes{
 		display: table-caption;
 		text-align: center;
 		width: 217px;
@@ -2764,7 +2764,7 @@ h2{
 	border: none;
 }
 
-	
+
 	/**********************************************************/
 	/* MEDIA QUERIES - RESPONSIVE */
 	/**********************************************************/
@@ -2783,7 +2783,7 @@ h2{
 			border-spacing: 0.1em;
 		}
 		.tamanoIndex .calendariTabla td {
-			padding: 0; 
+			padding: 0;
 		}
 		.tamanoIndex .calendariTabla td span {
 			font-size: 0.8em;
@@ -2812,7 +2812,7 @@ h2{
 		#serveis li a{
 			font-size: 12.5px;
 		}
-		
+
 		/* AGENDA */
 
 		.body-diaAgenda .activitat #imgNoticia {
@@ -2826,7 +2826,7 @@ h2{
 	/**********************************************************/
 
 	@media screen and (max-width:1090px) {
-		
+
 		.listarAgenda .fechaEvento{
 			width:10%;
 		}
@@ -2907,7 +2907,7 @@ h2{
 		#info {
 			width: 60%;
 		}
-		/* GALERIA */ 
+		/* GALERIA */
 		#Gallery .ancho20 {
 			width: 17% !important;
 		}
@@ -2925,7 +2925,7 @@ h2{
 		}
 		.listarAgenda .infoEvento {
 			width: 80%;
-		}		
+		}
 	}
 
 	/**********************************************************/
@@ -2962,13 +2962,13 @@ h2{
 			margin-left: 0px !important;
 			margin-right: 0px !important;
 		}
-		
+
 		div.enlaces>div.idiomes {
 			margin-bottom: 0;
 			margin-top: 25px;
 			float: right;
 		}
-		
+
 		.menuLateral {
 			margin: 0;
 			width: calc(100% - 1em)!important;
@@ -2976,7 +2976,7 @@ h2{
 		.menuLateral nav.contenidoNav .botonLateralResponsive{
 			display: none;
 		}
-		.menuLateral nav.contenidoNav .navbar-collapse, 
+		.menuLateral nav.contenidoNav .navbar-collapse,
 		.manuLateral nav.contenidoNav .navbar-form{
 			display: inline-block;
 			width: 100%;
@@ -2988,7 +2988,7 @@ h2{
 		}
 		div#indexCercador,
 		div#indexCercador form {
-			width: 100%;		
+			width: 100%;
 		}
 		#indexCercador form label{
 			margin: 0;
@@ -3067,7 +3067,7 @@ h2{
 		}
 		.noticiasInfo h2,.noticiasInfo h3#titolNoticia,.noticiasInfo p#subtitol{
 			text-align: left !important;
-		}	
+		}
 		.noticiasInfo div#infoNoticia{
 			margin-left: auto;
 			margin-right: auto;
@@ -3078,18 +3078,18 @@ h2{
 		}
 		div#capsal{
 			padding: 0.5em 0em 0.8em 0em;
-		}	
+		}
 		div#info, div#infoNoMenu,div#info h2, div#infoNoMenu h2,div#info div#calendariLateral h3, div#infoNoMenu div#calendariLateral h3, div#agendaLlistat h3, div.activitat h3#titolNoticia,div#info div.enquestaResultats h3, div#infoNoMenu div.enquestaResultats h3, div#info div#enquestaPreguntaCom h3,div#infoNoMenu div#enquestaPreguntaCom h3{
 			width: 100% !important;
 			text-align: left;
 		}
 		form {
 			margin: 0 auto;
-			text-align: center; 
+			text-align: center;
 		}
 		div.activitat p{
 			text-align: center !important;
-		}		
+		}
 		div#agendaCalendaris table{
 			margin: auto;
 		}
@@ -3102,11 +3102,11 @@ h2{
 
 		/* MAPA */
 
-		#info .contenedorMapa h3, 
+		#info .contenedorMapa h3,
 		#infoNoMenu .contenedorMapa h3{
 			text-align: left !important;
 		}
-		#info, 
+		#info,
 		#infoNoMenu {
 			width: 94%;
 		}
@@ -3136,7 +3136,7 @@ h2{
 
 	}
 	@media screen and (max-width:515px) {
-		
+
 		#pagMapaWeb ul li {
 			font-size: 1em;
 		}
@@ -3183,13 +3183,13 @@ h2{
 		}
 		textarea, input[type="text"] {
 			width: 90%;
-		}	
+		}
 	}
 
 	/**********************************************************/
 
 	@media screen and (max-width:400px) {
-		
+
 	}
 
 	/**********************************************************/
@@ -3197,8 +3197,8 @@ h2{
 	@media screen and (max-width:360px) {
 		textarea, input[type="text"] {
 			width: 90%;
-		}	
-		
+		}
+
 	}
 
 	/***** @Media para las img retina ******/
@@ -3207,7 +3207,7 @@ h2{
 		#logo-cont .logo {
 			background-image: url("../files/govern_logo@2x.png") !important;
 		}
-		
+
 	}
 
 	/**********************************************************/
@@ -3224,17 +3224,17 @@ h2{
 			margin: 0 auto;
 		}
 	}
-	
+
 	.tituloNoDisponible{
 		color: #000;
 	}
-	
+
 	.literalNoDisponible{
 		color: #F00;
 	}
-	
-/*** Personalización gusiteMaps****/	
-	
+
+/*** Personalización gusiteMaps****/
+
 #info div.gMMInfoWindow h3{
 	font-size: 1.5em !important;
 }
@@ -3296,11 +3296,11 @@ h2{
 
 footer,header { display: block; }
 
-footer * , header *, header *:before, header *:after, footer *:before, footer *:after, 
+footer * , header *, header *:before, header *:after, footer *:before, footer *:after,
  .imc-logo *, .imc-titol *,.imc-marc *,
  .imc-logo *:after, .imc-titol *:after,.imc-marc *:after,
  .imc-logo *:before, .imc-titol *:before,.imc-marc *:before {
-  -webkit-box-sizing: border-box; 
+  -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -3309,8 +3309,8 @@ footer * , header *, header *:before, header *:after, footer *:before, footer *:
 /* peu */
 
 
-.imc-peu { 
-	padding: 4em 0em 2em 1.5em; 
+.imc-peu {
+	padding: 4em 0em 2em 1.5em;
 	font: normal 90% 'Bariol Regular',Arial,Helvetica,sans-serif;
   font-size: 90%;
   line-height: normal;
@@ -3435,7 +3435,7 @@ a.imc-bt-xarxa {
 
 /* titol */
 
-.imc-titol { position: fixed; z-index: 5; top: 0; left: 0; width: 100%; height: 2.5em; padding-left: 4.5em;  background-color: #32814b; 
+.imc-titol { position: fixed; z-index: 5; top: 0; left: 0; width: 100%; height: 2.5em; padding-left: 4.5em;  background-color: #32814b;
 	margin: 0em auto 0em auto;
 }
 .imc-titol .imc--contingut { position: relative; max-width: 1280px !important; margin: 0; width: calc(100% - 5em);  }
@@ -3568,16 +3568,16 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 		list-style: none;
 	}
 	.imc-peu-opcions { font-size: 0.9em }
-	
+
 	#continguts { margin-left: 4.5em; margin-right: 4.5em; width: calc(100% - 7em); }
-	
+
 	.imc-titol .imc-torna { display: inline-block; }
 	.imc-titol .imc--contingut {margin-left: 0.5em;}
 
 	.imc-titol .imc-torna:hover,
 	.imc-titol .imc-torna:focus,
 	.imc-titol .imc-torna:active { background-color: #32814b; }
-	
+
 	.imc-titol .imc-torna::before {
 		content: "";
 		display: inline-block;
@@ -3592,7 +3592,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 		transform: rotate(180deg);
 		margin-left:-1em;
 	}
-	
+
 	.imc-titol .imc-torna span { position: absolute; top: -999em; left: -99em; }
 
 	.imc-titol h1 { overflow: hidden; display: inline-block; font-size:1.1em; padding-top:0.1em;}
@@ -3603,7 +3603,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 
 	.imc-molla-pa { display: none; }
 
-	
+
 
 	.imc-llistat li { width: 33%; padding-right: 1em; margin-bottom: 1em; }
 
@@ -3617,11 +3617,11 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 	.imc-bt-directori { width: 2em; height: 2em; padding-left: 0; margin-right: 0; background-size: auto 100%; }
 	.imc-bt-directori span { position: absolute; top: -999em; left: -999em; }
 	.imc-titol .imc-torna::before { width: 1em; background-position: center center;  padding-right: 2em; }
-	
+
 	#continguts { width: calc(100% - 5em); }
-	
+
 	.imc-titol h1 {width: calc(100% - 9.5em)}
-	
+
 	.imc-sense-info h2 span { font-size: 1.8em; }
 
 	.imc-llistat li { width: 49.5%; padding-right: 1em; margin-bottom: 1em; }
@@ -3641,11 +3641,11 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 
 @media only screen and (max-width : 750px) {
 	#continguts { margin-left: 3.5em; margin-right: 3.5em; width: calc(100% - 4em);}
-	
+
 	.imc-logo { font-size: 80%; }
 	.imc-titol { padding-left: 3.5em; }
 	.imc-titol .imc--contingut { width: calc(100% - 4em);}
-	
+
 
 
 	.imc-titol h1 { font-size: 0.9em;}
@@ -3718,7 +3718,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 	.imc-modul > h2 span { font-size: 1em; }
 
 	.imc-sense-info { text-align: center; padding-top: 1.5em; }
-	
+
 	.imc-sense-info svg { float: none; width: 4em; margin-left: 0; }
 	.imc-sense-info h2 { padding-top: 1em; margin-left: 0; }
 	.imc-sense-info p { font-size: 1.1em; margin-left: 0; }
@@ -3733,7 +3733,7 @@ html.imc-menu-visible .imc-marc .imc-marc-menu {
 	.imc-logo { font-size: 60%; }
 	#continguts{
 		margin-left: 2.5em; margin-right: 2.5em;
-		width: calc(100% - 3em); 
+		width: calc(100% - 3em);
 	}
 	.imc-titol .imc--contingut {margin-left: -0.5em}
 	#Gallery li>div>div>div>a>img {
