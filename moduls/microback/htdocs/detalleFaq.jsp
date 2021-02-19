@@ -12,7 +12,7 @@
 	<link href="css/estils.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<script type="text/javascript" src="moduls/funcions.js"></script>
-	
+
 		<!-- tinyMCE. Editar codigo segun el rol (siendo 1 el valor si puede editar codigo). -->
 		<script language="javascript" type="text/javascript">
 					var editarCodigo = "";
@@ -22,12 +22,12 @@
 					editarCodigo = "code";
 			</script>
 		</logic:equal>
-		
+
 		<!-- tinyMCE -->
 		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
 		<script language="javascript" type="text/javascript">
-		
-		
+
+
 		//Paso 1. Inicializamos tinyMCE.
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
@@ -35,25 +35,26 @@
 			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC,lists"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck | botonMIC'
 			,menubar: false
+			, convert_urls: false
 			, content_css: [
 			    'css/estils.css'
-			] 
+			]
 			//, extended_valid_elements : "span"
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			}
-			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">
 				,paste_as_text: true
 				,invalid_elements: 'br'
 			</logic:notEqual>
 		  });
-		
+
 		var Rcajatemp_tiny;
 	   	var Rwin_tiny;
-		
+
 		function Rmeterurl_tiny(laurl) {
 			document.getElementById(Rcajatemp_tiny).value = laurl;
-		}	
+		}
 		</script>
 		<!-- /tinyMCE -->
 </head>
@@ -69,21 +70,21 @@
 		<li><a href="faqs.do"><bean:message key="faq.faqs" /></a></li>
 	    <logic:present name="faqForm" property="id">
          		<li class="pagActual"><bean:message key="faq.modificacion" /></li>
-	    </logic:present>		
+	    </logic:present>
 	    <logic:notPresent name="faqForm" property="id">
 	         <li class="pagActual"><bean:message key="faq.alta" /></li>
-	    </logic:notPresent>				
+	    </logic:notPresent>
 	</ul>
 	<!-- titol pagina -->
 	<h1><img src="imgs/titulos/faqs.gif" alt="<bean:message key="faq.faqs" />" />
-	<bean:message key="faq.faqs" />. 
+	<bean:message key="faq.faqs" />.
 		<span>
 		    <logic:present name="faqForm" property="id">
 	         		<bean:message key="faq.modificacion" />
-		    </logic:present>		
+		    </logic:present>
 		    <logic:notPresent name="faqForm" property="id">
 		         <bean:message key="faq.alta" />
-		    </logic:notPresent>					
+		    </logic:notPresent>
 		</span>
 	</h1>
 
@@ -96,9 +97,9 @@
 				<em><strong><bean:message key="faq.tema.nohay" />.</strong> <bean:message key="faq.tema.alerta" />.&nbsp;&nbsp;&nbsp;<button type="button" title="<bean:message key="tema.crear" />" onclick="document.location='temasAcc.do?accion=crear';"><img src="imgs/botons/nou.gif" alt="<bean:message key="tema.crear" />" /></button> </em><br/>
 				<br/>
 			</div>
-		</p>					
+		</p>
 	</logic:equal>
-	
+
 	<logic:notEqual name="tamano" value="0">
 	<!-- botonera -->
 	<div id="botonera">
@@ -109,23 +110,23 @@
 	<div style="font-weight:bold; color:#FF4400;">
 	<html:errors/>
 	</div>
-	
+
 		<html:form action="/faqEdita.do" enctype="multipart/form-data"  styleId="accFormulario">
-		
+
 				     <logic:present name="faqForm" property="id">
 					     <input type="hidden" name="modifica" value="Grabar">
 				         <html:hidden property="id" />
 				     </logic:present>
 					 <logic:notPresent name="faqForm" property="id">
 					  	<input type="hidden" name="anyade" value="Crear">
-					 </logic:notPresent>    
-		
-	
-				
+					 </logic:notPresent>
+
+
+
 				<div id="formulario">
 					<!-- las tablas están entre divs por un bug del FireFox -->
 						<table cellpadding="0" cellspacing="0" class="edicio">
-				
+
 								<tr class="par">
 										<td class="etiqueta"><bean:message key="faq.fecha" /></td>
 										<td>
@@ -143,26 +144,26 @@
 										<td class="etiqueta"><bean:message key="faq.visible" /></td>
 										<td colspan="3"><html:radio property="visible" value="S" />&nbsp;Sí­<html:radio property="visible" value="N" />&nbsp;No</td>
 								</tr>
-						
+
 								<tr>
 										<td colspan="4">
-								
+
 												<ul id="submenu">
 													<logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
 														<li<%=(j.intValue()==0?" class='selec'":"")%>><a href="#" onclick="mostrarForm(this);"><bean:message name="lang" /></a></li>
 											        </logic:iterate>
-												</ul>    
-								
+												</ul>
+
 											    <logic:iterate id="traducciones" name="faqForm" property="traducciones" indexId="i" >
 											     	     <bean:define id="idiomaahora" value="Catalan" type="java.lang.String" />
 												            <logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
 												            		<%if(j.intValue()==i.intValue()){%>
-															  	<bean:define id="idiomaahora" name="lang" type="java.lang.String" />  
-															<%}%>   	
-															 
+															  	<bean:define id="idiomaahora" name="lang" type="java.lang.String" />
+															<%}%>
+
 												            </logic:iterate>
 												<div id="capa_tabla<%=i%>" class="capaFormIdioma" style="<%=(i.intValue()==0?"display:true;":"display:none;")%>">
-												
+
 													<table cellpadding="0" cellspacing="0" class="edicio">
 													<tr>
 														<td class="etiqueta"><bean:message key="faq.pregunta" />:</td>
@@ -177,30 +178,30 @@
 														<td class="etiqueta"><bean:message key="url.adicional" />:</td>
 														<td></td>
 													</tr>
-													<tr>																
+													<tr>
 														<td class="etiqueta"><bean:message key="faq.url" />:</td>
 														<td><html:text property="url" name="traducciones"  size="60" maxlength="1024" indexed="true" />&nbsp;<button type="button" title="<bean:message key="micro.verurl"/>" onclick="javascript:Rpopupurl('traducciones[<%=i%>].url', 'traducciones[<%=i%>].urlnom','<bean:write name="idiomaahora"/>');"><img src="imgs/botons/urls.gif" alt="<bean:message key="micro.verurl"/>" /></button></td>
 													</tr>
-													<tr>														
+													<tr>
 														<td class="etiqueta"><bean:message key="faq.urlnom" />:</td>
 														<td><html:text property="urlnom" name="traducciones" size="114" maxlength="512" indexed="true" /></td>
 													</tr>
 													</table>
-											
+
 												</div>
 											    </logic:iterate>
-								
+
 										</td>
 								</tr>
 						</table>
-				
-		
+
+
 				</div>
-		
-		
+
+
 		</html:form>
-	
-	
+
+
 	</logic:notEqual>
 
 
@@ -209,16 +210,16 @@
 
 <script type="text/javascript">
 <!--
-	
+
 	function submitForm(){
 		var accForm = document.getElementById('accFormulario');
 		accForm.submit();
 	}
-	
+
     var RcajatempUrl;
 	var RcajatempDesc;
 
-    function Rpopupurl(objurl, objdesc, idioma ) 
+    function Rpopupurl(objurl, objdesc, idioma )
     {
 
       RcajatempUrl =document.faqForm[objurl];
@@ -227,13 +228,13 @@
 
     }
 
-      function Rmeterurl(laurl, descr) 
+      function Rmeterurl(laurl, descr)
     {
             RcajatempUrl.value=laurl;
 			RcajatempDesc.value=descr;
 
     }
-	
+
 // -->
 </script>
 <jsp:include page="/moduls/pieControl.jsp"/>
