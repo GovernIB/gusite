@@ -14,7 +14,7 @@
 	<script type="text/javascript" src="moduls/funcions.js"></script>
 	<script type="text/javascript"	src="js/jquery/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript" src="js/fillOption.js"></script>
-	
+
 	<script>
 		<logic:present name="convocatoriaForm" property="id">
 			var idEncuesta = <bean:write name="convocatoriaForm" property="encuesta"/>;
@@ -28,21 +28,21 @@
 			var idPreConfirmacion = 0;
 			var idResConfirmacion = 0;
 		</logic:notPresent>
-		
+
 		$(document).ready(inicializarDesplegables);
 		function inicializarDesplegables(){
 			$("#encuesta").change(chgEncuesta);
 			$("#preConfirmacion").change(chgPreConfirmacion);
 			fillOption("/sacmicroback/convocatoriaEdita.do","detalleEncuestas", "<bean:write name="MVS_microsite" property="id"/>", "#encuesta", idEncuesta);
 		}
-		
+
 		function chgEncuesta(){
 			fillOption("/sacmicroback/convocatoriaEdita.do","detalleResCorreo", $("#encuesta").val(), "#resCorreo", idResCorreo);
-			fillOption("/sacmicroback/convocatoriaEdita.do","detallePreConfirmacion", $("#encuesta").val(), "#preConfirmacion", idPreConfirmacion);										
+			fillOption("/sacmicroback/convocatoriaEdita.do","detallePreConfirmacion", $("#encuesta").val(), "#preConfirmacion", idPreConfirmacion);
 		}
-	
+
 		function chgPreConfirmacion(){
-			fillOption("/sacmicroback/convocatoriaEdita.do","detalleResConfirmacion", $("#preConfirmacion").val(), "#resConfirmacion", idResConfirmacion);		
+			fillOption("/sacmicroback/convocatoriaEdita.do","detalleResConfirmacion", $("#preConfirmacion").val(), "#resConfirmacion", idResConfirmacion);
 		}
 	</script>
 </head>
@@ -51,8 +51,8 @@
 	<!-- tinyMCE -->
 		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
 		<script language="javascript" type="text/javascript">
-		
-		
+
+
 		//Paso 1. Inicializamos tinyMCE.
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
@@ -60,15 +60,16 @@
 			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC, lists"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck | botonMIC'
 			,menubar: false
+			, convert_urls: false
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			}
-			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">
 				,paste_as_text: true
 				,invalid_elements: 'br'
 			</logic:notEqual>
 			, file_browser_callback : function(field_name, url, type, win){
-               
+
                Rcajatemp_tiny=field_name;
                Rwin_tiny=win;
                <logic:notEmpty name="contenidoForm">
@@ -81,17 +82,17 @@
 			}
 			, content_css: [
 			    'css/estils.css'
-			] 
+			]
 			//, extended_valid_elements : "span"
 		  });
-		
-		
+
+
 			var Rcajatemp_tiny;
 		   	var Rwin_tiny;
-			
+
 			function Rmeterurl_tiny(laurl) {
 				document.getElementById(Rcajatemp_tiny).value = laurl;
-			}	
+			}
 		</script>
 		<!-- /tinyMCE -->
 
@@ -100,7 +101,7 @@
 	<!-- molla pa -->
 	<ul id="mollapa">
 		<li><a href="microsites.do" target="_parent"><bean:message key="micro.listado.microsites" /></a></li>
-		<li><a href="index_inicio.do"><bean:message key="op.7" /></a></li>		
+		<li><a href="index_inicio.do"><bean:message key="op.7" /></a></li>
 		<li><bean:message key="menu.recursos" /></li>
 		<li><a href="convocatorias.do"><bean:message key="menu.convocatorias" /></a></li>
 		<logic:present name="convocatoriaForm" property="id">
@@ -110,9 +111,9 @@
 	         <li class="pagActual"><bean:message key="convocatoria.alta" /></li>
 	    </logic:notPresent>
 	</ul>
-			
+
 	<!-- titol pagina -->
-	<h1><img src="imgs/titulos/convocatorias.gif" alt="<bean:message key="menu.editarpagina" />"/>  
+	<h1><img src="imgs/titulos/convocatorias.gif" alt="<bean:message key="menu.editarpagina" />"/>
 		<span>
 		    <logic:present name="convocatoriaForm" property="id">
 	         	<bean:message key="convocatoria.modificacion" />
@@ -123,15 +124,15 @@
 		</span>
 	</h1>
 	<logic:present name="convocatoriaForm" property="id">
-		<html:form action="/escogerDistribConvoc.do" method="get" styleId="chgDistribForm">	
+		<html:form action="/escogerDistribConvoc.do" method="get" styleId="chgDistribForm">
 			<html:hidden name="convocatoriaForm" property="id"/>
 		</html:form>
 	</logic:present>
 
 	<%session.setAttribute("action_path_key",null);%>
 	<!--  Jsp que muestra mensajes de Info/Alerta y/o error -->
-	<jsp:include page="/moduls/mensajes.jsp"/>	
-	
+	<jsp:include page="/moduls/mensajes.jsp"/>
+
 	<!-- botonera -->
 	<div id="botonera">
 		<span class="grup">
@@ -152,17 +153,17 @@
 		<logic:present name="convocatoriaForm" property="id">
 		 	<button type="submit" title='<bean:message key="operacion.borrar" />' onclick="submitForm('BorrarConv');">
 		   		<img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' />
-		    </button>		    
+		    </button>
 		</logic:present>
-	</div>	
+	</div>
 
 	<html:form action="/convocatoriaEdita.do"  method="post" enctype="multipart/form-data"  styleId="accFormulario">
 		<!-- las tablas están entre divs por un bug del FireFox -->
 		<div id="formulario">
 			<input type="hidden" name="espera" value="si" id="espera" />
-			<input type="hidden" name="accion" value=""/>	
+			<input type="hidden" name="accion" value=""/>
 			<html:hidden name="convocatoriaForm" property="id"/>
-					
+
 			<table cellpadding="3" cellspacing="0" class="edicio">
 				<tr class="par">
 					<td class="etiqueta"><bean:message key="convocatoria.datos"/></td>
@@ -184,12 +185,12 @@
 						<html:radio property="envioError" value="N" />&nbsp;No
 					</td>
 					<td class="etiqueta">
-						
+
 					</td>
 					<td>
-						
+
 					</td>
-					<td/>				
+					<td/>
 				</tr>
 				<tr>
 					<td class="etiqueta"><bean:message key="convocatoria.ultimoEnvio" />:</td>
@@ -202,17 +203,17 @@
 				</tr>
 				<tr class="par">
 					<td class="etiqueta"><bean:message key="convocatoria.preguntas" /></td>
-					<td colspan="4" ></td>				
-				</tr>			
+					<td colspan="4" ></td>
+				</tr>
 				<tr>
 					<td class="etiqueta"><bean:message key="convocatoria.encuesta" /></td>
 					<td colspan="3">
-						<html:select property="encuesta" styleId="encuesta"/>										
+						<html:select property="encuesta" styleId="encuesta"/>
 						<br/>
 						<bean:message key="convocatoria.elegible"/>
 					</td>
 					<td>
-						<button type="button" title="<bean:message key="boton.seleccionar" />" 
+						<button type="button" title="<bean:message key="boton.seleccionar" />"
 								onclick="window.open('<%=System.getProperty("es.caib.gusite.portal.url")%>/sacmicrofront/encuesta.do?idsite=<bean:write name="MVS_microsite" property="id"/>&cont=' + $('#encuesta').val(),'ventana','width=700,height=540');">
 							<img alt="<bean:message key="boton.seleccionar" />" src="imgs/botons/cercar.gif"/>
 						</button>
@@ -221,18 +222,18 @@
 				<tr>
 					<td class="etiqueta"><bean:message key="convocatoria.respuestaCorreo" /></td>
 					<td colspan="3">
-						<html:select property="resCorreo" styleId="resCorreo"/>					
+						<html:select property="resCorreo" styleId="resCorreo"/>
 					</td>
-					<td/>				
-				</tr>			
+					<td/>
+				</tr>
 				<tr>
 					<td class="etiqueta">
 						<bean:message key="convocatoria.preguntaConfirmacion" />
 					</td>
 					<td colspan="3">
-						<html:select property="preConfirmacion" styleId="preConfirmacion"/>					
+						<html:select property="preConfirmacion" styleId="preConfirmacion"/>
 					</td>
-					<td/>				
+					<td/>
 				</tr>
 				<tr>
 					<td class="etiqueta">
@@ -241,13 +242,13 @@
 					<td colspan="3">
 						<html:select property="resConfirmacion" styleId="resConfirmacion"/>
 					</td>
-					<td/>				
+					<td/>
 				</tr>
 				<tr class="par">
 					<td class="etiqueta">
 						<bean:message key="convocatoria.mailing" />
 					</td>
-					<td colspan="4" ></td>				
+					<td colspan="4" ></td>
 				</tr>
 				<tr>
 					<td class="etiqueta">
@@ -256,11 +257,11 @@
 					<td colspan="3">
 						<logic:iterate id="i" name="convocatoriaForm" property="destinatarios">&lt<bean:write name="i" property="nombre"/>&gt </logic:iterate>
 					</td>
-					<td>										
+					<td>
 						<button type="button" title="<bean:message key="boton.seleccionar" />" onclick="escogerDistrib();">
 							<img alt="<bean:message key="boton.seleccionar" />" src="imgs/botons/cercar.gif"/>
 						</button>
-					</td>								
+					</td>
 				</tr>
 				<tr>
 					<td class="etiqueta">
@@ -286,18 +287,18 @@
 						<html:textarea  property="txtMensaje" styleClass="editorTinyMCE" rows="5" cols="50" style="width:700px; height:300px;"/>
 					</td>
 					<td/>
-				</tr>			
-			</table>				
+				</tr>
+			</table>
 		</div>
-	
+
 	</html:form>
 
 <script>
 	function submitForm(nom_accio){
 		var strError = "";
 		var accForm = document.getElementById('accFormulario');
-		accForm.accion.value= nom_accio;	
-		
+		accForm.accion.value= nom_accio;
+
 		if (accForm.nombre.value == ""){
 			strError = strError + "<bean:message key="mensa.nombreconvocatoria"/>\n";
 		}
@@ -313,7 +314,7 @@
 		if (accForm.resConfirmacion.value == ""){
 			strError = strError + "<bean:message key="mensa.resconfirmacionconvocatoria"/>\n";
 		}
-		if (!validar(accForm.otrosDestinatarios.value)){ 
+		if (!validar(accForm.otrosDestinatarios.value)){
 			strError = strError + "<bean:message key="mensa.altresDestinataris"/>\n";
 		}
 		if (accForm.txtAsunto.value == ""){

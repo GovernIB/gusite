@@ -542,11 +542,11 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements
 		if (null == anyo) {
 			return false;
 		}
-
+/* Fix: #141
 		if (Integer.valueOf(anyo) < 1970) {
 			return false;
 		}
-
+*/
 		return true;
 	}
 

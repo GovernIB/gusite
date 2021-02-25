@@ -22,6 +22,7 @@ import es.caib.gusite.front.general.DelegateBase;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
 import es.caib.gusite.front.general.Front;
+import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.general.bean.ResultadoBusqueda;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
@@ -55,20 +56,23 @@ public class FrontDataService {
 	protected static Log log = LogFactory.getLog(FrontDataService.class);
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Set<Integer>> getDatosCalendario(Microsite microsite, Idioma lang) throws DelegateException {
+	public Map<String, Set<Integer>> getDatosCalendario(final Microsite microsite, final Idioma lang)
+			throws DelegateException {
 		return this.getDatosCalendario(microsite, lang.getLang());
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Set<Integer>> getDatosCalendario(Microsite microsite, String idioma) throws DelegateException {
+	public Map<String, Set<Integer>> getDatosCalendario(final Microsite microsite, final String idioma)
+			throws DelegateException {
 
 		// CALENDARIO
-		AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+		final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
 		agendadel.init();
-		agendadel.setWhere("where trad.id.codigoIdioma='" + idioma + "' and agenda.visible='S' and agenda.idmicrosite=" + microsite.getId());
+		agendadel.setWhere("where trad.id.codigoIdioma='" + idioma + "' and agenda.visible='S' and agenda.idmicrosite="
+				+ microsite.getId());
 		agendadel.setPagina(1);
 		agendadel.setTampagina(Integer.MAX_VALUE);
-		List<Agenda> listagenda = (List<Agenda>) agendadel.listarAgendas();
+		final List<Agenda> listagenda = (List<Agenda>) agendadel.listarAgendas();
 
 		GregorianCalendar gc = new GregorianCalendar();
 		Set<Integer> diasMesAgenda = new HashSet<Integer>();
@@ -78,10 +82,10 @@ public class FrontDataService {
 		// Establecemos el valor al día 1
 		gc.set(Calendar.DAY_OF_MONTH, 1);
 
-		Map<String, Set<Integer>> meses = new Hashtable<String, Set<Integer>>();
+		final Map<String, Set<Integer>> meses = new Hashtable<String, Set<Integer>>();
 
-		int nummesesaretroceder = 2;
-		int nummeses = 3;
+		final int nummesesaretroceder = 2;
+		final int nummeses = 3;
 		// retrocedemos 2 meses
 		gc = Fechas.anteriorMes(gc);
 		gc = Fechas.anteriorMes(gc);
@@ -99,88 +103,91 @@ public class FrontDataService {
 	}
 
 	/**
-	 * Devuelve una coleccion con los dias de un mes determinado en que hay
-	 * eventos
+	 * Devuelve una coleccion con los dias de un mes determinado en que hay eventos
 	 */
-	private static Set<Integer> getDiasMesAgenda(List<Agenda> listaagenda, GregorianCalendar gc) {
+	private static Set<Integer> getDiasMesAgenda(final List<Agenda> listaagenda, final GregorianCalendar gc) {
 
-		Set<Integer> diasMes = new HashSet<Integer>();
+		final Set<Integer> diasMes = new HashSet<Integer>();
 
 		try {
 
 			for (int i = 1; i <= gc.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-				GregorianCalendar fecha2 = new GregorianCalendar();
+				final GregorianCalendar fecha2 = new GregorianCalendar();
 				fecha2.setTime(gc.getTime());
 				fecha2.set(Calendar.DAY_OF_MONTH, i);
 				fecha2.set(Calendar.HOUR_OF_DAY, 0);
 				fecha2.set(Calendar.MINUTE, 0);
-				Iterator<?> iter = listaagenda.iterator();
+				final Iterator<?> iter = listaagenda.iterator();
 				while (iter.hasNext()) {
-					Agenda agenda = (Agenda) iter.next();
+					final Agenda agenda = (Agenda) iter.next();
 					if (Fechas.between(agenda.getFinicio(), agenda.getFfin(), fecha2.getTime())) {
 						diasMes.add(fecha2.get(java.util.Calendar.DAY_OF_MONTH));
 					}
 				}
 
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error("[getDiasMesAgenda]: " + e.getMessage());
 		}
 		return diasMes;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Agenda> getDatosListadoHome(Microsite microsite, Idioma lang) throws DelegateException {
+	public List<Agenda> getDatosListadoHome(final Microsite microsite, final Idioma lang) throws DelegateException {
 		// LISTADO
-		AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+		final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
 		agendadel.init();
 
-		GregorianCalendar gc2 = new GregorianCalendar();
-		java.sql.Date dt = new java.sql.Date(gc2.getTime().getTime());
-		agendadel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and agenda.visible='S' and agenda.idmicrosite=" + microsite.getId()
-				+ " and to_char(agenda.finicio,'yyyy-MM-dd')>='" + dt + "'");
+		final GregorianCalendar gc2 = new GregorianCalendar();
+		final java.sql.Date dt = new java.sql.Date(gc2.getTime().getTime());
+		agendadel.setWhere(
+				"where trad.id.codigoIdioma='" + lang.getLang() + "' and agenda.visible='S' and agenda.idmicrosite="
+						+ microsite.getId() + " and to_char(agenda.finicio,'yyyy-MM-dd')>='" + dt + "'");
 		agendadel.setOrderby2(" order by agenda.finicio asc");
 		agendadel.setPagina(1);
 		agendadel.setTampagina(3);
-		List<Agenda> ret = (List<Agenda>) agendadel.listarAgendas();
+		final List<Agenda> ret = (List<Agenda>) agendadel.listarAgendas();
 		this.traducelista(ret, lang.getLang());
 		return ret;
 	}
 
 	@SuppressWarnings("unchecked")
-	public ResultadoBusqueda<Agenda> getListadoAgenda(Microsite microsite, Idioma lang, Date fecha, int pagina) throws DelegateException {
-		AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+	public ResultadoBusqueda<Agenda> getListadoAgenda(final Microsite microsite, final Idioma lang, final Date fecha,
+			final int pagina) throws DelegateException {
+		final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
 		agendadel.init();
-		agendadel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and agenda.visible='S' and agenda.idmicrosite=" + microsite.getId());
+		agendadel.setWhere("where trad.id.codigoIdioma='" + lang.getLang()
+				+ "' and agenda.visible='S' and agenda.idmicrosite=" + microsite.getId());
 		agendadel.setOrderby2(" ORDER BY agenda.actividad, NVL(agenda.ffin,SYSDATE)");
 
 		// Indicamos la página a visualizar
 		agendadel.setPagina(pagina);
-		List<Agenda> listaeventos = (List<Agenda>) agendadel.listarAgendas(fecha, lang.getLang());
+		final List<Agenda> listaeventos = (List<Agenda>) agendadel.listarAgendas(fecha, lang.getLang());
 		this.traducelista(listaeventos, lang.getLang());
-		ResultadoBusqueda<Agenda> ret = new ResultadoBusqueda<Agenda>(listaeventos, (Map<String, Integer>) agendadel.getParametros());
+		final ResultadoBusqueda<Agenda> ret = new ResultadoBusqueda<Agenda>(listaeventos,
+				(Map<String, Integer>) agendadel.getParametros());
 
 		return ret;
 	}
-	
-	public Agenda loadAgenda(Long idCont, Idioma lang) throws ExceptionFrontPagina {
+
+	public Agenda loadAgenda(final Long idCont, final Idioma lang) throws ExceptionFrontPagina {
 
 		try {
-			AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
-			Agenda ret = agendadel.obtenerAgenda(idCont);
+			final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+			final Agenda ret = agendadel.obtenerAgenda(idCont);
 			ret.setIdi(lang.getLang());
 			if (ret.getActividad() != null) {
 				ret.getActividad().setIdi(lang.getLang());
 			}
 			return ret;
-		} catch (DelegateException e) {
-			throw new ExceptionFrontPagina(" [loadAgenda, id=" + idCont + ", idioma=" + lang.getLang()
-					+ " ] Error=" + e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
+		} catch (final DelegateException e) {
+			throw new ExceptionFrontPagina(" [loadAgenda, id=" + idCont + ", idioma=" + lang.getLang() + " ] Error="
+					+ e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
 		}
-	}	
+	}
 
-	private void traducelista(List<Agenda> listaeventos, String lang) {
-		for (Agenda agenda : listaeventos) {
+	private void traducelista(final List<Agenda> listaeventos, final String lang) {
+		for (final Agenda agenda : listaeventos) {
 			agenda.setIdi(lang);
 			if (agenda.getActividad() != null) {
 				agenda.getActividad().setIdi(lang);
@@ -189,8 +196,9 @@ public class FrontDataService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ResultadoBusqueda<Agenda> getListadoAgenda(Microsite microsite, Idioma lang, AgendaCriteria criteria) throws DelegateException {
-		AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
+	public ResultadoBusqueda<Agenda> getListadoAgenda(final Microsite microsite, final Idioma lang,
+			final AgendaCriteria criteria) throws DelegateException {
+		final AgendaDelegate agendadel = DelegateUtil.getAgendaDelegate();
 		agendadel.init();
 		agendadel.setTampagina(3); // TODO: esto está hardcoded y esmuy pequeño
 		GregorianCalendar gc = new GregorianCalendar();
@@ -198,10 +206,11 @@ public class FrontDataService {
 		gc = Fechas.anteriorMes(gc);
 		gc = Fechas.anteriorMes(gc);
 
-		GregorianCalendar gc2 = new GregorianCalendar();
-		java.sql.Date dt = new java.sql.Date(gc2.getTime().getTime());
-		agendadel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and agenda.visible='S' and agenda.idmicrosite=" + microsite.getId()
-				+ " and to_char(agenda.finicio,'yyyy-MM-dd')>='" + dt + "'");
+		final GregorianCalendar gc2 = new GregorianCalendar();
+		final java.sql.Date dt = new java.sql.Date(gc2.getTime().getTime());
+		agendadel.setWhere(
+				"where trad.id.codigoIdioma='" + lang.getLang() + "' and agenda.visible='S' and agenda.idmicrosite="
+						+ microsite.getId() + " and to_char(agenda.finicio,'yyyy-MM-dd')>='" + dt + "'");
 		agendadel.setOrderby2(" order by agenda.finicio asc");
 
 		if (criteria.getFiltro() != null && criteria.getFiltro().length() > 0) {
@@ -214,28 +223,29 @@ public class FrontDataService {
 
 		agendadel.setPagina(criteria.getPagina());
 
-		List<Agenda> listaeventos = (List<Agenda>) agendadel.listarAgendas(lang.getLang());
+		final List<Agenda> listaeventos = (List<Agenda>) agendadel.listarAgendas(lang.getLang());
 		this.traducelista(listaeventos, lang.getLang());
-		ResultadoBusqueda<Agenda> ret = new ResultadoBusqueda<Agenda>(listaeventos, (Map<String, Integer>) agendadel.getParametros());
+		final ResultadoBusqueda<Agenda> ret = new ResultadoBusqueda<Agenda>(listaeventos,
+				(Map<String, Integer>) agendadel.getParametros());
 		return ret;
 	}
 
-	public List<Noticia> getNoticiasHome(Microsite site, Idioma lang) throws DelegateException {
+	public List<Noticia> getNoticiasHome(final Microsite site, final Idioma lang) throws DelegateException {
 		return this.getNoticiasHome(site, lang.getLang());
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Noticia> getNoticiasHome(Microsite microsite, String idioma) throws DelegateException {
+	public List<Noticia> getNoticiasHome(final Microsite microsite, final String idioma) throws DelegateException {
 		int noticias = 3;
 		if (microsite.getNumeronoticias() != 0) {
 			noticias = microsite.getNumeronoticias();
 		}
 
-		NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+		final NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
 		noticiadel.init();
 		noticiadel.setPagina(1);
 		noticiadel.setTampagina(noticias);
-		java.sql.Date dt = new java.sql.Date((new Date()).getTime());
+		final java.sql.Date dt = new java.sql.Date((new Date()).getTime());
 		String wherenoticias = "where noti.visible = 'S' and noti.idmicrosite = " + microsite.getId();
 		wherenoticias += " and (noti.fpublicacion is null OR to_char(noti.fpublicacion,'yyyy-MM-dd')<='" + dt + "')";
 		wherenoticias += " and (noti.fcaducidad is null OR to_char(noti.fcaducidad,'yyyy-MM-dd')>='" + dt + "')";
@@ -243,8 +253,8 @@ public class FrontDataService {
 		noticiadel.setWhere(wherenoticias);
 		noticiadel.setOrderby2(" order by noti.fpublicacion desc");
 
-		List<Noticia> ret = noticiadel.listarNoticiasThin(idioma);
-		for (Noticia n : ret) {
+		final List<Noticia> ret = noticiadel.listarNoticiasThin(idioma);
+		for (final Noticia n : ret) {
 			n.setIdi(idioma);
 			if (n.getTipo() != null) {
 				n.getTipo().setIdi(idioma);
@@ -253,28 +263,30 @@ public class FrontDataService {
 		return ret;
 	}
 
-	public List<Faqtema> listarFaqs(Microsite microsite, Idioma lang) throws DelegateException {
-		TemaDelegate temadel = DelegateUtil.getTemafaqDelegate();
+	public List<Faqtema> listarFaqs(final Microsite microsite, final Idioma lang) throws DelegateException {
+		final TemaDelegate temadel = DelegateUtil.getTemafaqDelegate();
 		temadel.init();
 		temadel.setTampagina(Integer.MAX_VALUE);
-		temadel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and tema.idmicrosite=" + microsite.getId());
-		List<?> listatemas = temadel.listarTemas();
-		Iterator<?> iter = listatemas.iterator();
-		List<Faqtema> listafaqstema = new ArrayList<Faqtema>();
+		temadel.setWhere(
+				"where trad.id.codigoIdioma='" + lang.getLang() + "' and tema.idmicrosite=" + microsite.getId());
+		final List<?> listatemas = temadel.listarTemas();
+		final Iterator<?> iter = listatemas.iterator();
+		final List<Faqtema> listafaqstema = new ArrayList<Faqtema>();
 		// recorrer los temas
 		while (iter.hasNext()) {
-			Temafaq tema = (Temafaq) iter.next();
-			FaqDelegate faqdel = DelegateUtil.getFaqDelegate();
+			final Temafaq tema = (Temafaq) iter.next();
+			final FaqDelegate faqdel = DelegateUtil.getFaqDelegate();
 			faqdel.init();
 			faqdel.setTampagina(Integer.MAX_VALUE);
-			faqdel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and faq.visible='S' and faq.tema=" + tema.getId());
-			List<?> listafaqs = faqdel.listarFaqs();
-			ArrayList<Faq> tmpfaqs = new ArrayList<Faq>();
-			Faqtema faqtema = new Faqtema();
-			Iterator<?> iter2 = listafaqs.iterator();
+			faqdel.setWhere("where trad.id.codigoIdioma='" + lang.getLang() + "' and faq.visible='S' and faq.tema="
+					+ tema.getId());
+			final List<?> listafaqs = faqdel.listarFaqs();
+			final ArrayList<Faq> tmpfaqs = new ArrayList<Faq>();
+			final Faqtema faqtema = new Faqtema();
+			final Iterator<?> iter2 = listafaqs.iterator();
 			// recorrer las faqs de cada uno de los temas
 			while (iter2.hasNext()) {
-				Faq faq = (Faq) iter2.next();
+				final Faq faq = (Faq) iter2.next();
 				faq.setIdi(lang.getLang());
 				// por si es nulo
 				if (((TraduccionFaq) faq.getTraduccion(lang.getLang()) != null)
@@ -294,110 +306,114 @@ public class FrontDataService {
 		return listafaqstema;
 	}
 
-	public Microsite getMicrosite(Long idSite, Idioma lang) throws ExceptionFrontMicro {
+	public Microsite getMicrosite(final Long idSite, final Idioma lang) throws ExceptionFrontMicro {
 		try {
-			MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
-			Microsite ret = micrositedel.obtenerMicrosite(idSite);
-			if(ret !=null){				
-				ret.setIdi(lang.getLang());
-			}
-			return ret;
-
-		} catch (DelegateException e) {
-			throw new ExceptionFrontMicro(e);
-		}
-	}
-
-	public Microsite getMicrositeByKey(String mkey, Idioma lang) throws ExceptionFrontMicro {
-		try {
-			DelegateBase _delegateBase = new DelegateBase();
-			Microsite ret = _delegateBase.obtenerMicrositebyKey(mkey, lang.getLang());
-			ret.setIdi(lang.getLang());
-			return ret;
-
-		} catch (DelegateException e) {
-			throw new ExceptionFrontMicro(e);
-		}
-	}
-
-	public Microsite getMicrositeByUri(String uri, Idioma lang) throws ExceptionFrontMicro {
-		try {
-			DelegateBase _delegateBase = new DelegateBase();
-			Microsite ret = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
+			final MicrositeDelegate micrositedel = DelegateUtil.getMicrositeDelegate();
+			final Microsite ret = micrositedel.obtenerMicrosite(idSite);
 			if (ret != null) {
 				ret.setIdi(lang.getLang());
 			}
 			return ret;
 
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontMicro(e);
 		}
 	}
 
-	public TemaFront getTemaFrontByUri(String uri) throws ExceptionFrontPagina {
+	public Microsite getMicrositeByKey(final String mkey, final Idioma lang) throws ExceptionFrontMicro {
 		try {
-	        TemaFrontDelegate tfd = DelegateUtil.getTemaFrontDelegate();
+			final DelegateBase _delegateBase = new DelegateBase();
+			final Microsite ret = _delegateBase.obtenerMicrositebyKey(mkey, lang.getLang());
+			ret.setIdi(lang.getLang());
+			return ret;
+
+		} catch (final DelegateException e) {
+			throw new ExceptionFrontMicro(e);
+		}
+	}
+
+	public Microsite getMicrositeByUri(final String uri, final Idioma lang) throws ExceptionFrontMicro {
+		try {
+			final DelegateBase _delegateBase = new DelegateBase();
+			final Microsite ret = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
+			if (ret != null) {
+				ret.setIdi(lang.getLang());
+			}
+			return ret;
+
+		} catch (final DelegateException e) {
+			throw new ExceptionFrontMicro(e);
+		}
+	}
+
+	public TemaFront getTemaFrontByUri(final String uri) throws ExceptionFrontPagina {
+		try {
+			final TemaFrontDelegate tfd = DelegateUtil.getTemaFrontDelegate();
 			return tfd.obtenerTemabyUri(uri);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
 
-	public List<ArchivoTemaFront> getArchivoTema(String uriTema, String filename) throws ExceptionFrontPagina {
+	public List<ArchivoTemaFront> getArchivoTema(final String uriTema, final String filename)
+			throws ExceptionFrontPagina {
 		try {
-	        ArchivoTemaFrontDelegate tfd = DelegateUtil.getArchivoTemaFrontDelegate();
+			final ArchivoTemaFrontDelegate tfd = DelegateUtil.getArchivoTemaFrontDelegate();
 			return tfd.searchByTemaNombre(uriTema, filename);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
 
-	public Archivo obtenerArchivo(Long id) throws ExceptionFrontPagina {
+	public Archivo obtenerArchivo(final Long id) throws ExceptionFrontPagina {
 		try {
-			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			if (!archi.visible(id)) {
+				log.error("Archivo  no disponible");
+				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
+			}
 			return archi.obtenerArchivo(id);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
-	
-	public byte[] obtenerContenidoArchivo(Archivo archivo) throws ExceptionFrontPagina, IOException {
+
+	public byte[] obtenerContenidoArchivo(final Archivo archivo) throws ExceptionFrontPagina, IOException {
 		try {
-			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 			return archi.obtenerContenidoFichero(archivo);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
-	
 
-	public Archivo obtenerArchivo(Long idSite, String name) throws ExceptionFrontPagina {
+	public Archivo obtenerArchivo(final Long idSite, final String name) throws ExceptionFrontPagina {
 		try {
-			ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
 			return archi.obtenerArchivobyName(idSite, name);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 
 	}
 
-	public Frqssi getFormularioQssi(Microsite microsite, Idioma lang, long idQssi) throws ExceptionFrontPagina {
+	public Frqssi getFormularioQssi(final Microsite microsite, final Idioma lang, final long idQssi)
+			throws ExceptionFrontPagina {
 		return this.getFormularioQssi(microsite, lang.getLang(), idQssi);
 	}
 
-
-	public Frqssi getFormularioQssi(Microsite microsite, String lang, long idQssi) throws ExceptionFrontPagina {
+	public Frqssi getFormularioQssi(final Microsite microsite, final String lang, final long idQssi)
+			throws ExceptionFrontPagina {
 
 		try {
-			FrqssiDelegate qssidel = DelegateUtil.getFrqssiDelegate();
-			Frqssi qssi = qssidel.obtenerFrqssi(idQssi);
+			final FrqssiDelegate qssidel = DelegateUtil.getFrqssiDelegate();
+			final Frqssi qssi = qssidel.obtenerFrqssi(idQssi);
 			qssi.setIdi(lang);
 			return qssi;
 
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
 	}
-
 
 }

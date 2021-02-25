@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="js/checkUri.js"></script>
 	<script type="text/javascript" src="js/jscolor.min.js"></script>
 	<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
-	<link href="css/modalMaps.css" rel="stylesheet" type="text/css" />	
+	<link href="css/modalMaps.css" rel="stylesheet" type="text/css" />
 	<%} %>
 </head>
 
@@ -29,28 +29,28 @@
 		<logic:present name="MVS_tipolistado">
 		<bean:define id="tipovisible" name="MVS_tipolistado" property="tipoelemento" />
 		</logic:present>
-				
-<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>		
-		
+
+<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
+
 <!-- ventana Modal para google maps MODALMAPS -->
 <div id="modalMaps" class="modal">
   <div class="modal-content">
     <span class="close_modal">&times;</span>
 	<div id="modal_cabecera">
-		<span>Dirección:</span> 
-		<input type="text" id="modal_direccion"/> 
-		<input type="button" id="modal_buscarDireccion" onclick="buscarDireccion()" value="<bean:message key="boton.buscar.direccion"/>"/> 
-		<input type="button" id="modal_centrar" onclick="centrarMapa()" value="<bean:message key="boton.centrar.mapa"/>"/> 
+		<span>Dirección:</span>
+		<input type="text" id="modal_direccion"/>
+		<input type="button" id="modal_buscarDireccion" onclick="buscarDireccion()" value="<bean:message key="boton.buscar.direccion"/>"/>
+		<input type="button" id="modal_centrar" onclick="centrarMapa()" value="<bean:message key="boton.centrar.mapa"/>"/>
 	</div>
 	<div id="modal_map">mapa</div>
 	<div id="modal_footer">
-		<input type="button" id="modal_guardar" onclick="guardarPosicion();cerrarModal();" value="<bean:message key="boton.usar.ubicacion"/>"/> 
-		<input type="button" id="modal_borrar" onclick="borrarPosicion();cerrarModal();" value="<bean:message key="boton.borrar.ubicacion"/>"/> 
-		<input type="button" id="modal_volver" onclick="cerrarModal();" value="<bean:message key="boton.volver"/>"/> 	
-	</div>   
+		<input type="button" id="modal_guardar" onclick="guardarPosicion();cerrarModal();" value="<bean:message key="boton.usar.ubicacion"/>"/>
+		<input type="button" id="modal_borrar" onclick="borrarPosicion();cerrarModal();" value="<bean:message key="boton.borrar.ubicacion"/>"/>
+		<input type="button" id="modal_volver" onclick="cerrarModal();" value="<bean:message key="boton.volver"/>"/>
+	</div>
   </div>
 </div>
-<%} %>	
+<%} %>
 	<!-- molla pa -->
 	<ul id="mollapa">
 		<li><a href="microsites.do" target="_parent"><bean:message key="micro.listado.microsites" /></a></li>
@@ -60,10 +60,10 @@
 		<logic:present name="MVS_tipolistado"><li><a href="noticias.do"><bean:write name="MVS_tipolistado" property="traduce.nombre" ignore="true" /></a></li></logic:present>
 	    <logic:present name="noticiaForm" property="id">
          		<li class="pagActual"><bean:write name="noticiaForm" property="traducciones[0].titulo" ignore="true" /></li>
-	    </logic:present>		
+	    </logic:present>
 	    <logic:notPresent name="noticiaForm" property="id">
 	         <li class="pagActual"><bean:message key="noticia.alta" /></li>
-	    </logic:notPresent>				
+	    </logic:notPresent>
 	</ul>
 	<!-- titol pagina -->
 	<h1><img src="imgs/titulos/fichas.gif" alt="<logic:present name="MVS_tipolistado"><bean:write name="MVS_tipolistado" property="traduce.nombre" ignore="true" /></logic:present>" />
@@ -71,10 +71,10 @@
 		<span>
 		    <logic:present name="noticiaForm" property="id">
 	         	<bean:write name="noticiaForm" property="traducciones[0].titulo" ignore="true" />
-		    </logic:present>		
+		    </logic:present>
 		    <logic:notPresent name="noticiaForm" property="id">
 		        <bean:message key="noticia.alta" />
-		    </logic:notPresent>				
+		    </logic:notPresent>
 		</span>
 	</h1>
 
@@ -87,12 +87,12 @@
 					editarCodigo = "code";
 			</script>
 		</logic:equal>
-		
+
 		<!-- tinyMCE -->
 		<script language="javascript" type="text/javascript" src="tinymce/tinymce.min.js"></script>
 		<script language="javascript" type="text/javascript">
-		
-		
+
+
 		//Paso 1. Inicializamos tinyMCE.
 		tinymce.init({
 		    selector: 'textarea.editorTinyMCE',
@@ -100,15 +100,16 @@
 			plugins: "code, compat3x, link, textcolor, acheck ,paste, botonMIC, lists"
 			,toolbar1: 'bold italic underline | alignleft aligncenter alignright alignjustify bullist numlist | outdent indent | link unlink forecolor removeformat cleanup '+editarCodigo+' acheck  | cut copy paste | botonMIC'
 			,menubar: false
+			, convert_urls: false
 			,external_plugins: {
 				"acheck": "plugins/acheck/editor_plugin.js"
 			}
-			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">		
+			<logic:notEqual name="MVS_usuario" property="permisosTiny" value="1">
 				,paste_as_text: true
 				,invalid_elements: 'br'
 			</logic:notEqual>
 			, file_browser_callback : function(field_name, url, type, win){
-                
+
                 Rcajatemp_tiny=field_name;
                 Rwin_tiny=win;
                 <logic:notEmpty name="contenidoForm">
@@ -124,13 +125,13 @@
 			]
 			//, extended_valid_elements : "span"
 		  });
-		
+
 			var Rcajatemp_tiny;
 		   	var Rwin_tiny;
-			
+
 			function Rmeterurl_tiny(laurl) {
 				document.getElementById(Rcajatemp_tiny).value = laurl;
-			}	
+			}
 		</script>
 		<!-- /tinyMCE -->
 
@@ -141,13 +142,13 @@
 		<jsp:include page="/moduls/mensajes.jsp"/>
 
 		<input type="hidden" name="accion" value=""/>
-		
+
 		<!-- botonera -->
 		<div id="botonera">
 			<span class="grup">
 			<button type="button" title='<bean:message key="tipo.volvermantenimiento.noticias"/>' onclick='document.location.href="noticias.do?tipo=<bean:write name="MVS_idtipo"/>";'>
 			  		<img src="imgs/botons/tornar.gif" alt='<bean:message key="tipo.volvermantenimiento.noticias"/>' />
-			</button> 
+			</button>
 			</span>
 			<logic:present name="noticiaForm" property="id">
 				<button type="submit" title="<bean:message key="noticia.crear" />" onclick="submitForm('Crear');"><img src="imgs/botons/nuevaPagina.gif" alt="<bean:message key="noticia.crear" />" /></button>
@@ -170,13 +171,13 @@
 				<span class="grup">
 				<button type="submit" title='<bean:message key="operacion.borrar" />' onclick="submitForm('Borrar');">
 					<img src="imgs/menu/esborrar.gif" alt='<bean:message key="operacion.borrar" />' />
-				</button> 
+				</button>
 				</span>
 			</logic:present>
 		</div>
-		
+
 		<input type="hidden" name="espera" value="si" id="espera" />
-		
+
 		     <logic:present name="noticiaForm" property="id">
 			     <input type="hidden" name="modifica" value="Grabar">
 		         <html:hidden property="id" />
@@ -185,15 +186,15 @@
 			 <logic:notPresent name="noticiaForm" property="id">
 			  	<input type="hidden" name="anyade" value="Crear">
 			  	<input type="hidden" name="idmicrosite" value='<bean:write name="idmicrosite"/>' />
-			 </logic:notPresent>      
+			 </logic:notPresent>
 
 	<div id="formulario">
 		  <logic:present name="accesibilidad">
 			<a href="accesibilitat.do?tipo=n&iditem=<bean:write name="noticiaForm" property="id"/>"><b> veure errors d'accessibilitat</b></a>
-		  </logic:present>	
+		  </logic:present>
 		<!-- las tablas estan entre divs por un bug del FireFox -->
 			<table cellpadding="0" cellspacing="0" class="edicio">
-	
+
 			<tr class="par" style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.fpublicacion" /></td>
 				<td>
@@ -204,28 +205,28 @@
 					<html:text property="fcaducidad" readonly="readonly" maxlength="16" />
 				</td>
 			</tr>
-	
+
 			<tr style="display:block;">
 				<td class="etiqueta"  <%= tipovisible.equals("5")?"style=\"display:none;\"":""%> ><bean:message key="noticia.orden" /></td>
 				<td <%= tipovisible.equals("5")?"style=\"display:none;\"":""%> ><html:text property="orden"/></td>
 				<td class="etiqueta"><bean:message key="noticia.visible" /></td>
 				<td style="min-width: 120px"><label><html:radio property="visible" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visible" value="N" />&nbsp;No</label></td>
 			</tr>
-			
+
 
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("5")?"block":"none"%>;" id="CamposMapa" class="par">
 				<td class="etiqueta"><bean:message key="noticia.latitud" /></td>
 				<td><html:text property="latitud" styleId="latitud"/></td>
 				<td class="etiqueta"><bean:message key="noticia.longitud" /></td>
 				<td>
-					<html:text property="longitud" styleId="longitud"/> 
+					<html:text property="longitud" styleId="longitud"/>
 					<% if(GusitePropertiesUtil.getKeyGooglemaps()!=null && GusitePropertiesUtil.getKeyGooglemaps()!=""){ %>
 					<button type="button" title="<bean:message key="boton.ubicarenmapa" />" onclick="ubicarEnMapa();"><img src="imgs/botons/ubicacion.gif" alt="<bean:message key="boton.ubicarenmapa" />" /></button>
 					<%} %>
 				</td>
 			</tr>
-			
-			<tr style="display:<%= tipovisible.equals("5")?"block":"none"%>;" id="CamposMapa2">				
+
+			<tr style="display:<%= tipovisible.equals("5")?"block":"none"%>;" id="CamposMapa2">
 				<td class="etiqueta"><bean:message key="noticia.color" /></td>
 				<% if(tipovisible.equals("5")){ %>
 				<td><html:text property="colorIcono" styleClass="jscolor" styleId="colorIcono" /></td>
@@ -234,7 +235,7 @@
 				<%} %>
 			</tr>
 
-						
+
 			<tr class="par" style="display:none;">
 				<td class="etiqueta"><bean:message key="noticia.tipo" /></td>
 				<td>
@@ -242,13 +243,13 @@
 	                	<html:option value=""><bean:message key="noticia.selectipo" /></html:option>
 		                <html:options collection="tiposCombo" labelProperty="traduccion.nombre" property="id"/>
 	    	        </html:select>
-				</td>				
+				</td>
 				<td class="etiqueta"><bean:message key="noticia.visibleweb" /></td>
-				<td><label><html:radio property="visibleweb" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visibleweb" value="N" />&nbsp;No</label></td>				
+				<td><label><html:radio property="visibleweb" value="S" />&nbsp;Sí­</label>&nbsp;&nbsp;&nbsp;<label><html:radio property="visibleweb" value="N" />&nbsp;No</label></td>
 			</tr>
-	
+
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4") || tipovisible.equals("5")?"block":"none"%>;" <%= tipovisible.equals("5")?"class=\"par\"":""%> >
-				
+
 				<td class="etiqueta"><bean:message key="noticia.imagen" /></td>
 				<td>
 					<div style="text-align:left" id="microManagedFile">
@@ -266,10 +267,10 @@
 				<td class="etiqueta"></td>
 				<td>&nbsp;</td>
 			</tr>
-	
+
 			<tr>
 			<td colspan="4">
-	
+
 		<ul id="submenu">
 			<logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
 				<li<%=(j.intValue()==0?" class='selec'":"")%>>
@@ -278,21 +279,21 @@
 					</a>
 				</li>
 	        </logic:iterate>
-		</ul>    
-	
+		</ul>
+
 	    <logic:iterate id="traducciones" name="noticiaForm" property="traducciones" indexId="i" >
 	     <bean:define id="idiomaahora" value="Catalan" type="java.lang.String" />
 
             <logic:iterate id="lang" name="es.caib.gusite.microback.LANGS_KEY" indexId="j">
             		<%if(j.intValue()==i.intValue()){%>
-			  	<bean:define id="idiomaahora" name="lang" type="java.lang.String" />  
-			<%}%>   	
-			 
+			  	<bean:define id="idiomaahora" name="lang" type="java.lang.String" />
+			<%}%>
+
             </logic:iterate>
 
-	    
+
 		<div id="capa_tabla<%=i%>" class="capaFormIdioma" style="<%=(i.intValue()==0?"display:block;":"display:none;")%>">
-		
+
 			<table cellpadding="0" cellspacing="0" class="edicio">
 			<tr style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.titulo" />:</td>
@@ -310,18 +311,18 @@
 			<tr id="tinymceEditor<%=i%>" style="display:block;">
 				<td class="etiqueta"><bean:message key="noticia.texto" />:
 				<p>
-				</p>				
+				</p>
 				</td>
 				<td><html:textarea  property="texto" name="traducciones" styleClass="editorTinyMCE" rows="5" cols="50" indexed="true" style="width:700px; height:300px;"/></td>
 			</tr>
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("4")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.fuente" />:</td>
 				<td><html:text property="fuente" name="traducciones" size="50" maxlength="256" indexed="true" /></td>
-			</tr>							
+			</tr>
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("2")|| tipovisible.equals("4") || tipovisible.equals("5")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.documento" /></td>
 				<td colspan="3">
-	
+
 					<div style="text-align:left" id="microManagedFile<%=i%>">
 						<html:hidden property="<%="ficherosid["+i+"]"%>" />
 						<logic:notEmpty name="noticiaForm" property="<%="ficherosnom["+i+"]"%>">
@@ -332,8 +333,8 @@
 					    <logic:empty name="noticiaForm" property="<%="ficherosnom["+i+"]"%>">
 						    <html:file property="<%="ficheros["+i+"]"%>" size="30"/>
 		   			    </logic:empty>
-	   			    </div>    
-	   			    
+	   			    </div>
+
 				</td>
 			</tr>
 			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("1") || tipovisible.equals("4")?"block":"none"%>;">
@@ -344,16 +345,16 @@
 				<td class="etiqueta"><bean:message key="noticia.laurl" />:</td>
 				<td><html:text property="laurl" name="traducciones"  size="45" maxlength="512" indexed="true" />&nbsp;<button type="button" title="<bean:message key="micro.verurl"/>" onclick="javascript:Rpopupurl('traducciones[<%=i%>].laurl', 'traducciones[<%=i%>].urlnom','<bean:write name="idiomaahora"/>');"><img src="imgs/botons/urls.gif" alt="<bean:message key="micro.verurl"/>" /></button></td>
 			</tr>
-			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("1") || tipovisible.equals("4")?"block":"none"%>;">				
+			<tr style="display:<%=tipovisible.equals("0") || tipovisible.equals("1") || tipovisible.equals("4")?"block":"none"%>;">
 				<td class="etiqueta"><bean:message key="noticia.urlnom" />:</td>
-				<td><html:text property="urlnom" name="traducciones" size="114" maxlength="512" indexed="true" /></td>				
+				<td><html:text property="urlnom" name="traducciones" size="114" maxlength="512" indexed="true" /></td>
 			</tr>
 			</table>
 		</div>
 	    </logic:iterate>
-	
+
 	</div>
-	
+
 
 </html:form>
 
@@ -365,7 +366,7 @@
 
 <script type="text/javascript">
 <!--
-	
+
 	function submitForm(){
 		var accForm = document.getElementById('accFormulario');
 		accForm.submit();
@@ -384,7 +385,7 @@
 		 if (nom_accio== "Traduir") {
 			 accForm.accion.value="<bean:message key='operacion.traducir'/>";
 		 }else if (nom_accio== "Crear"){
-			  accForm.accion.value="<bean:message key='operacion.crear'/>";	 
+			  accForm.accion.value="<bean:message key='operacion.crear'/>";
 		 }else if (nom_accio== "Guardar"){
 			 accForm.accion.value="<bean:message key='operacion.guardar'/>";
 		} else if (nom_accio== "Borrar"){
@@ -394,15 +395,15 @@
 		}
 		accForm.submit();
 	}
-	
+
 	function previsualizar() {
 		abrirWindow('<bean:message key="url.aplicacion" />noticia.do?lang=ca&mkey=<bean:write name="MVS_microsite" property="claveunica"/>&cont=<bean:write name="noticiaForm" property="id"/>&stat=no');
 	}
-	
+
 	var RcajatempUrl;
 	var RcajatempDesc;
 
-    function Rpopupurl(objurl, objdesc, idioma ) 
+    function Rpopupurl(objurl, objdesc, idioma )
     {
 
       RcajatempUrl =document.noticiaForm[objurl];
@@ -411,14 +412,14 @@
 
     }
 
-      function Rmeterurl(laurl, descr) 
+      function Rmeterurl(laurl, descr)
     {
             RcajatempUrl.value=laurl;
 			RcajatempDesc.value=descr;
 
-    } 
-	
-	
+    }
+
+
 // -->
 </script>
 
@@ -426,11 +427,11 @@
 
 <script type="text/javascript">
 <!--
-//labels por defecto	 
+//labels por defecto
 var lb_coordenadasInvalidas = "<bean:message key="error.coordenadas.invalidas"/>";
 var lb_colorInvalido = "<bean:message key="error.color.invalido"/>";
 var lb_completeDireccion = "<bean:message key="error.complete.direccion"/>";
-var lb_DireccionNoEncontrada = "<bean:message key="error.direccion.erronea"/>";	
+var lb_DireccionNoEncontrada = "<bean:message key="error.direccion.erronea"/>";
 //-->
 </script>
 

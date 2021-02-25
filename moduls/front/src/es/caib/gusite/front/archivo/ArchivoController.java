@@ -38,7 +38,7 @@ import es.caib.gusite.micromodel.TemaFront;
 
 /**
  * Controlador para servir archivos subidos al microsite, contenidos, etcétera.
- * 
+ *
  * @author brujula-at4
  */
 @Controller
@@ -48,7 +48,7 @@ public class ArchivoController extends BaseViewController {
 
 	/**
 	 * Archivo {id} del microsite {uri}
-	 * 
+	 *
 	 * @param uri
 	 *            Uri de microsite
 	 * @param lang
@@ -56,25 +56,26 @@ public class ArchivoController extends BaseViewController {
 	 * @param id
 	 *            Identificador de archivo
 	 * @return bytes y encabezados para la petición del archivo
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping("{uri}/f/{id}")
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @PathVariable("id") Long idFile, Model model, HttpServletResponse response, final HttpServletRequest req) throws Exception {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") final SiteId URI, @PathVariable("id") final Long idFile,
+			final Model model, final HttpServletResponse response, final HttpServletRequest req) throws Exception {
 
-			final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
-			if (microsite == null) {
-				log.error("Microsite " + URI.uri + " no encontrado");
-				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
-			}
-			
-			return this.sirveArchivo(this.dataService.obtenerArchivo(idFile), response);
+		final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+		if (microsite == null || microsite.getVisible().equals("N")) {
+			log.error("Microsite " + URI.uri + " no encontrado");
+			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
+		}
+
+		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile), response);
 	}
-	
+
 	/**
-	 * Archivo de nombre "filename" del microsite {uri}. El nombre se recibe en
-	 * el RequestParam {@link Microfront.PNAME}
-	 * 
+	 * Archivo de nombre "filename" del microsite {uri}. El nombre se recibe en el
+	 * RequestParam {@link Microfront.PNAME}
+	 *
 	 * @param uri
 	 *            Uri de microsite
 	 * @param lang
@@ -83,26 +84,29 @@ public class ArchivoController extends BaseViewController {
 	 *            Nombre del archivo
 	 * @return bytes y encabezados para la petición del archivo
 	 * @throws IOException
-	 * @throws ExceptionFrontPagina 
-	 * @throws ExceptionFrontMicro 
+	 * @throws ExceptionFrontPagina
+	 * @throws ExceptionFrontMicro
 	 */
 	@RequestMapping(value = "{uri}/f/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivo(@PathVariable("uri") SiteId URI, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException, ExceptionFrontPagina, ExceptionFrontMicro {
+	public ResponseEntity<byte[]> archivo(@PathVariable("uri") final SiteId URI,
+			@RequestParam(Microfront.PNAME) final String filename, final HttpServletResponse response)
+			throws IOException, ExceptionFrontPagina, ExceptionFrontMicro {
 
-		Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
+		final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 		if (microsite == null) {
 			log.error("Microsite " + URI.uri + " no encontrado");
 			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
-		return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);	
+		return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);
 	}
 
-	
 	/**
-	 * Archivo de nombre "filename" del tema {uri}. El nombre se recibe en
-	 * el RequestParam {@link Microfront.PNAME}
-	 * OJO: La url externa es ft/{uriTema}/files/{name}, pero esto no es soportado por spring, así que se modifica en UrlRewrite
+	 * Archivo de nombre "filename" del tema {uri}. El nombre se recibe en el
+	 * RequestParam {@link Microfront.PNAME} OJO: La url externa es
+	 * ft/{uriTema}/files/{name}, pero esto no es soportado por spring, así que se
+	 * modifica en UrlRewrite
+	 *
 	 * @param filename
 	 *            Nombre del archivo
 	 * @return bytes y encabezados para la petición del archivo
@@ -110,10 +114,12 @@ public class ArchivoController extends BaseViewController {
 	 */
 	@RequestMapping(value = "ft/{uriTema}/", params = Microfront.PNAME)
 	@ResponseBody
-	public ResponseEntity<byte[]> archivoTema(@PathVariable("uriTema") String uriTema, @RequestParam(Microfront.PNAME) String filename, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> archivoTema(@PathVariable("uriTema") final String uriTema,
+			@RequestParam(Microfront.PNAME) final String filename, final HttpServletResponse response)
+			throws IOException {
 
 		try {
-			List<ArchivoTemaFront> archivos  = this.dataService.getArchivoTema(uriTema, filename);
+			final List<ArchivoTemaFront> archivos = this.dataService.getArchivoTema(uriTema, filename);
 			if (archivos == null || archivos.size() < 1) {
 				log.error("Archivo " + filename + " no encontrado en tema " + uriTema);
 				response.setStatus(404);
@@ -121,34 +127,36 @@ public class ArchivoController extends BaseViewController {
 			}
 
 			Archivo archivo = null;
-			for (ArchivoTemaFront a : archivos) {
+			for (final ArchivoTemaFront a : archivos) {
 				if (a.getArchivo().getNombre().equals(filename)) {
 					archivo = a.getArchivo();
 				}
 			}
 			return this.sirveArchivo(archivo, response);
 
-		} catch (ExceptionFrontPagina e) {
+		} catch (final ExceptionFrontPagina e) {
 			log.error(e.getMessage(), e);
 			response.setStatus(404);
 			return null;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 			response.setStatus(500);
 			return null;
 		}
 
 	}
-	
+
 	/**
-	 * Css del tema {uri}.
-	 * OJO: La url externa es ft/{uriTema}/css/estils-tema.css, pero esto no es soportado por spring, así que se modifica en UrlRewrite
+	 * Css del tema {uri}. OJO: La url externa es ft/{uriTema}/css/estils-tema.css,
+	 * pero esto no es soportado por spring, así que se modifica en UrlRewrite
+	 *
 	 * @return bytes y encabezados para la petición del archivo
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "ft/{uriTema}/css")
 	@ResponseBody
-	public ResponseEntity<byte[]> cssTema(@PathVariable("uriTema") String uriTema, HttpServletResponse response) throws IOException {
+	public ResponseEntity<byte[]> cssTema(@PathVariable("uriTema") final String uriTema,
+			final HttpServletResponse response) throws IOException {
 
 		TemaFront tema = null;
 		try {
@@ -161,11 +169,11 @@ public class ArchivoController extends BaseViewController {
 
 			return this.sirveArchivo(tema.getCss(), response);
 
-		} catch (ExceptionFrontPagina e) {
+		} catch (final ExceptionFrontPagina e) {
 			log.error(e.getMessage(), e);
 			response.setStatus(404);
 			return null;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 			response.setStatus(500);
 			return null;
@@ -173,56 +181,60 @@ public class ArchivoController extends BaseViewController {
 
 	}
 
-	/** 
+	/**
 	 * Obtiene el archivo.
-	 * 
+	 *
 	 * @param archivo
 	 * @param response
 	 * @return
 	 * @throws IOException
 	 * @throws ExceptionFrontPagina
 	 */
-	private ResponseEntity<byte[]> sirveArchivo(Archivo archivo, HttpServletResponse response) throws IOException, ExceptionFrontPagina {
+	private ResponseEntity<byte[]> sirveArchivo(final Archivo archivo, final HttpServletResponse response)
+			throws IOException, ExceptionFrontPagina {
 		if (archivo == null) {
 			log.error("Archivo no encontrado");
 			response.setStatus(404);
 			return null;
 		}
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.parseMediaType( this.parseMime(archivo) ));
+		final HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.parseMediaType(this.parseMime(archivo)));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-		responseHeaders.setContentDispositionFormData("file",  archivo.getNombre());//Header("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
-		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders, HttpStatus.OK);
+		responseHeaders.setContentDispositionFormData("file", archivo.getNombre());// Header("Content-Disposition",
+																					// "inline; filename=\"" +
+																					// archivo.getNombre() + "\"");
+		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders,
+				HttpStatus.OK);
 	}
-	
-	/** 
+
+	/**
 	 * Mime extensions
 	 */
-	private static final Map<String, String> MIME_EXTENSIONES;  
-	 static {
-	        Map<String, String> aMap = new HashMap<String, String>();
-	        aMap.put("css", "text/css");
-	        aMap.put("js", "application/javascript");
-			MIME_EXTENSIONES = Collections.unmodifiableMap(aMap);
-	    }
-	 
-	 /** 
-	  * Prase mime.
-	  *  
-	  * @param archivo
-	  * @return
-	  */
-	  
-	private String parseMime(Archivo archivo) {
+	private static final Map<String, String> MIME_EXTENSIONES;
+	static {
+		final Map<String, String> aMap = new HashMap<String, String>();
+		aMap.put("css", "text/css");
+		aMap.put("js", "application/javascript");
+		MIME_EXTENSIONES = Collections.unmodifiableMap(aMap);
+	}
+
+	/**
+	 * Prase mime.
+	 *
+	 * @param archivo
+	 * @return
+	 */
+
+	private String parseMime(final Archivo archivo) {
 		if (archivo.getNombre() != null) {
-			int i = archivo.getNombre().lastIndexOf('.');
+			final int i = archivo.getNombre().lastIndexOf('.');
 			if (i > 0) {
-			    String extension = archivo.getNombre().substring(i+1);
-			    if (MIME_EXTENSIONES.containsKey(extension)) {
-			    	return MIME_EXTENSIONES.get(extension);
-			    }
-			} 
+				final String extension = archivo.getNombre().substring(i + 1);
+				if (MIME_EXTENSIONES.containsKey(extension)) {
+					return MIME_EXTENSIONES.get(extension);
+				}
+			}
 		}
 		return archivo.getMime();
 	}
@@ -231,30 +243,27 @@ public class ArchivoController extends BaseViewController {
 	public String setServicio() {
 		return Microfront.RARCHIVO;
 	}
-	
-	
-	@ExceptionHandler(ExceptionFrontPagina.class)
-	public ModelAndView handleExceptionFrontPagina(ExceptionFrontPagina ex, HttpServletResponse response) {
 
-		Microsite microsite = null;
-		ErrorGenericoView view = new ErrorGenericoView();
-		Idioma lang = new Idioma();
+	@ExceptionHandler(ExceptionFrontPagina.class)
+	public ModelAndView handleExceptionFrontPagina(final ExceptionFrontPagina ex, final HttpServletResponse response) {
+
+		final Microsite microsite = null;
+		final ErrorGenericoView view = new ErrorGenericoView();
+		final Idioma lang = new Idioma();
 		lang.setLang(LANG_CA);
 		view.setLang(lang);
 		view.setIdioma(LANG_CA);
-		ErrorMicrosite errorMicrosite = new ErrorMicrosite();
+		final ErrorMicrosite errorMicrosite = new ErrorMicrosite();
 		errorMicrosite.setAviso("Aviso:" + ex.getMessage());
 		errorMicrosite.setMensaje(ex.getMessage());
 		view.setErrParam(errorMicrosite);
 		view.setErrEstado(errorMicrosite.getEstado());
-		
-		//El 404
+
+		// El 404
 		response.setStatus(HttpStatus.NOT_FOUND.value());
-				
-		return this.modelForView(this.templateNameFactory.errorGenerico(microsite ), view);		
+
+		return this.modelForView(this.templateNameFactory.errorGenerico(microsite), view);
 
 	}
-	
-	
-	
+
 }
