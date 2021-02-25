@@ -3,36 +3,37 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.searchByMicrosite"><![CDATA[ 
+<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.searchByMicrosite"><![CDATA[
+SELECT pp.id || '-' || pp.plantilla.nombre
 FROM PersonalizacionPlantilla pp
 WHERE
 	pp.id IN(
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		PersonalizacionPlantilla p
 	WHERE
 		p.microsite.id = :microsite
 	) OR pp.id IN (
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		Microsite m
 		left outer join
 			m.tema.personalizacionesPlantilla as p
 	WHERE
-		m.id = :microsite 
+		m.id = :microsite
 	) OR pp.id IN (
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		Microsite m
 		left outer join
 			m.tema.temaPadre.personalizacionesPlantilla as p
 	WHERE
-		m.id = :microsite 
+		m.id = :microsite
 	)
-order by 
+order by
 	pp.plantilla.nombre,
 	pp.microsite.id,
 	pp.tema.id,
@@ -41,39 +42,39 @@ order by
 </query>
 
 
-<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.searchByMicrositePlantilla"><![CDATA[ 
+<query name="es.caib.gusite.micromodel.PersonalizacionPlantilla.searchByMicrositePlantilla"><![CDATA[
 FROM PersonalizacionPlantilla pp
 WHERE
 	pp.id IN(
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		PersonalizacionPlantilla p
 	WHERE
 		p.microsite.id = :microsite AND
 		p.plantilla.nombre = :plantilla
 	) OR pp.id IN (
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		Microsite m
 		left outer join
 			m.tema.personalizacionesPlantilla as p
 	WHERE
 		m.id = :microsite AND
-		p.plantilla.nombre = :plantilla 
+		p.plantilla.nombre = :plantilla
 	) OR pp.id IN (
-	SELECT 
+	SELECT
 		p.id
-	FROM 
+	FROM
 		Microsite m
 		left outer join
 			m.tema.temaPadre.personalizacionesPlantilla as p
 	WHERE
 		m.id = :microsite AND
-		p.plantilla.nombre = :plantilla 
+		p.plantilla.nombre = :plantilla
 	)
-order by 
+order by
 	pp.plantilla.nombre,
 	pp.microsite.id,
 	pp.tema.id,
@@ -96,7 +97,7 @@ order by
 
 <query name="es.caib.gusite.micromodel.ArchivoTemaFront.searchByTemaNombre"><![CDATA[
     FROM ArchivoTemaFront atf
-    WHERE 
+    WHERE
     	atf.tema.uri = :uriTema AND
     	atf.archivo.nombre = :nombre
     	]]>

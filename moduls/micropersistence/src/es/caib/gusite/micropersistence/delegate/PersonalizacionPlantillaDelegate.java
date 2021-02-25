@@ -1,188 +1,182 @@
 package es.caib.gusite.micropersistence.delegate;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
-import es.caib.gusite.micromodel.PersonalizacionPlantilla;
-import java.rmi.RemoteException;
 import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
+
+import es.caib.gusite.micromodel.PersonalizacionPlantilla;
 import es.caib.gusite.micropersistence.intf.PersonalizacionPlantillaFacade;
 import es.caib.gusite.micropersistence.intf.PersonalizacionPlantillaFacadeHome;
 import es.caib.gusite.micropersistence.util.PersonalizacionPlantillaFacadeUtil;
 
 /**
  * Delegate para manipular PersonalizacionPlantilla.
+ *
  * @author at4.net
  *
  */
-public class PersonalizacionPlantillaDelegate implements StatelessDelegate{
+public class PersonalizacionPlantillaDelegate implements StatelessDelegate {
 
 	private static final long serialVersionUID = -2076446869522196666L;
-	
-    /**
-     * Crea un PersonalizacionPlantilla
-     */
-    public PersonalizacionPlantilla crearPersonalizacionPlantilla(PersonalizacionPlantilla instance) throws DelegateException {
-        try {
-        	return getFacade().crearPersonalizacionPlantilla(instance);
-        }
-        catch (RemoteException re) {
+
+	/**
+	 * Crea un PersonalizacionPlantilla
+	 */
+	public PersonalizacionPlantilla crearPersonalizacionPlantilla(final PersonalizacionPlantilla instance)
+			throws DelegateException {
+		try {
+			return getFacade().crearPersonalizacionPlantilla(instance);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
+	}
 
-    /**
-     * Actualiza un PersonalizacionPlantilla
-     */
-    public void actualizarPersonalizacionPlantilla(PersonalizacionPlantilla instance) throws DelegateException {
-        try {
-        	getFacade().actualizarPersonalizacionPlantilla(instance);
-        }
-        catch (RemoteException re) {
+	/**
+	 * Actualiza un PersonalizacionPlantilla
+	 */
+	public void actualizarPersonalizacionPlantilla(final PersonalizacionPlantilla instance) throws DelegateException {
+		try {
+			getFacade().actualizarPersonalizacionPlantilla(instance);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
-    
-    /**
-     * Borra un PersonalizacionPlantilla
-     */
-    public void borrarPersonalizacionPlantilla(PersonalizacionPlantilla instance) throws DelegateException {
-        try {
-        	getFacade().borrarPersonalizacionPlantilla(instance);
-        }
-        catch (RemoteException re) {
+	}
+
+	/**
+	 * Borra un PersonalizacionPlantilla
+	 */
+	public void borrarPersonalizacionPlantilla(final PersonalizacionPlantilla instance) throws DelegateException {
+		try {
+			getFacade().borrarPersonalizacionPlantilla(instance);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
+	}
 
-    /**
-     * Lista todos los PersonalizacionPlantilla
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true" 
-     */
-    @SuppressWarnings("unchecked")
-    public List<PersonalizacionPlantilla> listarPersonalizacionPlantilla() throws DelegateException {
-        try {
-        	return getFacade().listarPersonalizacionPlantilla();
-        }
-        catch (RemoteException re) {
+	/**
+	 * Lista todos los PersonalizacionPlantilla
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	@SuppressWarnings("unchecked")
+	public List<PersonalizacionPlantilla> listarPersonalizacionPlantilla() throws DelegateException {
+		try {
+			return getFacade().listarPersonalizacionPlantilla();
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
-    
-    /**
-     * Obtiene un PersonalizacionPlantilla
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public PersonalizacionPlantilla obtenerPersonalizacionPlantilla( java.lang.Long id) throws DelegateException {
-        try {
-        	return getFacade().obtenerPersonalizacionPlantilla(id);
-        }
-        catch (RemoteException re) {
+	}
+
+	/**
+	 * Obtiene un PersonalizacionPlantilla
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public PersonalizacionPlantilla obtenerPersonalizacionPlantilla(final java.lang.Long id) throws DelegateException {
+		try {
+			return getFacade().obtenerPersonalizacionPlantilla(id);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
-    
-    /**
-     * Busca PersonalizacionPlantilla por searchByMicrosite
-     */
-    public List<PersonalizacionPlantilla> searchByMicrosite(long microsite) throws DelegateException {
-        try {
-        	return getFacade().searchByMicrosite(
-		        microsite
-        	);
-        }
-        catch (RemoteException re) {
+	}
+
+	/**
+	 * Busca PersonalizacionPlantilla por searchByMicrosite
+	 */
+	public List<String> searchByMicrosite(final Long microsite) throws DelegateException {
+		try {
+			return getFacade().searchByMicrosite(microsite);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
+	}
 
-    /**
-     * Busca PersonalizacionPlantilla por searchByMicrosite
-     */
-    public List<PersonalizacionPlantilla> searchByMicrosite(Long microsite, String ordre, Integer pagina, Integer max) throws DelegateException {
-        try {
-            return getFacade().searchByMicrosite(microsite, ordre, pagina, max);
-        }
-        catch (RemoteException re) {
-            throw new DelegateException(re);
-        }
-    }
-
-    /**
-     * Busca PersonalizacionPlantilla por searchByMicrosite
-     */
-    public List<PersonalizacionPlantilla> searchByMicrositePlantilla(long microsite, String plantilla) throws DelegateException {
-        try {
-        	return getFacade().searchByMicrositePlantilla(
-		        microsite, plantilla
-        	);
-        }
-        catch (RemoteException re) {
+	/**
+	 * Busca PersonalizacionPlantilla por searchByMicrosite
+	 */
+	public List<PersonalizacionPlantilla> searchByMicrosite(final Long microsite, final String ordre,
+			final Integer pagina, final Integer max) throws DelegateException {
+		try {
+			return getFacade().searchByMicrosite(microsite, ordre, pagina, max);
+		} catch (final RemoteException re) {
 			throw new DelegateException(re);
 		}
-    }
+	}
 
-    /**
-     * Busca PersonalizacionPlantilla por searchByPlantilla
-     */
-    public List<PersonalizacionPlantilla> searchByTema(Long tema) throws DelegateException {
-        try {
-            return getFacade().searchByTema(tema);
-        }
-        catch (RemoteException re) {
-            throw new DelegateException(re);
-        }
-    }
+	/**
+	 * Busca PersonalizacionPlantilla por searchByMicrosite
+	 */
+	public List<PersonalizacionPlantilla> searchByMicrositePlantilla(final long microsite, final String plantilla)
+			throws DelegateException {
+		try {
+			return getFacade().searchByMicrositePlantilla(microsite, plantilla);
+		} catch (final RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
 
-    /**
-     * Eliminar una lista de plantillas
-     */
-    public void borrarPersonalizacionPlantillas(List<Long> ids) throws DelegateException {
-        try {
-            getFacade().borrarPersonalizacionPlantillas(ids);
-        } catch (RemoteException re) {
-            throw new DelegateException(re);
-        }
-    }
+	/**
+	 * Busca PersonalizacionPlantilla por searchByPlantilla
+	 */
+	public List<PersonalizacionPlantilla> searchByTema(final Long tema) throws DelegateException {
+		try {
+			return getFacade().searchByTema(tema);
+		} catch (final RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
 
-    /**
-     * Contar PersonalizacionPlantilla por Microsite
-     * @ejb.interface-method
-     * @ejb.permission unchecked="true"
-     */
-    public Long countByMicrosite(Long microsite) throws DelegateException {
-        try {
-            return getFacade().countByMicrosite(microsite);
-        } catch (RemoteException re) {
-            throw new DelegateException(re);
-        }
-    }
-    /* ========================================================= */
-    /* ======================== REFERENCIA AL FACADE  ========== */
-    /* ========================================================= */
+	/**
+	 * Eliminar una lista de plantillas
+	 */
+	public void borrarPersonalizacionPlantillas(final List<Long> ids) throws DelegateException {
+		try {
+			getFacade().borrarPersonalizacionPlantillas(ids);
+		} catch (final RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
 
-    private Handle facadeHandle;
+	/**
+	 * Contar PersonalizacionPlantilla por Microsite
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public Long countByMicrosite(final Long microsite) throws DelegateException {
+		try {
+			return getFacade().countByMicrosite(microsite);
+		} catch (final RemoteException re) {
+			throw new DelegateException(re);
+		}
+	}
+	/* ========================================================= */
+	/* ======================== REFERENCIA AL FACADE ========== */
+	/* ========================================================= */
 
-    private PersonalizacionPlantillaFacade getFacade() throws RemoteException {
-        return (PersonalizacionPlantillaFacade) facadeHandle.getEJBObject();
-    }
+	private Handle facadeHandle;
 
-    protected PersonalizacionPlantillaDelegate() throws DelegateException {
-        try {
-        	PersonalizacionPlantillaFacadeHome home = PersonalizacionPlantillaFacadeUtil.getHome();
-        	PersonalizacionPlantillaFacade remote = home.create();
-            facadeHandle = remote.getHandle();
-        } catch (NamingException e) {
-            throw new DelegateException(e);
-        } catch (CreateException e) {
-            throw new DelegateException(e);
-        } catch (RemoteException e) {
-            throw new DelegateException(e);
-        }
-    }
+	private PersonalizacionPlantillaFacade getFacade() throws RemoteException {
+		return (PersonalizacionPlantillaFacade) facadeHandle.getEJBObject();
+	}
+
+	protected PersonalizacionPlantillaDelegate() throws DelegateException {
+		try {
+			final PersonalizacionPlantillaFacadeHome home = PersonalizacionPlantillaFacadeUtil.getHome();
+			final PersonalizacionPlantillaFacade remote = home.create();
+			facadeHandle = remote.getHandle();
+		} catch (final NamingException e) {
+			throw new DelegateException(e);
+		} catch (final CreateException e) {
+			throw new DelegateException(e);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
 
 }
-
