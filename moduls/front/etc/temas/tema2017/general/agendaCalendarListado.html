@@ -101,12 +101,12 @@ var thDebug = false;
 						<div th:with="DayOfMonthgi=1" th:remove="tag">
 							<p
 							th:with="gi=${#calendars.create(#calendars.year(gi),#calendars.month(gi),DayOfMonthgi,#calendars.hour(gi),#calendars.minute(gi))}">
-							<button id="mesAnterior" type="button" class="btn btn-default" aria-label="Left Align" onclick="cambiMes(this.id);">
+							<button th:title="#{general.anterior}"  id="mesAnterior" type="button" class="btn btn-default" aria-label="Left Align" onclick="cambiMes(this.id);">
 								<span class="icon icon-left" ></span>
 <!-- 								<span class="button-month-text" th:text="#{general.anterior}">mes anterior</span> -->
-								<label class="button-month-text" th:text="#{general.anterior}"  for="agendaSelect"></label>
+								<label th:title="#{general.anterior}" class="button-month-text" th:text="#{general.anterior}"  for="agendaSelect"></label>
 							</button>
-							<select  onchange="mostrarCalendari();" name="agendaSelect"
+							<select  th:title="#{general.anterior}" onchange="mostrarCalendari();" name="agendaSelect"
 							id="agendaSelect"
 							th:with="nummeses=3 + ${nummesesaretroceder}">
 								<div th:each="i : ${#numbers.sequence( 0, nummeses-1)}"
@@ -216,13 +216,13 @@ var thDebug = false;
 					<th id="D7" scope="col"><abbr th:title="#{calendario.domingo}" title="Diumenge" th:text="#{calendario.domingo.abrv}">Dg</abbr></th>
 				</tr>
 				<tr id="diasNoAbreviados">
-					<th scope="col"><abbr th:title="#{calendario.lunes}" title="Dilluns" th:text="#{calendario.lunes}">Dl</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.martes}" title="Dimarts" th:text="#{calendario.martes}">Dm</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.miercoles}" title="Dimecres" th:text="#{calendario.miercoles}">Dc</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.jueves}" title="Dijous" th:text="#{calendario.jueves}">Dj</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.viernes}" title="Divendres" th:text="#{calendario.viernes}">Dv</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.sabado}" title="Dissabte" th:text="#{calendario.sabado}">Ds</abbr></th>
-					<th scope="col"><abbr th:title="#{calendario.domingo}" title="Diumenge" th:text="#{calendario.domingo}">Dg</abbr></th>
+					<th id="D1" scope="col"><abbr th:title="#{calendario.lunes}" title="Dilluns" th:text="#{calendario.lunes}">Dl</abbr></th>
+					<th id="D2" scope="col"><abbr th:title="#{calendario.martes}" title="Dimarts" th:text="#{calendario.martes}">Dm</abbr></th>
+					<th id="D3" scope="col"><abbr th:title="#{calendario.miercoles}" title="Dimecres" th:text="#{calendario.miercoles}">Dc</abbr></th>
+					<th id="D4" scope="col"><abbr th:title="#{calendario.jueves}" title="Dijous" th:text="#{calendario.jueves}">Dj</abbr></th>
+					<th id="D5" scope="col"><abbr th:title="#{calendario.viernes}" title="Divendres" th:text="#{calendario.viernes}">Dv</abbr></th>
+					<th id="D6" scope="col"><abbr th:title="#{calendario.sabado}" title="Dissabte" th:text="#{calendario.sabado}">Ds</abbr></th>
+					<th id="D7" scope="col"><abbr th:title="#{calendario.domingo}" title="Diumenge" th:text="#{calendario.domingo}">Dg</abbr></th>
 				</tr>
 				<th:block th:with="diaSemanaPrimerDiaMesEn=(${#calendars.dayOfWeek(cf)}-1),
 				diaSemanaPrimerDiaMes=${diaSemanaPrimerDiaMesEn==0?7:diaSemanaPrimerDiaMesEn}" th:remove="tag">
