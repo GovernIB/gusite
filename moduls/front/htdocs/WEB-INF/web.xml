@@ -67,7 +67,26 @@
 	      <param-value>/WEB-INF/mvc-servlet.xml</param-value>
 	    </init-param>
 		<load-on-startup>1</load-on-startup>
-    		
+    		<security-role-ref>
+       <role-name>gussystem</role-name>
+       <role-link>GUS_SYSTEM</role-link>
+    </security-role-ref>
+    
+    <security-role-ref>
+       <role-name>gusadmin</role-name>
+       <role-link>GUS_ADMIN</role-link>
+    </security-role-ref>
+    
+    <security-role-ref>
+       <role-name>gussuper</role-name>
+       <role-link>GUS_SUPER</role-link>
+    </security-role-ref>
+    
+    <security-role-ref>
+       <role-name>gusoper</role-name>
+       <role-link>GUS_OPER</role-link>
+    </security-role-ref>  
+    
 	</servlet>
 
 	<servlet-mapping>

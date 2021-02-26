@@ -365,12 +365,14 @@ public class FrontDataService {
 		}
 	}
 
-	public Archivo obtenerArchivo(final Long id) throws ExceptionFrontPagina {
+	public Archivo obtenerArchivo(final Long id,Boolean visualizar) throws ExceptionFrontPagina {
 		try {
 			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
+			if(!visualizar) {
 			if (!archi.visible(id)) {
 				log.error("Archivo  no disponible");
 				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
+			}
 			}
 			return archi.obtenerArchivo(id);
 		} catch (final DelegateException e) {

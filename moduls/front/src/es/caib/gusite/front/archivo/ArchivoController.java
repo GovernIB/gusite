@@ -1,6 +1,7 @@
 package es.caib.gusite.front.archivo;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,14 +63,18 @@ public class ArchivoController extends BaseViewController {
 	@ResponseBody
 	public ResponseEntity<byte[]> archivo(@PathVariable("uri") final SiteId URI, @PathVariable("id") final Long idFile,
 			final Model model, final HttpServletResponse response, final HttpServletRequest req) throws Exception {
-
+		Boolean visualizar = false;
 		final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
-		if (microsite == null || microsite.getVisible().equals("N")) {
+	    if(req.isUserInRole("gussystem") || req.isUserInRole("gusadmin") || req.isUserInRole("gussuper") || req.isUserInRole("gusoper")){
+	    	visualizar = true;
+	    }
+
+		if (microsite == null || (microsite.getVisible().equals("N") && !visualizar)) {
 			log.error("Microsite " + URI.uri + " no encontrado");
 			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
 
-		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile), response);
+		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile,visualizar), response);
 	}
 
 	/**
