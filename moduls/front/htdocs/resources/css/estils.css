@@ -50,7 +50,7 @@ input, select, textarea, button {
 }
 
 input[type="text"], select, textarea {
-    line-height: 1.3em !important;
+    line-height: 1.3em;
     background-color: #fff;
     border: 2px solid #e5e5e5 !important;
 }
@@ -1208,12 +1208,12 @@ hr {
     margin: 0 auto;
     display: block;
     background-size:32%;
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
 }
 
 /*OCULTAR CAPTION TABLA CALENDARIO EN TODAS Y COLOCAR EN EL CENTRO EL NOMBRE DEL MES*/
 
-.captionSummaryTable 
+.captionSummaryTable
 {
     display: none;
 }
@@ -1249,8 +1249,8 @@ hr {
     #imagenCabecera1,#imagenCabecera2 {
         margin-top: 16px;
     }
-    
-}   
+
+}
 
 /*CLASE PARA MOSTRAR U OCULTAR BOTONES DE ENCUESTAS SEGUN CONVENGA*/
 
@@ -1262,7 +1262,7 @@ hr {
     display: none;
 }
 
-/*  AGENDA */ 
+/*  AGENDA */
 
 /* CSS Document */
 
@@ -1494,7 +1494,7 @@ h2 { font-size: 1.1em; padding: 10px; margin: 0; }
 }
 
 .contenedorFAQS .bloquePreguntas{
-    margin-top: 29px !important;    
+    margin-top: 29px !important;
 }
 
 .deshabilitado{
