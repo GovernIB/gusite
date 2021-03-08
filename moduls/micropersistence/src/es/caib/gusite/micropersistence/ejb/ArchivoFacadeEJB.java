@@ -930,23 +930,8 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		if (resultados.isEmpty()) {
 			return esEncuesta(session, id);
 		}
-		resultados.get(0);
-
-		if (resultados != null && !resultados.isEmpty()) {
-			for (final Object[] resultado : resultados) {
-				final Date actual = new Date();
-				final Menu menu = new Menu();
-
-				if (resultado[0] != null) {
-					menu.setVisible((resultado[0].toString()));
-					if (menu.getVisible().equals(noVisible)) {
-						return false;
-					}
-				}
-			}
-		}
-
-		return true;
+		
+		return "S".equals(resultados.get(0));
 
 	}
 
