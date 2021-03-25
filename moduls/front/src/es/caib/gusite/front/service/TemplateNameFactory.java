@@ -39,7 +39,7 @@ public class TemplateNameFactory {
 
 			final List<String> plantillas = this.templateDataService.getPlantillasAplicables(microsite.getId(),
 					microsite.getDesarrollo());
-			final String persPlant = getPlantillaByFragmento(plantillas, plantillaOfragmento);
+			final String persPlant = getPlantillaByFragmento(plantillas, plantilla);
 			if (persPlant == null) {
 				return plantilla + fragmento;
 			} else {

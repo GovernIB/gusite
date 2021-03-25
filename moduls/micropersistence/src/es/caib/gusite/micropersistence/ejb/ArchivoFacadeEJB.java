@@ -21,7 +21,6 @@ import es.caib.gusite.micromodel.ArchivoFull;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Encuesta;
-import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Pregunta;
@@ -42,7 +41,7 @@ import es.caib.gusite.micropersistence.util.ArchivoUtil;
  * @author Indra
  */
 
-@SuppressWarnings({ "deprecation", "unchecked" })
+@SuppressWarnings({ "unchecked" })
 public abstract class ArchivoFacadeEJB extends HibernateEJB {
 
 	private static final long serialVersionUID = 81125150632029055L;
@@ -437,6 +436,12 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	 * @ejb.permission unchecked="true"
 	 */
 	public boolean visible(final Long id) {
+
+		if (true) {
+			// #134 Se ha puesto este parche para subir una version que mejora el
+			// rendimiento
+			return true;
+		}
 
 		final Session session = this.getSession();
 		final String noVisible = "N";
@@ -930,23 +935,8 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 		if (resultados.isEmpty()) {
 			return esEncuesta(session, id);
 		}
-		resultados.get(0);
 
-		if (resultados != null && !resultados.isEmpty()) {
-			for (final Object[] resultado : resultados) {
-				final Date actual = new Date();
-				final Menu menu = new Menu();
-
-				if (resultado[0] != null) {
-					menu.setVisible((resultado[0].toString()));
-					if (menu.getVisible().equals(noVisible)) {
-						return false;
-					}
-				}
-			}
-		}
-
-		return true;
+		return "S".equals(resultados.get(0));
 
 	}
 
