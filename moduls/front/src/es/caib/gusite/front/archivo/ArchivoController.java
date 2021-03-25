@@ -2,6 +2,7 @@ package es.caib.gusite.front.archivo;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.Normalizer;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -202,11 +203,12 @@ public class ArchivoController extends BaseViewController {
 			response.setStatus(404);
 			return null;
 		}
-
+		  String norm= normalizador(archivo.getNombre());
+		  String nombreNormalize = norm.replace("¿", "");
 		final HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.parseMediaType(this.parseMime(archivo)));
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
-		responseHeaders.setContentDispositionFormData("file", archivo.getNombre());// Header("Content-Disposition",
+		responseHeaders.setContentDispositionFormData("file", nombreNormalize);// Header("Content-Disposition",
 																					// "inline; filename=\"" +
 																					// archivo.getNombre() + "\"");
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders,
@@ -270,5 +272,10 @@ public class ArchivoController extends BaseViewController {
 		return this.modelForView(this.templateNameFactory.errorGenerico(microsite), view);
 
 	}
+
+	 private static String normalizador(String str)
+	  {
+	    return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
+	   }
 
 }

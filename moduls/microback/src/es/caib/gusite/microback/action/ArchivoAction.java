@@ -1,5 +1,6 @@
 package es.caib.gusite.microback.action;
 
+import java.text.Normalizer;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -103,13 +104,14 @@ public class ArchivoAction extends BaseAction {
 			if (archivo != null) {
 
 				response.reset();
-
+                String nombreNormalize= normalizador(archivo.getNombre());
 				if (!forzarDownload(mapping, form, request)) {
 					response.setContentType(archivo.getMime());
-					response.setHeader("Content-Disposition", "inline; filename=\"" + archivo.getNombre() + "\"");
+					// poner normalize en el nombre
+					response.setHeader("Content-Disposition", "inline; filename=\"" + nombreNormalize + "\"");
 				} else {
 					response.setContentType("application/octet-stream");
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getNombre() + "\"");
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + nombreNormalize + "\"");
 				}
 
 				response.setContentLength(new Long(archivo.getPeso()).intValue());
@@ -165,6 +167,10 @@ public class ArchivoAction extends BaseAction {
 		return text20;
 	}
 
+	  private static String normalizador(String str)
+	  {
+	    return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
+	   }
 	public boolean forzarDownload(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request)
 			throws Exception {
 
