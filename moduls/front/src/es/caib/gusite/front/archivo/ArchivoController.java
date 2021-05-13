@@ -1,7 +1,6 @@
 package es.caib.gusite.front.archivo;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.text.Normalizer;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,16 +65,17 @@ public class ArchivoController extends BaseViewController {
 			final Model model, final HttpServletResponse response, final HttpServletRequest req) throws Exception {
 		Boolean visualizar = false;
 		final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
-	    if(req.isUserInRole("gussystem") || req.isUserInRole("gusadmin") || req.isUserInRole("gussuper") || req.isUserInRole("gusoper")){
-	    	visualizar = true;
-	    }
+		if (req.isUserInRole("gussystem") || req.isUserInRole("gusadmin") || req.isUserInRole("gussuper")
+				|| req.isUserInRole("gusoper")) {
+			visualizar = true;
+		}
 
 		if (microsite == null || (microsite.getVisible().equals("N") && !visualizar)) {
 			log.error("Microsite " + URI.uri + " no encontrado");
 			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
 
-		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile,visualizar), response);
+		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile, visualizar), response);
 	}
 
 	/**
@@ -203,14 +203,16 @@ public class ArchivoController extends BaseViewController {
 			response.setStatus(404);
 			return null;
 		}
-		  String norm= normalizador(archivo.getNombre());
-		  String nombreNormalize = norm.replace("¿", "");
+		final String norm = normalizador(archivo.getNombre());
+		final String nombreNormalize = norm.replace("¿", "");
 		final HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.parseMediaType(this.parseMime(archivo)));
+		if (this.parseMime(archivo) != null) {
+			responseHeaders.setContentType(MediaType.parseMediaType(this.parseMime(archivo)));
+		}
 		responseHeaders.setContentLength(new Long(archivo.getPeso()).intValue());
 		responseHeaders.setContentDispositionFormData("file", nombreNormalize);// Header("Content-Disposition",
-																					// "inline; filename=\"" +
-																					// archivo.getNombre() + "\"");
+																				// "inline; filename=\"" +
+																				// archivo.getNombre() + "\"");
 		return new ResponseEntity<byte[]>(this.dataService.obtenerContenidoArchivo(archivo), responseHeaders,
 				HttpStatus.OK);
 	}
@@ -223,6 +225,10 @@ public class ArchivoController extends BaseViewController {
 		final Map<String, String> aMap = new HashMap<String, String>();
 		aMap.put("css", "text/css");
 		aMap.put("js", "application/javascript");
+		aMap.put("ttf", "application/x-font-ttf");
+		aMap.put("otf", "application/x-font-opentype");
+		aMap.put("woff", "application/font-woff");
+		aMap.put("woff2", "application/font-woff2");
 		MIME_EXTENSIONES = Collections.unmodifiableMap(aMap);
 	}
 
@@ -273,9 +279,9 @@ public class ArchivoController extends BaseViewController {
 
 	}
 
-	 private static String normalizador(String str)
-	  {
-	    return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
-	   }
+	private static String normalizador(final String str) {
+		return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replaceAll(" ", "_");
+	}
 
 }
