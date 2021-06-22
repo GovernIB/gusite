@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import es.caib.gusite.plugins.PluginException;
@@ -30,8 +31,9 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 	private static Log log = LogFactory.getLog(RolsacOrganigramaProvider.class);
 	static public final String UO_PORTAVOZ="270677";  // caib: 270677 nuestra: 51079
 	private static final String DEFAULT_IDIOMA = "ca";
-	
-	@Override 
+
+	@Override
+	@Cacheable(value = "cacheUnidades", key = "#lang")
 	public Collection<UnidadListData> getUnidades (String lang) throws PluginException {
 		try {
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
@@ -63,8 +65,9 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			throw new PluginException("No se han podido obtener las unidades principales ROLSAC", e);
 		}
 	}
-	
-	@Override 
+
+	@Override
+	@Cacheable(value = "cacheUnidadesPrincipales", key = "#lang")
 	public Collection<UnidadListData> getUnidadesPrincipales(String lang) throws PluginException {
 
 		try {
@@ -89,15 +92,15 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			uaCriteria.setId(UO_GOVERN_IB.toString());
 
 			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-			
+
 			if (ua == null) {
 				throw new RuntimeException("No se ha encontrado la uo govern, la propiedad de sistema es.caib.gusite.codigoUO.govern es:" + idUOGovern);
 			}
-			
+
 			UnitatAdministrativaCriteria uaCriteriaFilles = new UnitatAdministrativaCriteria();
 			uaCriteriaFilles.setIdioma(lang);
 			uaCriteriaFilles.setOrdenar(new UnitatAdministrativaOrdenacio[] {UnitatAdministrativaOrdenacio.orden_asc});
-			
+
 			List<UnitatAdministrativaQueryServiceAdapter> listaUAs = ua.llistarFilles(uaCriteriaFilles);
 
 			Collection<UnidadListData> nuevasUAs = new ArrayList<UnidadListData>();
@@ -116,11 +119,12 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			log.error("No se han podido obtener las unidades principales ROLSAC", e);
 			throw new PluginException("No se han podido obtener las unidades principales ROLSAC", e);
 		}
-		
+
 	}
 
 
-	@Override 
+	@Override
+	@Cacheable(value = "cacheUnidadesHijas", key = "#unidadId+ '-' +#lang")
 	public Collection<UnidadListData> getUnidadesHijas(Serializable unidadId, String lang) throws PluginException {
 
 		try {
@@ -157,19 +161,20 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			log.error("No se han podido obtener las unidades principales ROLSAC", e);
 			throw new PluginException("No se han podido obtener las unidades principales ROLSAC", e);
 		}
-		
+
 	}
 
-	
+
 	@Override
+	@Cacheable(value = "cacheUnidadesData", key = "#unidadId+ '-' +#lang")
 	public UnidadData getUnidadData(Serializable unidadId, String lang) throws PluginException {
 
 
 		try {
 			// DIRECCION DEL PIE DE PAGINA
-	
+
 			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-	
+
 			// Obtener UA.
 			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
 			Long coduo = Long.valueOf(String.valueOf(unidadId));
@@ -185,20 +190,20 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 
 			ua.setIdioma(lang);
 			return transform2UnidadData(ua);
-	
+
 		} catch (QueryServiceException e) {
 			log.error(e.getMessage(), e);
 			throw new PluginException(e.getMessage(), e);
-			
+
 		}
 	}
 
-	
+
 	private UnidadData transform2UnidadData(UnitatAdministrativaQueryServiceAdapter ua) throws PluginException, QueryServiceException {
 
 		UnidadData unidadData = new UnidadData();
 		this.transform2UnidadListData(ua, unidadData);
-		
+
 		// Obtener edificios asociados y construir dirección.
 		EdificiCriteria edificiCriteria = new EdificiCriteria();
 		List<EdificiQueryServiceAdapter> edificios = ua.llistarEdificis(edificiCriteria);
@@ -229,15 +234,15 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 			unidadData.setFax(edificio.getFax());
 		}
 		return unidadData;
-	} 
-	
+	}
+
 	private UnidadListData transform2UnidadListData(UnitatAdministrativaQueryServiceAdapter ua) throws PluginException, QueryServiceException {
 		UnidadListData unidadData = new UnidadData();
 		return this.transform2UnidadListData(ua, unidadData);
 	}
 
 	private UnidadListData transform2UnidadListData(UnitatAdministrativaQueryServiceAdapter ua, UnidadListData unidadData) throws PluginException, QueryServiceException {
-		
+
 		unidadData.setNombre(ua.getNombre());
 		unidadData.setAbreviatura(ua.getAbreviatura());
 		unidadData.setIdUnidad(ua.getId());
@@ -246,20 +251,20 @@ public class RolsacOrganigramaProvider implements OrganigramaProvider {
 		if (idUOGovern == null) {
 			throw new RuntimeException("No se estableció la propiedad de sistema es.caib.gusite.codigoUO.govern");
 		}
-		
+
 		if (ua.getPadre() != null && !ua.getId().toString().equals(idUOGovern)) { //La UO Govern de rolsac es la raíz
-			unidadData.setIdUnidadPadre(ua.getPadre()); 
+			unidadData.setIdUnidadPadre(ua.getPadre());
 		}
-		
-		
+
+
 		//TODO: mover la propiedad al espacio del plugin
 		String absUrl = System.getProperty("es.caib.gusite.portal.url");
 
 		unidadData.setUrl(absUrl + "/govern/organigrama/area.do?coduo=" + ua.getId() + "&lang=" + ua.getIdioma());
 		unidadData.setDominio(ua.getDominio());
 		return unidadData;
-	} 
-	
+	}
+
 
 
 }

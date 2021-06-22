@@ -1,0 +1,46 @@
+<ehcache  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	updateCheck="false">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <defaultCache
+        maxElementsInMemory="800"
+        eternal="false"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"
+        />
+
+      <cache name="cacheUnidades"
+        maxElementsInMemory="500"
+        eternal="86400"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"/>
+
+        <cache name="cacheUnidadesHijas"
+        maxElementsInMemory="500"
+        eternal="86400"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"/>
+
+        <cache name="cacheUnidadesPrincipales"
+        maxElementsInMemory="500"
+        eternal="86400"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"/>
+
+        <cache name="cacheUnidadesData"
+        maxElementsInMemory="500"
+        eternal="86400"
+        timeToLiveSeconds="600"
+        overflowToDisk="false"/>
+
+
+
+
+
+
+
+
+
+</ehcache>
