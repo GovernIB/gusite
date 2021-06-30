@@ -105,19 +105,12 @@ public class BuscaOrdenaAuditoriasAction extends Action {
 
     private static Collection<UnidadListData> obtenerListaUAsCacheada() throws PluginException {
 
-        Date fechaLlamada = new Date();
 
-        // Si es la primera llamada o se ha sobrepasado el tiempo de caché, actualizamos lista de UAs obtenidas vía WS.
-        if (fechaUltimaComprobacionCacheUas == null ||
-                (fechaLlamada.getTime() - fechaUltimaComprobacionCacheUas.getTime() > MAX_MILISEGUNDOS_COMPROBACION_UAS)) {
 
-            // Actualizar caché de UAs.
+
             cacheListaUAs = PluginFactory.getInstance().getOrganigramaProvider().getUnidades(Idioma.getIdiomaPorDefecto());
 
-            // Actualizar fecha de modificación de caché.
-            fechaUltimaComprobacionCacheUas = new Date();
 
-        }
 
         return cacheListaUAs;
     }

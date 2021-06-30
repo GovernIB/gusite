@@ -54,7 +54,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author at4.net
- * 
+ *
  */
 public abstract class BaseViewController extends FrontController {
 
@@ -65,14 +65,14 @@ public abstract class BaseViewController extends FrontController {
 	}
 
 	@Autowired
-	private OrganigramaProvider organigramaProvider; 
-	
+	private OrganigramaProvider organigramaProvider;
+
 	@Autowired
 	private Version version;
-	
+
 	/**
 	 * Realiza las tareas que antes realizaba el constructor de Bdbase
-	 * 
+	 *
 	 * @param uri
 	 * @param lang
 	 * @param model
@@ -84,10 +84,10 @@ public abstract class BaseViewController extends FrontController {
 	public void configureLayoutView(final String uri, final Idioma lang, final LayoutView view, final String pcampa) throws ExceptionFrontMicro {
 		this.configureLayoutView(uri, lang, view, pcampa, null);
 	}
-	
+
 	/**
 	 * Realiza las tareas que antes realizaba el constructor de Bdbase
-	 * 
+	 *
 	 * @param uri
 	 * @param lang
 	 * @param model
@@ -103,9 +103,9 @@ public abstract class BaseViewController extends FrontController {
 		view.setIdioma(idi);
 		view.setLang(lang);
 		view.setVersion(version);
-		
+
 		final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		
+
 		view.setIntranetAuth(request);
 		this.cargarSite(uri, lang, view);
 
@@ -127,7 +127,7 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Genera el modelo spring para la vista, según sus variables
-	 * 
+	 *
 	 * @param viewName
 	 * @param view
 	 * @return
@@ -173,7 +173,7 @@ public abstract class BaseViewController extends FrontController {
 			if (!"S".equals(microsite.getVisible())) {
 				throw new ExceptionFrontMicro(" [Configuracion microsite]: El site no es visible");
 			}
-			 * 
+			 *
 			 */
 
 		} catch (DelegateException e) {
@@ -211,7 +211,7 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Carga en el modelo la lista de idiomas. MVS_listaidiomas
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void cargarListaIdiomas(LayoutView view) throws ExceptionFrontMicro {
@@ -260,7 +260,7 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Mete en sesión el css. MVS_css
-	 * 
+	 *
 	 * @param request
 	 * @throws Exception
 	 */
@@ -291,24 +291,24 @@ public abstract class BaseViewController extends FrontController {
 				archivosCss.add( new ArchivoCSS( "/resources/css/estils_morat.css", "screen") );
 			}
 		}
-		
+
 		if (view.getMicrosite().getTema() != null) {
 
 			view.setUriTema( this.urlFactory.uriTema(view.getMicrosite().getTema()));
-			
+
 			if (view.getMicrosite().getTema().getCss() != null) {
 				archivosCss.add( new ArchivoCSS ( this.urlFactory.cssTema(view.getMicrosite().getTema()), "screen" ) );
 			}
-			
+
 		}
-		
+
 		view.setCss(archivosCss);
-		
+
 	}
 
 	/**
 	 * Mete en sesión una lista de beans para el pie. MVS_listapie
-	 * 
+	 *
 	 * @param request
 	 */
 	private void cargarPie(LayoutView view) throws ExceptionFrontMicro {
@@ -400,11 +400,11 @@ public abstract class BaseViewController extends FrontController {
 		if (!isEmpty(unidadData.getDireccion())) {
 			if (!isEmpty(unidadData.getUrlPlano())) {
 				direccion.append("<a href=\"").append(unidadData.getUrlPlano()).append("\">");
-				//TODO: asumimos que si hay dirección, también hay cp y pob 
+				//TODO: asumimos que si hay dirección, también hay cp y pob
 				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
 				.append(unidadData.getPoblacion()).append("</a><p></p>");
 			} else {
-				//TODO: asumimos que si hay dirección, también hay cp y pob 
+				//TODO: asumimos que si hay dirección, también hay cp y pob
 				direccion.append(": ").append(unidadData.getDireccion()).append(" - ").append(unidadData.getCodigoPostal()).append(" ")
 				.append(unidadData.getPoblacion()).append("<p></p>");
 			}
@@ -436,12 +436,12 @@ public abstract class BaseViewController extends FrontController {
 	}
 
 	private boolean isEmpty(String url) {
-		return url == null || url.length() < 1; 
+		return url == null || url.length() < 1;
 	}
 
 	/**
 	 * Mete en sesión una lista de beans para la cabecera. MVS_listacabecera
-	 * 
+	 *
 	 * @param request
 	 */
 	private void cargarCabecera(LayoutView view) throws ExceptionFrontMicro {
@@ -495,13 +495,13 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Método que cambia el valor MVS_menu de la sesión
-	 * 
+	 *
 	 * @param request
 	 */
 	private void cargarMenu(final LayoutView view, final String uriContenido) throws ExceptionFrontMicro {
 		DelegateBase delegateBase;
 		try {
-			delegateBase = new DelegateBase(); 
+			delegateBase = new DelegateBase();
 			view.setMenu(delegateBase.obtenerMainMenu(view.getMicrosite().getId(), view.getLang().getLang(), uriContenido));
 		} catch (DelegateException e) {
 			throw new ExceptionFrontMicro(e);
@@ -516,14 +516,14 @@ public abstract class BaseViewController extends FrontController {
 	 * Método que deben implementar las clases. Debe devolver un string con el
 	 * servicio en el que nos encontremos. Por ejemplo: return
 	 * Microfront.RCONTENIDO
-	 * 
+	 *
 	 * @return String un Servicio
 	 */
 	public abstract String setServicio();
 
 	/**
 	 * Mete en el request el html de la campaña.
-	 * 
+	 *
 	 * @param request
 	 */
 	private void cargarCampanya(LayoutView view, String pcampa) throws ExceptionFrontMicro {
@@ -540,7 +540,7 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * TODO: El menú corporativo debería ser un plugin que devolviese el árbol de menú
-	 * 
+	 *
 	 * @param microsite
 	 * @param model
 	 * @param lang
@@ -549,15 +549,15 @@ public abstract class BaseViewController extends FrontController {
 		String idioma = view.getLang().getLang().toLowerCase();
 		view.setUos(getUos(idioma));
 	}
-	
+
 	/**
 	 * Plantillas aplicables al microsite
-	 * 
+	 *
 	 * @param microsite
 	 * @return
 	 * @throws ExceptionFront
 	 */
-	@Cacheable(value = "uos")
+
 	private Collection<UnidadListData> getUos(String lang) {
 		Collection<UnidadListData> lista;
 		try {
@@ -568,12 +568,12 @@ public abstract class BaseViewController extends FrontController {
 		}
 		return lista;
 	}
-	
+
 
 	/**
 	 * Método que devuelve si el servicio que se solicita es ofrecido o no por
 	 * el microsite.
-	 * 
+	 *
 	 * @param refservicio
 	 *            una referencia a un servicio
 	 * @return boolean true si el tipo de servicio del microsite es igual a
@@ -605,7 +605,7 @@ public abstract class BaseViewController extends FrontController {
 
 	/**
 	 * Crea la miga de pan genérica
-	 * 
+	 *
 	 * @param microsite
 	 * @param model
 	 * @param lang
@@ -670,7 +670,7 @@ public abstract class BaseViewController extends FrontController {
 	/**
 	 * Metodo protegido que devuelve String de error de contenido de un site
 	 * los parámetros microsite,lang y req solo se usan si se trata de un error de microsite
-	 * 
+	 *
 	 * @param HttpServletRequest
 	 *            request, Microsite microsite, ErrorMicrosite errorMicrosite
 	 * @exception Exception
@@ -682,11 +682,11 @@ public abstract class BaseViewController extends FrontController {
 
 		ErrorMicrosite errorMicrosite = null;
 
-		
+
 		if (ErrorMicrosite.ERROR_AMBIT_MICRO.equals(ambitError)) {
 			//MICROSITE
 			if (microsite == null) {
-				if(!StringUtils.isEmpty(micrositeKey)){								
+				if(!StringUtils.isEmpty(micrositeKey)){
 					try {
 						microsite = this.dataService.getMicrositeByKey(micrositeKey, lang);
 					} catch (Exception e) {
@@ -709,40 +709,40 @@ public abstract class BaseViewController extends FrontController {
 						log.error(e + "Error intentando obtener y redirigir a la nueva url del microsite");
 					}
 				}
-				
+
 				response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_MICRO_TIT, ErrorMicrosite.ERROR_MICRO_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-				
-				
+
+
 			} else {
 				response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
 				errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG + microsite.getId(), "","",ErrorMicrosite.ESTADO_NOT_FOUNT);
 			}
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_PAGINA.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_PAGINA_TIT, ErrorMicrosite.ERROR_PAGINA_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_DOCUMENT.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_NOT_FOUNT_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_DOCU_TIT, ErrorMicrosite.ERROR_DOCU_MSG,"","",ErrorMicrosite.ESTADO_NOT_FOUNT);
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_ACCES.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_FORBIDDEN_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_ACCES_TIT, ErrorMicrosite.ERROR_ACCES_MSG,"","",ErrorMicrosite.ESTADO_FORBIDDEN);
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_SESSIO.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_SESSION_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SESSIO_TIT, ErrorMicrosite.ERROR_SESSIO_MSG,"","",ErrorMicrosite.ESTADO_SESSION);
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_SERVER.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
-			
+
 		} else if (ErrorMicrosite.ERROR_AMBIT_SOLR.equals(ambitError)) {
 			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SOLR_TIT, ErrorMicrosite.ERROR_SOLR_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
-			
+
 		} else {
 			response.setStatus(ErrorMicrosite.ESTADO_SERVER_INT);
 			errorMicrosite = new ErrorMicrosite(ErrorMicrosite.ERROR_SERVER_TIT, ErrorMicrosite.ERROR_SERVER_MSG,"","",ErrorMicrosite.ESTADO_SERVER);
@@ -751,7 +751,7 @@ public abstract class BaseViewController extends FrontController {
 		if (errorMicrosite != null) {
 			view.setErrParam(errorMicrosite);
 		}
-		
+
 		if (errorMicrosite != null) {
 			view.setErrEstado(errorMicrosite.getEstado());
 		}
@@ -771,6 +771,6 @@ public abstract class BaseViewController extends FrontController {
 	protected ModelAndView getForwardError(PageView causeView, String ambitError, HttpServletResponse response) {
 		return this.getForwardError( causeView,  ambitError,  response,"",null,null);
 	}
-	
+
 
 }
