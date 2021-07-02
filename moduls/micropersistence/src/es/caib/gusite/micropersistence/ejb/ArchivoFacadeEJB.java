@@ -437,11 +437,11 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	 */
 	public boolean visible(final Long id) {
 
-		if (true) {
-			// #134 Se ha puesto este parche para subir una version que mejora el
-			// rendimiento
-			return true;
-		}
+//		if (true) {
+//			// #134 Se ha puesto este parche para subir una version que mejora el
+//			// rendimiento
+//			return true;
+//		}
 
 		final Session session = this.getSession();
 		final String noVisible = "N";

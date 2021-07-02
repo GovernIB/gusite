@@ -367,8 +367,13 @@ public class FrontDataService {
 
 	public Archivo obtenerArchivo(final Long id,Boolean visualizar) throws ExceptionFrontPagina {
 		try {
+			boolean comprobar = false;
 			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
-			if(!visualizar) {
+			Archivo archivo = archi.obtenerArchivo(id);
+			if(archivo!=null) {
+			 comprobar = esComprobacion(archivo.getNombre());
+		    }
+			if(!visualizar && comprobar) {
 			if (!archi.visible(id)) {
 				log.error("Archivo  no disponible");
 				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
@@ -418,4 +423,21 @@ public class FrontDataService {
 		}
 	}
 
+	private boolean esComprobacion(String nombre) {
+		String ext = "";
+		boolean comprobar=false;
+		int i = nombre.lastIndexOf('.');
+		if (i > 0) {
+			ext = nombre.substring(i+1).toUpperCase();
+		}
+
+
+		if(ext.equals("PDF") || ext.equals("DOC") || ext.equals("DOCX") || ext.equals("XLS") || ext.equals("XLSX") || ext.equals("ODT")) {
+			comprobar =  true;
+		}
+
+		return comprobar;
+
+
+	}
 }
