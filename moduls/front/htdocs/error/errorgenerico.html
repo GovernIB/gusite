@@ -5,7 +5,7 @@
 
 */-->
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"	
+	xmlns:th="http://www.thymeleaf.org"
 	xmlns:gus="http://www.caib.es/thymeleaf/gusite"
 	th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 	th:lang-xmllang="${lang}">
@@ -17,7 +17,7 @@
 <script src="../../js/jquery/jquery-1.11.0.min.js" th:src="@{/resources/js/jquery/jquery-1.12.4.min.js}"></script>
 <script type="text/javascript" src="/resources/js/globales.js" th:src="@{/resources/js/globales.js}"></script>
 <th:block th:remove="all">
-<!--/*  
+<!--/*
 	Este bloque se usa para visualización en prototipo estático.
 	Al ejecutarse dinámicamente, se eliminará automáticamente
 	*/-->
@@ -35,35 +35,29 @@
 	<!-- contenidor -->
 	<div id="contenedor">
 		<!-- capçal -->
-		<div th:if="${MVS_microsite}!=null"
-			 th:remove="(${MVS_microsite.tipocabecera}=='0') ? all : none"
-			 id="" th:fragment="cabeceraReducida">
-			<div th:remove="(${MVS_microsite.tipocabecera}=='2') ? all : none">
-				<div id="capsal">
+
+
+				<div id="capsal" style="text-align: center;">
 					<div>
 						<a href="index.html" id="lang" name="lang" accesskey="0"
-							class="destacat"> <img class="logo"
-							src="resources/imgs/cap/logo.gif"
-							th:src="@{/resources/imgs/cap/logo.gif}"
+							class="destacat"> <img class="logo" width="500" height="500"
+							src="resources/imgs/cap/logoBal.png"
+							th:src="@{/resources/imgs/cap/logoBal.png}"
 							alt="Logo del Govern de les Illes Balears" /></a>
 					</div>
 				</div>
-			</div>
-			<div
-				th:remove="(${MVS_microsite.tipocabecera}=='1') ? all : tag"
-				th:utext="${MVS_microsite.traduce.cabecerapersonal}">Cabecera personal microsite</div>
-		</div>
+
 		<!--  Fi capçal -->
 		<!-- continguts -->
 		<div id="continguts">
 			<!-- missatge -->
 			<div id="missatge">
 				<p align="center">
-					<strong> 
+					<strong>
 							<span th:text="#{error.titulo}" th:remove="tag">Error:</span>
 							<span th:if="${exception} !=null" th:remove="tag">
 								<span th:text="${exception}" th:remove="tag"></span>
-								 <span th:text="${exception.message}" th:remove="tag"></span> 
+								 <span th:text="${exception.message}" th:remove="tag"></span>
 							</span>
 							<span th:if="${exception} ==null" th:remove="tag">
 								<span th:if="${MVS_errparam} !=null" th:remove="tag">
@@ -71,7 +65,7 @@
 									<span th:if="${MVS_errparam.descripcion} !=null" th:text="${MVS_errparam.descripcion}" th:remove="tag"></span>
 									<span th:if="${MVS_errparam.accion} !=null" th:text="${MVS_errparam.accion}" th:remove="tag"></span>
 								</span>
-							</span>							   
+							</span>
 					</strong>
 				</p>
 			</div>

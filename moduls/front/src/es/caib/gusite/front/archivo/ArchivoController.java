@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import es.caib.gusite.front.general.BaseViewController;
 import es.caib.gusite.front.general.ExceptionFrontMicro;
 import es.caib.gusite.front.general.ExceptionFrontPagina;
+import es.caib.gusite.front.general.ExceptionFrontPaginaDoc;
 import es.caib.gusite.front.general.Microfront;
 import es.caib.gusite.front.general.bean.ErrorMicrosite;
 import es.caib.gusite.front.view.ErrorGenericoView;
@@ -74,8 +75,10 @@ public class ArchivoController extends BaseViewController {
 			log.error("Microsite " + URI.uri + " no encontrado");
 			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
-
-		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile, visualizar), response);
+//		if(microsite!=null) {
+//			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG +":"+ URI.uri);
+//		}
+		return this.sirveArchivo(this.dataService.obtenerArchivo(idFile, visualizar,URI.uri), response);
 	}
 
 	/**
@@ -104,6 +107,7 @@ public class ArchivoController extends BaseViewController {
 			log.error("Microsite " + URI.uri + " no encontrado");
 			throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_MICRO_URI_MSG + URI.uri);
 		}
+
 		return this.sirveArchivo(this.dataService.obtenerArchivo(microsite.getId(), filename), response);
 	}
 
@@ -259,8 +263,8 @@ public class ArchivoController extends BaseViewController {
 
 	@ExceptionHandler(ExceptionFrontPagina.class)
 	public ModelAndView handleExceptionFrontPagina(final ExceptionFrontPagina ex, final HttpServletResponse response) {
-
-		final Microsite microsite = null;
+		 String uri = null;
+		//final Microsite microsite = null;
 		final ErrorGenericoView view = new ErrorGenericoView();
 		final Idioma lang = new Idioma();
 		lang.setLang(LANG_CA);
@@ -271,7 +275,22 @@ public class ArchivoController extends BaseViewController {
 		errorMicrosite.setMensaje(ex.getMessage());
 		view.setErrParam(errorMicrosite);
 		view.setErrEstado(errorMicrosite.getEstado());
+		int i = ex.getMessage().lastIndexOf(':');
+		if (i > 0) {
+		     uri = ex.getMessage().substring(i+1);
+		     String msg = ex.getMessage().substring(0, i);
+		     errorMicrosite.setMensaje(msg);
+		     errorMicrosite.setAviso("Aviso:" + msg);
+		}
 
+		Microsite microsite = null;
+		try {
+			microsite = this.dataService.getMicrositeByUri(uri, DEFAULT_IDIOMA);
+			microsite.setTipocabecera("1");
+		} catch (ExceptionFrontMicro e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// El 404
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 
@@ -279,6 +298,25 @@ public class ArchivoController extends BaseViewController {
 
 	}
 
+	@ExceptionHandler(ExceptionFrontPaginaDoc.class)
+	public String handleExceptionFrontPag(final ExceptionFrontPaginaDoc ex, final HttpServletResponse response,final Model model) {
+
+		final Microsite microsite = null;
+
+		final Idioma lang = new Idioma();
+		lang.setLang(LANG_CA);
+
+		final ErrorMicrosite errorMicrosite = new ErrorMicrosite();
+		errorMicrosite.setAviso("Aviso:" + ex.getMessage());
+		errorMicrosite.setMensaje(ex.getMessage());
+
+
+		// El 404
+		response.setStatus(HttpStatus.NOT_FOUND.value());
+		return this.getForwardError(microsite, lang, model, ErrorMicrosite.ERROR_DOCU_MSG, response);
+
+
+	}
 	private static String normalizador(final String str) {
 		return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
 				.replaceAll(" ", "_");

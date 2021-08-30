@@ -365,7 +365,7 @@ public class FrontDataService {
 		}
 	}
 
-	public Archivo obtenerArchivo(final Long id,Boolean visualizar) throws ExceptionFrontPagina {
+	public Archivo obtenerArchivo(final Long id,Boolean visualizar,String uri) throws ExceptionFrontPagina {
 		try {
 			boolean comprobar = false;
 			final ArchivoDelegate archi = DelegateUtil.getArchivoDelegate();
@@ -376,7 +376,8 @@ public class FrontDataService {
 			if(!visualizar && comprobar) {
 			if (!archi.visible(id)) {
 				log.error("Archivo  no disponible");
-				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
+				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG +":"+uri);
+				//throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
 			}
 			}
 			return archi.obtenerArchivo(id);

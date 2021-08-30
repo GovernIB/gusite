@@ -2,6 +2,7 @@ package es.caib.gusite.micropersistence.delegate;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.text.Normalizer;
 import java.util.List;
 
 import javax.ejb.CreateException;
@@ -109,6 +110,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 	 */
 	public Long insertarArchivo(final Archivo archi) throws DelegateException {
 		try {
+			archi.setNombre(normalizador(archi.getNombre()));
 			return this.getFacade().insertarArchivo(archi);
 		} catch (final RemoteException e) {
 			throw new DelegateException(e);
@@ -154,6 +156,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 	 */
 	public Long grabarArchivo(final Archivo archi) throws DelegateException {
 		try {
+			archi.setNombre(normalizador(archi.getNombre()));
 			return this.getFacade().grabarArchivo(archi);
 		} catch (final RemoteException e) {
 			throw new DelegateException(e);
@@ -256,7 +259,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 
 	/**
 	 * Obtiene los archivos de un microsite
-	 * 
+	 *
 	 * @param idMicrosite
 	 * @throws DelegateException
 	 */
@@ -281,6 +284,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 	public Long insertarArchivoIndexar(final Archivo archi, final Long idContenido, final Long idMicrosite)
 			throws DelegateException {
 		try {
+			archi.setNombre(normalizador(archi.getNombre()));
 			final Long idArchivo = this.getFacade().insertarArchivo(archi);
 			final SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
 			Long idElemento = idMicrosite;
@@ -340,6 +344,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 	public void grabarArchivoIndexar(final Archivo archi, final Long idContenido, final Long idMicrosite)
 			throws DelegateException {
 		try {
+			archi.setNombre(normalizador(archi.getNombre()));
 			this.getFacade().grabarArchivo(archi);
 			final SolrPendienteDelegate pendienteDel = DelegateUtil.getSolrPendienteDelegate();
 			Long idElemento = idMicrosite;
@@ -368,7 +373,10 @@ public class ArchivoDelegate implements StatelessDelegate {
 	private ArchivoFacade getFacade() throws RemoteException {
 		return (ArchivoFacade) this.facadeHandle.getEJBObject();
 	}
-
+	  private static String normalizador(String str)
+	  {
+	    return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
+	   }
 	protected ArchivoDelegate() throws DelegateException {
 		try {
 			final ArchivoFacadeHome home = ArchivoFacadeUtil.getHome();
