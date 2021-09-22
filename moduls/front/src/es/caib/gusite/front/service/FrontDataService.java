@@ -372,6 +372,9 @@ public class FrontDataService {
 			Archivo archivo = archi.obtenerArchivo(id);
 			if(archivo!=null) {
 			 comprobar = esComprobacion(archivo.getNombre());
+		    }else {
+		    	log.error("Archivo  no disponible");
+				throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG +":"+uri);
 		    }
 			if(!visualizar && comprobar) {
 			if (!archi.visible(id)) {
@@ -380,7 +383,8 @@ public class FrontDataService {
 				//throw new ExceptionFrontPagina(ErrorMicrosite.ERROR_DOCU_MSG);
 			}
 			}
-			return archi.obtenerArchivo(id);
+			//return archi.obtenerArchivo(id);
+			return archivo;
 		} catch (final DelegateException e) {
 			throw new ExceptionFrontPagina(e);
 		}
