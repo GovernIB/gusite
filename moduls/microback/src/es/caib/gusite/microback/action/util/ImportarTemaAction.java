@@ -231,7 +231,7 @@ public class ImportarTemaAction extends BaseAction {
         	oldCssId = css.getId();
         }
         css = populateArchivo(ExportarTemaAction.NOMBRE_CSS, fullpath);
-        DelegateUtil.getArchivoDelegate().insertarArchivo(css);
+        DelegateUtil.getArchivoDelegate().insertarArchivo(css,false);
         temaFront.setCss(css);
         DelegateUtil.getTemaFrontDelegate().actualizarTemaFront(temaFront);
         if (oldCssId > 0) {
@@ -276,17 +276,20 @@ public class ImportarTemaAction extends BaseAction {
 
         ArchivoTemaFrontDelegate archivoTemaFrontDelegate = DelegateUtil.getArchivoTemaFrontDelegate();
         String nombreArchivo = archivo.substring(ExportarTemaAction.NOMBRE_DIR_ARCHIVOS.length());
+    //    String existe="existe: ";
         
         ArchivoTemaFront archivoTema = this.findArchivo(nombreArchivo, tema);
         if (archivoTema != null) {
         	//Borramos el archivo anterior
             addImportLogVisual(request, rb.getString("frontTemas.import.arxiuDuplicat"));
             archivoTemaFrontDelegate.borrarArchivoTemaFront(archivoTema);
+      //      existe="NO existe: ";
         }
         archivoTema = new ArchivoTemaFront();
         archivoTema.setTema(tema);
         archivoTema.setArchivo(populateArchivo(nombreArchivo, fullpath));
         archivoTema.setPath(generarPath(tema.getUri(), archivoTema.getArchivo().getNombre()));
+       // log.debug("CreandoArchivo:"+existe + archivoTema.getPath());
         archivoTemaFrontDelegate.crearArchivoTemaFront(archivoTema);
 
     }

@@ -103,6 +103,28 @@ public class ArchivoDelegate implements StatelessDelegate {
 
 	/**
 	 * Inserta un nuevo documento en la BD
+	 * Solo normaliza el nombre si se indica mediante normalizarNombre
+	 * @param archi
+	 * @param normalizarNombre
+	 * @return Id del documento
+	 * @throws DelegateException
+	 */
+	public Long insertarArchivo(final Archivo archi, boolean normalizarNombre) throws DelegateException {
+		try {
+			if(normalizarNombre) {
+				archi.setNombre(normalizador(archi.getNombre()));
+			}
+			
+			return this.getFacade().insertarArchivo(archi);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+	
+	
+	/**
+	 * Inserta un nuevo documento en la BD
+	 * Normaliza el nombre en todos los casos
 	 *
 	 * @param archi
 	 * @return Id del documento
@@ -116,6 +138,7 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
+	
 
 	/**
 	 * Borrar un archivo

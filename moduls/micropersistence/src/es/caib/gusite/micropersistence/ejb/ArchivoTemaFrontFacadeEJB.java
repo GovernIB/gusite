@@ -55,7 +55,7 @@ public abstract class ArchivoTemaFrontFacadeEJB extends HibernateTrulyStatelessE
             if (instance.getArchivo().getIdmicrosite() == null) {
                 instance.getArchivo().setIdmicrosite(new Long(0));
             }
-            DelegateUtil.getArchivoDelegate().insertarArchivo(instance.getArchivo());
+            DelegateUtil.getArchivoDelegate().insertarArchivo(instance.getArchivo(),false);
 			ArchivoTemaFront ret = (ArchivoTemaFront) session.get(ArchivoTemaFront.class, session.save(instance));
             session.flush();
             session.close();
