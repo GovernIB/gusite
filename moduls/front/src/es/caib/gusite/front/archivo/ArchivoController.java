@@ -64,7 +64,7 @@ public class ArchivoController extends BaseViewController {
 	@ResponseBody
 	public ResponseEntity<byte[]> archivo(@PathVariable("uri") final SiteId URI, @PathVariable("id") final Long idFile,
 			final Model model, final HttpServletResponse response, final HttpServletRequest req) throws Exception {
-		Boolean visualizar = false;
+		Boolean visualizar = false; //permite forzar que se visualice el fichero
 		final Microsite microsite = this.dataService.getMicrositeByUri(URI.uri, DEFAULT_IDIOMA);
 		if (req.isUserInRole("gussystem") || req.isUserInRole("gusadmin") || req.isUserInRole("gussuper")
 				|| req.isUserInRole("gusoper")) {

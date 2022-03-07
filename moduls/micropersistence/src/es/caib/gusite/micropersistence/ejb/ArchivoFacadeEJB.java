@@ -900,7 +900,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			for (final Object[] resultado : resultados) {
 				final Date actual = new Date();
 				final Agenda agen = new Agenda();
-				if (resultado[0] != null) {
+				/*if (resultado[0] != null) {
 					agen.setFfin((java.util.Date) resultado[0]);
 					if (agen.getFfin().before(actual)) {
 						return false;
@@ -911,7 +911,7 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 					if (agen.getFinicio().after(actual)) {
 						return false;
 					}
-				}
+				}*/
 				if (resultado[2] != null) {
 					agen.setVisible((resultado[2].toString()));
 					if (agen.getVisible().equals(noVisible)) {
