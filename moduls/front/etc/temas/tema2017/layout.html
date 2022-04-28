@@ -27,28 +27,32 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" th:with="lang=${#string
 	<meta name="description" th:content="${MVS_micrositedescription}" th:if="${!#strings.isEmpty(MVS_micrositedescription)}"></meta>
 
 
-	<!--/* Javascript para introducir clave analytics */-->
-	<script th:inline="javascript" th:if="${!#strings.isEmpty(MVS_micrositeanalytics)}">
-	/*<![CDATA[*/
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', 
-		/*[[${MVS_micrositeanalytics}]]*/ 
-		]);
-	_gaq.push(['_trackPageview']);
+    <script  th:remove="tag"  th:if="${!#strings.isEmpty(MVS_micrositeanalytics) and #strings.arraySplit(MVS_micrositeanalytics,';') ne null and      #arrays.length( #strings.arraySplit(MVS_micrositeanalytics,';'))>0     }" > 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--/* Ahora se pueden indicar varias keys de Anlaitics separadas por el separador ";" , la primera key se aÃ±ade al solicitar el script, y aÃ±adir el gtag. Las sucesivas solo en el gtag  */-->
+    <script  th:if="${!#strings.isEmpty(MVS_micrositeanalytics)}" th:async="true" th:src="@{'https://www.googletagmanager.com/gtag/js?id='+${#strings.arraySplit(MVS_micrositeanalytics,';')[0]}}"></script>   
+    <script>
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        <script th:inline="javascript" th:remove="tag" th:each="cod : ${#strings.arraySplit(MVS_micrositeanalytics,';')}" >gtag('config', [[${cod}]]);</script> 
+        
+    </script>
+    </script>
 
-	(function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	})();
-	
-	var APP_SERVIDOR = /*[[@{${MVS_uriTema}}]]*/;	
-	var	txtCookie =  /*[[#{cookies.txt}]]*/;
-	var	txtCookieMes = /*[[#{cookies.mes}]]*/;
-	var	txtCookieOk = /*[[#{cookies.ok}]]*/;
-	
-	/*]]>*/
-	</script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    
+    var APP_SERVIDOR = /*[[@{${MVS_uriTema}}]]*/;	
+    var	txtCookie =  /*[[#{cookies.txt}]]*/;
+    var	txtCookieMes = /*[[#{cookies.mes}]]*/;
+    var	txtCookieOk = /*[[#{cookies.ok}]]*/;
+    
+    /*]]>*/
+    </script>
+   
+   
 	<!-- Bootstrap -->
 	<link href="resources/bootstrap/css/bootstrap.min.css" th:href="@{/resources/bootstrap/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
 	<script src="../files/jquery-1.12.4.min.js" th:src="@{${MVS_uriTema + 'files/jquery-1.12.4.min.js'}}"></script>
