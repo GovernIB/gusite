@@ -21,96 +21,91 @@ import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.Usuario;
 import es.caib.gusite.micropersistence.delegate.ContenidoDelegate;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
-import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
-import es.caib.gusite.micropersistence.exception.UsuarioInexistenteException;
 
 /**
- * Action que guarda las últimas modificaciones del microsite en un atributo de petición  MVS_ultimsmodificats <P>
- * 
- * 	Definición Struts:<BR>
- *  action path="/index_inicio"<BR> 
- *  unknown="false" <BR>
- *  forward name="inicio" path="/index_inicio.jsp"
- *  
- *  @author - Indra
+ * Action que guarda las últimas modificaciones del microsite en un atributo de
+ * petición MVS_ultimsmodificats
+ * <P>
+ *
+ * Definición Struts:<BR>
+ * action path="/index_inicio"<BR>
+ * unknown="false" <BR>
+ * forward name="inicio" path="/index_inicio.jsp"
+ *
+ * @author - Indra
  */
-public class IndexInicioAction extends Action  {
-
+public class IndexInicioAction extends Action {
 
 	protected static Log log = LogFactory.getLog(IndexInicioAction.class);
-	
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws Exception
-    {
+
+	@Override
+	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
 
 		/* ************************************************************ */
 		/* ***************** prueba de indexer ************************ */
 		/* ************************************************************ */
-		//IndexerDelegate indexador = DelegateUtil.getIndexerDelegate();
-		//indexador.reindexarMicrosites();
 
 		/* ************************************************************ */
-		/* *****************   fin  prueba de indexer ***************** */
-		/* ************************************************************ */		
-		
-		
+		/* ***************** fin prueba de indexer ***************** */
+		/* ************************************************************ */
+
 		request.setAttribute("MVS_ultimsmodificats", obtenerListaUltimasModificaciones(request));
 		request.setAttribute("MVS_urlpublica", obtenerUrlPublica(request));
-		//aprobechamos para actualizar la variable de sesion MVS_microsite
-		
-        return mapping.findForward("inicio");
-    }
-	
-	
-	private String obtenerUrlPublica(HttpServletRequest request) throws Exception {
-		Microsite microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
-		
-		if (microsite == null){
-			UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
-	     	Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
-	 	
-	     	usudel.isUsuarioNulo(usu);
+		// aprobechamos para actualizar la variable de sesion MVS_microsite
+
+		return mapping.findForward("inicio");
+	}
+
+	private String obtenerUrlPublica(final HttpServletRequest request) throws Exception {
+		final Microsite microsite = (Microsite) request.getSession().getAttribute("MVS_microsite");
+
+		if (microsite == null) {
+			final UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
+			final Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
+
+			usudel.isUsuarioNulo(usu);
 		}
-		
-		
+
 		if (microsite.getRestringido().equals("5")) {
-            String newContext = System.getProperty("es.caib.gusite.context.front");
-            return newContext + "/" + microsite.getUri() + "/";
+			final String newContext = System.getProperty("es.caib.gusite.context.front");
+			return newContext + "/" + microsite.getUri() + "/";
 		} else {
 			return "/sacmicrofront/index.do?lang=ca&mkey=" + microsite.getClaveunica();
-			
+
 		}
 	}
 
-
-	private ArrayList<Pardato> obtenerListaUltimasModificaciones(HttpServletRequest request) {
-		ArrayList<Pardato> listaretorno=new ArrayList<Pardato>();
-		String idcontenido=null;
+	private ArrayList<Pardato> obtenerListaUltimasModificaciones(final HttpServletRequest request) {
+		final ArrayList<Pardato> listaretorno = new ArrayList<Pardato>();
+		String idcontenido = null;
 		try {
-			ContenidoDelegate contedel = DelegateUtil.getContenidoDelegate();
-			
-			
-			//aprobechamos para actualizar la variable de sesion MVS_microsite
-			Microsite microsite = (Microsite)request.getSession().getAttribute("MVS_microsite");
-			Base.micrositeRefresh(microsite.getId(),request);
-			StringTokenizer st=new StringTokenizer(microsite.getServiciosSeleccionados(),";");
-    		int n=st.countTokens();
-    		
-    		for (int i=0;i<n;i++) {
-    				idcontenido=st.nextToken();
-    				if (contedel.existeContenido(new Long(idcontenido))) {
-		    			Contenido conte = contedel.obtenerContenido(new Long(idcontenido));
-		    			Pardato pardato = new Pardato(""+conte.getId(), ( (((TraduccionContenido)conte.getTraduce()).getTitulo()!=null)?((TraduccionContenido)conte.getTraduce()).getTitulo():"[sin titulo]" )  );
-		    			listaretorno.add(pardato);
-    				}
-    		}
-			
-		
-		} catch (Exception e) {
-			log.warn("Contenido id=" + idcontenido + ": no se ha mostrado en el listado de ultimos contenidos modificados.");
+			final ContenidoDelegate contedel = DelegateUtil.getContenidoDelegate();
+
+			// aprobechamos para actualizar la variable de sesion MVS_microsite
+			final Microsite microsite = (Microsite) request.getSession().getAttribute("MVS_microsite");
+			Base.micrositeRefresh(microsite.getId(), request);
+			final StringTokenizer st = new StringTokenizer(microsite.getServiciosSeleccionados(), ";");
+			final int n = st.countTokens();
+
+			for (int i = 0; i < n; i++) {
+				idcontenido = st.nextToken();
+				if (contedel.existeContenido(new Long(idcontenido))) {
+					final Contenido conte = contedel.obtenerContenido(new Long(idcontenido));
+					final Pardato pardato = new Pardato("" + conte.getId(),
+							((((TraduccionContenido) conte.getTraduce()).getTitulo() != null)
+									? ((TraduccionContenido) conte.getTraduce()).getTitulo()
+									: "[sin titulo]"));
+					listaretorno.add(pardato);
+				}
+			}
+
+		} catch (final Exception e) {
+			log.warn("Contenido id=" + idcontenido
+					+ ": no se ha mostrado en el listado de ultimos contenidos modificados.");
 		}
-		
+
 		return listaretorno;
 	}
 }

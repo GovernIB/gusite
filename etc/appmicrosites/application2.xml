@@ -12,7 +12,7 @@
     <module><java>utilities.jar</java></module>
     <module><java>micromodel.jar</java></module>
     <module><java>extractor.jar</java></module>
-    
+
     <!-- SOLRJ -->
     <module><java>lib/commons-io-2.4.jar</java></module>
     <module><java>lib/noggit-0.6.jar</java></module>
@@ -20,14 +20,14 @@
     <module><java>lib/zookeeper-3.4.6.jar</java></module>
     <module><java>lib/httpcore-4.4.1.jar</java></module>
     <module><java>lib/httpmime-4.4.1.jar</java></module>
-    <module><java>lib/httpclient-4.4.1.jar</java></module>
+    <module><java>lib/httpclient-4.5.jar</java></module>
     <module><java>lib/solr-solrj-5.5.1.jar</java></module>
-    <module><java>lib/solrapi-1.0.2.jar</java></module>
-    
+    <module><java>lib/solrapi-1.1.0.jar</java></module>
+
     <!-- BACK -->
     <module><ejb>sac-micropersistence.jar</ejb></module>
     <module><ejb>sac.jar</ejb></module>
-    
+
     <module>
         <web>
             <web-uri>sac-microfront.war</web-uri>
@@ -40,9 +40,9 @@
             <context-root>sacmicroback</context-root>
         </web>
     </module>
-    
-	<!--  nou módul de front per GUSITE2014 
-			TODO: 
+
+	<!--  nou módul de front per GUSITE2014
+			TODO:
 				-context-root (lo ideal seria un positiu pel SEO, o al manco no negatiu
 				-web-uri. El nom del war hauria de seguir l'estandar
 	-->
@@ -52,5 +52,5 @@
             <context-root>sites</context-root>
         </web>
     </module>
-    
+
 </application>

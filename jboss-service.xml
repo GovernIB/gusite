@@ -59,6 +59,14 @@
 		es.caib.gusite.solr.dias = 10
 		<!--  Dias máximo que puede estar el job en la tabla. -->
 		es.caib.gusite.solr.diasjobs = 10
+		es.caib.gusite.solr.activo=S
+
+		<!-- elastic -->
+		es.caib.gusite.solr.activo=S
+		es.caib.gusite.elastic.url=http://sdeswebgoibray1:21080/api/v1/indexer/solr/
+		es.caib.gusite.elastic.user=
+		es.caib.gusite.elastic.pass=
+
 
 		<!-- key google Maps  -->
 		es.caib.gusite.key.google.maps=keyGoogleMaps

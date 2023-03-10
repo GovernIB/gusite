@@ -51,11 +51,6 @@
         	<!--<include name="hibernate-jpa-2.0-api-1.0.1.Final.jar"/>-->
 
 
-			<!-- https://intranet.caib.es/redmine/issues/1113
-	       	<include name="httpclient-4.2.5.jar"/>
-        	<include name="httpcore-4.2.4.jar"/>
-        	-->
-
 			<!--
         	<include name="sac-api-client.jar" />
         	-->
@@ -213,12 +208,6 @@
 	    		<!--<include name="struts.jar"/>-->
 	        </lib>
 
-			<!-- https://intranet.caib.es/redmine/issues/1113
-        	<lib dir="${lib.dir}">
-        		<include name="httpclient-4.2.5.jar"/>
-        		<include name="httpcore-4.2.4.jar"/>
-    	    </lib>
-    	    -->
         </war>
     </target>
 
