@@ -305,7 +305,7 @@
        <!-- ================================================================== -->
        <target name="main" depends="prepare,generate.properties" description="Realiza todo el proceso de construcción de GUSITE">
              <antcall target="sacapiclientFromMVN" />
-             <antcall target="solrapiFromMVN" />
+             <!--<antcall target="solrapiFromMVN" />-->
              <antcall target="propagate">
                     <param name="task" value="main"/>
              </antcall>

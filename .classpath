@@ -30,7 +30,6 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/ejb-2_0.jar"/>
 	<classpathentry kind="lib" path="lib/htmllexer.jar"/>
-	<classpathentry kind="lib" path="lib/httpclient-4.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.12.jar"/>
@@ -85,7 +84,7 @@
 	<classpathentry kind="lib" path="lib/solr/httpmime-4.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/solr/noggit-0.6.jar"/>
 	<classpathentry kind="lib" path="lib/solr/solr-solrj-5.5.1.jar"/>
-	<classpathentry kind="lib" path="lib/solr/solrapi-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/solr/solrapi-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/solr/stax2-api-3.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/solr/zookeeper-3.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
