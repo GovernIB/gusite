@@ -40,7 +40,7 @@ public class APIUtil {
     	final String keyStorePass = System.getProperty("es.caib.gusite.api.rolsac.keystore.pass");
     	final String url = System.getProperty("es.caib.gusite.url.rolsac");
     	
-    	if (API_STRATEGY == STRATEGY.WS) {
+    	if (API_STRATEGY == STRATEGY.WS && keyStoreName!=null && !keyStoreName.isEmpty() ) {
     		CertificadoUtil.autentificar(keyStorePass, keyStoreName);
     	}
     	
