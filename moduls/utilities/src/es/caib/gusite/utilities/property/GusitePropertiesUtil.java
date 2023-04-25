@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GusitePropertiesUtil {
 	/** Activo SOLR **/
-	private static final String ACTIVO_SOLR = "es.caib.rolsac.solr.activo";
+	private static final String ACTIVO_SOLR = "es.caib.gusite.solr.activo";
 	/** Usuario SOLR. **/
 	private static final String USER_SOLR = "es.caib.gusite.solr.user";
 	/** Contrasenya SOLR. **/
@@ -19,7 +19,7 @@ public class GusitePropertiesUtil {
 	/** Url SOLR. **/
 	private static final String URL_SOLR = "es.caib.gusite.solr.url";
 	/** Activo SOLR **/
-	private static final String ACTIVO_ELASTIC = "es.caib.rolsac.elastic.activo";
+	private static final String ACTIVO_ELASTIC = "es.caib.gusite.elastic.activo";
 	/** Usuario SOLR. **/
 	private static final String USER_ELASTIC = "es.caib.gusite.elastic.user";
 	/** Contrasenya SOLR. **/
