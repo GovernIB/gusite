@@ -15,6 +15,7 @@
 
 	   es.caib.gusite.idioma.default=ca
 
+		<!-- dejara esta propiedad vacia para evitar problemas con el certificado, al consultar el api de rolsac  (es.caib.gusite.api.rolsac.keystore.nombre)-->
 	   es.caib.gusite.api.rolsac.keystore.nombre=storerolsac.jks
 	   es.caib.gusite.api.rolsac.keystore.pass=contrasena
 
