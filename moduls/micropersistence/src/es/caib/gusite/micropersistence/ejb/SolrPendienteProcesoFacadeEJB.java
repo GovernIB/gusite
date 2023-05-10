@@ -99,13 +99,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 			final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 			final int diasMaximos = GusitePropertiesUtil.getDiasMaxSOLR();
 			final String iactivo = GusitePropertiesUtil.getActivoSOLR();
-			final boolean solrActivo = iactivo != null && !"S".equals(iactivo.toUpperCase());
+			final boolean solrActivo = iactivo != null && "S".equalsIgnoreCase(iactivo);
 
 			final String urlElastic = GusitePropertiesUtil.getUrlELASTIC();
 			final String userElastic = GusitePropertiesUtil.getUserELASTIC();
 			final String passElastic = GusitePropertiesUtil.getPassELASTIC();
 			final String iactivoElastic = GusitePropertiesUtil.getActivoELASTIC();
-			final boolean elasticActivo = iactivoElastic != null && !"S".equals(iactivo.toUpperCase());
+			final boolean elasticActivo = iactivoElastic != null && "S".equalsIgnoreCase(iactivoElastic);
 
 			solrIndexer = SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE, username, password,
 					urlElastic, userElastic, passElastic, solrActivo, elasticActivo);
@@ -394,13 +394,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 			final String index = GusitePropertiesUtil.getIndexSOLR();
 			final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 			final String iactivo = GusitePropertiesUtil.getActivoSOLR();
-			final boolean solrActivo = iactivo != null && !"S".equals(iactivo.toUpperCase());
+			final boolean solrActivo = iactivo != null && "S".equalsIgnoreCase(iactivo);
 
 			final String urlElastic = GusitePropertiesUtil.getUrlELASTIC();
 			final String userElastic = GusitePropertiesUtil.getUserELASTIC();
 			final String passElastic = GusitePropertiesUtil.getPassELASTIC();
 			final String iactivoElastic = GusitePropertiesUtil.getActivoELASTIC();
-			final boolean elasticActivo = iactivoElastic != null && !"S".equals(iactivo.toUpperCase());
+			final boolean elasticActivo = iactivoElastic != null && "S".equalsIgnoreCase(iactivoElastic);
 
 			solrIndexer = SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE, username, password,
 					urlElastic, userElastic, passElastic, solrActivo, elasticActivo);
@@ -770,13 +770,13 @@ public abstract class SolrPendienteProcesoFacadeEJB extends HibernateEJB {
 		final String index = GusitePropertiesUtil.getIndexSOLR();
 		final String urlSolr = GusitePropertiesUtil.getUrlSOLR();
 		final String iactivo = GusitePropertiesUtil.getActivoSOLR();
-		final boolean solrActivo = iactivo != null && !"S".equals(iactivo.toUpperCase());
+		final boolean solrActivo = iactivo != null && "S".equalsIgnoreCase(iactivo);
 
 		final String urlElastic = GusitePropertiesUtil.getUrlELASTIC();
 		final String userElastic = GusitePropertiesUtil.getUserELASTIC();
 		final String passElastic = GusitePropertiesUtil.getPassELASTIC();
 		final String iactivoElastic = GusitePropertiesUtil.getActivoELASTIC();
-		final boolean elasticActivo = iactivoElastic != null && !"S".equals(iactivo.toUpperCase());
+		final boolean elasticActivo = iactivoElastic != null && "S".equalsIgnoreCase(iactivoElastic);
 
 		final SolrIndexer solrIndexer = SolrFactory.getIndexer(urlSolr, index, EnumAplicacionId.GUSITE, username,
 				password, urlElastic, userElastic, passElastic, solrActivo, elasticActivo);
