@@ -102,29 +102,28 @@ public class ArchivoDelegate implements StatelessDelegate {
 	}
 
 	/**
-	 * Inserta un nuevo documento en la BD
-	 * Solo normaliza el nombre si se indica mediante normalizarNombre
+	 * Inserta un nuevo documento en la BD Solo normaliza el nombre si se indica
+	 * mediante normalizarNombre
+	 * 
 	 * @param archi
 	 * @param normalizarNombre
 	 * @return Id del documento
 	 * @throws DelegateException
 	 */
-	public Long insertarArchivo(final Archivo archi, boolean normalizarNombre) throws DelegateException {
+	public Long insertarArchivo(final Archivo archi, final boolean normalizarNombre) throws DelegateException {
 		try {
-			if(normalizarNombre) {
+			if (normalizarNombre) {
 				archi.setNombre(normalizador(archi.getNombre()));
 			}
-			
+
 			return this.getFacade().insertarArchivo(archi);
 		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	
+
 	/**
-	 * Inserta un nuevo documento en la BD
-	 * Normaliza el nombre en todos los casos
+	 * Inserta un nuevo documento en la BD Normaliza el nombre en todos los casos
 	 *
 	 * @param archi
 	 * @return Id del documento
@@ -138,7 +137,6 @@ public class ArchivoDelegate implements StatelessDelegate {
 			throw new DelegateException(e);
 		}
 	}
-	
 
 	/**
 	 * Borrar un archivo
@@ -150,6 +148,23 @@ public class ArchivoDelegate implements StatelessDelegate {
 	public void borrarArchivo(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarArchivo(id);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Borrar un archivo
+	 *
+	 * @param id
+	 *            Id del archivo
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarArchivo(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarArchivo(id, indexar);
 		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
@@ -396,10 +411,12 @@ public class ArchivoDelegate implements StatelessDelegate {
 	private ArchivoFacade getFacade() throws RemoteException {
 		return (ArchivoFacade) this.facadeHandle.getEJBObject();
 	}
-	  private static String normalizador(String str)
-	  {
-	    return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll(" ", "_");
-	   }
+
+	private static String normalizador(final String str) {
+		return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+				.replaceAll(" ", "_");
+	}
+
 	protected ArchivoDelegate() throws DelegateException {
 		try {
 			final ArchivoFacadeHome home = ArchivoFacadeUtil.getHome();

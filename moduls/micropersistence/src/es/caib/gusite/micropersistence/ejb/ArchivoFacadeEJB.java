@@ -437,11 +437,11 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	 */
 	public boolean visible(final Long id) {
 
-//		if (true) {
-//			// #134 Se ha puesto este parche para subir una version que mejora el
-//			// rendimiento
-//			return true;
-//		}
+		// if (true) {
+		// // #134 Se ha puesto este parche para subir una version que mejora el
+		// // rendimiento
+		// return true;
+		// }
 
 		final Session session = this.getSession();
 		final String noVisible = "N";
@@ -603,7 +603,16 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
 	public void borrarArchivo(final Long id) throws DelegateException {
+		borrarArchivo(id, true);
+	}
 
+	/**
+	 * Borra un documento de la BD
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarArchivo(final Long id, final boolean indexar) throws DelegateException {
 		final Session session = this.getSession();
 
 		try {
@@ -900,18 +909,12 @@ public abstract class ArchivoFacadeEJB extends HibernateEJB {
 			for (final Object[] resultado : resultados) {
 				final Date actual = new Date();
 				final Agenda agen = new Agenda();
-				/*if (resultado[0] != null) {
-					agen.setFfin((java.util.Date) resultado[0]);
-					if (agen.getFfin().before(actual)) {
-						return false;
-					}
-				}
-				if (resultado[1] != null) {
-					agen.setFinicio((java.util.Date) resultado[1]);
-					if (agen.getFinicio().after(actual)) {
-						return false;
-					}
-				}*/
+				/*
+				 * if (resultado[0] != null) { agen.setFfin((java.util.Date) resultado[0]); if
+				 * (agen.getFfin().before(actual)) { return false; } } if (resultado[1] != null)
+				 * { agen.setFinicio((java.util.Date) resultado[1]); if
+				 * (agen.getFinicio().after(actual)) { return false; } }
+				 */
 				if (resultado[2] != null) {
 					agen.setVisible((resultado[2].toString()));
 					if (agen.getVisible().equals(noVisible)) {

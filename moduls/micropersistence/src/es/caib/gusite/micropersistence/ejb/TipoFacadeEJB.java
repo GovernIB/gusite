@@ -25,19 +25,18 @@ import org.hibernate.Transaction;
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Tipo;
-import es.caib.gusite.micromodel.TraduccionContenido;
 import es.caib.gusite.micromodel.TraduccionTipo;
 import es.caib.gusite.micropersistence.plugins.PluginDominio;
 
 /**
  * SessionBean para manipular los tipos de Noticias
- * 
+ *
  * @ejb.bean name="sac/micropersistence/TipoFacade"
  *           jndi-name="es.caib.gusite.micropersistence.TipoFacade"
  *           type="Stateless" view-type="remote" transaction-type="Container"
- * 
+ *
  * @ejb.transaction type="Required"
- * 
+ *
  * @author Indra
  */
 
@@ -56,17 +55,16 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void init(Long site) {
+	public void init(final Long site) {
 		super.tampagina = 10;
 		super.pagina = 0;
 		super.select = "select tipo ";
 		super.from = " from Tipo tipo join tipo.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "' and tipo.idmicrosite = "
+		super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and tipo.idmicrosite = "
 				+ site.toString();
 		super.whereini = " ";
 		super.orderby = "";
@@ -79,19 +77,17 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void init(Long site, String idiomapasado) {
+	public void init(final Long site, final String idiomapasado) {
 		super.tampagina = 10;
 		super.pagina = 0;
 		super.select = "select tipo.id,trad.nombre ";
 		super.from = " from Tipo tipo join tipo.traducciones trad ";
-		super.where = " where (trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto()
-				+ "' or trad.id.codigoIdioma = '" + idiomapasado
-				+ "') and tipo.idmicrosite = " + site.toString();
+		super.where = " where (trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto()
+				+ "' or trad.id.codigoIdioma = '" + idiomapasado + "') and tipo.idmicrosite = " + site.toString();
 		super.whereini = " ";
 		super.orderby = "";
 
@@ -103,7 +99,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
@@ -112,8 +108,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select tipo ";
 		super.from = " from Tipo tipo join tipo.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma='"
-				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 
@@ -125,54 +120,53 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Crea o actualiza un tipo de noticia
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarTipo(Tipo tipo) {
+	public Long grabarTipo(final Tipo tipo) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			boolean nuevo = (tipo.getId() == null) ? true : false;
-			Transaction tx = session.beginTransaction();
+			final boolean nuevo = (tipo.getId() == null) ? true : false;
+			final Transaction tx = session.beginTransaction();
 
-			Map<String, TraduccionTipo> listaTraducciones = new HashMap<String, TraduccionTipo>();
+			final Map<String, TraduccionTipo> listaTraducciones = new HashMap<String, TraduccionTipo>();
 			if (nuevo) {
-				Iterator<TraduccionTipo> it = tipo.getTraducciones().values()
-						.iterator();
+				final Iterator<TraduccionTipo> it = tipo.getTraducciones().values().iterator();
 				while (it.hasNext()) {
-					TraduccionTipo trd = it.next();
+					final TraduccionTipo trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				tipo.setTraducciones(null);
-			} else {//#28 Incidencia borrando traducciones
+			} else {// #28 Incidencia borrando traducciones
 				String listIdiomaBorrar = "";
-				Iterator<TraduccionTipo> it = tipo.getTraducciones()
-						.values().iterator();
+				final Iterator<TraduccionTipo> it = tipo.getTraducciones().values().iterator();
 				while (it.hasNext()) {
-					TraduccionTipo trd = it.next();
-					listIdiomaBorrar += "'" +trd.getId().getCodigoIdioma()+"'";
-					if(it.hasNext()){
-						listIdiomaBorrar += "," ;						
+					final TraduccionTipo trd = it.next();
+					listIdiomaBorrar += "'" + trd.getId().getCodigoIdioma() + "'";
+					if (it.hasNext()) {
+						listIdiomaBorrar += ",";
 					}
 				}
 				// Borramos los idiomas que no pertenecen a contenido y existen en la BBDD
-				if(!listIdiomaBorrar.isEmpty()){ 
-					Query query = session.createQuery("select tradTip from TraduccionTipo tradTip where tradTip.id.codigoTipo = " + tipo.getId() + " and tradTip.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
+				if (!listIdiomaBorrar.isEmpty()) {
+					final Query query = session
+							.createQuery("select tradTip from TraduccionTipo tradTip where tradTip.id.codigoTipo = "
+									+ tipo.getId() + " and tradTip.id.codigoIdioma not in (" + listIdiomaBorrar + ") ");
 					final List<TraduccionTipo> traduciones = query.list();
-					for(TraduccionTipo traducI : traduciones ) {
-						session.delete(traducI);	
+					for (final TraduccionTipo traducI : traduciones) {
+						session.delete(traducI);
 					}
 					session.flush();
-				}				
+				}
 			}
 
 			session.saveOrUpdate(tipo);
 			session.flush();
 
 			if (nuevo) {
-				for (TraduccionTipo trad : listaTraducciones.values()) {
+				for (final TraduccionTipo trad : listaTraducciones.values()) {
 					trad.getId().setCodigoTipo(tipo.getId());
 					session.saveOrUpdate(trad);
 				}
@@ -183,12 +177,12 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 			tx.commit();
 			this.close(session);
 
-			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			final int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(tipo, op);
 
 			return tipo.getId();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -197,18 +191,18 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene un tipo de noticia
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Tipo obtenerTipo(Long id) {
+	public Tipo obtenerTipo(final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Tipo tipo = (Tipo) session.get(Tipo.class, id);
+			final Tipo tipo = (Tipo) session.get(Tipo.class, id);
 			return tipo;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -217,33 +211,33 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene un Tipo a partir de la URI
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Tipo obtenerTipoDesdeUri(String idioma, String uri, String site) {
+	public Tipo obtenerTipoDesdeUri(final String idioma, final String uri, final String site) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			Query query;
 			if (idioma != null) {
-				query = session
-						.createQuery("select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.id.codigoIdioma = :idioma and tt.uri = :uri and tipo.idmicrosite = :site");
+				query = session.createQuery(
+						"select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.id.codigoIdioma = :idioma and tt.uri = :uri and tipo.idmicrosite = :site");
 				query.setParameter("idioma", idioma);
-				
+
 			} else {
-				query = session
-						.createQuery("select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.uri = :uri and tipo.idmicrosite = :site");
+				query = session.createQuery(
+						"select tipo from Tipo tipo JOIN tipo.traducciones tt where tt.uri = :uri and tipo.idmicrosite = :site");
 			}
 			query.setParameter("uri", uri);
 			query.setParameter("site", Long.valueOf(site));
 			query.setMaxResults(1);
 			return (Tipo) query.uniqueResult();
 
-		} catch (ObjectNotFoundException oNe) {
+		} catch (final ObjectNotFoundException oNe) {
 			log.error(oNe.getMessage());
 			return new Tipo();
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -252,23 +246,23 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene los valores del dominio
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Map<?, ?> obtenerListado(Long id, Map<?, ?> parametros) {
+	public Map<?, ?> obtenerListado(final Long id, final Map<?, ?> parametros) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Tipo tipo = (Tipo) session.get(Tipo.class, id);
-			PluginDominio plgDominio = new PluginDominio();
+			final Tipo tipo = (Tipo) session.get(Tipo.class, id);
+			final PluginDominio plgDominio = new PluginDominio();
 			return plgDominio.obtenerListado(tipo, parametros);
 
-		} catch (javax.naming.NamingException ne) {
+		} catch (final javax.naming.NamingException ne) {
 			throw new EJBException(ne);
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new EJBException(e);
 		} finally {
 			this.close(session);
@@ -277,23 +271,22 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los tipos de noticias
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
 	public List<?> listarTipos() {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -302,28 +295,27 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los tipos
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<Tipo> listarTiposrec(String idiomapasado) {
+	public List<Tipo> listarTiposrec(final String idiomapasado) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
-			ArrayList<Tipo> lista = new ArrayList<Tipo>();
-			ScrollableResults scr = query.scroll();
+			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
+			final ArrayList<Tipo> lista = new ArrayList<Tipo>();
+			final ScrollableResults scr = query.scroll();
 			scr.first();
 			scr.scroll(this.cursor - 1);
 			int i = 0;
 			while (this.tampagina > i++) {
-				Object[] fila = scr.get();
-				Tipo tip = new Tipo();
+				final Object[] fila = scr.get();
+				final Tipo tip = new Tipo();
 				tip.setId((Long) fila[0]);
-				TraduccionTipo tratipo = new TraduccionTipo();
+				final TraduccionTipo tratipo = new TraduccionTipo();
 				tratipo.setNombre((String) fila[1]);
 				tip.setTraduccion(idiomapasado, tratipo);
 				lista.add(tip);
@@ -334,7 +326,7 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 			scr.close();
 			return lista;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -343,127 +335,119 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * borra un tipo de noticia
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void borrarTipo(Long id) {
+	public void borrarTipo(final Long id) {
+		borrarTipo(id, true);
+	}
 
-		Session session = this.getSession();
+	/**
+	 * borra un tipo de noticia
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarTipo(final Long id, final boolean indexar) {
+
+		final Session session = this.getSession();
 		try {
-			Tipo tipo = (Tipo) session.get(Tipo.class, id);
+			final Tipo tipo = (Tipo) session.get(Tipo.class, id);
 
-			Transaction tx = session.beginTransaction();
-			session.createQuery(
-					"delete from TraduccionTipo tt where tt.id.codigoTipo = "
-							+ id).executeUpdate();
-			session.createQuery("delete from Tipo t where t.id = " + id)
-					.executeUpdate();
+			final Transaction tx = session.beginTransaction();
+			session.createQuery("delete from TraduccionTipo tt where tt.id.codigoTipo = " + id).executeUpdate();
+			session.createQuery("delete from Tipo t where t.id = " + id).executeUpdate();
 			session.flush();
 			tx.commit();
 			this.close(session);
 
 			this.grabarAuditoria(tipo, Auditoria.ELIMINAR);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
 		}
 	}
 
-	
-	
 	/**
 	 * Retorna la query que Lista todos los tipos de noticias para usar en Combos
 	 */
-	private String listarComboQuery(Long idmicrosite, String filtro) {
-			return "select tipo" + " from Tipo tipo"
-					+ " join tipo.traducciones trad"
-					+ " where trad.id.codigoIdioma = '"
-					+ Idioma.getIdiomaPorDefecto() + "'"
-					+ " and tipo.idmicrosite = " + idmicrosite.toString()
-					+ filtro
-					+ " order by tipo.tipoelemento ";
+	private String listarComboQuery(final Long idmicrosite, final String filtro) {
+		return "select tipo" + " from Tipo tipo" + " join tipo.traducciones trad" + " where trad.id.codigoIdioma = '"
+				+ Idioma.getIdiomaPorDefecto() + "'" + " and tipo.idmicrosite = " + idmicrosite.toString() + filtro
+				+ " order by tipo.tipoelemento ";
 	}
-	
+
 	/**
 	 * Lista todos los tipos de noticias para usar en Combos
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarCombo(Long idmicrosite) {
+	public List<?> listarCombo(final Long idmicrosite) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session.createQuery(listarComboQuery( idmicrosite,""));
+			final Query query = session.createQuery(listarComboQuery(idmicrosite, ""));
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
 		}
 	}
-	
-	
+
 	/**
-	 * Lista todos los tipos de noticias para usar en Combos, filtrando los tipos indicados
-	 * 
+	 * Lista todos los tipos de noticias para usar en Combos, filtrando los tipos
+	 * indicados
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarCombo(Long idmicrosite, ArrayList<String> tiposNoIncluidos ) {
+	public List<?> listarCombo(final Long idmicrosite, final ArrayList<String> tiposNoIncluidos) {
 		String filtro = "";
-		if(tiposNoIncluidos!=null && tiposNoIncluidos.size()>0){
-			boolean inicial = true;
-			for (String tipo : tiposNoIncluidos) {
-				if(!inicial){
-					filtro +=",";
+		if (tiposNoIncluidos != null && tiposNoIncluidos.size() > 0) {
+			final boolean inicial = true;
+			for (final String tipo : tiposNoIncluidos) {
+				if (!inicial) {
+					filtro += ",";
 				}
 				filtro += tipo;
-			}			
-			if(!StringUtils.isEmpty(filtro.trim())){
-				filtro = " and tipo.tipoelemento not in ('" + filtro +"') ";
+			}
+			if (!StringUtils.isEmpty(filtro.trim())) {
+				filtro = " and tipo.tipoelemento not in ('" + filtro + "') ";
 			}
 		}
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session.createQuery(listarComboQuery(idmicrosite,filtro));
+			final Query query = session.createQuery(listarComboQuery(idmicrosite, filtro));
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
 		}
 	}
-	
-	
-	
-	
 
 	/**
 	 * Comprueba que el elemento pertenece al Microsite
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public boolean checkSite(Long site, Long id) {
+	public boolean checkSite(final Long site, final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session
-					.createQuery("select tipo from Tipo tipo where tipo.idmicrosite = "
-							+ site.toString()
-							+ " and tipo.id = "
-							+ id.toString());
+			final Query query = session.createQuery("select tipo from Tipo tipo where tipo.idmicrosite = "
+					+ site.toString() + " and tipo.id = " + id.toString());
 			return query.list().isEmpty();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -471,13 +455,13 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 	}
 
 	/**
-	 * Establece el filtro del tipo. Si es true devolverá sólo los externos. Si
-	 * es false, devolverá todos menos los externos.
-	 * 
+	 * Establece el filtro del tipo. Si es true devolverá sólo los externos. Si es
+	 * false, devolverá todos menos los externos.
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void setFiltroExterno(boolean externos) {
+	public void setFiltroExterno(final boolean externos) {
 
 		String filtro = " ";
 		if (externos) {
@@ -495,33 +479,32 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todas las distintas clasificaciones de un tipo de noticias
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<Tipo> comboClasificacion(Long idmicrosite) {
+	public List<Tipo> comboClasificacion(final Long idmicrosite) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			String hql = "select distinct tipo.clasificacion from Tipo tipo";
-			hql += " where tipo.idmicrosite = " + idmicrosite.toString()
-					+ " order by tipo.clasificacion ";
-			Query query = session.createQuery(hql);
-			List<?> lista = query.list();
-			List<Tipo> clasif = new ArrayList<Tipo>();
+			hql += " where tipo.idmicrosite = " + idmicrosite.toString() + " order by tipo.clasificacion ";
+			final Query query = session.createQuery(hql);
+			final List<?> lista = query.list();
+			final List<Tipo> clasif = new ArrayList<Tipo>();
 
-			Iterator<?> it = lista.iterator();
+			final Iterator<?> it = lista.iterator();
 			while (it.hasNext()) {
-				String nombre = (String) it.next();
+				final String nombre = (String) it.next();
 				if (nombre != null) {
-					Tipo tp = new Tipo();
+					final Tipo tp = new Tipo();
 					tp.setClasificacion(nombre);
 					clasif.add(tp);
 				}
 			}
 			return clasif;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -530,47 +513,45 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene los valores del dominio
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public String obtenerPegoteHTMLExterno(Long id, Map<?, ?> parametros) {
+	public String obtenerPegoteHTMLExterno(final Long id, final Map<?, ?> parametros) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Tipo tipo = (Tipo) session.get(Tipo.class, id);
-			Iterator<?> iter = parametros.keySet().iterator();
+			final Tipo tipo = (Tipo) session.get(Tipo.class, id);
+			final Iterator<?> iter = parametros.keySet().iterator();
 			String laurl = tipo.getXurl();
 			if (laurl.indexOf("?") == -1) {
 				laurl += "?wbxtrn";
 			}
 
 			while (iter.hasNext()) {
-				String paramkey = (String) iter.next();
-				String paramvalue = (String) parametros.get(paramkey);
+				final String paramkey = (String) iter.next();
+				final String paramvalue = (String) parametros.get(paramkey);
 				laurl += "&" + paramkey + "=" + paramvalue;
 			}
 			return this.getHTTPEXTERNO(laurl);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new EJBException(e);
 		} finally {
 			this.close(session);
 		}
 	}
 
-	private String getHTTPEXTERNO(String laurl) {
+	private String getHTTPEXTERNO(final String laurl) {
 
 		String str = "";
 		try {
-			HttpURLConnection connection = (HttpURLConnection) new URL(laurl)
-					.openConnection();
+			final HttpURLConnection connection = (HttpURLConnection) new URL(laurl).openConnection();
 			connection.connect();
 
-			DataInputStream dis = new DataInputStream(
-					connection.getInputStream());
+			final DataInputStream dis = new DataInputStream(connection.getInputStream());
 			String inputLine;
 
 			while ((inputLine = dis.readLine()) != null) {
@@ -579,10 +560,10 @@ public abstract class TipoFacadeEJB extends HibernateEJB {
 			dis.close();
 			return str;
 
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			log.error("La URL no es válida: " + laurl + " " + e);
 			str = "No hi ha conexió amb el servidor extern.";
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			log.error("No puedo conectar con " + laurl + " " + e);
 			str = "No hi ha conexió amb el servidor extern.";
 		}

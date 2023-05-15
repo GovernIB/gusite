@@ -18,7 +18,7 @@ import es.caib.gusite.micropersistence.util.MenuFacadeUtil;
 
 /**
  * Business delegate para manipular menu.
- * 
+ *
  * @author Indra
  */
 public class MenuDelegate implements StatelessDelegate {
@@ -31,116 +31,114 @@ public class MenuDelegate implements StatelessDelegate {
 
 	/**
 	 * Inicializo los parámetros de la consulta de Menu.
-	 * 
+	 *
 	 * @throws DelegateException
 	 */
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Inicializo los parámetros de la consulta de Menu.
-	 * 
+	 *
 	 * @param id
 	 *            del Menu
 	 * @throws DelegateException
 	 */
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza un Menu
-	 * 
+	 *
 	 * @param menu
 	 * @return Id del menu
 	 * @throws DelegateException
 	 */
-	public Long grabarMenu(Menu menu) throws DelegateException {
+	public Long grabarMenu(final Menu menu) throws DelegateException {
 		try {
 			return this.getFacade().grabarMenu(menu);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un menu
-	 * 
+	 *
 	 * @param id
 	 *            Id del Menu
 	 * @return Menu
 	 * @throws DelegateException
 	 */
-	public Menu obtenerMenu(Long id) throws DelegateException {
+	public Menu obtenerMenu(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerMenu(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un menu sin cargar las paginas de contenido
-	 * 
+	 *
 	 * @param id
 	 *            Id del Menu
 	 * @param idioma
 	 * @return Menu
 	 * @throws DelegateException
 	 */
-	public Menu obtenerMenuThin(Long id, String idioma)
-			throws DelegateException {
+	public Menu obtenerMenuThin(final Long id, final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().obtenerMenuThin(id, idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
-	 * Listado plano de todos los objetos menu y contenidos de un microsite.
-	 * Está ordenado por el campo orden.
-	 * 
+	 * Listado plano de todos los objetos menu y contenidos de un microsite. Está
+	 * ordenado por el campo orden.
+	 *
 	 * @param idsite
 	 *            Id del site
 	 * @return ArrayList
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> ObtenerObjetosMenu(Long idsite)
-			throws DelegateException {
+	public ArrayList<?> ObtenerObjetosMenu(final Long idsite) throws DelegateException {
 		try {
 			return this.getFacade().ObtenerObjetosMenu(idsite);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los menus
-	 * 
+	 *
 	 * @return una lista de menus
 	 * @throws DelegateException
 	 */
 	public List<?> listarMenus() throws DelegateException {
 		try {
 			return this.getFacade().listarMenus();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un menu.
-	 * 
+	 *
 	 * @param idmicrosite
 	 *            Id del microsite
 	 * @param padre
@@ -149,67 +147,82 @@ public class MenuDelegate implements StatelessDelegate {
 	 * @return ArrayList con objetos "Menu"
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> listarMenuMicrosite(Long idmicrosite, Long padre,
-			String visible, String idioma) throws DelegateException {
+	public ArrayList<?> listarMenuMicrosite(final Long idmicrosite, final Long padre, final String visible,
+			final String idioma) throws DelegateException {
 		try {
-			return this.getFacade().listarMenuMicrosite(idmicrosite, padre,
-					visible, idioma);
-		} catch (RemoteException e) {
+			return this.getFacade().listarMenuMicrosite(idmicrosite, padre, visible, idioma);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los menus poniendole un idioma por defecto
-	 * 
+	 *
 	 * @param idioma
 	 * @return ArrayList
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> listarMenus(String idioma) throws DelegateException {
+	public ArrayList<?> listarMenus(final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().listarMenus(idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista un menu poniendole un idioma por defecto
-	 * 
+	 *
 	 * @param id
 	 *            Id del menu
 	 * @throws DelegateException
 	 */
-	public void borrarMenu(Long id) throws DelegateException {
+	public void borrarMenu(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarMenu(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
-	 * Actualizamos los ordenes de los objetos que están por debajo del nuevo
-	 * menú creado o eliminado sumando 1 o restando 1
-	 * 
+	 * Lista un menu poniendole un idioma por defecto
+	 *
+	 * @param id
+	 *            Id del menu
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarMenu(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarMenu(id, indexar);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Actualizamos los ordenes de los objetos que están por debajo del nuevo menú
+	 * creado o eliminado sumando 1 o restando 1
+	 *
 	 * @param orden
 	 * @param op
 	 * @param micro
 	 * @throws DelegateException
 	 */
-	public void Reordena(int orden, char op, Long micro)
-			throws DelegateException {
+	public void Reordena(final int orden, final char op, final Long micro) throws DelegateException {
 		try {
 			this.getFacade().Reordena(orden, op, micro);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Actualiza todo el arbol del menu
-	 * 
+	 *
 	 * @param idmicro
 	 *            Id del microsite
 	 * @param ids
@@ -225,15 +238,14 @@ public class MenuDelegate implements StatelessDelegate {
 	 * @param traducciones
 	 * @throws DelegateException
 	 */
-	public void actualizarMenus(Long idmicro, Long[] ids, String[] visibles,
-			String[] modos, Integer[] ordenes, Long[] idPadres, String[] tipos,
-			FormFile[] imagenes, String[] imagenesnom, boolean[] imagenesbor,
-			String[] traducciones) throws DelegateException {
+	public void actualizarMenus(final Long idmicro, final Long[] ids, final String[] visibles, final String[] modos,
+			final Integer[] ordenes, final Long[] idPadres, final String[] tipos, final FormFile[] imagenes,
+			final String[] imagenesnom, final boolean[] imagenesbor, final String[] traducciones)
+			throws DelegateException {
 		try {
-			this.getFacade().actualizarMenus(idmicro, ids, visibles, modos,
-					ordenes, idPadres, tipos, imagenes, imagenesnom,
-					imagenesbor, traducciones);
-		} catch (RemoteException e) {
+			this.getFacade().actualizarMenus(idmicro, ids, visibles, modos, ordenes, idPadres, tipos, imagenes,
+					imagenesnom, imagenesbor, traducciones);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -241,7 +253,7 @@ public class MenuDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -249,7 +261,7 @@ public class MenuDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -257,47 +269,47 @@ public class MenuDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -305,15 +317,15 @@ public class MenuDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -321,39 +333,39 @@ public class MenuDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> listarCombo(String mic) throws DelegateException {
+	public List<?> listarCombo(final String mic) throws DelegateException {
 		try {
 			return this.getFacade().listarCombo(mic);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> padreCombo(String mic) throws DelegateException {
+	public List<?> padreCombo(final String mic) throws DelegateException {
 		try {
 			return this.getFacade().padreCombo(mic);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -370,14 +382,14 @@ public class MenuDelegate implements StatelessDelegate {
 
 	protected MenuDelegate() throws DelegateException {
 		try {
-			MenuFacadeHome home = MenuFacadeUtil.getHome();
-			MenuFacade remote = home.create();
+			final MenuFacadeHome home = MenuFacadeUtil.getHome();
+			final MenuFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

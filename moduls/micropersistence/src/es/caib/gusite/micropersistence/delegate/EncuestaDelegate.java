@@ -24,7 +24,7 @@ import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Encuestas.
- * 
+ *
  * @author Indra
  */
 public class EncuestaDelegate implements StatelessDelegate {
@@ -38,273 +38,286 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void initra(Long id, String idiomapasado) throws DelegateException {
+	public void initra(final Long id, final String idiomapasado) throws DelegateException {
 		try {
 			this.getFacade().initra(id, idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una encuesta
-	 * 
+	 *
 	 * @param encuesta
 	 * @return Id de la encuesta
 	 * @throws DelegateException
 	 */
-	public Long grabarEncuesta(Encuesta encuesta) throws DelegateException {
+	public Long grabarEncuesta(final Encuesta encuesta) throws DelegateException {
 		try {
 			return this.getFacade().grabarEncuesta(encuesta);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una encuesta
-	 * 
+	 *
 	 * @param id
 	 *            Id de la encuesta
 	 * @return Encuesta
 	 * @throws DelegateException
 	 */
-	public Encuesta obtenerEncuesta(Long id) throws DelegateException {
+	public Encuesta obtenerEncuesta(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerEncuesta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un encuesta a partir de la uri
-	 * 
+	 *
 	 * @return Encuesta
 	 * @throws DelegateException
 	 */
-	public Encuesta obtenerEncuestaDesdeUri(String idioma, String uri, String site)
+	public Encuesta obtenerEncuestaDesdeUri(final String idioma, final String uri, final String site)
 			throws DelegateException {
 		try {
 			return this.getFacade().obtenerEncuestaDesdeUri(idioma, uri, site);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las encuestas
-	 * 
+	 *
 	 * @return una Lista de encuestas
 	 * @throws DelegateException
 	 */
 	public List<?> listarEncuestas() throws DelegateException {
 		try {
 			return this.getFacade().listarEncuestas();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las encuestas de recursos
-	 * 
+	 *
 	 * @param idiomapasado
 	 * @return una Lista de encuestas de recursos
 	 * @throws DelegateException
 	 */
-	public List<?> listarEncuestasrec(String idiomapasado)
-			throws DelegateException {
+	public List<?> listarEncuestasrec(final String idiomapasado) throws DelegateException {
 		try {
 			return this.getFacade().listarEncuestasrec(idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Borra una encuesta
-	 * 
+	 *
 	 * @param id
 	 *            Id de la encuesta
 	 * @throws DelegateException
 	 */
-	public void borrarEncuesta(Long id) throws DelegateException {
+	public void borrarEncuesta(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarEncuesta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Borra una encuesta
+	 *
+	 * @param id
+	 *            Id de la encuesta
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarEncuesta(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarEncuesta(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una pregunta
-	 * 
+	 *
 	 * @param pre
 	 * @throws DelegateException
 	 */
-	public void grabarPregunta(Pregunta pre) throws DelegateException {
+	public void grabarPregunta(final Pregunta pre) throws DelegateException {
 		try {
 			this.getFacade().grabarPregunta(pre);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una pregunta
-	 * 
+	 *
 	 * @param id
 	 *            Id de la pregunta
 	 * @return Pregunta
 	 * @throws DelegateException
 	 */
-	public Pregunta obtenerPregunta(Long id) throws DelegateException {
+	public Pregunta obtenerPregunta(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerPregunta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las preguntas de una encuesta
-	 * 
+	 *
 	 * @param id
 	 *            Id de la encuesta
 	 * @return una lista de preguntas
 	 * @throws DelegateException
 	 */
-	public List<?> listarPreguntas(Long id) throws DelegateException {
+	public List<?> listarPreguntas(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().listarPreguntas(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las preguntas de una encuesta ordenadas ascendentemente
-	 * 
+	 *
 	 * @param id
 	 *            de la encuesta
 	 * @return lista de preguntas
 	 * @throws DelegateException
 	 */
-	public List<?> listarPreguntasOrdAsc(Long id) throws DelegateException {
+	public List<?> listarPreguntasOrdAsc(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().listarPreguntasOrdAsc(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Elimina una o varias preguntas de la encuesta
-	 * 
+	 *
 	 * @param preguntas
 	 * @param encuesta_id
 	 *            Id de la encuesta
 	 * @throws DelegateException
 	 */
-	public void eliminarPreguntas(String[] preguntas, Long encuesta_id)
-			throws DelegateException {
+	public void eliminarPreguntas(final String[] preguntas, final Long encuesta_id) throws DelegateException {
 		try {
 			this.getFacade().eliminarPreguntas(preguntas, encuesta_id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una respuesta
-	 * 
+	 *
 	 * @param res
 	 * @throws DelegateException
 	 */
-	public void grabarRespuesta(Respuesta res) throws DelegateException {
+	public void grabarRespuesta(final Respuesta res) throws DelegateException {
 		try {
 			this.getFacade().grabarRespuesta(res);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una respuesta
-	 * 
+	 *
 	 * @param id
 	 *            Id de una respuesta
 	 * @return Respuesta
 	 * @throws DelegateException
 	 */
-	public Respuesta obtenerRespuesta(Long id) throws DelegateException {
+	public Respuesta obtenerRespuesta(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerRespuesta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las respuestas libres de un usuario en una encuesta
-	 * 
+	 *
 	 * @param id
 	 *            Id de encuesta
 	 * @return una lista de respuestas
 	 * @throws DelegateException
 	 */
-	public Hashtable<?, ?> listarRespuestasDato(Long idEncuesta, Long idUsuario)
-			throws DelegateException {
+	public Hashtable<?, ?> listarRespuestasDato(final Long idEncuesta, final Long idUsuario) throws DelegateException {
 		try {
 			return this.getFacade().listarRespuestasDato(idEncuesta, idUsuario);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las respuestas de una pregunta
-	 * 
+	 *
 	 * @param id
 	 *            Id de una pregunta
 	 * @return una lista de respuestas
 	 * @throws DelegateException
 	 */
-	public List<?> listarRespuestas(Long id) throws DelegateException {
+	public List<?> listarRespuestas(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().listarRespuestas(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Elimina una o varias respuestas de la pregunta
-	 * 
+	 *
 	 * @param respuestas
 	 * @param pregunta_id
 	 *            Id de una pregunta
 	 * @throws DelegateException
 	 */
-	public void eliminarRespuestas(String[] respuestas, Long pregunta_id)
-			throws DelegateException {
+	public void eliminarRespuestas(final String[] respuestas, final Long pregunta_id) throws DelegateException {
 		try {
 			this.getFacade().eliminarRespuestas(respuestas, pregunta_id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -312,7 +325,7 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -320,7 +333,7 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -328,47 +341,47 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -376,15 +389,15 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -392,145 +405,134 @@ public class EncuestaDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void sumarRespuesta(Long id) throws DelegateException {
+	public void sumarRespuesta(final Long id) throws DelegateException {
 		try {
 			this.getFacade().sumarRespuesta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void sumarPregunta(Long id) throws DelegateException {
+	public void sumarPregunta(final Long id) throws DelegateException {
 		try {
 			this.getFacade().sumarPregunta(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-
-	
 
 	/**
 	 * Crea o actualiza grabarUsuarioPropietarioRespuesta
-	 * 
+	 *
 	 * @param upm
 	 * @return Identificador
 	 * @throws DelegateException
 	 */
-	public long grabarUsuarioPropietarioRespuesta(
-			UsuarioPropietarioRespuesta upm) throws DelegateException {
+	public long grabarUsuarioPropietarioRespuesta(final UsuarioPropietarioRespuesta upm) throws DelegateException {
 		try {
 			return this.getFacade().grabarUsuarioPropietarioRespuesta(upm);
 
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtener todos los usuarios que han seleccionado una respuesta
-	 * 
+	 *
 	 * @param idRespuesta
 	 * @return una Lista
 	 * @throws DelegateException
 	 */
-	public List<?> obtenerUsuariosRespuesta(Long idRespuesta)
-			throws DelegateException {
+	public List<?> obtenerUsuariosRespuesta(final Long idRespuesta) throws DelegateException {
 		try {
 			return this.getFacade().obtenerUsuariosRespuesta(idRespuesta);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
-	 * Obtener el número de votos por respuesta en función de un grupo de
-	 * usuarios
-	 * 
+	 * Obtener el número de votos por respuesta en función de un grupo de usuarios
+	 *
 	 * @param condicioUsu
 	 * @return hastable key: idRespuesta value:numero respuestas
 	 * @throws DelegateException
 	 */
-	public Hashtable<?, ?> obtenerNumVotosByResp(Collection<?> condicioUsu)
-			throws DelegateException {
+	public Hashtable<?, ?> obtenerNumVotosByResp(final Collection<?> condicioUsu) throws DelegateException {
 		try {
 			return this.getFacade().obtenerNumVotosByResp(condicioUsu);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> obtenerUsuariosEncuesta(Long idEncuesta)
-			throws DelegateException {
+	public List<?> obtenerUsuariosEncuesta(final Long idEncuesta) throws DelegateException {
 		try {
 			return this.getFacade().obtenerUsuariosEncuesta(idEncuesta);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> obtenerRespuestasDeUsuario(Long idUsuario)
-			throws DelegateException {
+	public List<?> obtenerRespuestasDeUsuario(final Long idUsuario) throws DelegateException {
 		try {
 			return this.getFacade().obtenerRespuestasDeUsuario(idUsuario);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public RespuestaDato obtenerRespuestaDato(Long idRespuesta, Long idUsuario)
-			throws DelegateException {
+	public RespuestaDato obtenerRespuestaDato(final Long idRespuesta, final Long idUsuario) throws DelegateException {
 		try {
-			return this.getFacade()
-					.obtenerRespuestaDato(idRespuesta, idUsuario);
-		} catch (RemoteException e) {
+			return this.getFacade().obtenerRespuestaDato(idRespuesta, idUsuario);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
-			throws DelegateException {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final PathUOResult iPathUO) throws DelegateException {
 		try {
 			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	 /**
-	   * Obtiene las encuestas de un microsite	
-      */
-	public List<Encuesta> obtenerEncuestasByMicrositeId(Long idMicrosite)
-		  throws DelegateException {
-	  try {
-		   return this.getFacade().obtenerEncuestasByMicrositeId(idMicrosite);
-	  } catch (RemoteException e) {
-		  throw new DelegateException(e);
-	  }
-		   
+
+	/**
+	 * Obtiene las encuestas de un microsite
+	 */
+	public List<Encuesta> obtenerEncuestasByMicrositeId(final Long idMicrosite) throws DelegateException {
+		try {
+			return this.getFacade().obtenerEncuestasByMicrositeId(idMicrosite);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+
 	}
-	
+
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
 	/* ========================================================= */
@@ -543,14 +545,14 @@ public class EncuestaDelegate implements StatelessDelegate {
 
 	protected EncuestaDelegate() throws DelegateException {
 		try {
-			EncuestaFacadeHome home = EncuestaFacadeUtil.getHome();
-			EncuestaFacade remote = home.create();
+			final EncuestaFacadeHome home = EncuestaFacadeUtil.getHome();
+			final EncuestaFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

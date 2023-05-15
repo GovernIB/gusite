@@ -20,13 +20,13 @@ import es.caib.gusite.micromodel.TraduccionTemafaq;
 
 /**
  * SessionBean para manipular los temas de las FAQS.
- * 
+ *
  * @ejb.bean name="sac/micropersistence/TemaFacade"
  *           jndi-name="es.caib.gusite.micropersistence.TemaFacade"
  *           type="Stateless" view-type="remote" transaction-type="Container"
- * 
+ *
  * @ejb.transaction type="Required"
- * 
+ *
  * @author Indra
  */
 public abstract class TemaFacadeEJB extends HibernateEJB {
@@ -44,17 +44,16 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void init(Long site) {
+	public void init(final Long site) {
 		super.tampagina = 10;
 		super.pagina = 0;
 		super.select = "select tema";
 		super.from = " from Temafaq tema join tema.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma='"
-				+ Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite="
+		super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite="
 				+ site.toString();
 		super.whereini = " ";
 		super.orderby = "";
@@ -67,7 +66,7 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
@@ -76,8 +75,7 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select tema";
 		super.from = " from Temafaq tema join tema.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma='"
-				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.where = " where trad.id.codigoIdioma='" + Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 
@@ -89,24 +87,22 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Crea o actualiza un tema
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarTema(Temafaq tema) {
+	public Long grabarTema(final Temafaq tema) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			boolean nuevo = (tema.getId() == null) ? true : false;
-			Transaction tx = session.beginTransaction();
+			final boolean nuevo = (tema.getId() == null) ? true : false;
+			final Transaction tx = session.beginTransaction();
 
-			Map<String, TraduccionTemafaq> listaTraducciones = new HashMap<String, TraduccionTemafaq>();
+			final Map<String, TraduccionTemafaq> listaTraducciones = new HashMap<String, TraduccionTemafaq>();
 			if (nuevo) {
-				Iterator<TraduccionTemafaq> it = tema.getTraducciones()
-						.values().iterator();
+				final Iterator<TraduccionTemafaq> it = tema.getTraducciones().values().iterator();
 				while (it.hasNext()) {
-					TraduccionTemafaq trd = it.next();
+					final TraduccionTemafaq trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				tema.setTraducciones(null);
@@ -116,7 +112,7 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 			session.flush();
 
 			if (nuevo) {
-				for (TraduccionTemafaq trad : listaTraducciones.values()) {
+				for (final TraduccionTemafaq trad : listaTraducciones.values()) {
 					trad.getId().setCodigoTema(tema.getId());
 					session.saveOrUpdate(trad);
 				}
@@ -127,12 +123,12 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 			tx.commit();
 			this.close(session);
 
-			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			final int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(tema, op);
 
 			return tema.getId();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -141,18 +137,18 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene un tema
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Temafaq obtenerTema(Long id) {
+	public Temafaq obtenerTema(final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Temafaq tema = (Temafaq) session.get(Temafaq.class, id);
+			final Temafaq tema = (Temafaq) session.get(Temafaq.class, id);
 			return tema;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -161,23 +157,22 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los temas
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
 	public List<?> listarTemas() {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -186,29 +181,34 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * borra un tema
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void borrarTema(Long id) {
+	public void borrarTema(final Long id) {
+		borrarTema(id, true);
+	}
 
-		Session session = this.getSession();
+	/**
+	 * borra un tema
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarTema(final Long id, final boolean indexar) {
+		final Session session = this.getSession();
 		try {
-			Temafaq temafaq = (Temafaq) session.get(Temafaq.class, id);
+			final Temafaq temafaq = (Temafaq) session.get(Temafaq.class, id);
 
-			session.createQuery(
-					"delete from TraduccionTemafaq ttema where ttema.id.codigoTema = "
-							+ id).executeUpdate();
-			session.createQuery(
-					"delete from Temafaq tfaq where tfaq.id = " + id)
+			session.createQuery("delete from TraduccionTemafaq ttema where ttema.id.codigoTema = " + id)
 					.executeUpdate();
+			session.createQuery("delete from Temafaq tfaq where tfaq.id = " + id).executeUpdate();
 			session.flush();
 			this.close(session);
 
 			this.grabarAuditoria(temafaq, Auditoria.ELIMINAR);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -217,21 +217,20 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los temas para usar en Combos
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarCombo(Long idmicrosite) {
+	public List<?> listarCombo(final Long idmicrosite) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			String consulta = "select tema from Temafaq tema join tema.traducciones trad where trad.id.codigoIdioma = '"
-					+ Idioma.getIdiomaPorDefecto()
-					+ "' and tema.idmicrosite = " + idmicrosite.toString();
-			Query query = session.createQuery(consulta.toString());
+			final String consulta = "select tema from Temafaq tema join tema.traducciones trad where trad.id.codigoIdioma = '"
+					+ Idioma.getIdiomaPorDefecto() + "' and tema.idmicrosite = " + idmicrosite.toString();
+			final Query query = session.createQuery(consulta.toString());
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -240,23 +239,19 @@ public abstract class TemaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Comprueba que el elemento pertenece al Microsite
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public boolean checkSite(Long site, Long id) {
+	public boolean checkSite(final Long site, final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session
-					.createQuery("select tema from Temafaq tema where tema.idmicrosite = "
-							+ site.toString()
-							+ " and tema.id = "
-							+ id.toString());
+			final Query query = session.createQuery("select tema from Temafaq tema where tema.idmicrosite = "
+					+ site.toString() + " and tema.id = " + id.toString());
 			return query.list().isEmpty();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);

@@ -14,23 +14,22 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init()
 	 */
 	public void init() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init(java
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init(java
 	 * .lang.Long)
 	 */
 	public void init(Long id) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#grabarNoticia
 	 * (es.caib.gusite.micromodel.Noticia)
@@ -39,7 +38,7 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#obtenerNoticia
 	 * (java.lang.Long)
@@ -48,7 +47,7 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#clonarNoticia
 	 * (java.lang.Long)
@@ -57,7 +56,7 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * obtenerNoticiaThin(java.lang.Long, java.lang.String)
 	 */
@@ -65,40 +64,37 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#listarNoticias
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#listarNoticias ()
 	 */
 	public List<?> listarNoticias() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * listarNoticiasThin()
 	 */
 	public List<?> listarNoticiasThin(String idioma) throws Exception;
 
-	public List<?> buscarElementos(BuscarElementosParameter parameterObject)
-			throws Exception;
+	public List<?> buscarElementos(BuscarElementosParameter parameterObject) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#buscarElementos
 	 * (java.util.Map, java.util.Map, java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
 	@Deprecated
-	public List<?> buscarElementos(Map<?, ?> parametros, Map<?, ?> traduccion,
-			String idmicrosite, String idtipo, String idioma) throws Exception;
+	public List<?> buscarElementos(Map<?, ?> parametros, Map<?, ?> traduccion, String idmicrosite, String idtipo,
+			String idioma) throws Exception;
 
-	
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#borrarNoticia
 	 * (java.lang.Long)
@@ -107,124 +103,114 @@ public interface NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getParametros
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getParametros ()
 	 */
 	public Hashtable<?, ?> getParametros() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#parametrosCons
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#parametrosCons ()
 	 */
 	public void parametrosCons() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getPagina()
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getPagina()
 	 */
 	public int getPagina() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setPagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setPagina
 	 * (int)
 	 */
 	public void setPagina(int pagina) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby
 	 * (java.lang.String)
 	 */
 	public void setOrderby(String orderby) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby2
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby2
 	 * (java.lang.String)
 	 */
 	public void setOrderby2(String orderby) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getValorBD
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getValorBD
 	 * (java.lang.String)
 	 */
 	public String getValorBD(String valor) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setFiltro
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setFiltro
 	 * (java.lang.String)
 	 */
 	public void setFiltro(String valor) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getWhere()
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getWhere()
 	 */
 	public String getWhere() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setWhere(
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setWhere(
 	 * java.lang.String)
 	 */
 	public void setWhere(String valor) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getTampagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getTampagina
 	 * ()
 	 */
 	public int getTampagina() throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setTampagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setTampagina
 	 * (int)
 	 */
 	public void setTampagina(int tampagina) throws Exception;
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#checkSite
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#checkSite
 	 * (java.lang.Long, java.lang.Long)
 	 */
 	public boolean checkSite(Long site, Long id) throws Exception;
 
 	public List<String> listarAnyos() throws Exception;
-	
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO) throws Exception;
-	
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, 
+
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final PathUOResult iPathUO) throws Exception;
+
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento,
 			final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) throws Exception;
+
+	void borrarNoticia(Long id, boolean indexar) throws DelegateException;
 
 }

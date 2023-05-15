@@ -9,7 +9,6 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micromodel.Encuesta;
 import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.FaqFacade;
@@ -21,7 +20,7 @@ import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular faq.
- * 
+ *
  * @author Indra
  */
 public class FaqDelegate implements StatelessDelegate {
@@ -35,90 +34,107 @@ public class FaqDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una faq
-	 * 
+	 *
 	 * @param faq
 	 * @return Id de una faq
 	 * @throws DelegateException
 	 */
-	public Long grabarFaq(Faq faq) throws DelegateException {
+	public Long grabarFaq(final Faq faq) throws DelegateException {
 		try {
 			return this.getFacade().grabarFaq(faq);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una faq
-	 * 
+	 *
 	 * @param id
 	 *            Id de la faq
 	 * @return Faq
 	 * @throws DelegateException
 	 */
-	public Faq obtenerFaq(Long id) throws DelegateException {
+	public Faq obtenerFaq(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerFaq(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las faqs
-	 * 
+	 *
 	 * @return una Lista
 	 * @throws DelegateException
 	 */
 	public List<?> listarFaqs() throws DelegateException {
 		try {
 			return this.getFacade().listarFaqs();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las faqs poniendole un idioma por defecto
-	 * 
+	 *
 	 * @param idioma
 	 * @return ArrayList
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> listarFaqs(String idioma) throws DelegateException {
+	public ArrayList<?> listarFaqs(final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().listarFaqs(idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * borra una faq
-	 * 
+	 *
 	 * @param id
 	 *            Id de la faq
 	 * @throws DelegateException
 	 */
-	public void borrarFaq(Long id) throws DelegateException {
+	public void borrarFaq(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarFaq(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * borra una faq
+	 *
+	 * @param id
+	 *            Id de la faq
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarFaq(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarFaq(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -126,7 +142,7 @@ public class FaqDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -134,7 +150,7 @@ public class FaqDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -142,47 +158,47 @@ public class FaqDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -190,15 +206,15 @@ public class FaqDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -206,45 +222,43 @@ public class FaqDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
-			throws DelegateException {
+
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final PathUOResult iPathUO) throws DelegateException {
 		try {
 			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	
-	public List<Faq> obtenerFaqsByMicrositeId(Long idMicrosite)
-		  throws DelegateException {
-	  try {
-		   return this.getFacade().obtenerFaqsByMicrositeId(idMicrosite);
-	  } catch (RemoteException e) {
-		  throw new DelegateException(e);
-	  }
-		   
+
+	public List<Faq> obtenerFaqsByMicrositeId(final Long idMicrosite) throws DelegateException {
+		try {
+			return this.getFacade().obtenerFaqsByMicrositeId(idMicrosite);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+
 	}
 
 	/* ========================================================= */
@@ -259,14 +273,14 @@ public class FaqDelegate implements StatelessDelegate {
 
 	protected FaqDelegate() throws DelegateException {
 		try {
-			FaqFacadeHome home = FaqFacadeUtil.getHome();
-			FaqFacade remote = home.create();
+			final FaqFacadeHome home = FaqFacadeUtil.getHome();
+			final FaqFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

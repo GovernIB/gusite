@@ -9,7 +9,6 @@ import javax.ejb.CreateException;
 import javax.ejb.Handle;
 import javax.naming.NamingException;
 
-import es.caib.gusite.micromodel.Faq;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.NoticiaFacade;
@@ -21,7 +20,7 @@ import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Noticias.
- * 
+ *
  * @author Indra
  */
 public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
@@ -34,69 +33,68 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init()
 	 */
 	@Override
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init(java
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#init(java
 	 * .lang.Long)
 	 */
 	@Override
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#grabarNoticia
 	 * (es.caib.gusite.micromodel.Noticia)
 	 */
 	@Override
-	public Long grabarNoticia(Noticia noticia) throws DelegateException {
+	public Long grabarNoticia(final Noticia noticia) throws DelegateException {
 		try {
 			return this.getFacade().grabarNoticia(noticia);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#obtenerNoticia
 	 * (java.lang.Long)
 	 */
 	@Override
-	public Noticia obtenerNoticia(Long id) throws DelegateException {
+	public Noticia obtenerNoticia(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerNoticia(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * obtenerNoticiaDesdeUri(java.lang.Idioma, java.lang.String)
 	 */
@@ -104,83 +102,79 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 			throws DelegateException {
 		try {
 			return this.getFacade().obtenerNoticiaDesdeUri(lang, uri, site);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#clonarNoticia
 	 * (java.lang.Long)
 	 */
 	@Override
-	public Long clonarNoticia(Long id) throws DelegateException {
+	public Long clonarNoticia(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().clonarNoticia(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * obtenerNoticiaThin(java.lang.Long)
 	 */
 	@Override
-	public Noticia obtenerNoticiaThin(Long id, String idioma)
-			throws DelegateException {
+	public Noticia obtenerNoticiaThin(final Long id, final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().obtenerNoticiaThin(id, idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#listarNoticias
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#listarNoticias ()
 	 */
 	@Override
 	public List<?> listarNoticias() throws DelegateException {
 		try {
 			return this.getFacade().listarNoticias();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#
 	 * listarNoticiasThin()
 	 */
 	@Override
-	public List<Noticia> listarNoticiasThin(String idioma)
-			throws DelegateException {
+	public List<Noticia> listarNoticiasThin(final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().listarNoticiasThin(idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	@Override
 	@Deprecated
-	public List<?> buscarElementos(Map<?, ?> parametros, Map<?, ?> traduccion,
-			String idmicrosite, String idtipo, String idioma) throws Exception {
+	public List<?> buscarElementos(final Map<?, ?> parametros, final Map<?, ?> traduccion, final String idmicrosite,
+			final String idtipo, final String idioma) throws Exception {
 		try {
-			return this.getFacade().buscarElementos(parametros, traduccion,
-					idmicrosite, idtipo, idioma);
-		} catch (RemoteException e) {
+			return this.getFacade().buscarElementos(parametros, traduccion, idmicrosite, idtipo, idioma);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 
@@ -188,286 +182,283 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#buscarElementos
 	 * (java.util.Map, java.util.Map, java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
 	@Override
-	public List<?> buscarElementos(BuscarElementosParameter parameterObject)
-			throws DelegateException {
+	public List<?> buscarElementos(final BuscarElementosParameter parameterObject) throws DelegateException {
 		try {
 			return this.getFacade().buscarElementos(parameterObject);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#borrarNoticia
 	 * (java.lang.Long)
 	 */
 	@Override
-	public void borrarNoticia(Long id) throws DelegateException {
+	public void borrarNoticia(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarNoticia(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getParametros
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#borrarNoticia
+	 * (java.lang.Long)
+	 */
+	@Override
+	public void borrarNoticia(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarNoticia(id, indexar);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getParametros ()
 	 */
 	@Override
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#parametrosCons
-	 * ()
+	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#parametrosCons ()
 	 */
 	@Override
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getPagina()
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getPagina()
 	 */
 	@Override
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setPagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setPagina
 	 * (int)
 	 */
 	@Override
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby
 	 * (java.lang.String)
 	 */
 	@Override
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby2
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setOrderby2
 	 * (java.lang.String)
 	 */
 	@Override
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getValorBD
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getValorBD
 	 * (java.lang.String)
 	 */
 	@Override
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setFiltro
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setFiltro
 	 * (java.lang.String)
 	 */
 	@Override
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getWhere()
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getWhere()
 	 */
 	@Override
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setWhere(
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setWhere(
 	 * java.lang.String)
 	 */
 	@Override
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getTampagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#getTampagina
 	 * ()
 	 */
 	@Override
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setTampagina
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#setTampagina
 	 * (int)
 	 */
 	@Override
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * es.caib.gusite.micropersistence.delegate.NotificaServiceItf#checkSite
+	 *
+	 * @see es.caib.gusite.micropersistence.delegate.NotificaServiceItf#checkSite
 	 * (java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-
 
 	@Override
 	public List<String> listarAnyos() throws DelegateException {
 		try {
 			return this.getFacade().listarAnyos();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
+
 	@Override
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
-			throws DelegateException {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final PathUOResult iPathUO) throws DelegateException {
 		try {
 			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	@Override
-	public SolrPendienteResultado indexarSolrArchivo(SolrIndexer solrIndexer,
-			Long idElemento, EnumCategoria categoria, Long idArchivo, final PathUOResult iPathUO)
-			throws Exception {
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) throws Exception {
 		try {
 			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria, idArchivo, iPathUO);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	public List<Noticia> obtenerNoticiasByMicrositeId(Long idMicrosite)
-			  throws DelegateException {
-		  try {
-			   return this.getFacade().obtenerNoticiasByMicrositeId(idMicrosite);
-		  } catch (RemoteException e) {
-			  throw new DelegateException(e);
-		  }
-			   
-	}
 
+	public List<Noticia> obtenerNoticiasByMicrositeId(final Long idMicrosite) throws DelegateException {
+		try {
+			return this.getFacade().obtenerNoticiasByMicrositeId(idMicrosite);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+
+	}
 
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -481,18 +472,16 @@ public class NoticiaDelegate implements StatelessDelegate, NoticiaServiceItf {
 
 	protected NoticiaDelegate() throws DelegateException {
 		try {
-			NoticiaFacadeHome home = NoticiaFacadeUtil.getHome();
-			NoticiaFacade remote = home.create();
+			final NoticiaFacadeHome home = NoticiaFacadeUtil.getHome();
+			final NoticiaFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-
-	
 }

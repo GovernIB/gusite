@@ -16,7 +16,7 @@ import es.caib.gusite.micropersistence.util.ContactoFacadeUtil;
 
 /**
  * Business delegate para manipular Accesibilidad.
- * 
+ *
  * @author Indra
  */
 public class ContactoDelegate implements StatelessDelegate {
@@ -30,150 +30,162 @@ public class ContactoDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Inicializo los parámetros de la consulta de Contacto.
-	 * 
+	 *
 	 * @param id
 	 *            Id del contacto
 	 * @throws DelegateException
 	 */
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza un Contacto
-	 * 
+	 *
 	 * @param contacto
 	 * @return Id del contacto
 	 * @throws DelegateException
 	 */
-	public Long grabarContacto(Contacto contacto) throws DelegateException {
+	public Long grabarContacto(final Contacto contacto) throws DelegateException {
 		try {
 			return this.getFacade().grabarContacto(contacto);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una linea del Formulario
-	 * 
+	 *
 	 * @param id
 	 *            Id de la linea de contacto
 	 * @return Lineadatocontacto
 	 * @throws DelegateException
 	 */
-	public Lineadatocontacto obtenerLinea(Long id) throws DelegateException {
+	public Lineadatocontacto obtenerLinea(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerLinea(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un contacto
-	 * 
+	 *
 	 * @param id
 	 *            Id del contato
 	 * @return Contacto
 	 * @throws DelegateException
 	 */
-	public Contacto obtenerContacto(Long id) throws DelegateException {
+	public Contacto obtenerContacto(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerContacto(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
+
 	/**
 	 * Obtiene un contacto
-	 * 
+	 *
 	 * @param id
 	 *            Id del contato
 	 * @return Contacto
 	 * @throws DelegateException
 	 */
-	public Contacto obtenerContactoByUri(String idioma, String uri, String site)
+	public Contacto obtenerContactoByUri(final String idioma, final String uri, final String site)
 			throws DelegateException {
 		try {
 			return this.getFacade().obtenerContactoByUri(idioma, uri, site);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	
 
 	/**
 	 * Lista todos los Formularios
-	 * 
+	 *
 	 * @return una Lista de contactos
 	 * @throws DelegateException
 	 */
 	public List<?> listarContactos() throws DelegateException {
 		try {
 			return this.getFacade().listarContactos();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * borra un contacto
-	 * 
+	 *
 	 * @param id
 	 * @throws DelegateException
 	 */
-	public void borrarContacto(Long id) throws DelegateException {
+	public void borrarContacto(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarContacto(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * borra un contacto
+	 *
+	 * @param id
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarContacto(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarContacto(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Añade una nueva línea al formulario o modifica la que existe
-	 * 
+	 *
 	 * @param lin
 	 * @param idcontacto
 	 *            Id del contacto
 	 * @throws DelegateException
 	 */
-	public void creamodificaLinea(Lineadatocontacto lin, Long idcontacto)
-			throws DelegateException {
+	public void creamodificaLinea(final Lineadatocontacto lin, final Long idcontacto) throws DelegateException {
 		try {
 			this.getFacade().creamodificaLinea(lin, idcontacto);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * elimina líneas del formulario
-	 * 
+	 *
 	 * @param lineas
 	 * @param contacto_id
 	 *            Id del contacto
 	 * @throws DelegateException
 	 */
-	public void eliminarLineas(String[] lineas, Long contacto_id)
-			throws DelegateException {
+	public void eliminarLineas(final String[] lineas, final Long contacto_id) throws DelegateException {
 		try {
 			this.getFacade().eliminarLineas(lineas, contacto_id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 
@@ -181,18 +193,17 @@ public class ContactoDelegate implements StatelessDelegate {
 
 	/**
 	 * elimina una línea del formulario
-	 * 
+	 *
 	 * @param idLinea
 	 *            Id de la linea de contacto
 	 * @param idContacto
 	 *            Id del contacto
 	 * @throws DelegateException
 	 */
-	public void eliminarLinea(Long idLinea, Long idContacto)
-			throws DelegateException {
+	public void eliminarLinea(final Long idLinea, final Long idContacto) throws DelegateException {
 		try {
 			this.getFacade().eliminarLinea(idLinea, idContacto);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 
@@ -201,7 +212,7 @@ public class ContactoDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -209,7 +220,7 @@ public class ContactoDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -217,47 +228,47 @@ public class ContactoDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -265,15 +276,15 @@ public class ContactoDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -281,31 +292,31 @@ public class ContactoDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Comprueba que el elemento pertenece al Microsite
-	 * 
+	 *
 	 * @param site
 	 * @param id
 	 * @return true si no pertenece
 	 * @throws DelegateException
 	 */
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -322,14 +333,14 @@ public class ContactoDelegate implements StatelessDelegate {
 
 	protected ContactoDelegate() throws DelegateException {
 		try {
-			ContactoFacadeHome home = ContactoFacadeUtil.getHome();
-			ContactoFacade remote = home.create();
+			final ContactoFacadeHome home = ContactoFacadeUtil.getHome();
+			final ContactoFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

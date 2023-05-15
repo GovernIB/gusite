@@ -16,9 +16,9 @@ import es.caib.gusite.micropersistence.util.ComponenteFacadeUtil;
 
 /**
  * Business delegate para manipular Componentes.
- * 
+ *
  * @author Indra
- * 
+ *
  */
 public class ComponenteDelegate implements StatelessDelegate {
 
@@ -30,88 +30,105 @@ public class ComponenteDelegate implements StatelessDelegate {
 
 	/**
 	 * Inicializo los parámetros de la consulta de Componente.
-	 * 
+	 *
 	 * @throws DelegateException
 	 */
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Inicializo los parámetros de la consulta de Componente.
-	 * 
+	 *
 	 * @param id
 	 *            del componente
 	 * @throws DelegateException
 	 */
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza un Componente
-	 * 
+	 *
 	 * @param compo
 	 * @return Id del componente
 	 * @throws DelegateException
 	 */
-	public Long grabarComponente(Componente compo) throws DelegateException, IOException {
+	public Long grabarComponente(final Componente compo) throws DelegateException, IOException {
 		try {
 			return this.getFacade().grabarComponente(compo);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un Componente
-	 * 
+	 *
 	 * @param id
 	 *            del componente
 	 * @return Componente
 	 * @throws DelegateException
 	 */
-	public Componente obtenerComponente(Long id) throws DelegateException {
+	public Componente obtenerComponente(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerComponente(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los Componentes
-	 * 
+	 *
 	 * @return una lista de componentes
 	 * @throws DelegateException
 	 */
 	public List<Componente> listarComponentes() throws DelegateException {
 		try {
 			return this.getFacade().listarComponentes();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * borra un Componente
-	 * 
+	 *
 	 * @param id
 	 *            del componente
 	 * @throws DelegateException
 	 */
-	public void borrarComponente(Long id) throws DelegateException {
+	public void borrarComponente(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarComponente(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * borra un Componente
+	 *
+	 * @param id
+	 *            del componente
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarComponente(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarComponente(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -119,7 +136,7 @@ public class ComponenteDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -127,7 +144,7 @@ public class ComponenteDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -135,47 +152,47 @@ public class ComponenteDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -183,15 +200,15 @@ public class ComponenteDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -199,31 +216,31 @@ public class ComponenteDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Comprueba que el componente pertenece al Microsite
-	 * 
+	 *
 	 * @param site
 	 * @param id
 	 * @return true si no pertenece
 	 * @throws DelegateException
 	 */
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -240,14 +257,14 @@ public class ComponenteDelegate implements StatelessDelegate {
 
 	protected ComponenteDelegate() throws DelegateException {
 		try {
-			ComponenteFacadeHome home = ComponenteFacadeUtil.getHome();
-			ComponenteFacade remote = home.create();
+			final ComponenteFacadeHome home = ComponenteFacadeUtil.getHome();
+			final ComponenteFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

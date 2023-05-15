@@ -38,13 +38,13 @@ import es.caib.gusite.micropersistence.delegate.IdiomaDelegate;
 
 /**
  * SessionBean para consultar Menu.
- * 
+ *
  * @ejb.bean name="sac/micropersistence/MenuFacade"
  *           jndi-name="es.caib.gusite.micropersistence.MenuFacade"
  *           type="Stateless" view-type="remote" transaction-type="Container"
- * 
+ *
  * @ejb.transaction type="Required"
- * 
+ *
  * @author Indra
  */
 @SuppressWarnings("unchecked")
@@ -55,7 +55,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	private static class ComparatorMenu implements Comparator<Object> {
 
 		@Override
-		public int compare(Object element1, Object element2) {
+		public int compare(final Object element1, final Object element2) {
 
 			Integer lower1 = new Integer(0);
 			Integer lower2 = new Integer(0);
@@ -88,17 +88,16 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	/**
 	 * Inicializo los parámetros de la consulta de Menu.... No está bien hecho
 	 * debería ser Statefull
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void init(Long site) {
+	public void init(final Long site) {
 		super.tampagina = 10;
 		super.pagina = 0;
 		super.select = "";
 		super.from = " from Menu menu join menu.traducciones trad ";
-		super.where = "where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "' and menu.microsite.id = "
+		super.where = "where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and menu.microsite.id = "
 				+ site.toString();
 		super.whereini = " ";
 		super.orderby = " order by menu.orden";
@@ -112,7 +111,7 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	/**
 	 * Inicializo los parámetros de la consulta de Menu.... No está bien hecho
 	 * debería ser Statefull
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
@@ -133,86 +132,85 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Crea o actualiza un Menu
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarMenu(Menu menu) throws DelegateException {
+	public Long grabarMenu(final Menu menu) throws DelegateException {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		boolean nuevo = false;
-		
-		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+
+		final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		final List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
 		Archivo imagenMenu = null;
-		
+
 		Menu menuOriginal = null;
-		
+
 		try {
-			
-			Transaction tx = session.beginTransaction();
-			Map<String, TraduccionMenu> listaTraducciones = new HashMap<String, TraduccionMenu>();
+
+			final Transaction tx = session.beginTransaction();
+			final Map<String, TraduccionMenu> listaTraducciones = new HashMap<String, TraduccionMenu>();
 
 			if (menu.getId() == null) {
 				nuevo = true;
 			}
 
 			if (nuevo) {
-				
-				Iterator<TraduccionMenu> it = menu.getTraducciones().values().iterator();
+
+				final Iterator<TraduccionMenu> it = menu.getTraducciones().values().iterator();
 				while (it.hasNext()) {
-					TraduccionMenu trd = it.next();
+					final TraduccionMenu trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				menu.setTraducciones(null);
-				
+
 				if (menu.getImagenmenu() != null) {
 					imagenMenu = menu.getImagenmenu();
 					menu.setImagenmenu(null);
 				}
-				
+
 			} else {
-				
+
 				menuOriginal = this.obtenerMenu(menu.getId());
-				
+
 				if (menu.getImagenmenu() != null) {
 					if (menu.getImagenmenu().getId() != null)
 						archivoDelegate.grabarArchivo(menu.getImagenmenu());
 					else
 						archivoDelegate.insertarArchivo(menu.getImagenmenu());
 				} else {
-					// Archivo a null pero anterior no lo era: solicitan borrado 
+					// Archivo a null pero anterior no lo era: solicitan borrado
 					if (menuOriginal.getImagenmenu() != null) {
 						archivosPorBorrar.add(menuOriginal.getImagenmenu());
 					}
 				}
-				
+
 			}
 
 			session.saveOrUpdate(menu);
 			session.flush();
 
 			if (nuevo) {
-				
-				for (TraduccionMenu trad : listaTraducciones.values()) {
+
+				for (final TraduccionMenu trad : listaTraducciones.values()) {
 					trad.getId().setCodigoMenu(menu.getId());
 					session.saveOrUpdate(trad);
 				}
 
 				menu.setTraducciones(listaTraducciones);
-				
+
 				if (imagenMenu != null) {
 					archivoDelegate.insertarArchivo(imagenMenu);
 				}
-				
+
 				menu.setImagenmenu(imagenMenu);
-				
+
 				session.saveOrUpdate(menu);
 				session.flush();
-				
+
 			}
-			
+
 			// Borramos archivos FKs del Microsite que han solicitado que se borren.
 			if (archivosPorBorrar.size() > 0)
 				archivoDelegate.borrarArchivos(archivosPorBorrar);
@@ -220,37 +218,37 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			tx.commit();
 			this.close(session);
 
-			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			final int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(menu, op);
 
 			return menu.getId();
 
-		} catch (HibernateException he) {
-			
+		} catch (final HibernateException he) {
+
 			throw new EJBException(he);
-			
+
 		} finally {
-			
+
 			this.close(session);
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * Obtiene un menu
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Menu obtenerMenu(Long id) {
+	public Menu obtenerMenu(final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Menu menu = (Menu) session.get(Menu.class, id);
+			final Menu menu = (Menu) session.get(Menu.class, id);
 			return menu;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -259,45 +257,41 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene un menu sin cargar las paginas de contenido
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Menu obtenerMenuThin(Long id, String idioma) {
+	public Menu obtenerMenuThin(final Long id, final String idioma) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Menu men = new Menu();
-			String sql = "select menu.id, menu.microsite.id, menu.orden, menu.visible, menu.modo, menu.padre, trad.nombre "
-					+ "from Menu menu"
-					+ " join menu.traducciones trad "
-					+ "where trad.id.codigoIdioma = '"
-					+ idioma
-					+ "'"
-					+ " and menu.id = " + id;
+			final Menu men = new Menu();
+			final String sql = "select menu.id, menu.microsite.id, menu.orden, menu.visible, menu.modo, menu.padre, trad.nombre "
+					+ "from Menu menu" + " join menu.traducciones trad " + "where trad.id.codigoIdioma = '" + idioma
+					+ "'" + " and menu.id = " + id;
 
-			Query query = session.createQuery(sql);
+			final Query query = session.createQuery(sql);
 
-			ScrollableResults scr = query.scroll();
+			final ScrollableResults scr = query.scroll();
 			scr.first();
-			Object[] fila = scr.get();
+			final Object[] fila = scr.get();
 
 			men.setId((Long) fila[0]);
-			Microsite microsite = new Microsite();
+			final Microsite microsite = new Microsite();
 			microsite.setId((Long) fila[1]);
 			men.setMicrosite(microsite);
 			men.setOrden(((Integer) fila[2]).intValue());
 			men.setVisible((String) fila[3]);
 			men.setModo((String) fila[4]);
 			men.setPadre((Long) fila[5]);
-			TraduccionMenu trad = new TraduccionMenu();
+			final TraduccionMenu trad = new TraduccionMenu();
 			trad.setNombre((String) fila[6]);
 			men.setTraduccion(idioma, trad);
 
 			scr.close();
 			return men;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -305,78 +299,66 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	}
 
 	/**
-	 * Listado plano de todos los objetos menu y contenidos de un microsite.
-	 * Está ordenado por el campo orden.
-	 * 
+	 * Listado plano de todos los objetos menu y contenidos de un microsite. Está
+	 * ordenado por el campo orden.
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public ArrayList<Object> ObtenerObjetosMenu(Long idsite) {
+	public ArrayList<Object> ObtenerObjetosMenu(final Long idsite) {
 
 		ArrayList<Object> listaobjetos = new ArrayList<Object>();
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			String sqlselect = "";
-			String sqlfrom = " from Menu menu ";
-			String sqlwhere = " where menu.microsite.id = " + idsite.toString()
-					+ " and menu.padre = 0 ";
-			String sqlorderby = " order by menu.orden";
-			Query query = session.createQuery(sqlselect + sqlfrom + sqlwhere
-					+ sqlorderby);
+			final String sqlselect = "";
+			final String sqlfrom = " from Menu menu ";
+			String sqlwhere = " where menu.microsite.id = " + idsite.toString() + " and menu.padre = 0 ";
+			final String sqlorderby = " order by menu.orden";
+			Query query = session.createQuery(sqlselect + sqlfrom + sqlwhere + sqlorderby);
 
 			// Recorrer los menus
-			List<?> list = query.list();
-			Iterator<?> iter = list.iterator();
+			final List<?> list = query.list();
+			final Iterator<?> iter = list.iterator();
 			while (iter.hasNext()) {
-				Menu menu = (Menu) iter.next();
+				final Menu menu = (Menu) iter.next();
 
-				String hql = "from TraduccionMenu trad"
-						+ " where trad.id.codigoMenu = "
-						+ menu.getId().toString()
-						+ " and trad.id.codigoIdioma = '"
-						+ Idioma.getIdiomaPorDefecto() + "'";
+				String hql = "from TraduccionMenu trad" + " where trad.id.codigoMenu = " + menu.getId().toString()
+						+ " and trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
 
 				query = session.createQuery(hql);
 				List<?> tradList = query.list();
-				menu.getTraducciones().put(Idioma.getIdiomaPorDefecto(),
-						(TraduccionMenu) tradList.get(0));
+				menu.getTraducciones().put(Idioma.getIdiomaPorDefecto(), (TraduccionMenu) tradList.get(0));
 
 				listaobjetos.add(menu);
 
 				// recorrer las paginas
-				Iterator<?> iterpaginas = menu.getContenidos().iterator();
+				final Iterator<?> iterpaginas = menu.getContenidos().iterator();
 				while (iterpaginas.hasNext()) {
-					Contenido conte = (Contenido) iterpaginas.next();
+					final Contenido conte = (Contenido) iterpaginas.next();
 					listaobjetos.add(conte);
 				}
 
 				// recoger los submenus. y dentro de los submenus recorrer las
 				// paginas.
 				sqlwhere = " where menu.padre = " + menu.getId();
-				Query querysubmenus = session.createQuery(sqlselect + sqlfrom
-						+ sqlwhere + sqlorderby);
+				final Query querysubmenus = session.createQuery(sqlselect + sqlfrom + sqlwhere + sqlorderby);
 
-				Iterator<?> itermenus = querysubmenus.list().iterator();
+				final Iterator<?> itermenus = querysubmenus.list().iterator();
 				while (itermenus.hasNext()) {
-					Menu submenu = (Menu) itermenus.next();
+					final Menu submenu = (Menu) itermenus.next();
 
-					hql = "from TraduccionMenu trad"
-							+ " where trad.id.codigoMenu = "
-							+ submenu.getId().toString()
-							+ " and trad.id.codigoIdioma = '"
-							+ Idioma.getIdiomaPorDefecto() + "'";
+					hql = "from TraduccionMenu trad" + " where trad.id.codigoMenu = " + submenu.getId().toString()
+							+ " and trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
 					query = session.createQuery(hql);
 					tradList = query.list();
-					submenu.getTraducciones().put(Idioma.getIdiomaPorDefecto(),
-							(TraduccionMenu) tradList.get(0));
+					submenu.getTraducciones().put(Idioma.getIdiomaPorDefecto(), (TraduccionMenu) tradList.get(0));
 
 					listaobjetos.add(submenu);
 
 					// recorrer las paginas
-					Iterator<?> iterpaginassub = submenu.getContenidos()
-							.iterator();
+					final Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
 					while (iterpaginassub.hasNext()) {
-						Contenido contesub = (Contenido) iterpaginassub.next();
+						final Contenido contesub = (Contenido) iterpaginassub.next();
 						listaobjetos.add(contesub);
 					}
 				}
@@ -384,9 +366,9 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 			listaobjetos = this.ordenarlista(listaobjetos);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new EJBException(e);
 		} finally {
 			this.close(session);
@@ -395,29 +377,28 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 		return listaobjetos;
 	}
 
-	private ArrayList<Object> ordenarlista(ArrayList<Object> listaoriginal) {
+	private ArrayList<Object> ordenarlista(final ArrayList<Object> listaoriginal) {
 
-		ArrayList<Object> listaresultante = new ArrayList<Object>(listaoriginal);
-		Comparator<Object> comp = new ComparatorMenu();
+		final ArrayList<Object> listaresultante = new ArrayList<Object>(listaoriginal);
+		final Comparator<Object> comp = new ComparatorMenu();
 		Collections.sort(listaresultante, comp);
 		return listaresultante;
 	}
 
 	/**
 	 * Lista todos los menus
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
 	public List<?> listarMenus() {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -426,23 +407,22 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los menus poniendole un idioma por defecto
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public ArrayList<Menu> listarMenus(String idioma) {
+	public ArrayList<Menu> listarMenus(final String idioma) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(this.select + this.from
-					+ this.where + this.orderby);
+			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
 			return this.crearlistadostateful(query.list(), idioma);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -451,27 +431,27 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista un menu poniendole un idioma por defecto
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public ArrayList<?> listarMenuMicrosite(Long idmicrosite, Long padre,
-			String visible, String idioma) {
+	public ArrayList<?> listarMenuMicrosite(final Long idmicrosite, final Long padre, final String visible,
+			final String idioma) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Criteria criteri = session.createCriteria(Menu.class);
+			final Criteria criteri = session.createCriteria(Menu.class);
 			criteri.add(Restrictions.eq("microsite.id", idmicrosite));
 			criteri.add(Restrictions.eq("padre", padre));
 			if (visible != "T") {
 				criteri.add(Restrictions.eq("visible", visible));
 			}
 			criteri.addOrder(Order.asc("orden"));
-			List<?> list = criteri.list();
+			final List<?> list = criteri.list();
 
 			return this.crearlistadostateful(list, idioma);
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -480,35 +460,46 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * borra un Menu
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void borrarMenu(Long id) throws DelegateException {
+	public void borrarMenu(final Long id) throws DelegateException {
+		borrarMenu(id, true);
+	}
 
-		Session session = this.getSession();
-		
+	/**
+	 * borra un Menu
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarMenu(final Long id, final boolean indexar) throws DelegateException {
+
+		final Session session = this.getSession();
+
 		try {
-			
-			Transaction tx = session.beginTransaction();
-			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-			Menu menu = (Menu) session.get(Menu.class, id);
 
-			session.createQuery("delete TraduccionMenu tmenu where tmenu.id.codigoMenu = " + id.toString()).executeUpdate();
-			
+			final Transaction tx = session.beginTransaction();
+			final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			final Menu menu = (Menu) session.get(Menu.class, id);
+
+			session.createQuery("delete TraduccionMenu tmenu where tmenu.id.codigoMenu = " + id.toString())
+					.executeUpdate();
+
 			// Tratar archivos de entidad Contenido.
-			List<Contenido> contenidos = menu.getContenidos();
-			for (Contenido c : contenidos) {
+			final List<Contenido> contenidos = menu.getContenidos();
+			for (final Contenido c : contenidos) {
 				// Archivos relacionados.
-				List<Archivo> listaArchivos = (List<Archivo>)session.createQuery("select arch from Archivo arch where arch.pagina = " + c.getId()).list();
-				archivoDelegate.borrarArchivos(listaArchivos);				
+				final List<Archivo> listaArchivos = session
+						.createQuery("select arch from Archivo arch where arch.pagina = " + c.getId()).list();
+				archivoDelegate.borrarArchivos(listaArchivos);
 			}
-			
+
 			session.createQuery("delete Contenido conten where conten.menu.id = " + id.toString()).executeUpdate();
 			session.createQuery("delete Menu menu where menu.id = " + id.toString()).executeUpdate();
 			session.flush();
-			
+
 			// Tratar archivos de entidad Menu.
 			Long idImagenMenu = null;
 			if (menu.getImagenmenu() != null) {
@@ -516,40 +507,38 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 				if (idImagenMenu != null)
 					archivoDelegate.borrarArchivo(idImagenMenu);
 			}
-			
+
 			tx.commit();
-			
+
 			this.close(session);
 
 			this.grabarAuditoria(menu, Auditoria.ELIMINAR);
 
-		} catch (HibernateException he) {
-			
+		} catch (final HibernateException he) {
+
 			throw new EJBException(he);
-			
+
 		} finally {
-			
+
 			this.close(session);
-			
+
 		}
-		
+
 	}
 
 	/**
-	 * Actualizamos los ordenes de los objetos que están por debajo del nuevo
-	 * menú creado o eliminado sumando 1 o restando 1
-	 * 
+	 * Actualizamos los ordenes de los objetos que están por debajo del nuevo menú
+	 * creado o eliminado sumando 1 o restando 1
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void Reordena(int orden, char op, Long micro)
-			throws DelegateException {
+	public void Reordena(final int orden, final char op, final Long micro) throws DelegateException {
 
-		ArrayList<?> listaobj = this.ObtenerObjetosMenu(micro);
-		Session session = this.getSession();
+		final ArrayList<?> listaobj = this.ObtenerObjetosMenu(micro);
+		final Session session = this.getSession();
 		try {
-			Iterator<?> it = listaobj.iterator();
+			final Iterator<?> it = listaobj.iterator();
 			Object obj = null;
 			Menu men = null;
 			Contenido con = null;
@@ -584,28 +573,27 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			session.flush();
 			this.close(session);
 
-			for (Object object : listaobj) {
+			for (final Object object : listaobj) {
 
 				if (object instanceof Menu) {
 					this.grabarAuditoria((Menu) object, Auditoria.MODIFICAR);
 				} else {
 					// Contenido
-					this.grabarAuditoria((Contenido) object,
-							Auditoria.MODIFICAR);
+					this.grabarAuditoria((Contenido) object, Auditoria.MODIFICAR);
 				}
 			}
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
 		}
 	}
 
-	private ArrayList<Menu> crearlistadostateful(List<?> listado, String idioma) {
+	private ArrayList<Menu> crearlistadostateful(final List<?> listado, final String idioma) {
 
-		ArrayList<Menu> lista = new ArrayList<Menu>();
-		Iterator<?> iter = listado.iterator();
+		final ArrayList<Menu> lista = new ArrayList<Menu>();
+		final Iterator<?> iter = listado.iterator();
 		Menu menu;
 		while (iter.hasNext()) {
 			menu = new Menu();
@@ -617,27 +605,26 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	}
 
 	/**
-	 * Lista los Menus para usar en Combos Obtenemos los menus de un microsite
-	 * Nivel 2
-	 * 
+	 * Lista los Menus para usar en Combos Obtenemos los menus de un microsite Nivel
+	 * 2
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> listarCombo(String microsite) {
+	public List<?> listarCombo(final String microsite) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			String hql = "from Menu men" + " join men.traducciones trad"
-					+ " where trad.id.codigoIdioma = '"
+			String hql = "from Menu men" + " join men.traducciones trad" + " where trad.id.codigoIdioma = '"
 					+ Idioma.getIdiomaPorDefecto() + "'";
 
 			if (microsite != null) {
 				hql += " and men.microsite.id = " + microsite;
 			}
-			Query query = session.createQuery(hql);
+			final Query query = session.createQuery(hql);
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -645,27 +632,26 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	}
 
 	/**
-	 * Lista los Menus para usar en Combos Obtenemos los menus de un microsite
-	 * Nivel 3
-	 * 
+	 * Lista los Menus para usar en Combos Obtenemos los menus de un microsite Nivel
+	 * 3
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public List<?> padreCombo(String microsite) {
+	public List<?> padreCombo(final String microsite) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			String hql = "from Menu men" + " join men.traducciones trad"
-					+ " where trad.id.codigoIdioma = '"
+			String hql = "from Menu men" + " join men.traducciones trad" + " where trad.id.codigoIdioma = '"
 					+ Idioma.getIdiomaPorDefecto() + "'";
 
 			if (microsite != null) {
 				hql += " and men.microsite.id = " + microsite;
 			}
-			Query query = session.createQuery(hql);
+			final Query query = session.createQuery(hql);
 			return query.list();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -674,22 +660,19 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Comprueba que el elemento pertenece al Microsite
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public boolean checkSite(Long site, Long id) {
+	public boolean checkSite(final Long site, final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session
-					.createQuery("from Menu menu where menu.microsite.id = "
-							+ site.toString() + " and menu.id = "
-							+ id.toString());
+			final Query query = session.createQuery(
+					"from Menu menu where menu.microsite.id = " + site.toString() + " and menu.id = " + id.toString());
 			return query.list().isEmpty();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -698,135 +681,122 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Actualiza todo el arbol del menu
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void actualizarMenus(Long idmicro, Long ids[], String[] visibles,
-			String[] modos, Integer[] ordenes, Long[] idPadres, String[] tipos,
-			FormFile[] imagenes, String[] imagenesnom, boolean[] imagenesbor,
-			String[] traducciones) {
+	public void actualizarMenus(final Long idmicro, final Long ids[], final String[] visibles, final String[] modos,
+			final Integer[] ordenes, final Long[] idPadres, final String[] tipos, final FormFile[] imagenes,
+			final String[] imagenesnom, final boolean[] imagenesbor, final String[] traducciones) {
 
-		Session session = this.getSession();
-		
+		final Session session = this.getSession();
+
 		try {
-			
-			IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
-			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-			
-			
+
+			final IdiomaDelegate idiomaDelegate = DelegateUtil.getIdiomaDelegate();
+			final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+
 			List<?> lang = null;
 			try {
 				lang = idiomaDelegate.listarIdiomas();
-			} catch (DelegateException e) {
+			} catch (final DelegateException e) {
 				throw new EJBException(e);
 			}
 
 			// Obtenemos en una consulta todos los objetos
-			List<Menu> menus = session.createQuery(
-					"from Menu menu where menu.microsite.id = "
-							+ idmicro.toString()).list();
+			final List<Menu> menus = session
+					.createQuery("from Menu menu where menu.microsite.id = " + idmicro.toString()).list();
 
-			Map<Long, Menu> menusIdx = new HashMap<Long, Menu>();
-			for (Menu m : menus) {
+			final Map<Long, Menu> menusIdx = new HashMap<Long, Menu>();
+			for (final Menu m : menus) {
 				menusIdx.put(m.getId(), m);
 			}
-			
-			for (Menu m : menus) {
+
+			for (final Menu m : menus) {
 				Long idArchivoBorrar = null;
 				int indice_m = -1;
 				for (int j = 0; j < ids.length; j++) {
-					if ((tipos[j].equals("m"))
-							&& (ids[j].toString()).equals(m.getId().toString())) {
+					if ((tipos[j].equals("m")) && (ids[j].toString()).equals(m.getId().toString())) {
 						indice_m = j;
 					}
 				}
 
 				if (indice_m != -1) {
-					
+
 					m.setOrden(ordenes[indice_m].intValue());
 					m.setPadre(idPadres[indice_m]);
 					m.setVisible(visibles[indice_m]);
 					m.setModo(modos[indice_m]);
 
 					// actualizamos los iconos
-					FormFile imagen = imagenes[indice_m];
+					final FormFile imagen = imagenes[indice_m];
 					if (imagen != null && imagen.getFileSize() > 0) {
-						
+
 						Archivo arc = m.getImagenmenu();
 						if (arc == null) {
 							arc = new Archivo();
 						}
-						
+
 						arc.setMime(imagen.getContentType());
 						arc.setNombre(imagen.getFileName());
 						arc.setPeso(imagen.getFileSize());
-												
+
 						try {
 							arc.setDatos(imagen.getFileData());
-						} catch (FileNotFoundException e) {
+						} catch (final FileNotFoundException e) {
 							throw new EJBException(e);
-						} catch (IOException e) {
+						} catch (final IOException e) {
 							throw new EJBException(e);
 						}
-						
+
 						archivoDelegate.insertarArchivo(arc);
-						
+
 						m.setImagenmenu(arc);
 
 					} else if (imagenesbor[indice_m]) {
-						
+
 						idArchivoBorrar = m.getImagenmenu().getId();
 						m.setImagenmenu(null);
-												
+
 					}
 
 					if (m.getImagenmenu() != null) {
 						if (imagenesnom[indice_m] != null) {
-							m.getImagenmenu().setNombre(
-									"" + imagenesnom[indice_m]);
+							m.getImagenmenu().setNombre("" + imagenesnom[indice_m]);
 						}
 					}
 
 					for (int j = 0; j < lang.size(); j++) {
 						TraduccionMenu tradm;
-						if (m.getTraducciones().containsKey(
-								((Idioma) lang.get(j)).getLang())) {
-							tradm = m.getTraducciones().get(
-									((Idioma) lang.get(j)).getLang());
-							tradm.setNombre(traducciones[(indice_m * lang
-									.size()) + j]);
+						if (m.getTraducciones().containsKey(((Idioma) lang.get(j)).getLang())) {
+							tradm = m.getTraducciones().get(((Idioma) lang.get(j)).getLang());
+							tradm.setNombre(traducciones[(indice_m * lang.size()) + j]);
 						} else {
 							tradm = new TraduccionMenu();
 							tradm.setId(new TraduccionMenuPK());
-							tradm.getId().setCodigoIdioma(
-									((Idioma) lang.get(j)).getLang());
+							tradm.getId().setCodigoIdioma(((Idioma) lang.get(j)).getLang());
 							tradm.getId().setCodigoMenu(m.getId());
-							tradm.setNombre(traducciones[(indice_m * lang
-									.size()) + j]);
+							tradm.setNombre(traducciones[(indice_m * lang.size()) + j]);
 
-							m.getTraducciones().put(
-									((Idioma) lang.get(j)).getLang(), tradm);
+							m.getTraducciones().put(((Idioma) lang.get(j)).getLang(), tradm);
 						}
 					}
 
 					session.saveOrUpdate(m);
 					session.flush();
-					
+
 					// Toca borrar archivo con imagen de menú asociada.
 					if (idArchivoBorrar != null)
 						archivoDelegate.borrarArchivo(idArchivoBorrar);
 
 					// Actualizamos sus contenidos
-					Iterator<?> itcon = m.getContenidos().iterator();
+					final Iterator<?> itcon = m.getContenidos().iterator();
 					while (itcon.hasNext()) {
-						Contenido con = (Contenido) itcon.next();
+						final Contenido con = (Contenido) itcon.next();
 						int indice = -1;
 						for (int j = 0; j < ids.length; j++) {
 							if ((tipos[j].equals("c1") || tipos[j].equals("c2"))
-									&& (ids[j].toString()).equals(con.getId()
-											.toString())) {
+									&& (ids[j].toString()).equals(con.getId().toString())) {
 								indice = j;
 							}
 						}
@@ -845,15 +815,15 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 			}
 			this.close(session);
 
-			Iterator<Menu> iter = menus.iterator();
+			final Iterator<Menu> iter = menus.iterator();
 			while (iter.hasNext()) {
-				Menu menu = iter.next();
+				final Menu menu = iter.next();
 				this.grabarAuditoria(menu, Auditoria.MODIFICAR);
 			}
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
-		} catch (DelegateException e) {
+		} catch (final DelegateException e) {
 			throw new EJBException(e);
 		} finally {
 			this.close(session);

@@ -11,7 +11,6 @@ import javax.ejb.Handle;
 import javax.naming.NamingException;
 
 import es.caib.gusite.micromodel.Agenda;
-import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.SolrPendienteResultado;
 import es.caib.gusite.micropersistence.intf.AgendaFacade;
 import es.caib.gusite.micropersistence.intf.AgendaFacadeHome;
@@ -22,7 +21,7 @@ import es.caib.solr.api.model.types.EnumCategoria;
 
 /**
  * Business delegate para manipular Agenda.
- * 
+ *
  * @author Indra
  */
 public class AgendaDelegate implements StatelessDelegate {
@@ -36,131 +35,146 @@ public class AgendaDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id, String idiomapasado) throws DelegateException {
+	public void init(final Long id, final String idiomapasado) throws DelegateException {
 		try {
 			this.getFacade().init(id, idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una actividad
-	 * 
+	 *
 	 * @param agenda
 	 * @return Identificador de la agenda
 	 * @throws DelegateException
 	 */
-	public Long grabarAgenda(Agenda agenda) throws DelegateException {
+	public Long grabarAgenda(final Agenda agenda) throws DelegateException {
 		try {
 			return this.getFacade().grabarAgenda(agenda);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una Agenda
-	 * 
+	 *
 	 * @param id
 	 *            Id de la agenda
 	 * @return una Agenda
 	 * @throws DelegateException
 	 */
-	public Agenda obtenerAgenda(Long id) throws DelegateException {
+	public Agenda obtenerAgenda(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerAgenda(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las Agendas
-	 * 
+	 *
 	 * @return Lista de Agendas
 	 * @throws DelegateException
 	 */
 	public List<?> listarAgendas() throws DelegateException {
 		try {
 			return this.getFacade().listarAgendas();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las Agendas
-	 * 
+	 *
 	 * @param idiomapasado
 	 * @return Lista de Agendas
 	 * @throws DelegateException
 	 */
-	public List<?> listarAgendasrec(String idiomapasado)
-			throws DelegateException {
+	public List<?> listarAgendasrec(final String idiomapasado) throws DelegateException {
 		try {
 			return this.getFacade().listarAgendasrec(idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las Agendas
-	 * 
+	 *
 	 * @param idioma
 	 * @return un ArrayList
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> listarAgendas(String idioma) throws DelegateException {
+	public ArrayList<?> listarAgendas(final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().listarAgendas(idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las Agendas
-	 * 
+	 *
 	 * @param fecha
 	 * @param idioma
 	 * @return ArrayList
 	 * @throws DelegateException
 	 */
-	public ArrayList<?> listarAgendas(Date fecha, String idioma)
-			throws DelegateException {
+	public ArrayList<?> listarAgendas(final Date fecha, final String idioma) throws DelegateException {
 		try {
 			return this.getFacade().listarAgendas(fecha, idioma);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Borra una Agenda
-	 * 
+	 *
 	 * @param id
 	 *            Id de la agenda
 	 * @throws DelegateException
 	 */
-	public void borrarAgenda(Long id) throws DelegateException {
+	public void borrarAgenda(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarAgenda(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Borra una Agenda
+	 *
+	 * @param id
+	 *            Id de la agenda
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarAgenda(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarAgenda(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -168,7 +182,7 @@ public class AgendaDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -176,7 +190,7 @@ public class AgendaDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -184,47 +198,47 @@ public class AgendaDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -232,15 +246,15 @@ public class AgendaDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -248,53 +262,52 @@ public class AgendaDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final PathUOResult iPathUO)
-			throws DelegateException {
+	public SolrPendienteResultado indexarSolr(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final PathUOResult iPathUO) throws DelegateException {
 		try {
 			return this.getFacade().indexarSolr(solrIndexer, idElemento, categoria, iPathUO);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento, final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO)
-			throws DelegateException {
+
+	public SolrPendienteResultado indexarSolrArchivo(final SolrIndexer solrIndexer, final Long idElemento,
+			final EnumCategoria categoria, final Long idArchivo, final PathUOResult iPathUO) throws DelegateException {
 		try {
-			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria,idArchivo, iPathUO);
-		} catch (RemoteException e) {
+			return this.getFacade().indexarSolrArchivo(solrIndexer, idElemento, categoria, idArchivo, iPathUO);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
-	
-	public List<Agenda> obtenerAgendasByMicrositeId(Long idMicrosite)
-			  throws DelegateException {
-		  try {
-			   return this.getFacade().obtenerAgendasByMicrositeId(idMicrosite);
-		  } catch (RemoteException e) {
-			  throw new DelegateException(e);
-		  }
-			   
+
+	public List<Agenda> obtenerAgendasByMicrositeId(final Long idMicrosite) throws DelegateException {
+		try {
+			return this.getFacade().obtenerAgendasByMicrositeId(idMicrosite);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+
 	}
 	/* ========================================================= */
 	/* ======================== REFERENCIA AL FACADE ========== */
@@ -308,14 +321,14 @@ public class AgendaDelegate implements StatelessDelegate {
 
 	protected AgendaDelegate() throws DelegateException {
 		try {
-			AgendaFacadeHome home = AgendaFacadeUtil.getHome();
-			AgendaFacade remote = home.create();
+			final AgendaFacadeHome home = AgendaFacadeUtil.getHome();
+			final AgendaFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

@@ -15,7 +15,7 @@ import es.caib.gusite.micropersistence.util.TemaFacadeUtil;
 
 /**
  * Business delegate para manipular Tema.
- * 
+ *
  * @author Indra
  */
 public class TemaDelegate implements StatelessDelegate {
@@ -28,88 +28,105 @@ public class TemaDelegate implements StatelessDelegate {
 
 	/**
 	 * Inicializo los parámetros de la consulta.
-	 * 
+	 *
 	 * @throws DelegateException
 	 */
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Inicializo los parámetros de la consulta.
-	 * 
+	 *
 	 * @param id
 	 *            Id de un Tema
 	 * @throws DelegateException
 	 */
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza un tema
-	 * 
+	 *
 	 * @param tema
 	 * @return Id de un tema
 	 * @throws DelegateException
 	 */
-	public Long grabarTema(Temafaq tema) throws DelegateException {
+	public Long grabarTema(final Temafaq tema) throws DelegateException {
 		try {
 			return this.getFacade().grabarTema(tema);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un tema
-	 * 
+	 *
 	 * @param id
 	 *            Id de un tema
 	 * @return Temafaq
 	 * @throws DelegateException
 	 */
-	public Temafaq obtenerTema(Long id) throws DelegateException {
+	public Temafaq obtenerTema(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerTema(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los temas
-	 * 
+	 *
 	 * @return una lista de temas
 	 * @throws DelegateException
 	 */
 	public List<?> listarTemas() throws DelegateException {
 		try {
 			return this.getFacade().listarTemas();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * borra un tema
-	 * 
+	 *
 	 * @param id
 	 *            Id de un Tema
 	 * @throws DelegateException
 	 */
-	public void borrarTema(Long id) throws DelegateException {
+	public void borrarTema(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarTema(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * borra un tema
+	 *
+	 * @param id
+	 *            Id de un Tema
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarTema(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarTema(id);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -117,7 +134,7 @@ public class TemaDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -125,7 +142,7 @@ public class TemaDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -133,47 +150,47 @@ public class TemaDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -181,15 +198,15 @@ public class TemaDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -197,30 +214,30 @@ public class TemaDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> listarCombo(Long idmicrosite) throws DelegateException {
+	public List<?> listarCombo(final Long idmicrosite) throws DelegateException {
 		try {
 			return this.getFacade().listarCombo(idmicrosite);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Comprueba si un tema pertenece o no a un microsite
-	 * 
+	 *
 	 * @param site
 	 *            Id de un site
 	 * @param id
@@ -228,10 +245,10 @@ public class TemaDelegate implements StatelessDelegate {
 	 * @return True si el tema no pertenece al site
 	 * @throws DelegateException
 	 */
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -248,14 +265,14 @@ public class TemaDelegate implements StatelessDelegate {
 
 	protected TemaDelegate() throws DelegateException {
 		try {
-			TemaFacadeHome home = TemaFacadeUtil.getHome();
-			TemaFacade remote = home.create();
+			final TemaFacadeHome home = TemaFacadeUtil.getHome();
+			final TemaFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

@@ -15,7 +15,7 @@ import es.caib.gusite.micropersistence.util.ActividadFacadeUtil;
 
 /**
  * Business delegate para manipular Actividades.
- * 
+ *
  * @author Indra
  */
 public class ActividadDelegate implements StatelessDelegate {
@@ -29,76 +29,93 @@ public class ActividadDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza una actividad
-	 * 
+	 *
 	 * @param activi
 	 * @return Identificador
 	 * @throws DelegateException
 	 */
-	public Long grabarActividad(Actividadagenda activi)
-			throws DelegateException {
+	public Long grabarActividad(final Actividadagenda activi) throws DelegateException {
 		try {
 			return this.getFacade().grabarActividad(activi);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene una Actividad
-	 * 
+	 *
 	 * @param id
 	 *            Id de la actividad
 	 * @return Actividadagenda
 	 * @throws DelegateException
 	 */
-	public Actividadagenda obtenerActividad(Long id) throws DelegateException {
+	public Actividadagenda obtenerActividad(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerActividad(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todas las actividades
-	 * 
+	 *
 	 * @return una lista de actividades
 	 * @throws DelegateException
 	 */
 	public List<?> listarActividades() throws DelegateException {
 		try {
 			return this.getFacade().listarActividades();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Borra una actividad
-	 * 
+	 *
 	 * @param id
 	 *            Id de la actividad
+	 *
 	 * @throws DelegateException
 	 */
-	public void borrarActividad(Long id) throws DelegateException {
+	public void borrarActividad(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarActividad(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Borra una actividad
+	 *
+	 * @param id
+	 *            Id de la actividad
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarActividad(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarActividad(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -106,7 +123,7 @@ public class ActividadDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -114,7 +131,7 @@ public class ActividadDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -122,15 +139,15 @@ public class ActividadDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -138,55 +155,55 @@ public class ActividadDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> listarCombo(Long idmicrosite) throws DelegateException {
+	public List<?> listarCombo(final Long idmicrosite) throws DelegateException {
 		try {
 			return this.getFacade().listarCombo(idmicrosite);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -203,14 +220,14 @@ public class ActividadDelegate implements StatelessDelegate {
 
 	protected ActividadDelegate() throws DelegateException {
 		try {
-			ActividadFacadeHome home = ActividadFacadeUtil.getHome();
-			ActividadFacade remote = home.create();
+			final ActividadFacadeHome home = ActividadFacadeUtil.getHome();
+			final ActividadFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

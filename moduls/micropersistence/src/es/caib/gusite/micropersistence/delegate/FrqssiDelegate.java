@@ -15,7 +15,7 @@ import es.caib.gusite.micropersistence.util.FrqssiFacadeUtil;
 
 /**
  * Business delegate para manipular Frqssi.
- * 
+ *
  * @author Indra
  */
 public class FrqssiDelegate implements StatelessDelegate {
@@ -29,98 +29,113 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public void init() throws DelegateException {
 		try {
 			this.getFacade().init();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id) throws DelegateException {
+	public void init(final Long id) throws DelegateException {
 		try {
 			this.getFacade().init(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void init(Long id, String idiomapasado) throws DelegateException {
+	public void init(final Long id, final String idiomapasado) throws DelegateException {
 		try {
 			this.getFacade().init(id, idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Crea o actualiza un Formulario QSSI
-	 * 
+	 *
 	 * @param tp
 	 * @return Id del Frqssi
 	 * @throws DelegateException
 	 */
-	public Long grabarFrqssi(Frqssi tp) throws DelegateException {
+	public Long grabarFrqssi(final Frqssi tp) throws DelegateException {
 		try {
 			return this.getFacade().grabarFrqssi(tp);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Obtiene un Formulario QSSI
-	 * 
+	 *
 	 * @param id
 	 *            Id del Frqssi
 	 * @return Frqssi
 	 * @throws DelegateException
 	 */
-	public Frqssi obtenerFrqssi(Long id) throws DelegateException {
+	public Frqssi obtenerFrqssi(final Long id) throws DelegateException {
 		try {
 			return this.getFacade().obtenerFrqssi(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los Formularios QSSI
-	 * 
+	 *
 	 * @return una Lista de Frqssis
 	 * @throws DelegateException
 	 */
 	public List<?> listarFrqssis() throws DelegateException {
 		try {
 			return this.getFacade().listarFrqssis();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Lista todos los Formularios QSSI
-	 * 
+	 *
 	 * @param idiomapasado
 	 * @return una lista de Frqssisrec
 	 * @throws DelegateException
 	 */
-	public List<?> listarFrqssisrec(String idiomapasado)
-			throws DelegateException {
+	public List<?> listarFrqssisrec(final String idiomapasado) throws DelegateException {
 		try {
 			return this.getFacade().listarFrqssisrec(idiomapasado);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
 	/**
 	 * Borra un Formulario QSSI
-	 * 
+	 *
 	 * @param id
 	 * @throws DelegateException
 	 */
-	public void borrarFrqssi(Long id) throws DelegateException {
+	public void borrarFrqssi(final Long id) throws DelegateException {
 		try {
 			this.getFacade().borrarFrqssi(id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
+	 * Borra un Formulario QSSI
+	 *
+	 * @param id
+	 * @param indexar
+	 *            Indica si se indexa
+	 * @throws DelegateException
+	 */
+	public void borrarFrqssi(final Long id, final boolean indexar) throws DelegateException {
+		try {
+			this.getFacade().borrarFrqssi(id, indexar);
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -128,7 +143,7 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public Hashtable<?, ?> getParametros() throws DelegateException {
 		try {
 			return this.getFacade().getParametros();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -136,7 +151,7 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public void parametrosCons() throws DelegateException {
 		try {
 			this.getFacade().parametrosCons();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -144,47 +159,47 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public int getPagina() throws DelegateException {
 		try {
 			return this.getFacade().getPagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setPagina(int pagina) throws DelegateException {
+	public void setPagina(final int pagina) throws DelegateException {
 		try {
 			this.getFacade().setPagina(pagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby(String orderby) throws DelegateException {
+	public void setOrderby(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setOrderby2(String orderby) throws DelegateException {
+	public void setOrderby2(final String orderby) throws DelegateException {
 		try {
 			this.getFacade().setOrderby2(orderby);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public String getValorBD(String valor) throws DelegateException {
+	public String getValorBD(final String valor) throws DelegateException {
 		try {
 			return this.getFacade().getValorBD(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setFiltro(String valor) throws DelegateException {
+	public void setFiltro(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setFiltro(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -192,15 +207,15 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public String getWhere() throws DelegateException {
 		try {
 			return this.getFacade().getWhere();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setWhere(String valor) throws DelegateException {
+	public void setWhere(final String valor) throws DelegateException {
 		try {
 			this.getFacade().setWhere(valor);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -208,31 +223,31 @@ public class FrqssiDelegate implements StatelessDelegate {
 	public int getTampagina() throws DelegateException {
 		try {
 			return this.getFacade().getTampagina();
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public void setTampagina(int tampagina) throws DelegateException {
+	public void setTampagina(final int tampagina) throws DelegateException {
 		try {
 			this.getFacade().setTampagina(tampagina);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public List<?> listarCombo(Long idmicrosite) throws DelegateException {
+	public List<?> listarCombo(final Long idmicrosite) throws DelegateException {
 		try {
 			return this.getFacade().listarCombo(idmicrosite);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
 
-	public boolean checkSite(Long site, Long id) throws DelegateException {
+	public boolean checkSite(final Long site, final Long id) throws DelegateException {
 		try {
 			return this.getFacade().checkSite(site, id);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}
@@ -249,14 +264,14 @@ public class FrqssiDelegate implements StatelessDelegate {
 
 	protected FrqssiDelegate() throws DelegateException {
 		try {
-			FrqssiFacadeHome home = FrqssiFacadeUtil.getHome();
-			FrqssiFacade remote = home.create();
+			final FrqssiFacadeHome home = FrqssiFacadeUtil.getHome();
+			final FrqssiFacade remote = home.create();
 			this.facadeHandle = remote.getHandle();
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new DelegateException(e);
-		} catch (CreateException e) {
+		} catch (final CreateException e) {
 			throw new DelegateException(e);
-		} catch (RemoteException e) {
+		} catch (final RemoteException e) {
 			throw new DelegateException(e);
 		}
 	}

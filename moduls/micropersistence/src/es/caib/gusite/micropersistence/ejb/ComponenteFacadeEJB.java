@@ -27,13 +27,13 @@ import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 
 /**
  * SessionBean para consultar Componente.
- * 
+ *
  * @ejb.bean name="sac/micropersistence/ComponenteFacade"
  *           jndi-name="es.caib.gusite.micropersistence.ComponenteFacade"
  *           type="Stateless" view-type="remote" transaction-type="Container"
- * 
+ *
  * @ejb.transaction type="Required"
- * 
+ *
  * @author Indra
  */
 public abstract class ComponenteFacadeEJB extends HibernateEJB {
@@ -51,17 +51,16 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta de Componente....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public void init(Long site) {
+	public void init(final Long site) {
 		super.tampagina = 10;
 		super.pagina = 0;
 		super.select = "select compo ";
 		super.from = " from Componente compo join compo.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "' and compo.idmicrosite = "
+		super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "' and compo.idmicrosite = "
 				+ site.toString();
 		super.whereini = " ";
 		super.orderby = "";
@@ -74,7 +73,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Inicializo los parámetros de la consulta de Componente....
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
@@ -83,8 +82,7 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 		super.pagina = 0;
 		super.select = "select compo ";
 		super.from = " from Componente compo join compo.traducciones trad ";
-		super.where = " where trad.id.codigoIdioma = '"
-				+ Idioma.getIdiomaPorDefecto() + "'";
+		super.where = " where trad.id.codigoIdioma = '" + Idioma.getIdiomaPorDefecto() + "'";
 		super.whereini = " ";
 		super.orderby = "";
 
@@ -96,99 +94,99 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Crea o actualiza un Componente
-	 * @throws IOException 
 	 * 
+	 * @throws IOException
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public Long grabarComponente(Componente compo) throws DelegateException, IOException {
+	public Long grabarComponente(final Componente compo) throws DelegateException, IOException {
 
-		Session session = this.getSession();
-		
+		final Session session = this.getSession();
+
 		Componente original = null;
 		Boolean nuevo = false;
-		
-		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
+
+		final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+		final List<Archivo> archivosPorBorrar = new ArrayList<Archivo>();
 		Archivo imagen = null;
-		
+
 		try {
-			
-			Transaction tx = session.beginTransaction();
+
+			final Transaction tx = session.beginTransaction();
 			if (compo.getId() == null) {
 				nuevo = true;
 			}
 
-			Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
+			final Map<String, TraduccionComponente> listaTraducciones = new HashMap<String, TraduccionComponente>();
 			if (nuevo) {
-				
-				Iterator<TraduccionComponente> it = compo.getTraducciones().values().iterator();
+
+				final Iterator<TraduccionComponente> it = compo.getTraducciones().values().iterator();
 				while (it.hasNext()) {
-					TraduccionComponente trd = it.next();
+					final TraduccionComponente trd = it.next();
 					listaTraducciones.put(trd.getId().getCodigoIdioma(), trd);
 				}
 				compo.setTraducciones(null);
-				
+
 				if (compo.getImagenbul() != null)
 					imagen = compo.getImagenbul();
-				
-				
+
 			} else {
-				
+
 				original = obtenerComponente(compo.getId());
-				
-				if (compo.getImagenbul() != null) {					
+
+				if (compo.getImagenbul() != null) {
 					imagen = compo.getImagenbul();
-					//Si la imagen que pasa ya existe, entonces hay que buscar su contenido.
-					//  Este método y este funcionamiento es de revisarlo y tirarlo, su funcionamiento deja bastante que desear.
-					if (imagen.getId() != null && imagen.getDatos() == null) { 
+					// Si la imagen que pasa ya existe, entonces hay que buscar su contenido.
+					// Este método y este funcionamiento es de revisarlo y tirarlo, su
+					// funcionamiento deja bastante que desear.
+					if (imagen.getId() != null && imagen.getDatos() == null) {
 						imagen.setDatos(archivoDelegate.obtenerContenidoFichero(imagen));
 					}
 				} else {
-					
+
 					// Antes había imagen pero ahora ya no la hay: solicitan borrado.
 					if (original.getImagenbul() != null)
 						archivosPorBorrar.add(original.getImagenbul());
-					
+
 				}
-								
+
 			}
-			
+
 			compo.setImagenbul(null);
 
 			session.saveOrUpdate(compo);
 			session.flush();
-			
+
 			// Imágenes.
 			if (imagen != null) {
-				
+
 				if (nuevo) {
-					
+
 					archivoDelegate.insertarArchivo(imagen);
-					
+
 				} else {
-					
+
 					if (original.getImagenbul() != null)
 						archivoDelegate.grabarArchivo(imagen);
 					else
 						archivoDelegate.insertarArchivo(imagen);
-					
+
 				}
-				
+
 				compo.setImagenbul(imagen);
-				
+
 				session.saveOrUpdate(compo);
 				session.flush();
-				
+
 			}
-			
+
 			// Borramos archivos FKs del Componente que han solicitado que se borren.
 			if (archivosPorBorrar.size() > 0)
 				archivoDelegate.borrarArchivos(archivosPorBorrar);
 
 			if (nuevo) {
-				for (TraduccionComponente trad : listaTraducciones.values()) {
+				for (final TraduccionComponente trad : listaTraducciones.values()) {
 					final TraduccionComponentePK tradPk = trad.getId();
 					tradPk.setCodigoComponente(compo.getId());
 					trad.setId(tradPk);
@@ -201,37 +199,37 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 			tx.commit();
 			this.close(session);
 
-			int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
+			final int op = (nuevo) ? Auditoria.CREAR : Auditoria.MODIFICAR;
 			this.grabarAuditoria(compo, op);
 
 			return compo.getId();
 
-		} catch (HibernateException he) {
-			
+		} catch (final HibernateException he) {
+
 			throw new EJBException(he);
-			
+
 		} finally {
-			
+
 			this.close(session);
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * Obtiene un Componente
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
-	public Componente obtenerComponente(Long id) {
+	public Componente obtenerComponente(final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Componente compo = (Componente) session.get(Componente.class, id);
+			final Componente compo = (Componente) session.get(Componente.class, id);
 			return compo;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -240,46 +238,43 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Lista todos los Componentes
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
 	public List<Componente> listarComponentes() {
 
-		Session session = this.getSession();
-		List<Componente> componentes = new ArrayList<Componente>();
+		final Session session = this.getSession();
+		final List<Componente> componentes = new ArrayList<Componente>();
 		try {
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
-			Query query = session.createQuery(/*this.select +*/ "select compo.id"+ this.from
-					+ this.where + this.orderby);
-			
+			final Query query = session
+					.createQuery(/* this.select + */ "select compo.id" + this.from + this.where + this.orderby);
+
 			query.setFirstResult(this.cursor - 1);
 			query.setMaxResults(this.tampagina);
-			query.setFetchSize(this.tampagina); //Se fija la cantidad de resultados en cada acceso
-			
+			query.setFetchSize(this.tampagina); // Se fija la cantidad de resultados en cada acceso
+
 			log.info("CompontentefacadeEjb.listarCompontentes");
-			List<Long> ids =  query.list();
-			for(Long id : ids) {
+			final List<Long> ids = query.list();
+			for (final Long id : ids) {
 				try {
 					componentes.add(obtenerComponente(id));
-				} catch(Exception exception) {
+				} catch (final Exception exception) {
 					log.error("Error obteniendo compontente", exception);
 				}
 			}
-			
+
 			/*
-			Iterator<Componente> res = query.iterate();
-			while (res.hasNext()) {
-				
-				Componente comp = res.next();
-				componentes.add(comp);
-			}*/
-			
-			
+			 * Iterator<Componente> res = query.iterate(); while (res.hasNext()) {
+			 * 
+			 * Componente comp = res.next(); componentes.add(comp); }
+			 */
+
 			return componentes;
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
@@ -288,67 +283,72 @@ public abstract class ComponenteFacadeEJB extends HibernateEJB {
 
 	/**
 	 * borra un Componente
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public void borrarComponente(Long id) throws DelegateException {
+	public void borrarComponente(final Long id) throws DelegateException {
+		borrarComponente(id, true);
+	}
 
-		Session session = this.getSession();
-		
+	/**
+	 * borra un Componente
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 */
+	public void borrarComponente(final Long id, final boolean indexar) throws DelegateException {
+		final Session session = this.getSession();
+
 		try {
-			
-			Transaction tx = session.beginTransaction();
-			ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-			Componente componente = (Componente) session.get(Componente.class, id);
 
-			Long idImagen = (componente.getImagenbul() != null) ? componente.getImagenbul().getId() : null;
-			
-			session.createQuery("delete from TraduccionComponente tc where tc.id.codigoComponente = " + id).executeUpdate();
+			final Transaction tx = session.beginTransaction();
+			final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			final Componente componente = (Componente) session.get(Componente.class, id);
+
+			final Long idImagen = (componente.getImagenbul() != null) ? componente.getImagenbul().getId() : null;
+
+			session.createQuery("delete from TraduccionComponente tc where tc.id.codigoComponente = " + id)
+					.executeUpdate();
 			session.createQuery("delete from Componente compo where compo.id = " + id).executeUpdate();
-			
+
 			if (idImagen != null)
 				archivoDelegate.borrarArchivo(idImagen);
-			
+
 			session.flush();
 			tx.commit();
-			
+
 			this.close(session);
 
 			this.grabarAuditoria(componente, Auditoria.ELIMINAR);
 
-		} catch (HibernateException he) {
-			
+		} catch (final HibernateException he) {
+
 			throw new EJBException(he);
-			
+
 		} finally {
-			
+
 			this.close(session);
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * Comprueba que el componente pertenece al Microsite
-	 * 
+	 *
 	 * @ejb.interface-method
-	 * @ejb.permission 
-	 *                 role-name="${role.system},${role.admin},${role.super},${role.oper}"
+	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
-	public boolean checkSite(Long site, Long id) {
+	public boolean checkSite(final Long site, final Long id) {
 
-		Session session = this.getSession();
+		final Session session = this.getSession();
 		try {
-			Query query = session
-					.createQuery("from Componente compo where compo.idmicrosite = "
-							+ site.toString()
-							+ " and compo.id = "
-							+ id.toString());
+			final Query query = session.createQuery("from Componente compo where compo.idmicrosite = " + site.toString()
+					+ " and compo.id = " + id.toString());
 			return query.list().isEmpty();
 
-		} catch (HibernateException he) {
+		} catch (final HibernateException he) {
 			throw new EJBException(he);
 		} finally {
 			this.close(session);
