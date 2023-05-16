@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--
+  //Muestra la lista de formularios de contacto disponibles. Extraído de pag_llistat.html
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout"
+      th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:text="${MVS_micrositetitulo} + ' - ' + #{listarcontactos.frmcontacto}">
+        Título Microsite - Formularis de contacte
+    </title>
+
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <h1 th:if="${MVS_contacto_titulo} !=''" style="text-transform: initial">
+            <span th:text="#{listarcontactos.frmcontacto}">
+                    Formularis de contacte
+            </span>
+    </h1>
+</section>
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--llista">
+        <p class="imc--info" th:if="${MVS_parametros_pagina.nreg} ==0"
+           th:text="#{listarcontactos.nohay} + '.'"> No s`han trobat formularis de contacte.</p>
+        <div th:if="${MVS_parametros_pagina.nreg} !=0" th:remove="tag">
+            <p class="imc--info" th:if="${MVS_parametros_pagina.nreg} !=0"
+               th:text="#{listarcontactos.frmdisponibles} + ':'">Formularis de contacte disponibles:</p>
+            <ul>
+                <li th:each="i : ${MVS_listado}">
+                    <a th:href="@{${i.value}}">
+                        <p class="imc--titol" th:text="${i.key}">
+                                i key
+                        </p>
+                    </a>
+                </li>
+            </ul>
+            <div class="imc--pag-nav">
+                <nav>
+                    <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}"
+                           th:text="#{general.param.inicio}" data-accio="nav-inici">
+                        Inici
+                        </a>
+                    </span>
+                    <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.anterior})}"
+                           th:text="#{general.param.anterior}" data-accio="nav-anterior">
+                        Anterior
+                    </a>
+                    </span>
+                    <span th:if="${MVS_listado} !=null" th:remove="tag">
+                        <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
+                            cursor
+                        </span>
+                        a
+                        <span th:text="${MVS_parametros_pagina.cursor_final}" th:remove="tag">
+                            cursor final
+                        </span>
+                        de
+                        <span th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">
+                            pagina nreg
+                        </span>
+                    </span>
+                    <span th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}" th:remove="tag">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}"
+                           th:text="#{general.param.siguiente}" data-accio="nav-seguent">
+                            Següent
+                        </a>
+                    </span>
+                    <span th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}" th:remove="tag">
+                        <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}"
+                           th:text="#{general.param.final}" data-accio="nav-final">
+                        Fi
+                        </a>
+                    </span>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <!-- fin informacio -->
+</section>
+</body>
+</html>
+
+

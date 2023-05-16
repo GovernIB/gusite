@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!--/*
+
+Página de formulario de encuesta.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite" gus:decorator="layout"
+      th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_encuesta} !=null"
+           th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_encuesta.traduce.titulo}">Microsite
+        Título - encuesta traduce título</title>
+</head>
+<body>
+<section layout:fragment="content" th:fragment="encuesta">
+
+    <!--/* css y js específico para esta página */-->
+    <script type="text/javascript" src="../resources/js/encuestas.js"
+            th:src="@{/resources/js/encuestas.js}"></script>
+    <div th:if="${MVS_manteniment} !=null" align="center"
+         style="border: 2px solid; border-radius: 5px; padding: 10px;"
+         th:text="#{encuesta.mantenimiento}">Per motius de manteniment
+        l'enquesta no estarà accesible durant unes hores.
+    </div>
+    <div th:if="${MVS_manteniment}==null" th:replace="::contenido">Contenido
+        de la encuesta
+    </div>
+</section>
+
+<section th:remove="tag" layout:fragment="content_header">
+    <h1>
+        <span th:text="${MVS_encuesta.traduce.titulo}">Titulo contacto</span>
+    </h1>
+</section>
+<div th:fragment="contenido" th:remove="tag">
+
+
+    <p th:if="${MVS_encuesta.identificacion}=='S'"
+         th:text="${MVS_identificacion}">
+    </p>
+    <form name="encuesta"
+          th:action="@{${#gusuri.envioencuesta(MVS_microsite,MVS_idioma,MVS_encuesta)}}"
+          method="post" id="encuesta">
+        <div class="imc--formulari">
+            <input type="hidden" name="idsite" th:value="${MVS_home_idmicrosite}"/>
+            <input type="hidden" name="lang" th:value="${#strings.toLowerCase(MVS_idioma)}"/>
+            <input type="hidden" name="cont" th:value="${MVS_encuesta.id}"/>
+            <input type="hidden" name="enccomp" value="yes"/>
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+
+                var checksValidar = [];
+                var numPreguntas = 0;
+
+                var txtCondiciones = /*[[#{encuesta.condiciones}]]*/ 'Alguna de les respostes no compleixen amb les condicions d\'enviament:';
+
+                /*]]>*/
+
+            </script>
+            <div th:each="pregunta: ${MVS_encuesta.preguntas}" th:remove="tag">
+
+                <div
+                        th:if="(${pregunta.visible}=='S') and (${pregunta.visiblecmp=='S'})"
+                        th:remove="tag"
+                        th:with="max=${pregunta.maxContestadas} !=null ? ${pregunta.maxContestadas} : 0,min=${pregunta.minContestadas} !=null ? ${pregunta.minContestadas} : 0">
+
+                    <div th:if="'S'==${pregunta.multiresp}" th:remove="tag">
+                        <div th:if="(${min}!=0) and (${max}!=0)" th:remove="tag"
+                             th:with="obligatoriedad=#{encuesta.respcont.minmax('', ${min}, ${max})}">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+                        <div th:if="(${min}!=0) and (${max}==0)" th:remove="tag"
+                             th:with="obligatoriedad=#{encuesta.respcont.min('', ${min})}">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+
+                        <div th:if="(${max}==1) and (${min}==0)" th:remove="tag"
+                             th:with="obligatoriedad=#{encuesta.respcont.max.una('', ${max})}">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+                        <div th:if="(${max}>1) and (${min}==0)" th:remove="tag"
+                             th:with="obligatoriedad=#{encuesta.respcont.max('', ${max})}">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+
+                        <div th:if="(${min}==0) and (${max}==0)" th:remove="tag"
+                             th:with="obligatoriedad=''">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+                    </div>
+                    <div th:if="'S'!=${pregunta.multiresp}" th:remove="tag">
+                        <div th:if="(${min}==1)" th:remove="tag"
+                             th:with="obligatoriedad=#{encuesta.obligatoria}">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+                        <div th:if="(${min}!=1)" th:remove="tag"
+                             th:with="obligatoriedad=''">
+                            <div th:replace="::encuestaPregunta"></div>
+                        </div>
+                    </div>
+                </div>
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+
+                    checksValidar[numPreguntas] = {};
+                    checksValidar[numPreguntas].id = /*[[${pregunta.id}]]*/ '1';
+                    checksValidar[numPreguntas].titulo = /*[[${pregunta.traduce.titulo}]]*/ 'Título de la pregunta';
+                    checksValidar[numPreguntas].multiresp = /*[[${pregunta.multiresp}]]*/ 'S';
+                    checksValidar[numPreguntas].max = /*[[${pregunta.maxContestadas}]]*/ 2;
+                    checksValidar[numPreguntas].min = /*[[${pregunta.minContestadas}]]*/ 1;
+                    numPreguntas++;
+
+                    /*]]>*/
+                </script>
+
+            </div>
+            <div id="botoneraCom" class="imc--f-botonera">
+                <input type="button" onClick="validaencuesta();"
+                        class="imc--ico" id="btnEnviarEncuesta" name="btnanar"
+                        th:value="#{encuesta.enviar}"/>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div id="enquestaPreguntaCom" th:fragment="encuestaPregunta">
+    <!--primer elemento  -->
+
+    <div class="imc--e-enunciat">
+        <h3 th:text="${pregunta.traduce.titulo} + ' ' + ${obligatoriedad}">Titulo
+            pregunta</h3>
+        <p th:if="${pregunta.imagen}!=null" th:remove="tag">
+            <img
+                    th:src="@{${#gusuri.archivopub(MVS_microsite,pregunta.imagen)}}"
+                    alt=""/>
+        </p>
+    </div>
+
+    <fieldset>
+        <legend th:text="#{encuesta.respuestas}">respuestas</legend>
+        <ul id="respuestas">
+            <li th:each="respuesta: ${pregunta.respuestas}"
+                th:with="compId=(${respuesta.id} + '_' + ${pregunta.id})"><span
+                    th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
+                    th:remove="tag"
+                    th:with="checked ='checked', disabledTxt ='readonly', disabledChk ='disabled', disabledRadio ='disabled'">
+	
+						<span th:replace="::itemFormulario" th:remove="tag"></span>
+	
+				</span> <span
+                    th:if="${!#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
+                    th:remove="tag"
+                    th:with="checked ='', disabledTxt ='', disabledChk ='', disabledRadio =''">
+	
+						<span th:replace="::itemFormulario" th:remove="tag"></span>
+	
+				</span></li>
+        </ul>
+    </fieldset>
+
+</div>
+
+<span th:fragment="itemFormulario" th:remove="tag">
+		<label>
+			<!--/* Multirespuesta (checkbox) */--> 
+			<span th:if="${pregunta.multiresp}=='S'" th:remove="tag"> 
+				<!--/* Usuario checkbox+textarea */-->
+				<input
+                        th:if="${respuesta.tipo}=='I'" type="checkbox"
+                        th:id="${compId}" th:name="'C' + ${pregunta.id}"
+                        th:value="${respuesta.id}" th:checked="${checked}=='checked'"
+                        th:disabled="true"/>
+                <!--/* Fija (checkbox) */-->
+				<input
+                        th:if="${respuesta.tipo}=='N'" type="checkbox" th:id="${compId}"
+                        th:name="'C' + ${pregunta.id}" th:value="${respuesta.id}"
+                        th:checked="${checked}=='checked'"
+                        th:disabled="${disabledChk}=='disabled'"/>
+			</span>
+            <!--/* No multirespuesta (radio) */-->
+			<input
+                    th:unless="${pregunta.multiresp}=='S'" type="radio" th:id="${compId}"
+                    th:name="'R' + ${pregunta.id}" th:value="${respuesta.id}"
+                    th:checked="${checked}=='checked'"/> <span
+                th:text="${respuesta.traduce.titulo}" th:remove="tag">Título
+				respuesta</span>
+		</label> 
+		<span th:if="${respuesta.tipo}=='I'" th:remove="tag"><p></p> 
+			<textarea
+                    COLS="120" ROWS="2"
+                    th:title="${#strings.escapeJavaScript(respuesta.traduce.titulo)}"
+                    th:onkeyup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
+                    th:onmouseup="'marcaCheck(\'' + ${respuesta.id} +  '\' , \'' + ${pregunta.id} +  '\');'"
+                    th:name="'T' + ${respuesta.id} + '_' + ${pregunta.id}"
+                    th:readonly="${disabledTxt}=='readonly'"></textarea> <script
+                    th:if="${#maps.containsKey(MVS_mapRespostesFixades, respuesta.id)}"
+                    th:inline="javascript">
+		/*<![CDATA[*/
+
+        var idRespuesta =/*[[${respuesta.id}]]*/;
+        var idPregunta =/*[[${pregunta.id}]]*/;
+
+        document.getElementById('encuesta')['T' + idRespuesta + "_" + idPregunta +].value = idRespuesta;
+
+
+        /*]]>*/
+		</script> 
+	</span> 
+	<script th:if="''!=${disabledRadio}" th:inline="javascript">
+	/*<![CDATA[*/
+    var preguntaMultiresp =/*[[${pregunta.multiresp}]]*/;
+    var respTipo =/*[[${respuesta.tipo}]]*/;
+    var idComp =/*[[${compId}]]*/;
+    var idRespuesta =/*[[${respuesta.id}]]*/;
+    var idPregunta =/*[[${pregunta.id}]]*/;
+
+    if (preguntaMultiresp != "S") {
+        document.getElementById(idComp).disabled = true;
+    }
+
+    if (respTipo == "I") {
+        document.encuesta['T' + idRespuesta + "_" + idPregunta].readonly = true;
+    }
+
+    /*]]>*/
+	</script>
+
+	</span>
+
+
+</body>
+</html>

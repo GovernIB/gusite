@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--
+//Este código nos muestra el menú de microsite
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:gus="http://www.caib.es/thymeleaf/gusite" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<div th:fragment="hijoMenu" th:remove="tag">
+
+    <li th:if="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}">
+        <a role="menuitem" th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}">
+            <span th:text="${cont.traduce.titulo}">
+                textocontenido no del menu
+            </span>
+        </a>
+    </li>
+
+    <li th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}"
+        th:with="tamano=${#lists.size(contenido.listacosas)}" th:remove="tag">
+        <ul th:remove="tag">
+            <div th:if="${tamano}!=0" th:remove="tag">
+                <li th:if="${tamano}>1">
+                    <button type="button" role="menuitem" data-accio="submenu-obri">
+                        <span th:text="${contenido.traduce.nombre}">
+                            Nom carpeta
+                        </span>
+                    </button>
+                    <div class="imc--me-submenu" aria-hidden="true">
+                        <ul>
+                            <li th:each="opcion : ${contenido.listacosas}">
+                                <!--/* #gusuri.contenido(MVS_microsite,MVS_idioma,opcion):devuelve la URL hacia el contenido con el id correspondiente */-->
+                                <a th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,opcion)}}"
+                                   th:target="(${opcion.urlExterna})? '_blank' : '_self'" role="menuitem">
+                                    <span th:text="${opcion.traduce.titulo}">
+                                         Título opción menú
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li th:if="${tamano}==1" th:with="opcion=${contenido.listacosas[0]}"
+                    th:id="${opcion.id}==${idcontenido} ? 'p'+${opcion.id} : ''"
+                    th:class="${opcion.id}==${idcontenido} ? 'seleccionado' : ''">
+                    <a th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido.listacosas[0])}}"
+                       th:target="(${contenido.listacosas[0].urlExterna})? '_blank' : '_self'" role="menuitem">
+                        <span th:text="${contenido.traduce.nombre}">
+                            Nombre contenido
+                        </span>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </li>
+
+
+</div>
+<section th:fragment="menu" th:remove="tag">
+    <div class="imc--m-lateral"
+         th:if="${MVS_microsite.orientacionMenu}=='H' or ${MVS_microsite.orientacionMenu}=='C' ">
+
+        <button type="button" class="imc--img imc--menu"
+                data-accio="menu-obri" role="menuitem">
+            <span th:text="#{cabecera.menu}">Menú</span>
+        </button>
+
+        <nav class="imc--me-menu" aria-label="Menú lateral"
+             aria-hidden="true" data-desplega="vertical" data-estatic="n">
+
+            <div class="imc--m-logo"></div>
+
+
+            <div class="imc--m-idioma"
+                 th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
+                <button type="submit"
+                        th:attr=" data-idioma=@{${idiomaLower}}">
+                    <span th:utext="${MVS_idioma}">Idioma seleccionado</span>
+                </button>
+                <div th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+                     th:remove="tag">
+
+                    <button type="button" th:if="${idiomaLower}!=${idiomaLista.key}"
+                            th:attr=" data-idioma=@{${idiomaLista.key}}"
+                            th:onclick="'window.location.href = \'' + @{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}} + '\''">
+                        <span th:utext="${#strings.toUpperCase(idiomaLista.key)}">CA</span>
+                    </button>
+
+                </div>
+            </div>
+
+
+            <!--  elementos del menu -->
+            <div class="imc--m-principal">
+                <ul class="" role="menubar"
+                    th:styleappend="${#lists.size(MVS_menu)} == 0 ? 'display:none;' : ''">
+
+                    <!-- Cosas a tener en cuenta:
+                        Tipomenu indica si lleva iconos o no. Valor 1 indica 'sin iconos', valor 2 con imagenes.
+                    -->
+                    <!-- inicio menu -->
+                    <th:block th:each="submenu : ${MVS_menu}" th:with="tamano=${#lists.size(submenu.listacosas)}">
+                        <div th:if="${tamano} > 0" th:remove="tag">
+                            <li th:if="${tamano} == 1 and ${submenu.listacosas[0] instanceof T(es.caib.gusite.micromodel.Contenido)}">
+                                <a role="menuitem" th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,submenu.listacosas[0])}}">
+                                        <span th:text="${submenu.traduce.nombre}">
+                                            textocontenido no del menu
+                                        </span>
+                                </a>
+                            </li>
+                            <li th:if="${tamano} > 1 or (${tamano} == 1 and !${submenu.listacosas[0] instanceof T(es.caib.gusite.micromodel.Contenido)})">
+                                <button type="button" role="menuitem" data-accio="submenu-obri">
+                                    <span th:text="${submenu.traduce.nombre}">Nombre del menúsaf</span>
+                                </button>
+                                <div class="imc--me-submenu" th:attr="aria-hidden=${submenu.modo}!=C ? 'false' : 'true'">
+                                    <ul>
+                                        <!-- recorremos primer nivel -->
+                                        <th:block th:each="contenido : ${submenu.listacosas}">
+                                            <!-- segundo nivel -->
+                                            <div gus:replace="general/menu :: hijoMenu (cont=${contenido})">
+                                            </div>
+                                        </th:block>
+                                    </ul>
+                                </div>
+                            </li>
+                        </div>
+
+
+                    </th:block>
+                    <!-- fin menu-->
+
+                </ul>
+
+            </div>
+            <ul class="imc--m-secundari" role="menubar">
+                <li>
+                    <a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('accessibilitat','{0}',lang)}}" th:title="#{cabecera.accessibilitat}"><span th:text="#{cabecera.accessibilitat}">Accessibilitat</span></a>
+                </li>
+
+                <li th:if="${MVS_listacabecera} !=null"
+                    th:each="i,iterStat:${MVS_listacabecera}"
+                    th:with="indice2=${iterStat.index}">
+                    <a href="" th:href="@{${i.value1}}" th:title="${i.key}" ><span th:text="${i.key}"> texto enlace</span></a>
+                </li>
+            </ul>
+
+            <button type="button" class="imc--img imc--tanca"
+                    data-accio="menu-tanca">
+
+            </button>
+            <button type="button" class="imc--img imc--enrere"
+                    data-accio="menu-enrere">
+                <span th:text="#{general.volver}">Menú superior</span>
+            </button>
+
+        </nav>
+
+    </div>
+</section>
+
+
+
+</body>
+</html>
+

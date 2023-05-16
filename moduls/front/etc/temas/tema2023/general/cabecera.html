@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--/*
+
+Plantilla para la cabecera general de microsite
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+
+
+
+<header th:fragment="cabecera" th:if="${MVS_microsite}!=null"
+        th:remove="tag">
+    <div
+            th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipocabecera}==null "
+            th:remove="tag">
+
+
+        <header id="imc--cap" class="imc--cap">
+            <!-- logos -->
+
+            <a href="https://www.caib.es/webgoib/ca/inici" class="imc--goib-logo"><span>Govern de les Illes Balears</span></a>
+            <div class="imc--app-logo">
+					<span th:if="${MVS_micrositetitulo} !=null"
+                          th:text="${MVS_micrositetitulo}">Título del microsite</span>
+            </div>
+            <!-- idiomes -->
+            <div class="imc--idioma"
+                 th:with="idiomaLower=${#strings.toLowerCase(MVS_idioma)}">
+                <div class="imc--llista">
+                    <button type="submit"
+                            th:attr="aria-label=${MVS_idioma}, data-idioma=@{${idiomaLower}}">
+                        <span th:utext="${MVS_idioma}">Idioma seleccionado</span>
+                    </button>
+                    <div th:each="idiomaLista,iterStat:${MVS_listaidiomas}"
+                         th:remove="tag">
+                        <button type="submit" th:if="${idiomaLower}!=${idiomaLista.key}"
+                                th:attr="data-idioma=@{${idiomaLista.key}}"
+                                th:onclick="'window.location.href = \'' + @{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}} + '\''">
+                            <span th:utext="${#strings.toUpperCase(idiomaLista.key)}">CA</span>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- cercador -->
+
+            <div class="imc--cercador" th:if="${MVS_microsite.buscador}=='S'">
+
+                <button type="button" class="imc--img imc--cercador"
+                        data-accio="cerca-obri">
+                    <span th:text="#{cercador.cercador}">Cercador</span>
+                </button>
+
+                <div class="imc--ce-form" aria-hidden="true">
+                    <form name="cercadorForm"
+                          th:action="@{${#gusuri.cercar(MVS_microsite,MVS_idioma)}}"
+                          method="post">
+
+                        <input type="hidden" name="idsite" value=""
+                               th:value="${MVS_idsite}"/> <input type="hidden" name="lang"
+                                                                 value="ca"
+                                                                 th:value="${#strings.toLowerCase(MVS_idioma)}"/>
+
+                        <div class="imc--fo-elms">
+                            <input type="text" name="cerca"
+                                   th:placeholder="#{cercador.cercau}"/>
+                            <button type="submit" class="imc--ico imc--cerca">
+                                <span th:text="#{cercador.cercar}">Cerca</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div gus:replace="general/menu :: menu">Listado agenda</div>
+            <!-- menú lateral (Clasica/Horizontal) -->
+
+
+
+        </header>
+    </div>
+    <!-- fin nueva -->
+    <!-- /* tipocabecera 2: personalizada */-->
+    <div th:if="(${MVS_microsite.tipocabecera}=='2')" th:remove="tag"
+         th:utext="${MVS_microsite.traduce.cabecerapersonal}">HTML de
+        cabecera personalizada del microsite
+    </div>
+
+
+</header>
+
+
+</body>
+</html>

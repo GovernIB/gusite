@@ -1,0 +1,153 @@
+/*CSS imc-goib-gusite--app*/
+
+body {
+    font-family: var(--font-principal) !important;
+}
+
+button {
+
+}
+
+/*Molla pa*/
+.imc--molla-pa img {
+    width: 1.2em;
+    vertical-align: bottom;
+}
+
+/** CSS Formularios -> imc-goib-gusite--app-pag-formulari.css **/
+.imc--formulari .imc--f-annex{ display: flex; flex-direction: row; gap: 1em; float: none; clear: both; width: 100%; text-align: start; padding-top: .6em;}
+.imc--formulari .imc--f-annex input {width: 100%;}
+.imc--formulari .imc--f-captcha{ display: flex; flex-direction: row; gap: 1em; float: none; clear: both; width: 100%; text-align: start; padding-top: .5em; padding-bottom: 1em;}
+.imc--formulari .imc--f-captcha input {width: 100%;}
+
+/** CSS Encuestas**/
+#encuesta fieldset legend { display:none; }
+
+.imc--formulari .imc--f-botonera input {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .3rem .7rem .3rem .7rem;
+    background-color: rgb(203, 2, 62);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+}
+
+.imc--e-enunciat {
+    margin-top: .8em;
+}
+
+.imc--e-enunciat img {
+    width: 100%; height: auto;
+    max-width: 100px;
+}
+
+.imc--e-mensaje{
+    color: rgb(203, 2, 62);
+    margin-bottom: 1em;
+}
+
+.imc--e-resultats{
+    margin-bottom: .8em;
+}
+
+.imc--e-resultats li{
+    list-style: disc;
+    padding-left: 1em;
+}
+
+.imc--e-resultats img {
+    width: 100%; height: auto;
+    max-width: 200px;
+}
+
+.imc--formulari .imc--f-botonera a {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .5rem .7rem .5rem .7rem;
+    background-color: rgb(203, 2, 62);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+}
+
+.imc--llista .imc--subtitol {
+    color: #333;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+
+/*CSS Calendario -> imc-goib-gusite--app-ux-calendari.css*/
+.imc--calendari .imc--navegador { display: flex; justify-content: center; gap: .4em; }
+.imc--calendari .imc--navegador select[data-tipus="mes"] {width: 10em !important; text-align: center;}
+
+/*CSS pie de página -> imc-goib-gusite--app-ui-peu.css*/
+.imc--enllasos {
+    min-width: 10rem !important;
+}
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+    .imc--enllasos {
+        min-width: 10em !important;
+    }
+
+    .imc--peu-dades {
+        gap: 1em !important;
+        padding: 2em 2em 2em 12em !important;
+    }
+}
+
+@media only screen and (max-width : 850px) {
+
+    fieldset { padding: 1em; }
+    .imc--enllasos {
+        min-width: 10rem;
+    }
+
+    .imc--peu-xarxes {
+        padding: 2em 2em !important;
+    }
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+    /* Media para los formularios -> imc-goib-gusite--app-pag-formulari.css*/
+    .imc--formulari .imc--f-annex{ flex-direction: column !important; }
+    .imc--formulari .imc--f-captcha{  flex-direction: column !important; }
+
+    .imc--peu-xarxes {
+        display: flex;
+        align-items: flex-start !important;
+    }
+
+    .imc--peu-xarxes ul {
+        display: flex;
+        justify-content: space-between !important;
+        width: 100%;
+    }
+
+}

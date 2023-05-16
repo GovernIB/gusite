@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--/*
+
+	Imprime la miga de pan
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <!--  Este .css se usa para que en estático aparezca lo más parecido posible a la versión dinámica.
+    Al ejecutarse dinámicamente, se eliminará automáticamente el .css -->
+    <!--<link rel="stylesheet" type="text/css" media="all"
+        href="resources/css/estils.css" th:href="@{/resources/css/estils.css}" th:remove="all"></link>	-->
+</head>
+<body>
+<ol th:fragment="mollaPan" id="mollaPa">
+    <li>
+        <a href="" th:href="@{${#gusuri.microsite(MVS_microsite, MVS_idioma)}}">
+            <img src="../files/ico_telefon.png" alt="home" th:src="@{${MVS_uriTema + 'files/home.png'}}"/></a>
+    </li>
+    <div th:each="item,iterStat : ${MVS2_pathdata}"
+         th:with="indice=${iterStat.index}, flag=false, microsite=${#gusuri.microsite(MVS_microsite)},
+         microsite_home=${#gusuri.microsite(MVS_microsite, MVS_idioma)}" th:remove="tag">
+        <div th:if="${item.href}!=null" th:remove="tag">
+            <div th:if="${#strings.contains(item.href, microsite) and !#strings.endsWith(item.href, microsite_home)}"
+                 th:remove="tag">
+                <li>
+                    <a th:href="@{${item.href}}"><span
+                            th:utext="${item.label}">Molla de pa</span></a>
+                </li>
+            </div>
+        </div>
+        <div th:if="${item.href}==null" th:remove="tag">
+            <li>
+                <span th:utext="${item.label}" th:remove="tag">Molla de pa</span>
+            </li>
+        </div>
+
+        <!--<span th:if="${indice} != 0" th:remove="tag">&gt;</span> -->
+    </div>
+</ol>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!--/*
+
+Información en cuanto a la accesibilidad del web
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_contacto_titulo} !=null"
+           th:text="(${MVS_micrositetitulo})+ ' - ' +(${MVS_contacto_titulo})">Titulo Contacto</title>
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <h1><span th:text="#{general.accessibilitat}">Accesibilitat</span></h1>
+</section>
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--element">
+        <p th:utext="#{accessibilitat.compromis}">Compromís del Govern
+            de les Illes Balears</p>
+        <p th:utext="#{accessibilitat.compromis.texte1}">Un dels
+            principals objectius d'interés social del Govern de les Illes
+            Balears és posar tota la informació de la web a disposició del
+            major nombre de ciutadans possible, evitant la info-exclussió; i
+            promovent l'accessibilitat per aconseguir la universalització de
+            la informació.</p>
+        <p th:utext="#{accessibilitat.compromis.texte2}">
+            Seguint les recomanacions de la <acronym
+                title="Web Accessibility Iniciative">WAI</acronym> (traduït al
+            català , <em>Iniciativa per l'Accessibilitat a la Web</em>) hem
+            utilitzat unes pautes referents a millorar la navegació i accedir
+            tots els continguts dels microsites d'una manera clara i senzilla.
+            Amb això, pretenem aconseguir un nivell Doble A d'accessibilitat,
+            a més de la major part de les del nivell Triple A, objectiu ja
+            assolit en el portal o Web Coporativa, i no tant en les webs
+            departamentals o microsites. A aquest efecte, tenim incorporada en
+            l'edició de qualsevol microsite l'execució automàtica del test
+            W3C, que desplega les mancances d'accessibilitat de prioritat 1 i
+            2. Si l'usuari gestor les atén i corregeix, es podrà  afirmar que
+            el microsite segueix les normes de programació establertes per la
+            W3C, estament internacional encarregat de crear els estàndards de
+            creació i comunicació a Internet.
+        </p>
+        <a href="http://www.w3.org/WAI/WCAG1AA-Conformance"
+           title="Explicació del Nivell Doble-A de Conformitat"><img
+                src="http://www.w3.org/WAI/wcag1AA"
+                alt="Icona de conformitat amb el Nivell Doble-A, de les Directrius d'Accessibilitat per al Contingut Web 1.0 del W3C-WAI"/></a>
+        <p th:utext="#{accessibilitat.compromis.texte3}">
+            Tot i això, el Govern de les Illes Balears pretén seguir millorant
+            i oferir als ciutadans el millor servei possible. Si teniu
+            qualsevol iniciativa, dubte, o suggeriment, vos demanam que us
+            poseu en contacte amb nosaltres mitjançant la pàgina de <a
+                href="http://web2.caib.es/qssi?lang=ca">contacte</a>.
+        </p>
+        <h2 th:utext="#{accessibilitat.dreceres}">Dreceres de teclat</h2>
+        <p th:utext="#{accessibilitat.dreceres.texte1}">Hem configurat
+            tecles d'accés directe als apartats més importants de la web. Són
+            les següents:</p>
+        <dl class="dreseres" th:utext="#{accessibilitat.dreceres.texte2}">
+            <!-- Atajos texto2 -->
+            <dt>
+                Tecla <span>0</span>
+            </dt>
+            <dd>Anar a la pàgina d'inici del portal</dd>
+            <dt>
+                Tecla <span>1</span>
+            </dt>
+            <dd>Accesibilitat</dd>
+            <dt>
+                Tecla <span>2</span>
+            </dt>
+            <dd>Anar a la pàgina d'inici del microsite</dd>
+        </dl>
+        <p th:utext="#{accessibilitat.dreceres.texte3}">Per usar
+            aquestes dreceres de teclat heu de pitjar:</p>
+        <dl class="dreseres" th:utext="#{accessibilitat.dreceres.texte4}">
+            <!-- Atajos texto4 -->
+            <dt>Internet Explorer per a Windows</dt>
+            <dd>
+                <abbr title="Tecla ALT">ALT</abbr> + dresera seguit de la tecla <abbr
+                    title="Tecla INTRO">INTRO</abbr>
+            </dd>
+            <dt>Firefox per a Windows Ver. 1.5 e inferiors , Mozilla per
+                a Windows, Netscape Ver. 6 y superiors per Windows
+            </dt>
+            <dd>
+                <abbr title="Tecla ALT">ALT</abbr> + dresera
+            </dd>
+            <dt>Firefox Ver. 2 per a Windows</dt>
+            <dd>
+                <abbr title="Tecla ALT">ALT</abbr> + <abbr title="Tecla SHIFT">SHIFT</abbr>
+                + dresera
+            </dd>
+            <dt>Opera per a Windows o Mac</dt>
+            <dd>
+                <abbr title="Tecla SHIFT">SHIFT</abbr> + <abbr title="Tecla ESC">ESC</abbr>
+                + dresera
+            </dd>
+            <dt>Safari Ver. 1.2 (sols Mac), Firefox per a Mac (incluyendo
+                Firefox Ver. 2), Mozilla per a Mac, Netscape Ver. 6 y superiors
+                per Mac
+            </dt>
+            <dd>
+                <abbr title="Tecla CTRL">CTRL</abbr> + dresera
+            </dd>
+        </dl>
+        <h2 th:utext="#{accessibilitat.eines}">Eines de navegació a
+            Internet</h2>
+        <p th:utext="#{accessibilitat.eines.texte1}">Des de la web del
+            Govern volem aconsellar a tots el ciutadans l'ús dels millors
+            navegadors web, per això recomanem la descàrrega de les darreres
+            versions d'aquestos per gaudir d'una connexió segura, ràpida i
+            satisfactòria.</p>
+        <p th:utext="#{accessibilitat.eines.texte2}">Aquí teniu enllaços
+            per instal·lar les versions més noves i completes dels navegadors
+            més coneguts:</p>
+        <ul>
+            <li><a
+                    href="http://www.mozilla-europe.org/es/products/firefox/">Firefox</a></li>
+            <li><a
+                    href="http://www.mozilla-europe.org/es/products/mozilla1x/">Mozilla</a></li>
+            <li><a
+                    href="http://www.microsoft.com/spain/windows/ie/experiences/default.mspx">Internet
+                Explorer</a></li>
+            <li><a
+                    href="http://browser.netscape.com/ns8/download/default.jsp">Netscape</a></li>
+            <li><a href="http://www.opera.com/download/">Opera</a></li>
+            <li><a href="http://www.kde.org/">Konqueror</a></li>
+            <li><a href="http://www.apple.com/es/macosx/features/safari/">Safari</a></li>
+        </ul>
+    </div>
+</section>
+
+</body>
+</html>

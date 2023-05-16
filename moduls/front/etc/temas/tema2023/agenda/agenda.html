@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--/*
+
+Listado de eventos de la agenda para una fecha
+	
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title
+            th:if="(${MVS_micrositetitulo} !=null) and (${MVS_agenda_diaevento} !=null)"
+            th:text="(${MVS_micrositetitulo} + '-' + #{agenda.eventos} + ' ' +${MVS_agenda_diaevento})"></title>
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <div th:each="elementoAgenda,iterStat : ${MVS_agenda_lista}" th:remove="tag">
+        <h1 th:if="${elementoAgenda.actividad}!=null" >
+            <span th:text="${elementoAgenda.actividad.traduce.nombre}">
+                    Formularis de contacte
+            </span>
+        </h1>
+        <h1 th:if="${elementoAgenda.actividad}==null">
+            <span th:text="${elementoAgenda.traduce.titulo}"></span>
+        </h1>
+        <p>
+        <span th:with="finicio=${#calendars.format(elementoAgenda.finicio, 'dd/MM/yyyy')},horai=${#calendars.format(elementoAgenda.finicio, 'HH:mm')}" th:remove="tag">
+            <span th:text="${finicio}" th:remove="tag"></span>
+            <span th:if="${horai}!='00:00'" th:text="#{agenda.cuando} +' '+ ${horai}" th:remove="tag">cuando HH:mm</span>
+        </span>
+            <span th:if="${elementoAgenda.ffin} !=null"
+                  th:with="ffin=${#calendars.format(elementoAgenda.ffin, 'dd/MM/yyyy')},horaf=${#calendars.format(elementoAgenda.ffin, 'HH:mm')}" th:remove="tag">
+            <span th:text="${' - ' + ffin}" th:remove="tag"></span>
+            <span th:if="${horaf}!='00:00'" th:text="#{agenda.cuando} +' '+ ${horaf}" th:remove="tag">cuando HH:mm</span>
+        </span>
+        </p>
+    </div>
+</section>
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--detall" th:each="elementoAgenda,iterStat : ${MVS_agenda_lista}">
+        <img th:if="${elementoAgenda.traduce.imagen}!=null" id="imgNoticia" src="archivopub.gif"
+             th:src="@{${#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.imagen)}}"
+             alt=""/>
+        <p class="imc--entradeta" th:text="${elementoAgenda.traduce.titulo}"></p>
+        <p th:utext="${elementoAgenda.traduce.descripcion}"></p>
+        <p class="linkNoticia" th:if="${elementoAgenda.traduce.url} !=null"
+             th:with="externa=${elementoAgenda.traduce.url}"
+             th:type="java.lang.String">
+            <a href="http://urlexterna.com" th:href="@{${elementoAgenda.traduce.url}}"
+               th:target="(${#strings.indexOf(externa,MVS_idsite)}==-1)? '__blanck' : '_self'">
+                <span th:text="(${elementoAgenda.traduce.urlnom}!=null) ? (${elementoAgenda.traduce.urlnom}) : (#{url.adicional})"
+                        th:remove="tag">traduce url o url adicional</span>
+            </a>
+        </p>
+        <p>
+            <a id="volverAgenda" href="listarAgenda.html"
+               th:href="@{${#gusuri.listarAgenda(MVS_microsite,MVS_idioma)}}" th:text="#{general.volver}">
+                Volver a agenda
+            </a>
+        </p>
+        <div th:if="${#arrays.length(MVS_agenda_lista)}==0">
+            <div id="fontNoticia" th:text="#{agenda.nohay}">No hay más información</div>
+        </div>
+    </div>
+    <!--fin informacio-->
+</section>
+<section th:remove="tag" layout:fragment="content_aside">
+    <div class="imc--documentacio" th:each="elementoAgenda,iterStat : ${MVS_agenda_lista}">
+        <div th:if="${elementoAgenda.traduce.documento}!=null" th:remove="tag">
+            <p th:utext="#{agenda.descdocumento}">agenda desdocumento</p>
+            <ul>
+                <li>
+                    <a href="archivopub.html"
+                       th:href="@{${#gusuri.archivopub(MVS_microsite,elementoAgenda.traduce.documento)}}"
+                       target="blank" class="imc--doc">
+                        <strong th:text="${#strings.substringBefore(elementoAgenda.traduce.documento.nombre,'.')}"></strong>
+                        <span th:text="${#strings.toUpperCase(#strings.substringAfter(elementoAgenda.traduce.documento.nombre,'.'))}"></span>
+                        <span th:if="${elementoAgenda.traduce.documento.peso} > 1024"
+                              th:text="'('+${#strings.substring(elementoAgenda.traduce.documento.peso,0,3)} + ' KB)'"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

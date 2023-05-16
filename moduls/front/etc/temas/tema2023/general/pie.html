@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--/*
+
+Este código muestra el pie de página.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+<section th:fragment="pie" th:if="${MVS_microsite} !=null" th:remove="tag">
+    <footer class="imc--peu" id="imc--peu">
+
+
+        <!-- seccions -->
+
+        <div class="imc--seccions">
+            <ul>
+                <li>
+                    <a href="https://www.caib.es/webgoib/documents/d/guest/boib?download=true" th:href="@{${#gusuri.enlacePropiedadesTema('boib','','')}}"
+                       class="imc--p-boib"><span th:text="@{${#gusuri.enlacePropiedadesTema('boib.' + lang,'','')}}">BOIB</span></a>
+                </li>
+                <li>
+                    <a href="https://www.caib.es/sites/transparencia/" th:href="@{${#gusuri.enlacePropiedadesTema('transparencia','','')}}"
+                       class="imc--p-transparencia"><span th:text="@{${#gusuri.enlacePropiedadesTema('transparencia.' + lang,'','')}}">Transparència</span></a>
+                </li>
+                <li>
+                    <a href="https://www.caib.es/seucaib/" class="imc--p-seu" th:href="@{${#gusuri.enlacePropiedadesTema('sede','','')}}">
+                        <span th:text="@{${#gusuri.enlacePropiedadesTema('sede.' + lang,'','')}}">Seu electrònica</span></a>
+                </li>
+                <li>
+                    <a href="https://www.caib.es/sites/atenciociutadania/" class="imc--p-atencio" th:href="@{${#gusuri.enlacePropiedadesTema('atencion','','')}}">
+                        <span th:text="@{${#gusuri.enlacePropiedadesTema('atencion.' + lang,'','')}}">Atenció a la ciutadania</span></a>
+                </li>
+                <li>
+                    <a href="https://www.caib.es/sites/contractaciopublica/" class="imc--p-contractacio" th:href="@{${#gusuri.enlacePropiedadesTema('contratacion','','')}}">
+                        <span th:text="@{${#gusuri.enlacePropiedadesTema('contratacion.' + lang,'','')}}">Contractació pública</span></a>
+                </li>
+                <li>
+                    <a href="https://www.caib.es/sites/governobert/" class="imc--p-govern" th:href="@{${#gusuri.enlacePropiedadesTema('gobiernoabierto','','')}}">
+                        <span th:text="@{${#gusuri.enlacePropiedadesTema('gobiernoabierto.' + lang,'','')}}">Govern obert</span></a>
+                </li>
+            </ul>
+            <button type="button" class="imc--img imc--anterior" data-accio="seccions-anterior"><span></span>
+            </button>
+            <button type="button" class="imc--img imc--seguent" data-accio="seccions-seguent">
+                <span></span></button>
+        </div>
+
+
+        <!-- dades -->
+
+        <div class="imc--peu-dades">
+            <div class="imc--enllasos">
+                <ul>
+                    <li><a href="https://www.caib.es/webgoib/inici" th:href="@{${#gusuri.enlacePropiedadesTema('inicio','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('inicio.' + lang,'','')}}">Inici</a></li>
+                    <li><a href="https://www.caib.es/webgoib/ca/que-necessites" th:href="@{${#gusuri.enlacePropiedadesTema('necesitas','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('necesitas.' + lang,'','')}}">Què necessites?</a></li>
+                    <li><a href="https://www.caib.es/webgoib/ca/temes" th:href="@{${#gusuri.enlacePropiedadesTema('temas','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('temas.' + lang,'','')}}">Temes</a></li>
+                    <li><a href="https://www.caib.es/govern/administracio.do" th:href="@{${#gusuri.enlacePropiedadesTema('govern','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('govern.' + lang,'','')}}">Govern</a></li>
+                    <li><a href="https://www.caib.es/seucaib/" th:href="@{${#gusuri.enlacePropiedadesTema('sede','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('sede.' + lang,'','')}}">Seu electrònica</a></li>
+                    <li><a href="https://www.caib.es/pidip2front/jsp/ca/convocatories/" th:href="@{${#gusuri.enlacePropiedadesTema('prensa','','')}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('prensa.' + lang,'','')}}">Sala de premsa</a></li>
+                </ul>
+            </div>
+            <div class="imc--enllasos">
+                <ul>
+                    <div th:if="${MVS_listapie} !=null" th:remove="tag">
+                        <li th:if="${MVS_listapie} !=null"
+                            th:each="i,iterStat:${MVS_listapie}"
+                            th:with="indice2=${iterStat.index}">
+                            <a href="" th:href="@{${i.value}}" th:text="${i.key}">menu pie link</a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+
+
+            <div class="imc--info">
+                <div th:if="${direccion}!=null" th:remove="tag">
+                    <p>
+                    <div th:utext="${direccion}" th:remove="tag">Dirección y Dominio</div>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- xarxes -->
+
+        <div class="imc--peu-xarxes">
+            <p>Xarxes socials:</p>
+            <ul>
+                <li>
+                    <a href="https://www.facebook.com/GovernIllesBalears/" class="imc--img imc--facebook">
+                        <span>Facebook</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/goib" class="imc--img imc--twitter">
+                        <span>Twitter</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.instagram.com/goib/" class="imc--img imc--instagram">
+                        <span>Instagram</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.youtube.com/user/CanalIllesBalears" class="imc--img imc--youtube">
+                        <span>YouTube</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+        <!-- enllaços -->
+
+        <div class="imc--peu-enllasos">
+            <strong>© Govern Illes Balears</strong>
+            <ul>
+                <li><a th:href="@{${#gusuri.mapa(MVS_microsite, MVS_idioma)}}"><span th:text="#{pie.mapaweb}">Mapa web</span>
+                    </a></li>
+                <li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('avislegal','{0}',lang)}}"
+                      ><span th:text="#{pie.avislegal}"></span></a></li>
+                <li>
+                    <a href="https://www.caib.es/webgoib/contacte/" target="_blank">
+                        <span th:text="#{micro.es.contacto}"></span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </footer>
+</section>
+
+
+</body>
+</html>
