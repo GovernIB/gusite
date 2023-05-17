@@ -89,6 +89,83 @@
 		es.caib.gusite.enlaces.twitter=http://twitter.com/iBalears
 		es.caib.gusite.enlaces.facebook=http://www.facebook.com/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?ref=ts#/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?v=wall&amp;viewas=0&amp;ref=ts
 
+		es.caib.gusite.enlaces.boib=https://www.caib.es/eboibfront/
+		es.caib.gusite.enlaces.boib.es=BOIB
+		es.caib.gusite.enlaces.boib.ca=BOIB
+		es.caib.gusite.enlaces.boib.en=BOIB
+		es.caib.gusite.enlaces.boib.fr=BOIB
+		es.caib.gusite.enlaces.boib.de=BOIB
+
+		es.caib.gusite.enlaces.transparencia=https://www.caib.es/sites/transparencia/
+		es.caib.gusite.enlaces.transparencia.es=Transparencia
+		es.caib.gusite.enlaces.transparencia.ca=Transparència
+		es.caib.gusite.enlaces.transparencia.en=Transparency
+		es.caib.gusite.enlaces.transparencia.fr=Transparence
+		es.caib.gusite.enlaces.transparencia.de=Transparenz
+
+		es.caib.gusite.enlaces.sede=https://www.caib.es/seucaib/
+		es.caib.gusite.enlaces.sede.es=Sede electrónica
+		es.caib.gusite.enlaces.sede.ca=Seu electrònica
+		es.caib.gusite.enlaces.sede.en=Electronic office
+		es.caib.gusite.enlaces.sede.fr=Siège électronique
+		es.caib.gusite.enlaces.sede.de=Elektronisches Zentrale
+
+		es.caib.gusite.enlaces.atencion=https://www.caib.es/sites/atenciociutadania/
+		es.caib.gusite.enlaces.atencion.es=Atención a la ciudadania
+		es.caib.gusite.enlaces.atencion.ca=Atenció a la ciutadania
+		es.caib.gusite.enlaces.atencion.en=Attention to citizens
+		es.caib.gusite.enlaces.atencion.fr=Attention à la citoyenneté
+		es.caib.gusite.enlaces.atencion.de=Aufmerksamkeit für die Bürger
+
+		es.caib.gusite.enlaces.contratacion=https://www.caib.es/sites/contractaciopublica/
+		es.caib.gusite.enlaces.contratacion.es=Contractación pública
+		es.caib.gusite.enlaces.contratacion.ca=Contractació pública
+		es.caib.gusite.enlaces.contratacion.en=Public procurement
+		es.caib.gusite.enlaces.contratacion.fr=Marchés publics
+		es.caib.gusite.enlaces.contratacion.de=Öffentliches Auftragswesen
+
+		es.caib.gusite.enlaces.gobiernoabierto=https://www.caib.es/sites/governobert/
+		es.caib.gusite.enlaces.gobiernoabierto.es=Gobierno abierto
+		es.caib.gusite.enlaces.gobiernoabierto.ca=Govern obert
+		es.caib.gusite.enlaces.gobiernoabierto.en=Open Government
+		es.caib.gusite.enlaces.gobiernoabierto.fr=Gouvernement ouvert
+		es.caib.gusite.enlaces.gobiernoabierto.de=Offene Regierung
+
+		es.caib.gusite.enlaces.inicio=https://www.caib.es/webgoib/inici
+		es.caib.gusite.enlaces.inicio.es=Inicio
+		es.caib.gusite.enlaces.inicio.ca=Inici
+		es.caib.gusite.enlaces.inicio.en=Home
+		es.caib.gusite.enlaces.inicio.fr=Accueil
+		es.caib.gusite.enlaces.inicio.de=Home
+
+		es.caib.gusite.enlaces.necesitas=https://www.caib.es/webgoib/ca/que-necessites
+		es.caib.gusite.enlaces.necesitas.es=¿Qué necesitas?
+		es.caib.gusite.enlaces.necesitas.ca=Què necessites?
+		es.caib.gusite.enlaces.necesitas.en=What do you need?
+		es.caib.gusite.enlaces.necesitas.fr=De quoi avez-vous besoin?
+		es.caib.gusite.enlaces.necesitas.de=Was brauchen Sie?
+
+		es.caib.gusite.enlaces.temas=https://www.caib.es/webgoib/ca/temes
+		es.caib.gusite.enlaces.temas.es=Temas
+		es.caib.gusite.enlaces.temas.ca=Temes
+		es.caib.gusite.enlaces.temas.en=Themes
+		es.caib.gusite.enlaces.temas.fr=Thèmes
+		es.caib.gusite.enlaces.temas.de=Themen
+
+		es.caib.gusite.enlaces.govern=https://www.caib.es/govern/administracio.do
+		es.caib.gusite.enlaces.govern.es=Gobierno
+		es.caib.gusite.enlaces.govern.ca=Govern
+		es.caib.gusite.enlaces.govern.en=Government
+		es.caib.gusite.enlaces.govern.fr=Gouvernement
+		es.caib.gusite.enlaces.govern.de=Regierung
+
+		es.caib.gusite.enlaces.prensa=https://www.caib.es/pidip2front/jsp/ca/convocatories/
+		es.caib.gusite.enlaces.prensa.es=Sala de prensa
+		es.caib.gusite.enlaces.prensa.ca=Sala de premsa
+		es.caib.gusite.enlaces.prensa.en=Press room
+		es.caib.gusite.enlaces.prensa.fr=Salle de presse
+		es.caib.gusite.enlaces.prensa.de=Presseraum
+
 		<!-- Translatorib -->
 		es.caib.gusite.translatorib.user=api-tib
 		es.caib.gusite.translatorib.pass=XXX
