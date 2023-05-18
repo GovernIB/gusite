@@ -96,6 +96,26 @@ button {
 .imc--enllasos {
     min-width: 10rem !important;
 }
+
+.activo {
+    background-color: rgba(0, 0, 0, .15);
+}
+
+.imc--ce-form .imc--fo-elms .imc--cerca{
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .3rem .7rem .3rem 2rem;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+    width: auto !important;
+    background:rgb(203, 2, 62) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
+}
+
 /* media */
 
 @media only screen and (max-width : 1400px) {

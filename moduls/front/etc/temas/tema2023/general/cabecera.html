@@ -73,9 +73,7 @@ Plantilla para la cabecera general de microsite
                         <div class="imc--fo-elms">
                             <input type="text" name="cerca"
                                    th:placeholder="#{cercador.cercau}"/>
-                            <button type="submit" class="imc--ico imc--cerca">
-                                <span th:text="#{cercador.cercar}">Cerca</span>
-                            </button>
+                            <input type="submit" class="imc--ico imc--cerca" th:value="#{cercador.cercar}"/>
                         </div>
                     </form>
                 </div>

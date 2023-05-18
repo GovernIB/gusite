@@ -13,18 +13,7 @@ $(function(){
 		.appPeuSeccions();
 
 
-	var resizeAppPeuSeccions;
-
-    imc_finestra
-        .on('resize', function(e) {
-            clearTimeout(resizeAppPeuSeccions);
-            resizeAppPeuSeccions = setTimeout(function() {
-
-                imc_body
-					.appPeuSeccions({ desde: "resize" });
-
-            }, 150);
-        });
+	
 
 
 });
@@ -96,6 +85,15 @@ $.fn.appPeuSeccions = function(options) {
 
 				var imc_finestra_W = imc_finestra.width()
 					,llistat_W = parseInt( llistat_.outerWidth(), 10);
+
+				if (imc_finestra_W > 850 ) {
+
+					llistat_
+						.removeAttr("style");
+
+					return;
+
+				}
 
 				posicio_llimit = (llistat_W - imc_finestra_W) * -1;
 
@@ -177,6 +175,21 @@ $.fn.appPeuSeccions = function(options) {
 		element
 			.off(".appPeuSeccions")
 			.on("click.appPeuSeccions", "button[data-accio]", mou);
+
+		// resize
+
+		var resizeAppPeuSeccions;
+
+	    imc_finestra
+	        .on('resize', function(e) {
+	            clearTimeout(resizeAppPeuSeccions);
+	            resizeAppPeuSeccions = setTimeout(function() {
+
+	                imc_body
+						.appPeuSeccions({ desde: "resize" });
+
+	            }, 150);
+	        });
 
 	});
 	return this;

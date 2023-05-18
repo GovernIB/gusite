@@ -195,6 +195,32 @@ $.fn.appCapMenu = function(options) {
 			,menu_elm = imc_cap.find(".imc--me-menu:first")
 			,esDesplegableVertical = menu_elm.attr("data-desplega") === "vertical" ? true : false
 			,esEstatic = menu_elm.attr("data-estatic") === "s" ? true : false
+			,inicia = function() {
+				var menus = element.find(".imc--me-submenu");
+				menus.each(function(i) {
+					
+					var menu = $(this)
+						,menu_fills=menu.children().children().find(".imc--me-submenu")
+						,actiu = menu.find(".activo");
+						
+					//Si hi ha submenús dintre del submenú de nivell 1, revisem que aquests no tinguin actiu cap element
+					if(menu_fills.length > 0) {
+						menu_fills.each(function(i) {
+							var menu = $(this)
+								,actiu = menu.find(".activo");
+							if(actiu.length === 1) {
+								menu.attr("aria-hidden", "false"); 
+								return; 
+							}
+						})
+					}
+					if(actiu.length === 1) {
+						menu.attr("aria-hidden", "false"); 
+						return; 
+					}
+
+				})
+			}
 			,altura = function() {
 
 				// revisem altura del llistat
@@ -278,8 +304,6 @@ $.fn.appCapMenu = function(options) {
 
 			}
 			,submenu = function(e) {
-
-				
 
 				var bt_ = $(this)
 					,bt_nivell = bt_.parents("li").length
@@ -377,6 +401,7 @@ $.fn.appCapMenu = function(options) {
 
 			};
 
+		inicia(); 
 		// altura
 
 		altura();
