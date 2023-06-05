@@ -342,7 +342,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 	/**
 	 * Obtiene una noticia devuelve un null en lugar en EJBException
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
@@ -662,6 +662,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 	 * @ejb.interface-method
 	 * @ejb.permission role-name="${role.system},${role.admin},${role.super},${role.oper}"
 	 */
+	@Override
 	public void borrarNoticia(final Long id, final boolean indexar) {
 		final Session session = this.getSession();
 
@@ -936,7 +937,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 	/**
 	 * Método para indexar según la id y la categoria.
-	 * 
+	 *
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
@@ -1081,7 +1082,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 	/**
 	 * Método para indexar según la id y la categoria.
-	 * 
+	 *
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
@@ -1117,6 +1118,11 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 			}
 
 			final byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
+
+			if (contenidoFichero == null) {
+				return new SolrPendienteResultado(false,
+						"No se obtiene el contenido del archivo " + archivo.getNombre() + ".");
+			}
 
 			// Hay que buscar el archivo en la traduccion correspondiente
 			for (final String keyIdioma : noticia.getTraducciones().keySet()) {
@@ -1205,7 +1211,7 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 	/**
 	 * Obtiene los noticia de un microsite
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */

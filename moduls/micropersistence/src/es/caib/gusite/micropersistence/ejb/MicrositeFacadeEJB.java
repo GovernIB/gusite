@@ -1552,7 +1552,7 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Método para indexar según la id y la categoria.
-	 * 
+	 *
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
@@ -1585,6 +1585,11 @@ public abstract class MicrositeFacadeEJB extends HibernateEJB {
 			}
 
 			final byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
+
+			if (contenidoFichero == null) {
+				return new SolrPendienteResultado(false,
+						"No se obtiene el contenido del archivo " + archivo.getNombre() + ".");
+			}
 
 			// Los archivos solo se indexa en un idioma, por lo que si se quiere que se
 			// encuentren en todos los idiomas,

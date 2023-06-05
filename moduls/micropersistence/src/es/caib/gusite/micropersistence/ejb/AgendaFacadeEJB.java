@@ -559,7 +559,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Método para indexar según la id y la categoria.
-	 * 
+	 *
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
@@ -693,7 +693,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Método para indexar según la id, idArchivo y la categoria.
-	 * 
+	 *
 	 * @param solrIndexer
 	 * @param idElemento
 	 * @param categoria
@@ -732,6 +732,11 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 			}
 
 			final byte[] contenidoFichero = archi.obtenerContenidoFichero(archivo);
+
+			if (contenidoFichero == null) {
+				return new SolrPendienteResultado(false,
+						"No se obtiene el contenido del archivo " + archivo.getNombre() + ".");
+			}
 
 			// Hay que buscar el archivo en la traduccion correspondiente
 			// Recorremos las traducciones
@@ -823,7 +828,7 @@ public abstract class AgendaFacadeEJB extends HibernateEJB {
 
 	/**
 	 * Obtiene las agendas de un microsite
-	 * 
+	 *
 	 * @ejb.interface-method
 	 * @ejb.permission unchecked="true"
 	 */
