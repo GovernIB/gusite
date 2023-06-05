@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--/*
+ 
+	Página de agenda del microsite
+
+	*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_micrositetitulo} !=null"
+           th:text="(${MVS_micrositetitulo}) + '-' + #{agenda.agenda}"></title>
+
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <h1 th:if="${MVS_contacto_titulo} !=''" style="text-transform: initial">
+            <span th:text="#{agenda.agenda}">
+                    Formularis de contacte
+            </span>
+    </h1>
+</section>
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--actes" th:if="${MVS_parametros_pagina.nreg}!=0">
+        <p class="imc--info" th:text="#{listaragenda.proximosactos}">>Actes</p>
+        <ul th:if="${MVS_parametros_pagina.nreg}!=0">
+            <li th:each="evento:${MVS_agenda_lista}" th:with="horai=${#calendars.format(evento.finicio, 'HH:mm')}">
+                <a href="agenda.html"
+                   th:href="@{${#gusuri.listarAgendaFecha(MVS_microsite,MVS_idioma,evento.finicio)}}">
+                    <span class="imc--data">
+                        <div th:if="${evento.ffin} !=null" th:remove="tag">
+							<span th:with="finicio=${#calendars.format(evento.finicio, 'dd/MM/yyyy')}" th:remove="tag">
+								<span th:text="${finicio + ' - '}" th:remove="tag"></span>
+							</span>
+                            <span th:with="ffin=${#calendars.format(evento.ffin, 'dd/MM/yyyy')}" th:remove="tag">
+								<span th:text="${ffin}" th:remove="tag"></span>
+							</span>
+                        </div>
+                        <div th:if="${evento.ffin} ==null" th:remove="tag">
+							<span th:with="finicio=${#calendars.format(evento.finicio, 'dd/MM/yyyy')}" th:remove="tag">
+								<span th:text="${finicio}" th:remove="tag"></span>
+							</span>
+                        </div>
+                        <div th:if="${horai} !='00:00'" th:remove="tag"
+                             th:text="#{agenda.cuando}+ ' ' + ${horai}"></div>
+                    </span>
+                    <p class="imc--titol" th:if="${evento.actividad}!=null"
+                       th:text="${evento.actividad.traduce.nombre}">
+                        Título
+                    </p>
+                    <p class="imc--titol" th:if="${evento.actividad}==null" th:text="${evento.traduce.titulo}">
+                        Título
+                    </p>
+                    <p class="imc--entradeta" th:text="${evento.traduce.titulo}"></p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="imc--pag-nav" th:if="!${MVS_busqueda}">
+        <nav>
+            <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+                <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.inicio})}"
+                   th:text="#{general.param.inicio}" data-accio="nav-inici">
+                        Inici
+                </a>
+            </span>
+            <span th:if="${MVS_parametros_pagina.cursor}!=1" th:remove="tag">
+                <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.anterior})}"
+                   th:text="#{general.param.anterior}" data-accio="nav-anterior">
+                        Anterior
+                </a>
+            </span>
+            <span th:if="${MVS_agenda_lista}!=null" th:remove="tag">
+                <span th:text="${MVS_parametros_pagina.cursor}" th:remove="tag">
+                            cursor
+                </span>
+                        a
+                <span th:text="${MVS_parametros_pagina.cursor_final}" th:remove="tag">
+                            cursor final
+                </span>
+                        de
+                <span th:text="${MVS_parametros_pagina.nreg}" th:remove="tag">
+                            pagina nreg
+                </span>
+            </span>
+            <span th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+                  th:remove="tag">
+                <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.siguiente})}"
+                   th:text="#{general.param.siguiente}" data-accio="nav-seguent">
+                            Següent
+                </a>
+            </span>
+            <span th:if="${MVS_parametros_pagina.cursor_final}!=${MVS_parametros_pagina.nreg}"
+                  th:remove="tag">
+                <a th:href="@{${MVS_seulet_sin}(pagina=${MVS_parametros_pagina.final})}"
+                   th:text="#{general.param.final}" data-accio="nav-final">
+                        Fi
+                </a>
+            </span>
+        </nav>
+    </div>
+</section>
+
+<section th:remove="tag" layout:fragment="content_aside">
+    <div th:if="${MVS_datos_agenda_calendario}!=null" th:remove="tag">
+        <div gus:replace="general/agendaCalendarListado :: calendario">Agenda Calendario</div>
+    </div>
+</section>
+
+</body>
+</html>
+
+

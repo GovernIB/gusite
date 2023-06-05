@@ -1,0 +1,68 @@
+/* Document CSS */
+
+
+
+
+header p { font-size: 1.2em; }
+
+/* element */
+
+.imc--element img { float: left; max-width: 20em; margin: 0 2em 2em 0; }
+.imc--element img.imc--dreta { float: right; margin: 0 0 2em 2em; }
+.imc--element img.imc--complet { float: none; max-width: 100%; margin: 0 0 2em 0; }
+
+.imc--element p { margin-bottom: .7em; }
+
+
+.imc--ubicacio { padding-top: 1em; margin-top: 1em; border-top: 1px dashed #ccc; }
+
+
+
+/* enllaços d'interés */
+
+.imc--urls { margin-bottom: 2em; }
+.imc--urls p { line-height: 1.2em; margin-bottom: 1em; }
+.imc--urls ul li { padding-bottom: .5em; }
+
+
+
+/* documentació */
+
+.imc--documentacio p { line-height: 1.2em; margin-bottom: 1em; }
+.imc--documentacio ul li { padding-bottom: .5em; }
+
+.imc--documentacio .imc--doc { display: block; padding: .5em .5em .5em 3em; background: #f2f2f2 url(ico_doc_666.svg) no-repeat 1em .8em / 1em auto; }
+.imc--documentacio .imc--doc strong { display: block; font-weight: normal; }
+.imc--documentacio .imc--doc span { font-size: .8em; color: #333; }
+
+
+
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 900px) {
+
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--/*
+
+Muestra un formulario de contacto.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_contacto_titulo} !=null"
+           th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_contacto_titulo}">-</title>
+
+
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <h1 th:if="${MVS_contacto_titulo} !=''" style="text-transform: initial">
+        <span th:text="${MVS_contacto_titulo}">Titulo contacto</span>
+    </h1>
+</section>
+<section th:remove="tag" th:if="${MVS_contacto} !=null" layout:fragment="content">
+    <form th:action="@{${#gusuri.contacto(MVS_microsite,MVS_idioma,MVS_contacto)}}"
+          onsubmit="return checkrequired(this)" enctype="multipart/form-data" method="post">
+        <div class="imc--formulari">
+            <!-- estils dels elements concrets -->
+            <input type="hidden" name="idsite" th:value="${MVS_idsite}"/>
+            <input type="hidden" name="lang" th:value="${MVS_idioma}"/>
+            <input type="hidden" name="cont" th:value="${MVS_contacto.id}"/>
+            <div th:each="i,iterStat : ${MVS_contacto_listatags}"
+                 th:with="indice=${iterStat.index}" class="imc--f-el">
+                <div class="imc--f-etiqueta">
+                    <label th:for="${i.id}" th:utext="${i.key}">Etiqueta campo</label>
+                </div>
+                <div class="imc--f-control">
+                    <input th:utext="${i.value}" th:remove="tag"></input>
+                </div>
+            </div>
+            <br/>
+            <div th:if="${MVS_contacto.anexarch} =='S'" class="imc--f-annex">
+                <div class="imc--f-etiqueta">
+                    <label th:text="#{contacto.docanex}">Document per
+                        annexar</label>
+                </div>
+                <div class="imc--f-control">
+                    <input type="file" name="docAnex" id="docAnex" size="30"/>
+                </div>
+            </div>
+            <br/>
+
+            <label th:text="${MVS_captcha.error}" th:if="${MVS_captcha.error} != null"
+                   style="color: red;">Error</label>
+            <div class="imc--f-captcha">
+                <div class="imc--f-etiqueta">
+                    <label th:text="#{contacto.captcha.rellene}">Emplenau el captcha.</label>
+                </div>
+                <div class="imc--f-control" style="display: flex;">
+                    <img th:src="@{'data:image/jpeg;base64,'+${MVS_captcha.getContenidoBase64()}}" alt="captcha"
+                         style="width: 100px;margin-right: 50px; min-width: 80px;"/>
+
+                    <label for="captcha">
+                        <input type="text" id="captchaResp" name="captchaResp" style="margin: auto;"
+                               onchange="habilitarEnviar()"/>
+                    </label>
+
+                </div>
+            </div>
+
+            <div class="imc--f-botonera">
+                <button type="submit" id="btnanar" th:value="#{contacto.enviar}" tabindex="500" class="imc--ico">
+                    <span>Enviar</span></button>
+                <!--Se tendría que añadir multiidioma de este botón-->
+                <button type="reset" class="imc--ico imc--bt-terciari"><span>Neteja formulari</span></button>
+            </div>
+
+
+        </div>
+    </form>
+
+    <div id="imc--missatge" class="imc--missatge" data-tipus="alerta" role="alert" aria-labelledby="missatge-titol"
+         aria-modal="true" aria-hidden="true" tabindex="0">
+        <div class="imc--contingut imc-mi--con">
+
+            <header>
+                <h2 id="missatge-titol"><span></span></h2>
+            </header>
+
+            <div class="imc--info">
+
+            </div>
+
+            <div class="imc--botonera">
+                <button type="button" class="imc--secundari" data-accio="cancela" data-tabula="si"><span>Cancel·la</span>
+                </button>
+                <button type="button" class="imc--secundari" data-accio="dacord" data-tabula="si"><span>D'acord</span>
+                </button>
+                <button type="button" data-accio="accepta" data-tabula="si"><span>Accepta</span></button>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+
+</body>
+</html>

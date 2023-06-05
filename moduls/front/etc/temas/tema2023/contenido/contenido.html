@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--/*
+
+Página de contenido
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:if="${MVS_contenido.traduce} !=null"
+    th:text="${MVS_micrositetitulo} + '-' + ${MVS_contenido.traduce.titulo}">-</title>  
+
+</head>
+<body>
+    <section th:remove="tag" layout:fragment="content">
+        <div class="imc--element">
+            <div th:if="${MVS_contenido.traduce} != null">
+                <div th:if="${MVS_tipobeta}=='beta'"
+                th:utext="${MVS_contenido.traduce.txbeta}">Contenido traducido beta</div>
+                <div th:unless="${MVS_tipobeta}=='beta'"
+                th:utext="${MVS_contenido.traduce.texto}">Contenido traducido NO beta</div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

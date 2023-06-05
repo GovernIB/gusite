@@ -1,0 +1,11 @@
+/* Document CSS */
+
+/* tooltip */
+
+div[role="tooltip"] { position: absolute; z-index: 50; color: #fff; text-align: left; white-space: nowrap; padding: .5em 1em; background-color: #333; transform: translateY(.5em); transition: visibility .2s linear, opacity .2s ease-out; }
+
+div[role="tooltip"]::before { content: ""; position: absolute; top: -0.2em; left: 1em; width: .4em; height: .4em; background-color: #333; transform: rotate(45deg); }
+
+div[role="tooltip"].imc--dreta::before { left: inherit; right: 1em; }
+
+

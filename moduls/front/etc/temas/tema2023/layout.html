@@ -1,0 +1,191 @@
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+th:with="lang=${#strings.toLowerCase(MVS_idioma)}"
+th:lang="${lang}"
+th:lang-xmllang="${lang}">
+
+<head>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="Generator" th:if="${MVS_version} != null" th:content="${MVS_version.micrositesName} + ' v' + ${MVS_version.micrositesVersion} +';build '+${MVS_version.micrositesBuild}+';revision '+${MVS_version.gitRevision}"/>
+	<meta name="keywords" th:content="${MVS_micrositekeywords}" th:if="${!#strings.isEmpty(MVS_micrositekeywords)}"></meta>
+	<meta name="description" th:content="${MVS_micrositedescription}" th:if="${!#strings.isEmpty(MVS_micrositedescription)}"></meta>
+
+
+	<title layout:title-pattern="$CONTENT_TITLE">Layout page</title>
+
+
+
+	<script  th:remove="tag"  th:if="${!#strings.isEmpty(MVS_micrositeanalytics) and #strings.arraySplit(MVS_micrositeanalytics,';') ne null and      #arrays.length( #strings.arraySplit(MVS_micrositeanalytics,';'))>0     }" >
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--/* Ahora se pueden indicar varias keys de Anlaitics separadas por el separador ";" , la primera key se aÃ±ade al solicitar el script, y aÃ±adir el gtag. Las sucesivas solo en el gtag  */-->
+    <script  th:if="${!#strings.isEmpty(MVS_micrositeanalytics)}" th:async="true" th:src="@{'https://www.googletagmanager.com/gtag/js?id='+${#strings.arraySplit(MVS_micrositeanalytics,';')[0]}}"></script>
+    <script>
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        <script th:inline="javascript" th:remove="tag" th:each="cod : ${#strings.arraySplit(MVS_micrositeanalytics,';')}" >gtag('config', [[${cod}]]);</script>
+
+    </script>
+    </script>
+
+	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
+	<link rel="apple-touch-icon-precomposed" th:href="@{/favicon.png}" type="image/x-ico" />
+	<link rel="icon" href="imgs/favicon/favicon.png" th:href="@{/favicon.png}" type="image/x-ico" />
+
+
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app.css"	 		th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app.css'}}" />
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag.css" 		th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag.css'}}" />
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ui-cap.css" 		th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-cap.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ui-peu.css" 		th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-peu.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ui-campanya.css"	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-campanya.css'}}" />
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-agenda.css"	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-agenda.css'}}" />
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-element.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-element.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-formulari.css" th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-formulari.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-noticies-ult.css" th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-noticies-ult.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-llistat-docs.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-llistat-docs.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-bt-desplegable.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-bt-desplegable.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-missatge.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-missatge.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-tooltip.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-tooltip.css'}}"/>
+
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-menu-h.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-menu-h.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-icones.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-icones.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-tooltip.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-tooltip.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-ux-calendari.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-calendari.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-llistat.css" 	th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-llistat.css'}}"/>
+	<link rel="stylesheet" media="screen" href="css/gusiteMaps.css" 						th:href="@{${MVS_uriTema + 'files/gusiteMaps.css'}}" />
+
+	<!--Se añaden estilos personalizables-->
+	<link th:each="archivoCss : ${MVS_css}" th:if="${!#strings.contains(archivoCss.src, 'resources')}" rel="stylesheet" type="text/css" media="all" th:media="${archivoCss.media}" href="resources/css/estils.css"  th:href="@{${archivoCss.src}}"></link>
+
+	<script src="js/utils/jquery-3.6.3.min.js" th:src="@{${MVS_uriTema + 'files/jquery-3.6.3.min.js'}}" type="text/javascript"></script>
+
+	<script src="js/imc-goib-gusite--app.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app.js'}}"		type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ui-cap.js" 	th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-cap.js'}}" type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ui-peu.js" 	th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-peu.js'}}" type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ux-bt-desplegable.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-bt-desplegable.js'}}" type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ux-form.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-form.js'}}" 	type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ux-missatge.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ux-missatge.js'}}" 	type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--app-ui-campanya.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-ui-campanya.js'}}" 	type="text/javascript"></script>
+	<script src="js/utils/jquery.fittext.js" 		th:src="@{${MVS_uriTema + 'files/jquery.fittext.js'}}" 	type="text/javascript"></script>
+	<script src="js/imc-goib-gusite--literals-ca.js" 		th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--literals-' + #strings.toLowerCase(MVS_idioma) + '.js'}}" 	type="text/javascript"></script>
+	<script src="js/globales.js" 					th:src="@{${MVS_uriTema + 'files/globales.js'}}" 	type="text/javascript"></script>
+	<script src="js/general.js" 					th:src="@{${MVS_uriTema + 'files/general.js'}}" 	type="text/javascript"></script>
+</head>
+
+<body>
+
+	<div id="imc--contenidor" class="imc--contenidor" th:attr="data-menu=(${MVS_microsite.tipomenu}!=0 and ${MVS_microsite.orientacionMenu}!='H')? 'vertical' : '', data-campanya=${!#strings.isEmpty(MVS_home_campanya)} ? 's' : 'n'"
+	 	data-molla-pa="s" data-aside="n">
+		<div class="imc--co">
+			<!-- cap -->
+			<header gus:replace="general/cabecera::cabecera" >
+				<!-- cabecera -->
+			</header>
+
+			<!-- continguts -->
+
+			<div id="imc--continguts" class="imc--continguts">
+
+
+				<!-- Molla de pa -->
+
+				<nav id="imc--molla-pa" class="imc--molla-pa" aria-label="Molla de pa" style="visibility: hidden">
+					<section gus:replace="general/mollaPan :: mollaPan"></section>
+				</nav>
+
+				<div layout:fragment="campanya" th:if="${!#strings.isEmpty(MVS_home_campanya)}" class="imc--campanya-old" id="imc--campanya-old">
+					<!-- campanya -->
+					<div th:if="${MVS_home_campanya} !=null" th:utext="${MVS_home_campanya}" th:remove="tag">
+						Campaña del home
+					</div>
+					<div th:if="${MVS_home_tmp_campanya} !=null" th:utext="${MVS_home_tmp_campanya}" th:remove="tag">
+						Campaña del home redir
+					</div>
+					<!-- fin campanya -->
+				</div>
+				<!-- títol de la pàgina -->
+
+				<header id="header">
+					<section th:remove="tag" layout:fragment="content_header"></section>
+				</header>
+
+
+				<!-- contingut principal -->
+
+				<main class="imc--pag">
+
+					<section th:remove="tag" layout:fragment="content"></section>
+
+				</main>
+
+				<aside id="imc--complementari" class="imc--complementari">
+					<section th:remove="tag" layout:fragment="content_aside"></section>
+				</aside>
+
+			</div>
+
+			<!-- peu -->
+			<section gus:replace="general/pie::pie" ></section>
+
+
+		</div>
+	</div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var pathName = window.location.pathname;
+		var pathNameLang = window.location.pathname + /*[[${#strings.toLowerCase(MVS_idioma)}]]*/ 'ca';
+		pathNameLang += '/'
+        var molla = $(".imc--molla-pa");
+		var campanya = $(".imc--campanya");
+        var uri = /*[[@{${#gusuri.microsite(MVS_microsite, MVS_idioma)}}]]*/ 'home';
+
+        if (uri === pathName || uri === pathNameLang) {
+            molla.attr('style', 'visibility:hidden');
+        }
+
+        /*]]>*/
+    </script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		$(function(){
+
+
+			imc_body
+					.appHeader();
+
+		});
+
+		$.fn.appHeader = function(options) {
+			var settings = $.extend({
+				contenidor : false
+			}, options);
+			this.each(function() {
+				var element = $(this)
+						,inicia = function(e) {
+					var capcalera = element.find("#header"),
+						text = capcalera.text().trim();
+					console.log(capcalera.text().trim());
+					if(text == "") {
+						capcalera.remove();
+					}
+				}
+				inicia();
+			});
+
+			return this;
+		}
+		/*]]>*/
+	</script>
+
+</body>
+</html>
+
+

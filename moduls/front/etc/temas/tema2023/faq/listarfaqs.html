@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--/*
+
+Listado de preguntas frecuentes.
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_micrositetitulo} !=null"
+           th:text="${MVS_micrositetitulo} + ' - ' + #{listarfaqs.listado}">Microsite
+        Título - Llistat de faqs</title>
+    <link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app-pag-faqs.css"
+          th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-faqs.css'}}"/>
+    <script src="js/imc-goib-gusite--app-pag-faqs.js" type="text/javascript"
+            th:src="@{${MVS_uriTema + 'files/imc-goib-gusite--app-pag-faqs.js'}}"></script>
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <h1>
+        <span th:text="#{listarfaqs.preguntas}">Preguntes freqüents</span>
+    </h1>
+</section>
+<section th:remove="tag" layout:fragment="content">
+
+    <div class="imc--preguntes">
+        <div class="imc--grup" th:each="tema : ${MVS_listado}" tabindex="1">
+            <h2><span th:text="${tema.tema}">Preguntes sobre avisos</span></h2>
+            <div class="imc--conversa" data-estat="tancat" th:each="pregunta : ${tema.listadopreguntas}"
+                 th:fragment="contenidoIE">
+                <button type="button" data-accio="pregunta-activa">
+						<span th:utext="${pregunta.traduce.pregunta}">
+						</span>
+                </button>
+                <div class="imc--resposta">
+                    <p th:utext="${pregunta.traduce.respuesta}"></p>
+                    <a th:if="${pregunta.traduce.url} !=null" th:href="${pregunta.traduce.url}"
+                       th:text="${pregunta.traduce.urlnom} !=null?${pregunta.traduce.urlnom}:#{url.adicional}">
+                        descripción url
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- fin informacio -->
+</section>
+
+</body>
+</html>
+
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+//Ficha de noticia
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title th:if="${MVS_noticia} !=null" th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_noticia.traduce.titulo}">
+        Microsite título - Noticia traduce título</title>
+
+</head>
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <a href="#" th:href="@{${#gusuri.listarElementos(MVS_microsite, MVS_idioma, MVS_noticia.tipo)}}"
+       th:text="#{noticia.volverListado}">
+        Volver al listado de noticias
+    </a>
+    <h1 id="titolNoticia">
+        <span th:text="${MVS_noticia.traduce.titulo}">Titulo de la noticia (traducido)</span>
+    </h1>
+    <p id="subtitol" th:text="${MVS_noticia.traduce.subtitulo}">
+        Subtitulo de la noticia (traducido)
+    </p>
+    <p id="fontNoticia" th:if="${MVS_noticia.fpublicacion}!=null"
+       th:with="publicacion=${#calendars.format(MVS_noticia.fpublicacion, 'dd/MM/yyyy')}">
+        <i>
+            <span th:text="${publicacion}" th:remove="tag">
+                    dd/MM/yyyy
+            </span>
+            <span th:if="${MVS_noticia.traduce.fuente}!=null" th:text="${MVS_noticia.traduce.fuente}"></span>
+        </i>
+    </p>
+    <div>
+        <div class="btn-red-social fb">
+            <div id="botonfb" class="fb-like" data-href="" data-layout="button_count" data-action="like"
+                 colorscheme="light" data-show-faces="false" data-share="false"></div>
+            <script>
+                document.getElementById("botonfb").setAttribute("data-href", window.location.href);
+            </script>
+        </div>
+        <div class="btn-red-social">
+            <script src="https://apis.google.com/js/platform.js" async="" defer="">
+                {
+                    lang: 'es'
+                }
+            </script>
+            <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+        </div>
+        <div class="btn-red-social tw">
+            <a id="botontw" href="https://twitter.com/share" class="imc--img imc--twitter"
+               data-text="">Tweet</a>
+            <script>
+                /*<![CDATA[*/
+                var texto = document.getElementById("titolNoticia").innerHTML;
+                texto = texto.substring(0, 80) + "...";
+                document.getElementById("botontw").setAttribute("data-text", texto);
+                !function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                        p = /^http:/.test(d.location) ? 'http' : 'https';
+                    if (!d.getElementById(id)) {
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = p + '://platform.twitter.com/widgets.js';
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }
+                }(document, 'script', 'twitter-wjs');
+                /*]]>*/
+            </script>
+        </div>
+    </div>
+</section>
+
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--element" th:if="${MVS_noticia.traduce} !=null">
+        <img th:if="${MVS_noticia.imagen}" src="../files/news.png" class="imc--complet"
+             th:src="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.imagen)}}" alt=""
+             th:width="${MVS_anchoImg}"/>
+        <p th:utext="${MVS_noticia.traduce.texto}" th:remove="tag">
+            Contenido texto html de la noticia
+        </p>
+        <p th:if="${MVS_noticia.latitud}!=null and ${MVS_noticia.longitud}!=null and ${MVS_noticia.latitud}!='' and ${MVS_noticia.longitud}!=''"
+           class="imc--ubicacio">
+            <a href="archivopub.html" class="imc--ico imc--ubicacio"
+               th:href="@{${#gusuri.noticiaFuerzaMapa(MVS_microsite,MVS_idioma,MVS_noticia,MVS_menu_cont_notic)}}"
+               target="_blank"><span th:text="#{maps.ubicacion}">ubicacion</span></a>
+        </p>
+    </div>
+</section>
+<section th:remove="tag" layout:fragment="content_aside">
+    <div class="imc--urls" th:if="${MVS_noticia.traduce.laurl} !=null" th:with="externa=${MVS_noticia.traduce.laurl}">
+        <p th:text="#{noticia.interes}">Enlaces interes</p>
+        <ul>
+            <li>
+                <a href="#" class="imc--ico imc--url" th:href="@{${MVS_noticia.traduce.laurl}}"
+                   th:target="${#strings.startsWith(externa,'http')}? '_blank' : '_self'"
+                   th:text="${MVS_noticia.traduce.urlnom} !=null ? ${MVS_noticia.traduce.urlnom} : #{url.adicional}">
+                    Titulo del enlace
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="imc--documentacio" th:if="${MVS_noticia.traduce.docu} !=null">
+        <p th:utext="#{noticia.descdocumento}">
+            Documentos adjuntos:
+        </p>
+        <ul>
+            <li>
+                <a href="archivopub.html" th:href="@{${#gusuri.archivopub(MVS_microsite,MVS_noticia.traduce.docu)}}"
+                   target="blank" class="imc--doc">
+                    <strong th:text="${MVS_noticia.traduce.docu.nombre}">Nombre de archivo lorem</strong>
+                    <span th:with="mimeVar=${#strings.arraySplit(MVS_noticia.traduce.docu.nombre,'.')}"
+                          th:text="${mimeVar[#arrays.length(mimeVar)-1]}">
+                                    pdf
+                    </span>
+                    <span th:text="'(' + ${MVS_noticia.traduce.docu.peso/1000} + ' kb)'">
+                                    (200 kb)
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- fin informacio -->
+</section>
+
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

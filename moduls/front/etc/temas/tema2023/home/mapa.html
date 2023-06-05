@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--/*
+
+Mapa del sitio web
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+	th:lang-xmllang="${lang}">
+<head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<title th:if="${MVS_micrositetitulo} !=null"
+	th:text="(${MVS_micrositetitulo}) + ' - Mapa'">Mapa</title>
+</head>
+<body>
+	<!--<section th:remove="tag" layout:fragment="menuLateral"></section>-->
+
+	<section th:remove="tag" layout:fragment="content">
+		<div id="infoNoMenu">
+			<div class="contenedorMapa">
+				<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+				<h2 th:text="#{mapa.mapaweb}">Mapa web</h2>
+				<div id="pagMapaWeb">
+					<h3 th:text="#{mapa.apartados}">Apartats generals</h3>
+					<ul th:if="${MVS_microsite.tipocabecera}=='1' or ${MVS_microsite.tipopie}=='1'">
+						<li th:if="${MVS_microsite.tipocabecera}=='1'" 
+						th:each="i:${MVS_listacabecera}">
+						<a href="" th:href="@{${i.value1}}" th:text="${i.key}">enlace cabecera</a>
+						</li>
+						<li th:if="${MVS_microsite.tipopie}=='1'" 
+						th:each="i:${MVS_listapie}">
+						<a href="" th:href="@{${i.value}}" th:text="${i.key}">enlace pie</a>
+						</li>
+				</ul>
+			
+			<div th:remove="tag">
+				<div th:each="menu : ${MVS_menu}" th:remove="tag">
+					<h3 th:text="${menu.traduce.nombre}">Nombre menu</h3>
+					<ul th:each="contenido : ${menu.listacosas}">
+						<li th:if="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}"  
+						th:id="${contenido.id}==${idcontenido} ? ${contenido.id} : ''"
+						th:class="${contenido.id}==${idcontenido} ? 'seleccionado' : ''">
+						<a href="contenido.html"
+						th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,contenido)}}"
+						th:target="(${contenido.urlExterna}) ? '_blank' : '_self'"
+						th:text="${contenido.traduce.titulo}">Título del contenido</a>
+					</li>
+					<li
+					th:unless="${contenido instanceof T(es.caib.gusite.micromodel.Contenido)}"
+					th:remove="tag">
+					<ul th:remove="tag">
+						<li th:if="${#lists.size(contenido.listacosas)}!=1">
+							<a href="#" class="pareADon" th:text="${contenido.traduce.nombre}">Nombre contenido</a>
+							<ul>
+								<li th:each="cosa : ${contenido.listacosas}"
+								th:id="${cosa.id}==${idcontenido} ? ${cosa.id} : ''"
+								th:class="${cosa.id}==${idcontenido} ? 'seleccionado' : ''">
+								<a href="contenido.html" 
+								th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,cosa)}}"
+								th:target="(${cosa.urlExterna})? '_blank' : '_self'"
+								th:text="${cosa.traduce.titulo}">Traduce Título</a>
+							</li>
+						</ul>															
+					</li> 
+					<li th:if="${#lists.size(contenido.listacosas)}==1" 
+					th:with="conte=${contenido.listacosas[0]}" 
+					th:id="${conte.id}==${idcontenido} ? ${conte.id} : ''"
+					th:class="${conte.id}==${idcontenido} ? 'seleccionado' : ''">
+					<a href="contenido.html" 
+					th:href="@{${#gusuri.contenido(MVS_microsite,MVS_idioma,conte)}}"
+					th:target="(${conte.urlExterna})? '_blank' : '_self'"
+					th:text="${contenido.traduce.nombre}">Traduce Nombre</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<!-- Parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>
+
+

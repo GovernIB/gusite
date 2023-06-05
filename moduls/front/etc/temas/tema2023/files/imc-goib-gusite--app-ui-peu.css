@@ -1,0 +1,150 @@
+/* Document CSS */
+
+
+
+/* peu */
+
+.imc--peu { display: grid; grid-template-columns: 1fr 25%; }
+
+.imc--peu ul a:hover,
+.imc--peu ul a:focus { text-decoration: underline; }
+
+
+
+/* seccions */
+
+.imc--seccions { grid-area: 1 / 1 / 1 / span 2; padding: 1em; background-color: #d7dbe0; }
+.imc--seccions ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0 3em; max-width: 1320px; margin: 0 auto; }
+
+.imc--seccions ul a { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 12em; height: 11em; }
+
+.imc--seccions ul a::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent url() no-repeat center center / 90% auto; opacity: 0.15; }
+
+.imc--seccions ul a.imc--p-boib::before { background-image: url(ico_boib.png); }
+.imc--seccions ul a.imc--p-transparencia::before { background-image: url(ico_transparencia.png); }
+.imc--seccions ul a.imc--p-seu::before { background-image: url(ico_seu_electronica.png); }
+.imc--seccions ul a.imc--p-atencio::before { background-image: url(ico_atencio.png); }
+.imc--seccions ul a.imc--p-contractacio::before { background-image: url(ico_contractacio.png); }
+.imc--seccions ul a.imc--p-govern::before { background-image: url(ico_govern_obert.png); }
+
+.imc--seccions ul a span { display: block; font-size: 1.3em; font-weight: bold; color: #333; text-align: center; }
+
+.imc--seccions button { display: none; }
+
+
+
+/* dades */
+
+.imc--peu-dades { display: flex; align-items: flex-start; gap: 7em; min-height: 235px; padding: 2em 2em 2em 17em; background: rgb(46, 46, 46) url(logo-footer-135_002.png) no-repeat 2.3em 2.9em / 7.6em auto; }
+
+.imc--peu-dades .imc--info { color: #fff; }
+.imc--peu-dades .imc--info p { padding-bottom: .5em; }
+.imc--peu-dades .imc--info a { color: #fff; opacity: .7; }
+
+.imc--peu-dades .imc--enllasos li { line-height: 1.4em; padding-bottom: .5em; }
+.imc--peu-dades .imc--enllasos a { color: #fff; }
+
+
+
+/* xarxes */
+
+.imc--peu-xarxes { display: flex; align-items: center; justify-content: center; flex-direction: column; background-color: rgb(246, 246, 246); }
+.imc--peu-xarxes p { margin-bottom: 1em; }
+.imc--peu-xarxes ul { display: flex; align-items: center; gap: 2em; }
+.imc--peu-xarxes ul a { font-size: 1.8em; }
+
+.imc--img.imc--youtube::before { background-image: url(youtube.png); }
+.imc--img.imc--instagram::before { background-image: url(instagram.png); }
+.imc--img.imc--twitter::before { background-image: url(twitter.png); }
+.imc--img.imc--facebook::before { background-image: url(facebook.png); }
+
+
+
+/* enllasos */
+
+.imc--peu-enllasos { grid-area: 3 / 1 / 3 / span 2; display: flex; align-items: center; padding: .5em 2em; }
+.imc--peu-enllasos > strong { font-size: .9em; font-weight: normal; text-transform: uppercase; padding-right: 5em; }
+.imc--peu-enllasos ul { display: flex; align-items: center; }
+.imc--peu-enllasos ul li { padding-right: 1em; margin-right: 1em; border-right: 1px solid #ccc; }
+.imc--peu-enllasos ul li:last-child { border-right: none; }
+
+.imc--peu-enllasos ul a { display: inline-flex; color: #000; align-items: center; }
+.imc--peu-enllasos ul a svg { width: .7em; height: .7em; margin-left: .5em }
+
+.imc--peu-enllasos ul a span { font-size: .9em; text-transform: uppercase; }
+
+.imc-en-rss::after { content: ""; display: inline-block; vertical-align: middle; position: relative; top: 0; width: 1em; height: 1em; margin-left: .5em; background: transparent url(ico_rss.svg) no-repeat 50% 50% / 90% auto; }
+
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+
+@media only screen and (max-width : 1000px) {
+
+	.imc--peu-dades { display: flex; align-items: flex-start; gap: 6em; min-height: 235px; padding: 2em 2em 2em 12em; background: rgb(46, 46, 46) url(logo-footer-135_002.png) no-repeat 2.3em 2.9em / 7.6em auto; }
+
+
+}
+
+
+@media only screen and (max-width : 850px) {
+
+
+	.imc--peu { display: block; }
+
+
+	.imc--seccions { position: relative; overflow: hidden; }
+
+	.imc--seccions ul { display: inline-grid; grid-template-columns: repeat(6, 12em); transition: transform .2s cubic-bezier(0,.78,.25,1); }
+
+	.imc--seccions button { display: block; position: absolute; z-index: 1; bottom: 1em; }
+
+	.imc--seccions button[data-accio="seccions-anterior"] { left: 1em; }
+	.imc--seccions button[data-accio="seccions-seguent"] { right: 1em; }
+
+
+	.imc--peu-xarxes { padding: 2em 0; }
+
+
+	.imc--peu-enllasos,
+	.imc--peu-enllasos strong { display: block; text-align: center; padding: 0; margin-bottom: 1em; }
+
+	.imc--peu-enllasos ul { justify-content: center; }
+
+}
+
+
+@media only screen and (max-width : 750px) {
+
+	.imc--peu-xarxes ul { gap: 3em; }
+	.imc--peu-dades { display: flex; align-items: flex-start; gap: 4em; min-height: 235px; padding: 2em 2em 2em 10em; background: rgb(46, 46, 46) url(logo-footer-135_002.png) no-repeat 2.3em 2.9em / 7.6em auto; }
+
+
+}
+
+@media only screen and (max-width : 600px) {
+	.imc--peu-dades { flex-direction: column; gap: 2em; padding: 2em 2em 2em 12em; background: rgb(46, 46, 46) url(logo-footer-135_002.png) no-repeat .5em 1em / 8em auto; }
+}
+
+
+@media only screen and (max-width : 450px) {
+
+
+	.imc--peu-enllasos ul { flex-wrap: wrap; }
+	.imc--peu-enllasos ul li { padding-bottom: 1em; border-right: none; }
+
+}
+
+

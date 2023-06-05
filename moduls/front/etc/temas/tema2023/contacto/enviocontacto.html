@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--/*
+ 
+Página que se muestra tras enviar un contacto satisfactoriamente
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+th:lang-xmllang="${lang}">
+<head>
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+	<!--MVS_contacto_titulo: devuelve el título del contacto en cuestión  -->
+	<!-- MVS_micrositetitulo: devuelve el titulo del microsite en cuestión -->
+	<title th:if="${MVS_contacto_titulo} !=null"
+	th:text="${MVS_contacto_titulo} + ' - ' + #{enviocontacto.confirmacion}">-</title>
+</head>
+<body>
+	<section th:remove="tag" layout:fragment="content">
+		<!-- informacio con o sin menu -->
+		<!-- MVS_microsite: devuelve un microsite a partir de su clave unica -->
+		<div  class="container-contacte success" th:id="(${MVS_microsite.tipomenu}=='0') ? 'infoNoMenu':'info'"	id="">
+			<!-- titol -->
+			<h2 th:text="#{enviocontacto.resultado}">Resultat enviament</h2>
+			<!-- informacio -->
+			<div>
+				<p><span class="glyphicon glyphicon-ok-circle"></span><span th:text="#{enviocontacto.ok} + '.'">S`ha enviat el formulari satisfactòriament</span></p>
+				<a href="#" th:href="@{${#gusuri.home(MVS_microsite,MVS_idioma)}}" th:text="#{general.aceptar}">Aceptar</a>
+			</div>
+		</div>
+		<!-- fin informacio -->
+	</section>
+	<!-- parte añadida para usar el layout decorator "<section>"-->
+</body>
+</html>

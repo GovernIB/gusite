@@ -1,0 +1,166 @@
+/* Document CSS */
+
+
+
+/* formulari */
+
+.imc--formulari .imc--f-el { float: left; padding: 0 2em 1em 0; }
+.imc--formulari .imc--f-el.imc--f-fi-linia { padding-right: 0; }
+
+.imc--formulari .imc--f-el .imc--f-etiqueta { padding-bottom: .3em; }
+
+.imc--formulari .imc--f-el .imc--f-control input[type="text"] { width: 100%; }
+.imc--formulari .imc--f-el .imc--f-control input[type="date"] { width: 12em; }
+
+.imc--formulari .imc--f-el .imc--f-control select { width: 100%; }
+
+.imc--formulari .imc--f-el .imc--f-control li { display: flex; align-items: center; min-height: 2.3em; }
+
+.imc--formulari .imc--f-el[data-aliniacio="h"] ul { display: flex; align-items: flex-start; }
+.imc--formulari .imc--f-el[data-aliniacio="h"] ul li { padding-right: 1em; }
+
+
+.imc--formulari .imc--f-botonera { display: flex; justify-content: center; gap: 2em; float: none; clear: both; width: 100%; text-align: center; padding-top: 1.5em; border-top: 1px dashed #ccc; }
+
+.imc--formulari .imc--f-botonera button[type="submit"]::before { background-image: url(ico_envia_fff.svg); }
+
+.imc--formulari .imc--f-botonera button[type="reset"]::before { background-image: url(ico_neteja_c70f2d.svg); }
+
+
+/* línea separació */
+
+.imc--formulari hr { width: 100%; height: .6em; margin-bottom: 1.5em; border: none; border-bottom: 1px dashed #ccc; }
+
+
+/* camp obligatori */
+
+.imc--f-el[data-obligatori="si"] .imc--f-etiqueta > label::after,
+.imc--f-el[data-obligatori="si"] .imc--f-etiqueta > span::after,
+.imc--f-el[data-obligatori="si"] .imc--f-etiqueta > .imc--label::after,
+.imc--f-el.imc--el-check[data-obligatori="si"] .imc-check > span::after { content: ""; display: inline-block; position: relative; top: -0.3em; left: .3em; width: .7em; height: .7em; background: transparent url(ico_asterisc_c00.svg) no-repeat center center / 90% auto; }
+
+
+
+/* fieldset */
+
+fieldset:not(.imc--f-el) { clear: both; width: 100%; padding: 1em 2em; margin-bottom: 1.5em; background-color: #fff; border: 1px solid #ccc; }
+fieldset:not(.imc--f-el) legend { padding: 0 1em; }
+fieldset:not(.imc--f-el) legend span { text-transform: uppercase; }
+
+fieldset.imc--f-el legend {  padding-bottom: .3em; }
+
+fieldset.imc--f-el[data-obligatori="si"] legend > span::after { content: ""; display: inline-block; position: relative; top: -0.3em; left: .3em; width: .7em; height: .7em; background: transparent url(ico_asterisc_c00.svg) no-repeat center center / 90% auto; }
+
+
+/* textarea */
+
+textarea { display: inline-block; vertical-align: middle; font: normal 1em var(--font-principal); width: 100%; padding: .3rem .7rem .4rem .4rem; background-color: #fff; border: 2px solid #ccc; }
+
+textarea {
+    transition: background-color .2s ease-out, border-color .2s ease-out;
+}
+
+textarea:hover { position: relative; z-index: 2; border-color: var(--color-primari); }
+textarea:focus { position: relative; z-index: 2; background-color: #ffffdd; border-color: #000; }
+
+textarea:focus { box-shadow: 0px 0px 4px 4px rgba(0, 140, 137, .3); }
+
+textarea[disabled] { background-color: #f2f2f2; }
+
+textarea[disabled]:hover,
+textarea[disabled]:focus { background-color: #f2f2f2; border: 2px solid #ccc; }
+
+textarea[readonly]:focus { background-color: #fff; box-shadow: none; }
+
+textarea.imc--f-error { border-color: #c00; }
+
+
+/* checkbox */
+
+.imc--checkbox,
+.imc--checkbox input { cursor: pointer; }
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0;
+    font-size: 1em;
+    margin-right: 4px;
+    border: .2em solid #c9c9c9;
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 10%;
+    background-color: #fff;
+    position: relative;
+    top: -0.1em;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    background: var(--color-primari) url(ico_check_fff.svg) no-repeat center center / 70% auto;
+    border-color: var(--color-primari);
+}
+
+
+/* radio */
+
+.imc--radio { display: inline-block; vertical-align: middle; position: relative; cursor: pointer;  }
+.imc--radio input { position: absolute; z-index: 0; top: 0em; left: 0.05em; width: 1.1em; height: 1.1em; margin: 0; cursor: pointer; }
+
+.imc--radio input + span::before {
+    content: ""; display: inline-block; vertical-align: middle;
+    position: relative;
+    top: -0.1em;
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: .3em;
+    background: #fff;
+    border: 3px solid #c9c9c9;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.imc--radio input:focus + span::before {
+    border-color: #000;
+}
+
+.imc--radio input:checked + span::before {
+    border-color: var(--color-primari);
+    box-shadow: 0 0 0 3px var(--color-primari) inset;
+}
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 850px) {
+
+	fieldset { padding: 1em; }
+
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+	.imc--f-el { float: none; width: 100% !important; padding-right: 0 !important; }
+
+}

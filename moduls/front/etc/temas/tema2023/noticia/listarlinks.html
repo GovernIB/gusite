@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--/*
+
+Listado de enlaces
+
+*/-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:gus="http://www.caib.es/thymeleaf/gusite"
+      gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
+      th:lang-xmllang="${lang}">
+<head>
+    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
+    <title
+            th:text="${MVS_micrositetitulo}+ ' - ' + ${MVS_tipolistado}">Microsite título - tipo listado</title>
+</head>
+
+<body>
+<section th:remove="tag" layout:fragment="content_header">
+    <div gus:replace="noticia/modulos :: capcelera_buscador">Listado cabecera buscador</div>
+</section>
+<section th:remove="tag" layout:fragment="content">
+    <div class="imc--llista">
+        <div th:if="${MVS_parametros_pagina.nreg}!=0" th:remove="tag">
+            <div gus:replace="noticia/modulos :: infoCursor">
+                Listado info cursor
+            </div>
+            <ul id="noticiesLlistatLinks">
+                <li th:each="link,iterStat : ${MVS_listado}" th:if="${link.traduce.titulo}!=null">
+                    <a href="#" th:if="${link.traduce.urlnom}!=null" th:href="@{${link.traduce.laurl}}">
+                        <!--<img th:src="@{${MVS_uriTema + 'files/enlace.png'}}" src="../files/enlace.png" alt=""/>-->
+                        <div>
+                            <p th:text="${link.traduce.titulo}" class="imc--titol">
+                                Titulo
+                            </p>
+                            <div th:if="${link.traduce.texto} !=null" th:utext="${link.traduce.texto}" class="imc--subtitol">
+                                traduce texto
+                            </div>
+
+                        </div>
+                        <!--<div th:if="${link.traduce.urlnom}!=null" th:remove="tag">
+                            <a href="#" th:if="${link.traduce.urlnom}!=null" th:href="@{${link.traduce.laurl}}"
+                               target="_blank" th:utext="${link.traduce.urlnom}">
+                                traduce url
+                            </a>
+                        </div>-->
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div gus:replace="noticia/modulos :: paginacio">
+            Listado paginación
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>
+
+
