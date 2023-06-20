@@ -186,7 +186,7 @@ header .imc--m-lateral .imc--me-menu[data-nivell="2"] > .imc--m-principal > ul >
 
 .imc--molla-pa li a[aria-current="page"] { cursor: default; pointer-events: none; opacity: .5; }
 
-
+.imc--no-molla {height: .5em;}
 
 /* menú vertical */
 

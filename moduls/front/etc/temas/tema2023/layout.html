@@ -97,9 +97,10 @@ th:lang-xmllang="${lang}">
 
 				<!-- Molla de pa -->
 
-				<nav id="imc--molla-pa" class="imc--molla-pa" aria-label="Molla de pa" style="visibility: hidden">
+				<nav id="imc--molla-pa" class="imc--molla-pa" aria-label="Molla de pa" style="display:none" th:remove="all">
 					<section gus:replace="general/mollaPan :: mollaPan"></section>
 				</nav>
+				<div class="imc--no-molla"></div>
 
 				<div layout:fragment="campanya" th:if="${!#strings.isEmpty(MVS_home_campanya)}" class="imc--campanya-old" id="imc--campanya-old">
 					<!-- campanya -->

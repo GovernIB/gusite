@@ -18,7 +18,7 @@ th:lang-xmllang="${lang}">
 </head>
 <body>
     <section th:remove="tag" layout:fragment="content">
-        <div class="imc--element">
+        <div class="imc--contenido-html">
             <div th:if="${MVS_contenido.traduce} != null">
                 <div th:if="${MVS_tipobeta}=='beta'"
                 th:utext="${MVS_contenido.traduce.txbeta}">Contenido traducido beta</div>

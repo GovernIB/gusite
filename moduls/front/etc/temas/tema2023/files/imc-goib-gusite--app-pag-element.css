@@ -36,9 +36,8 @@ header p { font-size: 1.2em; }
 .imc--documentacio .imc--doc span { font-size: .8em; color: #333; }
 
 
-
-
-
+/*imc--contenido-html --> contenidos internos html*/
+.imc--contenido-html{ }
 
 
 /* media */
