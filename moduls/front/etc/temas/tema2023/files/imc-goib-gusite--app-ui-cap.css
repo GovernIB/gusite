@@ -16,7 +16,7 @@ header .imc--goib-logo span { position: absolute; top: -999em; left: -999em; }
 
 
 header .imc--app-logo { flex-grow: 2; display: flex; align-items: center; height: 100%; }
-header .imc--app-logo span { font-size: 1.8em; line-height: 1em; }
+header .imc--app-logo span { font-size: 1.6em; line-height: 1em; }
 
 
 
@@ -192,7 +192,9 @@ header .imc--m-lateral .imc--me-menu[data-nivell="2"] > .imc--m-principal > ul >
 
 div[data-menu="vertical"] .imc--continguts .imc--me-menu { display: none; }
 
-
+/*Ajustamos fontsize de textos menu vertical principal*/
+div[data-menu="vertical"] .imc--continguts .imc--me-menu[data-desplega="vertical"] .imc--m-principal ul button { font-size: 0.8em; font-weight: bold; }
+div[data-menu="vertical"] .imc--continguts .imc--me-menu .imc--m-principal ul a {font-size: 0.76em;}
 
 /* media */
 
