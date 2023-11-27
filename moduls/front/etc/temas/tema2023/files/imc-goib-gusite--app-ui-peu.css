@@ -14,7 +14,7 @@
 /* seccions */
 
 .imc--seccions { grid-area: 1 / 1 / 1 / span 2; padding: 1em; background-color: #d7dbe0; }
-.imc--seccions ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0 3em; max-width: 1320px; margin: 0 auto; }
+.imc--seccions ul { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0 3em; max-width: 1600px; margin: 0 auto; }
 
 .imc--seccions ul a { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 12em; height: 11em; }
 
@@ -26,6 +26,7 @@
 .imc--seccions ul a.imc--p-atencio::before { background-image: url(ico_atencio.png); }
 .imc--seccions ul a.imc--p-contractacio::before { background-image: url(ico_contractacio.png); }
 .imc--seccions ul a.imc--p-govern::before { background-image: url(ico_govern_obert.png); }
+.imc--seccions ul a.imc--p-proteccio::before { background-image: url(ico_proteccio_dades.png); }
 
 .imc--seccions ul a span { display: block; font-size: 1.3em; font-weight: bold; color: #333; text-align: center; }
 
@@ -107,7 +108,7 @@
 
 	.imc--seccions { position: relative; overflow: hidden; }
 
-	.imc--seccions ul { display: inline-grid; grid-template-columns: repeat(6, 12em); transition: transform .2s cubic-bezier(0,.78,.25,1); }
+	.imc--seccions ul { display: inline-grid; grid-template-columns: repeat(7, 12em); transition: transform .2s cubic-bezier(0,.78,.25,1); }
 
 	.imc--seccions button { display: block; position: absolute; z-index: 1; bottom: 1em; }
 

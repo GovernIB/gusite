@@ -7,14 +7,14 @@ $(window).on('load', function() {
     console.log("Accedo al load del window");
     console.log(dataAside.innerHTML.trim()=="");
 
-    if(dataAside.innerHTML.trim()=="") {
+    if(dataAside.innerHTML.trim()=="" || contenido.getAttribute("data-campanya")=="s" ) {
         contenido.setAttribute("data-aside", "n");
     } else {
         contenido.setAttribute("data-aside", "s")
     }
 
     var dataCampanyaEnlace = document.getElementById('enllasDestPeu');
-    if(dataCampanyaEnlace.innerHTML.trim()=="") {
+    if(dataCampanyaEnlace !== null &&  dataCampanyaEnlace.innerHTML.trim()=="") {
         dataCampanyaEnlace.className = "invisible";
     }
 });

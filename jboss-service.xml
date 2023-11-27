@@ -34,6 +34,9 @@
 
 	   <!-- Ruta en la que se almacenan las plantillas en tiempo de desarrollo. Debe estar deshabilitado templateCaching para q se tenga en cuenta -->
 	   es.caib.gusite.front.templateHotLoadingPath=/home/web/proyectos/ADCaib/gusite/plantillasDev/
+	 
+	   <!-- nombre del tema que será remplazado por la version local ubicada en es.caib.gusite.front.templateHotLoadingPath, solo para desarrollo. es.caib.gusite.front.templateHotLoadingPath no debe ser vacio y templateCaching debe ser N. -->
+	   es.caib.gusite.front.temaARemplazarPorLocal=tema2023local
 
 
         <!--  es.caib.rolsac.api.v2.urlPrefix = http://localhost:8080/sacws-api/services/-->
@@ -165,6 +168,15 @@
 		es.caib.gusite.enlaces.prensa.en=Press room
 		es.caib.gusite.enlaces.prensa.fr=Salle de presse
 		es.caib.gusite.enlaces.prensa.de=Presseraum
+		
+		
+		es.caib.gusite.enlaces.protecciondatos=https://www.caib.es/sites/protecciodedadespersonals/
+		es.caib.gusite.enlaces.protecciondatos.es=Protección de datos
+		es.caib.gusite.enlaces.protecciondatos.ca=Protecció de dades
+		es.caib.gusite.enlaces.protecciondatos.en=Data Protection
+		es.caib.gusite.enlaces.protecciondatos.fr=Protection de données
+		es.caib.gusite.enlaces.protecciondatos.de=Datenschutz
+		
 
 		<!-- Translatorib -->
 		es.caib.gusite.translatorib.user=api-tib

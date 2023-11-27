@@ -116,6 +116,16 @@ button {
     background:rgb(203, 2, 62) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
 }
 
+main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4 {
+    font-size:revert;
+}
+
+main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4, main.imc--pag div.imc--contenido-html p, main.imc--pag div.imc--contenido-html ul, main.imc--pag div.imc--contenido-html ol, main.imc--pag div.imc--contenido-html li{
+    margin:revert;
+    padding: revert;
+    list-style: revert;   
+}
+
 /* media */
 
 @media only screen and (max-width : 1400px) {
