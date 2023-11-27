@@ -56,7 +56,7 @@
 
 .imc--img.imc--youtube::before { background-image: url(youtube.png); }
 .imc--img.imc--instagram::before { background-image: url(instagram.png); }
-.imc--img.imc--twitter::before { background-image: url(twitter.png); }
+.imc--img.imc--twitter::before { background-image: url(x.png); }
 .imc--img.imc--facebook::before { background-image: url(facebook.png); }
 
 
