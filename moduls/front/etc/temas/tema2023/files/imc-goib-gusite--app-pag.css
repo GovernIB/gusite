@@ -4,7 +4,7 @@
 
 /* continguts */
 
-.imc--continguts { width: 100%; max-width: 1320px; padding: 0 2em 3em 2em; margin: 0 auto; }
+.imc--continguts { width: 100%; max-width: 1510px; padding: 0 2em 3em 2em; margin: 0 auto; }
 
 .imc--contenidor[data-molla-pa="s"] .imc--continguts { display: grid; gap: 1em 3em; }
 

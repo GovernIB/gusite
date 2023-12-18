@@ -76,7 +76,9 @@
 		es.caib.gusite.key.google.maps=keyGoogleMaps
 
 
-		<!-- Propiedades tema2017 {0} sera substituido por el idioma de navegacion (ca,es,en,fr,de)-->
+		<!-- Propiedades tema2023 
+		ENLACES GENERALES 
+		en el enlace si se indican los caracteres {0} seran substituidos por el idioma de navegacion (ca,es,en,fr,de) -->
 		es.caib.gusite.enlaces.govern=http://www.caib.es/govern/index.do?lang={0}
 		es.caib.gusite.enlaces.noticies=http://www.caib.es/govern/pidip/comunicats.do?tipus=C?lang={0}
 		es.caib.gusite.enlaces.administracio=http://www.caib.es/govern/administracio.do?lang={0}
@@ -92,6 +94,10 @@
 		es.caib.gusite.enlaces.twitter=http://twitter.com/iBalears
 		es.caib.gusite.enlaces.facebook=http://www.facebook.com/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?ref=ts#/pages/Palma-Spain/Govern-de-les-Illes-Balears/50145562453?v=wall&amp;viewas=0&amp;ref=ts
 
+
+		<!-- ENLACES PREFOOTER 
+		en el enlace si se indican los caracteres: {0} seran substituidos por el idioma de navegacion (ca,es,en,fr,de)-->
+		
 		es.caib.gusite.enlaces.boib=https://www.caib.es/eboibfront/
 		es.caib.gusite.enlaces.boib.es=BOIB
 		es.caib.gusite.enlaces.boib.ca=BOIB
@@ -127,56 +133,71 @@
 		es.caib.gusite.enlaces.contratacion.fr=Marchés publics
 		es.caib.gusite.enlaces.contratacion.de=Öffentliches Auftragswesen
 
-		es.caib.gusite.enlaces.gobiernoabierto=https://www.caib.es/sites/governobert/
-		es.caib.gusite.enlaces.gobiernoabierto.es=Gobierno abierto
-		es.caib.gusite.enlaces.gobiernoabierto.ca=Govern obert
-		es.caib.gusite.enlaces.gobiernoabierto.en=Open Government
-		es.caib.gusite.enlaces.gobiernoabierto.fr=Gouvernement ouvert
-		es.caib.gusite.enlaces.gobiernoabierto.de=Offene Regierung
-
-		es.caib.gusite.enlaces.inicio=https://www.caib.es/webgoib/inici
-		es.caib.gusite.enlaces.inicio.es=Inicio
-		es.caib.gusite.enlaces.inicio.ca=Inici
-		es.caib.gusite.enlaces.inicio.en=Home
-		es.caib.gusite.enlaces.inicio.fr=Accueil
-		es.caib.gusite.enlaces.inicio.de=Home
-
-		es.caib.gusite.enlaces.necesitas=https://www.caib.es/webgoib/ca/que-necessites
-		es.caib.gusite.enlaces.necesitas.es=¿Qué necesitas?
-		es.caib.gusite.enlaces.necesitas.ca=Què necessites?
-		es.caib.gusite.enlaces.necesitas.en=What do you need?
-		es.caib.gusite.enlaces.necesitas.fr=De quoi avez-vous besoin?
-		es.caib.gusite.enlaces.necesitas.de=Was brauchen Sie?
-
-		es.caib.gusite.enlaces.temas=https://www.caib.es/webgoib/ca/temes
-		es.caib.gusite.enlaces.temas.es=Temas
-		es.caib.gusite.enlaces.temas.ca=Temes
-		es.caib.gusite.enlaces.temas.en=Themes
-		es.caib.gusite.enlaces.temas.fr=Thèmes
-		es.caib.gusite.enlaces.temas.de=Themen
-
-		es.caib.gusite.enlaces.govern=https://www.caib.es/govern/administracio.do
-		es.caib.gusite.enlaces.govern.es=Gobierno
-		es.caib.gusite.enlaces.govern.ca=Govern
-		es.caib.gusite.enlaces.govern.en=Government
-		es.caib.gusite.enlaces.govern.fr=Gouvernement
-		es.caib.gusite.enlaces.govern.de=Regierung
-
-		es.caib.gusite.enlaces.prensa=https://www.caib.es/pidip2front/jsp/ca/convocatories/
-		es.caib.gusite.enlaces.prensa.es=Sala de prensa
-		es.caib.gusite.enlaces.prensa.ca=Sala de premsa
-		es.caib.gusite.enlaces.prensa.en=Press room
-		es.caib.gusite.enlaces.prensa.fr=Salle de presse
-		es.caib.gusite.enlaces.prensa.de=Presseraum
-		
-		
 		es.caib.gusite.enlaces.protecciondatos=https://www.caib.es/sites/protecciodedadespersonals/
 		es.caib.gusite.enlaces.protecciondatos.es=Protección de datos
 		es.caib.gusite.enlaces.protecciondatos.ca=Protecció de dades
 		es.caib.gusite.enlaces.protecciondatos.en=Data Protection
 		es.caib.gusite.enlaces.protecciondatos.fr=Protection de données
 		es.caib.gusite.enlaces.protecciondatos.de=Datenschutz
+		<!-- fin enlaces prefooter -->
+
+
+
+		<!--
+		ENLACES FOOTER GLOBALES - COLUMNA IZQUIERDA, SE PERMITEN HASTA UN MÁXIMO DE 7 ENLACES.
+		PARA QUE NO SE MUESTRE UN ENLACE, DEJAR EL LINK VACIO 
+		en el enlace si se indican los caracteres {0} , estos seran substituidos por el idioma de navegacion (ca,es,en,fr,de)-->
+
+		es.caib.gusite.enlaces.enlacepie1=https://www.caib.es/webgoib/inici
+		es.caib.gusite.enlaces.enlacepie1.es=Inicio 
+		es.caib.gusite.enlaces.enlacepie1.ca=Inici  
+		es.caib.gusite.enlaces.enlacepie1.en=Home   
+		es.caib.gusite.enlaces.enlacepie1.fr=Accueil
+		es.caib.gusite.enlaces.enlacepie1.de=Home   
 		
+		es.caib.gusite.enlaces.enlacepie2=https://www.caib.es/webgoib/ca/que-necessites
+		es.caib.gusite.enlaces.enlacepie2.es=¿Qué necesitas?          
+		es.caib.gusite.enlaces.enlacepie2.ca=Què necessites?          
+		es.caib.gusite.enlaces.enlacepie2.en=What do you need?        
+		es.caib.gusite.enlaces.enlacepie2.fr=De quoi avez-vous besoin?
+		es.caib.gusite.enlaces.enlacepie2.de=Was brauchen Sie?        
+
+		es.caib.gusite.enlaces.enlacepie3=https://www.caib.es/webgoib/ca/temes
+		es.caib.gusite.enlaces.enlacepie3.es=Temas 
+		es.caib.gusite.enlaces.enlacepie3.ca=Temes 
+		es.caib.gusite.enlaces.enlacepie3.en=Themes
+		es.caib.gusite.enlaces.enlacepie3.fr=Thèmes
+		es.caib.gusite.enlaces.enlacepie3.de=Themen
+
+		es.caib.gusite.enlaces.enlacepie4=https://www.caib.es/govern/administracio.do
+		es.caib.gusite.enlaces.enlacepie4.es=Gobierno    
+		es.caib.gusite.enlaces.enlacepie4.ca=Govern      
+		es.caib.gusite.enlaces.enlacepie4.en=Government  
+		es.caib.gusite.enlaces.enlacepie4.fr=Gouvernement
+		es.caib.gusite.enlaces.enlacepie4.de=Regierung   
+
+		es.caib.gusite.enlaces.enlacepie5=https://www.caib.es/pidip2front/jsp/ca/convocatories/
+		es.caib.gusite.enlaces.enlacepie5.es=Sala de prensa 
+		es.caib.gusite.enlaces.enlacepie5.ca=Sala de premsa 
+		es.caib.gusite.enlaces.enlacepie5.en=Press room     
+		es.caib.gusite.enlaces.enlacepie5.fr=Salle de presse
+		es.caib.gusite.enlaces.enlacepie5.de=Presseraum     
+
+		es.caib.gusite.enlaces.enlacepie6= 
+		es.caib.gusite.enlaces.enlacepie6.es=
+		es.caib.gusite.enlaces.enlacepie6.ca=
+		es.caib.gusite.enlaces.enlacepie6.en=
+		es.caib.gusite.enlaces.enlacepie6.fr=
+		es.caib.gusite.enlaces.enlacepie6.de=
+		
+		es.caib.gusite.enlaces.enlacepie7=
+		es.caib.gusite.enlaces.enlacepie7.es=
+		es.caib.gusite.enlaces.enlacepie7.ca=
+		es.caib.gusite.enlaces.enlacepie7.en=
+		es.caib.gusite.enlaces.enlacepie7.fr=
+		es.caib.gusite.enlaces.enlacepie7.de=
+		<!-- FIN ENLACES FOOTER -->
+
 
 		<!-- Translatorib -->
 		es.caib.gusite.translatorib.user=api-tib

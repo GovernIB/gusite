@@ -14,7 +14,7 @@
 /* seccions */
 
 .imc--seccions { grid-area: 1 / 1 / 1 / span 2; padding: 1em; background-color: #d7dbe0; }
-.imc--seccions ul { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0 3em; max-width: 1600px; margin: 0 auto; }
+.imc--seccions ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0 3em; max-width: 1510px; margin: 0 auto; }
 
 .imc--seccions ul a { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 12em; height: 11em; }
 
@@ -108,7 +108,7 @@
 
 	.imc--seccions { position: relative; overflow: hidden; }
 
-	.imc--seccions ul { display: inline-grid; grid-template-columns: repeat(7, 12em); transition: transform .2s cubic-bezier(0,.78,.25,1); }
+	.imc--seccions ul { display: inline-grid; grid-template-columns: repeat(6, 12em); transition: transform .2s cubic-bezier(0,.78,.25,1); }
 
 	.imc--seccions button { display: block; position: absolute; z-index: 1; bottom: 1em; }
 

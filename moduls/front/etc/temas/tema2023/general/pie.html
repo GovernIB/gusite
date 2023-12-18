@@ -42,10 +42,11 @@ Este código muestra el pie de página.
                     <a href="https://www.caib.es/sites/contractaciopublica/" class="imc--p-contractacio" th:href="@{${#gusuri.enlacePropiedadesTema('contratacion','','')}}">
                         <span th:text="@{${#gusuri.enlacePropiedadesTema('contratacion.' + lang,'','')}}">Contractació pública</span></a>
                 </li>
-                <li>
+               <!--/*  <li>
                     <a href="https://www.caib.es/sites/governobert/" class="imc--p-govern" th:href="@{${#gusuri.enlacePropiedadesTema('gobiernoabierto','','')}}">
                         <span th:text="@{${#gusuri.enlacePropiedadesTema('gobiernoabierto.' + lang,'','')}}">Govern obert</span></a>
-                </li>
+                </li> 
+                */-->
 				 <li>
                     <a href="https://www.caib.es/sites/governobert/" class="imc--p-proteccio" th:href="@{${#gusuri.enlacePropiedadesTema('protecciondatos','','')}}">
                         <span th:text="@{${#gusuri.enlacePropiedadesTema('protecciondatos.' + lang,'','')}}">peotecció de dades</span></a>
@@ -63,18 +64,21 @@ Este código muestra el pie de página.
         <div class="imc--peu-dades">
             <div class="imc--enllasos">
                 <ul>
-                    <li><a href="https://www.caib.es/webgoib/inici" th:href="@{${#gusuri.enlacePropiedadesTema('inicio','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('inicio.' + lang,'','')}}">Inici</a></li>
-                    <li><a href="https://www.caib.es/webgoib/ca/que-necessites" th:href="@{${#gusuri.enlacePropiedadesTema('necesitas','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('necesitas.' + lang,'','')}}">Què necessites?</a></li>
-                    <li><a href="https://www.caib.es/webgoib/ca/temes" th:href="@{${#gusuri.enlacePropiedadesTema('temas','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('temas.' + lang,'','')}}">Temes</a></li>
-                    <li><a href="https://www.caib.es/govern/administracio.do" th:href="@{${#gusuri.enlacePropiedadesTema('govern','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('govern.' + lang,'','')}}">Govern</a></li>
-                    <li><a href="https://www.caib.es/seucaib/" th:href="@{${#gusuri.enlacePropiedadesTema('sede','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('sede.' + lang,'','')}}">Seu electrònica</a></li>
-                    <li><a href="https://www.caib.es/pidip2front/jsp/ca/convocatories/" th:href="@{${#gusuri.enlacePropiedadesTema('prensa','','')}}"
-                           th:text="@{${#gusuri.enlacePropiedadesTema('prensa.' + lang,'','')}}">Sala de premsa</a></li>
+                           
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie1','',''))}"><a href="https://www.caib.es/webgoib/inici" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie1','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie1.' + lang,'','')}}">enlace 1</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie2','',''))}"><a href="https://www.caib.es/webgoib/ca/que-necessites" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie2','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie2.' + lang,'','')}}">enlace 2</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie3','',''))}"><a href="https://www.caib.es/webgoib/ca/temes" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie3','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie3.' + lang,'','')}}">enlace 3</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie4','',''))}"><a href="https://www.caib.es/govern/administracio.do" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie4','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie4.' + lang,'','')}}">enlace 4</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie5','',''))}"><a href="https://www.caib.es/seucaib/" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie5','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie5.' + lang,'','')}}">enlace 5</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie6','',''))}"><a href="https://www.caib.es/pidip2front/jsp/ca/convocatories/" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie6','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie6.' + lang,'','')}}">enlace 6</a></li>
+                    <li th:if="${! #strings.isEmpty(#gusuri.enlacePropiedadesTema('enlacepie7','',''))}"><a href="https://www.caib.es/pidip2front/jsp/ca/convocatories/" th:href="@{${#gusuri.enlacePropiedadesTema('enlacepie7','{0}',lang)}}"
+                           th:text="@{${#gusuri.enlacePropiedadesTema('enlacepie7.' + lang,'','')}}">enlace 7</a></li>
                 </ul>
             </div>
             <div class="imc--enllasos">
@@ -92,7 +96,7 @@ Este código muestra el pie de página.
 
             <div class="imc--info">
                 <div th:if="${direccion}!=null" th:remove="tag">
-                    <p>
+                    <p class="imc--quitarenlaces">
                     <div th:utext="${direccion}" th:remove="tag">Dirección y Dominio</div>
                     </p>
                 </div>
@@ -135,16 +139,22 @@ Este código muestra el pie de página.
         <div class="imc--peu-enllasos">
             <strong>© Govern Illes Balears</strong>
             <ul>
-                <li><a th:href="@{${#gusuri.mapa(MVS_microsite, MVS_idioma)}}"><span th:text="#{pie.mapaweb}">Mapa web</span>
-                    </a></li>
-                <li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('avislegal','{0}',lang)}}"
-                      ><span th:text="#{pie.avislegal}"></span></a></li>
-                <li>
+            	<li>
                     <a href="https://www.caib.es/webgoib/contacte/" target="_blank">
                         <span th:text="#{micro.es.contacto}"></span>
                     </a>
                 </li>
-
+                <li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('avislegal','{0}',lang)}}"
+                      ><span th:text="#{pie.avislegal}"></span></a>
+                      </li>
+                <li><a th:href="@{${#gusuri.mapa(MVS_microsite, MVS_idioma)}}"><span th:text="#{pie.mapaweb}">Mapa web</span>
+                    </a>
+                </li>
+                <li><a href="#" th:href="@{${#gusuri.enlacePropiedadesTema('accessibilitat','{0}',lang)}}"
+                       th:title="#{cabecera.accessibilitat}"><span
+                            th:text="#{cabecera.accessibilitat}">Accessibilitat</span>
+                 </a>                
+                </li>
             </ul>
         </div>
     </footer>

@@ -43,7 +43,7 @@ $.fn.appCapTitol = function(options) {
 					return;
 				}
 
-				if ( contador >= 6 ) {
+				if ( contador >= 15 ) {
 					clearTimeout(resizeFont);
 					return;
 				}
@@ -109,25 +109,24 @@ $.fn.appCapTitol = function(options) {
 		revisa();
 
 		// resize
-
-		var resizeAppCapTitol;
-
-	    imc_finestra
-	        .on('resize', function(e) {
-	            clearTimeout(resizeAppCapTitol);
-	            resizeAppCapTitol = setTimeout(function() {
-
-	                imc_body
-						.appCapTitol({ desde: "resize" });
-
-	            }, 50);
-	        });
-		
+		if(options==undefined ){
+			var resizeAppCapTitol;
+	
+		    imc_finestra
+		        .on('resize', function(e) {
+		            clearTimeout(resizeAppCapTitol);
+		            resizeAppCapTitol = setTimeout(function() {
+	
+		                imc_body
+							.appCapTitol({ desde: "resize" });
+	
+		            }, 50);
+		        });
+		}
 	});
 
 	return this;
 }
-
 
 /* cercador */
 
@@ -406,18 +405,19 @@ $.fn.appCapMenu = function(options) {
 
 		altura();
 
-		var resizealtura;
-
-	    imc_finestra
-	        .on('resize.resizealtura', function(e) {
-	            clearTimeout(resizealtura);
-	            resizealtura = setTimeout(function() {
-
-	                altura();
-
-	            }, 100);
-	        });	
-
+		if(options==undefined ){
+			var resizealtura;
+	
+		    imc_finestra
+		        .on('resize.resizealtura', function(e) {
+		            clearTimeout(resizealtura);
+		            resizealtura = setTimeout(function() {
+	
+		                altura();
+	
+		            }, 100);
+		        });	
+		}
 		// events
 		
 		element
@@ -554,20 +554,19 @@ $.fn.appIdioma = function(options) {
 		revisa();
 
 		// resize
-
-		var resizeAppIdioma;
-
-	    imc_finestra
-	        .on('resize', function(e) {
-	            clearTimeout(resizeAppIdioma);
-	            resizeAppIdioma = setTimeout(function() {
-
-	                imc_body
-						.appIdioma({ desde: "resize" });
-
-	            }, 50);
-	        });
-
+		if(options==undefined ){
+			var resizeAppIdioma;
+		    imc_finestra
+		        .on('resize', function(e) {
+		            clearTimeout(resizeAppIdioma);
+		            resizeAppIdioma = setTimeout(function() {
+	
+		                imc_body
+							.appIdioma({ desde: "resize" });
+	
+		            }, 50);
+		        });
+		}
 		// events
 		
 		element

@@ -178,18 +178,20 @@ $.fn.appPeuSeccions = function(options) {
 
 		// resize
 
-		var resizeAppPeuSeccions;
-
-	    imc_finestra
-	        .on('resize', function(e) {
-	            clearTimeout(resizeAppPeuSeccions);
-	            resizeAppPeuSeccions = setTimeout(function() {
-
-	                imc_body
-						.appPeuSeccions({ desde: "resize" });
-
-	            }, 150);
-	        });
+		if(options==undefined ){
+			var resizeAppPeuSeccions;
+	
+		    imc_finestra
+		        .on('resize', function(e) {
+		            clearTimeout(resizeAppPeuSeccions);
+		            resizeAppPeuSeccions = setTimeout(function() {
+	
+		                imc_body
+							.appPeuSeccions({ desde: "resize" });
+	
+		            }, 150);
+		        });
+		}
 
 	});
 	return this;

@@ -116,6 +116,8 @@ button {
     background:rgb(203, 2, 62) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
 }
 
+/* ESTILOS PARA CONTENIDO HTML*/
+
 main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4 {
     font-size:revert;
 }
@@ -124,6 +126,17 @@ main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h
     margin:revert;
     padding: revert;
     list-style: revert;   
+}
+
+main.imc--pag div.imc--contenido-html img{
+    all:revert;
+    max-width: 100%;    
+}
+
+p.imc--quitarenlaces a {
+    pointer-events: none; 
+    cursor: default;
+    display: block;
 }
 
 /* media */
