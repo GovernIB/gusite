@@ -129,7 +129,7 @@ main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h
 }
 
 main.imc--pag div.imc--contenido-html img{
-    all:revert;
+	height: auto;
     max-width: 100%;    
 }
 
