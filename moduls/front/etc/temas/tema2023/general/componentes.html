@@ -157,13 +157,13 @@
        </div>
 	</div>
 
-    <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion == 'L'}">
-		<div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="imc--llista" th:if="${MVS_componente.visualizacion == 'L'}">
+    <div th:fragment="componenteListaEnlaces" th:if="${MVS_componente.visualizacion != 'B'}">
+		<div th:id="'elementoEnlaces'+${MVS_componente.id}"  class="imc--llista" th:if="${MVS_componente.visualizacion != 'B'}">			
             <style gus:replace="::componenteStyle"></style>
             <h2 th:text="${nombre_elemento == null}? '[ empty ]' : ${nombre_elemento}">Nombre del elemento</h2>
             <ul id="noticiesLlistatLinks" th:if="${lista_noticias != null and #lists.size(lista_noticias) != 0}">
                 <li th:each="noticia,iterStat : ${lista_noticias}" th:if="${noticia.traduce.titulo}!=null">
-                    <a href="#" th:if="${noticia.traduce.urlnom}!=null" th:href="@{${noticia.traduce.laurl}}">
+                    <a href="#" th:if="${noticia.traduce.titulo}!=null" th:href="@{${noticia.traduce.laurl}}">
                         <!--<img th:src="@{${MVS_uriTema + 'files/enlace.png'}}" src="../files/enlace.png" alt=""/>-->
                         <div>
                             <p th:text="${noticia.traduce.titulo}" class="imc--titol">

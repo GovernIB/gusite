@@ -139,6 +139,32 @@ p.imc--quitarenlaces a {
     display: block;
 }
 
+
+/* Estilos especificos para tablas */
+
+table.oldstyletable{
+   border:solid 2px #555;
+   width:revert;
+}
+
+table.oldstyletable tbody tr{
+    background-color:revert;
+}
+
+table.oldstyletable tbody tr td{
+  border:solid 2px #555;
+  padding: revert;
+  vertical-align: revert;
+}
+
+table.oldstyletable tbody tr td p{
+  margin: 0;
+  padding:0;
+}
+ /* fin estilos tabla*/
+
+
+
 /* media */
 
 @media only screen and (max-width : 1400px) {
@@ -154,6 +180,12 @@ p.imc--quitarenlaces a {
         gap: 1em !important;
         padding: 2em 2em 2em 12em !important;
     }
+    
+     /* ajustar el memu para que ocupe solo el alto necesario*/
+     div[data-menu="vertical"] .imc--continguts[data-menu="vertical"] .imc--me-menu{
+        height: fit-content;
+     }
+    
 }
 
 @media only screen and (max-width : 850px) {

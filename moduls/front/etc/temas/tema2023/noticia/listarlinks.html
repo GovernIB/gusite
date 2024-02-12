@@ -28,7 +28,7 @@ Listado de enlaces
             </div>
             <ul id="noticiesLlistatLinks">
                 <li th:each="link,iterStat : ${MVS_listado}" th:if="${link.traduce.titulo}!=null">
-                    <a href="#" th:if="${link.traduce.urlnom}!=null" th:href="@{${link.traduce.laurl}}">
+                    <a href="#" th:if="${link.traduce.titulo}!=null" th:href="@{${link.traduce.laurl}}">
                         <!--<img th:src="@{${MVS_uriTema + 'files/enlace.png'}}" src="../files/enlace.png" alt=""/>-->
                         <div>
                             <p th:text="${link.traduce.titulo}" class="imc--titol">
