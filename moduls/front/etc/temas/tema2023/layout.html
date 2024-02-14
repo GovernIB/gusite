@@ -36,9 +36,9 @@ th:lang-xmllang="${lang}">
     </script>
     </script>
 
-	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
-	<link rel="apple-touch-icon-precomposed" th:href="@{/favicon.png}" type="image/x-ico" />
-	<link rel="icon" href="imgs/favicon/favicon.png" th:href="@{/favicon.png}" type="image/x-ico" />
+	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" th:href="@{${MVS_uriTema + 'files/favicon.ico'}}" type="image/x-icon" /><![endif]-->
+	<link rel="apple-touch-icon-precomposed" th:href="@{${MVS_uriTema + 'files/favicon.png'}}" type="image/x-ico" />
+	<link rel="icon" href="imgs/favicon/favicon.png" th:href="@{${MVS_uriTema + 'files/favicon.png'}}" type="image/x-ico" />
 
 
 	<link rel="stylesheet" media="screen" href="css/imc-goib-gusite--app.css"	 		th:href="@{${MVS_uriTema + 'files/imc-goib-gusite--app.css'}}" />

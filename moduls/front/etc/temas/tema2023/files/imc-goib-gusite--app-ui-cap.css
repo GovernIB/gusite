@@ -4,14 +4,14 @@
 
 /* cap */
 
-header.imc--cap { display: flex; align-items: center; position: sticky; z-index: 10; top: 0; height: 4.5em; padding: .7em 1.2em; background-color: #fff; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important; }
+header.imc--cap { display: flex; align-items: center; position: sticky; z-index: 10; top: 0; height: 6em; padding: .7em 1.2em; background-color: #fff; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important; }
 
 
 
 /* app nom i logos */
 
-header .imc--goib-logo { width: 12em; height: 3em; margin-right: 1.5em; border-right: 1px solid #ccc; }
-header .imc--goib-logo::before { content: ""; display: inline-block; width: 11em; height: 3em; background: transparent url(logo-goib-h.svg) no-repeat left center; }
+header .imc--goib-logo { width: 12em; height: 3.1em; margin-right: 1.5em; border-right: 1px solid #ccc; padding-left: .1em;}
+header .imc--goib-logo::before { content: ""; display: inline-block; width: 11em; height: 3.1em; background: transparent url(logo-goib-h.png) no-repeat left center; background-size: 9.2em;}
 header .imc--goib-logo span { position: absolute; top: -999em; left: -999em; }
 
 
@@ -36,19 +36,19 @@ header .imc--idioma button { position: relative; top: 1px; background-color: tra
 header .imc--idioma button span { color: var(--color-primari); }
 
 html[lang="ca"] header .imc--idioma .imc--llista button[data-idioma="ca"] { cursor: default; border-color: var(--font-color-primari); pointer-events: none; }
-html[lang="ca"] header .imc--idioma .imc--llista button[data-idioma="ca"] span { color: var(--font-color-primari); }
+html[lang="ca"] header .imc--idioma .imc--llista button[data-idioma="ca"] span { color: var(--font-color-primari); font-weight: bold; }
 
 html[lang="es"] header .imc--idioma .imc--llista button[data-idioma="es"] { cursor: default; border-color: var(--font-color-primari); pointer-events: none; }
-html[lang="es"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); }
+html[lang="es"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); font-weight: bold;}
 
 html[lang="en"] header .imc--idioma .imc--llista button[data-idioma="es"] { cursor: default; border-color: var(--font-color-primari); pointer-events: none; }
-html[lang="en"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); }
+html[lang="en"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); font-weight: bold;}
 
 html[lang="fr"] header .imc--idioma .imc--llista button[data-idioma="es"] { cursor: default; border-color: var(--font-color-primari); pointer-events: none; }
-html[lang="fr"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); }
+html[lang="fr"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); font-weight: bold;}
 
 html[lang="de"] header .imc--idioma .imc--llista button[data-idioma="es"] { cursor: default; border-color: var(--font-color-primari); pointer-events: none; }
-html[lang="de"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); }
+html[lang="de"] header .imc--idioma .imc--llista button[data-idioma="es"] span { color: var(--font-color-primari); font-weight: bold;}
 
 header .imc--idioma > button { white-space: nowrap; }
 
@@ -380,7 +380,11 @@ div[data-menu="vertical"] .imc--continguts .imc--me-menu .imc--m-principal ul a 
 @media only screen and (max-width : 650px) {
 
 	header .imc--goib-logo { width: 4em; margin-right: 1em; }
-	header .imc--goib-logo::before { width: 3em; background-image: url(logo-goib-v.svg); }
+	header .imc--goib-logo::before { width: 3em; 
+	/*background-image: url(logo-goib-v.svg);*/
+	background-image: url(logo-goib-v.png);
+    background-size: 2.7em;	
+	 }
 
 	header .imc--idioma,
 	header .imc--idioma .imc--llista { display: none; }

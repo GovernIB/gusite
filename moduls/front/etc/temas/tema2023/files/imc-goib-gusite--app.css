@@ -18,7 +18,11 @@ button::-moz-focus-inner { padding: 0; border: 0; }
     --font-principal: var(--font), sans-serif;
     --font-color-primari: #333;
 
-    --color-primari: rgb(203, 2, 62);
+ /*   --color-primari: rgb(203, 2, 62);
+     --color-secundari: #3b8e5d;
+    --color-terciari: #3b8e5d;
+ */
+ 	--color-primari: #004B99;
     --color-secundari: #3b8e5d;
     --color-terciari: #3b8e5d;
 

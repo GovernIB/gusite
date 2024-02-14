@@ -13,12 +13,12 @@
 
 /* seccions */
 
-.imc--seccions { grid-area: 1 / 1 / 1 / span 2; padding: 1em; background-color: #d7dbe0; }
+.imc--seccions { grid-area: 1 / 1 / 1 / span 2; padding: 1em; background-color: #CACACA; }
 .imc--seccions ul { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0 3em; max-width: 1510px; margin: 0 auto; }
 
 .imc--seccions ul a { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; max-width: 12em; height: 11em; }
 
-.imc--seccions ul a::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent url() no-repeat center center / 90% auto; opacity: 0.15; }
+.imc--seccions ul a::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent url() no-repeat center center / 70% auto; opacity: 0.3; }
 
 .imc--seccions ul a.imc--p-boib::before { background-image: url(ico_boib.png); }
 .imc--seccions ul a.imc--p-transparencia::before { background-image: url(ico_transparencia.png); }

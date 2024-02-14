@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 124 124" xml:space="preserve">
-	<g>
-		<path d="M112,6H12C5.4,6,0,11.4,0,18s5.4,12,12,12h100c6.6,0,12-5.4,12-12S118.6,6,112,6z"/>
-		<path d="M112,50H12C5.4,50,0,55.4,0,62c0,6.6,5.4,12,12,12h100c6.6,0,12-5.4,12-12C124,55.4,118.6,50,112,50z"/>
-		<path d="M112,94H12c-6.6,0-12,5.4-12,12s5.4,12,12,12h100c6.6,0,12-5.4,12-12S118.6,94,112,94z"/>
-	</g>
+<!--
+* SPDX-FileCopyrightText: © 2020 Liferay, Inc. <https://liferay.com>
+* SPDX-FileCopyrightText: © 2020 Contributors to the project Clay <https://github.com/liferay/clay/graphs/contributors>
+*
+* SPDX-License-Identifier: BSD-3-Clause
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	<path class="lexicon-icon-outline bars-line-top" d="M480 64h-448c-17.664 0-32-14.336-32-32v0c0-17.664 14.336-32 32-32h448c17.664 0 32 14.336 32 32v0c0 17.664-14.336 32-32 32z"></path>
+	<path class="lexicon-icon-outline bars-line-middle" d="M480 288h-448c-17.664 0-32-14.336-32-32v0c0-17.664 14.336-32 32-32h448c17.664 0 32 14.336 32 32v0c0 17.664-14.336 32-32 32z"></path>
+	<path class="lexicon-icon-outline bars-line-bottom" d="M480 512h-448c-17.664 0-32-14.336-32-32v0c0-17.664 14.336-32 32-32h448c17.664 0 32 14.336 32 32v0c0 17.664-14.336 32-32 32z"></path>
 </svg>

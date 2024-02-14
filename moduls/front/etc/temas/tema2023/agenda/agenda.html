@@ -11,7 +11,6 @@ Listado de eventos de la agenda para una fecha
       gus:decorator="layout" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
       th:lang-xmllang="${lang}">
 <head>
-    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
     <title
             th:if="(${MVS_micrositetitulo} !=null) and (${MVS_agenda_diaevento} !=null)"
             th:text="(${MVS_micrositetitulo} + '-' + #{agenda.eventos} + ' ' +${MVS_agenda_diaevento})"></title>

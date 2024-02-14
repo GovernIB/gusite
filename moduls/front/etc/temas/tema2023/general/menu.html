@@ -7,7 +7,6 @@
       th:lang="${lang}"
       th:lang-xmllang="${lang}">
 <head>
-    <link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
@@ -73,17 +72,17 @@
         <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
     </div>
     <!--/* Caso para cuando hay un contenido a resaltar */-->
-    <div th:if="${MVS_menu_cont_notic}!=null" th:with="idcontenido=${MVS_menu_cont_notic}"
+    <div th:if="${MVS_menu_cont_notic}!=null and ${MVS_menu_cont_notic}!=''" th:with="idcontenido=${MVS_menu_cont_notic}"
          th:type="java.lang.String" th:remove="tag">
         <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
     </div>
     <!--/* Caso para cuando hay un contenido a resaltar de encuestas */-->
-    <div th:if="${MVS_idContenido}!=null" th:with="idcontenido=${MVS_idContenido}" th:type="java.lang.String"
+    <div th:if="${MVS_idContenido}!=null and ${MVS_idContenido}!=''" th:with="idcontenido=${MVS_idContenido}" th:type="java.lang.String"
          th:remove="tag">
         <div gus:replace="general/menu :: contenido" th:remove="tag"></div>
     </div>
     <!--/* Caso para cuando no hay contenido ni noticia definido */-->
-    <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null) and (${MVS_idContenido}==null or ${MVS_idContenido}=='')"
+    <div th:if="(${MVS_contenido}==null) and (${MVS_menu_cont_notic}==null or ${MVS_menu_cont_notic}=='') and (${MVS_idContenido}==null or ${MVS_idContenido}=='')"
          th:with="idcontenido='-1'" th:type="java.lang.Object" th:remove="tag">
         <div gus:replace="general/menu :: contenido" th:remove="tag">
         </div>

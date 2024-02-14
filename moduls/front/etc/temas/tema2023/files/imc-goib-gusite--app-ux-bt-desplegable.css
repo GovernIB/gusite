@@ -31,7 +31,7 @@
     width: 100%;
     height: 4em;
     font-weight: normal;
-    color: #cc073c;
+    color: var(--color-primari);
     text-align: left;
     text-transform: uppercase;
     vertical-align: middle;
@@ -45,7 +45,7 @@
 .imc--bt-desplegable button:hover,
 .imc--bt-desplegable button:focus,
 .imc--bt-desplegable button:active {
-    background-color: rgba(204,7,60,1);
+    background-color: var(--color-primari);
 }
 
 .imc--bt-desplegable button {
@@ -83,7 +83,7 @@
     padding: .5em .5em !important;
     margin: 0 !important;
     background-color: rgba(255,255,255,1);
-    border: 2px solid rgba(204,7,60,1);
+    border: 2px solid var(--color-primari);
     visibility: hidden;
     opacity: 0;
 }
@@ -99,7 +99,7 @@
 }
 
 .imc--bt-desplegable.imc--obert button {
-    border: 2px solid rgba(204,7,60,1);
+    border: 2px solid var(--color-primari);
 }
 
 .imc--bt-desplegable.imc--obert ul {
@@ -126,7 +126,7 @@
 
 .imc--bt-desplegable ul a {
     display: block;
-    color: rgba(204,7,60,1);
+    color: var(--color-primari);
     padding: .3em 1em;
 }
 
@@ -134,7 +134,7 @@
 .imc--bt-desplegable ul a:focus,
 .imc--bt-desplegable ul a:active {
     color: #fff;
-    background-color: rgba(204,7,60,1);
+    background-color: var(--color-primari);
 
 }
 
@@ -153,7 +153,7 @@
 .imc--bt-desplegable ul::-webkit-scrollbar-thumb {
     -webkit-border-radius: .5em;
     border-radius: .5em;
-    background: #cc073c;
+    background: var(--color-primari);
 }
 
 .imc--bt-desplegable ul::-webkit-scrollbar-thumb:window-inactive {

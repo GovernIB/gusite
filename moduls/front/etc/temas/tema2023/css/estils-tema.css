@@ -29,7 +29,7 @@ button {
     min-height: 2.3em;
     text-align: left;
     padding: .3rem .7rem .3rem .7rem;
-    background-color: rgb(203, 2, 62);
+    background-color: var(--color-primari);
     border: none;
     cursor: pointer;
     color: #fff;
@@ -58,6 +58,11 @@ button {
 .imc--e-resultats li{
     list-style: disc;
     padding-left: 1em;
+    margin-left: 1em;
+}
+
+.imc--e-resultats ul{
+    margin:.5em;
 }
 
 .imc--e-resultats img {
@@ -71,7 +76,7 @@ button {
     min-height: 2.3em;
     text-align: left;
     padding: .5rem .7rem .5rem .7rem;
-    background-color: rgb(203, 2, 62);
+    background-color: var(--color-primari);
     border: none;
     cursor: pointer;
     color: #fff;
@@ -113,7 +118,7 @@ button {
     will-change: background-color, transform;
     transition: background-color .2s ease-out;
     width: auto !important;
-    background:rgb(203, 2, 62) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
+    background:var(--color-primari) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
 }
 
 /* ESTILOS PARA CONTENIDO HTML*/
@@ -163,7 +168,18 @@ table.oldstyletable tbody tr td p{
 }
  /* fin estilos tabla*/
 
+/* ajustar el memu para que ocupe solo el alto necesario*/
+div[data-menu="vertical"] .imc--continguts[data-menu="vertical"] .imc--me-menu{
+   height: fit-content;
+}
 
+
+/*retornamos a las listas que empiezan por la clase imc-- sus atributos base*/
+main.imc--pag div.imc--contenido-html div[class^=imc--] li  {
+  margin: 0;
+  padding: .8em;
+  list-style: none;
+}
 
 /* media */
 
@@ -180,11 +196,6 @@ table.oldstyletable tbody tr td p{
         gap: 1em !important;
         padding: 2em 2em 2em 12em !important;
     }
-    
-     /* ajustar el memu para que ocupe solo el alto necesario*/
-     div[data-menu="vertical"] .imc--continguts[data-menu="vertical"] .imc--me-menu{
-        height: fit-content;
-     }
     
 }
 

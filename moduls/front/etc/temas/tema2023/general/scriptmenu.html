@@ -11,7 +11,6 @@ Variables:
 	xmlns:th="http://www.thymeleaf.org" th:with="lang=${#strings.toLowerCase(MVS_idioma)}" th:lang="${lang}"
 	th:lang-xmllang="${lang}">
 <head>
-	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-ico"/>
 	<script type="text/javascript" th:if="${MVS_contenido}!=null and ${MVS_microsite}!=null"
 	th:remove="(${MVS_microsite.tipomenu}=='2') ? all : none">
 		var nodo='p'+'${MVS_contenido.id}';

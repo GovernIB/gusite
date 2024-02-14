@@ -38,12 +38,13 @@ $.fn.appCapTitol = function(options) {
 			,accioAnterior = false
 			,revisa = function(accio) {
 
-				if ( parseInt( titol_text.css("font-size"), 10 ) >= 29 ) {
+			/*	if ( parseInt( titol_text.css("font-size"), 10 ) >= 29 ) {
 					clearTimeout(resizeFont);
 					return;
-				}
+				}*/
 
 				if ( contador >= 15 ) {
+					contador=0;
 					clearTimeout(resizeFont);
 					return;
 				}
@@ -82,26 +83,31 @@ $.fn.appCapTitol = function(options) {
 			}
 			,ajusta = function(accio) {
 
-				contador++;
+				contador++;							
 
 				font_amp_ = parseInt( titol_text.css("font-size"), 10 );
+				
+				
+				if (accio === "reduix" || font_amp_ < 29 ){
+				//el tamanyo maximo de fuente es 29, si nos pasamos ho hacemos nada	
+					
+					font_amplaria = (accio === "reduix") ? font_amp_ - 1 : font_amp_ + 1;
+	
+					titol_text
+						.css("font-size", font_amplaria + "px");
+	
+					clearTimeout(resizeFont);
+	
+					resizeFont = setTimeout(
+						function() {
+	
+							revisa(accio);
+	
+						}
+						,50
+					);
 
-				font_amplaria = (accio === "reduix") ? font_amp_ - 1 : font_amp_ + 1;
-
-				titol_text
-					.css("font-size", font_amplaria + "px");
-
-				clearTimeout(resizeFont);
-
-				resizeFont = setTimeout(
-					function() {
-
-						revisa(accio);
-
-					}
-					,50
-				);
-
+				}
 			};
 
 		// revisa

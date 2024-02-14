@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.999 511.999" xml:space="preserve" preserveAspectRatio="xMinYMid">
+<!--
+* SPDX-FileCopyrightText: © 2020 Liferay, Inc. <https://liferay.com>
+* SPDX-FileCopyrightText: © 2020 Contributors to the project Clay <https://github.com/liferay/clay/graphs/contributors>
+*
+* SPDX-License-Identifier: BSD-3-Clause
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 	<g fill="#ffffff">
-		<path d="M508.874,478.708L360.142,329.976c28.21-34.827,45.191-79.103,45.191-127.309c0-111.75-90.917-202.667-202.667-202.667
-			S0,90.917,0,202.667s90.917,202.667,202.667,202.667c48.206,0,92.482-16.982,127.309-45.191l148.732,148.732
-			c4.167,4.165,10.919,4.165,15.086,0l15.081-15.082C513.04,489.627,513.04,482.873,508.874,478.708z M202.667,362.667
-			c-88.229,0-160-71.771-160-160s71.771-160,160-160s160,71.771,160,160S290.896,362.667,202.667,362.667z"/>
+		<path class="lexicon-icon-outline" d="M499.2,455.5L377.7,333.4c146-241.1-148.1-435.8-318.2-274c-165.1,185.9,41.6,460.6,273.4,319l121.5,118.8C489.5,535.8,534.4,490.8,499.2,455.5z M206.2,63.6c191.9,0,198.1,289,0,289C13.3,352.6,18.8,63.6,206.2,63.6z"/>
 	</g>
 </svg>
