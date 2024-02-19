@@ -124,18 +124,26 @@ button {
 /* ESTILOS PARA CONTENIDO HTML*/
 
 main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4 {
-    font-size:revert;
+  /*  font-size:revert;*/
 }
 
-main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4, main.imc--pag div.imc--contenido-html p, main.imc--pag div.imc--contenido-html ul, main.imc--pag div.imc--contenido-html ol, main.imc--pag div.imc--contenido-html li{
+main.imc--pag div.imc--contenido-html h1,
+main.imc--pag div.imc--contenido-html h2,
+main.imc--pag div.imc--contenido-html h3, 
+main.imc--pag div.imc--contenido-html h4, 
+main.imc--pag div.imc--contenido-html p, 
+main.imc--pag div.imc--contenido-html ul, 
+main.imc--pag div.imc--contenido-html ol, 
+main.imc--pag div.imc--contenido-html li,
+main.imc--pag > div.imc--llista > ul >li >  div > div p{
     margin:revert;
     padding: revert;
     list-style: revert;   
 }
 
 main.imc--pag div.imc--contenido-html img{
-	height: auto;
-    max-width: 100%;    
+ /* 	height: auto;
+  max-width: 100%;    */
 }
 
 p.imc--quitarenlaces a {
@@ -152,7 +160,7 @@ table.oldstyletable{
    width:revert;
 }
 
-table.oldstyletable tbody tr{
+table.oldstyletable tbody tr, table.oldstyletableclean tbody tr{
     background-color:revert;
 }
 
@@ -180,6 +188,14 @@ main.imc--pag div.imc--contenido-html div[class^=imc--] li  {
   padding: .8em;
   list-style: none;
 }
+
+/* retornamos las listas a los contenidos de usuario*/
+main.imc--pag div.imc--contenido-html div[class^=imc--] li div div div li  {
+  list-style: revert;
+}
+
+
+
 
 /* media */
 

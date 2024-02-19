@@ -23,8 +23,7 @@
             <div gus:replace="noticia/modulos :: infoCursor" th:remove="tag">Listado info cursor</div>
                 <ul id="noticiesLlistat">
                     <li th:each="elementoListado : ${MVS_listado}" th:if="${elementoListado.traduce.titulo}!=null">
-                        <a href="noticia.html"
-                           th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,elementoListado,MVS_menu_cont_notic)}}">
+                        <div class="link" >
                             <div th:if="${elementoListado.imagen} !=null" th:remove="tag">
                                 <img th:src="@{${#gusuri.archivopub(MVS_microsite,elementoListado.imagen)}}" alt=""/>
                             </div>
@@ -32,15 +31,17 @@
                                 <span class="imc--data" th:if="${elementoListado.fpublicacion}!=null"
                                 th:with="anoPublicacion=${#strings.substring(elementoListado.fpublicacion,0,4)},mesPublicacion=${#strings.substring(elementoListado.fpublicacion,5,7)},diaPublicacion=${#strings.substring(elementoListado.fpublicacion,8,10)},publicacionFecha=${#calendars.create(anoPublicacion,mesPublicacion,diaPublicacion)},publicacion=${#calendars.format(publicacionFecha, 'dd/MM/yyyy')}"
                                 th:text="${publicacion}"></span>
-                                <p th:text="${elementoListado.traduce.titulo}" class="imc--titol">
-                                    Titulo
+                                <p class="imc--titol">
+	                                <a href="noticia.html" 
+	                          		   th:href="@{${#gusuri.noticia(MVS_microsite,MVS_idioma,elementoListado,MVS_menu_cont_notic)}}" 
+	                          		   th:text="${elementoListado.traduce.titulo}">Titulo</a>                                   
                                 </p>
                                 <p class="imc--subtitol" th:if="${elementoListado.traduce.subtitulo}!=null"
-                                   th:text="'[' + ${elementoListado.traduce.subtitulo} + ']'">
+                                   th:utext="'[' + ${elementoListado.traduce.subtitulo} + ']'">
                                     Subtitulo
                                 </p>
                             </div>
-                        </a>
+                        </div>
                     </li>
                 </ul>
             <div gus:replace="noticia/modulos :: paginacio">

@@ -96,7 +96,7 @@ a.imc--img { display: inline-flex; justify-content: center; align-items: center;
 
 /* botons */
 
-button { display: inline-block; vertical-align: middle; min-height: 2.3em; font: normal 1em var(--font-principal); text-align: left; padding: .3rem .7rem .3rem .7rem; background-color: var(--color-primari); border: none; cursor: pointer; will-change: background-color, transform; transition: background-color .2s ease-out; }
+button { display: inline-block; vertical-align: middle; min-height: 2.3em; font: normal 1em var(--font-principal); text-align: left; padding: .3rem .7rem .3rem .7rem; background-color: var(--color-primari); border: none; cursor: pointer; will-change: background-color, transform; transition: background-color .2s ease-out; color: var(--fons-color-primari); }
 
 button span,
 button strong { display: inline-block; vertical-align: middle; color: #fff; line-height: 1.6em; }

@@ -7,13 +7,22 @@
 .imc--llista > p.imc--info { margin-bottom: 1em; }
 
 .imc--llista li { padding-bottom: 1em; }
-.imc--llista li a { display: flex; gap: 2em; padding: 1em 1.5em; border: 1px solid #ccc; }
+.imc--llista li > a, .imc--llista li > div.link { display: flex; gap: 2em; padding: 1em 1.5em; border: 1px solid #ccc; }
 
-.imc--llista li a img { max-width: 10em; }
+.imc--llista li > a img, .imc--llista li > div.link img { max-width: 10em; }
 
-.imc--llista li a span { display: block; font-size: .8em; color: #333; padding-bottom: .4em; }
-.imc--llista li a p.imc--titol { font-size: 1.2em; line-height: 1.1em; }
-.imc--llista li a p.imc--subtitol { color: #333; }
+.imc--llista li > a span, .imc--llista li > div.link span { display: block; font-size: .8em; color: #333; padding-bottom: .4em; }
+.imc--llista li > a p.imc--titol, .imc--llista li > div.link p.imc--titol { font-size: 1.2em; line-height: 1.1em; }
+.imc--llista li > a p.imc--subtitol, .imc--llista li > div.link p.imc--subtitol { color: #333; }
+
+
+.imc--llista li > div.link { display: flex; gap: 2em; padding: 1em 1.5em; border: 1px solid #ccc; }
+
+.imc--llista li > div.link img { max-width: 10em; }
+
+.imc--llista li > div.link span { display: block; font-size: .8em; color: #333; padding-bottom: .4em; }
+.imc--llista li > div.link p.imc--titol { font-size: 1.2em; line-height: 1.1em; }
+.imc--llista li > a p.imc--subtitol { color: #333; }
 
 
 

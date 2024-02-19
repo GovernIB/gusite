@@ -4,7 +4,7 @@
 
 /* formulari */
 
-.imc--formulari .imc--f-el { float: left; padding: 0 2em 1em 0; }
+.imc--formulari .imc--f-el { /*float: left;*/ padding: 0 2em 1em 0; }
 .imc--formulari .imc--f-el.imc--f-fi-linia { padding-right: 0; }
 
 .imc--formulari .imc--f-el .imc--f-etiqueta { padding-bottom: .3em; }

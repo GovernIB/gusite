@@ -26,25 +26,21 @@ Listado de enlaces
                 Listado info cursor
             </div>
             <ul id="noticiesLlistatLinks">
-                <li th:each="link,iterStat : ${MVS_listado}" th:if="${link.traduce.titulo}!=null">
-                    <a href="#" th:if="${link.traduce.titulo}!=null" th:href="@{${link.traduce.laurl}}">
-                        <!--<img th:src="@{${MVS_uriTema + 'files/enlace.png'}}" src="../files/enlace.png" alt=""/>-->
+                <li th:each="noticia,iterStat : ${MVS_listado}" th:if="${noticia.traduce.titulo}!=null">                                     
+                    <div class="link">                       
                         <div>
-                            <p th:text="${link.traduce.titulo}" class="imc--titol">
-                                Titulo
+                       	 	<p th:if="${noticia.traduce.titulo}!=null and ${noticia.traduce.titulo}!=''" class="imc--titol" >
+                            	<a th:if="${noticia.traduce.laurl}!=null and ${noticia.traduce.laurl}!=''" th:href="@{${noticia.traduce.laurl}}" th:text="${noticia.traduce.titulo}" >                                
+                                    Titulo                                
+                           		</a>
+                           		<div th:if="${noticia.traduce.laurl}==null or ${noticia.traduce.laurl}==''" th:text="${noticia.traduce.titulo}" th:remove="tag" >Titulo</div>                          		                           		
                             </p>
-                            <div th:if="${link.traduce.texto} !=null" th:utext="${link.traduce.texto}" class="imc--subtitol">
+                                                                        
+                            <div th:if="${noticia.traduce.texto} !=null and ${noticia.traduce.texto} !=''" th:utext="${noticia.traduce.texto}" class="imc--subtitol">
                                 traduce texto
                             </div>
-
                         </div>
-                        <!--<div th:if="${link.traduce.urlnom}!=null" th:remove="tag">
-                            <a href="#" th:if="${link.traduce.urlnom}!=null" th:href="@{${link.traduce.laurl}}"
-                               target="_blank" th:utext="${link.traduce.urlnom}">
-                                traduce url
-                            </a>
-                        </div>-->
-                    </a>
+                    </div>                        
                 </li>
             </ul>
         </div>
@@ -57,5 +53,3 @@ Listado de enlaces
 
 </body>
 </html>
-
-
