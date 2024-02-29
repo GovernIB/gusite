@@ -195,6 +195,15 @@ main.imc--pag div.imc--contenido-html div[class^=imc--] li div div div li  {
 }
 
 
+img.ajusta100{
+	max-width: 100%;
+}
+img.ajusta50{
+	max-width: 50%;
+}
+img.ajusta25{
+	max-width: 25%;
+}
 
 
 /* media */
