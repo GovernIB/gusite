@@ -5,7 +5,7 @@
 
 $(function () {
 
-
+	
     // preguntes
 
     imc_body
@@ -39,7 +39,7 @@ $.fn.appFormulariValida = function (options) {
             e.preventDefault();
 
             // revisa tipus d'elements de formulari
-
+            esError = false;
             form_els
                 .each(function () {
 
@@ -53,6 +53,8 @@ $.fn.appFormulariValida = function (options) {
                         ,
                         esText = el.find("input[type=text]:first, input[type=date]:first, input[type=email]:first, input[type=url]:first").length;
 
+                    el.removeClass("imc--f-error");
+                    
                     if (esRequerit && esSelect && el.find("select:first").val() === "") {
 
                         esError = true;
@@ -101,7 +103,7 @@ $.fn.appFormulariValida = function (options) {
                         error_etiqueta = error_el.find("label:first").text();
                         return false;
 
-                    }
+                    }					
 
                 });
 
@@ -157,7 +159,8 @@ $.fn.appFormulariValida = function (options) {
 
                 esValid = true;
 
-                //return esValid;
+				$("#formEnviar").trigger( "submit" );
+                return esValid;
 
             }
 
