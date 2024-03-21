@@ -13,7 +13,72 @@ Muestra un formulario de contacto.
 <head>
     <title th:if="${MVS_contacto_titulo} !=null"
            th:text="${MVS_micrositetitulo} + ' - ' + ${MVS_contacto_titulo}">-</title>
+ 		<script th:inline="javascript">
+        /***********************************************
+         * Validador de campos genericos requeridos v1.10- By VRS
+         ***********************************************/
+         /*<![CDATA[*/
+         function checkrequired(which) {
+            var pass = true;
+            for (var i = 0; i < which.length; i++) {
 
+                var obj = which.elements[i];
+                if (obj.name.substring(0, 8) == "required") {
+                    if (obj) {
+                        switch (obj.type) {
+                            case "select-one":
+                            if (obj.selectedIndex == -1 || obj.options[obj.selectedIndex].text == "")
+                                pass = false;
+                            break;
+                            case "select-multiple":
+                            if (obj.selectedIndex == -1)
+                                pass = false;
+                            break;
+                            case "text":
+                            case "textarea":
+                            if (obj.value == "" || obj.value == null)
+                                pass = false;
+                            break;
+                            default:
+                        }
+                        if (obj.type == undefined) {
+                            var blnchecked = false;
+                            for (var j = 0; j < obj.length; j++) {
+                                if (obj[j].checked) {
+                                    blnchecked = true;
+                                }
+                            }
+                            if (!blnchecked) {
+                                pass = false;
+                            }
+                        }
+                    }
+                }
+                if (!pass) break;
+            }
+
+            if (!pass) {
+                var contactoCampoRequerido =/*[[#{contacto.camporequerido}]]*/;
+                alert(contactoCampoRequerido);
+                return false;
+            }
+            else
+                return true;
+        }
+         
+         function habilitarEnviar(){
+        	 
+     		//Si está informado el captcha se habilita el botón
+     		if (document.getElementById("captchaResp").value !="" ){				
+     			document.getElementById("btnanar").disabled = false;
+           		document.getElementById("btnanar").className='';
+     		}else{
+           		document.getElementById("btnanar").disabled = true;
+           		document.getElementById("btnanar").className='deshabilitado';
+         	}
+     	} 
+        /*]]>*/
+        </script>
 
 </head>
 <body>
