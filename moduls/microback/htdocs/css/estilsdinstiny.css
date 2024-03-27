@@ -1,0 +1,21 @@
+/* Estilos especificos para tablas */
+
+table.oldstyletable{
+   border:solid 2px #555;
+   width:revert;
+}
+
+table.oldstyletable tbody tr, table.oldstyletableclean tbody tr{
+    background-color:revert;
+}
+
+table.oldstyletable tbody tr td{
+  border:solid 2px #555;
+  padding: revert;
+  vertical-align: revert;
+}
+
+table.oldstyletable tbody tr td p{
+  margin: 0;
+  padding:0;
+}

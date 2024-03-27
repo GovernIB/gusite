@@ -37,6 +37,7 @@ import es.caib.gusite.front.view.Variable;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.IdiomaMicrosite;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.ObjContactoUa;
 import es.caib.gusite.micromodel.Tiposervicio;
 import es.caib.gusite.micromodel.TraduccionMicrosite;
 import es.caib.gusite.micropersistence.delegate.DelegateException;
@@ -388,7 +389,22 @@ public abstract class BaseViewController extends FrontController {
 			log.info("No hay datos de dirección");
 			return;
 		}
+		
 
+		ObjContactoUa cua = new ObjContactoUa(!isEmpty(unidadData.getNombre()) ? unidadData.getNombre() : "",
+				!isEmpty(unidadData.getDireccion()) ? unidadData.getDireccion() : "",
+				!isEmpty(unidadData.getUrl()) ? unidadData.getUrl() : "",
+				!isEmpty(unidadData.getUrlPlano()) ? unidadData.getUrlPlano() : "",
+				!isEmpty(unidadData.getCodigoPostal()) ? unidadData.getCodigoPostal() : "",
+				!isEmpty(unidadData.getTelefono()) ? unidadData.getTelefono() : "",
+				!isEmpty(unidadData.getFax()) ? unidadData.getFax() : "",
+				!isEmpty(unidadData.getDominio()) ? unidadData.getDominio() : "",
+				this.getMessage("WEB_ILL067", view.getLang().getLang()), // literal tel
+				this.getMessage("WEB_ILL068", view.getLang().getLang()), // literal Fax
+				this.getMessage("WEB_ILL130", view.getLang().getLang())// literal dominio
+		);
+						
+				
 		if (!isEmpty(unidadData.getUrl())) {
 			direccion.append("<a href=\"").append(unidadData.getUrl()).append("\">");
 			direccion.append(unidadData.getNombre());
@@ -432,6 +448,7 @@ public abstract class BaseViewController extends FrontController {
 		}
 
 		view.setDireccion(direccion.toString());
+		view.setObjContactoUa(cua);
 
 	}
 

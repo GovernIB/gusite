@@ -122,7 +122,7 @@
 				{ title: 'Subtítol nivell 5', block: 'h6'},
 			]*/
 			, content_css: [
-			    'css/estils.css'
+			    'css/estilsdinstiny.css'
 			] 
             , table_default_styles: {
                 title: 'Tabla',

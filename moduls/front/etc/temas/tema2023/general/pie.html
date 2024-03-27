@@ -95,8 +95,19 @@ Este código muestra el pie de página.
 
             <div class="imc--info">
                 <div th:if="${direccion}!=null" th:remove="tag">
-                    <p class="imc--quitarenlaces">
-                    <div th:utext="${direccion}" th:remove="tag">Dirección y Dominio</div>
+                    <p>
+						<!--  th:utext="${direccion}" th:remove="tag">Dirección y Dominio</div>-->
+						<div th:if="${! #strings.isEmpty(MVS_objContactoUa.uaNombre)}" th:text="${MVS_objContactoUa.uaNombre}"></div>
+						<div th:if="${! #strings.isEmpty(MVS_objContactoUa.uaDireccion)}" th:text="${MVS_objContactoUa.uaDireccion}"></div>
+						<div>
+							<span th:if="${! #strings.isEmpty(MVS_objContactoUa.uaTelefono)}" th:text="${MVS_objContactoUa.uaTxtTelefono + ' ' + MVS_objContactoUa.uaTelefono}"></span>
+							<span th:if="${! #strings.isEmpty(MVS_objContactoUa.uaTelefono) and ! #strings.isEmpty(MVS_objContactoUa.uaFax)}"> - </span>
+							<span th:if="${! #strings.isEmpty(MVS_objContactoUa.uaFax)}" th:text="${ MVS_objContactoUa.uaTxtFax + ' ' + MVS_objContactoUa.uaFax }"></span>
+						</div>					
+						<div th:if="${! #strings.isEmpty(MVS_objContactoUa.uaDominio)}" >
+								<span th:text="${MVS_objContactoUa.uaTxtDominio + ': '}"></span>
+								<a th:href="${MVS_objContactoUa.uaDominio}" th:text="${MVS_objContactoUa.uaDominio}">enlace dominio</a>						
+						</div>
                     </p>
                 </div>
             </div>

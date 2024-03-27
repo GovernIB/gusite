@@ -15,6 +15,7 @@ import es.caib.gusite.front.general.bean.Pardato;
 import es.caib.gusite.front.general.bean.Tridato;
 import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Microsite;
+import es.caib.gusite.micromodel.ObjContactoUa;
 import es.caib.gusite.plugins.organigrama.UnidadData;
 import es.caib.gusite.plugins.organigrama.UnidadListData;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +61,8 @@ public class LayoutView {
 		return mv;
 	}
 	
+	
+	
 	public static class ArchivoCSS {
 		
 		public ArchivoCSS(String src) {
@@ -88,6 +91,8 @@ public class LayoutView {
 	private List<ArchivoCSS> css;
 
 	private String direccion;
+	
+	private ObjContactoUa objContactoUa;
 
 	private List<Pardato> listaPie;
 
@@ -402,5 +407,21 @@ public class LayoutView {
 	public boolean getIntranetAuth() {
 		return intranetAuth;
 	}
+
+	/**
+	 * @return the objContactoUa
+	 */
+	@Variable("MVS_objContactoUa")
+	public ObjContactoUa getObjContactoUa() {
+		return objContactoUa;
+	}
+
+	/**
+	 * @param objContactoUa the objContactoUa to set
+	 */
+	public void setObjContactoUa(ObjContactoUa objContactoUa) {
+		this.objContactoUa = objContactoUa;
+	}
+
 	
 }
