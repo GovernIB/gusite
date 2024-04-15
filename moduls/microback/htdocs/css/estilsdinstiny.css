@@ -19,3 +19,10 @@ table.oldstyletable tbody tr td p{
   margin: 0;
   padding:0;
 }
+
+h1 { font-size: 2.2em; }
+h2 { margin-bottom: .5em;  font-size: 1.8em; font-weight: normal; }
+h3 { margin-bottom: .5em; font-size: 1.4em; }
+h4 { margin-bottom: .5em; font-size: 1.2em; font-weight: bold; text-transform: uppercase; }
+h5 { margin-bottom: .5em; font-size: 1em; font-weight: bold; text-transform: uppercase; }
+h6 { margin-bottom: .5em; font-size: 1em; font-weight: bold; }
