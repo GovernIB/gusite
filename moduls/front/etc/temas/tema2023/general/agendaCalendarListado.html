@@ -128,8 +128,9 @@ Tabla con el calendario y listado de eventos
                                         </select>
                                         <script type="text/javascript">
                                             //$("agendaSelect").style.fontWeight = "bold";
-                                            $("agendaSelect").css('font-weight', 'bold')
-                                            jQuery("option").each(function () {
+                                            $("#agendaSelect").css('font-weight', 'bold');
+                                            
+                                            $("#agendaSelect > option").each(function () {
                                                 var mes = this.text.substring(0, 3);
                                                 var any = this.text.substring(this.text.indexOf(" "))
                                                 this.text = mes + any;
@@ -288,8 +289,8 @@ Tabla con el calendario y listado de eventos
                     </div>
                 </div>
                 <script type="text/javascript">
-                    onload = function () {
-                        $('agendaSelect').value = $('agendaSelect').options[$('agendaSelect').selectedIndex].value;
+                    onload = function () {                     
+                        $('#agendaSelect')[0].value = $('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex].value;
                         mostrarCalendari();
                     }
                 </script>

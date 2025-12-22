@@ -20,7 +20,8 @@ function establecerAnyoEnBuscador(anyo) {
 
 function mostrarCalendari() {
 	num = $('#agendaSelect')[0].options[$('#agendaSelect')[0].selectedIndex].value;
-	divs = $('#agendaCalendaris')[0].getElementsByTagName('div');
+	//divs = $('#agendaCalendaris')[0].getElementsByTagName('div');
+	divs = $('#agendaCalendaris > div');
 	for(i=0;i<divs.length;i++) {
 		divs[i].style.display = (i==num) ? 'block' : 'none';
 	}
