@@ -1,0 +1,21 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:11
+    container_name: gusite-db
+    ports:
+      - "1521:1521"
+    environment:
+      # This sets the SYS/SYSTEM password
+      - ORACLE_PASSWORD=syspassword
+      # Optional: Create a custom database user on startup
+      - APP_USER=gusite
+      - APP_USER_PASSWORD=gusite
+    volumes:
+      # Persists your data even if the container is deleted
+      - oracle_data:/u01/app/oracle/oradata
+    # Oracle 11g needs a healthy amount of shared memory
+    shm_size: '1gb'
+    restart: always
+
+volumes:
+  oracle_data:

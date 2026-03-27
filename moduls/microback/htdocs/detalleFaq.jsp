@@ -94,7 +94,7 @@
 	<logic:equal name="tamano" value="0">
 		<p>
 			<div class="alerta" style="font-weight:bold; color:#FF1111;">
-				<em><strong><bean:message key="faq.tema.nohay" />.</strong> <bean:message key="faq.tema.alerta" />.&nbsp;&nbsp;&nbsp;<button type="button" title="<bean:message key="tema.crear" />" onclick="document.location='temasAcc.do?accion=crear';"><img src="imgs/botons/nou.gif" alt="<bean:message key="tema.crear" />" /></button> </em><br/>
+	  			<em><strong><bean:message key="faq.tema.nohay" />.</strong> <bean:message key="faq.tema.alerta" />.&nbsp;&nbsp;&nbsp;<button type="button" title="<bean:message key="tema.crear" />" onclick="document.location='temasAcc.do?accion=crear';"><img src="imgs/botons/nou.gif" alt="<bean:message key="tema.crear" />" /></button> </em><br/>
 				<br/>
 			</div>
 		</p>

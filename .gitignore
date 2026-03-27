@@ -1,6 +1,10 @@
+.idea
+*.iml
 target
 .classpath
 .project
 .settings/
 bin
 output
+build.*.properties
+!build.USERNAME.properties

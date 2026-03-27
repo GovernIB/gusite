@@ -65,6 +65,10 @@ public class Faq extends AuditableModel implements Traducible2 {
 	@JoinColumn(name = "FAQ_CODTEM")
 	private Temafaq tema;
 
+	@XmlAttribute
+	@Column(name = "FAQ_ORDRE")
+	private Integer ordre;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "FID_FAQCOD")
 	@MapKey(name = "id.codigoIdioma")
@@ -115,6 +119,14 @@ public class Faq extends AuditableModel implements Traducible2 {
 
 	public void setTema(Temafaq tema) {
 		this.tema = tema;
+	}
+
+	public Integer getOrdre() {
+		return ordre;
+	}
+
+	public void setOrdre(Integer ordre) {
+		this.ordre = ordre;
 	}
 
 	public String getVisible() {

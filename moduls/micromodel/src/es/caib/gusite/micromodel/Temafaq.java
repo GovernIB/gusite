@@ -50,6 +50,10 @@ public class Temafaq extends AuditableModel implements Traducible2 {
 	@Column(name = "TEM_MICCOD")
 	private Long idmicrosite;
 
+	@XmlAttribute
+	@Column(name = "TEM_ORDRE")
+	private Integer ordre;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "TID_TEMCOD")
 	@MapKey(name = "id.codigoIdioma")
@@ -85,6 +89,14 @@ public class Temafaq extends AuditableModel implements Traducible2 {
 
 	public void setIdmicrosite(Long idmicrosite) {
 		this.idmicrosite = idmicrosite;
+	}
+
+	public Integer getOrdre() {
+		return ordre;
+	}
+
+	public void setOrdre(Integer ordre) {
+		this.ordre = ordre;
 	}
 
 	public void setId(Long id) {
