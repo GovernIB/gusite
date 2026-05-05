@@ -66,6 +66,9 @@ public abstract class BaseViewController extends FrontController {
 	}
 
 	@Autowired
+	private DelegateBase delegateBase;
+
+	@Autowired
 	private OrganigramaProvider organigramaProvider;
 
 	@Autowired
@@ -516,9 +519,7 @@ public abstract class BaseViewController extends FrontController {
 	 * @param request
 	 */
 	private void cargarMenu(final LayoutView view, final String uriContenido) throws ExceptionFrontMicro {
-		DelegateBase delegateBase;
 		try {
-			delegateBase = new DelegateBase();
 			view.setMenu(delegateBase.obtenerMainMenu(view.getMicrosite().getId(), view.getLang().getLang(), uriContenido));
 		} catch (DelegateException e) {
 			throw new ExceptionFrontMicro(e);

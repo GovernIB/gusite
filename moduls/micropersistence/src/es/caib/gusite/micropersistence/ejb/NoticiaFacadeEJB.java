@@ -140,10 +140,10 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 		final Session session = this.getSession();
 		final boolean nuevo = (noticia.getId() == null) ? true : false;
-		final Transaction tx = session.beginTransaction();
 
 		try {
 
+			final Transaction tx = session.beginTransaction();
 			final ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
 			Noticia noticiaOriginal = null;
 			Archivo imagenNoticia = null;
@@ -302,15 +302,15 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 
 		} catch (final HibernateException he) {
 
-			tx.rollback();
-			session.close();
 			throw new EJBException(he);
 
 		} catch (final DelegateException e) {
 
-			tx.rollback();
-			session.close();
 			throw new EJBException(e);
+
+		} finally {
+
+			this.close(session);
 
 		}
 

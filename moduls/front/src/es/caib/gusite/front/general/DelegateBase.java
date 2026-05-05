@@ -30,6 +30,8 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 //import es.caib.gusite.plugins.rolsac.APIUtil;
 //import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
 //import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
@@ -39,10 +41,11 @@ import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
 /**
  * Manejador de obtener objetos listos para ser visualizados en la web. Utiliza
  * ObjectCache para ir cacheando todos los objetos que se van demandando.
- * 
+ *
  * @author Indra
- * 
+ *
  */
+@Component
 public class DelegateBase {
 
 	protected static Log _log = LogFactory.getLog(DelegateBase.class);
@@ -103,6 +106,7 @@ public class DelegateBase {
 	 * @return ArrayList con objetos "Menufront"
 	 * @throws Exception
 	 */
+	@Cacheable(value = "cacheMicrositeMenu", key = "#idmicrosite+ '-' +#idioma")
 	public List<MenuFront> obtenerMainMenu(Long idmicrosite, String idioma, String uriContenido) throws DelegateException {
 		List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma, uriContenido);
 		return listamenu;
