@@ -31,7 +31,7 @@
     <cache name="cacheMicrositeMenu"
         maxElementsInMemory="1000"
         eternal="false"
-        timeToLiveSeconds="600"
+        timeToLiveSeconds="60"
         overflowToDisk="false"/>
 
 </ehcache>
