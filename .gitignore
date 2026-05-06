@@ -7,3 +7,5 @@ output
 .idea/
 *.iml
 CLAUDE.md
+build.*.properties
+!build.USERNAME.properties
