@@ -84,6 +84,7 @@ public class DelegateBase {
 	 * @return Microsites
 	 * @throws ExceptionFrontMicro
 	 */
+	@Cacheable(value = "cacheMicrosite", key = "#uri + '-' + #idioma", unless = "#result == null")
 	public Microsite obtenerMicrositebyUri(String uri, String idioma) throws DelegateException {
 		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
 

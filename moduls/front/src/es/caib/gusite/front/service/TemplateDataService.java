@@ -18,6 +18,7 @@ public class TemplateDataService {
 
 	protected static Log log = LogFactory.getLog(TemplateDataService.class);
 
+	@Cacheable(value = "plantillas", unless = "#result == null")
 	public PersonalizacionPlantilla getPlantilla(final Long idPerPla) throws ExceptionFront {
 		try {
 			final PersonalizacionPlantillaDelegate ppdel = DelegateUtil.getPersonalizacionPlantillaDelegate();

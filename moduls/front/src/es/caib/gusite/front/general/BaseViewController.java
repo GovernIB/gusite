@@ -165,8 +165,7 @@ public abstract class BaseViewController extends FrontController {
 
 		Microsite microsite = null;
 		try {
-			DelegateBase _delegateBase = new DelegateBase();
-			microsite = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
+			microsite = delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
 
 			if (microsite == null) {
 				throw new ExceptionFrontMicro(" [Configuracion microsite]: Se debe indicar algún microsite");
