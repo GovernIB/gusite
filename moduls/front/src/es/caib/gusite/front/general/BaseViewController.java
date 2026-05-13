@@ -101,7 +101,6 @@ public abstract class BaseViewController extends FrontController {
 	 * @see
 	 */
 	public void configureLayoutView(final String uri, final Idioma lang, final LayoutView view, final String pcampa, final String uriContenido) throws ExceptionFrontMicro {
-
 		/* El idioma ya viene fijado en la URI */
 		String idi = lang.getLang().toUpperCase();
 		view.setIdioma(idi);

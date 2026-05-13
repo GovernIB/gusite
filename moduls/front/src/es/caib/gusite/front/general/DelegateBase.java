@@ -30,6 +30,9 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 //import es.caib.gusite.plugins.rolsac.APIUtil;
@@ -49,6 +52,9 @@ import org.springframework.stereotype.Component;
 public class DelegateBase {
 
 	protected static Log _log = LogFactory.getLog(DelegateBase.class);
+
+	@Autowired(required = false)
+	private CacheManager cacheManager;
 
 	public DelegateBase() {
 	}
@@ -84,13 +90,21 @@ public class DelegateBase {
 	 * @return Microsites
 	 * @throws ExceptionFrontMicro
 	 */
-	@Cacheable(value = "cacheMicrosite", key = "#uri + '-' + #idioma", unless = "#result == null")
 	public Microsite obtenerMicrositebyUri(String uri, String idioma) throws DelegateException {
+		if (cacheManager != null) {
+			Cache cache = cacheManager.getCache("cacheMicrosite");
+			Cache.ValueWrapper cached = cache.get(uri + '-' + idioma);
+			if (cached != null) {
+				return (Microsite) cached.get();
+			}
+		}
 		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
-
 		Microsite micro = microdel.obtenerMicrositebyUri(uri);
 		if (micro != null) {
 			micro.setIdi(idioma);
+			if (cacheManager != null) {
+				cacheManager.getCache("cacheMicrosite").put(uri + '-' + idioma, micro);
+			}
 		}
 		return micro;
 
