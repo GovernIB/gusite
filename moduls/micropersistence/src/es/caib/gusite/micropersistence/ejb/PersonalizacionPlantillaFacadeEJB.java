@@ -207,8 +207,15 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 				criteria.addOrder(Order.desc(orden.substring(1)));
 			}
 
-			return criteria.list();
-
+			List<PersonalizacionPlantilla> instances = criteria.list();
+			// forzar carga de colecciones para poder cerrar la conexión
+			// sin riesgo a LazyInitializationException
+			for (PersonalizacionPlantilla instance : instances) {
+				instance.getTipos().size();
+				instance.getContenidos().size();
+				instance.getComponentes().size();
+			}
+			return instances;
 		} catch (final HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);

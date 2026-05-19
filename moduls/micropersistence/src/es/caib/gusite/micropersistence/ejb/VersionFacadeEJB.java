@@ -122,6 +122,7 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 		Session session = this.getSession();
 		try {
 			List<Version> instances = session.createCriteria(Version.class).list();
+			// ojo: si aguas arriba alguien hace Version.getPlantilla(), fallará por LazyInitializationException
 			if (instances.size() == 0) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -150,6 +151,10 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
+				// forzamos la carga de objetos lazy anidados para evitar errores aguas arriba
+				if (instance.getPlantilla() != null) {
+					instance.getPlantilla().getPersonalizacionesPlantilla().size();
+				}
 				log.debug("get successful, instance found");
 			}
 			return instance;

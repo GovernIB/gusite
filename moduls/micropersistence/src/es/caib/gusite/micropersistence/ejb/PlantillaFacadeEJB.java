@@ -149,6 +149,9 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
+				// forzar carga de colecciones para poder cerrar la conexión
+				// sin riesgo a LazyInitializationException
+				instance.getPersonalizacionesPlantilla().size();
 				log.debug("get successful, instance found");
 			}
 			return instance;
