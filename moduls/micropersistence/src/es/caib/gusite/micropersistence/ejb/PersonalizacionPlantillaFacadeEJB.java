@@ -54,7 +54,6 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			final PersonalizacionPlantilla ret = (PersonalizacionPlantilla) session.get(PersonalizacionPlantilla.class,
 					session.save(instance));
 			session.flush();
-			session.close();
 			grabarAuditoria(ret, Auditoria.CREAR);
 			return ret;
 
@@ -62,6 +61,7 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			log.error("persist failed", re);
 			throw new EJBException(re);
 		} finally {
+			this.close(session);
 			log.debug("finished add PersonalizacionPlantilla instance");
 		}
 	}
@@ -80,13 +80,13 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			// Now update the data.
 			session.update(instance);
 			session.flush();
-			session.close();
 			grabarAuditoria(instance, Auditoria.MODIFICAR);
 
 		} catch (final HibernateException e) {
 			log.error("update failed", e);
 			throw new EJBException(e);
 		} finally {
+			this.close(session);
 			log.debug("finished updating PersonalizacionPlantilla instance");
 		}
 	}
@@ -104,13 +104,13 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 		try {
 			session.delete(instance);
 			session.flush();
-			session.close();
 			grabarAuditoria(instance, Auditoria.ELIMINAR);
 
 		} catch (final HibernateException e) {
 			log.error("delete failed", e);
 			throw new EJBException(e);
 		} finally {
+			this.close(session);
 			log.debug("finished deleting PersonalizacionPlantilla instance");
 		}
 	}
@@ -134,12 +134,13 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			} else {
 				log.debug("get successful, instances found");
 			}
-			session.close();
 			return instances;
 
 		} catch (final HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 
@@ -161,12 +162,13 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			} else {
 				log.debug("get successful, instance found");
 			}
-			session.close();
 			return instance;
 
 		} catch (final HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 
@@ -192,8 +194,8 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 			final Integer pagina, final Integer max) {
 
 		final String orden = (ordre == null) ? "Aid" : ordre;
+		final Session session = this.getSession();
 		try {
-			final Session session = this.getSession();
 			final Criteria criteria = session.createCriteria(PersonalizacionPlantilla.class);
 			criteria.add(Restrictions.eq("microsite.id", microsite));
 			criteria.setMaxResults(max);
@@ -205,12 +207,13 @@ public abstract class PersonalizacionPlantillaFacadeEJB extends HibernateTrulySt
 				criteria.addOrder(Order.desc(orden.substring(1)));
 			}
 
-			final List<PersonalizacionPlantilla> list = criteria.list();
-			return list;
+			return criteria.list();
 
 		} catch (final HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 

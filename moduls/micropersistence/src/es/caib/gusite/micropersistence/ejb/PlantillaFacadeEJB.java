@@ -72,14 +72,16 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	 */
 	public void actualizarPlantilla(Plantilla instance) {
 		log.debug("updating Plantilla instance");
+		Session session = this.getSession();
 		try {
 			// Now update the data.
-			this.getSession().update(instance);
+			session.update(instance);
 			this.grabarAuditoria(instance, Auditoria.MODIFICAR);
 		} catch (HibernateException e) {
 			log.error("update failed", e);
 			throw new EJBException(e);
 		} finally {
+			this.close(session);
 			log.debug("finished updating Plantilla instance");
 		}
 	}
@@ -92,13 +94,15 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	 */
 	public void borrarPlantilla(Plantilla instance) {
 		log.debug("deleting Plantilla instance");
+		Session session = this.getSession();
 		try {
-			this.getSession().delete(instance);
+			session.delete(instance);
 			this.grabarAuditoria(instance, Auditoria.ELIMINAR);
 		} catch (HibernateException e) {
 			log.error("delete failed", e);
 			throw new EJBException(e);
 		} finally {
+			this.close(session);
 			log.debug("finished deleting Plantilla instance");
 		}
 	}
@@ -112,8 +116,9 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	@SuppressWarnings("unchecked")
 	public List<Plantilla> listarPlantilla() {
 		log.debug("listar Plantilla");
+		Session session = this.getSession();
 		try {
-			List<Plantilla> instances = this.getSession()
+			List<Plantilla> instances = session
 					.createCriteria(Plantilla.class).addOrder(Order.asc("nombre")).list();
 			if (instances.size() == 0) {
 				log.debug("get successful, no instance found");
@@ -124,6 +129,8 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 
 	}
@@ -136,9 +143,9 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 	 */
 	public Plantilla obtenerPlantilla(java.lang.Long id) {
 		log.debug("getting Plantilla instance with id: " + id);
+		Session session = this.getSession();
 		try {
-			Plantilla instance = (Plantilla) this.getSession().get(
-					Plantilla.class, id);
+			Plantilla instance = (Plantilla) session.get(Plantilla.class, id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -148,6 +155,8 @@ public abstract class PlantillaFacadeEJB extends HibernateTrulyStatelessEJB {
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 

@@ -119,9 +119,9 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	@SuppressWarnings("unchecked")
 	public List<Version> listarVersion() {
 		log.debug("listar Version");
+		Session session = this.getSession();
 		try {
-			List<Version> instances = this.getSession()
-					.createCriteria(Version.class).list();
+			List<Version> instances = session.createCriteria(Version.class).list();
 			if (instances.size() == 0) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -131,6 +131,8 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 
@@ -142,9 +144,9 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 */
 	public Version obtenerVersion(java.lang.String id) {
 		log.debug("getting Version instance with id: " + id);
+		Session session = this.getSession();
 		try {
-			Version instance = (Version) this.getSession().get(Version.class,
-					id);
+			Version instance = (Version) session.get(Version.class, id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -154,6 +156,8 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 
