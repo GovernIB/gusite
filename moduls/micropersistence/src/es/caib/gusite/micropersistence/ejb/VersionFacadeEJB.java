@@ -9,6 +9,7 @@ import org.hibernate.HibernateException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Version;
+import es.caib.gusite.micromodel.Plantilla;
 import org.hibernate.Session;
 
 /**
@@ -152,8 +153,8 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 				log.debug("get successful, no instance found");
 			} else {
 				// forzamos la carga de objetos lazy anidados para evitar errores aguas arriba
-				if (instance.getPlantilla() != null) {
-					instance.getPlantilla().getPersonalizacionesPlantilla().size();
+				for (Plantilla plantilla: instance.getPlantillas()) {
+					plantilla.getPersonalizacionesPlantilla().size();
 				}
 				log.debug("get successful, instance found");
 			}
