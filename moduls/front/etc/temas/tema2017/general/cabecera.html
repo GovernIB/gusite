@@ -98,7 +98,7 @@ Plantilla para la cabecera general de microsite
 								<strong th:if="${idiomaLower}==${idiomaLista.key}"								
 								th:utext="${idiomaLista.value}"> Catalan </strong>
 								<a th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
-								th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+								th:href="@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null ? MVS_urlsIdiomas[idiomaLista.key] : #gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
 								th:lang="@{${idiomaLista.key}}" th:utext="${idiomaLista.value}"> Castellano </a>
 							</div>
 						</li>

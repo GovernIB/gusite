@@ -115,6 +115,8 @@ public class LayoutView {
 	 */
 	private String uriTema;
 
+	private Map<String, String> urlsIdiomas;
+
 	/**
 	 *  
 	 */
@@ -369,6 +371,18 @@ public class LayoutView {
 	@Variable("MVS_uriTema")
 	public String getUriTema() {
 		return uriTema;
+	}
+
+	public void setUrlsIdiomas(Map<String, String> urlsIdiomas) {
+		this.urlsIdiomas = urlsIdiomas;
+	}
+
+	/**
+	 * Mapa idioma -> URL correcta para el selector de idioma. Null en páginas sin slug variable.
+	 */
+	@Variable("MVS_urlsIdiomas")
+	public Map<String, String> getUrlsIdiomas() {
+		return urlsIdiomas;
 	}
 
 	/** Tiene la autorizacion/cookie para la intranet. **/

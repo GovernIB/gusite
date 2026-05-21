@@ -108,7 +108,7 @@ Plantilla para la cabecera general de microsite
 												role="presentation" class="idioma idioma-adicional"><a
 												role="menuitem" tabindex="-1"
 												th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
-												th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+												th:href="@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null ? MVS_urlsIdiomas[idiomaLista.key] : #gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
 												th:utext="${idiomaLista.value}"> Castellano </a></li>
 											<!-- Inicio de otros idiomas para probar -->
 											<li role="presentation" class="idioma idioma-adicional"
@@ -153,7 +153,7 @@ Plantilla para la cabecera general de microsite
 												role="presentation" class="idioma idioma-adicional"><a
 												role="menuitem" tabindex="-1"
 												th:if="${idiomaLower}!=${idiomaLista.key}" href="#"
-												th:href="@{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
+												th:href="@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null ? MVS_urlsIdiomas[idiomaLista.key] : #gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}"
 												th:utext="${idiomaLista.value}"> Castellano </a></li>
 											<!-- Inicio de otros idiomas para probar -->
 											<li role="presentation" class="idioma idioma-adicional"

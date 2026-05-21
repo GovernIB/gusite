@@ -125,7 +125,7 @@
 
                     <button type="button" th:if="${idiomaLower}!=${idiomaLista.key}"
                             th:attr=" data-idioma=@{${idiomaLista.key}}"
-                            th:onclick="'window.location.href = \'' + @{${#gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}} + '\''">
+                            th:onclick="'window.location.href = \'' + @{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null ? MVS_urlsIdiomas[idiomaLista.key] : #gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath, #httpServletRequest.requestURI, idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}} + '\''">
                         <span th:utext="${#strings.toUpperCase(idiomaLista.key)}">CA</span>
                     </button>
 
