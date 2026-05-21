@@ -1,0 +1,47 @@
+/* Document CSS */
+
+
+
+/* últimes notícies */
+
+.imc--noticies-ultimes { padding: 1em 2em; margin-bottom: 2em; background-color: #fff; box-shadow: .2em .2em .5em #ccc; }
+
+.imc--noticies-ultimes header { margin-bottom:1em; }
+
+
+.imc--noticies-ultimes li { padding-bottom: 1em; }
+.imc--noticies-ultimes li a { display: block; }
+.imc--noticies-ultimes li span { display: block; font-size: .8em; color: #333; padding-bottom: .4em; }
+.imc--noticies-ultimes li p.imc--titol { font-size: 1.2em; line-height: 1.1em; }
+.imc--noticies-ultimes li p.imc--entradeta { color: #333; }
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 900px) {
+
+}
+
+@media only screen and (max-width : 850px) {
+
+	.imc--noticies-ultimes { padding: 1em; }
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+}

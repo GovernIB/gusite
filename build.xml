@@ -352,6 +352,9 @@
 			<zip destfile="${temas.dir}/zip/tema2023.zip"
 				basedir="${temas.dir}/tema2023"
 				update="true" />
+			<zip destfile="${temas.dir}/zip/tema2024.zip"
+				basedir="${temas.dir}/tema2024"
+				update="true" />
        </target>
 
        <!-- including tha maven-ant-tasks-jar into classpath -->

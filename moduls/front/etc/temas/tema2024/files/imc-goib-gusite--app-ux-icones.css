@@ -1,0 +1,42 @@
+/* Document CSS */
+
+
+
+/* botons */
+
+.imc--ico::before { content: ""; display: inline-block; vertical-align: middle; width: 1.2em; height: 1.2em; margin-right: .5em; background: transparent url() no-repeat center center / 90% auto; }
+
+.imc--img::before { content: ""; display: inline-block; vertical-align: middle; width: 1.2em; height: 1.2em; background: transparent url() no-repeat center center / 90% auto; }
+.imc--img span { position: absolute; top: -999em; left: -999em; }
+
+
+
+
+.imc--ico.imc--cercador::before,
+.imc--img.imc--cercador::before { background-image: url(ico_cerca.svg); }
+
+.imc--ico.imc--cerca::before,
+.imc--img.imc--cerca::before { background-image: url(ico_cerca_fff.svg); }
+
+.imc--ico.imc--menu::before,
+.imc--img.imc--menu::before { background-image: url(ico_menu.svg); }
+
+.imc--ico.imc--tanca::before,
+.imc--img.imc--tanca::before { background-image: url(ico_cancela_fff.svg); }
+
+
+.imc--ico.imc--enrere::before,
+.imc--img.imc--enrere::before { background-image: url(ico_tornar_fff.svg); }
+
+.imc--ico.imc--url::before { background-image: url(ico_vincula.svg); opacity: .5; }
+
+.imc--ico.imc--ubicacio::before { background-image: url(ico_localitat.svg); opacity: .5; }
+
+
+.imc--img.imc--anterior::before { background-image: url(ico_nav_fff.svg); transform: rotate(180deg); }
+.imc--img.imc--seguent::before { background-image: url(ico_nav_fff.svg); }
+
+
+
+
+a[href^="tel:"]::before { content: ""; display: inline-block; vertical-align: middle; width: 1.2em; height: 1.2em; margin-right: .5em; background: transparent url(ico_telefon_fff.png) no-repeat center center / 90% auto; }
