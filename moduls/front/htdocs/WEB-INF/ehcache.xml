@@ -31,19 +31,19 @@
     <cache name="cacheMicrositeMenu"
         maxElementsInMemory="1000"
         eternal="false"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="1"
         overflowToDisk="false"/>
 
     <cache name="plantillas"
         maxElementsInMemory="500"
         eternal="false"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="1"
         overflowToDisk="false"/>
 
     <cache name="cacheMicrosite"
         maxElementsInMemory="200"
         eternal="false"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="1"
         overflowToDisk="false"/>
 
 </ehcache>
