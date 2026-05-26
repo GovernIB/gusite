@@ -30,6 +30,11 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 //import es.caib.gusite.plugins.rolsac.APIUtil;
 //import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
 //import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
@@ -39,13 +44,17 @@ import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
 /**
  * Manejador de obtener objetos listos para ser visualizados en la web. Utiliza
  * ObjectCache para ir cacheando todos los objetos que se van demandando.
- * 
+ *
  * @author Indra
- * 
+ *
  */
+@Component
 public class DelegateBase {
 
 	protected static Log _log = LogFactory.getLog(DelegateBase.class);
+
+	@Autowired(required = false)
+	private CacheManager cacheManager;
 
 	public DelegateBase() {
 	}
@@ -82,11 +91,20 @@ public class DelegateBase {
 	 * @throws ExceptionFrontMicro
 	 */
 	public Microsite obtenerMicrositebyUri(String uri, String idioma) throws DelegateException {
+		if (cacheManager != null) {
+			Cache cache = cacheManager.getCache("cacheMicrosite");
+			Cache.ValueWrapper cached = cache.get(uri + '-' + idioma);
+			if (cached != null) {
+				return (Microsite) cached.get();
+			}
+		}
 		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
-
 		Microsite micro = microdel.obtenerMicrositebyUri(uri);
 		if (micro != null) {
 			micro.setIdi(idioma);
+			if (cacheManager != null) {
+				cacheManager.getCache("cacheMicrosite").put(uri + '-' + idioma, micro);
+			}
 		}
 		return micro;
 
@@ -103,6 +121,7 @@ public class DelegateBase {
 	 * @return ArrayList con objetos "Menufront"
 	 * @throws Exception
 	 */
+	@Cacheable(value = "cacheMicrositeMenu", key = "#idmicrosite+ '-' +#idioma")
 	public List<MenuFront> obtenerMainMenu(Long idmicrosite, String idioma, String uriContenido) throws DelegateException {
 		List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma, uriContenido);
 		return listamenu;

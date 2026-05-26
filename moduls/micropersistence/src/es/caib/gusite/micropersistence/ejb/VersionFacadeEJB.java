@@ -9,6 +9,7 @@ import org.hibernate.HibernateException;
 
 import es.caib.gusite.micromodel.Auditoria;
 import es.caib.gusite.micromodel.Version;
+import es.caib.gusite.micromodel.Plantilla;
 import org.hibernate.Session;
 
 /**
@@ -119,9 +120,10 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	@SuppressWarnings("unchecked")
 	public List<Version> listarVersion() {
 		log.debug("listar Version");
+		Session session = this.getSession();
 		try {
-			List<Version> instances = this.getSession()
-					.createCriteria(Version.class).list();
+			List<Version> instances = session.createCriteria(Version.class).list();
+			// ojo: si aguas arriba alguien hace Version.getPlantilla(), fallará por LazyInitializationException
 			if (instances.size() == 0) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -131,6 +133,8 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 
@@ -142,18 +146,24 @@ public abstract class VersionFacadeEJB extends HibernateTrulyStatelessEJB {
 	 */
 	public Version obtenerVersion(java.lang.String id) {
 		log.debug("getting Version instance with id: " + id);
+		Session session = this.getSession();
 		try {
-			Version instance = (Version) this.getSession().get(Version.class,
-					id);
+			Version instance = (Version) session.get(Version.class, id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
+				// forzamos la carga de objetos lazy anidados para evitar errores aguas arriba
+				for (Plantilla plantilla: instance.getPlantillas()) {
+					plantilla.getPersonalizacionesPlantilla().size();
+				}
 				log.debug("get successful, instance found");
 			}
 			return instance;
 		} catch (HibernateException re) {
 			log.error("get failed", re);
 			throw new EJBException(re);
+		} finally {
+			this.close(session);
 		}
 	}
 

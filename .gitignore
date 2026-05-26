@@ -4,3 +4,8 @@ target
 .settings/
 bin
 output
+.idea/
+*.iml
+CLAUDE.md
+build.*.properties
+!build.USERNAME.properties

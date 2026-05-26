@@ -66,6 +66,9 @@ public abstract class BaseViewController extends FrontController {
 	}
 
 	@Autowired
+	private DelegateBase delegateBase;
+
+	@Autowired
 	private OrganigramaProvider organigramaProvider;
 
 	@Autowired
@@ -98,7 +101,6 @@ public abstract class BaseViewController extends FrontController {
 	 * @see
 	 */
 	public void configureLayoutView(final String uri, final Idioma lang, final LayoutView view, final String pcampa, final String uriContenido) throws ExceptionFrontMicro {
-
 		/* El idioma ya viene fijado en la URI */
 		String idi = lang.getLang().toUpperCase();
 		view.setIdioma(idi);
@@ -162,8 +164,7 @@ public abstract class BaseViewController extends FrontController {
 
 		Microsite microsite = null;
 		try {
-			DelegateBase _delegateBase = new DelegateBase();
-			microsite = _delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
+			microsite = delegateBase.obtenerMicrositebyUri(uri, lang.getLang());
 
 			if (microsite == null) {
 				throw new ExceptionFrontMicro(" [Configuracion microsite]: Se debe indicar algún microsite");
@@ -516,9 +517,7 @@ public abstract class BaseViewController extends FrontController {
 	 * @param request
 	 */
 	private void cargarMenu(final LayoutView view, final String uriContenido) throws ExceptionFrontMicro {
-		DelegateBase delegateBase;
 		try {
-			delegateBase = new DelegateBase();
 			view.setMenu(delegateBase.obtenerMainMenu(view.getMicrosite().getId(), view.getLang().getLang(), uriContenido));
 		} catch (DelegateException e) {
 			throw new ExceptionFrontMicro(e);
