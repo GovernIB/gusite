@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -345,13 +347,30 @@ public class DelegateBase {
 	private List<MenuFront> montarmenu(Long idmicrosite, String idi, String uriContenido) throws DelegateException {
 		ArrayList<MenuFront> listadomenu = new ArrayList<MenuFront>();
 
-		// los menus de primer nivel ya salen ordenados
 		MenuDelegate menudel = DelegateUtil.getMenuDelegate();
-		// recorrer los menus
-		Iterator<?> iter = menudel.listarMenuMicrosite(idmicrosite, new Long(0), "S", idi).iterator();
+
+		// Una sola llamada EJB carga todos los menús visibles del microsite.
+		// La partición por nivel se hace en Java para evitar M+1 sesiones Hibernate.
+		ArrayList<Menu> todosMenus = menudel.listarMenusMicrositeCompleto(idmicrosite, idi);
+
+		ArrayList<Menu> menusNivel1 = new ArrayList<Menu>();
+		Map<Long, ArrayList<Menu>> subMenusPorPadre = new HashMap<Long, ArrayList<Menu>>();
+		for (Menu m : todosMenus) {
+			if (Long.valueOf(0).equals(m.getPadre())) {
+				menusNivel1.add(m);
+			} else {
+				Long padreId = m.getPadre();
+				if (!subMenusPorPadre.containsKey(padreId)) {
+					subMenusPorPadre.put(padreId, new ArrayList<Menu>());
+				}
+				subMenusPorPadre.get(padreId).add(m);
+			}
+		}
+
+		Iterator<Menu> iter = menusNivel1.iterator();
 		while (iter.hasNext()) {
-			Menu menu = (Menu) iter.next();
-			MenuFront menufront = new MenuFront(menu); 
+			Menu menu = iter.next();
+			MenuFront menufront = new MenuFront(menu);
 			menu.setIdi(idi);
 			menufront.setIdi(idi);
 
@@ -378,17 +397,21 @@ public class DelegateBase {
 					}
 					menufront.getListacosas().add(conte);
 				}
-				
+
 				if (uriContenido != null && tracon.getUri().equals(uriContenido)) {
-					menufront.setModo("F");					
+					menufront.setModo("F");
 				}
 			}
 
 			// recoger los submenus. y dentro de los submenus recorrer las
 			// paginas y coger las visibles y no caducadas.
-			Iterator<?> itermenus = menudel.listarMenuMicrosite(idmicrosite, menu.getId(), "S", idi).iterator();
+			ArrayList<Menu> submenus = subMenusPorPadre.get(menu.getId());
+			if (submenus == null) {
+				submenus = new ArrayList<Menu>();
+			}
+			Iterator<Menu> itermenus = submenus.iterator();
 			while (itermenus.hasNext()) {
-				Menu submenu = (Menu) itermenus.next();
+				Menu submenu = itermenus.next();
 				MenuFront menufrontsub = new MenuFront(submenu);
 				menufrontsub.setIdi(idi);
 				submenu.setIdi(idi);
@@ -397,7 +420,6 @@ public class DelegateBase {
 				if (trasubmen.getNombre() == null || "".equals(trasubmen.getNombre())) {
 					continue;
 				}
-				
 
 				// recorrer las paginas y coger las visibles y no caducadas
 				Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
@@ -415,19 +437,16 @@ public class DelegateBase {
 						} else {
 							contesub.setUrlExterna("false");
 						}
-						menufrontsub.getListacosas().add(contesub);						
+						menufrontsub.getListacosas().add(contesub);
 					}
 				}
 
-				// los elementos que cuelgan del primer nivel tienen que
-				// reordenarse
 				menufront.getListacosas().add(menufrontsub);
 			}
 
 			menufront.setListacosas(this.ordenarlista(menufront.getListacosas()));
 			menufront.setIdi(idi);
 			listadomenu.add(menufront);
-
 		}
 		return listadomenu;
 

@@ -157,6 +157,22 @@ public class MenuDelegate implements StatelessDelegate {
 	}
 
 	/**
+	 * Lista todos los menus visibles de un microsite en una sola sesión.
+	 *
+	 * @param idmicrosite
+	 * @param idioma
+	 * @return ArrayList con todos los menus visibles del microsite
+	 * @throws DelegateException
+	 */
+	public ArrayList<Menu> listarMenusMicrositeCompleto(final Long idmicrosite, final String idioma) throws DelegateException {
+		try {
+			return this.getFacade().listarMenusMicrositeCompleto(idmicrosite, idioma);
+		} catch (final RemoteException e) {
+			throw new DelegateException(e);
+		}
+	}
+
+	/**
 	 * Lista todos los menus poniendole un idioma por defecto
 	 *
 	 * @param idioma
