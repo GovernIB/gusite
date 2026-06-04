@@ -1,0 +1,43 @@
+/* Document CSS */
+
+
+
+/* calendari */
+
+.imc--calendari { margin-bottom: 2em; }
+
+.imc--calendari h2 { margin-bottom: .8em; }
+.imc--calendari h2 span { font-size: 1em; font-weight: normal; text-transform: uppercase; }
+
+.imc--calendari .imc--cal-contingut { padding: 1em; margin-bottom: 1em; background-color: #eaeaea;  }
+
+.imc--calendari .imc--navegador { text-align: center; margin-bottom: .8em; }
+.imc--calendari .imc--navegador button { width: 2em; padding-left: 0; padding-right: 0; }
+.imc--calendari .imc--navegador button[data-accio="calendari-anterior"]::before { background-image: url(ico_nav_fff.svg); transform: rotate(180deg); }
+.imc--calendari .imc--navegador button[data-accio="calendari-seguent"]::before { background-image: url(ico_nav_fff.svg); }
+
+.imc--calendari .imc--navegador select[data-tipus="mes"] { width: 8em; }
+.imc--calendari .imc--navegador select[data-tipus="any"] { width: 5em; }
+
+.imc--calendari table { width: 100%; }
+.imc--calendari table thead th { width: 14%; text-align: center; padding-bottom: .5em; background-color: transparent; }
+
+.imc--calendari table tbody tr:nth-child(2n) { background-color: #eaeaea; }
+
+.imc--calendari table tbody td { width: 14%; height: 3em; text-align: center; vertical-align: middle; padding: .3em; }
+
+.imc--calendari table tbody td > span { display: block; padding: .3em 0; }
+.imc--calendari table tbody td > a { display: inline-flex; align-items: center; justify-content: center; width: 1.9em; height: 1.9em; color: #fff; font-weight: bold; background-color: var(--color-primari); }
+
+
+
+
+.imc--actes > p.imc--info { margin-bottom: 1em; }
+
+
+.imc--actes li { padding-bottom: 1em; }
+.imc--actes li a { display: block; }
+.imc--actes li span { display: block; font-size: .8em; color: #333; padding-bottom: .4em; }
+.imc--actes li p.imc--titol { font-size: 1.2em; line-height: 1.1em; }
+.imc--actes li p.imc--entradeta { color: #333; }
+

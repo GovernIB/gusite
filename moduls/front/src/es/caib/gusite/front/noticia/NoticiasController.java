@@ -2,7 +2,9 @@ package es.caib.gusite.front.noticia;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,7 @@ import es.caib.gusite.front.view.ListarNoticiasView;
 import es.caib.gusite.front.view.NoticiaView;
 import es.caib.gusite.front.view.PageView;
 import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.IdiomaMicrosite;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
 import es.caib.gusite.micromodel.Tipo;
@@ -367,6 +370,16 @@ public class NoticiasController extends BaseViewController {
 				return this.getForwardError(view, ErrorMicrosite.ERROR_AMBIT_PAGINA, response);
 			}
 			view.setNoticia(noticia);
+
+			Map<String, String> urlsIdiomas = new HashMap<String, String>();
+			for (IdiomaMicrosite im : microsite.getIdiomas()) {
+				String idiomaCode = im.getId().getCodigoIdioma().toLowerCase();
+				if (noticia.getTraduccion(idiomaCode) != null) {
+					urlsIdiomas.put(idiomaCode, this.urlFactory.noticia(microsite, new Idioma(idiomaCode), noticia));
+				}
+			}
+			view.setUrlsIdiomas(urlsIdiomas);
+
 			if (noticia.getImagen() != null) {
 
 				// TODO: this is weird

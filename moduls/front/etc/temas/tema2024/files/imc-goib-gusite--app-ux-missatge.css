@@ -1,0 +1,94 @@
+/* Document CSS */
+
+
+/* missatge */
+
+.imc--missatge { position: fixed; z-index: 40; top: 0; left: 0; width: 100%; height: 100%; /*font: normal 1em 'Open Sans Condensed', Open Sans;*/ transition: visibility .2s cubic-bezier(0,.78,.25,1), opacity .2s cubic-bezier(0,.78,.25,1); }
+.imc--missatge[aria-hidden="false"] { transition: visibility 0s ease-out, opacity .2s cubic-bezier(0,.78,.25,1); }
+
+.imc--missatge::before { content: ""; position: fixed; z-index: 11; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.7); }
+
+.imc--missatge .imc--contingut { position: fixed; z-index: 12; top: 50%; left: 50%; width: 30em; padding: 1.3em 1em 1em 6em; background-color: #fff; border: .4em solid #008c89; transform: translate(-50%, -50%); transition: border-color .2s ease-out; }
+
+.imc--missatge .imc--contingut::before { content: ""; position: absolute; top: 1.5em; left: 2em; width: 2em; height: 2em; background: transparent url() no-repeat center center / auto 100%; }
+
+.imc--missatge:focus .imc--contingut { border-color: #000; }
+
+.imc--missatge header { padding: 0 0 .2em 0; }
+.imc--missatge h2 { font-size: 1em; /*font: normal 1em 'Open Sans Condensed', Open Sans;*/ line-height: 1.6em; margin: .3em 0 .5em 0; }
+.imc--missatge h2 span { font-size: 1.5em; font-weight: bold; }
+
+.imc--missatge .imc--info { padding: 0 0 1em 0; }
+.imc--missatge .imc--info p { margin-bottom: 1em; }
+
+.imc--missatge .imc--botonera { list-style: none; margin: 1.5em 0 0 0; text-align: right; }
+.imc--missatge .imc--botonera button { display: none; margin-left: .5em; }
+
+
+/* tipus */
+
+.imc--missatge[data-tipus='informacio'] .imc--botonera button[data-accio="dacord"] { display: inline-block; }
+
+.imc--missatge[data-tipus='accio'] .imc--botonera button[data-accio="accepta"],
+.imc--missatge[data-tipus='accio'] .imc--botonera button[data-accio="cancela"] { display: inline-block; }
+
+.imc--missatge[data-tipus='execucio'] .imc--botonera { display: none; }
+
+
+/* estat */
+
+.imc--missatge[data-estat='eixir'] .imc--contingut::before { background-image: url(ico_desconnecta_be3a3a.svg); }
+.imc--missatge[data-estat='alerta'] .imc--contingut::before { background-image: url(ico_alerta_008c89.svg); }
+.imc--missatge[data-estat='correcte'] .imc--contingut::before { background-image: url(ico_correcte.svg); }
+.imc--missatge[data-estat='error'] .imc--contingut::before { background-image: url(ico_error_be3a3a.svg); }
+.imc--missatge[data-estat='desa'] .imc--contingut::before { background-image: url(ico_desa_008c89.svg); }
+
+.imc--missatge[data-estat='esborra'] .imc--contingut::before { background-image: url(ico_esborra_be3a3a.svg); }
+.imc--missatge[data-estat='elimina'] .imc--contingut::before { background-image: url(ico_esborra_be3a3a.svg); }
+.imc--missatge[data-estat='desvincula'] .imc--contingut::before { background-image: url(ico_vincula_no_be3a3a.svg); }
+
+.imc--missatge[data-estat='processar'] .imc--contingut::before { background-image: url(ico_envia_008c89.svg); }
+
+.imc--missatge[data-estat='executant'] .imc--contingut::before {
+    border: .3em solid transparent;
+    border-top-color: #008c89;
+    border-bottom-color: #008c89;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.imc--missatge[data-estat='executant'] .imc--contingut::before {
+    -moz-animation-name: carregant;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -webkit-animation-name: carregant;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -o-animation-name: carregant;
+    -o-animation-duration: 1s;
+    -o-animation-iteration-count: infinite;
+    -o-animation-timing-function: linear;
+    animation-name: carregant;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 650px) {
+
+	.imc--missatge .imc--contingut { width: 90%; padding: 1.3em 1em 1em 5em; }
+	
+	.imc--missatge .imc--contingut::before { width: 2em; height: 2em; }
+
+}

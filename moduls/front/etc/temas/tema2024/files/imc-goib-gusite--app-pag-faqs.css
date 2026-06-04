@@ -1,0 +1,64 @@
+/* Document CSS */
+
+
+
+/* preguntes */
+
+.imc--preguntes > h2 { margin-bottom: 1em; }
+
+.imc--preguntes .imc--conversa { margin-bottom: 1em; background-color: #fff; border: 1px solid #ccc; }
+
+.imc--preguntes .imc--conversa button[data-accio="pregunta-activa"] { display: block; position: relative; width: 100%; padding: .5em 4em .5em 1em; background-color: #f2f2f2; }
+
+.imc--preguntes .imc--conversa button[data-accio="pregunta-activa"]::before { content: ""; display: inline-block; width: 1em; height: 1em; vertical-align: middle; margin-right: .7em; background: transparent url(ico_preguntes.svg) no-repeat center center / auto 100%; opacity: .5; }
+
+.imc--preguntes .imc--conversa button[data-accio="pregunta-activa"]::after { content: ""; display: block; position: absolute; top: .8em; right: 1em; width: 1.5em; height: 1em; vertical-align: middle; margin-right: .5em; background: transparent url(ico_selector.svg) no-repeat center center / 100% auto; opacity: .4; transition: transform .2s ease-out; }
+
+.imc--preguntes .imc--conversa button[data-accio="pregunta-activa"] span { display: inline-block; vertical-align: middle; font-size: 1.1em; color: var(--color-primari); }
+
+.imc--preguntes .imc--conversa .imc--resposta { display: none; padding: 1em 1em .5em 1em; }
+.imc--preguntes .imc--conversa .imc--resposta p { margin-bottom: .5em; }
+
+.imc--preguntes .imc--conversa button[aria-expanded="true"][data-accio="pregunta-activa"]::after { transform: rotate(180deg); }
+
+.imc--preguntes .imc--conversa ul { padding-left: 2em; margin-bottom: 1em; }
+.imc--preguntes .imc--conversa ul li { list-style: circle; }
+
+.imc--preguntes .imc--conversa + .imc--grup { margin-top: 2em; }
+
+
+.imc--preguntes .imc--grups {  }
+
+.imc--preguntes .imc--grup { padding: 1em 2em; margin-bottom: 1em; background-color: #fff; box-shadow: .2em .2em .5em #ccc; }
+.imc--preguntes .imc--grup h2 { margin-top: 0; margin-bottom: 1em; }
+.imc--preguntes .imc--grup h2 span { font-size: 1.3em; }
+.imc--preguntes .imc--grup li { padding-bottom: .3em; }
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 900px) {
+
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+}

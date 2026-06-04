@@ -1,6 +1,8 @@
 package es.caib.gusite.front.contenido;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +32,7 @@ import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.front.view.ContenidoView;
 import es.caib.gusite.micromodel.Contenido;
 import es.caib.gusite.micromodel.Idioma;
+import es.caib.gusite.micromodel.IdiomaMicrosite;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.TraduccionContenido;
@@ -176,6 +179,15 @@ public class ContenidoController extends BaseViewController {
 
 			view.setContenido(contenido);
 			view.setTipoBeta(tipobeta);
+
+			Map<String, String> urlsIdiomas = new HashMap<String, String>();
+			for (IdiomaMicrosite im : microsite.getIdiomas()) {
+				String idiomaCode = im.getId().getCodigoIdioma().toLowerCase();
+				if (contenido.getTraduccion(idiomaCode) != null) {
+					urlsIdiomas.put(idiomaCode, this.urlFactory.contenido(microsite, new Idioma(idiomaCode), contenido));
+				}
+			}
+			view.setUrlsIdiomas(urlsIdiomas);
 
 			return this.modelForView(this.templateNameFactory.contenido(microsite), view);
 		} catch (final ExceptionFrontMicro e) {

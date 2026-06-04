@@ -1,0 +1,46 @@
+/* Document CSS */
+
+
+
+/* documents llistat */
+
+.imc--llistat-docs p { line-height: 1.2em; margin-bottom: 1em; }
+.imc--llistat-docs ul li { padding-bottom: .5em; }
+
+.imc--llistat-docs .imc--doc { display: block; padding: .5em .5em .5em 3em; background: #f2f2f2 url(ico_doc_666.svg) no-repeat 1em .8em / 1em auto; }
+.imc--llistat-docs .imc--doc strong { display: block; font-weight: normal; }
+.imc--llistat-docs .imc--doc span { font-size: .8em; color: #333; }
+
+.imc--llistat-docs li a strong { font-size: 1.2em; line-height: 1.1em; }
+.imc--llistat-docs li a p { color: #333; padding-top: .3em; }
+
+
+
+
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 900px) {
+
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+}

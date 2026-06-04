@@ -271,11 +271,13 @@ function cambiarPosicion(obj) {
 	// y a?adimos eventos
 	addEvent(document,'mousemove',cambiarPosicionGo,true);
 	addEvent(document,'mouseup',cambiarPosicionStop,true);
+	document.body.style.cursor = 'grabbing';
 	// y retornamos valores
 	return objY, ratonYinicial, posicions, divID, usuariY;
 }
 
 var idCapaOver = '';
+var dropIndicator = document.getElementById('dropIndicator');
 
 function cambiarPosicionGo(event) {
 	capaClone = document.getElementById('nuevo');
@@ -284,7 +286,30 @@ function cambiarPosicionGo(event) {
 		if(ratonY > posicions.capa[i].posicion) idCapaOver = posicions.capa[i].id;
 	}
 	if(ratonY < posicions.capa[0].posicion) idCapaOver = '';
-	
+
+	// Indicador visual de posición de destino
+	if (!dropIndicator) {
+		dropIndicator = document.createElement('div');
+		dropIndicator.id = 'dropIndicator';
+		dropIndicator.style.position = 'fixed';
+		dropIndicator.style.left = '0';
+		dropIndicator.style.width = '100%';
+		dropIndicator.style.height = '3px';
+		dropIndicator.style.background = '#0066cc';
+		dropIndicator.style.zIndex = '1001';
+		dropIndicator.style.pointerEvents = 'none';
+		dropIndicator.style.display = 'none';
+		document.body.appendChild(dropIndicator);
+	}
+	if (idCapaOver !== '') {
+		var targetEl = document.getElementById(idCapaOver);
+		var rect = targetEl.getBoundingClientRect();
+		dropIndicator.style.top = rect.bottom + 'px';
+		dropIndicator.style.display = 'block';
+	} else {
+		dropIndicator.style.display = 'none';
+	}
+
 	usuariActualY = usuariY + document.documentElement.scrollTop;
 	
 	if(ratonY >= usuariActualY - 40) document.documentElement.scrollTop = document.documentElement.scrollTop + 5;
@@ -295,11 +320,13 @@ function cambiarPosicionGo(event) {
 	//document.getElementById('CapaXX').value = ratonY; // solo PRUEBAS!!
 	//document.getElementById('ventanaUser').value = usuariActualY; // solo PRUEBAS!!
 	
-	return idCapaOver;
 	if(document.all) {
 		window.event.cancelBubble = true;
 		window.event.returnValue = false;
-  } else event.preventDefault();
+	} else {
+		event.preventDefault();
+	}
+	return idCapaOver;
 }
 
 
@@ -310,6 +337,9 @@ function cambiarPosicionGo(event) {
 function resetearArbol(event) {
 	removeEvent(document,'mousemove',cambiarPosicionGo,true);
 	removeEvent(document,'mouseup',cambiarPosicionStop,true);
+	document.body.style.cursor = '';
+	var indicator = document.getElementById('dropIndicator');
+	if (indicator) indicator.style.display = 'none';
 	if(document.all) {
 		window.event.cancelBubble = true;
 		window.event.returnValue = false;
@@ -446,8 +476,9 @@ function cambiarPosicionStopNivel2(event) {
 
 	//Extramos el idPadre y elementoPuntero
 	if (capaOverClassName == 'nivel1') {
-		idPadre = capaOverID;
-		elementoPuntero = document.getElementById(idPadre);
+		// El idPadre debe ser el ID numérico de BD del nivel1, no el ID del div ("mX")
+		idPadre = document.getElementById(capaOverID).getElementsByTagName('input')[0].value;
+		elementoPuntero = document.getElementById(capaOverID);
 	} else if (capaOverClassName == 'nivel2') {
 		idPadre = obtenerIdPadre(capaOverID);
 		if (idPadre == '') { document.getElementById(divID).style.visibility=""; return ;}
@@ -468,7 +499,7 @@ function cambiarPosicionStopNivel2(event) {
 		}
 		
 		idPadre = obtenerIdPadre(capaOverID);
-		if (idPadre == '') { elementos[0].style.visibility=""; return ;}		
+		if (idPadre == '') { document.getElementById(divID).style.visibility=""; return ;}		
 		elementoPuntero = document.getElementById(capaOverID);
 	}
 	
@@ -570,7 +601,21 @@ function cambiarPosicionStop(event) {
 		}
 		
 		if(cloneClassName.indexOf('nivel') != -1 && capaOverClassName != '') {
-			buscarUltimoHijo(capaOverID,divID);
+			var targetCapaOverID = capaOverID;
+			// Al arrastrar nivel1, si el hover está sobre un hijo (nivel2/pagC),
+			// subir al nivel1 padre para hallar el último descendiente correcto
+			if (cloneClassName === 'nivel1' && capaOverClassName !== 'nivel1') {
+				var sibling = document.getElementById(capaOverID).previousElementSibling;
+				while (sibling) {
+					if (sibling.className === 'nivel1') {
+						targetCapaOverID = sibling.id;
+						capaOverClassName = 'nivel1';
+						break;
+					}
+					sibling = sibling.previousElementSibling;
+				}
+			}
+			buscarUltimoHijo(targetCapaOverID, divID);
 			capaOverID = nuevoID;
 		}
 		
@@ -681,6 +726,9 @@ function cambiarPosicionStop(event) {
 			}
 		}
 	
+		var indicator = document.getElementById('dropIndicator');
+		if (indicator) indicator.style.display = 'none';
+		document.body.style.cursor = '';
 		removeEvent(document,'mousemove',cambiarPosicionGo,true);
 		removeEvent(document,'mouseup',cambiarPosicionStop,true);
 		if(document.all) {
@@ -689,7 +737,7 @@ function cambiarPosicionStop(event) {
 		} else {
 			event.preventDefault();
 		}
-		
+
 		// reordenamos
 		ordenarNodes();
 		// y reiniciamos buttons

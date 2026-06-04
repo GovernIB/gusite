@@ -1,0 +1,264 @@
+/*CSS imc-goib-gusite--app*/
+
+body {
+    font-family: var(--font-principal) !important;
+}
+
+button {
+
+}
+
+/*Molla pa*/
+.imc--molla-pa img {
+    width: 1.2em;
+    vertical-align: bottom;
+}
+
+/** CSS Formularios -> imc-goib-gusite--app-pag-formulari.css **/
+.imc--formulari .imc--f-annex{ display: flex; flex-direction: row; gap: 1em; float: none; clear: both; width: 100%; text-align: start; padding-top: .6em;}
+.imc--formulari .imc--f-annex input {width: 100%;}
+.imc--formulari .imc--f-captcha{ display: flex; flex-direction: row; gap: 1em; float: none; clear: both; width: 100%; text-align: start; padding-top: .5em; padding-bottom: 1em;}
+.imc--formulari .imc--f-captcha input {width: 100%;}
+
+/** CSS Encuestas**/
+#encuesta fieldset legend { display:none; }
+
+.imc--formulari .imc--f-botonera input {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .3rem .7rem .3rem .7rem;
+    background-color: var(--color-primari);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+}
+
+.imc--e-enunciat {
+    margin-top: .8em;
+}
+
+.imc--e-enunciat img {
+    width: 100%; height: auto;
+    max-width: 100px;
+}
+
+.imc--e-mensaje{
+    color: rgb(203, 2, 62);
+    margin-bottom: 1em;
+}
+
+.imc--e-resultats{
+    margin-bottom: .8em;
+}
+
+.imc--e-resultats li{
+    list-style: disc;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+.imc--e-resultats ul{
+    margin:.5em;
+}
+
+.imc--e-resultats img {
+    width: 100%; height: auto;
+    max-width: 200px;
+}
+
+.imc--formulari .imc--f-botonera a {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .5rem .7rem .5rem .7rem;
+    background-color: var(--color-primari);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+}
+
+.imc--llista .imc--subtitol {
+    color: #333;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+
+/*CSS Calendario -> imc-goib-gusite--app-ux-calendari.css*/
+.imc--calendari .imc--navegador { display: flex; justify-content: center; gap: .4em; }
+.imc--calendari .imc--navegador select[data-tipus="mes"] {width: 10em !important; text-align: center;}
+
+/*CSS pie de página -> imc-goib-gusite--app-ui-peu.css*/
+.imc--enllasos {
+    min-width: 10rem !important;
+}
+
+.activo {
+    background-color: rgba(0, 0, 0, .15);
+}
+
+.imc--ce-form .imc--fo-elms .imc--cerca{
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2.3em;
+    text-align: left;
+    padding: .3rem .7rem .3rem 2rem;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    will-change: background-color, transform;
+    transition: background-color .2s ease-out;
+    width: auto !important;
+    background:var(--color-primari) url(../files/ico_cerca_fff.svg) no-repeat .4em .5em / 1.2em auto;
+}
+
+/* ESTILOS PARA CONTENIDO HTML*/
+
+main.imc--pag div.imc--contenido-html h1,main.imc--pag div.imc--contenido-html h2,main.imc--pag div.imc--contenido-html h3, main.imc--pag div.imc--contenido-html h4 {
+  /*  font-size:revert;*/
+}
+
+main.imc--pag div.imc--contenido-html h1,
+main.imc--pag div.imc--contenido-html h2,
+main.imc--pag div.imc--contenido-html h3, 
+main.imc--pag div.imc--contenido-html h4, 
+main.imc--pag div.imc--contenido-html p, 
+main.imc--pag div.imc--contenido-html ul, 
+main.imc--pag div.imc--contenido-html ol, 
+main.imc--pag div.imc--contenido-html li,
+main.imc--pag > div.imc--llista > ul >li >  div > div p{
+    margin:revert;
+    padding: revert;
+    list-style: revert;   
+}
+
+main.imc--pag div.imc--contenido-html img{
+ /* 	height: auto;
+  max-width: 100%;    */
+}
+
+p.imc--quitarenlaces a {
+    pointer-events: none; 
+    cursor: default;
+    display: block;
+}
+
+
+/* Estilos especificos para tablas */
+
+table.oldstyletable{
+   border:solid 2px #555;
+   width:revert;
+}
+
+table.oldstyletable tbody tr, table.oldstyletableclean tbody tr{
+    background-color:revert;
+}
+
+table.oldstyletable tbody tr td{
+  border:solid 2px #555;
+  padding: revert;
+  vertical-align: revert;
+}
+
+table.oldstyletable tbody tr td p{
+  margin: 0;
+  padding:0;
+}
+ /* fin estilos tabla*/
+
+/* ajustar el memu para que ocupe solo el alto necesario*/
+div[data-menu="vertical"] .imc--continguts[data-menu="vertical"] .imc--me-menu{
+   height: fit-content;
+}
+
+
+/*retornamos a las listas que empiezan por la clase imc-- sus atributos base*/
+main.imc--pag div.imc--contenido-html div[class^=imc--] li  {
+  margin: 0;
+  padding: .8em;
+  list-style: none;
+}
+
+/* retornamos las listas a los contenidos de usuario*/
+main.imc--pag div.imc--contenido-html div[class^=imc--] li div div div li  {
+  list-style: revert;
+}
+
+
+img.ajusta100{
+	max-width: 100%;
+}
+img.ajusta50{
+	max-width: 50%;
+}
+img.ajusta25{
+	max-width: 25%;
+}
+
+
+/* media */
+
+@media only screen and (max-width : 1400px) {
+
+}
+
+@media only screen and (max-width : 1200px) {
+    .imc--enllasos {
+        min-width: 10em !important;
+    }
+
+    .imc--peu-dades {
+        gap: 1em !important;
+        padding: 2em 2em 2em 12em !important;
+    }
+    
+}
+
+@media only screen and (max-width : 850px) {
+
+    fieldset { padding: 1em; }
+    .imc--enllasos {
+        min-width: 10rem;
+    }
+
+    .imc--peu-xarxes {
+        padding: 2em 2em !important;
+    }
+}
+
+@media only screen and (max-width : 750px) {
+
+}
+
+@media only screen and (max-width : 650px) {
+
+}
+
+@media only screen and (max-width : 550px) {
+
+    /* Media para los formularios -> imc-goib-gusite--app-pag-formulari.css*/
+    .imc--formulari .imc--f-annex{ flex-direction: column !important; }
+    .imc--formulari .imc--f-captcha{  flex-direction: column !important; }
+
+    .imc--peu-xarxes {
+        display: flex;
+        align-items: flex-start !important;
+    }
+
+    .imc--peu-xarxes ul {
+        display: flex;
+        justify-content: space-between !important;
+        width: 100%;
+    }
+
+}

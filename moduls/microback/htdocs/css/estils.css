@@ -169,6 +169,14 @@ div.atencion { padding:1em 1em 1em 3.5em; background:url(../imgs/icones/ico_aten
 
 .pagCnoVisibleNivel1, .pagCnoVisibleNivel2 { display:none; }
 
+/* Drag handle: siempre visible, con cursor grab */
+.nivel1 td span button.moure,
+.nivel2 td span button.moure,
+.pagC td span button.moure { visibility:visible; cursor:grab; }
+
+/* Indicador visual de posición de destino al arrastrar */
+#dropIndicator { position:fixed; left:0; width:100%; height:3px; background:#0066cc; pointer-events:none; z-index:1001; display:none; }
+
 .xIdioma { margin:0; padding:0; list-style:none }
 .xIdioma li { margin-bottom:2px; }
 .xIdioma li span { display:block; float:left; width:5em; text-align:right; margin-right:10px; font-size:.9em; }

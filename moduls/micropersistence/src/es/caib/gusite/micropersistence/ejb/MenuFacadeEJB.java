@@ -459,6 +459,33 @@ public abstract class MenuFacadeEJB extends HibernateEJB {
 	}
 
 	/**
+	 * Lista todos los menus visibles de un microsite en una sola sesión Hibernate,
+	 * sin filtrar por nivel. Equivale a llamar a listarMenuMicrosite para cada
+	 * nivel por separado, pero con un único acceso a base de datos.
+	 *
+	 * @ejb.interface-method
+	 * @ejb.permission unchecked="true"
+	 */
+	public ArrayList<Menu> listarMenusMicrositeCompleto(final Long idmicrosite, final String idioma) {
+
+		final Session session = this.getSession();
+		try {
+			final Criteria criteri = session.createCriteria(Menu.class);
+			criteri.add(Restrictions.eq("microsite.id", idmicrosite));
+			criteri.add(Restrictions.eq("visible", "S"));
+			criteri.addOrder(Order.asc("padre"));
+			criteri.addOrder(Order.asc("orden"));
+			final List<?> list = criteri.list();
+			return this.crearlistadostateful(list, idioma);
+
+		} catch (final HibernateException he) {
+			throw new EJBException(he);
+		} finally {
+			this.close(session);
+		}
+	}
+
+	/**
 	 * borra un Menu
 	 *
 	 * @ejb.interface-method
