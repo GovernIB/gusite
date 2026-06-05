@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fix selector de idioma – Gusite</title>
+  <title>Fix selector de idioma &ndash; Gusite</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -167,7 +167,7 @@
 
 <header>
   <h1>Fix selector de idioma</h1>
-  <span>Gusite – plantillas personalizadas (GUS_FR_PERPLA.PPL_CONTENIDO)</span>
+  <span>Gusite &ndash; plantillas personalizadas (GUS_FR_PERPLA.PPL_CONTENIDO)</span>
 </header>
 
 <main>
@@ -177,12 +177,12 @@
       <label>HTML original (PPL_CONTENIDO)</label>
       <button id="btn-clear">Limpiar</button>
     </div>
-    <textarea id="input" spellcheck="false" placeholder="Pega aquí el contenido de PPL_CONTENIDO…"></textarea>
+    <textarea id="input" spellcheck="false" placeholder="Pega aqu&iacute; el contenido de PPL_CONTENIDO&hellip;"></textarea>
   </div>
 
-  <!-- Columna central: acción -->
+  <!-- Columna central: accion -->
   <div class="center-col">
-    <button id="btn-apply">Aplicar →</button>
+    <button id="btn-apply">Aplicar &rarr;</button>
     <div id="status"></div>
     <div class="hint">Detecta y corrige<br>Variante A y B</div>
     <div id="detail" class="detail-box"></div>
@@ -194,20 +194,20 @@
       <label>HTML corregido</label>
       <button id="btn-copy">Copiar</button>
     </div>
-    <textarea id="output" readonly spellcheck="false" placeholder="El resultado aparecerá aquí…"></textarea>
+    <textarea id="output" readonly spellcheck="false" placeholder="El resultado aparecer&aacute; aqu&iacute;&hellip;"></textarea>
   </div>
 </main>
 
 <script>
-  // ── Lógica de sustitución (equivalente a fix_content() en fix_tema_selector.py) ──
+  // \u2500\u2500 Logica de sustitucion (equivalente a fix_content() en fix_tema_selector.py) \u2500\u2500
 
-  const OLD_DYN =
+  var OLD_DYN =
     "@{${#gusuri.traduccionEnlacePie(" +
     "#ctx.httpServletRequest.contextPath, " +
     "#httpServletRequest.requestURI, " +
     "idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}";
 
-  const NEW_DYN =
+  var NEW_DYN =
     "@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null" +
     " ? MVS_urlsIdiomas[idiomaLista.key]" +
     " : #gusuri.traduccionEnlacePie(" +
@@ -215,8 +215,8 @@
     "#httpServletRequest.requestURI, " +
     "idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}";
 
-  // Variante B: idioma literal 'ca', 'es', 'en', …
-  const PATTERN_STATIC = /@\{\$\{#gusuri\.traduccionEnlacePie\(#ctx\.httpServletRequest\.contextPath, #httpServletRequest\.requestURI, '([a-z]{2})',MVS_busquedaBuscador,MVS_tipobeta\)\}\}/g;
+  // Variante B: idioma literal 'ca', 'es', 'en', ...
+  var PATTERN_STATIC = /@\{\$\{#gusuri\.traduccionEnlacePie\(#ctx\.httpServletRequest\.contextPath, #httpServletRequest\.requestURI, '([a-z]{2})',MVS_busquedaBuscador,MVS_tipobeta\)\}\}/g;
 
   function replaceStatic(match, lang) {
     return (
@@ -228,89 +228,90 @@
   }
 
   function countAll(str, sub) {
-    let n = 0, pos = 0;
+    var n = 0, pos = 0;
     while ((pos = str.indexOf(sub, pos)) !== -1) { n++; pos += sub.length; }
     return n;
   }
 
   function fixContent(content) {
-    let details = [];
-    let total = 0;
+    var details = [];
+    var total = 0;
 
     // Variante A
-    const countA = countAll(content, OLD_DYN);
+    var countA = countAll(content, OLD_DYN);
     if (countA > 0) {
       content = content.split(OLD_DYN).join(NEW_DYN);
       total += countA;
-      details.push({ type: 'A', count: countA, desc: 'Selector dinámico (idiomaLista.key)' });
+      details.push({ type: 'A', count: countA, desc: 'Selector din\u00e1mico (idiomaLista.key)' });
     }
 
-    // Variante B — reset lastIndex antes de usar con flag /g
+    // Variante B
     PATTERN_STATIC.lastIndex = 0;
-    let countB = 0;
-    const fixedB = content.replace(PATTERN_STATIC, function(match, lang) {
+    var countB = 0;
+    var fixedB = content.replace(PATTERN_STATIC, function(match, lang) {
       countB++;
       return replaceStatic(match, lang);
     });
     if (countB > 0) {
       content = fixedB;
       total += countB;
-      details.push({ type: 'B', count: countB, desc: 'Selector estático (idioma literal)' });
+      details.push({ type: 'B', count: countB, desc: 'Selector est\u00e1tico (idioma literal)' });
     }
 
-    return { content, total, details };
+    return { content: content, total: total, details: details };
   }
 
-  // ── UI ──
+  // \u2500\u2500 UI \u2500\u2500
 
-  const elInput  = document.getElementById('input');
-  const elOutput = document.getElementById('output');
-  const elStatus = document.getElementById('status');
-  const elDetail = document.getElementById('detail');
-  const btnApply = document.getElementById('btn-apply');
-  const btnCopy  = document.getElementById('btn-copy');
-  const btnClear = document.getElementById('btn-clear');
+  var elInput  = document.getElementById('input');
+  var elOutput = document.getElementById('output');
+  var elStatus = document.getElementById('status');
+  var elDetail = document.getElementById('detail');
+  var btnApply = document.getElementById('btn-apply');
+  var btnCopy  = document.getElementById('btn-copy');
+  var btnClear = document.getElementById('btn-clear');
 
-  btnApply.addEventListener('click', () => {
-    const raw = elInput.value;
+  btnApply.addEventListener('click', function() {
+    var raw = elInput.value;
 
     if (!raw.trim()) {
-      showStatus('error', 'El campo de entrada está vacío.');
+      showStatus('error', 'El campo de entrada est\u00e1 vac\u00edo.');
       elDetail.className = 'detail-box';
       elOutput.value = '';
       return;
     }
 
-    const { content, total, details } = fixContent(raw);
-    elOutput.value = content;
+    var result = fixContent(raw);
+    elOutput.value = result.content;
 
-    if (total === 0) {
-      showStatus('warn', 'No se encontró ninguna ocurrencia de traduccionEnlacePie activa.');
-      elDetail.innerHTML = '<span class="noop">La plantilla no contiene el patrón esperado, o ya tiene el fix aplicado.</span>';
+    if (result.total === 0) {
+      showStatus('warn', 'No se encontr\u00f3 ninguna ocurrencia de traduccionEnlacePie activa.');
+      elDetail.innerHTML = '<span class="noop">La plantilla no contiene el patr\u00f3n esperado, o ya tiene el fix aplicado.</span>';
       elDetail.className = 'detail-box visible';
     } else {
-      showStatus('ok', total + ' sustitución' + (total !== 1 ? 'es' : '') + ' aplicada' + (total !== 1 ? 's' : '') + '.');
-      elDetail.innerHTML = details.map(d =>
-        '<span class="hit">Variante ' + d.type + ': ' + d.count + 'x — ' + d.desc + '</span>'
-      ).join('\n');
+      var n = result.total;
+      showStatus('ok', n + ' sustituci\u00f3n' + (n !== 1 ? 'es' : '') + ' aplicada' + (n !== 1 ? 's' : '') + '.');
+      elDetail.innerHTML = result.details.map(function(d) {
+        return '<span class="hit">Variante ' + d.type + ': ' + d.count + 'x \u2014 ' + d.desc + '</span>';
+      }).join('\n');
       elDetail.className = 'detail-box visible';
     }
   });
 
-  btnCopy.addEventListener('click', () => {
-    const text = elOutput.value;
+  btnCopy.addEventListener('click', function() {
+    var text = elOutput.value;
     if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-      btnCopy.textContent = '¡Copiado!';
+    navigator.clipboard.writeText(text).then(function() {
+      btnCopy.textContent = '\u00a1Copiado!';
       btnCopy.classList.add('copied');
-      setTimeout(() => {
+      setTimeout(function() {
         btnCopy.textContent = 'Copiar';
         btnCopy.classList.remove('copied');
       }, 2000);
     });
   });
 
-  btnClear.addEventListener('click', () => {
+  btnClear.addEventListener('click', function() {
     elInput.value = '';
     elOutput.value = '';
     elStatus.className = '';
