@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fix selector de idioma – Gusite</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1a3a5c;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 600; }
+    header span { font-size: 0.8rem; opacity: 0.65; }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 0;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .panel label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+    }
+
+    textarea {
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 180px);
+      min-height: 300px;
+      font-family: 'Cascadia Code', 'Fira Mono', 'Consolas', monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      border: 1px solid #ccd0da;
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+      resize: none;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: #1a3a5c; box-shadow: 0 0 0 2px rgba(26,58,92,0.12); }
+    textarea[readonly] { background: #f8f9fc; color: #333; }
+
+    .center-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding-top: 28px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    button:active { transform: scale(0.97); }
+
+    #btn-apply {
+      background: #1a3a5c;
+      color: #fff;
+      font-size: 1rem;
+      padding: 12px 20px;
+      white-space: nowrap;
+    }
+    #btn-apply:hover { background: #254d7a; }
+
+    #btn-clear {
+      background: #e8eaf0;
+      color: #555;
+      font-size: 0.78rem;
+      padding: 7px 14px;
+    }
+    #btn-clear:hover { background: #d8dae5; }
+
+    #btn-copy {
+      background: #e8eaf0;
+      color: #555;
+      font-size: 0.78rem;
+      padding: 7px 14px;
+    }
+    #btn-copy:hover { background: #d8dae5; }
+    #btn-copy.copied { background: #d4edda; color: #1a6b35; }
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #status {
+      display: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    #status.ok    { display: block; background: #d4edda; color: #1a6b35; }
+    #status.warn  { display: block; background: #fff3cd; color: #856404; }
+    #status.error { display: block; background: #f8d7da; color: #721c24; }
+
+    .hint {
+      font-size: 0.72rem;
+      color: #888;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .detail-box {
+      display: none;
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid #ccd0da;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      line-height: 1.6;
+      max-height: 140px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .detail-box.visible { display: block; }
+    .detail-box .hit { color: #1a6b35; font-weight: 600; }
+    .detail-box .noop { color: #856404; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Fix selector de idioma</h1>
+  <span>Gusite – plantillas personalizadas (GUS_FR_PERPLA.PPL_CONTENIDO)</span>
+</header>
+
+<main>
+  <!-- Columna izquierda: input -->
+  <div class="panel">
+    <div class="panel-actions">
+      <label>HTML original (PPL_CONTENIDO)</label>
+      <button id="btn-clear">Limpiar</button>
+    </div>
+    <textarea id="input" spellcheck="false" placeholder="Pega aquí el contenido de PPL_CONTENIDO…"></textarea>
+  </div>
+
+  <!-- Columna central: acción -->
+  <div class="center-col">
+    <button id="btn-apply">Aplicar →</button>
+    <div id="status"></div>
+    <div class="hint">Detecta y corrige<br>Variante A y B</div>
+    <div id="detail" class="detail-box"></div>
+  </div>
+
+  <!-- Columna derecha: output -->
+  <div class="panel">
+    <div class="panel-actions">
+      <label>HTML corregido</label>
+      <button id="btn-copy">Copiar</button>
+    </div>
+    <textarea id="output" readonly spellcheck="false" placeholder="El resultado aparecerá aquí…"></textarea>
+  </div>
+</main>
+
+<script>
+  // ── Lógica de sustitución (equivalente a fix_content() en fix_tema_selector.py) ──
+
+  const OLD_DYN =
+    "@{${#gusuri.traduccionEnlacePie(" +
+    "#ctx.httpServletRequest.contextPath, " +
+    "#httpServletRequest.requestURI, " +
+    "idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}";
+
+  const NEW_DYN =
+    "@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas[idiomaLista.key] != null" +
+    " ? MVS_urlsIdiomas[idiomaLista.key]" +
+    " : #gusuri.traduccionEnlacePie(" +
+    "#ctx.httpServletRequest.contextPath, " +
+    "#httpServletRequest.requestURI, " +
+    "idiomaLista.key,MVS_busquedaBuscador,MVS_tipobeta)}}";
+
+  // Variante B: idioma literal 'ca', 'es', 'en', …
+  const PATTERN_STATIC = /@\{\$\{#gusuri\.traduccionEnlacePie\(#ctx\.httpServletRequest\.contextPath, #httpServletRequest\.requestURI, '([a-z]{2})',MVS_busquedaBuscador,MVS_tipobeta\)\}\}/g;
+
+  function replaceStatic(match, lang) {
+    return (
+      "@{${MVS_urlsIdiomas != null and MVS_urlsIdiomas['" + lang + "'] != null" +
+      " ? MVS_urlsIdiomas['" + lang + "']" +
+      " : #gusuri.traduccionEnlacePie(#ctx.httpServletRequest.contextPath," +
+      " #httpServletRequest.requestURI, '" + lang + "',MVS_busquedaBuscador,MVS_tipobeta)}}"
+    );
+  }
+
+  function countAll(str, sub) {
+    let n = 0, pos = 0;
+    while ((pos = str.indexOf(sub, pos)) !== -1) { n++; pos += sub.length; }
+    return n;
+  }
+
+  function fixContent(content) {
+    let details = [];
+    let total = 0;
+
+    // Variante A
+    const countA = countAll(content, OLD_DYN);
+    if (countA > 0) {
+      content = content.split(OLD_DYN).join(NEW_DYN);
+      total += countA;
+      details.push({ type: 'A', count: countA, desc: 'Selector dinámico (idiomaLista.key)' });
+    }
+
+    // Variante B — reset lastIndex antes de usar con flag /g
+    PATTERN_STATIC.lastIndex = 0;
+    let countB = 0;
+    const fixedB = content.replace(PATTERN_STATIC, function(match, lang) {
+      countB++;
+      return replaceStatic(match, lang);
+    });
+    if (countB > 0) {
+      content = fixedB;
+      total += countB;
+      details.push({ type: 'B', count: countB, desc: 'Selector estático (idioma literal)' });
+    }
+
+    return { content, total, details };
+  }
+
+  // ── UI ──
+
+  const elInput  = document.getElementById('input');
+  const elOutput = document.getElementById('output');
+  const elStatus = document.getElementById('status');
+  const elDetail = document.getElementById('detail');
+  const btnApply = document.getElementById('btn-apply');
+  const btnCopy  = document.getElementById('btn-copy');
+  const btnClear = document.getElementById('btn-clear');
+
+  btnApply.addEventListener('click', () => {
+    const raw = elInput.value;
+
+    if (!raw.trim()) {
+      showStatus('error', 'El campo de entrada está vacío.');
+      elDetail.className = 'detail-box';
+      elOutput.value = '';
+      return;
+    }
+
+    const { content, total, details } = fixContent(raw);
+    elOutput.value = content;
+
+    if (total === 0) {
+      showStatus('warn', 'No se encontró ninguna ocurrencia de traduccionEnlacePie activa.');
+      elDetail.innerHTML = '<span class="noop">La plantilla no contiene el patrón esperado, o ya tiene el fix aplicado.</span>';
+      elDetail.className = 'detail-box visible';
+    } else {
+      showStatus('ok', total + ' sustitución' + (total !== 1 ? 'es' : '') + ' aplicada' + (total !== 1 ? 's' : '') + '.');
+      elDetail.innerHTML = details.map(d =>
+        '<span class="hit">Variante ' + d.type + ': ' + d.count + 'x — ' + d.desc + '</span>'
+      ).join('\n');
+      elDetail.className = 'detail-box visible';
+    }
+  });
+
+  btnCopy.addEventListener('click', () => {
+    const text = elOutput.value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      btnCopy.textContent = '¡Copiado!';
+      btnCopy.classList.add('copied');
+      setTimeout(() => {
+        btnCopy.textContent = 'Copiar';
+        btnCopy.classList.remove('copied');
+      }, 2000);
+    });
+  });
+
+  btnClear.addEventListener('click', () => {
+    elInput.value = '';
+    elOutput.value = '';
+    elStatus.className = '';
+    elStatus.textContent = '';
+    elDetail.className = 'detail-box';
+    elInput.focus();
+  });
+
+  function showStatus(type, msg) {
+    elStatus.textContent = msg;
+    elStatus.className = type;
+  }
+</script>
+
+</body>
+</html>
