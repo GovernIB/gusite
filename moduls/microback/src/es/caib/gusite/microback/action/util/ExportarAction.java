@@ -8,8 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
@@ -47,25 +49,26 @@ import es.caib.gusite.micropersistence.delegate.DelegateException;
 import es.caib.gusite.micropersistence.delegate.DelegateUtil;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.UsuarioDelegate;
+import es.caib.gusite.micropersistence.util.ArchivoUtil;
 import es.caib.gusite.micropersistence.util.log.MicroLog;
 
 /**
  * Action que exporta un microsite <P>
  * 	Definición Struts:<BR>
- *  action path="exportar"<BR> 
+ *  action path="exportar"<BR>
  *	scope="request" <BR>
  *  unknown="false"
- *  
+ *
  */
 public class ExportarAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ExportarAction.class);
 	private static String[] roles = new String[]{"gussystem", "gusadmin"};
-	
+
 	// Constantes para la generación del archivo ZIP.
 	private final String NOMBRE_BASE_ZIP = "_microsite.zip";
 	private final String NOMBRE_DIR_ARCHIVOS = "archivos/";
-	
+
 	/**
      * This is the main action called from the Struts framework.
      * @param mapping The ActionMapping used to select this instance.
@@ -81,29 +84,29 @@ public class ExportarAction extends BaseAction {
 		MicrositeDelegate micrositeDelegate = DelegateUtil.getMicrositeDelegate();
 		MicrositeCompleto micro = null;
 		Hashtable<String, String> rolenames = null;
-		
+
     	// recoger usuario.....
 		if (request.getSession().getAttribute("MVS_usuario") == null) {
 			UsuarioDelegate usudel = DelegateUtil.getUsuarioDelegate();
 			Usuario usu = usudel.obtenerUsuariobyUsername(request.getRemoteUser());
 			request.getSession().setAttribute("MVS_usuario", usu);
 		}
-    	
+
 		if (request.getSession().getAttribute("rolenames") == null) {
 			if (request.getRemoteUser() != null) {
 				request.getSession().setAttribute("username", request.getRemoteUser());
 				rolenames = new Hashtable<String, String>();
-				
+
 				for (int i = 0; i < roles.length; i++) {
                     if (request.isUserInRole(roles[i])) {
                         rolenames.put(roles[i], roles[i]);
                     }
                 }
-				
+
 				request.getSession().setAttribute("rolenames", rolenames);
 			}
 		}
-    	
+
 		// Solo podrán exportar los roles gussystem y gusadmin
 		rolenames = (Hashtable) request.getSession().getAttribute("rolenames");
 
@@ -111,20 +114,20 @@ public class ExportarAction extends BaseAction {
 			addMessage(request, "peticion.error");
             return mapping.findForward("info");
 		}
-		
+
 		if (request.getParameter("idsite") != null) {
-    		
+
 			MicroLog.addLog("Inici Exportació Microsite: [" + request.getParameter("idsite") + "] , Usuari: [" + request.getSession().getAttribute("username") + "]");
-			
+
     		Long idmicrosite = new Long(request.getParameter("idsite"));
     		micro = micrositeDelegate.obtenerMicrositeCompleto(idmicrosite);
     		micro.setVersion(Microback.microsites_version);
-    		
+
     		// TODO amartin 2014/07/01: ¿por qué no se exportan los servicios ofrecidos?
     		micro.setServiciosSeleccionados("");
-    		    		
+
     		try {
-    			
+
 	    		// Generar archivo XML.
 	    		String tmpDir = System.getProperty("java.io.tmpdir") + File.separator;
 	    		String nombreXML = "microsite-" + ((TraduccionMicrosite) micro.getTraduccion()).getTitulo() + ".xml";
@@ -138,74 +141,75 @@ public class ExportarAction extends BaseAction {
                 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "ASCII");
                 jaxbMarshaller.marshal(micro, file);
-	    		
+
 	    		// Generar ZIP con archivo XML y archivos adjuntos.
-	            String prefijoFechaHora = obtenerFechaHora(); 
+	            String prefijoFechaHora = obtenerFechaHora();
 	            String nombreZIP = micro.getUri() + "_" + prefijoFechaHora + NOMBRE_BASE_ZIP;
 	    		String rutaZIP = tmpDir + nombreZIP;
-	    		
+
 	    		// Creamos el archivo ZIP.
 			    ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(rutaZIP));
-			    
+
 			    // Agregamos XML al ZIP.
 			    agregaXmlAZIP(rutaXML, nombreXML, zipFile);
-			    
+
 			    // Agregamos, si los hubiese, los archivos asociados al XML dentro de un directorio aparte dentro del ZIP.
-			    incluirArchivosMicrosite(micro, zipFile);
-		    	
+			    ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
+			    incluirArchivosMicrosite(micro, zipFile, archivoDelegate);
+
 			    // Ofrecemos ZIP al usuario.
 		    	zipFile.close();
 			    ofreceZIP(response, tmpDir, nombreZIP);
-			    
+
     		} catch (SecurityException e) {
-    			
+
     			// Capturamos para posible tratamiento posterior.
     			log.error(e);
     			throw e;
-    			
+
     		} catch (IOException e) {
-    			
+
     			// Capturamos para posible tratamiento posterior.
     			log.error(e);
     			throw e;
-    			
+
     		}
-		    
+
             MicroLog.addLog("Fi Exportació Microsite: [" + request.getParameter("idsite") + "] , Usuari: [" + request.getSession().getAttribute("username") + "]");
-            
+
     	}
-		
+
         return null;
-        
+
 	}
-	
+
 	private String obtenerFechaHora() {
-		
+
 		Calendar cal = Calendar.getInstance();
-		
+
         // Cero inicial para meses o días menores que 10.
         String mes = ((cal.get(Calendar.MONTH) + 1) > 10) ? String.valueOf((cal.get(Calendar.MONTH) + 1)) : "0" + String.valueOf((cal.get(Calendar.MONTH) + 1));
         String dia = (cal.get(Calendar.DAY_OF_MONTH) > 10) ? String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) : "0" + String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
         String fecha = cal.get(Calendar.YEAR) + mes + dia; // Formato: YYYYMMDD
         String hora = cal.get(Calendar.HOUR_OF_DAY) + "" + cal.get(Calendar.MINUTE) + "" + cal.get(Calendar.SECOND); // Formato: HHmmss
         String prefijoFechaHora = fecha + "_" + hora;
-        
+
         return prefijoFechaHora;
-        
+
 	}
-	
+
 	private void agregaXmlAZIP(String rutaXML, String nombreXML, ZipOutputStream out) throws IOException {
-		
+
 	    File f = new File(rutaXML);
-	    
+
     	if (f.exists()) {
-    		
+
 	    	FileInputStream in = new FileInputStream(f);
 	        out.putNextEntry(new ZipEntry(nombreXML));
 
 	        byte[] buf = new byte[1024];
 	        int len;
-	        
+
 	        while ((len = in.read(buf)) > 0) {
 	            out.write(buf, 0, len);
 	        }
@@ -213,45 +217,49 @@ public class ExportarAction extends BaseAction {
 	        // Complete the entry
 	        out.closeEntry();
 	        in.close();
-	        
+
     	}
-    	
+
 	}
 
 	@SuppressWarnings("unchecked")
-	private void incluirArchivosMicrosite(MicrositeCompleto microsite, ZipOutputStream zipFile) throws IOException, DelegateException {
+	private void incluirArchivosMicrosite(MicrositeCompleto microsite, ZipOutputStream zipFile, ArchivoDelegate archivoDelegate) throws IOException, DelegateException {
 
     	// Creamos la entrada en el ZIP para el directorio que contendrá los archivos.
     	// El API de archivos ZIP de Java detecta que es un directorio al acabar en "/".
 	    zipFile.putNextEntry(new ZipEntry(NOMBRE_DIR_ARCHIVOS));
-		ArchivoDelegate archivoDelegate = DelegateUtil.getArchivoDelegate();
-		
-		Iterator<ArchivoLite> iter = (Iterator<ArchivoLite>) microsite.getDocus().iterator();
-		while (iter.hasNext()) {
-			ArchivoLite archivoLite = iter.next();
-			Archivo archivo = archivoDelegate.obtenerArchivo(archivoLite.getId());
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, archivo, zipFile);
+
+		// Carga todos los archivos del microsite en una sola query en lugar de una llamada por fichero.
+		List<Archivo> todosLosArchivos = archivoDelegate.obtenerArchivoByMicrositeId(microsite.getId());
+		Map<Long, Archivo> archivoById = new HashMap<Long, Archivo>();
+		for (Archivo a : todosLosArchivos) {
+			archivoById.put(a.getId(), a);
+		}
+
+		for (ArchivoLite archivoLite : (Iterable<ArchivoLite>) microsite.getDocus()) {
+			Archivo archivo = archivoById.get(archivoLite.getId());
+			agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, archivo, zipFile, archivoDelegate);
 		}
 
 		if (microsite.getImagenPrincipal() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenPrincipal(), zipFile);
+			agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenPrincipal(), zipFile, archivoDelegate);
 		}
 
 		if (microsite.getImagenCampanya() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenCampanya(), zipFile);
+			agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getImagenCampanya(), zipFile, archivoDelegate);
 		}
 
 		if (microsite.getEstiloCSS() != null) {
-    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getEstiloCSS(), zipFile);
+			agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, microsite.getEstiloCSS(), zipFile, archivoDelegate);
 		}
 
 		for (Object menu : microsite.getMenus()) {
 			if (((Menu) menu).getImagenmenu() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Menu) menu).getImagenmenu(), zipFile);
+				agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Menu) menu).getImagenmenu(), zipFile, archivoDelegate);
 			}
 			for (Contenido contenido : ((Menu) menu).getContenidos()) {
 				if (contenido.getImagenmenu() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, contenido.getImagenmenu(), zipFile);
+					agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, contenido.getImagenmenu(), zipFile, archivoDelegate);
 				}
 			}
 		}
@@ -259,128 +267,116 @@ public class ExportarAction extends BaseAction {
 		for (Object agenda : microsite.getAgendas()) {
 			for (TraduccionAgenda trad : ((Agenda) agenda).getTraducciones().values()) {
 				if (trad.getDocumento() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocumento(), zipFile);
+					agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocumento(), zipFile, archivoDelegate);
 				}
 				if (trad.getImagen() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getImagen(), zipFile);
+					agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getImagen(), zipFile, archivoDelegate);
 				}
 			}
 		}
 
 		for (Object noticia : microsite.getNoticias()) {
 			if (((Noticia) noticia).getImagen() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Noticia) noticia).getImagen(), zipFile);
+				agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Noticia) noticia).getImagen(), zipFile, archivoDelegate);
 			}
 			for (TraduccionNoticia trad : ((Noticia) noticia).getTraducciones().values()) {
 				if (trad.getDocu() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocu(), zipFile);
+					agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, trad.getDocu(), zipFile, archivoDelegate);
 				}
 			}
 		}
 
 		for (Object componente : microsite.getComponentes()) {
 			if (((Componente) componente).getImagenbul() != null) {
-	    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Componente) componente).getImagenbul(), zipFile);
+				agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, ((Componente) componente).getImagenbul(), zipFile, archivoDelegate);
 			}
 		}
 
 		for (Object encuesta : microsite.getEncuestas()) {
 			for (Pregunta pregunta : ((Encuesta) encuesta).getPreguntas()) {
 				if (pregunta.getImagen() != null) {
-		    		agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, pregunta.getImagen(), zipFile);
+					agregaArchivoAZIP(NOMBRE_DIR_ARCHIVOS, pregunta.getImagen(), zipFile, archivoDelegate);
 				}
 			}
 		}
 
 	}
-	
-	
 
-	private void agregaArchivoAZIP(String nombreDirArchivos, Archivo docu, ZipOutputStream out) throws IOException, DelegateException {
-		
-		
-		// TODO SLR cambiar esto para recuperar contenido archivo
-		if (docu != null) {
-			
-			ArchivoDelegate delegate = DelegateUtil.getArchivoDelegate();
-			byte[] datosDocumento = delegate.obtenerContenidoFichero(docu);
-			ByteArrayInputStream in = new ByteArrayInputStream(datosDocumento);
+	private void agregaArchivoAZIP(String nombreDirArchivos, Archivo docu, ZipOutputStream out, ArchivoDelegate delegate) throws IOException, DelegateException {
 
-			// Ponemos como prefijo el ID del documento en la BD, por si hay algún documento
-			// relacionado con el microsite que coincida en nombre con otro.
+		if (docu == null) return;
+
+		// Ponemos como prefijo el ID del documento en la BD, por si hay algún documento
+		// relacionado con el microsite que coincida en nombre con otro.
+		try {
+			out.putNextEntry(new ZipEntry(nombreDirArchivos + docu.getId() + "_" + docu.getNombre()));
+
+			InputStream in = null;
+			byte[] datosDocumento = null;
 			try {
-	        
-				out.putNextEntry(new ZipEntry(nombreDirArchivos + docu.getId() + "_" + docu.getNombre()));
-				
-				byte[] buf = new byte[1024];
-		        int len;
-		        
-		        while ((len = in.read(buf)) > 0) {
-		            out.write(buf, 0, len);
-		        }
+				// En modo filesystem hacemos streaming directo sin cargar el fichero entero en memoria.
+				// En modo BD cargamos el byte[] y lo nulificamos en cuanto termina la escritura.
+				if (ArchivoUtil.almacenarEnFilesystem()) {
+					in = ArchivoUtil.obtenerInputStreamFichero(docu);
+				} else {
+					datosDocumento = delegate.obtenerContenidoFichero(docu);
+					in = new ByteArrayInputStream(datosDocumento);
+				}
 
-		        // Complete the entry
-		        out.closeEntry();
-		        				
-			} catch (ZipException e) {
-				
-				// Si el error es por entrada duplicada, lo ignoramos ya que, por ejemplo, los documentos de noticias
-				// quedan como archivos comunes del Microsite y se leen dos veces: procesando los archivos comunes y las noticias.
-				// En cualquier otro caso, lanzamos la excepción.
-				if (!e.getMessage().contains("duplicate entry")) {
-					throw new IOException(e);
+				byte[] buf = new byte[8192];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
 				}
-				
 			} finally {
-				
-				if (in != null) {
-					in.close();
-					in = null;
-				}
-				
-				// XXX amartin: contra todos los pronósticos y recomendaciones, y tras muchas pruebas con el profiler Java VisualVM,
-				// si no hacemos la llamada a este método sugiriendo una ejecución del Garbage Collector de Java, no se libera la memoria
-				// reservada para los objetos usados en la escritura del ZIP (importante sobre todo el array de bytes con los datos del
-				// objeto Archivo que hemos escrito en el Zip).
-				System.gc();
-				
+				if (in != null) in.close();
+				datosDocumento = null;
 			}
-	        
+
+			out.closeEntry();
+
+		} catch (ZipException e) {
+			// Si el error es por entrada duplicada, lo ignoramos ya que, por ejemplo, los documentos de noticias
+			// quedan como archivos comunes del Microsite y se leen dos veces: procesando los archivos comunes y las noticias.
+			// En cualquier otro caso, lanzamos la excepción.
+			if (!e.getMessage().contains("duplicate entry")) {
+				throw new IOException(e);
+			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Deuelve al usuario el ZIP con con la ruta tmpDir + nombreZIP.
 	 * @param response objeto de respuesta del servlet.
 	 * @param tmpDir directorio temporal del usuario que ejecuta el software.
 	 * @param nombreZIP cadena de texto con el nombre del ZIP que queremos generar.
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws Exception en caso de algún error, se pasa el error a un nivel superior.
 	 */
 	private void ofreceZIP(HttpServletResponse response, String tmpDir, String nombreZIP) throws IOException {
-		
+
 		final ServletOutputStream out = response.getOutputStream();
-		  
-	    //Preparamos el tipo de respuesta: 
+
+	    //Preparamos el tipo de respuesta:
 	    response.setHeader("Expires", "0");
 	    response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
 	    response.setHeader("Pragma", "public");
 	    response.setContentType("application/octet-stream");
-	    response.setHeader("Content-Disposition", "attachment;filename=" + nombreZIP); 
-	    
-	    InputStream in = new FileInputStream(tmpDir + nombreZIP);		    
-	    byte[] buffer = new byte[4 * 1024]; // 4K buffer 
-	    int bytesRead; 	
-	    
-	    while ((bytesRead = in.read(buffer)) != -1) 
+	    response.setHeader("Content-Disposition", "attachment;filename=" + nombreZIP);
+
+	    InputStream in = new FileInputStream(tmpDir + nombreZIP);
+	    byte[] buffer = new byte[4 * 1024]; // 4K buffer
+	    int bytesRead;
+
+	    while ((bytesRead = in.read(buffer)) != -1)
 	    	out.write(buffer, 0, bytesRead);
-	    
-	    in.close(); 
-	    in = null; 
-  
+
+	    in.close();
+	    in = null;
+
 	    out.close();
-	    
+
 	}
 
 }

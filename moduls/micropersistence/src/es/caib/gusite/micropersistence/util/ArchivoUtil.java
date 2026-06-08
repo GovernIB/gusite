@@ -401,6 +401,14 @@ public class ArchivoUtil {
 	}
 
 	/**
+	 * Devuelve un InputStream del archivo en filesystem, sin cargarlo en memoria.
+	 * El llamador es responsable de cerrar el stream.
+	 */
+	public static InputStream obtenerInputStreamFichero(final Archivo archivo) throws IOException {
+		return new FileInputStream(obtenerRutaArchivoExportadoEnFilesystem(archivo));
+	}
+
+	/**
 	 * Comprueba si un archivo existe en la estructura de archivos exportados de los
 	 * microsites.
 	 *
