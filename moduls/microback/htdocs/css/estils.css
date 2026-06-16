@@ -144,7 +144,7 @@ div.atencion { padding:1em 1em 1em 3.5em; background:url(../imgs/icones/ico_aten
 .nivel1 td.icono img, .nivel1 td.icono button, .nivel2 td.icono img, .nivel2 td.icono button { vertical-align:middle; }
 .nivel1 td.text { font-weight:bold; }
 .nivel1 td.text span, .nivel2 td.text span { margin-left:20px; }
-.nivel1 td span button, .nivel2 td span button { visibility:hidden; }
+.nivel1 td span button, .nivel2 td span button { visibility:visible; }
 .nivel1 td span.visible button, .nivel2 td span.visible button { visibility:visible; }
 .nivel1 tfoot, .nivel2 tfoot { display:none; }
 .nivel1 tfoot p a, .nivel2 tfoot p a { background:url(../imgs/enllasos/tancar_edicio.gif) no-repeat left center; color:#c00; padding-left:1.5em; margin-left:5.5em; }
@@ -162,17 +162,16 @@ div.atencion { padding:1em 1em 1em 3.5em; background:url(../imgs/icones/ico_aten
 .pagC td.icono img, .pagC td.icono button { vertical-align:middle; }
 .pagC td.text { font-size:.9em; }
 .pagC td.text span { margin-left:20px; }
-.pagC td span button { visibility:hidden; }
+.pagC td span button { visibility:visible; }
 .pagC td span.visible button { visibility:visible; }
 .pagC tfoot { display:none; }
 .pagC tfoot p a { background:url(../imgs/enllasos/tancar_edicio.gif) no-repeat left center; color:#c00; padding-left:1.5em; margin-left:5.5em; }
 
 .pagCnoVisibleNivel1, .pagCnoVisibleNivel2 { display:none; }
 
-/* Drag handle: siempre visible, con cursor grab */
 .nivel1 td span button.moure,
 .nivel2 td span button.moure,
-.pagC td span button.moure { visibility:visible; cursor:grab; }
+.pagC td span button.moure { cursor:grab; }
 
 /* Indicador visual de posición de destino al arrastrar */
 #dropIndicator { position:fixed; left:0; width:100%; height:3px; background:#0066cc; pointer-events:none; z-index:1001; display:none; }
