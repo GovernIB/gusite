@@ -565,7 +565,11 @@ public abstract class NoticiaFacadeEJB extends HibernateEJB implements DominioIn
 		try {
 			this.select = "select noti";
 			this.from = " from Noticia noti join noti.traducciones trad ";
-			this.where += " and trad.id.codigoIdioma = '" + idioma + "' and trad.titulo is not null ";
+			if (this.where.isEmpty()) {
+				this.where = " where trad.id.codigoIdioma = '" + idioma + "' and trad.titulo is not null ";
+			} else {
+				this.where += " and trad.id.codigoIdioma = '" + idioma + "' and trad.titulo is not null ";
+			}
 			this.parametrosCons(); // Establecemos los parámetros de la
 									// paginación
 			final Query query = session.createQuery(this.select + this.from + this.where + this.orderby);
