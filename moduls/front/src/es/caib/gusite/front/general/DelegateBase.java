@@ -1,7 +1,6 @@
 package es.caib.gusite.front.general;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,12 +10,21 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
+//import es.caib.gusite.plugins.rolsac.APIUtil;
+//import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
+//import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
+//import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
+//import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
 
 import es.caib.gusite.front.general.bean.MenuFront;
 import es.caib.gusite.front.util.Cadenas;
 import es.caib.gusite.front.util.Fechas;
 import es.caib.gusite.micromodel.Contenido;
-import es.caib.gusite.micromodel.Idioma;
 import es.caib.gusite.micromodel.Menu;
 import es.caib.gusite.micromodel.Microsite;
 import es.caib.gusite.micromodel.Noticia;
@@ -32,16 +40,6 @@ import es.caib.gusite.micropersistence.delegate.MenuDelegate;
 import es.caib.gusite.micropersistence.delegate.MicrositeDelegate;
 import es.caib.gusite.micropersistence.delegate.NoticiaDelegate;
 import es.caib.gusite.micropersistence.delegate.TiposervicioDelegate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
-//import es.caib.gusite.plugins.rolsac.APIUtil;
-//import es.caib.rolsac.api.v2.edifici.EdificiCriteria;
-//import es.caib.rolsac.api.v2.rolsac.RolsacQueryService;
-//import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaCriteria;
-//import es.caib.rolsac.api.v2.unitatAdministrativa.UnitatAdministrativaQueryServiceAdapter;
 
 /**
  * Manejador de obtener objetos listos para ser visualizados en la web. Utiliza
@@ -63,7 +61,7 @@ public class DelegateBase {
 
 	/**
 	 * Método que devuelve un microsite a partir de su clave unica.
-	 * 
+	 *
 	 * @param key
 	 *            String con el mkey del microsite
 	 * @param idioma
@@ -71,10 +69,10 @@ public class DelegateBase {
 	 * @return Microsites
 	 * @throws ExceptionFrontMicro
 	 */
-	public Microsite obtenerMicrositebyKey(String key, String idioma) throws DelegateException {
-		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
+	public Microsite obtenerMicrositebyKey(final String key, final String idioma) throws DelegateException {
+		final MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
 
-		Microsite micro = microdel.obtenerMicrositebyKey(key);
+		final Microsite micro = microdel.obtenerMicrositebyKey(key);
 		if (micro != null) {
 			micro.setIdi(idioma);
 		}
@@ -84,7 +82,7 @@ public class DelegateBase {
 
 	/**
 	 * Método que devuelve un microsite a partir de su URI.
-	 * 
+	 *
 	 * @param uri
 	 *            String con el URI del microsite
 	 * @param idioma
@@ -92,16 +90,16 @@ public class DelegateBase {
 	 * @return Microsites
 	 * @throws ExceptionFrontMicro
 	 */
-	public Microsite obtenerMicrositebyUri(String uri, String idioma) throws DelegateException {
+	public Microsite obtenerMicrositebyUri(final String uri, final String idioma) throws DelegateException {
 		if (cacheManager != null) {
-			Cache cache = cacheManager.getCache("cacheMicrosite");
-			Cache.ValueWrapper cached = cache.get(uri + '-' + idioma);
+			final Cache cache = cacheManager.getCache("cacheMicrosite");
+			final Cache.ValueWrapper cached = cache.get(uri + '-' + idioma);
 			if (cached != null) {
 				return (Microsite) cached.get();
 			}
 		}
-		MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
-		Microsite micro = microdel.obtenerMicrositebyUri(uri);
+		final MicrositeDelegate microdel = DelegateUtil.getMicrositeDelegate();
+		final Microsite micro = microdel.obtenerMicrositebyUri(uri);
 		if (micro != null) {
 			micro.setIdi(idioma);
 			if (cacheManager != null) {
@@ -115,7 +113,7 @@ public class DelegateBase {
 	/**
 	 * Método que devuelve el menú principal de un microsite listo para ser
 	 * visualizado por el público.
-	 * 
+	 *
 	 * @param idmicrosite
 	 *            Long con el id del microsite
 	 * @param idioma
@@ -123,19 +121,20 @@ public class DelegateBase {
 	 * @return ArrayList con objetos "Menufront"
 	 * @throws Exception
 	 */
-	@Cacheable(value = "cacheMicrositeMenu", key = "#idmicrosite+ '-' +#idioma")
-	public List<MenuFront> obtenerMainMenu(Long idmicrosite, String idioma, String uriContenido) throws DelegateException {
-		List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma, uriContenido);
+	@Cacheable(value = "cacheMicrositeMenu", key = "#idmicrosite+ '-' +#idioma + '-' + #uriContenido")
+	public List<MenuFront> obtenerMainMenu(final Long idmicrosite, final String idioma, final String uriContenido)
+			throws DelegateException {
+		final List<MenuFront> listamenu = this.montarmenu(idmicrosite, idioma, uriContenido);
 		return listamenu;
 		// throw new Exception(" [obtenerMainMenu, " + idmicrosite + ", " +
 		// idioma + " ] Error: " + e.getMessage());
 	}
 
 	/**
-	 * Método que devuelve un contenido listo para ser visualizado por el
-	 * público. Parsea todas los tags de HTML de microsite. También parsea la
-	 * versión Beta del contenido.
-	 * 
+	 * Método que devuelve un contenido listo para ser visualizado por el público.
+	 * Parsea todas los tags de HTML de microsite. También parsea la versión Beta
+	 * del contenido.
+	 *
 	 * @param idcontenido
 	 *            Long con el id del contenido
 	 * @param idioma
@@ -145,16 +144,17 @@ public class DelegateBase {
 	 * @return Contenido
 	 * @throws Exception
 	 */
-	public Contenido obtenerContenido(Long idcontenido, String idioma, Microsite microsite) throws ExceptionFrontPagina {
+	public Contenido obtenerContenido(final Long idcontenido, final String idioma, final Microsite microsite)
+			throws ExceptionFrontPagina {
 		try {
 
-			ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
-			Contenido contenido = contenidodel.obtenerContenido(idcontenido);
+			final ContenidoDelegate contenidodel = DelegateUtil.getContenidoDelegate();
+			final Contenido contenido = contenidodel.obtenerContenido(idcontenido);
 			if (contenido == null) {
 				return null;
 			}
 			contenido.setIdi(idioma);
-			TraduccionContenido traduccionContenido = ((TraduccionContenido) contenido.getTraduccion(idioma));
+			final TraduccionContenido traduccionContenido = ((TraduccionContenido) contenido.getTraduccion(idioma));
 			if (traduccionContenido == null) {
 				// Si no hay traduccion dada de alta para el contenido (lo cual
 				// es una inconsistencia de bd, damos un not found)
@@ -162,17 +162,17 @@ public class DelegateBase {
 			}
 			return contenido;
 
-		} catch (DelegateException e) {
-			throw new ExceptionFrontPagina(" [obtenerContenido, idsite=" + microsite.getId() + ", cont=" + idcontenido + ", idioma=" + idioma
-					+ " ] Error=" + e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
+		} catch (final DelegateException e) {
+			throw new ExceptionFrontPagina(" [obtenerContenido, idsite=" + microsite.getId() + ", cont=" + idcontenido
+					+ ", idioma=" + idioma + " ] Error=" + e.getMessage() + "\n Stack="
+					+ Cadenas.statcktrace2String(e.getStackTrace(), 3));
 		}
 
 	}
 
 	/**
-	 * Obtiene una rama de menú completa lista para ser visualizada por el
-	 * público.
-	 * 
+	 * Obtiene una rama de menú completa lista para ser visualizada por el público.
+	 *
 	 * @param idmenu
 	 *            Long con el identificador del menu
 	 * @param idioma
@@ -181,16 +181,16 @@ public class DelegateBase {
 	 * @throws DelegateException
 	 * @throws Exception
 	 */
-	public Menu obtenerMenuBranch(Long idmenu, String idioma) throws DelegateException {
-		MenuDelegate menudel = DelegateUtil.getMenuDelegate();
-		Menu menu = menudel.obtenerMenuThin(idmenu, idioma);
+	public Menu obtenerMenuBranch(final Long idmenu, final String idioma) throws DelegateException {
+		final MenuDelegate menudel = DelegateUtil.getMenuDelegate();
+		final Menu menu = menudel.obtenerMenuThin(idmenu, idioma);
 		return menu;
 
 	}
 
 	/**
 	 * Obtiene una noticia lista para ser visualizada por el público.
-	 * 
+	 *
 	 * @param idnoticia
 	 *            Long con el identificador de la noticia.
 	 * @param idioma
@@ -198,26 +198,25 @@ public class DelegateBase {
 	 * @return Noticia
 	 * @throws Exception
 	 */
-	public Noticia obtenerNoticia(Long idnoticia, String idioma) throws Exception {
+	public Noticia obtenerNoticia(final Long idnoticia, final String idioma) throws Exception {
 		try {
 
-			NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
-			Noticia noticia = noticiadel.obtenerNoticia(idnoticia);
+			final NoticiaDelegate noticiadel = DelegateUtil.getNoticiasDelegate();
+			final Noticia noticia = noticiadel.obtenerNoticia(idnoticia);
 			noticia.setIdi(idioma);
 			noticia.getTipo().setIdi(idioma);
 			return noticia;
 
-		} catch (Exception e) {
-			throw new Exception(" [obtenerNoticia, idnoticia=" + idnoticia + ", idioma=" + idioma + " ] Error: " + e.getMessage() + "\n Stack="
-					+ Cadenas.statcktrace2String(e.getStackTrace(), 3));
+		} catch (final Exception e) {
+			throw new Exception(" [obtenerNoticia, idnoticia=" + idnoticia + ", idioma=" + idioma + " ] Error: "
+					+ e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
 		}
 
 	}
 
 	/**
-	 * Metodo que devuleve un listado de las listas de distribucion de un
-	 * microsite
-	 * 
+	 * Metodo que devuleve un listado de las listas de distribucion de un microsite
+	 *
 	 * @param microsite
 	 *            Microsite
 	 * @param idioma
@@ -225,20 +224,20 @@ public class DelegateBase {
 	 * @return ArrayList Lista de objetos "Tiposervicio".
 	 * @throws Exception
 	 */
-	public List<?> obtenerListadoDistribucionMicrosite(Long idmicrosite) throws Exception {
+	public List<?> obtenerListadoDistribucionMicrosite(final Long idmicrosite) throws Exception {
 		try {
-			LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
+			final LDistribucionDelegate distribDel = DelegateUtil.getLlistaDistribucionDelegate();
 			distribDel.init(idmicrosite);
 			return distribDel.listarListaDistribucion();
-		} catch (Exception e) {
-			throw new Exception(" [obtenerListadoDistribucionMicrosite, idsite=" + idmicrosite + " ] Error: " + e.getMessage() + "\n Stack="
-					+ Cadenas.statcktrace2String(e.getStackTrace(), 3));
+		} catch (final Exception e) {
+			throw new Exception(" [obtenerListadoDistribucionMicrosite, idsite=" + idmicrosite + " ] Error: "
+					+ e.getMessage() + "\n Stack=" + Cadenas.statcktrace2String(e.getStackTrace(), 3));
 		}
 	}
 
 	/**
 	 * Metodo que devuleve un listado de servicios ofrecidos por un microsite
-	 * 
+	 *
 	 * @param microsite
 	 *            Microsite
 	 * @param idioma
@@ -246,18 +245,19 @@ public class DelegateBase {
 	 * @return ArrayList Lista de objetos "Tiposervicio".
 	 * @throws Exception
 	 */
-	public ArrayList<Object> obtenerListadoServiciosMicrosite(Microsite microsite, String idioma) throws DelegateException {
+	public ArrayList<Object> obtenerListadoServiciosMicrosite(final Microsite microsite, final String idioma)
+			throws DelegateException {
 
 		ArrayList<Object> listserofrtoken = new ArrayList<Object>();
-		ArrayList<Object> listserofr = new ArrayList<Object>();
+		final ArrayList<Object> listserofr = new ArrayList<Object>();
 		if (microsite.getServiciosOfrecidos() != null) {
 			listserofrtoken = Cadenas.getArrayListFromString(microsite.getServiciosOfrecidos());
 		}
 
-		Iterator<Object> iter = listserofrtoken.iterator();
+		final Iterator<Object> iter = listserofrtoken.iterator();
 		while (iter.hasNext()) {
-			TiposervicioDelegate tiposerdel = DelegateUtil.getTiposervicioDelegate();
-			Tiposervicio tiposervicio = tiposerdel.obtenerTiposervicio(new Long((String) iter.next()));
+			final TiposervicioDelegate tiposerdel = DelegateUtil.getTiposervicioDelegate();
+			final Tiposervicio tiposervicio = tiposerdel.obtenerTiposervicio(new Long((String) iter.next()));
 			listserofr.add(tiposervicio);
 		}
 
@@ -266,7 +266,7 @@ public class DelegateBase {
 
 	/**
 	 * Obtiene un listado de centros asociados a una Unidad Administrativa.
-	 * 
+	 *
 	 * @param coduo
 	 *            Long con el id de la ua.
 	 * @param idioma
@@ -274,37 +274,39 @@ public class DelegateBase {
 	 * @return Collection Coleccion de objetos
 	 *         "UnitatAdministrativaQueryServiceAdapter"
 	 * @throws Exception
-	public Collection<?> obtenerUacentres(Long coduo, String idioma) throws Exception {
-
-		try {
-
-			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-
-			// Obtener UA.
-			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-			uaCriteria.setId(coduo.toString());
-			uaCriteria.setIdioma(idioma);
-			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-
-			// Obtener edificios asociados y construir dirección.
-			EdificiCriteria edificiCriteria = new EdificiCriteria();
-			List<?> direcciones = ua.llistarEdificis(edificiCriteria);
-
-			return direcciones;
-
-		} catch (Exception e) {
-
-			throw new Exception(" [obtenerUacentres, coduo=" + coduo + ", idioma=" + idioma + " ] Error: " + e.getMessage() + "\n Stack="
-					+ Cadenas.statcktrace2String(e.getStackTrace(), 3));
-
-		}
-
-	}
+	 *             public Collection<?> obtenerUacentres(Long coduo, String idioma)
+	 *             throws Exception {
+	 * 
+	 *             try {
+	 * 
+	 *             RolsacQueryService rqs = APIUtil.getRolsacQueryService();
+	 * 
+	 *             // Obtener UA. UnitatAdministrativaCriteria uaCriteria = new
+	 *             UnitatAdministrativaCriteria();
+	 *             uaCriteria.setId(coduo.toString()); uaCriteria.setIdioma(idioma);
+	 *             UnitatAdministrativaQueryServiceAdapter ua =
+	 *             rqs.obtenirUnitatAdministrativa(uaCriteria);
+	 * 
+	 *             // Obtener edificios asociados y construir dirección.
+	 *             EdificiCriteria edificiCriteria = new EdificiCriteria(); List<?>
+	 *             direcciones = ua.llistarEdificis(edificiCriteria);
+	 * 
+	 *             return direcciones;
+	 * 
+	 *             } catch (Exception e) {
+	 * 
+	 *             throw new Exception(" [obtenerUacentres, coduo=" + coduo + ",
+	 *             idioma=" + idioma + " ] Error: " + e.getMessage() + "\n Stack=" +
+	 *             Cadenas.statcktrace2String(e.getStackTrace(), 3));
+	 * 
+	 *             }
+	 * 
+	 *             }
 	 */
 
 	/**
 	 * Obtenr los detalles de una Unidad Administrativa
-	 * 
+	 *
 	 * @param coduo
 	 *            codigo de la Unidad Administrativa
 	 * @param idioma
@@ -312,54 +314,57 @@ public class DelegateBase {
 	 * @return UnitatAdministrativaQueryServiceAdapter Objeto
 	 *         UnitatAdministrativaQueryServiceAdapter
 	 * @throws Exception
-	public UnitatAdministrativaQueryServiceAdapter getUaDetails(String coduo, String idioma) throws Exception {
-
-		try {
-
-			RolsacQueryService rqs = APIUtil.getRolsacQueryService();
-
-			// Obtener UA.
-			UnitatAdministrativaCriteria uaCriteria = new UnitatAdministrativaCriteria();
-			uaCriteria.setId(coduo.toString());
-			uaCriteria.setIdioma(idioma);
-			UnitatAdministrativaQueryServiceAdapter ua = rqs.obtenirUnitatAdministrativa(uaCriteria);
-
-			return ua;
-
-		} catch (Exception e) {
-
-			throw new Exception(" [getUaDetails, coduo=" + coduo + ", idioma=" + idioma + " ] Error: " + e.getMessage() + "\n Stack="
-					+ Cadenas.statcktrace2String(e.getStackTrace(), 3));
-
-		}
-
-	}
+	 *             public UnitatAdministrativaQueryServiceAdapter
+	 *             getUaDetails(String coduo, String idioma) throws Exception {
+	 * 
+	 *             try {
+	 * 
+	 *             RolsacQueryService rqs = APIUtil.getRolsacQueryService();
+	 * 
+	 *             // Obtener UA. UnitatAdministrativaCriteria uaCriteria = new
+	 *             UnitatAdministrativaCriteria();
+	 *             uaCriteria.setId(coduo.toString()); uaCriteria.setIdioma(idioma);
+	 *             UnitatAdministrativaQueryServiceAdapter ua =
+	 *             rqs.obtenirUnitatAdministrativa(uaCriteria);
+	 * 
+	 *             return ua;
+	 * 
+	 *             } catch (Exception e) {
+	 * 
+	 *             throw new Exception(" [getUaDetails, coduo=" + coduo + ",
+	 *             idioma=" + idioma + " ] Error: " + e.getMessage() + "\n Stack=" +
+	 *             Cadenas.statcktrace2String(e.getStackTrace(), 3));
+	 * 
+	 *             }
+	 * 
+	 *             }
 	 */
 
 	/* **************** METODOS PRIVADOS ******************* */
 
 	/**
 	 * Método que devuelve una lista con el menú según el idioma.
-	 * 
+	 *
 	 * @param idi
 	 * @return ArrayList
 	 */
-	private List<MenuFront> montarmenu(Long idmicrosite, String idi, String uriContenido) throws DelegateException {
-		ArrayList<MenuFront> listadomenu = new ArrayList<MenuFront>();
+	private List<MenuFront> montarmenu(final Long idmicrosite, final String idi, final String uriContenido)
+			throws DelegateException {
+		final ArrayList<MenuFront> listadomenu = new ArrayList<MenuFront>();
 
-		MenuDelegate menudel = DelegateUtil.getMenuDelegate();
+		final MenuDelegate menudel = DelegateUtil.getMenuDelegate();
 
 		// Una sola llamada EJB carga todos los menús visibles del microsite.
 		// La partición por nivel se hace en Java para evitar M+1 sesiones Hibernate.
-		ArrayList<Menu> todosMenus = menudel.listarMenusMicrositeCompleto(idmicrosite, idi);
+		final ArrayList<Menu> todosMenus = menudel.listarMenusMicrositeCompleto(idmicrosite, idi);
 
-		ArrayList<Menu> menusNivel1 = new ArrayList<Menu>();
-		Map<Long, ArrayList<Menu>> subMenusPorPadre = new HashMap<Long, ArrayList<Menu>>();
-		for (Menu m : todosMenus) {
+		final ArrayList<Menu> menusNivel1 = new ArrayList<Menu>();
+		final Map<Long, ArrayList<Menu>> subMenusPorPadre = new HashMap<Long, ArrayList<Menu>>();
+		for (final Menu m : todosMenus) {
 			if (Long.valueOf(0).equals(m.getPadre())) {
 				menusNivel1.add(m);
 			} else {
-				Long padreId = m.getPadre();
+				final Long padreId = m.getPadre();
 				if (!subMenusPorPadre.containsKey(padreId)) {
 					subMenusPorPadre.put(padreId, new ArrayList<Menu>());
 				}
@@ -367,28 +372,29 @@ public class DelegateBase {
 			}
 		}
 
-		Iterator<Menu> iter = menusNivel1.iterator();
+		final Iterator<Menu> iter = menusNivel1.iterator();
 		while (iter.hasNext()) {
-			Menu menu = iter.next();
-			MenuFront menufront = new MenuFront(menu);
+			final Menu menu = iter.next();
+			final MenuFront menufront = new MenuFront(menu);
 			menu.setIdi(idi);
 			menufront.setIdi(idi);
 
-			TraduccionMenu tramen = (TraduccionMenu) menu.getTraduccion(idi);
+			final TraduccionMenu tramen = (TraduccionMenu) menu.getTraduccion(idi);
 			if (tramen.getNombre() == null || "".equals(tramen.getNombre())) {
 				continue;
 			}
 
 			// recorrer las paginas y coger las visibles y no caducadas
-			Iterator<?> iterpaginas = menu.getContenidos().iterator();
+			final Iterator<?> iterpaginas = menu.getContenidos().iterator();
 			while (iterpaginas.hasNext()) {
-				String iditmp = idi;
-				Contenido conte = (Contenido) iterpaginas.next();
-				TraduccionContenido tracon = (TraduccionContenido) conte.getTraduccion(idi);
+				final String iditmp = idi;
+				final Contenido conte = (Contenido) iterpaginas.next();
+				final TraduccionContenido tracon = (TraduccionContenido) conte.getTraduccion(idi);
 				if (tracon == null || tracon.getTitulo() == null || tracon.getTitulo().equals("")) {
 					continue;
 				}
-				if ((conte.getVisible().equals("S")) && (Fechas.vigente(conte.getFpublicacion(), conte.getFcaducidad()))) {
+				if ((conte.getVisible().equals("S"))
+						&& (Fechas.vigente(conte.getFpublicacion(), conte.getFcaducidad()))) {
 					conte.setIdi(iditmp);
 					if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
 						conte.setUrlExterna("true");
@@ -409,28 +415,29 @@ public class DelegateBase {
 			if (submenus == null) {
 				submenus = new ArrayList<Menu>();
 			}
-			Iterator<Menu> itermenus = submenus.iterator();
+			final Iterator<Menu> itermenus = submenus.iterator();
 			while (itermenus.hasNext()) {
-				Menu submenu = itermenus.next();
-				MenuFront menufrontsub = new MenuFront(submenu);
+				final Menu submenu = itermenus.next();
+				final MenuFront menufrontsub = new MenuFront(submenu);
 				menufrontsub.setIdi(idi);
 				submenu.setIdi(idi);
 
-				TraduccionMenu trasubmen = (TraduccionMenu) submenu.getTraduccion(idi);
+				final TraduccionMenu trasubmen = (TraduccionMenu) submenu.getTraduccion(idi);
 				if (trasubmen.getNombre() == null || "".equals(trasubmen.getNombre())) {
 					continue;
 				}
 
 				// recorrer las paginas y coger las visibles y no caducadas
-				Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
+				final Iterator<?> iterpaginassub = submenu.getContenidos().iterator();
 				while (iterpaginassub.hasNext()) {
-					String iditmp = idi;
-					Contenido contesub = (Contenido) iterpaginassub.next();
-					TraduccionContenido tracon = (TraduccionContenido) contesub.getTraduccion(idi);
+					final String iditmp = idi;
+					final Contenido contesub = (Contenido) iterpaginassub.next();
+					final TraduccionContenido tracon = (TraduccionContenido) contesub.getTraduccion(idi);
 					if (tracon == null || tracon.getTitulo() == null || tracon.getTitulo().equals("")) {
 						continue;
 					}
-					if ((contesub.getVisible().equals("S")) && (Fechas.vigente(contesub.getFpublicacion(), contesub.getFcaducidad()))) {
+					if ((contesub.getVisible().equals("S"))
+							&& (Fechas.vigente(contesub.getFpublicacion(), contesub.getFcaducidad()))) {
 						contesub.setIdi(iditmp);
 						if ((tracon.getUrl() != null) && (tracon.getUrl().indexOf("http") != -1)) {
 							contesub.setUrlExterna("true");
@@ -457,7 +464,7 @@ public class DelegateBase {
 	 */
 	private static class ComparatorMenu implements Comparator {
 		@Override
-		public int compare(Object element1, Object element2) {
+		public int compare(final Object element1, final Object element2) {
 
 			Integer lower1 = new Integer(0);
 			Integer lower2 = new Integer(0);
@@ -479,14 +486,14 @@ public class DelegateBase {
 
 	/**
 	 * Método privado utilizado para ordenar una lista
-	 * 
+	 *
 	 * @param listaoriginal
 	 * @return Arraylist lista ordenada
 	 */
-	private ArrayList<Traducible> ordenarlista(ArrayList<Traducible> listaoriginal) {
+	private ArrayList<Traducible> ordenarlista(final ArrayList<Traducible> listaoriginal) {
 
-		ArrayList<Traducible> listaresultante = new ArrayList<Traducible>(listaoriginal);
-		Comparator comp = new ComparatorMenu();
+		final ArrayList<Traducible> listaresultante = new ArrayList<Traducible>(listaoriginal);
+		final Comparator comp = new ComparatorMenu();
 		Collections.sort(listaresultante, comp);
 
 		return listaresultante;

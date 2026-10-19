@@ -13,25 +13,25 @@
 
       <cache name="cacheUnidades"
         maxElementsInMemory="500"
-        eternal="86400"
+        eternal="false"
         timeToLiveSeconds="600"
         overflowToDisk="false"/>
 
         <cache name="cacheUnidadesHijas"
         maxElementsInMemory="500"
-        eternal="86400"
+        eternal="false"
         timeToLiveSeconds="600"
         overflowToDisk="false"/>
 
         <cache name="cacheUnidadesPrincipales"
         maxElementsInMemory="500"
-        eternal="86400"
+        eternal="false"
         timeToLiveSeconds="600"
         overflowToDisk="false"/>
 
         <cache name="cacheUnidadesData"
         maxElementsInMemory="500"
-        eternal="86400"
+        eternal="false"
         timeToLiveSeconds="600"
         overflowToDisk="false"/>
 
